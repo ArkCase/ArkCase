@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "सूचनाएं",
+    "search.btn": "hi_Search",
+    "export.btn": "hi_Export",
+    "search.placeholder": "hi_Search for notifications",
+    "menus": {
+      "leftnav.item": "सूचनाएं"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "hi_ID",
+          "description": "hi_Description",
+          "objNumber": "hi_Object Number",
+          "parentNumber": "hi_Parent Number",
+          "objType": "hi_Object Type",
+          "modified": "hi_Modified"
+        }
+      }
+    }
+  }
+}

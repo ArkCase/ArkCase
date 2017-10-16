@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "Inscriçãos",
+    "search.btn": "Pesquisa",
+    "export.btn": "pt_Export",
+    "search.placeholder": "pt_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "Inscriçãos"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "pt_ID",
+          "event": "pt_Event",
+          "parentName": "pt_Parent Name",
+          "parentType": "pt_Parent Type",
+          "modified": "pt_Modified"
+        }
+      }
+    }
+  }
+}

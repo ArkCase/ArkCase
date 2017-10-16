@@ -9,7 +9,6 @@ import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +42,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
             pipelineContext.setIsAppend(false);
 
             // Only certain file formats can be merged (PDF at this point is the only one supported)
-            String fileExtension = FilenameUtils.getExtension(entity.getFileName());
+            String fileExtension = entity.getFileExtension();
 
             // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension application
             boolean isFileTypeMergeable = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToMerge);
@@ -64,7 +63,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
-                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getVersionSeriesId());
+                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(), matchFile.getVersionSeriesId());
                     if (originalFileStream == null)
                     {
                         throw new Exception("Failed to pull document " + matchFile.getFileId() + " from the repository");

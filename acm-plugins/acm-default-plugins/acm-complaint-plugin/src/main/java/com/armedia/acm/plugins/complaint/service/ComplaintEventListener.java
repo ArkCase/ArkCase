@@ -12,15 +12,28 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 public class ComplaintEventListener implements ApplicationListener<AcmObjectHistoryEvent>
 {
+    /**
+     * Logger instance.
+     */
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private AcmObjectHistoryService acmObjectHistoryService;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
@@ -28,7 +41,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private AcmAssignmentDao acmAssignmentDao;
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
-    private String complaintStatusClosed;
+    private List<String> complaintStatusClosed;
+
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -41,54 +56,62 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
             if (isComplaint)
             {
+
+                String ipAddress = event.getIpAddress();
+
                 // Converter for JSON string to Object
                 AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
 
                 String jsonUpdatedComplaint = acmObjectHistory.getObjectString();
-                Complaint updatedComplaint = (Complaint) converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
+                Complaint updatedComplaint = converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedComplaint);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().
-                        getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService()
+                        .getAcmObjectHistory(updatedComplaint.getComplaintId(), ComplaintConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
-
                     String json = acmObjectHistoryExisting.getObjectString();
-                    Complaint existing = (Complaint) converter.unmarshall(json, Complaint.class);
+                    Complaint existing = converter.unmarshall(json, Complaint.class);
 
                     acmAssignment.setOldAssignee(ParticipantUtils.getAssigneeIdFromParticipants(existing.getParticipants()));
 
                     if (isPriorityChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "priority.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "priority.changed");
                     }
 
                     if (isDetailsChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "details.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "details.changed");
                     }
 
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (updatedComplaint.getStatus().equals(complaintStatusClosed) &&
-                                shouldDeleteCalendarFolder && calId != null){
+                        if (complaintStatusClosed.contains(updatedComplaint.getStatus()) && shouldDeleteCalendarFolder && calId != null)
+                        {
 
-                            //delete shared calendar if complaint closed
-                            getCalendarService().deleteFolder(updatedComplaint.getContainer().getContainerObjectId(),
-                                    calId, DeleteMode.MoveToDeletedItems);
+                            // delete shared calendar if complaint closed
+                            Optional<AcmOutlookUser> user = calendarAdminService
+                                    .getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE);
+                            // if integration is not enabled the user will be null.
+                            if (user.isPresent())
+                            {
+                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(), DeleteMode.MoveToDeletedItems);
+                            }
                         }
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "status.changed");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
                     }
 
                     if (isLocationChanged(existing, updatedComplaint))
                     {
-                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, event.getIpAddress(), "location.updated");
+                        getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "location.updated");
                     }
 
                     checkParticipants(existing, updatedComplaint, event.getIpAddress());
+
                 }
 
                 if (isAssigneeChanged(acmAssignment))
@@ -97,7 +120,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     getAcmAssignmentDao().save(acmAssignment);
 
                     // Raise an event
-                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), event.getIpAddress());
+                    getAcmObjectHistoryEventPublisher().publishAssigneeChangeEvent(acmAssignment, event.getUserId(), ipAddress);
                 }
             }
         }
@@ -105,20 +128,9 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
     {
-        if (assignment.getNewAssignee() != null && assignment.getOldAssignee() != null)
-        {
-            if (assignment.getNewAssignee().equals(assignment.getOldAssignee()))
-            {
-                return false;
-            }
-        }
 
-        if (assignment.getNewAssignee() == null && assignment.getOldAssignee() == null)
-        {
-            return false;
-        }
+        return !Objects.equals(assignment.getNewAssignee(), assignment.getOldAssignee());
 
-        return true;
     }
 
     private AcmAssignment createAcmAssignment(Complaint updatedComplaint)
@@ -137,35 +149,23 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         String updatedPriority = updatedComplaint.getPriority();
         String priority = complaint.getPriority();
-        return !updatedPriority.equals(priority);
+
+        return !Objects.equals(updatedPriority, priority);
     }
 
     private boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
     {
         PostalAddress updatedLocation = updatedComplaint.getLocation();
         PostalAddress location = complaint.getLocation();
-        if (location != null)
-        {
-            return !location.equals(updatedLocation);
-        } else if (updatedLocation != null)
-        {
-            return true;
-        }
-        return false;
+        return !Objects.equals(updatedLocation, location);
     }
 
     private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)
     {
         String updatedDetails = updatedComplaint.getDetails();
         String details = complaint.getDetails();
-        if (updatedDetails != null && details != null)
-        {
-            return !details.equals(updatedDetails);
-        } else if (updatedDetails != null)
-        {
-            return true;
-        }
-        return false;
+        return !Objects.equals(details, updatedDetails);
+
     }
 
     private void checkParticipants(Complaint complaint, Complaint updatedComplaint, String ipAddress)
@@ -196,7 +196,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     {
         String updatedStatus = updatedComplaint.getStatus();
         String status = complaint.getStatus();
-        return !updatedStatus.equals(status);
+        return !Objects.equals(updatedStatus, status);
     }
 
     private boolean checkExecution(String objectType)
@@ -269,13 +269,17 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         this.shouldDeleteCalendarFolder = shouldDeleteCalendarFolder;
     }
 
-    public String getComplaintStatusClosed()
-    {
-        return complaintStatusClosed;
-    }
-
     public void setComplaintStatusClosed(String complaintStatusClosed)
     {
-        this.complaintStatusClosed = complaintStatusClosed;
+        this.complaintStatusClosed = Arrays.asList(complaintStatusClosed.split(","));
+    }
+
+    /**
+     * @param calendarAdminService
+     *            the calendarAdminService to set
+     */
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 }

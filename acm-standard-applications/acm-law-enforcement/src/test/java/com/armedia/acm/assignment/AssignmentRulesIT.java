@@ -68,6 +68,7 @@ public class AssignmentRulesIT
 
         Complaint c = new Complaint();
         c.setStatus("DRAFT");
+        c.setCreator("testUser");
 
         log.debug("object type: " + c.getObjectType());
 
@@ -75,7 +76,13 @@ public class AssignmentRulesIT
 
         workingMemory.execute(c);
 
-        assertEquals(3, c.getParticipants().size());
+        for (AcmParticipant p : c.getParticipants())
+        {
+            log.error("name: {}, type: {}", p.getParticipantLdapId(), p.getParticipantType());
+        }
+
+        int numExpectedParticipants = 4;
+        assertEquals(numExpectedParticipants, c.getParticipants().size());
 
         assertEquals("samuel-acm", c.getParticipants().get(0).getParticipantLdapId());
         assertEquals("assignee", c.getParticipants().get(0).getParticipantType());
@@ -83,10 +90,12 @@ public class AssignmentRulesIT
         assertEquals("*", c.getParticipants().get(1).getParticipantType());
         assertEquals("owning group", c.getParticipants().get(2).getParticipantType());
         assertEquals("ACM_INVESTIGATOR_DEV", c.getParticipants().get(2).getParticipantLdapId());
+        assertEquals("reader", c.getParticipants().get(3).getParticipantType());
+        assertEquals("testUser", c.getParticipants().get(3).getParticipantLdapId());
 
         // since we have participants now, if we run the rule again, it should not add any more
         workingMemory.execute(c);
-        assertEquals(3, c.getParticipants().size());
+        assertEquals(numExpectedParticipants, c.getParticipants().size());
 
     }
 

@@ -1,0 +1,27 @@
+{
+  "audit": {
+    "title": "Аудит",
+    "menus": {
+      "leftnav.item": "Аудит"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "ru_Report Name",
+        "inputID": "ru_ID",
+        "dateFrom": "ru_From",
+        "dateTo": "ru_To"
+      },
+      "placeholder": {
+        "selectAudit": "ru_ALL",
+        "inputId": "ru_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "ru_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "ru_Done"
+    }
+  }
+}
+

@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 
 /**
- * Defines the privilege required to invoke a plugin URL.  URLs in the /plugin URL namespace are protected by a
- * Spring MVC interceptor.  The interceptor checks AcmPluginUrlPrivilege instances to verify the user has a privilege
- * that allows them to execute the URL.
+ * Defines the privilege required to invoke a plugin URL. URLs in the /plugin URL namespace are protected by a Spring
+ * MVC interceptor. The interceptor checks AcmPluginUrlPrivilege instances to verify the user has a privilege that
+ * allows them to execute the URL.
  */
 public class AcmPluginUrlPrivilege
 {
+    private static final String HTML_EXTENSION = ".html";
     private static final String XML_EXTENSION = ".xml";
     private static final String JSON_EXTENSION = ".json";
     private static final int XML_EXTENSION_LENGTH = XML_EXTENSION.length();
@@ -24,38 +25,43 @@ public class AcmPluginUrlPrivilege
 
     public boolean matches(String incomingUrl, String method)
     {
-        if ( !getHttpMethod().name().equals(method))
+        if (!getHttpMethod().name().equals(method))
         {
             return false;
         }
 
-        if ( getUrl().equalsIgnoreCase(incomingUrl) )
+        if (getUrl().equalsIgnoreCase(incomingUrl))
+        {
+            return true;
+        }
+
+        if (incomingUrl.endsWith(HTML_EXTENSION) && incomingUrl.startsWith(getUrl()))
         {
             return true;
         }
 
         String[] incomingUrlPathVariables = incomingUrl.split("/");
 
-        if ( incomingUrlPathVariables.length != urlPathVariables.length )
+        if (incomingUrlPathVariables.length != urlPathVariables.length)
         {
             return false;
         }
 
-        for ( int a = 0; a < incomingUrlPathVariables.length; a++ )
+        for (int a = 0; a < incomingUrlPathVariables.length; a++)
         {
             String pathPart = incomingUrlPathVariables[a];
-            if ( pathPart.endsWith(XML_EXTENSION) )
+            if (pathPart.endsWith(XML_EXTENSION))
             {
                 pathPart = trimPathPart(pathPart, XML_EXTENSION_LENGTH);
             }
-            if ( pathPart.endsWith(JSON_EXTENSION) )
+            if (pathPart.endsWith(JSON_EXTENSION))
             {
                 pathPart = trimPathPart(pathPart, JSON_EXTENSION_LENGTH);
             }
             boolean exactMatch = pathPart.equalsIgnoreCase(urlPathVariables[a]);
             boolean placeholder = urlPathVariables[a].startsWith("{") && urlPathVariables[a].endsWith("}");
 
-            if ( !exactMatch && !placeholder )
+            if (!exactMatch && !placeholder)
             {
                 return false;
             }

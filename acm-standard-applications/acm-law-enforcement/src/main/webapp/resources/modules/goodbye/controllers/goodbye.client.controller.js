@@ -5,22 +5,23 @@ angular.module('goodbye').controller('GoodbyeController', ['$window'
     , function ($window, Store, Util, AcmLoginService, LookupService, AcmAppService, WebSocketService) {
         // Retrieves the app properties from app-config.xml file
         var appConfig = LookupService.getConfig('app').then(function (data) {
-             var logoutUrl = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
+            var logoutUrl = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
 
             AcmLoginService.setLogin(false);
-            
-            // disconnect websocket
-            WebSocketService.disconnect();
-            
-            //localStorage.removeItem('redirectURL');
             sessionStorage.removeItem('redirectURL');
             sessionStorage.removeItem('redirectState');
-            //sessionStorage.removeItem('warningAccepted');
+            sessionStorage.removeItem('passwordWarningAccepted');
             Store.Registry.clearSessionCache();
             Store.Registry.clearLocalCache();
 
+            try {
+                // disconnect websocket
+                WebSocketService.disconnect();
+            } catch (exc) {
+
+            }
             $window.location.href = logoutUrl;
-         
+
         });
 
     }

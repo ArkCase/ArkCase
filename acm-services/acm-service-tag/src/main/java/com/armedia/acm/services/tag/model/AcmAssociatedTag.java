@@ -15,6 +15,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 @Entity
 @Table(name = "acm_associated_tag")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
 {
 
@@ -56,6 +59,9 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_parent_object_type")
     private String parentType;
+
+    @Column(name = "cm_parent_object_title")
+    private String parentTitle;
 
     @Column(name = "cm_associated_tag_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -166,5 +172,12 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
     public Long getId()
     {
         return id;
+    }
+
+    public String getParentTitle() {return parentTitle; }
+
+    public void setParentTitle(String parentTitle)
+    {
+        this.parentTitle = parentTitle;
     }
 }

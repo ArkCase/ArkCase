@@ -59,6 +59,7 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
         {
             var toBeAdded = [];
             var toBeRemoved = [];
+            var deferred = $q.defer();
 
             //get roles which needs to be added
             angular.forEach(authorized, function (role)
@@ -71,8 +72,14 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
             //perform adding on server
             if (toBeAdded.length > 0)
             {
-                modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded);
+                modulesService.addRolesToModule(selectedObject['privilege'], toBeAdded).then(function() {
+                	deferred.resolve();
+                }, function(){
+                	deferred.reject();
+                });
+                
                 $scope.currentAuthRoles = $scope.currentAuthRoles.concat(toBeAdded);
+                return deferred.promise;
             }
 
             //get roles which needs to be removed
@@ -86,12 +93,19 @@ angular.module('admin').controller('Admin.ModulesController', ['$scope', 'Admin.
             if (toBeRemoved.length > 0)
             {
                 //perform removing on server
-                modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved);
+                modulesService.removeRolesFromModule(selectedObject['privilege'], toBeRemoved).then(function() {
+                	deferred.resolve();
+                }, function(){
+                	deferred.reject();
+                });
+                
                 //remove from $scope.currentAuthRoles
                 angular.forEach(toBeRemoved, function (element)
                 {
                     $scope.currentAuthRoles.splice($scope.currentAuthRoles.indexOf(element), 1);
                 });
+                
+                return deferred.promise;
             }
         };
     }

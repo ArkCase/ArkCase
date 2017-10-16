@@ -2,8 +2,6 @@ package com.armedia.acm.form.plain.model;
 
 import org.springframework.context.ApplicationEvent;
 
-import java.util.Date;
-
 /**
  * Created by riste.tutureski on 12/4/2015.
  */
@@ -15,6 +13,8 @@ public class PlainFormEvent extends ApplicationEvent
     private String cmisFolderId;
     private String userId;
     private String ipAddress;
+    private Long pdfRenditionId;
+    private Long xmlRenditionId;
 
     /**
      * Create a new ApplicationEvent.
@@ -84,5 +84,25 @@ public class PlainFormEvent extends ApplicationEvent
     public void setIpAddress(String ipAddress)
     {
         this.ipAddress = ipAddress;
+    }
+
+    public Long getPdfRenditionId()
+    {
+        return pdfRenditionId;
+    }
+
+    public void setPdfRenditionId(Long pdfRenditionId)
+    {
+        this.pdfRenditionId = pdfRenditionId;
+    }
+
+    public Long getXmlRenditionId()
+    {
+        return xmlRenditionId;
+    }
+
+    public void setXmlRenditionId(Long xmlRenditionId)
+    {
+        this.xmlRenditionId = xmlRenditionId;
     }
 }

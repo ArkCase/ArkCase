@@ -1,11 +1,13 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams'
+angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$stateParams', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService'
     , 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Object.ModelService', 'LookupService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams
+    , 'MessageService'
+    , function ($scope, $stateParams, $translate
         , Util, ConfigService, ObjectService, CaseInfoService, ComplaintInfoService, TaskInfoService
-        , CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService) {
+        , CostTrackingInfoService, TimeTrackingInfoService, ObjectModelService, LookupService, HelperObjectBrowserService
+        , MessageService) {
 
         new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -35,11 +37,11 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
             } else if ($scope.parentComplaintInfo) {
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.complaintId);
-            }else if ($scope.parentCostsheetInfo){
+            } else if ($scope.parentCostsheetInfo) {
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.COSTSHEET, $scope.parentCostsheetInfo.id);
-            } else if ($scope.parentTimesheetInfo){
+            } else if ($scope.parentTimesheetInfo) {
                 ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, $scope.parentTimesheetInfo.id);
-            }else {
+            } else {
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }
         };
@@ -84,15 +86,27 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                         return costsheetInfo;
                     }
                 );
-            }else if (ObjectService.ObjectTypes.TIMESHEET == $scope.objectInfo.parentObjectType) {
+            } else if (ObjectService.ObjectTypes.TIMESHEET == $scope.objectInfo.parentObjectType) {
                 TimeTrackingInfoService.getTimesheetInfo($scope.objectInfo.parentObjectId).then(
-                    function(timesheetInfo){
+                    function (timesheetInfo) {
                         $scope.parentTimesheetInfo = timesheetInfo;
                         $scope.timesheetApprover = ObjectModelService.getParticipantByType(timesheetInfo, "approver");
                         return timesheetInfo;
                     }
                 );
             }
+
+            var parentObjectType = $scope.objectInfo.parentObjectType;
+            var parentObjectId = $scope.objectInfo.parentObjectId;
+            var eventName = "object.changed/" + parentObjectType + "/" + parentObjectId;
+            var objectTypeString = $translate.instant('common.objectTypes.' + parentObjectType);
+            if (!objectTypeString) {
+                objectTypeString = parentObjectType;
+            }
+            $scope.$bus.subscribe(eventName, function (data) {
+                MessageService.info(objectTypeString + " with ID " + parentObjectId + " was updated.");
+                $scope.$emit('report-object-refreshed', $stateParams.id);
+            });
         };
     }
 ]);

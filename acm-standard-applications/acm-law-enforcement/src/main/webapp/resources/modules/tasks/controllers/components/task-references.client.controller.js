@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
-    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', '$modal', 'Object.ReferenceService', 'ObjectService'
-    , function ($scope, $stateParams
-        , Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, $modal, referenceService, ObjectService) {
+    , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
+    , '$modal', 'Object.ReferenceService', 'ObjectService'
+    , function ($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService
+        , HelperObjectBrowserService, $modal, referenceService, ObjectService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -36,12 +37,20 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var parentId = Util.goodMapValue(rowEntity, "parentId");
+            var parentType = Util.goodMapValue(rowEntity, "parentType");
+            var fileName = Util.goodMapValue(rowEntity, "targetName");
+
+            if(targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked){
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            }else{
+                gridHelper.showObject(targetType, targetId);
+            }
 
             if (ObjectService.ObjectTypes.TASK == targetType || ObjectService.ObjectTypes.ADHOC_TASK == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
@@ -57,7 +66,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -66,13 +75,14 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-TASK";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.taskId + "-" + ObjectService.ObjectTypes.TASK;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.taskId + "-" + ObjectService.ObjectTypes.TASK;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
@@ -91,7 +101,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
                     reference.parentType = ObjectService.ObjectTypes.TASK;
-                    referenceService.addReference(reference).then(
+                    referenceService.addReferenceToTask(reference).then(
                         function (objectSaved) {
                         	$scope.refresh();
                             return objectSaved;

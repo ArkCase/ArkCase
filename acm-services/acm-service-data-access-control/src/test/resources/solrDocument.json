@@ -54,7 +54,8 @@
         "requester_type_s": "requesterType",
         "requester_name_s": "Company",
         "zip_code_s": "a",
-        "_version_": 1517459360083607600
+        "_version_": 1517459360083607600,
+        "acm_participants_lcs": "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"},{\"ldapId\":\"samuel-acm\", \"type\":\"supervisor\"},{\"ldapId\":\"ann-acm\", \"type\":\"assignee\"}]"
       }
     ]
   }

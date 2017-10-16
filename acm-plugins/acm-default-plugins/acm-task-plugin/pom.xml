@@ -3,14 +3,14 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-plugins.acm-default-plugins</groupId>
     <artifactId>acm-task-plugin</artifactId>
     <name>ACM Default Plugin: Tasks</name>
-    <description>This plugin enables the task feature. 
+    <description>This plugin enables the task feature.
     </description>
 
     <dependencies>
@@ -120,6 +120,23 @@
             <artifactId>acm-service-note</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-mule-module-cmis</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-notification</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar-integration-exchange</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
@@ -166,7 +183,7 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
         </dependency>
-        
+
         <!-- liquibase (database com.armedia.acm.ddl maintenance) -->
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -193,10 +210,6 @@
         </dependency>
         <dependency>
             <groupId>org.mule.modules</groupId>
-            <artifactId>mule-module-cmis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <scope>compile</scope>
         </dependency>
@@ -213,11 +226,6 @@
 
         <!-- json -->
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <scope>compile</scope>
@@ -230,7 +238,7 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
         </dependency>
-        
+
         <!-- servlet -->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -256,12 +264,12 @@
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
+            <groupId>jmimemagic</groupId>
+            <artifactId>jmimemagic</artifactId>
             <scope>test</scope>
         </dependency>
+
 
     </dependencies>
 

@@ -1,0 +1,95 @@
+{
+  "costTracking": {
+    "title": "トラック費用",
+    "progressNoCostsheet": "[ 費用シートは選択されていません ]",
+    "progressLoading": "費用シートの読み込み",
+    "progressError": "費用シートの読み込みに失敗しました"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "トラック費用",
+    "topbar.item": "費用シート"
+  },
+  "costTracking.comp.main": {
+    "title": "概観"
+  },
+  "costTracking.comp.info": {
+    "title": "情報",
+    "incidentDate": "事件の日付",
+    "priority": "優先",
+    "assignedTo": "割り当て先",
+    "subjectType": "亜種類",
+    "state": "状態"
+  },
+  "costTracking.comp.actions": {
+    "title": "行动",
+    "new.button": "新しい費用シート",
+    "edit.button": "費用シートの編集"
+  },
+  "costTracking.comp.details": {
+    "title": "詳細",
+    "informSaved": "ja_Costsheet details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "costTracking.comp.person": {
+    "title": "人員",
+    "table.columns": {
+      "fullName": "ja_Full Name",
+      "userId": "ja_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "費用の概要",
+    "table.columns": {
+      "parentId": "ja_ID",
+      "parentNumber": "ja_Parent ID",
+      "parentType": "ja_Parent Type",
+      "value": "ja_Total Cost",
+      "title": "ja_Title",
+      "description": "ja_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "タグ",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+    "title": "ja_Tag",
+    "search": "ja_Search for Tag",
+    "buttons": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "person.label": "人員",
+      "summary.label": "費用",
+      "tags.label": "タグ"
+    },
+    "sorters": {
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "アンチ日付順",
+      "idAsc": "費用識別番号を並べ替える",
+      "idDesc": "費用識別番号を昇順で並べ替え",
+      "nameDesc": "名で並べ替え",
+      "noSort": "(注文しません)"
+    }
+  }
+}

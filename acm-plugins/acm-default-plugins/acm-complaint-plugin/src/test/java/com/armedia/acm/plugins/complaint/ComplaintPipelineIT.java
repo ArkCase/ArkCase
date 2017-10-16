@@ -3,11 +3,13 @@ package com.armedia.acm.plugins.complaint;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
+import com.armedia.acm.web.api.MDCConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,44 +20,60 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring",
         locations = {
-                "/spring/spring-library-object-history.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-object-association-plugin.xml",
-                "/spring/spring-library-complaint-plugin-test.xml",
-                "/spring/spring-library-complaint.xml",
+                "/spring/spring-library-acm-encryption.xml",
                 "/spring/spring-library-activiti-actions.xml",
                 "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-drools-monitor.xml",
-                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-authentication-token.xml",
+                "/spring/spring-library-business-process.xml",
+                "/spring/spring-library-calendar-config-service.xml",
+                "/spring/spring-library-calendar-integration-exchange-service.xml",
+                "/spring/spring-library-case-file-dao.xml",
+                "/spring/spring-library-case-file-events.xml",
+                "/spring/spring-library-case-file-rules.xml",
+                "/spring/spring-library-case-file-save.xml",
+                "/spring/spring-library-complaint.xml",
+                "/spring/spring-library-complaint-plugin-test.xml",
+                "/spring/spring-library-complaint-plugin-test-mule.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-search.xml",
+                "/spring/spring-library-data-source.xml",
+                "/spring/spring-library-drools-rule-monitor.xml",
                 "/spring/spring-library-ecm-file.xml",
-                "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-person.xml",
-                "/spring/spring-library-case-file.xml",
+                "/spring/spring-library-ecm-tika.xml",
+                "/spring/spring-library-email.xml",
+                "/spring/spring-library-email-smtp.xml",
+                "/spring/spring-library-event.xml",
+                "/spring/spring-library-folder-watcher.xml",
+                "/spring/spring-library-form-configurations.xml",
+                "/spring/spring-library-forms-configuration.xml",
+                "/spring/spring-library-functional-access-control.xml",
                 "/spring/spring-library-ms-outlook-integration.xml",
                 "/spring/spring-library-ms-outlook-plugin.xml",
-                "/spring/spring-library-profile.xml",
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-task.xml",
                 "/spring/spring-library-note.xml",
-                "/spring/spring-library-event.xml",
-                "/spring/spring-library-complaint-plugin-test-mule.xml",
-                "/spring/spring-library-forms-configuration.xml",
-                "/spring/spring-library-authentication-token.xml",
+                "/spring/spring-library-notification.xml",
+                "/spring/spring-library-object-association-plugin.xml",
+                "/spring/spring-library-object-diff.xml",
+                "/spring/spring-library-object-history.xml",
+                "/spring/spring-library-object-lock.xml",
+                "/spring/spring-library-organization-rules.xml",
+                "/spring/spring-library-particpants.xml",
+                "/spring/spring-library-person.xml",
+                "/spring/spring-library-person-rules.xml",
                 "/spring/spring-library-plugin-manager.xml",
-                "/spring/spring-library-functional-access-control.xml",
+                "/spring/spring-library-profile.xml",
+                "/spring/spring-library-property-file-manager.xml",
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-service-data.xml",
+                "/spring/spring-library-task.xml",
                 "/spring/spring-library-user-login.xml",
-                "/spring/spring-library-business-process.xml"
+                "/spring/spring-library-user-service.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
@@ -79,6 +97,9 @@ public class ComplaintPipelineIT
     public void setUp()
     {
         auditAdapter.setUserId("auditUser");
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
     }
 
 
@@ -88,6 +109,7 @@ public class ComplaintPipelineIT
     {
         Complaint complaint = complaintFactory.complaint();
         complaint.setRestricted(true);
+        complaint.setCreator("auditUser");
 
         // complaint number should be set by the flow
         complaint.setComplaintNumber(null);

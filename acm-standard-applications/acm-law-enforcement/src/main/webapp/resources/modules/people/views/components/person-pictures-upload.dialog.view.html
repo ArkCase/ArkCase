@@ -1,0 +1,62 @@
+<div class="modal-header">
+    <ng-switch on="userPicture.isEdit">
+        <h3><span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.title</span></h3>
+        <h3><span ng-switch-default translate>people.comp.pictures.dialog.title</span></h3>
+    </ng-switch>
+</div>
+<form name="picturesForm">
+    <div class="modal-body">
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <ng-switch on="userPicture.isEdit">
+                    <label ng-switch-default translate>people.comp.pictures.dialog.title</label>
+                    <label ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</label>
+                </ng-switch>
+                <span class="required-asterisk">*</span><br/>
+                <button ngf-select ng-model="userPicture" id="file"
+                        ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                        class="btn btn-sm btn-default" ngf-change="upload()" required="required">
+                    <ng-switch on="userPicture.isEdit">
+                        <span ng-switch-default translate>people.comp.pictures.dialog.browse</span>
+                        <span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</span>
+                    </ng-switch>
+                </button>
+                {{userPicture.name}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>people.comp.pictures.dialog.setPrimary</label><span
+                    class="required-asterisk">*</span><br/>
+                <label>
+                    <translate>people.comp.pictures.dialog.yes</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                </label>
+                <label ng-hide="hideNoField">
+                    <translate>people.comp.pictures.dialog.no</translate>
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="phoneDescription" translate>people.comp.pictures.dialog.description</label>
+                <textarea id="phoneDescription" class="input-md form-control" ng-model="image.description"></textarea>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="onClickCancel()" translate>
+            people.comp.pictures.dialog.cancel
+        </button>
+        <ng-switch on="userPicture.isEdit">
+            <button class="btn btn-primary" ng-switch-default ng-click="onClickOk()" ng-disabled="picturesForm.$invalid">
+                <span translate>people.comp.pictures.dialog.upload</span>
+            </button>
+
+            <button class="btn btn-primary" ng-switch-when="true" ng-click="onClickOk()">
+                <span translate>people.comp.pictures.dialog.edit.save</span>
+            </button>
+        </ng-switch>
+    </div>
+</form>

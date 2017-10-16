@@ -1,0 +1,363 @@
+{
+  "tasks": {
+    "title": "कार्य",
+    "progressNoTask": "[ कोई कार्य डेटा नहीं ]",
+    "progressLoading": "लोडिंग कार्य ",
+    "progressError": "कार्य को लोड करने में विफल"
+  },
+  "tasks.menus": {
+    "leftnav.item": "कार्य",
+    "topbar.item": "कार्य"
+  },
+  "tasks.comp.main": {
+    "title": "अवलोकन"
+  },
+  "tasks.comp.info": {
+    "title": "जानकारी",
+    "taskId": "कार्य आईडी:",
+    "percentage.label": "समापन का%",
+    "assignee.label": "नियुक्त",
+    "priority.label": "प्राथमिकता",
+    "startDate.label": "आरंभ दिनांक",
+    "dueDate.label": "नियत दिनांक",
+    "state.label": "राज्य",
+    "overdue.tooltip": "टास्क ओवरड्यू है",
+    "deadline.tooltip": "डेडलाइन ही आ रही है",
+    "owningGroup.label": "स्वामी समूह"
+  },
+  "tasks.comp.parentinfo": {
+    "title": "जनक जानकारी",
+    "taskId": "कार्य आईडी:",
+    "case": {
+      "subjectType.label": "विषय प्रकार",
+      "incidentDate.label": "घटना दिनांक",
+      "priority.label": "प्राथमिकता",
+      "assignee.label": "डेडलाइन ही आ रही है",
+      "owningGroup.label": "स्वामी समूह"
+    },
+    "complaint": {
+      "subjectType.label": "विषय प्रकार",
+      "incidentDate.label": "घटना दिनांक",
+      "priority.label": "प्राथमिकता",
+      "assignee.label": "डेडलाइन ही आ रही है",
+      "owningGroup.label": "स्वामी समूह"
+    },
+    "costsheet": {
+      "approver.label": "अनुज्ञा"
+    },
+    "timesheet": {
+      "approver.label": "अनुज्ञा"
+    }
+  },
+  "tasks.comp.actions": {
+    "title": "क्रियाएं",
+    "diagram.button": "प्रक्रिया आरेख",
+    "eSignature.button": "साइन",
+    "subscribe.button": "सदस्यता लें",
+    "unsubscribe.button": "सदस्यता रद्द करें",
+    "reject.button": "अस्वीकार करें",
+    "delete.button": "हटाएं",
+    "complete.button": "पूर्ण",
+    "approve.button": "दस्तावेज़ स्वीकृत करें",
+    "rework.button": "रीवॉर्ट के लिए भेजें",
+    "claim.button": "दावा",
+    "unclaim.button": "दावा नहीं करना",
+    "error.outcomeFieldMissing": "अनुपलब्ध मूल्य की वजह से कार्य को पूरा नहीं किया जा सकता",
+    "modal": {
+      "errorHeaderText": "त्रुटि",
+      "btnOk.text": "ओके",
+      "btnClose.text": "बंद करें"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "विवरण",
+    "informSaved": "hi_Task details saved",
+    "table.columns": {
+      "details": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "पुनर्पूंजी विवरण",
+    "informSaved": "hi_Rework details saved",
+    "table.columns": {
+      "title": "hi_Rework Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "जनक दस्तावेज़",
+    "noParentDataMessage": "hi_No parent documents for standalone task",
+    "sendEmail": "hi_Send Email",
+    "filterInputPlaceholder": "hi_Filter",
+    "searchInputPlaceholder": "hi_Search"
+  },
+  "tasks.comp.attachments": {
+    "title": "अटैचमेंट्स",
+    "sendEmail": "hi_Send Email",
+    "filterInputPlaceholder": "hi_Filter",
+    "searchInputPlaceholder": "hi_Search"
+  },
+  "tasks.comp.notes": {
+    "title": "नोट्स",
+    "table.columns": {
+      "note": "hi_Note",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "संदर्भ",
+    "table.columns": {
+      "targetName": "hi_Number",
+      "targetTitle": "hi_Title",
+      "modified": "hi_Modified",
+      "targetType": "hi_Reference Type",
+      "status": "hi_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "टिप्पणियों को अस्वीकार करें",
+    "table.columns": {
+      "note": "hi_Comment",
+      "created": "hi_Created",
+      "creator": "hi_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "वर्कफ़्लो अवलोकन",
+    "table.columns": {
+      "participant": "hi_Participant",
+      "role": "hi_Role",
+      "status": "hi_Status",
+      "startDateTime": "hi_Start",
+      "endDateTime": "hi_End"
+    }
+  },
+  "tasks.comp.diagram": {
+    "title": "hi_Process Diagram",
+    "error.loading": "hi_Diagram can't be loaded"
+  },
+  "tasks.comp.signatures": {
+    "title": "hi_eSignatures",
+    "table.columns": {
+      "signedDate": "hi_Date",
+      "signedBy": "hi_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "समीक्षाधीन दस्तावेज़",
+    "table.columns": {
+      "fileId": "hi_ID",
+      "fileName": "hi_Title",
+      "created": "hi_Created",
+      "creator": "hi_Author",
+      "status": "hi_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "इतिहास",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "टैग",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+      "title": "hi_Tag",
+      "search": "hi_Search for Tag",
+      "buttons": {
+        "cancel": "hi_Cancel",
+        "ok": "hi_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "hi_New Task",
+    "assignee.button": "hi_Choose Assignee",
+    "assignee.label": "hi_Assign To",
+    "assignee.placeholder": "hi_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "hi_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "hi_Select Priority",
+    "priority.label": "hi_Priority",
+    "status.placeholder": "hi_Select Status",
+    "status.label": "hi_Status",
+    "associateNumber.label": "hi_Associate with Complaint or Case",
+    "associateNumber.placeholder": "hi_Complaint or Case #",
+    "associateType.label": "hi_Parent Type",
+    "subject.label": "hi_Subject",
+    "taskStartDate.label": "hi_Start Date",
+    "dueDate.label": "hi_Due Date",
+    "datepicker.close": "hi_Done",
+    "percentComplete.label": "hi_% Complete",
+    "notes.label": "hi_Notes",
+    "saveButton": "hi_Save",
+    "overdue.tooltip": "hi_Task is Overdue",
+    "deadline.tooltip": "hi_Deadline is Approaching",
+    "groupToggle.label": "hi_Group Task?",
+    "group.placeholder": "hi_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "hi_userSearch",
+    "title": "hi_User/Group Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "hi_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "hi_Name",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "hi_objectSearch",
+    "title": "hi_Object Search",
+    "search": {
+      "btn": "hi_Search",
+      "placeholder": "hi_Search for the case or complaint to this task."
+    },
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Confirm",
+    "enabled": true,
+    "userFacetFilter": "hi_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "hi_Number",
+      "type": "hi_Type",
+      "title": "hi_Title",
+      "username": "hi_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "hi_Add Reference",
+    "cancelButton": "hi_Cancel",
+    "confirmButton": "hi_Add",
+    "search": {
+      "placeholder": "hi_Search for case, complaint, file, task",
+      "btn": "hi_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "hi_Id",
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "parent": "hi_Parent",
+        "assignee": "hi_Assignee",
+        "modified": "hi_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "hi_Participants",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "hi_Change Assignee",
+    "assigneeNamelabel": "hi_Assignee Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchAssigneeHeader": "hi_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "hi_Change Group",
+    "groupNamelabel": "hi_Group Name",
+    "btnCancelText": "hi_Cancel",
+    "btnSaveText": "hi_Save",
+    "searchGroupHeader": "hi_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "hi_Future Approvers",
+    "addNewTooltip": "hi_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "hi_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "hi_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "hi_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "hi_Approval Date",
+      "approverId": "hi_Approver",
+      "approverFullName": "hi_Full Name",
+      "approverDecision": "hi_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "reworkDetails.label": "पुनर्पूंजी विवरण",
+      "docReview.label": "समीक्षाधीन दस्तावेज़",
+      "parentDoc.label": "जनक दस्तावेज़",
+      "attachments.label": "अटैचमेंट्स",
+      "references.label": "संदर्भ",
+      "notes.label": "नोट्स",
+      "workflow.label": "वर्कफ़्लो अवलोकन",
+      "history.label": "इतिहास",
+      "eSignatures.label": "ईसाइग्नेचर",
+      "tags.label": "टैग",
+      "reject.label": "टिप्पणियों को अस्वीकार करें"
+    },
+    "filters": {
+      "myTasks": "मेरा कार्य",
+      "opened": "सभी ओपन टास्क",
+      "completed": "सभी पूर्ण कार्य",
+      "dueToday": "सभी कार्य अब आज",
+      "myDueToday": "ऑल माय टास्क्स के कारण",
+      "overdue": "सभी कार्य अतिदेय",
+      "myOverdue": "ऑल माय टास्क ओवरड्यू",
+      "noFilter": "(फ़िल्टर नहीं)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट की गई दिनांक एएससी",
+      "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
+      "nameAsc": "सॉर्ट कार्य नाम एएससी",
+      "nameDesc": "सॉर्ट कार्य नाम देश",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
+}

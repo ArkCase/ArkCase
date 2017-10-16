@@ -1,0 +1,22 @@
+{
+  "subscriptions": {
+    "title": "訂閱",
+    "search.btn": "搜索",
+    "export.btn": "zh-tw_Export",
+    "search.placeholder": "zh-tw_Search for subscriptions",
+    "menus": {
+      "leftnav.item": "訂閱"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-tw_ID",
+          "event": "zh-tw_Event",
+          "parentName": "zh-tw_Parent Name",
+          "parentType": "zh-tw_Parent Type",
+          "modified": "zh-tw_Modified"
+        }
+      }
+    }
+  }
+}

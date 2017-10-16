@@ -12,9 +12,6 @@
 
         <bean id="outlookContainerService" class="com.armedia.acm.plugins.outlook.service.impl.OutlookContainerCalendarServiceImpl">
             <property name="participantsTypesForOutlookFolder" value="${participants-types-as-outlook-permission}"/>
-            <property name="systemUserEmail" value="${outlook.exchange.system_user_email}"/>
-            <property name="systemUserEmailPassword" value="${outlook.exchange.system_user_email_password}"/>
-            <property name="systemUserId" value="${outlook.exchange.system_user_id}"/>
             <property name="defaultAccess" value="${outlook.exchange.default_access}"/>
             <property name="approverAccess" value="${outlook.exchange.approver_access}"/>
             <property name="followerAccess" value="${outlook.exchange.follower_access}"/>

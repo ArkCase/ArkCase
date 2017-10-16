@@ -19,12 +19,13 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         $scope.$on('show-widgets', showWidgets);
 
         function toggleDefaultView() {
-            var collapsed = ($scope.defaultViewExpand === 'true');
+           var isExpanded = ($scope.defaultViewExpand === 'true');
+
             DashboardService.getConfig({moduleName: $scope.moduleName}, function (config) {
                 DashboardService.saveConfig({
                     dashboardConfig: config.dashboardConfig,
                     module: $scope.moduleName,
-                    collapsed: collapsed
+                    collapsed: isExpanded
                 });
             });
         }
@@ -116,10 +117,12 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
         function createWidgetStructure(widgetName) {
             var widgetToInsert = {};
             var widgetInfo = _.find($scope.preferenceDashboardWidgetsCopy, {commonName: widgetName});
-            widgetToInsert.type = widgetInfo.commonName;
-            widgetToInsert.config = {};
-            widgetToInsert.title = widgetInfo.title;
-            widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+            if(widgetInfo) {
+                widgetToInsert.type = widgetInfo.commonName;
+                widgetToInsert.config = {};
+                widgetToInsert.title = widgetInfo.title;
+                widgetToInsert.titleTemplateUrl = "../src/templates/widget-title.html";
+            }
             return widgetToInsert;
         }
 
@@ -138,10 +141,7 @@ angular.module('preference').controller('Preference.WidgetsListController', ['$s
                 });
                 $scope.widgets = widgets;
             }, function (error) {
-
             });
-
-            $scope.widgets = widgets;
             $scope.showDefaultForm = true;
         }
 

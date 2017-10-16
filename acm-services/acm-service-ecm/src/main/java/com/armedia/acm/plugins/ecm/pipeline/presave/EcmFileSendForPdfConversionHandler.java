@@ -6,7 +6,6 @@ import com.armedia.acm.plugins.ecm.service.SendForPdfConversion;
 import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
         // Any file format which cannot be merged by ArkCase will be sent for external format conversion
-        String fileExtension = FilenameUtils.getExtension(entity.getFileName());
+        String fileExtension = entity.getFileExtension();
 
         // Only certain file types (authorization, abstract, etc.) are converted to PDF
         boolean isFileTypeConvertibleToPdf = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToBeConvertedToPDF);

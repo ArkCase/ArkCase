@@ -7,7 +7,10 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.InvalidLookupException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +60,13 @@ public class AcmSpringMvcErrorManager
         sendResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e.getMessage());
     }
 
+    @ExceptionHandler(AcmUpdateObjectFailedException.class)
+    public void handleUpdateObjectFailed(HttpServletResponse response, AcmUpdateObjectFailedException e)
+    {
+        log.error("Update Object Failed: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
+
     @ExceptionHandler(AcmNotAuthorizedException.class)
     public void handleNotAuthorized(HttpServletResponse response, AcmNotAuthorizedException e)
     {
@@ -91,16 +102,24 @@ public class AcmSpringMvcErrorManager
         sendResponse(HttpStatus.NOT_FOUND, response, e.getMessage());
     }
 
+    @ExceptionHandler(InvalidLookupException.class)
+    public void invalidLookup(HttpServletResponse response, Exception e)
+    {
+        log.error("Invalid lookup: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
+
     @ExceptionHandler(AcmAppErrorJsonMsg.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, Object> handleJsonMessageError(HttpServletResponse response, AcmAppErrorJsonMsg e)
     {
         log.error("AcmAppErrorJsonMsg", e);
-        Map<String, Object> result = new HashMap();
+        Map<String, Object> result = new HashMap<>();
         result.put("message", e.getMessage());
         result.put("field", e.getField());
         result.put("objectType", e.getObjectType());
+        result.put("extra", e.getExtra());
         return result;
     }
 
@@ -117,7 +136,8 @@ public class AcmSpringMvcErrorManager
         {
             response.getOutputStream().write(bytes);
             response.getOutputStream().flush();
-        } catch (IOException ie)
+        }
+        catch (IOException ie)
         {
             log.error("Could not send error response to client: " + ie.getMessage(), ie);
         }

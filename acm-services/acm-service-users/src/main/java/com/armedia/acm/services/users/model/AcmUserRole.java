@@ -2,13 +2,15 @@ package com.armedia.acm.services.users.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ACM_USER_ROLE")
+@Table(name = "acm_user_role")
 @IdClass(AcmUserRolePrimaryKey.class)
 public class AcmUserRole
 {
@@ -21,12 +23,13 @@ public class AcmUserRole
     private String userId;
 
     @Column(name = "cm_user_role_state")
-    private String userRoleState;
+    @Enumerated(EnumType.STRING)
+    private AcmUserRoleState userRoleState;
 
     @PrePersist
     public void preInsert()
     {
-        setUserRoleState("VALID");
+        setUserRoleState(AcmUserRoleState.VALID);
     }
 
     public String getRoleName()
@@ -49,12 +52,12 @@ public class AcmUserRole
         this.userId = userId;
     }
 
-    public String getUserRoleState()
+    public AcmUserRoleState getUserRoleState()
     {
         return userRoleState;
     }
 
-    public void setUserRoleState(String userRoleState)
+    public void setUserRoleState(AcmUserRoleState userRoleState)
     {
         this.userRoleState = userRoleState;
     }

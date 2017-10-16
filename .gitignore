@@ -14,11 +14,15 @@ atlassian-ide-plugin.xml
 .externalToolBuilders/
 .checkstyle
 .mule/
+.configuration
 
 # Package Files #
 nbactions.xml
 partition-descriptor
-rebel.xml
 activemq-data
 logs
 ${user.home}
+
+# jrebel
+rebel.xml
+**/rebel.xml

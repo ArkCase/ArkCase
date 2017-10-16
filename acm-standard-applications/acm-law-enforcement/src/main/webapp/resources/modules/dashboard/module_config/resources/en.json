@@ -1,13 +1,18 @@
 {
   "dashboard": {
     "title": "Dashboard",
+    "menus": {
+      "leftnav.item": "Dashboard"
+    },
     "widgets": {
       "casesByQueue": {
         "title": "Active Case Files by Queue",
         "description": "Displays active case files by queue",
         "xAxis": "Queues",
         "yAxis": "Number of Case Files",
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "casesByStatus": {
         "title": "Cases By Status",
@@ -19,7 +24,9 @@
           "lastYear": "Last Year",
           "all": "All"
         },
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myCases": {
         "title": "My Cases",
@@ -30,9 +37,17 @@
             "caseId": "ID",
             "title": "Title",
             "priority": "Priority",
-            "status": "Status"
-          }
-        }
+            "created": "Created",
+            "modified": "Modified",
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
+          },
+          "overdue.tooltip": "Case is Overdue",
+          "deadline.tooltip": "Deadline is Approaching"
+        },
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myComplaints": {
         "title": "My Complaints",
@@ -43,10 +58,17 @@
             "title": "Title",
             "priority": "Priority",
             "created": "Created",
-            "status": "Status"
+            "modified": "Modified",
+            "dueDate": "Due Date",
+            "status": "Status",
+            "assignee": "Assignee"
           },
+          "overdue.tooltip": "Complaint is Overdue",
+          "deadline.tooltip": "Deadline is Approaching",
           "noDataMessage": "Currently there are no complaints info"
-        }
+        },
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "myTasks": {
         "title": "My Tasks",
@@ -61,9 +83,13 @@
             "dueDate": "Due",
             "status": "Status",
             "objectId": "Object ID"
-          }
+          },
+          "overdue.tooltip": "Task is Overdue",
+          "deadline.tooltip": "Deadline is Approaching"
         },
-        "noDataMessage": "Currently there are no tasks info"
+        "noDataMessage": "Currently there are no tasks info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "newComplaints": {
         "title": "New Complaints",
@@ -76,12 +102,16 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
-        "noDataMessage": "Currently there are no complaints info"
+        "noDataMessage": "Currently there are no complaints info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "newCases": {
         "title": "New Cases",
         "description": "Displays new cases",
-        "noDataMessage": "Currently there are no cases info"
+        "noDataMessage": "Currently there are no cases info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "teamWorkload": {
         "title": "Team Workload",
@@ -94,7 +124,27 @@
           "dueMonth": "Due in Month",
           "all": "All"
         },
-        "noDataMessage": "Currently there are no team tasks info"
+        "noDataMessage": "Currently there are no team tasks info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
+      },
+      "workflowReport": {
+        "title": "Workflow Report",
+        "description": "Displays Workflow Report",
+        "rowNumbers.label": "Default Row Numbers",
+        "rowNumbers.placeholder": "Enter Default Row Numbers",
+        "table": {
+          "header": {
+            "taskId": "Task ID",
+            "taskParentType": "Parent Type",
+            "taskParentName": "Parent Name",
+            "processName": "Business Process Name",
+            "taskName": "Task Name"
+          }
+        },
+        "noDataMessage": "Currently there is no workflow report info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "weather": {
         "description": "Displays weather",
@@ -106,7 +156,9 @@
           "insertLocationInConfiguration": "Please insert a location in the widget configuration"
         },
         "title": "Weather",
-        "noDataMessage": "Currently there are no weather info"
+        "noDataMessage": "Currently there are no weather info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "news": {
         "description": "Displays news",
@@ -117,7 +169,9 @@
           "insertUrl": "Please insert a feed url in the widget configuration"
         },
         "title": "News",
-        "noDataMessage": "Currently there is no RSS/info"
+        "noDataMessage": "Currently there is no RSS/info",
+        "configDescription": "Description",
+        "configDescriptionPlaceholder": "Enter widget description"
       },
       "details": {
         "title": "Details",
@@ -129,6 +183,21 @@
         "description": "Displays people details",
         "noDataMessage": "Currently there are no people to display"
       },
+      "ids": {
+        "title": "IDs",
+        "description": "Displays IDs details",
+        "noDataMessage": "Currently there are no IDs to display"
+      },
+      "complaints": {
+        "title": "Complaints",
+        "description": "Displays complaint details",
+        "noDataMessage": "Currently there are no complaints to display"
+      },
+      "cases": {
+        "title": "Cases",
+        "description": "Displays case details",
+        "noDataMessage": "Currently there are no cases to display"
+      },
       "documents": {
         "title": "Documents",
         "description": "Displays chart of documents by folder",
@@ -138,6 +207,31 @@
         "title": "Locations",
         "description": "Displays location details",
         "noDataMessage": "Currently there are no locations to display"
+      },
+      "phones": {
+        "title": "Phone Numbers",
+        "description": "Displays phone numbers",
+        "noDataMessage": "Currently there are no phone numbers to display"
+      },
+      "faxes": {
+        "title": "Fax Numbers",
+        "description": "Displays faxes details",
+        "noDataMessage": "Currently there are no faxes to display"
+      },
+      "emails": {
+        "title": "Email Address",
+        "description": "Displays Email details",
+        "noDataMessage": "Currently there are no Email addresses to display"
+      },
+      "urls": {
+        "title": "URLs",
+        "description": "Displays URLs details",
+        "noDataMessage": "Currently there are no URLs to display"
+      },
+      "dbas": {
+        "title": "DBAs",
+        "description": "Displays DBA details",
+        "noDataMessage": "Currently there are no DBAs to display"
       },
       "tasks": {
         "title": "Tasks",
@@ -154,6 +248,11 @@
         "description": "Displays reference details",
         "noDataMessage": "Currently there are no references to display"
       },
+      "relOrganizations": {
+        "title": "Related Organizations",
+        "description": "Displays Related Organizations details",
+        "noDataMessage": "Currently there are no Related Organizations to display"
+      },
       "history": {
         "title": "History",
         "description": "Displays chart of history events",
@@ -163,11 +262,6 @@
         "title": "Notes",
         "description": "Displays note details",
         "noDataMessage": "Currently there are no notes to display"
-      },
-      "correspondence": {
-        "title": "Correspondence",
-        "description": "Displays correspondence details",
-        "noDataMessage": "Currently there are no correspondence to display"
       },
       "time": {
         "title": "Time",
@@ -194,6 +288,11 @@
         "description": "Shows documents under review",
         "noDataMessage": "Currently there no are no documents under review to display"
       },
+      "parentDocs": {
+        "title": "Parent Documents",
+        "description": "Shows parent documents",
+        "noDataMessage": "Currently there no are no parent documents to display"
+      },
       "workflow": {
         "title": "Workflow Overview",
         "description": "Overview of pending workflows",
@@ -218,7 +317,64 @@
         "title": "Expenses",
         "description": "Displays a cost-to-user graph",
         "noDataMessage": "Currently no expense data to display"
+      },
+      "organizations": {
+        "title": "Organizations",
+        "description": "Displays organization",
+        "noDataMessage": "Currently there are no organizations to display"
+      },
+      "tags": {
+        "title": "Tags",
+        "description": "Displays Tags",
+        "noDataMessage": "Currently there are no tags to display"
+      },
+      "approvalRouting": {
+        "title": "Approval Routing",
+        "description": "Displays approval routings",
+        "noDataMessage": "Currently no approvers to display"
+      },
+      "pictures": {
+        "title": "Pictures",
+        "description": "Display pictures",
+        "noDataMessage": "Currently no pictures to display"
+      },
+      "aliases": {
+        "title": "Aliases",
+        "description": "Display aliases",
+        "noDataMessage": "Currently no aliases to display"
+      },
+      "related": {
+        "title": "Related People",
+        "description": "Display related people",
+        "noDataMessage": "Currently no related people to display"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "News Widget"
+  },
+  "dashboard.comp.weather": {
+    "title": "Weather Widget"
+  },
+  "dashboard.comp.myCases": {
+    "title": "My Cases Widget"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "My Tasks Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "My Complaints Widget"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Workflow Report"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "New Complaints"
+  },
+  "dashboard.comp.newCases": {
+    "title": "New Cases"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Cases By Queue"
   }
 }

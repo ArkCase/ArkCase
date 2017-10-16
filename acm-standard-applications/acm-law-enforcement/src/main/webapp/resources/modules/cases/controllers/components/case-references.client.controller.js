@@ -2,11 +2,10 @@
 
 angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService'
+    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService
-    ) {
+        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -27,7 +26,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
         var onConfigRetrieved = function (config) {
             $scope.config = config;
-
+            gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
@@ -36,30 +35,31 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.gridOptions = $scope.gridOptions || {};
-            $scope.gridOptions.data = Util.goodArray($scope.objectInfo.references);
+            refreshGridData(objectInfo.id);
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
-            var targetType = Util.goodMapValue(rowEntity, "targetType");
-            var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var targetType = Util.goodMapValue(rowEntity, "target_type_s");
+            var targetId = Util.goodMapValue(rowEntity, "target_id_s");
+            var parentId = Util.goodMapValue(rowEntity, "parent_id_s");
+            var parentType = Util.goodMapValue(rowEntity, "parent_type_s");
+            var fileName = Util.goodMapValue(rowEntity, "target_object.title_parseable");
+
+            if (targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked) {
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            } else {
+                gridHelper.showObject(targetType, targetId);
+            }
 
             if (ObjectService.ObjectTypes.CASE_FILE == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
             }
-
-            //$scope.$bus.publish('object-tree.select', {
-            //	nodeId : targetId,
-            //	nodeType : targetType,
-            //	pageStart : 0,
-            //	subKey : null
-            //});
         };
 
         ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
-        	$scope.modalConfig = _.find(moduleConfig.components, {id: "referenceSearchGrid"});
+            $scope.modalConfig = _.find(moduleConfig.components, {id: "referenceSearchGrid"});
             return moduleConfig;
         });
 
@@ -67,7 +67,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -76,13 +76,14 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-CASE_FILE";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.id + "-" + ObjectService.ObjectTypes.CASE_FILE;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
@@ -91,27 +92,63 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 }
             });
 
+            //chosenReference - target
+            //parent - objectInfo
             modalInstance.result.then(function (chosenReference) {
-                if (chosenReference) {
-                    var reference = {};
-                    reference.referenceId = chosenReference.object_id_s;
-                    reference.referenceTitle = chosenReference.title_parseable;
-                    reference.referenceType = chosenReference.object_type_s;
-                    reference.referenceNumber = chosenReference.name;
-                    reference.referenceStatus = chosenReference.status_lcs;
-                    reference.parentId = $stateParams.id;
-                    reference.parentType = 'CASE_FILE';
-                    referenceService.addReference(reference).then(
-                        function (objectSaved) {
-                            $scope.refresh();
-                            return objectSaved;
-                        },
-                        function (error) {
-                            return error;
-                        }
-                    );
-                    return;
+                var association = {};
+                var parent = $scope.objectInfo;
+                var target = chosenReference;
+                if (target) {
+                    association.parentId = parent.id;
+                    association.parentType = ObjectService.ObjectTypes.CASE_FILE;
+                    association.parentTitle = parent.title;
+                    association.parentName = parent.caseNumber;
+
+                    association.targetId = target.object_id_s;
+                    association.targetType = target.object_type_s;
+                    association.targetTitle = target.title_parseable;
+                    association.targetName = target.name;
+
+                    association.associationType = 'REFERENCE';
+
+                    association.inverseAssociation = {};
+                    if (association.inverseAssociation.inverseAssociation != association) {
+                        association.inverseAssociation.inverseAssociation = association;
+                    }
+                    association.inverseAssociation.parentId = target.object_id_s;
+                    association.inverseAssociation.parentType = target.object_type_s;
+                    association.inverseAssociation.parentTitle = target.title_parseable;
+                    association.inverseAssociation.parentName = target.name;
+
+                    association.inverseAssociation.targetId = parent.id;
+                    association.inverseAssociation.targetType = ObjectService.ObjectTypes.CASE_FILE;
+                    association.inverseAssociation.targetTitle = parent.title;
+                    association.inverseAssociation.targetName = parent.caseNumber;
+
+                    association.inverseAssociation.associationType = 'REFERENCE';
                 }
+                ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
+                    //success
+                    //append new entity as last item in the grid
+                    var rowEntity = {
+                        object_id_s: payload.id,
+                        target_object: {
+                            name: target.name,
+                            title_parseable: target.title_parseable,
+                            parent_ref_s: target.parent_ref_s,
+                            modified_date_tdt: payload.modified,
+                            object_type_s: target.object_type_s,
+                            status_lcs: target.status_lcs
+                        }
+                    };
+
+                    if (rowEntity.target_object.parent_ref_s) {
+                        updateIterableTitleReferences(rowEntity.target_object);
+                    }
+
+                    $scope.gridOptions.data.push(rowEntity);
+
+                });
             }, function () {
                 // Cancel button was clicked.
                 return [];
@@ -119,5 +156,65 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
 
         };
 
+        /**
+         * Initially attemped to use the below code
+         * However, the index i is out of scope in the onFulfilled function
+         *
+         * if($scope.objectInfo.references[i].targetType == "CASE_FILE") {
+                    CaseInfoService.getCaseInfo($scope.objectInfo.references[i].targetId).then(
+						function(caseInfo) {
+							$scope.objectInfo.references[i].targetTitle = caseInfo.title;
+						}
+					);
+                }
+         *
+         * As a result, we need to use Closures to be able to pass the index variable into the onFulfilled case
+         *
+         * Since i and the fulfillment function of getCaseInfo are both defined in the distinct scope of
+         * getIterablePromises, the fulfillment function still has access to i
+         *
+         * The function has been updated to use solr SearchService instead of CaseInfoService
+         *
+         * @param index
+         */
+        function updateIterableTitleReferences(doc) {
+
+            // build the solr filter based on the object's ID as well as its type
+            var query = 'id:' + doc.parent_ref_s;
+
+            SearchService.querySimpleSearch({
+                    query: query
+                },
+                // If the solr query fails, the title won't get updated, so it will just use whatever is in the DB
+                function (data) {
+                    if (data.response.docs && data.response.docs.length > 0) {
+                        doc.parent_name = data.response.docs[0].title_parseable
+                    }
+                });
+        }
+
+        function refreshGridData(objectId) {
+            // If the reference is a CASE_FILE, retrieve its title, as it may have changed since reference was created
+
+
+            ObjectAssociationService.getObjectAssociations(objectId, ObjectService.ObjectTypes.CASE_FILE, null).then(function (response) {
+                // See above, this iterates over all found references and updates case titles where required
+                angular.forEach(response.response.docs, function (doc) {
+                    updateIterableTitleReferences(doc.target_object);
+                });
+                $scope.gridOptions.data = response.response.docs;
+            });
+        }
+
+        $scope.deleteRow = function (rowEntity) {
+            var id = Util.goodMapValue(rowEntity, "object_id_s", 0);
+            ObjectAssociationService.deleteAssociationInfo(id).then(function (data) {
+                //success
+                //remove it from the grid
+                _.remove($scope.gridOptions.data, function (row) {
+                    return row === rowEntity;
+                });
+            });
+        };
     }
 ]);

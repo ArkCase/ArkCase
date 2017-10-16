@@ -54,6 +54,11 @@
                     <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property value="GET" name="httpMethod"/>
+                    <property value="/api/{version}/plugin/task/getListByDueDate/{due}" name="url"/>
+                    <property name="requiredPrivilege" ref="acmTaskListPrivilege"/>
+                </bean>
+                <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/task/completeTask/{taskId}"/>
                     <property name="requiredPrivilege" ref="acmTaskCompletePrivilege"/>
@@ -98,6 +103,12 @@
                     <property name="url"
                               value="/api/{version}/plugin/task/deleteProcessInstance/{parentObjectId}/{processInstanceId}"/>
                     <property name="requiredPrivilege" ref="acmTaskDeletePrivilege"/>
+                </bean>
+                <bean id="sendDueTaskEmailNotificationUrl"
+                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="GET"/>
+                    <property name="url" value="/api/{version}/plugin/task/sendDueTaskEmailNotification"/>
+                    <property name="requiredPrivilege" ref="acmNotificationPrivilege"/>
                 </bean>
             </list>
         </property>

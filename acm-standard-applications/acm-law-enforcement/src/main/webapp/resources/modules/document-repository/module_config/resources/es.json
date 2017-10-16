@@ -1,0 +1,215 @@
+{
+  "document-repository": {
+    "title": "Documentos"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "Documentos",
+    "topbar.item": "Repositorio de Documentos"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "document-repository.comp.main": {
+    "title": "Descripción general"
+  },
+  "document-repository.comp.info": {
+    "title": "Información",
+    "docRepoId": "ID de repositorio:",
+    "docRepoName": "Nombre del Repositorio de Documentos:",
+    "modified.label": "Fecha modificada",
+    "assignee.label": "Asignado a",
+    "owningGroup.label": "Grupo propietario",
+    "description.label": "Descripción"
+  },
+  "document-repository.comp.actions": {
+    "title": "Acciones",
+    "restrict": "Restringir?",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "delete.button": "Eliminar el repositorio",
+    "confirm.delete.documentRepository.msg": "Esta acción eliminará todo el repositorio. ¿Está seguro de que desea continuar?"
+  },
+  "document-repository.comp.details": {
+    "title": "Detalles",
+    "informSaved": "es_Document Repository details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "Documentos",
+    "sendEmail": "es_Send Email",
+    "filterInputPlaceholder": "es_Filter",
+    "searchInputPlaceholder": "es_Search"
+  },
+  "document-repository.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "Notas",
+    "table.columns": {
+      "note": "es_Note",
+      "created": "es_Created",
+      "creator": "es_Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "Referencias",
+    "table.columns": {
+      "targetName": "es_Number",
+      "parentName": "es_Parent",
+      "targetTitle": "es_Title",
+      "modified": "es_Modified",
+      "targetType": "es_Reference Type",
+      "status": "es_Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "Historia",
+    "table.columns": {
+      "eventType": "es_Event Name",
+      "eventDate": "es_Date",
+      "userId": "es_User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+      "title": "es_Tag",
+      "search": "es_Search for Tag",
+      "buttons": {
+        "cancel": "es_Cancel",
+        "ok": "es_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "es_Add Reference",
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Add",
+    "search": {
+      "placeholder": "es_Search for case, complaint, file, task",
+      "btn": "es_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "es_Id",
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "parent": "es_Parent",
+        "assignee": "es_Assignee",
+        "modified": "es_Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "es_Change Assignee",
+    "assigneeNamelabel": "es_Assignee Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchAssigneeHeader": "es_Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "es_Change Group",
+    "groupNamelabel": "es_Group Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchGroupHeader": "es_Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "es_userSearch",
+    "title": "es_User/Group Search",
+    "search": {
+      "btn": "es_Search",
+      "placeholder": "es_Search for the user or group."
+    },
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "username": "es_Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "es_Create Repository",
+    "assigneeLabel": "es_Assignee",
+    "owningGroupLabel": "es_Owning Group",
+    "assignee.placeholder": "es_Search Assignee",
+    "saveButton": "es_Create Repository",
+    "cancelButton": "es_Cancel",
+    "nameLabel": "es_Name",
+    "name.placeholder": "es_Enter Name",
+    "descriptionLabel": "es_Description",
+    "description.placeholder": "es_Enter Description",
+    "searchUser": "es_Search User"
+  },
+  "document-repository.dialogUserPicker":{
+    "table.columns.name": "es_Name",
+    "table.columns.type": "es_Type",
+    "table.columns.title": "es_Title",
+    "table.columns.id": "es_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "tags.label": "Etiquetas",
+      "references.label": "Referencias",
+      "notes.label": "Notas",
+      "history.label": "Historia"
+    },
+    "filters": {
+      "iHaveCreated": "Todo lo que he creado",
+      "iAmFollowing": "Todo lo que estoy siguiendo",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "idAsc": "Ordenar identificación Asc",
+      "idDesc": "Ordenar identificación Dec",
+      "nameAsc": "Ordenar por nombre Asc",
+      "noSort": "(Sin Clasificar)"
+    }
+  }
+}

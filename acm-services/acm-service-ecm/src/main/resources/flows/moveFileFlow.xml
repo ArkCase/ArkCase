@@ -26,12 +26,13 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
 
-        <cmis:move-object objectId="#[message.inboundProperties.cmisObjectId]"
+        <cmis:move-object config-ref="#[message.inboundProperties.configRef]"
+                          objectId="#[message.inboundProperties.cmisObjectId]"
                           sourceFolderId="#[message.inboundProperties.srcFolderId]"
                           targetFolderId="#[message.inboundProperties.dstFolderId]"/>
 
 
-		<catch-exception-strategy>
+        <catch-exception-strategy>
             <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception saving: #[exception.message]"/>
             <set-property propertyName="moveException" value="#[exception]"/>
         </catch-exception-strategy>

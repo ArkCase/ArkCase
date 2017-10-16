@@ -23,11 +23,20 @@ public class AcmAssigneeChangeEvent extends AcmEvent
     {
         super(source);
 
-        setObjectId(source.getObjectId());
-        setObjectType(source.getObjectType());
+        setObjectId(source.getId());
+        setObjectType("ASSIGNMENT");
+        setParentObjectId(source.getObjectId());
+        setParentObjectType(source.getObjectType());
         setEventDate(new Date());
         setEventType(EVENT_TYPE);
         setUserId(userId);
+
+        if(source.getNewAssignee()==null || source.getNewAssignee().isEmpty()) //For unclaiming case
+            source.setNewAssignee("None");
+        if(source.getOldAssignee()==null || source.getOldAssignee().isEmpty()) //For claiming case
+            setEventDescription("Assignee changed to " + source.getNewAssignee());
+        else //For changing from one Assignee to another
+            setEventDescription("Assignee changed from " + source.getOldAssignee() + " to " + source.getNewAssignee());
 
         Map<String, Object> eventProperties = new HashMap<String, Object>();
 

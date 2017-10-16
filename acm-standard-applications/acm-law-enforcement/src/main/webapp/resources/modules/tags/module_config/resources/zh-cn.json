@@ -1,0 +1,24 @@
+{
+  "tags": {
+    "title": "标签",
+    "search.btn": "zh-cn_Search",
+    "search.placeholder": "zh-cn_Search for tags",
+    "menus": {
+      "leftnav.item": "标签"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-cn_ID",
+          "name": "zh-cn_Name",
+          "type": "zh-cn_Type",
+          "title": "zh-cn_Title",
+          "parent": "zh-cn_Parent",
+          "assignee": "zh-cn_Assignee",
+          "modified": "zh-cn_Modified"
+        }
+      }
+    }
+  }
+}
+

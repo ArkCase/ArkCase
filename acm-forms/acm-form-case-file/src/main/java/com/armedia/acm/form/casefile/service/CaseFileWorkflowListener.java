@@ -32,7 +32,11 @@ public class CaseFileWorkflowListener
         log.debug("Calling business rules for new case files");
 
         configuration = fileWorkflowBusinessRule.applyRules(configuration);
-
+        if (configuration.isBuckslipProcess())
+        {
+            //CaseFileWorkflowListener is not handling buckslip process
+            return;
+        }
         log.debug("start process? " + configuration.isStartProcess());
 
         if (configuration.isStartProcess())

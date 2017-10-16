@@ -5,7 +5,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -59,6 +59,8 @@ public class PostalAddressToSolrTransformer implements AcmObjectToSolrDocTransfo
         name.append(hasZip ? address.getZip() : "");
 
         addrDoc.setName(name.toString());
+
+        addrDoc.setTitle_parseable(name.toString());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(address.getCreator());

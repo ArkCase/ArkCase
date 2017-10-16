@@ -31,8 +31,15 @@
 
     <!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00.000+0000 -->
     <bean id="sourceObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
-
     </bean>
+
+    <bean id="jacksonDeserializationHandler" class="com.armedia.acm.web.api.handler.JacksonDeserializationHandler"/>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="addHandler"/>
+        <property name="arguments" ref="jacksonDeserializationHandler"/>
+    </bean>
+
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="sourceObjectMapper"/>
         <property name="targetMethod" value="disable"/>
@@ -109,6 +116,13 @@
         <mvc:interceptor>
             <mvc:mapping path="/plugin/**"/>
             <mvc:mapping path="/api/*/plugin/**"/>
+            <mvc:mapping path="/api/*/service/**"/>
+            <mvc:mapping path="/modules/*/views/**.html"/>
+            <mvc:mapping path="/api/*/authenticationtoken/**"/>
+            <mvc:mapping path="/api/*forms/**"/>
+            <mvc:mapping path="/api/*/functionalaccess/**"/>
+            <mvc:mapping path="/api/*/users/**"/>
+            <mvc:mapping path="/api/*/milestonebyname/**"/>
             <ref bean="acmPluginRoleBasedAccessInterceptor"/>
         </mvc:interceptor>
         <mvc:interceptor>
@@ -127,7 +141,7 @@
     <mvc:default-servlet-handler/>
 
     <!-- File upload support -->
-    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+    <bean id="multipartResolver" class="com.armedia.acm.web.api.AcmMultipartResolver"/>
 
 
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
@@ -160,4 +174,9 @@
         <property name="permissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
+    <!-- Swagger documentation configuration class -->
+    <bean id="swagger2Config" class="springfox.documentation.swagger2.configuration.Swagger2DocumentationConfiguration"></bean>
+
+    <!-- default servlet handler so that spring auto-detects the default servlet for the container on startup -->
+    <mvc:default-servlet-handler/>
 </beans>

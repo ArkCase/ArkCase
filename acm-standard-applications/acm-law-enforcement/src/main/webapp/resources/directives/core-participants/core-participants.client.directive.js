@@ -43,10 +43,10 @@
  */
 angular.module('directives').directive('coreParticipants', ['$stateParams', '$q', '$translate', '$modal',
     'Acm.StoreService', 'UtilService', 'ConfigService', 'Case.InfoService', 'LookupService', 'Object.LookupService',
-    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService',
+    'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.ParticipantService', 'Object.ModelService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
     function ($stateParams, $q, $translate, $modal
         , Store, Util, ConfigService, CaseInfoService, LookupService, ObjectLookupService
-        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectParticipantService, ObjectModelService, MessageService, SearchService, SearchQueryBuilder) {
         return {
             restrict: 'E',
             scope: {
@@ -71,8 +71,8 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 var gridHelper = new HelperUiGridService.Grid({scope: scope});
                 var promiseUsers = gridHelper.getUsers();
-                
-                var promiseTypes = ObjectLookupService.getParticipantTypes().then(
+
+                var promiseTypes = ObjectLookupService.getParticipantTypes(scope.participantsInit.objectType).then(
                     function (participantTypes) {
                         scope.participantTypes = participantTypes;
                         return participantTypes;
@@ -96,6 +96,11 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     var modalScope = scope.$new();
                     modalScope.participant = participant || {};
                     modalScope.isEdit = isEdit || false;
+                    modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
+
+                    var params =  {};
+
+                    params.owningGroup=ObjectModelService.getParticipantByType(scope.objectInfo, "owning group");
 
                     var modalInstance = $modal.open({
                         scope: modalScope,
@@ -103,29 +108,61 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
                         controller: "Directives.CoreParticipantsModalController",
                         size: 'lg',
-                        backdrop: 'static'
+                        backdrop: 'static',
+                        resolve: {
+                            params: function () {
+                                return params;
+                            }
+                        }
                     });
 
+
                     modalInstance.result.then(function (data) {
-                        scope.participant.id = data.participant.id;
-                        scope.participant.participantLdapId = data.participant.participantLdapId;
-                        scope.participant.participantType = data.participant.participantType;
-                        if (data.isEdit) {
-                            var participant = _.find(scope.objectInfo.participants, function (pa) {
-                                return Util.compare(pa.id, data.participant.id);
-                            });
-                            participant.participantLdapId = data.participant.participantLdapId;
-                            participant.participantType = data.participant.participantType;
-                            participant.id = data.participant.id;
+                        if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
+                            scope.participant.id = data.participant.id;
+                            scope.participant.participantLdapId = data.participant.participantLdapId;
+                            scope.participant.participantType = data.participant.participantType;
+
+                            var assignee = ObjectModelService.getParticipantByType(scope.objectInfo, "assignee");
+                            var typeNoAccess = 'No Access';
+                            if (scope.config.typeNoAccess) {
+                                typeNoAccess = scope.config.typeNoAccess;
+                            }
+
+                            if (data.isEdit) {
+                                var participant = _.find(scope.objectInfo.participants, function (pa) {
+                                    return Util.compare(pa.id, data.participant.id);
+                                });
+                                participant.participantLdapId = data.participant.participantLdapId;
+                                participant.id = data.participant.id;
+
+                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                }
+                                else {
+                                    participant.participantType = data.participant.participantType;
+                                }
+                            }
+                            else {
+                                var participant = {};
+                                participant.participantLdapId = data.participant.participantLdapId;
+
+                                if (data.participant.participantType == typeNoAccess && assignee == data.participant.participantLdapId) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.noAccessCombo"));
+                                }
+                                else {
+                                    participant.participantType = data.participant.participantType;
+                                    participant.className = scope.config.className;
+                                    scope.objectInfo.participants.push(participant);
+                                }
+                            }
+                            if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants)) {
+                                saveObjectInfoAndRefresh();
+                            }
+                            else {
+                                refresh();
+                            }
                         }
-                        else {
-                            var participant = {};
-                            participant.participantLdapId = data.participant.participantLdapId;
-                            participant.participantType = data.participant.participantType;
-                            participant.className = scope.config.className;
-                            scope.objectInfo.participants.push(participant);
-                        }
-                        saveObjectInfoAndRefresh();
                     });
                 };
 
@@ -152,21 +189,38 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
 
                 scope.editRow = function (rowEntity) {
                     scope.participant = rowEntity;
-                    var item = {
-                        id: rowEntity.id,
-                        participantType: rowEntity.participantType,
-                        participantLdapId: rowEntity.participantLdapId,
-                        participantTypes: scope.participantTypes,
-                        config: scope.config
-                    };
-                    showModal(item, true);
+                    var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
+                    participantDataPromise.then(function (participantData) {
+                        if (!Util.isArrayEmpty(participantData)) {
+                            var item = {
+                                id: rowEntity.id,
+                                participantType: rowEntity.participantType,
+                                participantLdapId: rowEntity.participantLdapId,
+                                participantTypes: scope.participantTypes,
+                                selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
+                                config: scope.config
+                            };
+                            showModal(item, true);
+                        }
+                    })
                 };
 
                 scope.deleteRow = function (rowEntity) {
-                    gridHelper.deleteRow(rowEntity);
-                    var id = Util.goodMapValue(rowEntity, "id", 0);
-                    if (0 < id) {    //do not need to call service when deleting a new row
-                        saveObjectInfoAndRefresh();
+                    var typeOwningGroup = "owning group";
+                    var typeAssignee = "assignee";
+
+                    if(rowEntity.participantType == typeOwningGroup) {
+                        MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupDelete"));
+                    }
+                    else if(rowEntity.participantType == typeAssignee) {
+                        MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeDelete"));
+                    }
+                    else {
+                        gridHelper.deleteRow(rowEntity);
+                        var id = Util.goodMapValue(rowEntity, "id", 0);
+                        if (0 < id) {    //do not need to call service when deleting a new row
+                            saveObjectInfoAndRefresh();
+                        }
                     }
                 };
 

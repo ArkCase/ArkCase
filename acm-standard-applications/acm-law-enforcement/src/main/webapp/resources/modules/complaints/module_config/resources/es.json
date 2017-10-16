@@ -1,0 +1,392 @@
+{
+  "complaints": {
+    "title": "Reclamaciones",
+    "progressNoComplaint": "[Sin datos de queja]",
+    "progressLoading": "Cargando queja",
+    "progressError": "No se pudo cargar la queja"
+  },
+  "complaints.menus": {
+    "leftnav.item": "Reclamaciones",
+    "topbar.item": "Reclamacione"
+  },
+  "complaints.comp.main": {
+    "title": "Descripción general"
+  },
+  "complaints.comp.info": {
+    "title": "Información",
+    "complaintId": "Identificación de la queja:",
+    "complaintNumber": "Número de queja:",
+    "courtRoomName": "Nombre de la sala:",
+    "type.label": "Tipo",
+    "created.label": "Fecha de creación",
+    "priority.label": "Prioridad",
+    "assignee.label": "Asignado a",
+    "owningGroup.label": "Grupo propietario",
+    "dueDate.label": "Fecha de vencimiento"
+  },
+  "complaints.comp.actions": {
+    "title": "Acciones",
+    "restrict": "Restringir?",
+    "new.button": "Nueva queja",
+    "close.button": "Cerrar queja",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "claim.button": "Reclamación",
+    "unclaim.button": "No reclamar"
+  },
+  "complaints.comp.details": {
+    "title": "Detalles",
+    "informSaved": "es_Complaint details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "complaints.comp.Documentos": {
+    "title": "Documentos",
+    "sendEmail": "es_Send Email",
+    "filterInputPlaceholder": "es_Filter",
+    "searchInputPlaceholder": "es_Search"
+  },
+  "complaints.comp.people": {
+    "title": "Personas",
+    "table.columns": {
+      "entity": "es_Entity",
+      "type": "es_Type",
+      "firstName": "es_FirstName",
+      "lastName": "es_LastName"
+    },
+    "contactMethods": {
+      "title": "es_ContactMethods",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "Organizaciones",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "Ubicaciones",
+      "table.columns": {
+        "type": "es_Type",
+        "streetAddress": "es_Address",
+        "city": "es_City",
+        "state": "es_State",
+        "zip": "es_Zip",
+        "country": "es_Country",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "es_Aliases",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "es_Security Tags",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    }
+  },
+  "complaints.comp.Organizaciones": {
+    "title": "Organizaciones",
+    "table.columns": {
+      "name": "es_Organization Name",
+      "associationType": "es_Role",
+      "type": "es_Organization Type",
+      "identification": "es_ID",
+      "value": "es_Organization",
+      "contact": "es_Primary Contact",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    },
+    "actions": {
+      "delete": "es_Delete",
+      "setPrimary": "es_Set as Primary",
+      "addNew": "es_Add New",
+      "addExisting": "es_Add New"
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "Ubicaciones",
+    "table.columns": {
+      "address": "es_Address",
+      "type": "es_Type",
+      "city": "es_City",
+      "state": "es_State",
+      "zip": "es_Zip",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "es_Add Location",
+      "editLocation": "es_Edit Record",
+      "type.label": "es_Type",
+      "street.label": "es_Street",
+      "city.label": "es_City",
+      "state.label": "es_State",
+      "zip.label": "es_Zip",
+      "btnOk.text": "es_Save",
+      "btnCancel.text": "es_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "Notas",
+    "table.columns": {
+      "note": "es_Note",
+      "created": "es_Created",
+      "creator": "es_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "Tareas",
+    "table.columns": {
+      "title": "es_Title",
+      "assignee": "es_Assignee",
+      "created": "es_Created",
+      "priority": "es_Priority",
+      "due": "es_Due",
+      "status": "es_Status"
+    },
+    "table.overdue.tooltip": "es_Task is Overdue",
+    "table.deadline.tooltip": "es_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "Referencias",
+    "table.columns": {
+      "targetName": "es_Number",
+      "targetTitle": "es_Title",
+      "parentName": "es_Parent",
+      "modified": "es_Modified",
+      "targetType": "es_Reference Type",
+      "status": "es_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "Historia",
+    "table.columns": {
+      "eventType": "es_Event Name",
+      "eventDate": "es_Date",
+      "userId": "es_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "Tiempo",
+    "table.columns": {
+      "name": "es_Form Name",
+      "user": "es_User",
+      "tally": "es_Total Hours",
+      "modified": "es_Modified Date",
+      "status": "es_Status"
+    },
+    "formNamePrefix": "es_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "Costo",
+    "table.columns": {
+      "name": "es_Form Name",
+      "user": "es_User",
+      "tally": "es_Total Cost",
+      "modified": "es_Modified Date",
+      "status": "es_Status"
+    },
+    "formNamePrefix": "es_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+      "title": "es_Tag",
+      "search": "es_Search for Tag",
+      "buttons": {
+        "cancel": "es_Cancel",
+        "ok": "es_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "Calendario"
+  },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Búsqueda de referencia"
+  },
+  "complaints.comp.addreference": {
+    "title": "es_Add Reference",
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Add",
+    "search": {
+      "placeholder": "es_Search for case, complaint, file, task",
+      "btn": "es_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "es_Id",
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "parent": "es_Parent",
+        "assignee": "es_Assignee",
+        "modified": "es_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "es_Change Assignee",
+    "assigneeNamelabel": "es_Assignee Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchAssigneeHeader": "es_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "es_Change Group",
+    "groupNamelabel": "es_Group Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchGroupHeader": "es_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "Ruta de Aprobación",
+    "addNewTooltip": "es_Add new approver",
+    "noBuckslipMessage": "es_No Data",
+    "button": {
+      "save.tooltip": "es_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "es_Full Name"
+    },
+    "assignee.label": "es_Assignee",
+    "owningGroup.label": "es_Owning Group",
+    "priority.label": "es_Priority",
+    "startDate.label": "es_Start Date",
+    "dueDate.label": "es_Due Date",
+    "state.label": "es_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "Aprobaciones anteriores",
+    "noBuckslipMessage": "es_No Data",
+    "table.columns": {
+      "approvalDate": "es_Approval Date",
+      "approverId": "es_Approver",
+      "approverFullName": "es_Approver",
+      "approverDecision": "es_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "es_userSearch",
+    "title": "es_User/Group Search",
+    "search": {
+      "btn": "es_Search",
+      "placeholder": "es_Search for the user or group."
+    },
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "es_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "username": "es_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "locations.label": "Ubicaciones",
+      "people.label": "Personas",
+      "organizations.label": "Organizaciones",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tareas",
+      "references.label": "Referencias",
+      "history.label": "Historia",
+      "time.label": "Tiempo",
+      "cost.label": "Costo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendario",
+      "approvalRouting.label": "Ruta de Aprobació"
+    },
+    "filters": {
+      "opened": "Todas las quejas abiertas",
+      "iHaveCreated": "Todo lo que he creado",
+      "iAmAssigned": "Todo lo que estoy asignado",
+      "iAmFollowing": "Todo lo que estoy siguiendo",
+      "closedNoFurtherAction": "Todos cerrados No hay más acción",
+      "closedReferExternal": "Todos cerrados Refer External",
+      "closedOpenInvestigation": "Toda Investigación Abierta Cerrada",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Ordenar la fecha del incidente Asc",
+      "incidentDateDesc": "Ordenar la fecha del incidente Dec",
+      "createdDateAsc": "Ordenar Creación de fecha creada Asc",
+      "createdDateDesc": "Ordenar Creación de fecha creada Dec",
+      "nameAsc": "Ordenar por nombre Asc",
+      "noSort": "(Sin Clasificar)"
+    }
+  }
+}

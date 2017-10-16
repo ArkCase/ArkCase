@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "Поиск",
+    "search.btn": "Поиск",
+    "export.btn": "Экспорт",
+    "search.placeholder": "Введите запрос",
+    "menus": {
+      "leftnav.item": "Поиск"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ID",
+          "name": "Имя",
+          "type": "Тип",
+          "title": "Заглавие",
+          "parent": "Родитель",
+          "assignee": "Правопреемник",
+          "modified": "Изменено"
+        }
+      }
+    }
+  }
+}

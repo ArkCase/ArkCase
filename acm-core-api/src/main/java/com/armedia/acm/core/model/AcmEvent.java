@@ -8,6 +8,7 @@ import java.util.Map;
 public abstract class AcmEvent extends ApplicationEvent
 {
     private String eventType;
+    private String eventDescription;
     private String userId;
     private Date eventDate;
     private boolean succeeded;
@@ -18,49 +19,80 @@ public abstract class AcmEvent extends ApplicationEvent
     private String parentObjectType;
     private String parentObjectName;
     private Map<String, Object> eventProperties;
+    private String diffDetailsAsJson;
 
     public AcmEvent(Object source)
     {
         super(source);
     }
 
-    public String getEventType() {
+    public String getDiffDetailsAsJson()
+    {
+        return diffDetailsAsJson;
+    }
+
+    public void setDiffDetailsAsJson(String diffDetailsAsJson)
+    {
+        this.diffDetailsAsJson = diffDetailsAsJson;
+    }
+
+    public String getEventType()
+    {
         return eventType;
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(String eventType)
+    {
         this.eventType = eventType;
     }
 
-    public String getUserId() {
+    public String getEventDescription()
+    {
+        return eventDescription;
+    }
+
+    public void setEventDescription(String eventDescription)
+    {
+        this.eventDescription = eventDescription;
+    }
+
+    public String getUserId()
+    {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId)
+    {
         this.userId = userId;
     }
 
-    public Date getEventDate() {
+    public Date getEventDate()
+    {
         return eventDate;
     }
 
-    public void setEventDate(Date eventDate) {
+    public void setEventDate(Date eventDate)
+    {
         this.eventDate = eventDate;
     }
 
-    public boolean isSucceeded() {
+    public boolean isSucceeded()
+    {
         return succeeded;
     }
 
-    public void setSucceeded(boolean succeeded) {
+    public void setSucceeded(boolean succeeded)
+    {
         this.succeeded = succeeded;
     }
 
-    public String getIpAddress() {
+    public String getIpAddress()
+    {
         return ipAddress;
     }
 
-    public void setIpAddress(String ipAddress) {
+    public void setIpAddress(String ipAddress)
+    {
         this.ipAddress = ipAddress;
     }
 

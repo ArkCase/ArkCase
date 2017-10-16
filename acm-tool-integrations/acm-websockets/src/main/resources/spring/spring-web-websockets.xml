@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:websocket="http://www.springframework.org/schema/websocket"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/websocket
@@ -32,6 +32,10 @@
                 <prop key="acm.websockets.stomp_broker_relay.relay_port">61613</prop>
                 <prop key="acm.websockets.stomp_broker_relay.heartbeat_send_interval">20000</prop>
                 <prop key="acm.websockets.stomp_broker_relay.heartbeat_receive_interval">20000</prop>
+                <prop key="acm.websockets.stomp_broker_relay.client_login">guest</prop>
+                <prop key="acm.websockets.stomp_broker_relay.client_passcode">guest</prop>
+                <prop key="acm.websockets.stomp_broker_relay.system_login">guest</prop>
+                <prop key="acm.websockets.stomp_broker_relay.system_passcode">guest</prop>
                 <prop key="acm.websockets.socksjs.enabled">true</prop>
             </props>
         </property>
@@ -45,13 +49,30 @@
 
     <websocket:message-broker application-destination-prefix="${acm.websockets.application_destination_prefix}">
         <websocket:stomp-endpoint path="${acm.websockets.stomp_endpoint}">
-            <websocket:sockjs websocket-enabled="true"/>
+            <!--
+                client-library-url: sockjs version must be always aligned with bower dependency;
+                the path is relative to /sockjs/iframe.html, iframe URL created by sockjs
+                (make sure sockjs bower dependency is still copied there, it may change over time)
+            -->
+            <websocket:sockjs
+                    websocket-enabled="true"
+                    client-library-url="../lib/sockjs-client/dist/sockjs.min.js">
+            </websocket:sockjs>
         </websocket:stomp-endpoint>
         <websocket:stomp-broker-relay prefix="/topic,/queue"
                                       relay-host="${acm.websockets.stomp_broker_relay.relay_host}"
                                       relay-port="${acm.websockets.stomp_broker_relay.relay_port}"
                                       heartbeat-send-interval="${acm.websockets.stomp_broker_relay.heartbeat_send_interval}"
-                                      heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"/>
+                                      heartbeat-receive-interval="${acm.websockets.stomp_broker_relay.heartbeat_receive_interval}"
+                                      client-login="${acm.websockets.stomp_broker_relay.client_login}"
+                                      client-passcode="${acm.websockets.stomp_broker_relay.client_passcode}"
+                                      system-login="${acm.websockets.stomp_broker_relay.system_login}"
+                                      system-passcode="${acm.websockets.stomp_broker_relay.system_passcode}"/>
+        <websocket:client-inbound-channel>
+            <websocket:interceptors>
+                <bean class="com.armedia.acm.websockets.AcmWebSocketChannelInterceptor"></bean>
+            </websocket:interceptors>
+        </websocket:client-inbound-channel>
     </websocket:message-broker>
 
     <bean class="com.armedia.acm.websockets.configuration.StompBrokerRelayMessageHandlerBeanPostProcessor">
@@ -76,12 +97,12 @@
         <property name="properties">
             <props>
                 <prop key="acm.object.changed.notification.filter.include.classNames">
-                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet
+                    com.armedia.acm.plugins.casefile.model.CaseFile,com.armedia.acm.plugins.complaint.model.Complaint,com.armedia.acm.plugins.task.model.AcmTask,com.armedia.acm.plugins.ecm.model.EcmFile,com.armedia.acm.plugins.casefile.model.ChangeCaseStatus,com.armedia.acm.plugins.complaint.model.CloseComplaintRequest,com.armedia.acm.services.costsheet.model.AcmCostsheet,com.armedia.acm.services.timesheet.model.AcmTimesheet,com.armedia.acm.plugins.documentrepository.model.DocumentRepository,com.armedia.acm.plugins.person.model.Person,com.armedia.acm.plugins.person.model.Organization
                 </prop>
-                <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE
+                <prop key="acm.object.changed.notification.filter.include.object_types">CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO,PERSON,ORGANIZATION
                 </prop>
                 <prop key="acm.object.changed.notification.filter.include.parent_object_types">
-                    CASE_FILE,COMPLAINT,TASK,FILE
+                    CASE_FILE,COMPLAINT,TASK,FILE,DOC_REPO
                 </prop>
             </props>
         </property>
@@ -92,5 +113,8 @@
         <property name="objectChangeNotificationProperties" ref="objectChangeNotificationProperties"/>
     </bean>
     <int:service-activator ref="objectUpdateNotifier" input-channel="objectEventChannel" method="notifyChange"/>
+
+    <bean id="simplePushNotifier" class="com.armedia.acm.websockets.SimplePushNotifier" />
+    <int:service-activator ref="simplePushNotifier" input-channel="genericMessagesChannel" method="receiveMessage"/>
 
 </beans>

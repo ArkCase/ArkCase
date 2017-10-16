@@ -1,0 +1,481 @@
+{
+  "people": {
+    "title": "लोग",
+    "progressNoComplaint": "[ कोई भी डेटा नहीं ]",
+    "progressLoading": "लोगों को लोड करना",
+    "progressError": "लोगों को लोड करने में विफल"
+  },
+  "people.menus": {
+    "leftnav.item": "लोग",
+    "topbar.item": "व्यक्ति"
+  },
+  "people.comp.main": {
+    "title": "अवलोकन"
+  },
+  "people.comp.info": {
+    "title": "जानकारी",
+    "phone.label": "फोन",
+    "email.label": "ईमेल",
+    "status.label": "स्थिति",
+    "organization.label": "संगठन",
+    "identification.label": "आईडी"
+  },
+  "people.comp.actions": {
+    "title": "क्रियाएं",
+    "export.button": "निर्यात",
+    "import.button": "आयात",
+    "delete.button": "हटाएं",
+    "activate.button": "सक्रिय",
+    "deactivate.button": "निष्क्रिय करें",
+    "merge.button": "मर्ज"
+  },
+  "people.comp.details": {
+    "title": "विवरण",
+    "informSaved": "hi_Person details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "इतिहास",
+    "table.columns": {
+      "eventType": "hi_Event Name",
+      "eventDate": "hi_Date",
+      "userId": "hi_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "चित्र",
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "upload": "hi_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "hi_Thumbnail",
+      "title": "hi_Filename",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "dialog": {
+      "title": "hi_Upload Picture",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "cancel": "hi_Cancel",
+      "upload": "hi_Upload Picture",
+      "noPictureSelected": "hi_No Files Selected.",
+      "browse": "hi_Browse",
+      "description": "hi_Description"
+    },
+    "dialog.edit": {
+      "title": "hi_Edit Picture",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "change": "hi_Change Picture",
+      "save": "hi_Save changes"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "स्थान",
+    "table.columns": {
+      "type": "hi_Type",
+      "streetAddress": "hi_Address 1",
+      "streetAddress2": "hi_Address 2",
+      "city": "hi_City",
+      "state": "hi_State",
+      "zip": "hi_Zip",
+      "country": "hi_Country",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "addNew": "hi_Add New",
+      "map": "hi_Map"
+    },
+    "modal": {
+      "addAddress": "hi_Add Location",
+      "editAddress": "hi_Edit Record",
+      "type.label": "hi_Address Type",
+      "type.placeholder": "hi_Enter Address Type",
+      "streetAddress.label": "hi_Address 1",
+      "streetAddress.placeholder": "hi_Enter Address 1",
+      "streetAddress2.label": "hi_Address 2",
+      "streetAddress2.placeholder": "hi_Enter Address 2",
+      "city.label": "hi_City",
+      "city.placeholder": "hi_Enter City",
+      "zip.label": "hi_Zip",
+      "zip.placeholder": "hi_Enter Zip",
+      "state.label": "hi_State",
+      "state.placeholder": "hi_Enter State",
+      "country.label": "hi_Country",
+      "country.placeholder": "hi_Enter Country",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Location",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "फ़ोन नंबर",
+    "table.columns": {
+      "type": "hi_Type",
+      "value": "hi_Phone Number",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "addPhone": "hi_Add New Phone Number",
+      "editPhone": "hi_Edit Phone Number",
+      "title": "hi_Add New Phone Number",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Phone Number",
+      "type.label": "hi_Phone Type",
+      "type.placeholder": "hi_Enter Phone Type",
+      "value.label": "hi_Phone Number",
+      "value.placeholder": "hi_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "ईमेल पते",
+    "table.columns": {
+      "type": "hi_Type",
+      "value": "hi_Email Address",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "title": "hi_Add New Email Address",
+      "addEmail": "hi_Add New Email Address",
+      "editEmail": "hi_Edit Email Address",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Email Address",
+      "type.label": "hi_Email Type",
+      "type.placeholder": "hi_Enter Email Type",
+      "value.label": "hi_Email Address",
+      "value.placeholder": "hi_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "यूआरएल",
+    "table.columns": {
+      "value": "hi_URL",
+      "type": "hi_Type",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "title": "hi_Add New URL",
+      "addUrl": "hi_Add New URL",
+      "editUrl": "hi_Edit URL",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "description": "hi_Description",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save URL",
+      "type.label": "hi_Type",
+      "type.placeholder": "hi_Enter Type",
+      "value.label": "hi_URL",
+      "value.placeholder": "hi_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "प्रतिभागियों",
+    "table.columns": {
+      "type": "hi_Type",
+      "name": "hi_Name"
+    },
+    "dialogUserPicker": {
+      "header": "hi_Choose User",
+      "table.columns": {
+        "name": "hi_Name",
+        "type": "hi_Type",
+        "title": "hi_Title",
+        "id": "hi_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "hi_Choose Group",
+      "table.columns": {
+        "name": "hi_Name"
+      }
+    }
+  },
+  "people.comp.aliases": {
+    "title": "उपनाम",
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "upload": "hi_New Alias"
+    },
+    "table.columns": {
+      "type": "hi_Type",
+      "aliasValue": "hi_Alias",
+      "description": "hi_Description",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "modal": {
+      "aliasValue": "hi_Alias Value",
+      "type": "hi_Type",
+      "addAlias": "hi_Add New Alias",
+      "editAlias": "hi_Edit Alias",
+      "title": "hi_Insert New Alias",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Alias",
+      "value.label": "hi_Alias",
+      "value.placeholder": "hi_Enter Alias",
+      "description": "hi_Description",
+      "aliasType.label": "hi_Alias Type",
+      "aliasType.placeholder": "hi_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "आईडी",
+    "table.columns": {
+      "type": "hi_Type",
+      "id": "hi_ID",
+      "number": "hi_Number",
+      "issuer": "hi_Issuer",
+      "yearIssued": "hi_Year Issued",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New"
+    },
+    "modal": {
+      "addID": "hi_Add New Identification",
+      "editID": "hi_Edit Identification",
+      "title": "hi_Add New Identification",
+      "setPrimary": "hi_Set as Primary?",
+      "yes": "hi_Yes",
+      "no": "hi_No",
+      "type.label": "hi_Type",
+      "type.placeholder": "hi_Enter Type",
+      "id.label": "hi_ID",
+      "id.placeholder": "hi_Enter ID",
+      "number.label": "hi_Number",
+      "number.placeholder": "hi_Enter Number",
+      "issuer.label": "hi_Issuer",
+      "issuer.placeholder": "hi_Enter Issuer",
+      "yearIssued.label": "hi_Year Issued",
+      "yearIssued.placeholder": "hi_Enter Year Issued",
+      "yearIssued.close.button": "hi_Close",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "संगठन",
+    "table.columns": {
+      "type": "hi_Type",
+      "id": "hi_ID",
+      "value": "hi_Organization",
+      "identification": "hi_ID",
+      "contact": "hi_Primary Contact",
+      "phone": "hi_Phone",
+      "location": "hi_Location",
+      "created": "hi_Date Added",
+      "creator": "hi_Added By",
+      "modified": "hi_Last Modified",
+      "modifier": "hi_Modified By"
+    },
+    "actions": {
+      "delete": "hi_Delete",
+      "setPrimary": "hi_Set as Primary",
+      "addNew": "hi_Add New",
+      "addExisting": "hi_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "मामले",
+    "table.columns": {
+      "priority": "hi_Priority",
+      "id": "hi_ID",
+      "title": "hi_Title",
+      "status": "hi_Status",
+      "assignee": "hi_Assignee",
+      "modified": "hi_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "शिकायतें",
+    "table.columns": {
+      "priority": "hi_Priority",
+      "id": "hi_ID",
+      "title": "hi_Title",
+      "status": "hi_Status",
+      "assignee": "hi_Assignee",
+      "modified": "hi_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "संबंधित लोग",
+    "table.columns": {
+      "firstName": "hi_First Name",
+      "lastName": "hi_Last Name",
+      "type": "hi_Relationship",
+      "description": "hi_Description",
+      "organization": "hi_Organization",
+      "phone": "hi_Phone",
+      "location": "hi_Location"
+    },
+    "modal": {
+      "title": "hi_Add Related Person",
+      "type.label": "hi_Relationship",
+      "type.placeholder": "hi_Enter Relationship",
+      "person.label": "hi_Person",
+      "person.placeholder": "hi_Search People",
+      "btnCancel.text": "hi_Cancel",
+      "btnOk.text": "hi_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "hi_Person",
+    "addAnother": "hi_Add Another",
+    "remove": "hi_Remove",
+    "familyName": "hi_Last Name",
+    "familyName.placeholder": "hi_Enter Last Name",
+    "givenName": "hi_First Name",
+    "givenName.placeholder": "hi_Enter First Name",
+    "middleName": "hi_Middle Name",
+    "middleName.placeholder": "hi_Enter Middle Name",
+    "saveButton": "hi_Save Person",
+    "informCreated": "hi_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "hi_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "hi_Communication Accounts",
+      "phone": "hi_Phone",
+      "phone.placeholder": "hi_Enter Phone",
+      "phoneType": "hi_Phone Type",
+      "email": "hi_Email",
+      "email.placeholder": "hi_Enter Email",
+      "emailType": "hi_Email Type",
+      "url": "hi_URL",
+      "url.placeholder": "hi_Enter URL",
+      "removeContactMethod": "hi_Remove",
+      "urlType": "hi_URL Type"
+    },
+    "organizations": {
+      "title": "hi_Organizations",
+      "searchExisting.placeholder": "hi_Search Existing Organizations",
+      "organizationType": "hi_Relation Type"
+    },
+    "picture": {
+      "title": "hi_Picture"
+    },
+    "locations": {
+      "title": "hi_Locations",
+      "country": "hi_Country",
+      "country.placeholder": "hi_Select Country",
+      "state": "hi_State",
+      "state.placeholder": "hi_Enter State",
+      "zip": "hi_Zip",
+      "zip.placeholder": "hi_Enter Zip",
+      "city": "hi_City",
+      "city.placeholder": "hi_Enter City",
+      "type": "hi_Address Type",
+      "type.placeholder": "hi_Select Address Type",
+      "streetAddress": "hi_Street Address",
+      "streetAddress.placeholder": "hi_Enter Street Address",
+      "streetAddress2": "hi_Street Address2",
+      "streetAddress2.placeholder": "hi_Enter Street Address2"
+    },
+    "identification": {
+      "title": "hi_Identifications",
+      "identificationID": "hi_Identification ID",
+      "identificationID.placeholder": "hi_Enter Identification ID",
+      "identificationType": "hi_Identification Type",
+      "identificationType.placeholder": "hi_Select Identification Type",
+      "identificationNumber": "hi_Identification Number",
+      "identificationNumber.placeholder": "hi_Enter Identification Number",
+      "identificationIssuer": "hi_Identification Issuer",
+      "identificationIssuer.placeholder": "hi_Enter Identification Issuer",
+      "identificationYearIssued": "hi_Identification Issued",
+      "identificationYearIssued.placeholder": "hi_Select Identification Issued",
+      "identificationYearIssued.close.button": "hi_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "pictures.label": "चित्र",
+      "addresses.label": "स्थान",
+      "phones.label": "फ़ोन नंबर",
+      "emails.label": "ईमेल पते",
+      "urls.label": "यूआरएल",
+      "participants.label": "प्रतिभागियों को",
+      "aliases.label": "उपनाम",
+      "organizations.label": "संगठन",
+      "ids.label": "आईडी",
+      "complaints.label": "शिकायतें",
+      "cases.label": "मामले",
+      "related.label": "संबंधित लोग",
+      "history.label": "इतिहास"
+    },
+    "filters": {
+      "iHaveCreated": "सभी मैंने बनाया है",
+      "noFilter": "(नो फिटर)"
+    },
+    "sorters": {
+      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
+      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
+      "idAsc": "लोग आईडी आरोही क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध लोग आईडी अवरोही",
+      "nameAsc": "लोगों द्वारा क्रमबद्ध करें नाम A-Z",
+      "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
+}

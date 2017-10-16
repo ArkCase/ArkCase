@@ -17,6 +17,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 /**
  * @author riste.tutureski
@@ -24,6 +26,7 @@ import com.armedia.acm.data.AcmEntity;
  */
 @Entity
 @Table(name = "acm_user_action")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmUserAction implements Serializable, AcmEntity{
 
 	private static final long serialVersionUID = -8595025198378154826L;

@@ -1,0 +1,364 @@
+{
+  "tasks": {
+    "title": "任務",
+    "progressNoTask": "[ 任務のデータはありません ]",
+    "progressLoading": "任務の読み込み",
+    "progressError": "任務の読み込みに失敗しました"
+  },
+  "tasks.menus": {
+    "leftnav.item": "任務",
+    "topbar.item": "任務"
+  },
+  "tasks.comp.main": {
+    "title": "概観"
+  },
+  "tasks.comp.info": {
+    "title": "情報",
+    "taskId": "任務識別番号:",
+    "percentage.label": "完成度％",
+    "assignee.label": "割り当て先",
+    "priority.label": "優先",
+    "startDate.label": "開始日",
+    "dueDate.label": "期限日",
+    "state.label": "状態",
+    "overdue.tooltip": "任務延滞",
+    "deadline.tooltip": "締め切りが近づいています",
+    "owningGroup.label": "群に所属"
+  },
+  "tasks.comp.parentinfo": {
+    "title": "任務の起源",
+    "taskId": "任務識別番号:",
+    "case": {
+      "subjectType.label": "亜種類",
+      "incidentDate.label": "事件の日付",
+      "priority.label": "優先",
+      "assignee.label": "割り当て先",
+      "owningGroup.label": "群に所属"
+    },
+    "complaint": {
+      "subjectType.label": "亜種類",
+      "incidentDate.label": "事件の日付",
+      "priority.label": "優先",
+      "assignee.label": "割り当て先",
+      "owningGroup.label": "群に所属"
+    },
+    "costsheet": {
+      "approver.label": "承認者"
+    },
+    "timesheet": {
+      "approver.label": "承認者"
+    },
+    "_xxx_courtRoomName": "ja_Court Room Name:"
+  },
+  "tasks.comp.actions": {
+    "title": "行动",
+    "diagram.button": "プロセス図",
+    "eSignature.button": "署名された",
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "reject.button": "拒否",
+    "delete.button": "削除",
+    "complete.button": "完了しました",
+    "approve.button": "承認文書",
+    "rework.button": "リワークのために送る",
+    "claim.button": "請求",
+    "unclaim.button": "申し立て",
+    "error.outcomeFieldMissing": "必須値がないために任務を完了できません",
+    "modal": {
+      "errorHeaderText": "エラー",
+      "btnOk.text": "はい",
+      "btnClose.text": "閉じる"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "詳細",
+    "informSaved": "ja_Task details saved",
+    "table.columns": {
+      "details": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "詳細をやり直し",
+    "informSaved": "ja_Rework details saved",
+    "table.columns": {
+      "title": "ja_Rework Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "情報の起源",
+    "noParentDataMessage": "ja_No parent documents for standalone task",
+    "sendEmail": "ja_Send Email",
+    "filterInputPlaceholder": "ja_Filter",
+    "searchInputPlaceholder": "ja_Search"
+  },
+  "tasks.comp.attachments": {
+    "title": "添付文書",
+    "sendEmail": "ja_Send Email",
+    "filterInputPlaceholder": "ja_Filter",
+    "searchInputPlaceholder": "ja_Search"
+  },
+  "tasks.comp.notes": {
+    "title": "コメント",
+    "table.columns": {
+      "note": "ja_Note",
+      "created": "ja_Created",
+      "creator": "ja_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "参照",
+    "table.columns": {
+      "targetName": "ja_Number",
+      "targetTitle": "ja_Title",
+      "modified": "ja_Modified",
+      "targetType": "ja_Reference Type",
+      "status": "ja_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "を説明することを拒否し",
+    "table.columns": {
+      "note": "ja_Comment",
+      "created": "ja_Created",
+      "creator": "ja_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "プロセスの概要",
+    "table.columns": {
+      "participant": "ja_Participant",
+      "role": "ja_Role",
+      "status": "ja_Status",
+      "startDateTime": "ja_Start",
+      "endDateTime": "ja_End"
+    }
+  },
+  "tasks.comp.diagram": {
+    "title": "ja_Process Diagram",
+    "error.loading": "ja_Diagram can't be loaded"
+  },
+  "tasks.comp.signatures": {
+    "title": "電子署名",
+    "table.columns": {
+      "signedDate": "ja_Date",
+      "signedBy": "ja_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "レビュー文書",
+    "table.columns": {
+      "fileId": "ja_ID",
+      "fileName": "ja_Title",
+      "created": "ja_Created",
+      "creator": "ja_Author",
+      "status": "ja_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "歴史",
+    "table.columns": {
+      "eventType": "ja_Event Name",
+      "eventDate": "ja_Date",
+      "userId": "ja_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "タグ",
+    "table.columns": {
+      "tag": "ja_Tag",
+      "created": "ja_Created",
+      "createdBy": "ja_Created By"
+    },
+    "modal": {
+      "title": "ja_Tag",
+      "search": "ja_Search for Tag",
+      "buttons": {
+        "cancel": "ja_Cancel",
+        "ok": "ja_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ja_Tag with that name or description or text already exists",
+      "tagAssociated": "ja_already associated",
+      "delete": {
+        "success": "ja_Tag deleted successfully",
+        "error": "ja_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "ja_New Task",
+    "assignee.button": "ja_Choose Assignee",
+    "assignee.label": "ja_Assign To",
+    "assignee.placeholder": "ja_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "ja_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "ja_Select Priority",
+    "priority.label": "ja_Priority",
+    "status.placeholder": "ja_Select Status",
+    "status.label": "ja_Status",
+    "associateNumber.label": "ja_Associate with Complaint or Case",
+    "associateNumber.placeholder": "ja_Complaint or Case #",
+    "associateType.label": "ja_Parent Type",
+    "subject.label": "ja_Subject",
+    "taskStartDate.label": "ja_Start Date",
+    "dueDate.label": "ja_Due Date",
+    "datepicker.close": "ja_Done",
+    "percentComplete.label": "ja_% Complete",
+    "notes.label": "ja_Notes",
+    "saveButton": "ja_Save",
+    "overdue.tooltip": "ja_Task is Overdue",
+    "deadline.tooltip": "ja_Deadline is Approaching",
+    "groupToggle.label": "ja_Group Task?",
+    "group.placeholder": "ja_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "ja_userSearch",
+    "title": "ja_User/Group Search",
+    "search": {
+      "btn": "ja_Search",
+      "placeholder": "ja_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ja_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ja_Name",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "username": "ja_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "ja_objectSearch",
+    "title": "ja_Object Search",
+    "search": {
+      "btn": "ja_Search",
+      "placeholder": "ja_Search for the case or complaint to this task."
+    },
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Confirm",
+    "enabled": true,
+    "userFacetFilter": "ja_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "ja_Number",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "username": "ja_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "ja_Add Reference",
+    "cancelButton": "ja_Cancel",
+    "confirmButton": "ja_Add",
+    "search": {
+      "placeholder": "ja_Search for case, complaint, file, task",
+      "btn": "ja_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ja_Id",
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "parent": "ja_Parent",
+        "assignee": "ja_Assignee",
+        "modified": "ja_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "ja_Participants",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "ja_Change Assignee",
+    "assigneeNamelabel": "ja_Assignee Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchAssigneeHeader": "ja_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "ja_Change Group",
+    "groupNamelabel": "ja_Group Name",
+    "btnCancelText": "ja_Cancel",
+    "btnSaveText": "ja_Save",
+    "searchGroupHeader": "ja_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "承認ル",
+    "addNewTooltip": "ja_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "ja_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ja_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "過去の承認",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "ja_Approval Date",
+      "approverId": "ja_Approver",
+      "approverFullName": "ja_Full Name",
+      "approverDecision": "ja_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "reworkDetails.label": "詳細をやり直し",
+      "docReview.label": "レビュー文書",
+      "parentDoc.label": "任務の起源",
+      "attachments.label": "添付文書",
+      "references.label": "参照",
+      "notes.label": "コメント",
+      "workflow.label": "プロセスの概要",
+      "history.label": "歴史",
+      "eSignatures.label": "電子署名",
+      "tags.label": "タグ",
+      "reject.label": "を説明することを拒否し"
+    },
+    "filters": {
+      "myTasks": "私の任務",
+      "opened": "開いているすべて",
+      "completed": "すべて終了",
+      "dueToday": "今日はすべてが原因",
+      "myDueToday": "私はすべてのため",
+      "overdue": "すべての延滞",
+      "myOverdue": "すべては私が遅れますよ",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "アンチは、イベントの日付順",
+      "nameAsc": "任務名で並べ替え",
+      "nameDesc": "アンチは、任務名でソート",
+      "noSort": "(注文しません)"
+    }
+  }
+}

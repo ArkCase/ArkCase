@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
@@ -36,7 +37,7 @@ public class MergeCaseFilesAPIController
             @RequestBody MergeCaseOptions mergeCaseOptions,
             HttpSession session,
             Authentication auth
-    ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
+    ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException, AcmAccessControlException
     {
 
         Objects.requireNonNull(mergeCaseOptions.getSourceCaseFileId(), "Source Id should not be null");

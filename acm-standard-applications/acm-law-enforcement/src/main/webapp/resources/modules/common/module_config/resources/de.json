@@ -1,0 +1,453 @@
+{
+  "common": {
+    "select.option.none": "(Wähle Eins)",
+    "value.unknown": "Unbekannt",
+
+    "defaultDateFormat": "de_MM/DD/YYYY",
+    "defaultTimeFormat": "de_hh:mm:ss",
+    "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "de_MM/dd/yyyy",
+    "defaultDateUIFormat": "de_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm"
+  },
+  "common.addOrganization": {
+    "title": "de_Add Parent Organization",
+    "addNew.label": "de_Add new Organization",
+    "selectExisting.label": "de_Select existing organization",
+    "organization.label": "de_Organization",
+    "description": "de_Description",
+    "type.label": "de_Organization Association Type",
+    "type.label.default.text": "de_No parent Organization",
+    "type.label.text": "de_Parent Organization",
+    "btnCancel.text": "de_Cancel",
+    "btnOk.text": "de_Save Organization",
+    "setPrimary.label": "de_Set As Primary?",
+    "radioName": "de_Choice primary",
+    "radioYes.text": "de_Yes",
+    "radioNo.text": "de_No",
+    "duplicateOrganizationRoleErrorMessage": "de_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "de_Add person",
+    "addNew.label": "de_Add new Person",
+    "selectExisting.label": "de_Select existing person",
+    "person.label": "de_Person",
+    "type.label": "de_Person Association Type",
+    "btnCancel.text": "de_Cancel",
+    "btnOk.text": "de_Save Person",
+    "setPrimary.label": "de_Set As Primary?",
+    "radioName": "de_Choice primary",
+    "radioYes.text": "de_Yes",
+    "radioNo.text": "de_No",
+    "duplicatePersonRoleErrorMessage": "de_Person already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "de_Edit Parent Organization"
+  },
+  "common.service": {
+    "error.invalidData": "Ungültige Daten"
+  },
+  "common.objects": {
+    "progressNoData": "[ Keine Daten ]",
+    "progressLoading": "Daten laden ",
+    "progressError": "Daten konnten nicht geladen werden "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "de_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "de_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "de_Action was successful",
+      "error": "de_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "de_Refresh",
+    "waitUploading": "de_Uploading...",
+    "confirmVersion": "de_Are you sure to set back to older version?",
+    "declareSuccessful": "de_Declare successful. Refreshing Document Tree...",
+    "prevItems": "de_ items above...",
+    "prevItemsTooltip": "de_Review previous items",
+    "moreItems": "de_ more items...",
+    "moreItemsTooltip": "de_Load more items",
+    "moreItemsBegin": "de_More items...",
+    "email": {
+      "defaultTitle": "de_ArkCase Documents",
+      "headerForLinks": "de_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "de_Documents from ArkCase",
+      "bodyForAttachment": "de_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "de_Hello,",
+      "footerForAttachment": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "de_(Select Item)",
+      "editWithWebDAV": "de_Edit"
+    },
+    "table.columns": {
+      "title": "de_Title",
+      "type": "de_Type",
+      "created": "de_Created",
+      "modified": "de_Modified",
+      "modifier": "de_Modified By",
+      "version": "de_Version",
+      "status": "de_Status"
+    },
+    "dndDialog": {
+      "title": "de_Drag and Drop",
+      "radReplace.text": "de_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "de_Create document(s) in parent folder",
+      "selFileTypes.label": "de_File Type:",
+      "optFileType.prompt": "de_[choose file type]",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_OK"
+    },
+    "emailDialog": {
+      "title": "de_Email",
+      "recipients": "de_Recipients:",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Send Email",
+      "gridColumns": {
+        "name": "de_Name",
+        "email": "de_Email"
+      }
+    },
+    "comment": {
+      "title": "de_Checkin New Document",
+      "addComent": "de_Detailed Note",
+      "btnCancel.text": "de_Cancel",
+      "btnOk.text": "de_Checkin",
+      "chooseFiles": "de_Choose Files",
+      "noFiles": "de_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "de_(Error)"
+    },
+    "lockedTitle": "de_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "de_Are you sure you want to delete this folder?",
+      "body.message": "de_The folder contains:",
+      "body.content.files": "de_files",
+      "body.content.folders": "de_folders",
+      "btn.delete.folder": "de_Yes",
+      "btn.cancel.delete.folder": "de_No"
+    },
+    "fileTypesDialog": {
+      "header": "de_Please select type of the Document",
+      "btnOK": "de_OK",
+      "btnCancel": "de_Cancel"
+    }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "Datensätze oben...",
+    "btnPrev.toolTip": "Vorherige Datensätze überprüfen",
+    "btnNext.titleUnknownSize": "Weitere Datensätze...",
+    "btnNext.title": "Weitere Datensätze...",
+    "btnNext.toolTip": "Laden Sie mehr Datensätze",
+    "edtQuery.placeHolder": "Suche",
+    "btnQuery.text": "Gehe!",
+    "errorNode.title": "(Fehler)",
+    "errorNode.toolTip": "(Fehler)",
+    "noAccessNode.title": "(Kein Zugriff)",
+    "noAccessNode.toolTip": "(Kein Zugriff)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "de_items per page",
+    "pagerCountMiddleLabel": "de_ of ",
+    "pagerCountLabel": "de_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "de_Choose",
+    "not_authorized": "de_Not Authorized",
+    "tooltip.move_right": "de_Move Right",
+    "tooltip.move_left": "de_Move Left",
+    "authorized": "de_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "Suche",
+    "btnSearch.text": "Suche",
+    "btnOk.text": "OK",
+    "btnCancel.text": "Abbrechen",
+    "edtPlaceholder": "In die Suche eingeben",
+    "noData.text": "Keine Ergebnisse"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "Mehr Werte anzeigen",
+    "showLess.button.text": "Weniger Werte anzeigen",
+    "results.text": "Ergebnisse",
+    "noResults.text": "Keine Ergebnisse",
+    "tooltip": {
+      "collapseFacetList": "Zusammenbruch Facettenliste",
+      "expandFacetList": "Erweitern Facettenliste"
+    },
+    "facet": {
+      "names.modifyUser%": "Benutzer ändern",
+      "names.taskPriority%": "Aufgabenpriorität",
+      "fields.taskPriority.medium%": "Mittel",
+      "fields.taskPriority.low%": "Niedrig",
+      "fields.taskPriority.high%": "hoch",
+      "fields.taskPriority.expedite%": "Expedite",
+      "name.group%": "Gruppe",
+      "names.tagToken%": "Token des Etiketts",
+      "name.assignee%": "Bevollmächtigter vollständiger Name",
+      "names.documentRepository%": "Dokument Repository Name",
+      "names.taskStatus%": "Taskstatus",
+      "fields.taskStatus.active%": "Aktiv",
+      "fields.taskStatus.draft%": "Entwurf",
+      "fields.taskStatus.closed%": "Abgeschlossen",
+      "fields.taskStatus.record%": "Aufzeichnung",
+      "fields.taskStatus.inactive%": "Inaktiv",
+      "fields.taskStatus.inApproval%": "In Genehmigung",
+      "fields.taskStatus.delete%": "Löschen",
+      "fields.taskStatus.approved%": "Genehmigt",
+      "fields.taskStatus.unclaimed%": "Nicht abgeholt",
+      "fields.taskStatus.valid%": "Gültig",
+      "names.documentLanguage%": "Dokumentsprache",
+      "names.createUser%": "Benutzer erstellen",
+      "names.postalCode%": "Postleitzahl",
+      "names.incidentType%": "Vorfall Typ",
+      "fields.incidentType.agricultural%": "Landwirtschaftlich",
+      "fields.incidentType.arson%": "Brandstiftung",
+      "fields.incidentType.backgroundInvestigation%": "Hintergrunduntersuchung",
+      "fields.incidentType.benefitsAppeal%": "Vorteile Appell",
+      "fields.incidentType.businessDispute%": "Bessere Geschäftsstreitigkeiten",
+      "fields.incidentType.clinicalFraud%": "Klinischer Forscherbetrug",
+      "fields.incidentType.congressional%": "Kongressreaktion",
+      "fields.incidentType.disabilityWaiver%": "Behinderung Verzichtserklärung",
+      "fields.incidentType.domesticDispute%": "Häuslicher Streit",
+      "fields.incidentType.drugTrafficking%": "Drogenhandel",
+      "fields.incidentType.educationWaiver%": "Ausbildungsberatung",
+      "fields.incidentType.eeoHarassment%": "EEO / Belästigung",
+      "fields.incidentType.embezzlement%": "Unterschlagung",
+      "fields.incidentType.extortion%": "Erpressung",
+      "fields.incidentType.fraud%": "Betrug",
+      "fields.incidentType.government%": "Regierung",
+      "fields.incidentType.investorComplaint%": "Investor-Beschwerde",
+      "fields.incidentType.laborRacketeering%": "Labor Racketeering",
+      "fields.incidentType.local%": "Lokal",
+      "fields.incidentType.murder%": "Mord",
+      "fields.incidentType.newDrugFraud%": "Neue Drogenanwendung Betrug",
+      "fields.incidentType.payoff%": "Auszahlung",
+      "fields.incidentType.pensionWaiver%": "Pension Verzichtserklärung",
+      "fields.incidentType.pollution%": "Verschmutzung",
+      "fields.incidentType.productTampering%": "Produkt-Manipulation",
+      "fields.incidentType.assetTheftMisuse%": "Diebstahl oder Missbrauch von Vermögenswert",
+      "names.objectType%": "Objekttyp",
+      "fields.objectType.participant%": "Teilnehmer",
+      "fields.objectType.contactMethod%": "Kontaktmethode",
+      "fields.objectType.task%": "Aufgabe",
+      "fields.objectType.file%": "Datei",
+      "fields.objectType.person%": "Person",
+      "fields.objectType.personAssociation%": "Personenvereinigung",
+      "fields.objectType.reference%": "Referenz",
+      "fields.objectType.location%": "Standort",
+      "fields.objectType.organization%": "Organisation",
+      "fields.objectType.organizationAssociation%": "Organisationsvereinigung",
+      "fields.objectType.caseFile%": "Falldatei",
+      "fields.objectType.complaint%": "Beschwerde",
+      "fields.objectType.associatedTag%": "Assoziiertes Tag",
+      "fields.objectType.group%": "Gruppe",
+      "fields.objectType.costsheet%": "Kostenblatt",
+      "fields.objectType.note%": "Hinweis",
+      "fields.objectType.docRepo%": "Dokument Reposit",
+      "fields.objectType.personAlias%": "Person Alias",
+      "fields.objectType.timesheet%": "Arbeitsblatt",
+      "fields.objectType.subscription%": "Abonnement",
+      "fields.objectType.user%": "Benutzer",
+      "fields.objectType.objectLock%": "Objektsperre",
+      "names.state%": "Staat",
+      "names.parentType%": "übergeordneter Typ",
+      "fields.parentType.container%": "Container",
+      "fields.parentType.caseFile%": "Falldatei",
+      "fields.parentType.complaint%": "Beschwerde",
+      "fields.parentType.organization%": "Organisation",
+      "fields.parentType.person%": "Person",
+      "fields.parentType.task%": "Aufgabe",
+      "fields.parentType.file%": "Datei",
+      "fields.parentType.group%": "Gruppe",
+      "fields.parentType.docRepo%": "Dokument Reposit",
+      "fields.parentType.costsheet%": "Kostenblatt",
+      "fields.parentType.timesheet%": "Arbeitsblatt",
+      "name.owner%": "Besitzer",
+      "names.parentObjectType%": "Übergeordneter Objekttyp",
+      "fields.parentObjectType.container%": "Container",
+      "fields.parentObjectType.caseFile%": "Falldatei",
+      "fields.parentObjectType.complaint%": "Beschwerde",
+      "fields.parentObjectType.organization%": "Organisation",
+      "fields.parentObjectType.person%": "Person",
+      "fields.parentObjectType.task%": "Aufgabe",
+      "fields.parentObjectType.file%": "Datei",
+      "fields.parentObjectType.group%": "Gruppe",
+      "fields.parentObjectType.docRepo%": "Dokument Reposit",
+      "fields.parentObjectType.costsheet%": "Kostenblatt",
+      "fields.parentObjectType.timesheet%": "Arbeitsblatt",
+      "names.personOrganisation%": "Person, Organisationstyp",
+      "names.city%": "Stadt",
+      "names.createDate%": "Erstellungsdatum",
+      "fields.createDate.previousWeek%": "Vorherige Woche",
+      "fields.createDate.previousMonth%": "Vorheriger Monat",
+      "fields.createDate.previousYear%": "Vorheriges Jahr",
+      "names.dueDate%": "Fälligkeitsdatum",
+      "fields.dueDate.previousWeek%": "Vorherige Woche",
+      "fields.dueDate.previousMonth%": "Vorheriger Monat",
+      "fields.dueDate.previousYear%": "Vorheriges Jahr",
+      "names.incidentDate%": "Vorfalldatum",
+      "fields.incidentDate.previousWeek%": "Vorherige Woche",
+      "fields.incidentDate.previousMonth%": "Vorheriger Monat",
+      "fields.incidentDate.previousYear%": "Vorheriges Jahr",
+      "names.modifyDate%": "Datum ändern",
+      "fields.modifyDate.previousWeek%": "Vorherige Woche",
+      "fields.modifyDate.previousMonth%": "Vorheriger Monat",
+      "fields.modifyDate.previousYear%": "Vorheriges Jahr"
+    }
+  },
+  "common.directive.coreNotes": {
+    "title": "de_Notes",
+    "modal.addNote": "de_Add Note",
+    "modal.editNote": "de_Edit Record",
+    "modal.notes.label": "de_Note",
+    "modal.btnOk.text": "de_Save",
+    "modal.btnCancel.text": "de_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "de_People",
+    "contactMethods": {
+      "title": "de_Contact Methods",
+      "modal": {
+        "addContactMethod": "de_Add Contact Method",
+        "editContactMethod": "de_Edit Record",
+        "contactMethodTypes.label": "de_Contact Method Types",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "organizations": {
+      "title": "de_Organizations",
+      "modal": {
+        "addOrganization": "de_Add Organization",
+        "editOrganization": "de_Edit Record",
+        "organizationTypes.label": "de_Organization Types",
+        "selectExisting.label": "de_Select Existing",
+        "addNew.label": "de_Add New",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save",
+        "dialogOrganizationPicker": {
+          "header": "de_Choose Organization",
+          "table.columns": {
+            "type": "de_Organization Type",
+            "name": "de_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "de_Addresses",
+      "modal": {
+        "addAddress": "de_Add Address",
+        "editAddress": "de_Edit Record",
+        "addressTypes.label": "de_Address Types",
+        "street.label": "de_Street",
+        "city.label": "de_City",
+        "zip.label": "de_Zip",
+        "state.label": "de_State",
+        "country.label": "de_Country",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "aliases": {
+      "title": "de_Aliases",
+      "modal": {
+        "addAlias": "de_Add Alias",
+        "editAlias": "de_Edit Record",
+        "aliasTypes.label": "de_Alias Types",
+        "value.label": "de_Value",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    },
+    "people": {
+      "title": "de_People",
+      "modal": {
+        "addPeople": "de_Add Person",
+        "editPeople": "de_Edit Record",
+        "personTypes.label": "de_Person Types",
+        "givenName.label": "de_First Name",
+        "familyName.label": "de_Last Name",
+        "btnCancel.text": "de_Cancel",
+        "btnOk.text": "de_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "de_Calendar",
+    "start.label": "de_Start: ",
+    "end.label": "de_End: ",
+    "message": {
+      "error.accessDenied": "de_Access denied to calendar service.",
+      "error.serviceConfiguration": "de_Invalid calendar service configuration.",
+      "error.serviceCredentials": "de_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "de_Internal Server Error occurred."
+    }
+  },
+  "common.directive.coreParticipants": {
+    "title": "de_Participants",
+    "modal.addParticipant.label": "de_Add Participant",
+    "modal.editParticipant.label": "de_Edit Record",
+    "modal.participantType.label": "de_Participant Type ",
+    "modal.participantName.label": "de_Participant Name",
+    "modal.btnOk.text": "de_Save",
+    "modal.btnCancel.text": "de_Cancel",
+    "modal.dialogUserPicker.header": "de_Search User",
+    "modal.dialogGroupPicker.header": "de_Search Group",
+    "message": {
+      "error.groupType": "de_The owning group cannot be a person.",
+      "error.userType": "de_ User type cannot be a group.",
+      "error.assigneeUnique": "de_Only one assignee is allowed.",
+      "error.owninggroupUnique": "de_Only one owning group is allowed.",
+      "error.noAccessCombo": "de_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+    }
+  },
+  "common.directive.progressIndicator": {
+    "progressCompletion": "de_% Complete"
+  },
+  "common.directive.folderActions": {
+    "button.addFile": "de_Add File",
+    "button.addFolder": "de_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "de_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "de_Case File",
+    "COMPLAINT": "de_Complaint",
+    "TASK": "de_Task",
+    "TIMESHEET": "de_Timesheet",
+    "COSTSHEET": "de_Costsheet",
+    "FILE": "de_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "de_Choose User",
+    "table.columns": {
+      "name": "de_Name",
+      "type": "de_Type",
+      "title": "de_Title",
+      "id": "de_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "de_{{objectTypeString}} with id {{objectId}} was created."
+}

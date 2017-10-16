@@ -11,8 +11,8 @@
  */
 
 angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
-    'Reports.BuildUrl', '$q', 'Reports.Data'
-    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data) {
+    'Reports.BuildUrl', '$q', 'Reports.Data', '$window'
+    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data, $window) {
 
         $scope.$on('req-component-config', function (e, componentId) {
             promiseModuleConfig.then(function (config) {
@@ -22,6 +22,8 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
             });
         });
 
+        $scope.showXmlReport = false;
+        
         $scope.data = Data.getData();
 
         var promiseModuleConfig = ConfigService.getModuleConfig("reports");
@@ -30,12 +32,12 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
         // Retrieves the properties from the acm-reports.properties file
-        var promiseReportConfig = LookupService.getConfig("acm-reports");
+        var promiseReportConfig = BuildUrl.getAuthorizedReports();
 
         $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
             .then(function (data) {
                 var reportsConfig = data[0];
-                $scope.data.reports = data[1];
+                $scope.data.reports = data[1].data;
                 $scope.config = data[2];
 
                 // On some reason reports list contains URL and PORT info
@@ -49,7 +51,11 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
             });
 
         $scope.generateReport = function () {
-            $scope.reportUrl = BuildUrl.getUrl($scope.data);
+            if ($scope.showXmlReport) {
+                $window.open(BuildUrl.getUrl($scope.data, $scope.showXmlReport));
+            } else {
+                $scope.reportUrl = BuildUrl.getUrl($scope.data, $scope.showXmlReport);
+            }
         };
     }
 ]);

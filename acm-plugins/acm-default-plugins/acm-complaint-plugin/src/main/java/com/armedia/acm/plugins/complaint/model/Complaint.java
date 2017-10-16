@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.complaint.model;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
+import com.armedia.acm.core.AcmStatefulEntity;
+import com.armedia.acm.core.AcmTitleEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
 import com.armedia.acm.data.converter.BooleanToStringConverter;
@@ -11,13 +13,16 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +49,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -63,8 +69,9 @@ import java.util.Set;
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
 @JsonPropertyOrder(value = {"complaintId", "personAssociations", "originator"})
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
-        AcmLegacySystemEntity, AcmNotifiableEntity
+        AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
 {
     private static final long serialVersionUID = -1154137631399833851L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -85,6 +92,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String priority;
 
     @Column(name = "cm_complaint_title")
+    @Size(min=1)
     private String complaintTitle;
 
     @Lob
@@ -141,11 +149,16 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Transient
     private List<String> approvers;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
             @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OrderBy("created ASC")
+    private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = ComplaintConstants.OBJECT_TYPE;
@@ -277,6 +290,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public void setPriority(String priority)
     {
         this.priority = priority;
+    }
+    
+    @Override
+    @JsonIgnore
+    public String getTitle()
+    {
+        return complaintTitle;
     }
 
     public String getComplaintTitle()
@@ -470,14 +490,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         personAssoc.setParentId(getComplaintId());
         personAssoc.setParentType(ComplaintConstants.OBJECT_TYPE);
 
-        if (personAssoc.getPerson().getPersonAssociations() == null)
+        if (personAssoc.getPerson().getAssociationsFromObjects() == null)
         {
-            personAssoc.getPerson().setPersonAssociations(new ArrayList<>());
+            personAssoc.getPerson().setAssociationsFromObjects(new ArrayList<>());
         }
 
-        if (!personAssoc.getPerson().getPersonAssociations().contains(personAssoc))
+        if (!personAssoc.getPerson().getAssociationsFromObjects().contains(personAssoc))
         {
-            personAssoc.getPerson().getPersonAssociations().add(personAssoc);
+            personAssoc.getPerson().getAssociationsFromObjects().add(personAssoc);
         }
     }
 
@@ -616,5 +636,30 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public String getNotifiableEntityTitle()
     {
         return complaintNumber;
+    }
+
+    @JsonIgnore
+    public String getAssigneeGroup()
+    {
+        String groupName = null;
+        AcmParticipant owningGroup = getParticipants().stream()
+                .filter(p -> ComplaintConstants.OWNING_GROUP.equals(p.getParticipantType())).findFirst().orElse(null);
+        AcmParticipant assignee = getParticipants().stream().filter(p -> ComplaintConstants.ASSIGNEE.equals(p.getParticipantType()))
+                .findFirst().orElse(null);
+        if (owningGroup != null && assignee != null && assignee.getParticipantLdapId().isEmpty())
+        {
+            groupName = owningGroup.getParticipantLdapId();
+        }
+        return groupName;
+    }
+
+    public List<OrganizationAssociation> getOrganizationAssociations()
+    {
+        return organizationAssociations;
+    }
+
+    public void setOrganizationAssociations(List<OrganizationAssociation> organizationAssociations)
+    {
+        this.organizationAssociations = organizationAssociations;
     }
 }

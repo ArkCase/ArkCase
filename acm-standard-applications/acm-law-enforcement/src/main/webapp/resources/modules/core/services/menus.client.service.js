@@ -109,6 +109,7 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
         // Add menu item object
         this.addMenuItems = function (menuObjects) {
             var context = this;
+
             $q.all([appModulesPromise, userRolesPromise]).then(function (data) {
                 var appModules = data[0].data;
                 var userRoles = data[1].authorities;
@@ -120,7 +121,11 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                     context.validateMenuExistance(menuObj.menuId);
                     // Check if we have defined permission rule with name of menu
                     (function processMenuPermission(menuObj) {
-                        PermissionsService.getActionPermission(menuObj.menuItemURL, null).then(function (moduleAllowedByActionPermission) {
+                        var action = menuObj.permissionAction;
+                        if (!action) {
+                            action = menuObj.menuItemURL;
+                        }
+                        PermissionsService.getActionPermission(action, null).then(function (moduleAllowedByActionPermission) {
                             var moduleObject = null;
                             var moduleAllowedByRoles = false;
 

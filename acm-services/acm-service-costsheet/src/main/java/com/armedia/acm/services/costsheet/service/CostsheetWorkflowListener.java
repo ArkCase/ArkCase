@@ -53,7 +53,11 @@ public class CostsheetWorkflowListener implements ApplicationListener<AcmCostshe
 		LOG.debug("Calling business rules");
 		
 		configuration = getFileWorkflowBusinessRule().applyRules(configuration);
-		
+		if (configuration.isBuckslipProcess())
+		{
+			//CostsheetWorkflowListener is not handling buckslip process
+			return;
+		}
 		LOG.debug("Start process? " + configuration.isStartProcess());
 		
 		if ( configuration.isStartProcess() )

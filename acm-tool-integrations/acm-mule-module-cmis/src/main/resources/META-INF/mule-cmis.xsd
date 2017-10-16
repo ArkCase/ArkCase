@@ -1,0 +1,2918 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xs:schema xmlns:ns2="http://www.mulesoft.org/schema/mule/devkit" xmlns:mule="http://www.mulesoft.org/schema/mule/core" xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="http://www.mulesoft.org/schema/mule/cmis">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"></xs:import>
+  <xs:import schemaLocation="http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" namespace="http://www.springframework.org/schema/beans"></xs:import>
+  <xs:import schemaLocation="http://www.mulesoft.org/schema/mule/core/current/mule.xsd" namespace="http://www.mulesoft.org/schema/mule/core"></xs:import>
+  <xs:element xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="config" substitutionGroup="mule:abstract-extension" ns2:javaClass="org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="mule:abstractExtensionType">
+          <xs:annotation>
+            <xs:documentation>CMIS (Content Management Interoperability Services) is a standard for improving interoperability between ECM systems.</xs:documentation>
+          </xs:annotation>
+          <xs:sequence>
+            <xs:element name="connection-pooling-profile" minOccurs="0" type="mule:poolingProfileType">
+              <xs:annotation>
+                <xs:documentation>Characteristics of the connection pool.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element ref="mule:abstract-reconnection-strategy" minOccurs="0">
+              <xs:annotation>
+                <xs:documentation>Reconnection strategy that defines how Mule should handle a connection failure.</xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="name" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Give a name to this configuration so it can be later referenced by config-ref.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="username" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>CMIS username</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="password" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>CMIS password</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="baseUrl" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>URL base for the SOAP connector</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="repositoryId" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>The connection time-out specification</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="repositories" substitutionGroup="mule:abstract-message-processor" type="RepositoriesType">
+    <xs:annotation>
+      <xs:documentation>Returns all repositories that are available at the endpoint.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RepositoriesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="repository-info" substitutionGroup="mule:abstract-message-processor" type="RepositoryInfoType">
+    <xs:annotation>
+      <xs:documentation>Returns information about the CMIS repository, the optional capabilities it supports and its Access Control information if applicable.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="RepositoryInfoType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="changelog" substitutionGroup="mule:abstract-message-processor" type="ChangelogType">
+    <xs:annotation>
+      <xs:documentation>Gets repository changes.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ChangelogType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="changeLogToken" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The change log token to start from or</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="includeProperties" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Indicates if changed properties should be included in the result</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-object-by-id" substitutionGroup="mule:abstract-message-processor" type="GetObjectByIdType">
+    <xs:annotation>
+      <xs:documentation>Returns a CMIS object from the repository and puts it into the cache.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetObjectByIdType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object id</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-object-by-path" substitutionGroup="mule:abstract-message-processor" type="GetObjectByPathType">
+    <xs:annotation>
+      <xs:documentation>Returns a CMIS object from the repository and puts it into the cache.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetObjectByPathType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="path" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Path of the object to retrieve</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-document-by-path" substitutionGroup="mule:abstract-message-processor" type="CreateDocumentByPathType">
+    <xs:annotation>
+      <xs:documentation>Creates a new document in the repository where the content comes directly from the payload and
+the target folder node is specified by a repository path.
+* &lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateDocumentByPathType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>the properties optional document properties to set</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderPath" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder in the repository that will hold the document</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>name of the file</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="content-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>file content as specified in the payload</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="mimeType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>stream content-type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="versioningState" use="required" type="VersioningStateEnumType">
+          <xs:annotation>
+            <xs:documentation>An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checked-out: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the type of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="force" default="false" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>if should folder structure must be created when there are missing intermediate folders</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-document-by-path-from-content" substitutionGroup="mule:abstract-message-processor" type="CreateDocumentByPathFromContentType">
+    <xs:annotation>
+      <xs:documentation>Creates a new document in the repository where the content is specified as the value of the "content"
+parameter and the target folder node is specified by a repository path.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateDocumentByPathFromContentType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>the properties optional document properties to set</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderPath" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder in the repository that will hold the document</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Name of the file</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="content-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>File content</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="mimeType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Stream content-type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="versioningState" use="required" type="VersioningStateEnumType">
+          <xs:annotation>
+            <xs:documentation>An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of the object.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="force" default="false" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>if should folder structure must be created when there are missing intermediate folders</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-or-create-folder-by-path" substitutionGroup="mule:abstract-message-processor" type="GetOrCreateFolderByPathType">
+    <xs:annotation>
+      <xs:documentation>Creates a new folder in the repository if it doesn't already exist.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetOrCreateFolderByPathType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderPath" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Path to the folder</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-document-by-id" substitutionGroup="mule:abstract-message-processor" type="CreateDocumentByIdType">
+    <xs:annotation>
+      <xs:documentation>Creates a new document in the repository where the content comes directly from the payload and
+the target folder node is specified by an object ID.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateDocumentByIdType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>the properties optional document properties to set</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object Id</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>name of the file</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="content-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>file content as specified in the payload</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="mimeType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>stream content-type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="versioningState" use="required" type="VersioningStateEnumType">
+          <xs:annotation>
+            <xs:documentation>An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checkedout: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the type of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-document-by-id-from-content" substitutionGroup="mule:abstract-message-processor" type="CreateDocumentByIdFromContentType">
+    <xs:annotation>
+      <xs:documentation>Creates a new document in the repository where the content comes directly from the payload and
+the target folder node is specified by an object ID.
+*  &lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateDocumentByIdFromContentType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>the properties optional document properties to set</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object Id</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>name of the file</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="content-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>file content</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="mimeType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>stream content-type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="versioningState" use="required" type="VersioningStateEnumType">
+          <xs:annotation>
+            <xs:documentation>An enumeration specifying what the versioning state of the newly-created object MUST be. If the repository does not support versioning, the repository MUST ignore the versioningState parameter.  Valid values are: o none:  The document MUST be created as a non-versionable document. o checkedout: The document MUST be created in the checked-out state. o major (default): The document MUST be created as a major version o minor: The document MUST be created as a minor version.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the type of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-folder" substitutionGroup="mule:abstract-message-processor" type="CreateFolderType">
+    <xs:annotation>
+      <xs:documentation>Creates a folder. Note that this is not recusive creation. You just create
+one folder
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateFolderType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderName" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder name (eg: "my documents")</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="parentObjectId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Parent folder for the folder being created (eg: repository.rootFolder)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-type-definition" substitutionGroup="mule:abstract-message-processor" type="GetTypeDefinitionType">
+    <xs:annotation>
+      <xs:documentation>Returns the type definition of the given type id.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetTypeDefinitionType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="typeId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Object type Id</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-checkout-docs" substitutionGroup="mule:abstract-message-processor" type="GetCheckoutDocsType">
+    <xs:annotation>
+      <xs:documentation>Retrieve list of checked out documents.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetCheckoutDocsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filter" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of properties to filter</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="orderBy" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of query names and the ascending modifier "ASC" or the descending modifier "DESC" for each query name</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="query" substitutionGroup="mule:abstract-message-processor" type="QueryType">
+    <xs:annotation>
+      <xs:documentation>Sends a query to the repository
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="QueryType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="statement" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the query statement (CMIS query language)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="searchAllVersions" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>specifies if the latest and non-latest versions of document objects should be included</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filter" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of properties to filter</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="orderBy" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of query names and the ascending modifier "ASC" or the descending modifier "DESC" for each query name</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-parent-folders" substitutionGroup="mule:abstract-message-processor" type="GetParentFoldersType">
+    <xs:annotation>
+      <xs:documentation>Retrieves the parent folders of a fileable cmis object
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetParentFoldersType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the object whose parent folders are needed. can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>id of the object whose parent folders are needed. can be null if "object" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="folder" substitutionGroup="mule:abstract-message-processor" type="FolderType">
+    <xs:annotation>
+      <xs:documentation>Navigates the folder structure.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="FolderType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folder-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object. Can be null if "folderId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object id. Can be null if "folder" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="get" use="required" type="NavigationOptionsEnumType">
+          <xs:annotation>
+            <xs:documentation>NavigationOptions that specifies whether to get the parent folder, the list of immediate children or the whole descendants tree</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="depth" use="optional" type="integerType">
+          <xs:annotation>
+            <xs:documentation>if "get" value is DESCENDANTS, represents the depth of the descendants tree</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filter" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of properties to filter (only for CHILDREN or DESCENDANTS navigation)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="orderBy" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of query names and the ascending modifier "ASC" or the descending modifier "DESC" for each query name (only for CHILDREN or DESCENDANTS navigation)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-content-stream" substitutionGroup="mule:abstract-message-processor" type="GetContentStreamType">
+    <xs:annotation>
+      <xs:documentation>Retrieves the content stream of a Document.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetContentStreamType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document from which to get the stream. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document from which to get the stream. Can be null if "object" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="move-object" substitutionGroup="mule:abstract-message-processor" type="MoveObjectType">
+    <xs:annotation>
+      <xs:documentation>Moves a fileable cmis object from one location to another. Take into account that a fileable
+object may be filled in several locations. Thats why you must specify a source folder.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="MoveObjectType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object to move. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object's id. Can be null if "cmisObject" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="sourceFolderId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the source folder</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="targetFolderId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the target folder</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="update-object-properties" substitutionGroup="mule:abstract-message-processor" type="UpdateObjectPropertiesType">
+    <xs:annotation>
+      <xs:documentation>Update an object's properties
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="UpdateObjectPropertiesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="1">
+            <xs:annotation>
+              <xs:documentation>The properties to update</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Object to be updated. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object's id. Can be null if "cmisObject" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-object-relationships" substitutionGroup="mule:abstract-message-processor" type="GetObjectRelationshipsType">
+    <xs:annotation>
+      <xs:documentation>Returns the relationships if they have been fetched for an object.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetObjectRelationshipsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the object whose relationships are needed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the id of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-acl" substitutionGroup="mule:abstract-message-processor" type="GetAclType">
+    <xs:annotation>
+      <xs:documentation>Returns the ACL if it has been fetched for an object.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAclType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the object whose Acl is needed</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the id of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-all-versions" substitutionGroup="mule:abstract-message-processor" type="GetAllVersionsType">
+    <xs:annotation>
+      <xs:documentation>Retrieve an object's version history
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAllVersionsType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="document-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the document whose versions are to be retrieved</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="documentId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document whose versions are to be retrieved</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filter" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of properties to filter (only for CHILDREN or DESCENDANTS navigation)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="orderBy" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>comma-separated list of query names and the ascending modifier "ASC" or the descending modifier "DESC" for each query name (only for CHILDREN or DESCENDANTS navigation)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="check-out" substitutionGroup="mule:abstract-message-processor" type="CheckOutType">
+    <xs:annotation>
+      <xs:documentation>Checks out the document and returns the object id of the PWC (private working copy).
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CheckOutType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="document-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document to be checked out. Can be null if "documentId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="documentId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document to be checked out. Can be null if "document" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="cancel-check-out" substitutionGroup="mule:abstract-message-processor" type="CancelCheckOutType">
+    <xs:annotation>
+      <xs:documentation>If applied to a PWC (private working copy) of the document, the check out
+will be reversed. Otherwise, an exception will be thrown.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CancelCheckOutType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="document-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The checked out document. Can be null if "documentId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="documentId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the checked out document. Can be null if "document" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="check-in" substitutionGroup="mule:abstract-message-processor" type="CheckInType">
+    <xs:annotation>
+      <xs:documentation>If applied to a PWC (private working copy) it performs a check in.
+Otherwise, an exception will be thrown.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CheckInType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>custom properties</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="document-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document to check-in. Can be null if "documentId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="documentId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document to check-in. Can be null if "document" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="content-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>File content (no byte array or input stream for now)</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="filename" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Name of the file</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="mimeType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Stream content-type</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="major" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>whether it is major</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="checkinComment" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Check-in comment</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="apply-acl" substitutionGroup="mule:abstract-message-processor" type="ApplyAclType">
+    <xs:annotation>
+      <xs:documentation>Set the permissions associated with an object.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AceObjectType">
+    <xs:sequence></xs:sequence>
+    <xs:attribute name="ref" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The reference object for this parameter</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ApplyAclType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="add-aces" maxOccurs="1" minOccurs="1">
+            <xs:annotation>
+              <xs:documentation>added access control entities</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="add-ace" maxOccurs="unbounded" minOccurs="0">
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension xmlns="http://www.mulesoft.org/schema/mule/cmis" base="AceObjectType">
+                        <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                      </xs:extension>
+                    </xs:complexContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="remove-aces" maxOccurs="1" minOccurs="1">
+            <xs:annotation>
+              <xs:documentation>removed access control entities</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="remove-ace" maxOccurs="unbounded" minOccurs="0">
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension xmlns="http://www.mulesoft.org/schema/mule/cmis" base="AceObjectType">
+                        <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                      </xs:extension>
+                    </xs:complexContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the object whose Acl is intended to change.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>the id of the object</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="aclPropagation" use="required" type="AclPropagationEnumType">
+          <xs:annotation>
+            <xs:documentation>wheter to propagate changes or not. can be  REPOSITORYDETERMINED | OBJECTONLY | PROPAGATE</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="get-applied-policies" substitutionGroup="mule:abstract-message-processor" type="GetAppliedPoliciesType">
+    <xs:annotation>
+      <xs:documentation>Get the policies that are applied to an object.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="GetAppliedPoliciesType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" default="#[payload]" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document from which to get the stream. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document from which to get the stream. Can be null if "object" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="apply-policy" substitutionGroup="mule:abstract-message-processor" type="ApplyPolicyType">
+    <xs:annotation>
+      <xs:documentation>Applies policies to this object.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ObjectIdObjectType">
+    <xs:sequence></xs:sequence>
+    <xs:attribute name="ref" use="optional" type="xs:string">
+      <xs:annotation>
+        <xs:documentation>The reference object for this parameter</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="ApplyPolicyType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="policy-ids" maxOccurs="1" minOccurs="1">
+            <xs:annotation>
+              <xs:documentation>Policy ID's to apply</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element name="policy-id" maxOccurs="unbounded" minOccurs="0">
+                  <xs:complexType>
+                    <xs:complexContent>
+                      <xs:extension xmlns="http://www.mulesoft.org/schema/mule/cmis" base="ObjectIdObjectType">
+                        <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                      </xs:extension>
+                    </xs:complexContent>
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The document from which to get the stream. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Id of the document from which to get the stream. Can be null if "object" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete" substitutionGroup="mule:abstract-message-processor" type="DeleteType">
+    <xs:annotation>
+      <xs:documentation>Remove an object
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cmisObject-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object to be deleted. Can be null if "objectId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object's id. Can be null if "cmisObject" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="allVersions" default="false" use="optional" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>If true, deletes all version history of the object. Defaults to "false".</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="delete-tree" substitutionGroup="mule:abstract-message-processor" type="DeleteTreeType">
+    <xs:annotation>
+      <xs:documentation>Deletes a folder and all subfolders.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DeleteTreeType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folder-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object. Can be null if "folderId" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="folderId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Folder Object id. Can be null if "folder" is set.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="allversions" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>If true, then delete all versions of the document. If false, delete only the document object specified.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="unfile" use="optional" type="UnfileObjectEnumType">
+          <xs:annotation>
+            <xs:documentation>Specifies how the repository must process file-able child- or descendant-objects.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute xmlns="http://www.mulesoft.org/schema/mule/cmis" name="continueOnFailure" use="required" type="booleanType">
+          <xs:annotation>
+            <xs:documentation>Specified whether to continue attempting to perform this operation even if deletion of a child- or descendant-object in the specified folder cannot be deleted or not.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="apply-aspect" substitutionGroup="mule:abstract-message-processor" type="ApplyAspectType">
+    <xs:annotation>
+      <xs:documentation>Apply and aspect to an object and set some properties of that aspect.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ApplyAspectType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:sequence>
+          <xs:element name="properties" maxOccurs="1" minOccurs="0">
+            <xs:annotation>
+              <xs:documentation>The properties to set.</xs:documentation>
+            </xs:annotation>
+            <xs:complexType>
+              <xs:choice>
+                <xs:sequence>
+                  <xs:element name="property" maxOccurs="unbounded" minOccurs="0">
+                    <xs:complexType>
+                      <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                          <xs:attribute name="value-ref" use="optional" type="xs:string"></xs:attribute>
+                          <xs:attribute name="key" type="xs:string"></xs:attribute>
+                        </xs:extension>
+                      </xs:simpleContent>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:sequence>
+                  <xs:any maxOccurs="unbounded" minOccurs="0" processContents="lax"></xs:any>
+                </xs:sequence>
+              </xs:choice>
+              <xs:attribute name="ref" use="optional" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>The reference object for this parameter</xs:documentation>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:complexType>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="objectId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The object's id.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="aspectName" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The name of the aspect to be applied to the object.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element xmlns="http://www.mulesoft.org/schema/mule/cmis" xmlns:mule="http://www.mulesoft.org/schema/mule/core" name="create-relationship" substitutionGroup="mule:abstract-message-processor" type="CreateRelationshipType">
+    <xs:annotation>
+      <xs:documentation>Creates a parent/child relationships between two nodes in the repository of the
+specified relationship object type.
+&lt;p/&gt;</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="CreateRelationshipType">
+    <xs:complexContent>
+      <xs:extension xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:abstractMessageProcessorType">
+        <xs:attribute name="config-ref" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specify which configuration to use for this invocation.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="parentObjectId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The ID of the parent (or source) object in the relationship.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="childObjectId" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The ID of the child (or target) object in the relationship.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="relationshipType" use="required" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The name of the relationship type that should be associated with the objects.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="username" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS username</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="password" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>CMIS password</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="baseUrl" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>URL base for the SOAP connector</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="repositoryId" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The identifier for the Repository that this connector instance works with</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="endpoint" default="ATOM" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The type of endpoint. Values: SOAP or ATOMPUB</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="connectionTimeout" default="10000" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>The connection time-out specification</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="useAlfrescoExtension" default="false" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies whether the Alfresco Object Factory implementation should be utilized, the Alfresco CMIS extension JAR must be included in your Mule application in order for this configuration to work.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+        <xs:attribute name="cxfPortProvider" default="org.apache.chemistry.opencmis.client.bindings.spi.webservices.CXFPortProvider" use="optional" type="xs:string">
+          <xs:annotation>
+            <xs:documentation>Specifies CXF port provider, the CMIS connector includes a default implementation but allows to set a custom implementation by extending org.apache.chemistry.opencmis.client.bindings.spi.webservices.AbstractPortProvider</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="AclPropagationEnumType">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="REPOSITORYDETERMINED">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="OBJECTONLY">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="PROPAGATE">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="VersioningStateEnumType">
+    <xs:annotation>
+      <xs:documentation>Enum holding all the possible versioning states</xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="NONE">
+            <xs:annotation>
+              <xs:documentation>The document MUST be created as a non-versionable document.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MAJOR">
+            <xs:annotation>
+              <xs:documentation>The document MUST be created as a major version</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="MINOR">
+            <xs:annotation>
+              <xs:documentation>The document MUST be created as a minor version.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CHECKEDOUT">
+            <xs:annotation>
+              <xs:documentation>The document MUST be created in the checked-out state.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="NavigationOptionsEnumType">
+    <xs:annotation>
+      <xs:documentation>Enum holding all the possible navigation options</xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="PARENT">
+            <xs:annotation>
+              <xs:documentation>Returns the parent Folder</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="CHILDREN">
+            <xs:annotation>
+              <xs:documentation>Returns a list of objects contained in the current folder</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DESCENDANTS">
+            <xs:annotation>
+              <xs:documentation>Returns the whole descentants tree of the current folder</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="TREE">
+            <xs:annotation>
+              <xs:documentation>Returns the folder tree starting with this folder.</xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="UnfileObjectEnumType">
+    <xs:annotation>
+      <xs:documentation></xs:documentation>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="UNFILE">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DELETESINGLEFILED">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+          <xs:enumeration value="DELETE">
+            <xs:annotation>
+              <xs:documentation></xs:documentation>
+            </xs:annotation>
+          </xs:enumeration>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="integerType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:integer"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="decimalType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:decimal"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="floatType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:float"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="doubleType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:double"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="dateTimeType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:dateTime"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="longType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:long"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="byteType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:byte"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="booleanType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:boolean"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="anyUriType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:anyURI"></xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:simpleType name="charType">
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:minLength value="1"></xs:minLength>
+          <xs:maxLength value="1"></xs:maxLength>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction xmlns:mule="http://www.mulesoft.org/schema/mule/core" base="mule:propertyPlaceholderType"></xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>

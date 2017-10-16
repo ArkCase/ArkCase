@@ -10,8 +10,8 @@
 
  * CallObjectsService contains wrapper functions of ObjectsService to support default error handling, data validation and data cache.
  */
-angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'UtilService',
-    function ($q, $resource, Util) {
+angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'UtilService', 'Admin.OrganizationalHierarchyService',
+    function ($q, $resource, Util, AdminOrganizationalHierarchyService) {
         return {
 
             /**
@@ -215,5 +215,5 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                 return restricted;
             }
         }
-    }
-]);
+    }])
+;

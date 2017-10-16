@@ -60,10 +60,9 @@
  </example>
  */
 angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
-    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService'
+    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService', 'Search.AutoSuggestService'
     , function (SearchService, SearchQueryBuilder, $q, Util
-        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService
-    ) {
+        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService, AutoSuggestService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -84,11 +83,34 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
+
                 if (typeof scope.config.emptySearch !== 'undefined') {
                     scope.emptySearch = scope.config.emptySearch;
                 }
+
+                scope.facetLimit = 10; //default value for facetLimit
+                if (typeof scope.config.facetLimit !== 'undefined') {
+                    scope.facetLimit = scope.config.facetLimit;
+                }
+
+                var searchObject = new Object();
+                try {
+                    searchObject = JSON.parse(scope.searchQuery);
+                } catch (e) {
+                    searchObject.searchQuery = scope.searchQuery;
+                    searchObject.isSelected = false;
+                }
+
+
+                var isSelected = searchObject.isSelected;
+                scope.searchQuery = searchObject.searchQuery;
+                scope.onSelect = function ($item, $model, $label) {
+                    isSelected = true;
+                };
+
                 scope.queryExistingItems = function (start) {
                     scope.start = Util.goodNumber(start, 0);
+                    scope.searchQuery = searchObject.searchQuery;
                     if (!scope.searchQuery || scope.searchQuery.length === 0) {
                         if (!scope.emptySearch) {
                             scope.searchQuery = "";
@@ -99,17 +121,21 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         }
                     }
                     if (scope.pageSize >= 0 && scope.start >= 0) {
-                        if (scope.multiFilter) {
+                        if (scope.isMultiFilter) {
                             if (scope.searchQuery) {
-                                if (scope.filters.indexOf("Tag Token") <= 0) {
-                                    scope.filters += "&fq" + scope.multiFilter;
-                                }
-                                _.map(scope.searchQuery, function (tag) {
-                                    scope.filters += tag.tag_token_lcs + "|";
-                                });
+                                // AFDP-3698: use Solr join query in tags module
+                                var joinQueryStr = scope.multiFilter.replace("${tagName}", scope.searchQuery);
+                                scope.join = joinQueryStr;
                             }
                         }
-                        var query = SearchQueryBuilder.buildFacetedSearchQuery((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.pageSize, scope.start);
+
+                        if (scope.isAutoSuggestActive && scope.searchQuery !== "" && isSelected) {
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : "\"" + scope.searchQuery + "\""), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
+                            isSelected = false;
+                        } else {
+                            scope.searchQuery = searchObject.searchQuery;
+                            var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
+                        }
                         if (query) {
                             setExportUrl(query);
                             SearchService.queryFilteredSearch({
@@ -130,7 +156,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                 };
 
                 scope.checkTag = function (tagSelected) {
-                    if (!tagSelected.tag_token_lcs) {
+                    scope.searchQuery = tagSelected.title_parseable;
+                    scope.queryExistingItems();
+                    if (!tagSelected.title_parseable) {
                         return false;
                     }
                     return true;
@@ -138,33 +166,35 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                 scope.loadTags = function loadTags(query) {
                     var deferred = $q.defer();
-                    TagsService.searchTags({
-                        query: query,
-                        filter: 'fq=' + scope.filter
-                    }).then(function (tags) {
+                    var autoSuggestObjectType = scope.objectType;
+                    AutoSuggestService.autoSuggest(query, "QUICK", autoSuggestObjectType).then(function (tags) {
                         deferred.resolve(tags);
                     });
                     return deferred.promise;
-                }
+                };
 
                 scope.queryTypeahead = function (typeaheadQuery) {
-                    typeaheadQuery = typeaheadQuery.replace('*', '');
-                    typeaheadQuery = '/' + typeaheadQuery + '.*/';
                     if (!scope.hideTypeahead) {
                         if (scope.filters && scope.filters.indexOf("USER") >= 0) {
                             return scope.queryTypeaheadForUser(typeaheadQuery);
                         } else {
-                            var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery, scope.filters, 10, 0);
                             var deferred = $q.defer();
-                            if (query) {
-                                SearchService.queryFilteredSearch({
-                                    query: query
-                                }, function (res) {
-                                    var result = _.pluck(res.response.docs, scope.typeAheadColumn);
-                                    deferred.resolve(result);
-                                });
+                            if (typeaheadQuery.length >= 2) {
+                                var deferred = $q.defer();
+                                if (scope.objectType !== 'undefined') {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", scope.objectType).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                } else {
+                                    AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                                        var results = _.pluck(res, scope.typeAheadColumn);
+                                        deferred.resolve(results);
+                                    });
+                                    return deferred.promise;
+                                }
                             }
-                            return deferred.promise;
                         }
                     }
                 };
@@ -223,11 +253,83 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.facets.splice(0, scope.facets.length)
                         }
                         _.forEach(facets, function (value, key) {
-                            if (value) {
-                                scope.facets.push({"name": key, "fields": value});
+                            //check if facet key is in hidden facets
+                            //and if it is we will ignore it
+                            var hidden = false;
+                            if (typeof scope.config.hiddenFacets !== 'undefined' &&
+                                Util.isArray(scope.config.hiddenFacets)) {
+                                hidden = _.includes(scope.config.hiddenFacets, key);
+                            }
+                            if (!hidden && value) {
+                                var fieldCategory = Util.goodValue($translate.getKey(key, "common.directive.search.facet.names"));
+                                var tokens = fieldCategory.split(".");
+                                fieldCategory = tokens.pop();
+                                fieldCategory = fieldCategory.replace(/%$/, "");
+                                //var nameTranslated = $translate.data(key, "common.directive.search.facet.names");
+                                var facet = {
+                                    name: key,
+                                    fields: value,
+                                    limit: scope.facetLimit,
+                                    //nameTranslated: nameTranslated,
+                                    nameTranslated: key,
+                                    fieldCategory: fieldCategory
+                                };
+
+                                // _.each(facet.fields, function(field) {
+                                //     field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                                //         "common.directive.search.facet.fields." + fieldCategory);
+                                // });
+
+                                scope.facets.push(facet);
                             }
                         });
+
+                        _translateFacets(scope.facets);
+
+                        //allow predetermined order of facets, defined in config
+                        if (Util.goodMapValue(scope.config, 'preferredFacetOrder', false)
+                            && Util.isArray(scope.config.preferredFacetOrder)) {
+                            sortFacets(scope.facets, scope.config.preferredFacetOrder);
+                        }
                     }
+                }
+
+                scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                    _translateFacets(scope.facets);
+                    // _.each(scope.facets, function(facet){
+                    //     facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
+                    //     _.each(facet.fields, function(field) {
+                    //         field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                    //             "common.directive.search.facet.fields." + facet.fieldCategory);
+                    //     });
+                    // });
+                });
+
+                var _translateFacets = function (facets) {
+                    _.each(facets, function(facet){
+                        facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
+                        _.each(facet.fields, function(field) {
+                            field.name.nameTranslated = $translate.data(field.name.nameFiltered,
+                                "common.directive.search.facet.fields." + facet.fieldCategory);
+                        });
+                    });
+                };
+
+
+                function sortFacets(facets, facetOrder) {
+                    facets.sort(function (a, b) {
+                        var aPos = _.indexOf(facetOrder, a.name);
+                        var bPos = _.indexOf(facetOrder, b.name);
+
+                        //Handle possibility of facet not being on ordered list
+                        if (aPos == -1 && bPos != -1) {
+                            return 1;
+                        } else if (aPos != -1 && bPos == -1) {
+                            return -1;
+                        }
+
+                        return aPos - bPos;
+                    })
                 }
 
                 scope.selectFacet = function (checked, facet, field) {
@@ -271,19 +373,23 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.customization.showParentObject(objectData);
 
                     } else {
-                        var parentReference = Util.goodMapValue(objectData, "objectData.parent_ref_s", "-");
+                        var parentReference = Util.goodMapValue(objectData, "parent_ref_s", "-");
                         var objectId = parentReference.substring(0, parentReference.indexOf('-'));
                         var objectTypeKey = parentReference.substring(parentReference.indexOf('-') + 1);
+
                         ObjectService.showObject(objectTypeKey, objectId);
                     }
                 };
 
                 scope.keyUp = function (event) {
                     scope.searchQuery = scope.searchQuery.replace('*', '');
+                    searchObject.searchQuery = scope.searchQuery;
+
                     if (event.keyCode == 13 && scope.searchQuery) {
                         scope.queryExistingItems();
                     }
                 };
+
 
                 scope.downloadCSV = function () {
                     if (scope.gridApi && scope.gridApi.exporter) {
@@ -298,6 +404,14 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     }
                 };
 
+                scope.increaseFacetLimit = function (facet) {
+                    facet.limit = facet.fields.length;
+                };
+
+                scope.decreaseFacetLimit = function (facet) {
+                    facet.limit = scope.facetLimit;
+                };
+
                 //prepare the UI-grid
                 scope.gridOptions = {};
 
@@ -306,6 +420,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                         scope.filterName = config.filterName;
                         scope.pageSize = config.paginationPageSize;
                         scope.start = config.start;
+                        scope.sort = Util.goodValue(config.sort, "");
+                        scope.objectType = config.autoSuggestObjectType;
                         scope.gridOptions = {
                             enableColumnResizing: true,
                             enableRowSelection: true,
@@ -328,6 +444,20 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                                     scope.selectedItem = row.isSelected ? row.entity : null;
                                 });
 
+                                // Get the sorting info from UI grid
+                                gridApi.core.on.sortChanged(scope, function (grid, sortColumns) {
+                                    if (sortColumns.length > 0) {
+                                        var sortColArr = [];
+                                        _.each(sortColumns, function (col) {
+                                            sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
+                                        });
+                                        scope.sort = sortColArr.join(',');
+                                    }
+                                    else {
+                                        scope.sort = "";
+                                    }
+                                    scope.queryExistingItems();
+                                });
 
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
@@ -337,8 +467,10 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             }
                         };
 
+                        scope.join = "";
                         scope.isMultiFilter = false;
                         if (config.multiFilter) {
+                            scope.multiFilter = scope.config.multiFilter;
                             scope.isMultiFilter = true;
                         }
                         //hideTypeahead is false by default, it will be changed in true if it is added in config
@@ -354,7 +486,15 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             if (scope.filter) {
                                 scope.filters = 'fq=' + scope.filter;
                             }
+
+                            scope.isAutoSuggestActive = false;
+                            if (config.isAutoSuggestActive) {
+                                scope.isAutoSuggestActive = config.isAutoSuggestActive;
+
+                            }
+
                             scope.queryExistingItems(scope.start);
+
                         }
                     }, true);
                 });

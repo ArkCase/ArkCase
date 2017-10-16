@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Help",
+        "logout": "Logout"
+      }
+    },
+    "leftNav": {
+      "title": "Navigation"
+    },
+    "topBar": {
+      "new": "New",
+      "toggle.btn": "Toggle navigation",
+      "search.placeholder": "Search ArkCase",
+      "locale.updateList": "Update"
+    },
+    "loginWarning": {
+      "btnOK.text": "OK",
+      "btnCancel.text": "Cancel",
+      "checkbox_warning.label": "I acknowledge this warning."
+    }
+  }
+}

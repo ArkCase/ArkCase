@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "सहायता",
+        "logout": "लॉगआउट"
+      }
+    },
+    "leftNav": {
+      "title": "नेविगेशन"
+    },
+    "topBar": {
+      "new": "बनाएं",
+      "toggle.btn": "hi_Toggle navigation",
+      "search.placeholder": "hi_Search ArkCase",
+      "locale.updateList": "अपडेट"
+    },
+    "loginWarning": {
+      "btnOK.text": "hi_OK",
+      "btnCancel.text": "hi_Cancel",
+      "checkbox_warning.label": "hi_I acknowledge this warning."
+    }
+  }
+}

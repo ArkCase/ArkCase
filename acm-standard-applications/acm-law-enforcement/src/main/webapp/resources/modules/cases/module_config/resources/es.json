@@ -1,0 +1,421 @@
+{
+  "cases": {
+    "title": "Casos",
+    "progressNoCase": "[ Sin datos de archivo de caso ]",
+    "progressLoading": "Cargando el archivo de caso",
+    "progressError": "No se pudo cargar el archivo de caso"
+  },
+  "cases.menus": {
+    "leftnav.item": "Expedientes de Caso",
+    "topbar.item": "Caso"
+  },
+  "cases.error": {
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Descripción general"
+  },
+  "cases.comp.info": {
+    "title": "Información",
+    "caseId": "Identificación del caso:",
+    "caseNumber": "Número de caso:",
+    "courtRoomName": "Nombre de la sala:",
+    "type.label": "Tipo",
+    "created.label": "Fecha de creación",
+    "priority.label": "Prioridad",
+    "assignee.label": "Asignado a",
+    "owningGroup.label": "Grupo propietario",
+    "dueDate.label": "Fecha de vencimiento",
+    "priorities": {
+      "low%": "Bajo",
+      "medium%": "Medio",
+      "high%": "Alta",
+      "expedite%": "Acelerar",
+      "unknown%": "Desconocido"
+    },
+    "caseTypes": {
+      "agricultural%": "Agrícola",
+      "arson%": "Incendio provocado",
+      "backgroundInvestigation%": "Investigación de Antecedentes",
+      "benefitsAppeal%": "Recurso de beneficios",
+      "businessDispute%": "Mejor disputa comercial",
+      "clinicalFraud%": "Fraude de Investigador Clínico",
+      "congressional%": "Respuesta del Congreso",
+      "disabilityWaiver%": "Solicitud de Exención de Discapacidad",
+      "domesticDispute%": "Disputa doméstica",
+      "drugTrafficking%": "Tráfico de drogas",
+      "educationWaiver%": "Solicitud de Exención de Educación",
+      "eeoHarassment%": "OEO/Acoso",
+      "embezzlement%": "Malversación",
+      "extortion%": "Extorsión",
+      "fraud%": "Fraude",
+      "government%": "Gobierno",
+      "investorComplaint%": "Queja del inversionista",
+      "laborRacketeering%": "Crimen de trabajo",
+      "local%": "Local",
+      "murder%": "Asesinato",
+      "newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+      "payoff%": "Ganancia",
+      "pensionWaiver%": "Solicitud de Exención de Pensiones",
+      "pollution%": "Contaminación",
+      "productTampering%": "Alteración del producto",
+      "assetTheftMisuse%": "Robo o mal uso del activo"
+    }
+  },
+  "cases.comp.actions": {
+    "title": "Acciones",
+    "restrict": "Restringir?",
+    "new.button": "Nuevo",
+    "edit.button": "Editar",
+    "status.button": "Cambiar estado del caso",
+    "reinvestigate.button": "Reinvestigar",
+    "subscribe.button": "Suscribirse",
+    "unsubscribe.button": "Anular suscripción",
+    "merge.button": "Combinar",
+    "claim.button": "Reclamación",
+    "unclaim.button": "No reclamar",
+    "split.button": "Dividir"
+  },
+  "cases.comp.details": {
+    "title": "Detalles",
+    "informSaved": "es_Case details saved",
+    "table.columns": {
+      "title": "es_Details",
+      "modified": "es_Date Last Modified",
+      "modifier": "es_User Last Modified"
+    }
+  },
+  "cases.comp.documents": {
+    "title": "Documentos",
+    "sendEmail": "es_Send Email",
+    "filterInputPlaceholder": "es_Filter",
+    "searchInputPlaceholder": "es_Search"
+  },
+  "cases.comp.people": {
+    "title": "Personas",
+    "table.columns": {
+      "entity": "es_Entity",
+      "type": "es_Type",
+      "firstName": "es_FirstName",
+      "lastName": "es_LastName"
+    },
+    "contactMethods": {
+      "title": "es_ContactMethods",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "Organizaciones",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "es_Locations",
+      "table.columns": {
+        "type": "es_Type",
+        "streetAddress": "es_Address",
+        "city": "es_City",
+        "state": "es_State",
+        "zip": "es_Zip",
+        "country": "es_Country",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "es_Aliases",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "es_Security Tags",
+      "table.columns": {
+        "type": "es_Type",
+        "value": "es_Value",
+        "created": "es_Date Added",
+        "creator": "es_Added By",
+        "modified": "es_Last Modified",
+        "modifier": "es_Modified By"
+      }
+    }
+  },
+  "cases.comp.organizations": {
+    "title": "Organizaciones",
+    "table.columns": {
+      "name": "es_Organization Name",
+      "associationType": "es_Role",
+      "type": "es_Organization Type",
+      "identification": "es_ID",
+      "value": "es_Organization",
+      "contact": "es_Primary Contact",
+      "phone": "es_Phone",
+      "location": "es_Location"
+    }
+  },
+  "cases.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "es_Type",
+      "name": "es_Name"
+    },
+    "dialogUserPicker": {
+      "header": "es_Choose User",
+      "table.columns": {
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "id": "es_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "es_Choose Group",
+      "table.columns": {
+        "name": "es_Name"
+      }
+    }
+  },
+  "cases.comp.notes": {
+    "title": "Notas",
+    "table.columns": {
+      "note": "es_Note",
+      "created": "es_Created",
+      "creator": "es_Author"
+    }
+  },
+  "cases.comp.tasks": {
+    "title": "Tareas",
+    "table.columns": {
+      "title": "es_Title",
+      "assignee": "es_Assignee",
+      "created": "es_Created",
+      "priority": "es_Priority",
+      "due": "es_Due",
+      "status": "es_Status"
+    },
+    "table.overdue.tooltip": "es_Task is Overdue",
+    "table.deadline.tooltip": "es_Deadline is Approaching"
+  },
+  "cases.comp.references": {
+    "title": "Referencias",
+    "table.columns": {
+      "targetName": "es_Number",
+      "parentName": "es_Parent",
+      "targetTitle": "es_Title",
+      "modified": "es_Modified",
+      "targetType": "es_Reference Type",
+      "status": "es_Status"
+    }
+  },
+  "cases.comp.history": {
+    "title": "Historia",
+    "table.columns": {
+      "eventType": "es_Event Name",
+      "eventDate": "es_Date",
+      "userId": "es_User"
+    }
+  },
+  "cases.comp.time": {
+    "title": "Tiempo",
+    "table.columns": {
+      "name": "es_Form Name",
+      "user": "es_User",
+      "tally": "es_Total Hours",
+      "modified": "es_Modified Date",
+      "status": "es_Status"
+    },
+    "formNamePrefix": "es_Timesheet"
+  },
+  "cases.comp.cost": {
+    "title": "Costo",
+    "table.columns": {
+      "name": "es_Form Name",
+      "user": "es_User",
+      "tally": "es_Total Cost",
+      "modified": "es_Modified Date",
+      "status": "es_Status"
+    },
+    "formNamePrefix": "es_Costsheet"
+  },
+  "cases.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "es_Tag",
+      "created": "es_Created",
+      "createdBy": "es_Created By"
+    },
+    "modal": {
+      "title": "es_Tag",
+      "search": "es_Search for Tag",
+      "buttons": {
+        "cancel": "es_Cancel",
+        "ok": "es_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "es_Tag with that name or description or text already exists",
+      "tagAssociated": "es_already associated",
+      "delete": {
+        "success": "es_Tag deleted successfully",
+        "error": "es_Error deleting tag"
+      }
+    }
+  },
+  "cases.comp.calendar": {
+    "title": "Calendario"
+  },
+  "cases.comp.merge": {
+    "id": "es_merge",
+    "title": "es_Merge",
+    "cancel.btn": "es_Cancel",
+    "merge.btn": "es_Merge",
+    "search.placeholder": "es_Search for case file.",
+    "search.btn": "es_Search",
+    "enabled": true,
+    "table.columns": {
+      "incident": "es_Type",
+      "name": "es_Name",
+      "assignee": "es_Assignee",
+      "title": "es_Title",
+      "parent": "es_Parent",
+      "modified": "es_Modified"
+    }
+  },
+  "cases.comp.split": {
+    "title": "es_Split",
+    "cancel": "es_Cancel",
+    "split": "es_Split"
+  },
+  "cases.comp.addreference": {
+    "title": "es_Add Reference",
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Add",
+    "search": {
+      "placeholder": "es_Search for case, complaint, file, task",
+      "btn": "es_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "es_Id",
+        "name": "es_Name",
+        "type": "es_Type",
+        "title": "es_Title",
+        "parent": "es_Parent",
+        "assignee": "es_Assignee",
+        "modified": "es_Modified"
+      }
+    }
+  },
+  "cases.comp.assigneePickerModal": {
+    "title": "es_Change Assignee",
+    "assigneeNamelabel": "es_Assignee Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchAssigneeHeader": "es_Search Assignee"
+  },
+  "cases.comp.groupPickerModal": {
+    "title": "es_Change Group",
+    "groupNamelabel": "es_Group Name",
+    "btnCancelText": "es_Cancel",
+    "btnSaveText": "es_Save",
+    "searchGroupHeader": "es_Search Group"
+  },
+  "cases.comp.approvalRouting": {
+    "title": "Ruta de Aprobación",
+    "addNewTooltip": "es_Add new approver",
+    "noBuckslipMessage": "es_No Data",
+    "button": {
+      "save.tooltip": "es_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "es_Full Name"
+    },
+    "assignee.label": "es_Assignee",
+    "owningGroup.label": "es_Owning Group",
+    "priority.label": "es_Priority",
+    "startDate.label": "es_Start Date",
+    "dueDate.label": "es_Due Date",
+    "state.label": "es_State"
+  },
+  "cases.comp.pastApprovals": {
+    "title": "Aprobaciones anteriores",
+    "noBuckslipMessage": "es_No Data",
+    "table.columns": {
+      "approvalDate": "es_Approval Date",
+      "approverId": "es_Approver",
+      "approverFullName": "es_Approver",
+      "approverDecision": "es_Approver Decision"
+    }
+  },
+  "cases.userOrGroupSearch": {
+    "id": "es_userSearch",
+    "title": "es_User/Group Search",
+    "search": {
+      "btn": "es_Search",
+      "placeholder": "es_Search for the user or group."
+    },
+    "cancelButton": "es_Cancel",
+    "confirmButton": "es_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "es_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "es_Name",
+      "type": "es_Type",
+      "title": "es_Title",
+      "username": "es_Username"
+    }
+  },
+  "cases.tree": {
+    "nodeTypes": {
+      "details.label": "Detalles",
+      "people.label": "Personas",
+      "organizations.label": "Organizaciones",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tareas",
+      "references.label": "Referencias",
+      "history.label": "Historia",
+      "time.label": "Tiempo",
+      "cost.label": "Costo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendario",
+      "approvalRouting.label": "Ruta de Aprobació"
+    },
+    "filters": {
+      "opened": "Todas las quejas abiertas",
+      "iHaveCreated": "Todo lo que he creado",
+      "iAmAssigned": "Todo lo que estoy asignado",
+      "iAmFollowing": "Todo lo que estoy siguiendo",
+      "closed": "Todos cerrados",
+      "noFilter": "(Sin filtro)"
+    },
+    "sorters": {
+      "dateAsc": "Ordenar Fecha Asc",
+      "dateDesc": "Ordenar Fecha Dec",
+      "idAsc": "Ordenar caso de la identificación Asc",
+      "idDesc": "Ordenar caso de la identificación Dec",
+      "nameAsc": "Ordenar por nombre Asc",
+      "noSort": "(Sin Clasificar)"
+    }
+  }
+}

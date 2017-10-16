@@ -14,7 +14,7 @@
     <property name="cmApproverUserIdLength" value="255" dbms="mysql,mssql"/>
 
 
-    <changeSet id="01-create-form-table" author="tsedalu">
+    <changeSet id="01-create-form-table" author="tsedalu" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_form_type_lu">
             <column name="cm_id" type="${idType}">
                 <constraints
@@ -41,6 +41,41 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="01-create-form-table" author="tsedalu" dbms="mysql">
+        <createTable tableName="acm_form_type_lu">
+            <column name="cm_id" type="${idType}">
+                <constraints
+                        nullable="false"
+                        primaryKey="true"
+                        primaryKeyName="pk_form_type"/>
+            </column>
+            <column name="cm_value" type="VARCHAR(${cmValueLength})">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="cm_order" type="NUMBER(32,0)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="cm_description" type="VARCHAR(4000)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_status" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">

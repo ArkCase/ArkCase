@@ -4,7 +4,7 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-create-protect_url-table" author="nebojsha.davidovikj">
+    <changeSet id="01-create-protect_url-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
 
         <!-- Create acm_protected_url table for storing protected urls-->
         <createTable tableName="acm_protected_url">
@@ -33,6 +33,62 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- since most of the queries will be by obfuscated_url we should have index for faster retrieval-->
+        <createIndex tableName="acm_protected_url" indexName="idx_acm_obfuscated_url" unique="true">
+            <column name="cm_obfuscated_url"/>
+        </createIndex>
+        <!-- we will need to query often valid_to in order to disable those, we should have index for faster retrieval-->
+        <createIndex tableName="acm_protected_url" indexName="idx_acm_valid_to">
+            <column name="cm_valid_to"/>
+        </createIndex>
+
+        <!-- Create id table for storing next id-->
+        <createTable tableName="acm_protected_url_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_protected_url_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_protected_url"></column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="01-create-protect_url-table" author="nebojsha.davidovikj" dbms="mysql">
+
+        <!-- Create acm_protected_url table for storing protected urls-->
+        <createTable tableName="acm_protected_url">
+            <column name="cm_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_protect_url"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_original_url" type="VARCHAR(2048)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_obfuscated_url" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_valid_from" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_valid_to" type="${timestampType}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="cm_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_modifier" type="VARCHAR(1024)">

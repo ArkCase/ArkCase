@@ -20,7 +20,8 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         getUserGroups: getUserGroups,
         getReportsUserGroups: getReportsUserGroups,
         saveReportsUserGroups: saveReportsUserGroups,
-        saveReports: saveReports
+        saveReports: saveReports,
+        syncReports: syncReports
     });
     /**
      * @ngdoc method
@@ -87,7 +88,7 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         return $http({
             method: "POST",
             url: "api/latest/plugin/report/reporttogroupsmap",
-            data: angular.toJson(reportsUserGroups),
+            data: reportsUserGroups,
             headers: {
                 "Content-Type": "application/json"
             }
@@ -108,7 +109,26 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
         return $http({
             method: "POST",
             url: "api/latest/plugin/report/save",
-            data: angular.toJson(reports),
+            data: reports,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
+    /**
+     * @ngdoc method
+     * @name syncReports
+     * @methodOf admin.service:Admin.ReportsConfigService
+     *
+     * @description
+     * Performs sync reports.
+     *
+     */
+    function syncReports() {
+        return $http({
+            method: "PUT",
+            url: "api/latest/plugin/report/sync",
             headers: {
                 "Content-Type": "application/json"
             }

@@ -1,0 +1,215 @@
+{
+  "document-repository": {
+    "title": "Dokumenten"
+  },
+  "document-repository.menus": {
+    "leftnav.item": "Dokumenten",
+    "topbar.item": "Dokument-Repository"
+  },
+  "document-repository.error": {
+    "invalidData": ""
+  },
+  "cases.comp.main": {
+    "title": "Übersicht"
+  },
+  "document-repository.comp.info": {
+    "title": "Informationen",
+    "docRepoId": "Repository ID:",
+    "docRepoName": "Repostitorischer Name:",
+    "modified.label": "Geändertes Datum",
+    "assignee.label": "Zugewiesen",
+    "owningGroup.label": "Besitzgruppe",
+    "description.label": "Beschreibung"
+  },
+  "document-repository.comp.actions": {
+    "title": "Aktionen",
+    "restrict": "Einschränken?",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "delete.button": "Repository löschen",
+    "confirm.delete.documentRepository.msg": "Diese Aktion löscht das gesamte Repository. Bist du sicher, dass du fortfahren willst?"
+  },
+  "document-repository.comp.details": {
+    "title": "Details",
+    "informSaved": "de_Document Repository details saved",
+    "table.columns": {
+      "title": "de_Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "document-repository.comp.documents": {
+    "title": "Dokumente",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
+  },
+  "document-repository.comp.participants": {
+    "title": "Teilnehmer",
+    "table.columns": {
+      "type": "de_Type",
+      "name": "de_Name"
+    },
+    "dialogUserPicker": {
+      "header": "de_Choose User",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "id": "de_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "de_Choose Group",
+      "table.columns": {
+        "name": "de_Name"
+      }
+    }
+  },
+  "document-repository.comp.notes": {
+    "title": "Notizen",
+    "table.columns": {
+      "note": "de_Note",
+      "created": "de_Created",
+      "creator": "de_Author"
+    }
+  },
+  "document-repository.comp.references": {
+    "title": "Referenzen",
+    "table.columns": {
+      "targetName": "de_Number",
+      "parentName": "de_Parent",
+      "targetTitle": "de_Title",
+      "modified": "de_Modified",
+      "targetType": "de_Reference Type",
+      "status": "de_Status"
+    }
+  },
+  "document-repository.comp.history": {
+    "title": "Geschichte",
+    "table.columns": {
+      "eventType": "de_Event Name",
+      "eventDate": "de_Date",
+      "userId": "de_User"
+    }
+  },
+  "document-repository.comp.tags": {
+    "title": "Etiketten",
+    "table.columns": {
+      "tag": "de_Tag",
+      "created": "de_Created",
+      "createdBy": "de_Created By"
+    },
+    "modal": {
+      "title": "de_Tag",
+      "search": "de_Search for Tag",
+      "buttons": {
+        "cancel": "de_Cancel",
+        "ok": "de_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "de_Tag with that name or description or text already exists",
+      "tagAssociated": "de_already associated",
+      "delete": {
+        "success": "de_Tag deleted successfully",
+        "error": "de_Error deleting tag"
+      }
+    }
+  },
+  "document-repository.comp.addreference": {
+    "title": "de_Add Reference",
+    "cancelButton": "de_Cancel",
+    "confirmButton": "de_Add",
+    "search": {
+      "placeholder": "de_Search for case, complaint, file, task",
+      "btn": "de_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "de_Id",
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "parent": "de_Parent",
+        "assignee": "de_Assignee",
+        "modified": "de_Modified"
+      }
+    }
+  },
+  "document-repository.comp.assigneePickerModal": {
+    "title": "de_Change Assignee",
+    "assigneeNamelabel": "de_Assignee Name",
+    "btnCancelText": "de_Cancel",
+    "btnSaveText": "de_Save",
+    "searchAssigneeHeader": "de_Search Assignee"
+  },
+  "document-repository.comp.groupPickerModal": {
+    "title": "de_Change Group",
+    "groupNamelabel": "de_Group Name",
+    "btnCancelText": "de_Cancel",
+    "btnSaveText": "de_Save",
+    "searchGroupHeader": "de_Search Group"
+  },
+  "document-repository.userOrGroupSearch": {
+    "id": "de_userSearch",
+    "title": "de_User/Group Search",
+    "search": {
+      "btn": "de_Search",
+      "placeholder": "de_Search for the user or group."
+    },
+    "cancelButton": "de_Cancel",
+    "confirmButton": "de_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "de_Name",
+      "type": "de_Type",
+      "title": "de_Title",
+      "username": "de_Username"
+    }
+  },
+  "document-repository.newRepository": {
+    "title": "de_Create Repository",
+    "assigneeLabel": "de_Assignee",
+    "owningGroupLabel": "de_Owning Group",
+    "assignee.placeholder": "de_Search Assignee",
+    "saveButton": "de_Create Repository",
+    "cancelButton": "de_Cancel",
+    "nameLabel": "de_Name",
+    "name.placeholder": "de_Enter Name",
+    "descriptionLabel": "de_Description",
+    "description.placeholder": "de_Enter Description",
+    "searchUser": "de_Search User"
+  },
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "de_Name",
+    "table.columns.type": "de_Type",
+    "table.columns.title": "de_Title",
+    "table.columns.id": "de_Username"
+  },
+  "document-repository.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "documents.label": "Dokumente",
+      "participants.label": "Teilnehmer",
+      "tags.label": "Etiketten",
+      "references.label": "Referenzen",
+      "notes.label": "Notizen",
+      "history.label": "Geschichte"
+    },
+    "filters": {
+      "iHaveCreated": "Alles, was ich erschaffen habe",
+      "iAmFollowing": "Alles, was ich folge",
+      "noFilter": "(Keine Einschränkung)"
+    },
+    "sorters": {
+      "dateAsc": "Sortieren Datum Auf",
+      "dateDesc": "Sortieren Datum Dec",
+      "idAsc": "Sortieren ID Auf",
+      "idDesc": "Sortieren ID Dec",
+      "nameAsc": "Nach Name sortieren Auf",
+      "noSort": "(Keine Sortierung)"
+    }
+  }
+}

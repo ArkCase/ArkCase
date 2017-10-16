@@ -1,0 +1,392 @@
+{
+  "complaints": {
+    "title": "Queixas",
+    "progressNoComplaint": "[ Não há dados sobre queixas ]",
+    "progressLoading": "Carregando queixas",
+    "progressError": "Falha ao carregar queixas"
+  },
+  "complaints.menus": {
+    "leftnav.item": "Queixas",
+    "topbar.item": "Queixa"
+  },
+  "complaints.comp.main": {
+    "title": "Visão geral"
+  },
+  "complaints.comp.info": {
+    "title": "Informações",
+    "complaintId": "Identificação da Queixa:",
+    "complaintNumber": "Número da Queixa:",
+    "courtRoomName": "Sala do Tribunal:",
+    "type.label": "Tipo",
+    "created.label": "Data criada",
+    "priority.label": "Prioridade",
+    "assignee.label": "Atribuído a",
+    "owningGroup.label": "O grupo pertence a",
+    "dueDate.label": "Data de vencimento"
+  },
+  "complaints.comp.actions": {
+    "title": "Ações",
+    "restrict": "Restringir?",
+    "new.button": "Nova Queixa",
+    "close.button": "Fechar Queixa",
+    "subscribe.button": "Assinar",
+    "unsubscribe.button": "Cancelar Inscrição",
+    "claim.button": "Reclamaçõe",
+    "unclaim.button": "Retirar Reclamaçõe"
+  },
+  "complaints.comp.details": {
+    "title": "Detalhes",
+    "informSaved": "pt_Complaint details saved",
+    "table.columns": {
+      "title": "pt_Details",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "Documentos",
+    "sendEmail": "pt_Send Email",
+    "filterInputPlaceholder": "pt_Filter",
+    "searchInputPlaceholder": "pt_Search"
+  },
+  "complaints.comp.people": {
+    "title": "Pessoas",
+    "table.columns": {
+      "entity": "pt_Entity",
+      "type": "pt_Type",
+      "firstName": "pt_FirstName",
+      "lastName": "pt_LastName"
+    },
+    "contactMethods": {
+      "title": "pt_ContactMethods",
+      "table.columns": {
+        "type": "pt_Type",
+        "value": "pt_Value",
+        "created": "pt_Date Added",
+        "creator": "pt_Added By",
+        "modified": "pt_Last Modified",
+        "modifier": "pt_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "Organizações",
+      "table.columns": {
+        "type": "pt_Type",
+        "value": "pt_Value",
+        "created": "pt_Date Added",
+        "creator": "pt_Added By",
+        "modified": "pt_Last Modified",
+        "modifier": "pt_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "Locais",
+      "table.columns": {
+        "type": "pt_Type",
+        "streetAddress": "pt_Address",
+        "city": "pt_City",
+        "state": "pt_State",
+        "zip": "pt_Zip",
+        "country": "pt_Country",
+        "created": "pt_Date Added",
+        "creator": "pt_Added By",
+        "modified": "pt_Last Modified",
+        "modifier": "pt_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "pt_Aliases",
+      "table.columns": {
+        "type": "pt_Type",
+        "value": "pt_Value",
+        "created": "pt_Date Added",
+        "creator": "pt_Added By",
+        "modified": "pt_Last Modified",
+        "modifier": "pt_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "pt_Security Tags",
+      "table.columns": {
+        "type": "pt_Type",
+        "value": "pt_Value",
+        "created": "pt_Date Added",
+        "creator": "pt_Added By",
+        "modified": "pt_Last Modified",
+        "modifier": "pt_Modified By"
+      }
+    }
+  },
+  "complaints.comp.organizations": {
+    "title": "Organizações",
+    "table.columns": {
+      "name": "pt_Organization Name",
+      "associationType": "pt_Role",
+      "type": "pt_Organization Type",
+      "identification": "pt_ID",
+      "value": "pt_Organization",
+      "contact": "pt_Primary Contact",
+      "phone": "pt_Phone",
+      "location": "pt_Location"
+    },
+    "actions": {
+      "delete": "pt_Delete",
+      "setPrimary": "pt_Set as Primary",
+      "addNew": "pt_Add New",
+      "addExisting": "pt_Add New"
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "Participantes",
+    "table.columns": {
+      "type": "pt_Type",
+      "name": "pt_Name"
+    },
+    "dialogUserPicker": {
+      "header": "pt_Choose User",
+      "table.columns": {
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "id": "pt_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "pt_Choose Group",
+      "table.columns": {
+        "name": "pt_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "Locais",
+    "table.columns": {
+      "address": "pt_Address",
+      "type": "pt_Type",
+      "city": "pt_City",
+      "state": "pt_State",
+      "zip": "pt_Zip",
+      "modified": "pt_Date Last Modified",
+      "modifier": "pt_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "pt_Add Location",
+      "editLocation": "pt_Edit Record",
+      "type.label": "pt_Type",
+      "street.label": "pt_Street",
+      "city.label": "pt_City",
+      "state.label": "pt_State",
+      "zip.label": "pt_Zip",
+      "btnOk.text": "pt_Save",
+      "btnCancel.text": "pt_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "Notas",
+    "table.columns": {
+      "note": "pt_Note",
+      "created": "pt_Created",
+      "creator": "pt_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "Tarefas",
+    "table.columns": {
+      "title": "pt_Title",
+      "assignee": "pt_Assignee",
+      "created": "pt_Created",
+      "priority": "pt_Priority",
+      "due": "pt_Due",
+      "status": "pt_Status"
+    },
+    "table.overdue.tooltip": "pt_Task is Overdue",
+    "table.deadline.tooltip": "pt_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "Referências",
+    "table.columns": {
+      "targetName": "pt_Number",
+      "targetTitle": "pt_Title",
+      "parentName": "pt_Parent",
+      "modified": "pt_Modified",
+      "targetType": "pt_Reference Type",
+      "status": "pt_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "Histórico",
+    "table.columns": {
+      "eventType": "pt_Event Name",
+      "eventDate": "pt_Date",
+      "userId": "pt_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "Tempo",
+    "table.columns": {
+      "name": "pt_Form Name",
+      "user": "pt_User",
+      "tally": "pt_Total Hours",
+      "modified": "pt_Modified Date",
+      "status": "pt_Status"
+    },
+    "formNamePrefix": "pt_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "Custo",
+    "table.columns": {
+      "name": "pt_Form Name",
+      "user": "pt_User",
+      "tally": "pt_Total Cost",
+      "modified": "pt_Modified Date",
+      "status": "pt_Status"
+    },
+    "formNamePrefix": "pt_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "Etiquetas",
+    "table.columns": {
+      "tag": "pt_Tag",
+      "created": "pt_Created",
+      "createdBy": "pt_Created By"
+    },
+    "modal": {
+      "title": "pt_Tag",
+      "search": "pt_Search for Tag",
+      "buttons": {
+        "cancel": "pt_Cancel",
+        "ok": "pt_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "pt_Tag with that name or description or text already exists",
+      "tagAssociated": "pt_already associated",
+      "delete": {
+        "success": "pt_Tag deleted successfully",
+        "error": "pt_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "Calendário"
+  },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Pesquisa de referência"
+  },
+  "complaints.comp.addreference": {
+    "title": "pt_Add Reference",
+    "cancelButton": "pt_Cancel",
+    "confirmButton": "pt_Add",
+    "search": {
+      "placeholder": "pt_Search for case, complaint, file, task",
+      "btn": "pt_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "pt_Id",
+        "name": "pt_Name",
+        "type": "pt_Type",
+        "title": "pt_Title",
+        "parent": "pt_Parent",
+        "assignee": "pt_Assignee",
+        "modified": "pt_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "pt_Change Assignee",
+    "assigneeNamelabel": "pt_Assignee Name",
+    "btnCancelText": "pt_Cancel",
+    "btnSaveText": "pt_Save",
+    "searchAssigneeHeader": "pt_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "pt_Change Group",
+    "groupNamelabel": "pt_Group Name",
+    "btnCancelText": "pt_Cancel",
+    "btnSaveText": "pt_Save",
+    "searchGroupHeader": "pt_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "Roteamento de Aprovação",
+    "addNewTooltip": "pt_Add new approver",
+    "noBuckslipMessage": "pt_No Data",
+    "button": {
+      "save.tooltip": "pt_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "pt_Full Name"
+    },
+    "assignee.label": "pt_Assignee",
+    "owningGroup.label": "pt_Owning Group",
+    "priority.label": "pt_Priority",
+    "startDate.label": "pt_Start Date",
+    "dueDate.label": "pt_Due Date",
+    "state.label": "pt_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "Roteamento de Aprovação",
+    "noBuckslipMessage": "pt_No Data",
+    "table.columns": {
+      "approvalDate": "pt_Approval Date",
+      "approverId": "pt_Approver",
+      "approverFullName": "pt_Approver",
+      "approverDecision": "pt_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "pt_userSearch",
+    "title": "pt_User/Group Search",
+    "search": {
+      "btn": "pt_Search",
+      "placeholder": "pt_Search for the user or group."
+    },
+    "cancelButton": "pt_Cancel",
+    "confirmButton": "pt_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "pt_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "pt_Name",
+      "type": "pt_Type",
+      "title": "pt_Title",
+      "username": "pt_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Detalhes",
+      "locations.label": "Locais",
+      "people.label": "Pessoas",
+      "organizations.label": "Organizações",
+      "documents.label": "Documentos",
+      "participants.label": "Participantes",
+      "notes.label": "Notas",
+      "tasks.label": "Tarefas",
+      "references.label": "Referências",
+      "history.label": "Histórico",
+      "time.label": "Tempo",
+      "cost.label": "Custo",
+      "tags.label": "Etiquetas",
+      "calendar.label": "Calendário",
+      "approvalRouting.label": "Roteamento de Aprovação"
+    },
+    "filters": {
+      "opened": "Todas as queixas abertas",
+      "iHaveCreated": "Tudo o que eu criei",
+      "iAmAssigned": "Tudo o que eu sou atribuído",
+      "iAmFollowing": "Tudo o que estou seguindo",
+      "closedNoFurtherAction": "Tudo fechado sem outra ação",
+      "closedReferExternal": "Referência externa totalmente fechada.",
+      "closedOpenInvestigation": "Todas as investigações fechadas abertas",
+      "noFilter": "(Sem filtro)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Ordenar Data do evento Asc",
+      "incidentDateDesc": "Ordenar Data do evento Desc",
+      "createdDateAsc": "Ordenar Data de Criação Asc",
+      "createdDateDesc": "Ordenar Data de Criação Desc",
+      "nameAsc": "Classificar por nome Asc",
+      "noSort": "(Não classificar)"
+    }
+  }
+}

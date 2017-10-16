@@ -8,7 +8,7 @@ import com.armedia.acm.plugins.dashboard.model.module.Module;
 import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDto;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
@@ -39,11 +39,6 @@ public class UserPreferenceService
         List<UserPreference> upList = null;
         Module module;
         AcmUser user;
-        if (widgetList.isEmpty())
-        {
-            log.warn("No widgets are found!");
-            throw new AcmObjectNotFoundException("User Preference", null, "Widgets not found", null);
-        }
         try
         {
             module = getModule(preferredWidgets.getModuleName());
@@ -187,6 +182,15 @@ public class UserPreferenceService
             }
         });
         return widgets;
+    }
+
+    public void deleteByWidgetId(Long widgetId){
+        userPreferenceDao.deleteByWidgetId(widgetId);
+    }
+
+    public List<UserPreference> findByWidgetId(Long widgetId)
+    {
+        return userPreferenceDao.findByWidgetId(widgetId);
     }
 
     private Module getModule(String moduleName) throws AcmObjectNotFoundException

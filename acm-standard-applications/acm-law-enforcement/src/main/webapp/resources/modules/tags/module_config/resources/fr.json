@@ -1,0 +1,23 @@
+{
+  "tags": {
+    "title": "Étiquettes",
+    "search.btn": "Recherche",
+    "search.placeholder": "fr_Search for tags",
+    "menus": {
+      "leftnav.item": "Étiquettes"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "fr_ID",
+          "name": "fr_Name",
+          "type": "fr_Type",
+          "title": "fr_Title",
+          "parent": "fr_Parent",
+          "assignee": "fr_Assignee",
+          "modified": "fr_Modified"
+        }
+      }
+    }
+  }
+}

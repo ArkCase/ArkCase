@@ -1,0 +1,481 @@
+{
+  "people": {
+    "title": "人員",
+    "progressNoComplaint": "[ 人員のデータはありません ]",
+    "progressLoading": "人員の読み込み",
+    "progressError": "人員の読み込みに失敗しました"
+  },
+  "people.menus": {
+    "leftnav.item": "人員",
+    "topbar.item": "個人"
+  },
+  "people.comp.main": {
+    "title": "概観"
+  },
+  "people.comp.info": {
+    "title": "情報",
+    "phone.label": "電話",
+    "email.label": "電子メール",
+    "status.label": "状態",
+    "organization.label": "組織",
+    "identification.label": "識別番号"
+  },
+  "people.comp.actions": {
+    "title": "操作",
+    "export.button": "出力",
+    "import.button": "入力",
+    "delete.button": "削除",
+    "activate.button": "アクティブ化",
+    "deactivate.button": "無効化",
+    "merge.button": "結合"
+  },
+  "people.comp.details": {
+    "title": "詳細",
+    "informSaved": "ja_Person details saved",
+    "table.columns": {
+      "title": "ja_Details",
+      "modified": "ja_Date Last Modified",
+      "modifier": "ja_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "歴史",
+    "table.columns": {
+      "eventType": "ja_Event Name",
+      "eventDate": "ja_Date",
+      "userId": "ja_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "写真",
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "upload": "ja_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "ja_Thumbnail",
+      "title": "ja_Filename",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "dialog": {
+      "title": "ja_Upload Picture",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "cancel": "ja_Cancel",
+      "upload": "ja_Upload Picture",
+      "noPictureSelected": "ja_No Files Selected.",
+      "browse": "ja_Browse",
+      "description": "ja_Description"
+    },
+    "dialog.edit": {
+      "title": "ja_Edit Picture",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "change": "ja_Change Picture",
+      "save": "ja_Save changes"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "場所",
+    "table.columns": {
+      "type": "ja_Type",
+      "streetAddress": "ja_Address 1",
+      "streetAddress2": "ja_Address 2",
+      "city": "ja_City",
+      "state": "ja_State",
+      "zip": "ja_Zip",
+      "country": "ja_Country",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "addNew": "ja_Add New",
+      "map": "ja_Map"
+    },
+    "modal": {
+      "addAddress": "ja_Add Location",
+      "editAddress": "ja_Edit Record",
+      "type.label": "ja_Address Type",
+      "type.placeholder": "ja_Enter Address Type",
+      "streetAddress.label": "ja_Address 1",
+      "streetAddress.placeholder": "ja_Enter Address 1",
+      "streetAddress2.label": "ja_Address 2",
+      "streetAddress2.placeholder": "ja_Enter Address 2",
+      "city.label": "ja_City",
+      "city.placeholder": "ja_Enter City",
+      "zip.label": "ja_Zip",
+      "zip.placeholder": "ja_Enter Zip",
+      "state.label": "ja_State",
+      "state.placeholder": "ja_Enter State",
+      "country.label": "ja_Country",
+      "country.placeholder": "ja_Enter Country",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Location",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "電話番号",
+    "table.columns": {
+      "type": "ja_Type",
+      "value": "ja_Phone Number",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "addPhone": "ja_Add New Phone Number",
+      "editPhone": "ja_Edit Phone Number",
+      "title": "ja_Add New Phone Number",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Phone Number",
+      "type.label": "ja_Phone Type",
+      "type.placeholder": "ja_Enter Phone Type",
+      "value.label": "ja_Phone Number",
+      "value.placeholder": "ja_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "電子メール",
+    "table.columns": {
+      "type": "ja_Type",
+      "value": "ja_Email Address",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "title": "ja_Add New Email Address",
+      "addEmail": "ja_Add New Email Address",
+      "editEmail": "ja_Edit Email Address",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Email Address",
+      "type.label": "ja_Email Type",
+      "type.placeholder": "ja_Enter Email Type",
+      "value.label": "ja_Email Address",
+      "value.placeholder": "ja_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "URL",
+    "table.columns": {
+      "value": "ja_URL",
+      "type": "ja_Type",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "title": "ja_Add New URL",
+      "addUrl": "ja_Add New URL",
+      "editUrl": "ja_Edit URL",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "description": "ja_Description",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save URL",
+      "type.label": "ja_Type",
+      "type.placeholder": "ja_Enter Type",
+      "value.label": "ja_URL",
+      "value.placeholder": "ja_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "参加者",
+    "table.columns": {
+      "type": "ja_Type",
+      "name": "ja_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ja_Choose User",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type",
+        "title": "ja_Title",
+        "id": "ja_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ja_Choose Group",
+      "table.columns": {
+        "name": "ja_Name"
+      }
+    }
+  },
+  "people.comp.aliases": {
+    "title": "別名",
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "upload": "ja_New Alias"
+    },
+    "table.columns": {
+      "type": "ja_Type",
+      "aliasValue": "ja_Alias",
+      "description": "ja_Description",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "modal": {
+      "aliasValue": "ja_Alias Value",
+      "type": "ja_Type",
+      "addAlias": "ja_Add New Alias",
+      "editAlias": "ja_Edit Alias",
+      "title": "ja_Insert New Alias",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Alias",
+      "value.label": "ja_Alias",
+      "value.placeholder": "ja_Enter Alias",
+      "description": "ja_Description",
+      "aliasType.label": "ja_Alias Type",
+      "aliasType.placeholder": "ja_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "人員識別番号",
+    "table.columns": {
+      "type": "ja_Type",
+      "id": "ja_ID",
+      "number": "ja_Number",
+      "issuer": "ja_Issuer",
+      "yearIssued": "ja_Year Issued",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New"
+    },
+    "modal": {
+      "addID": "ja_Add New Identification",
+      "editID": "ja_Edit Identification",
+      "title": "ja_Add New Identification",
+      "setPrimary": "ja_Set as Primary?",
+      "yes": "ja_Yes",
+      "no": "ja_No",
+      "type.label": "ja_Type",
+      "type.placeholder": "ja_Enter Type",
+      "id.label": "ja_ID",
+      "id.placeholder": "ja_Enter ID",
+      "number.label": "ja_Number",
+      "number.placeholder": "ja_Enter Number",
+      "issuer.label": "ja_Issuer",
+      "issuer.placeholder": "ja_Enter Issuer",
+      "yearIssued.label": "ja_Year Issued",
+      "yearIssued.placeholder": "ja_Enter Year Issued",
+      "yearIssued.close.button": "ja_Close",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "組織",
+    "table.columns": {
+      "type": "ja_Type",
+      "id": "ja_ID",
+      "value": "ja_Organization",
+      "identification": "ja_ID",
+      "contact": "ja_Primary Contact",
+      "phone": "ja_Phone",
+      "location": "ja_Location",
+      "created": "ja_Date Added",
+      "creator": "ja_Added By",
+      "modified": "ja_Last Modified",
+      "modifier": "ja_Modified By"
+    },
+    "actions": {
+      "delete": "ja_Delete",
+      "setPrimary": "ja_Set as Primary",
+      "addNew": "ja_Add New",
+      "addExisting": "ja_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "案件",
+    "table.columns": {
+      "priority": "ja_Priority",
+      "id": "ja_ID",
+      "title": "ja_Title",
+      "status": "ja_Status",
+      "assignee": "ja_Assignee",
+      "modified": "ja_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "訴状",
+    "table.columns": {
+      "priority": "ja_Priority",
+      "id": "ja_ID",
+      "title": "ja_Title",
+      "status": "ja_Status",
+      "assignee": "ja_Assignee",
+      "modified": "ja_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "関連する人々",
+    "table.columns": {
+      "firstName": "ja_First Name",
+      "lastName": "ja_Last Name",
+      "type": "ja_Relationship",
+      "description": "ja_Description",
+      "organization": "ja_Organization",
+      "phone": "ja_Phone",
+      "location": "ja_Location"
+    },
+    "modal": {
+      "title": "ja_Add Related Person",
+      "type.label": "ja_Relationship",
+      "type.placeholder": "ja_Enter Relationship",
+      "person.label": "ja_Person",
+      "person.placeholder": "ja_Search People",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "ja_Person",
+    "addAnother": "ja_Add Another",
+    "remove": "ja_Remove",
+    "familyName": "ja_Last Name",
+    "familyName.placeholder": "ja_Enter Last Name",
+    "givenName": "ja_First Name",
+    "givenName.placeholder": "ja_Enter First Name",
+    "middleName": "ja_Middle Name",
+    "middleName.placeholder": "ja_Enter Middle Name",
+    "saveButton": "ja_Save Person",
+    "informCreated": "ja_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "ja_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "ja_Communication Accounts",
+      "phone": "ja_Phone",
+      "phone.placeholder": "ja_Enter Phone",
+      "phoneType": "ja_Phone Type",
+      "email": "ja_Email",
+      "email.placeholder": "ja_Enter Email",
+      "emailType": "ja_Email Type",
+      "url": "ja_URL",
+      "url.placeholder": "ja_Enter URL",
+      "removeContactMethod": "ja_Remove",
+      "urlType": "ja_URL Type"
+    },
+    "organizations": {
+      "title": "ja_Organizations",
+      "searchExisting.placeholder": "ja_Search Existing Organizations",
+      "organizationType": "ja_Relation Type"
+    },
+    "picture": {
+      "title": "ja_Picture"
+    },
+    "locations": {
+      "title": "ja_Locations",
+      "country": "ja_Country",
+      "country.placeholder": "ja_Select Country",
+      "state": "ja_State",
+      "state.placeholder": "ja_Enter State",
+      "zip": "ja_Zip",
+      "zip.placeholder": "ja_Enter Zip",
+      "city": "ja_City",
+      "city.placeholder": "ja_Enter City",
+      "type": "ja_Address Type",
+      "type.placeholder": "ja_Select Address Type",
+      "streetAddress": "ja_Street Address",
+      "streetAddress.placeholder": "ja_Enter Street Address",
+      "streetAddress2": "ja_Street Address2",
+      "streetAddress2.placeholder": "ja_Enter Street Address2"
+    },
+    "identification": {
+      "title": "ja_Identifications",
+      "identificationID": "ja_Identification ID",
+      "identificationID.placeholder": "ja_Enter Identification ID",
+      "identificationType": "ja_Identification Type",
+      "identificationType.placeholder": "ja_Select Identification Type",
+      "identificationNumber": "ja_Identification Number",
+      "identificationNumber.placeholder": "ja_Enter Identification Number",
+      "identificationIssuer": "ja_Identification Issuer",
+      "identificationIssuer.placeholder": "ja_Enter Identification Issuer",
+      "identificationYearIssued": "ja_Identification Issued",
+      "identificationYearIssued.placeholder": "ja_Select Identification Issued",
+      "identificationYearIssued.close.button": "ja_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "詳細",
+      "pictures.label": "写真",
+      "addresses.label": "場所",
+      "phones.label": "電話番号",
+      "emails.label": "電子メール",
+      "urls.label": "URL",
+      "participants.label": "参加者",
+      "aliases.label": "別名",
+      "organizations.label": "組織",
+      "ids.label": "人員識番号",
+      "complaints.label": "訴状",
+      "cases.label": "案件",
+      "related.label": "関連する人々",
+      "history.label": "歴史"
+    },
+    "filters": {
+      "iHaveCreated": "私が作成しました",
+      "noFilter": "(無制限)"
+    },
+    "sorters": {
+      "createdDateAsc": "作成日で並べ替え",
+      "createdDateDesc": "作成日で並べ替え降順",
+      "idAsc": "人員番号で並べ替え",
+      "idDesc": "人員番号で並べ替え降順",
+      "nameAsc": "名で並べ替え",
+      "nameDesc": "名で並べ替え降順",
+      "noSort": "(注文しません)"
+    }
+  }
+}

@@ -10,7 +10,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
-
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -28,7 +29,6 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -45,7 +45,10 @@ public class ReportServiceImpl implements ReportService
 {
 
     private final Logger LOG = LoggerFactory.getLogger(getClass());
-
+    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
+    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
+    private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE = "PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE";
+    private final String PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/prpti.view";
     private String reportsPropertiesFileLocation;
     private String reportToGroupsMapPropertiesFileLocation;
     private String reportServerConfigPropertiesFileLocation;
@@ -57,30 +60,26 @@ public class ReportServiceImpl implements ReportService
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
 
-    private final String PENTAHO_REPORT_URL_TEMPLATE = "PENTAHO_REPORT_URL_TEMPLATE";
-    private final String PENTAHO_REPORT_URL_TEMPLATE_DEFAULT = "/pentaho/api/repos/{path}/viewer";
-    private final String PENTAHO_SERVER_USER = "PENTAHO_SERVER_USER";
-    private final String PENTAHO_SERVER_USER_DEFAULT = "admin";
-    private final String PENTAHO_SERVER_PASSWORD = "PENTAHO_SERVER_PASSWORD";
-    private final String PENTAHO_SERVER_PASSWORD_DEFAULT = "password";
-
     @Override
     public List<Report> getPentahoReports() throws Exception, MuleException
     {
         Reports reports = null;
 
-        String serverFormUser = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER,
-                PENTAHO_SERVER_USER_DEFAULT);
-        String serverFormPassword = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD,
-                PENTAHO_SERVER_PASSWORD_DEFAULT);
+        String username = "";
+        Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
+        if (authentication != null)
+        {
+            username = authentication.getName();
+        }
 
         String fullReportUrl = getReportUrl().getReportsUrl();
         String reportListUrl = fullReportUrl.replace("http://", "").replace("https://", "");
-        reportListUrl += "?userid=" + serverFormUser + "&password=" + serverFormPassword;
 
         String muleEndPoint = fullReportUrl.startsWith("http://") ? "vm://getPentahoReports.in" : "vm://getPentahoReportsSecure.in";
 
-        MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl);
+        Map<String, Object> properties = new HashedMap();
+        properties.put("username", username);
+        MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl, properties);
 
         String xml = received.getPayload(String.class);
 
@@ -204,7 +203,7 @@ public class ReportServiceImpl implements ReportService
             }
         }
 
-        LOG.debug("Report authorization: " + authorized);
+        LOG.debug("Report authorization: {}", authorized);
         return authorized;
     }
 
@@ -220,7 +219,7 @@ public class ReportServiceImpl implements ReportService
             Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
             String response = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1, "");
 
-            LOG.debug("Response: " + response);
+            LOG.debug("Response: {}", response);
 
             if (response != null && getSearchResults().getNumFound(response) > 0)
             {
@@ -233,7 +232,7 @@ public class ReportServiceImpl implements ReportService
             }
         } catch (Exception e)
         {
-            LOG.error("Cannot retrieve User informatio from Solr for userId=" + userId, e);
+            LOG.error("Cannot retrieve User information from Solr for userId={}", userId, e);
         }
 
         return retval;
@@ -259,6 +258,31 @@ public class ReportServiceImpl implements ReportService
     }
 
     @Override
+    public List<Report> sync() throws Exception
+    {
+        List<Report> reports = getPentahoReports();
+        if (reports != null)
+        {
+            List<String> propertiesToDelete = new ArrayList<>();
+            for (Entry<String, String> entry : reportPluginProperties.entrySet())
+            {
+                Report found = reports.stream().filter(item -> entry.getKey().equals(item.getPropertyName())).findFirst().orElse(null);
+                if (found == null)
+                {
+                    propertiesToDelete.add(entry.getKey());
+                }
+            }
+
+            propertiesToDelete.forEach(item -> reportPluginProperties.remove(item));
+
+            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportsPropertiesFileLocation());
+            getPropertyFileManager().removeMultiple(propertiesToDelete, getReportToGroupsMapPropertiesFileLocation());
+        }
+
+        return reports;
+    }
+
+    @Override
     public Map<String, List<String>> getReportToGroupsMap()
     {
         Map<String, String> reportsToGroupsMap = getReportToGroupsMapProperties();
@@ -279,11 +303,13 @@ public class ReportServiceImpl implements ReportService
 
                 if (report.isInjected())
                 {
-                    String value = createPentahoReportUri(report.getPropertyPath());
+                    String value = createPentahoReportUri(report);
                     propertiesToUpdate.put(key, value);
+                    reportPluginProperties.put(key, value);
                 } else
                 {
                     propertiesToDelete.add(key);
+                    reportPluginProperties.remove(key);
                 }
             }
 
@@ -293,19 +319,28 @@ public class ReportServiceImpl implements ReportService
         return true;
     }
 
-    private String createPentahoReportUri(String path) throws AcmEncryptionException
+    private String createPentahoReportUri(Report report) throws AcmEncryptionException
     {
-        String url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
-                PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
-        String user = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_USER,
-                PENTAHO_SERVER_USER_DEFAULT);
-        String password = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_SERVER_PASSWORD,
-                PENTAHO_SERVER_PASSWORD_DEFAULT);
+        if (report == null)
+        {
+            return null;
+        }
+
+        String url = null;
+        if (report.getName() != null && report.getName().endsWith(".prpti"))
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE,
+                    PENTAHO_VIEW_REPORT_URL_PRPTI_TEMPLATE_DEFAULT);
+        }
+        else
+        {
+            url = getPropertyFileManager().load(getReportServerConfigPropertiesFileLocation(), PENTAHO_REPORT_URL_TEMPLATE,
+                    PENTAHO_REPORT_URL_TEMPLATE_DEFAULT);
+        }
 
         if (url != null)
         {
-            url = url.replace("{path}", path);
-            url = url + "?userid=" + user + "&password=" + password;
+            url = url.replace("{path}", report.getPropertyPath());
         }
 
         return url;

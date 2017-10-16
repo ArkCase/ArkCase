@@ -98,7 +98,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                     <set-variable variableName="folder" value="#[message.payload.container.folder]"/>
                     <!-- update the userOrg with the ID of the folder -->
                     <enricher source="#[message.payload.id]" target="#[flowVars['folder'].cmisFolderId]">
-                        <cmis:get-or-create-folder-by-path folderPath="#[payload.ecmFolderPath]"/>
+                        <cmis:get-or-create-folder-by-path config-ref="#[message.inboundProperties.configRef]" folderPath="#[payload.ecmFolderPath]"/>
                     </enricher>
                 </processor-chain>
             </when>

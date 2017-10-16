@@ -1,0 +1,91 @@
+{
+  "timeTracking": {
+    "title": "时间跟踪",
+    "progressNoTimesheet": "[ 无时间数据  ]",
+    "progressLoading": "加载时间数据",
+    "progressError": "无法加载时间数据"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "时间跟踪",
+    "topbar.item": "时间文表"
+  },
+  "timeTracking.comp.main": {
+    "title": "概述"
+  },
+  "timeTracking.comp.info": {
+    "title": "信息",
+    "lastModified.label": "上次更改时间"
+  },
+  "timeTracking.comp.actions": {
+    "title": "行动",
+    "new.button": "新时间项目",
+    "edit.button": "更改时间项目"
+  },
+  "timeTracking.comp.details": {
+    "title": "详情",
+    "informSaved": "zh-cn_Timesheet details saved",
+    "table.columns": {
+      "title": "zh-cn_Details",
+      "modified": "zh-cn_Date Last Modified",
+      "modifier": "zh-cn_User Last Modified"
+    }
+  },
+  "timeTracking.comp.person": {
+    "title": "成员",
+    "table.columns": {
+      "fullName": "zh-cn_Full Name",
+      "userId": "zh-cn_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "时间总结",
+    "table.columns": {
+      "code": "zh-cn_Parent ID",
+      "type": "zh-cn_Parent Type",
+      "value": "zh-cn_Total Hours",
+      "date": "zh-cn_Date Charged",
+      "modified": "zh-cn_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "标签",
+    "table.columns": {
+      "tag": "zh-cn_Tag",
+      "created": "zh-cn_Created",
+      "createdBy": "zh-cn_Created By"
+    },
+    "modal": {
+      "title": "zh-cn_Tag",
+      "search": "zh-cn_Search for Tag",
+      "buttons": {
+        "cancel": "zh-cn_Cancel",
+        "ok": "zh-cn_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "zh-cn_Tag with that name or description or text already exists",
+      "tagAssociated": "zh-cn_already associated",
+      "delete": {
+        "success": "zh-cn_Tag deleted successfully",
+        "error": "zh-cn_Error deleting tag"
+      }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "详情",
+      "person.label": "成员",
+      "summary.label": "费用",
+      "tags.label": "标签"
+    },
+    "sorters": {
+      "dateAsc": "按日期排序",
+      "dateDesc": "按日期反排序",
+      "idAsc": "按时间表格号排序",
+      "idDesc": "按时间表格号反排序",
+      "nameDesc": "按名称排序",
+      "noSort": "(不排序)"
+    }
+  }
+}
+

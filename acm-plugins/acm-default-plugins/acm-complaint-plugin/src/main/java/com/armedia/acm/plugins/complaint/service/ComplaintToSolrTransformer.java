@@ -4,10 +4,11 @@ import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -57,7 +58,7 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         String assigneeUserId = findAssigneeUserId(in);
         solr.setAssignee_id_lcs(assigneeUserId);
 
-        solr.setTitle_parseable_lcs(setTitleProperty(in));
+        solr.setTitle_parseable_lcs(in.getComplaintTitle());
 
         AcmUser assignee = getUserDao().quietFindByUserId(assigneeUserId);
 
@@ -80,6 +81,15 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         {
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
+        // The property "assignee_group_id_lcs" is used only for showing/hiding claim/unclaim buttons
+        solr.setAdditionalProperty("assignee_group_id_lcs", in.getAssigneeGroup());
+
+        // This property is used for showin the owning group for the object
+        solr.setAdditionalProperty("owning_group_id_lcs", ParticipantUtils.getOwningGroupIdFromParticipants(in.getParticipants()));
 
         return solr;
     }
@@ -115,14 +125,8 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         solr.setAssignee_s(assigneeUserId);
 
         // needed a _lcs property for sorting
-        solr.setTitle_parseable_lcs(setTitleProperty(in));
+        solr.setTitle_parseable_lcs(in.getComplaintTitle());
         return solr;
-    }
-
-    private String setTitleProperty(Complaint complaint)
-    {
-        String title = complaint.getComplaintTitle();
-        return title != null ? title.toLowerCase() : "";
     }
 
     @Override

@@ -1,10 +1,9 @@
 package web.api;
 
-import com.armedia.acm.services.subscription.dao.SubscriptionDao;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,15 +22,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
@@ -43,7 +38,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-subscription-web-api-test.xml"
 })
-public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
+public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport
+{
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
     private MockHttpSession mockHttpSession;
@@ -57,7 +53,8 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
 
         mockSubscriptionService = createMock(SubscriptionService.class);
         mockGetUserSubscriptionAPIController = new GetUserSubscriptionAPIController();
@@ -70,13 +67,14 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
 
 
     @Test
-    public void getUserSubscription() throws Exception {
+    public void getUserSubscription() throws Exception
+    {
 
-        String userId="user-acm";
-        Long objectId=100L;
-        String objectType="NEW_OBJ_TYPE";
+        String userId = "user-acm";
+        Long objectId = 100L;
+        String objectType = "NEW_OBJ_TYPE";
 
-        AcmSubscription subscription= new AcmSubscription();
+        AcmSubscription subscription = new AcmSubscription();
         subscription.setSubscriptionObjectType(objectType);
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
@@ -90,11 +88,11 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/service/subscription/{userId}/{objType}/{objId}",userId,objectType,objectId)
+                get("/api/latest/service/subscription/{userId}/{objType}/{objId}", userId, objectType, objectId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
-                        .andReturn();
+                .andReturn();
 
         verifyAll();
 
@@ -111,7 +109,7 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
 
         assertNotNull(foundSubscription);
 
-        assertEquals(1,foundSubscription.size());
+        assertEquals(1, foundSubscription.size());
 
         assertEquals(subscription.getObjectId(), foundSubscription.get(0).getObjectId());
         assertEquals(subscription.getObjectType(), foundSubscription.get(0).getObjectType());
@@ -119,27 +117,33 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport {
 
     }
 
-    public MockMvc getMockMvc() {
+    public MockMvc getMockMvc()
+    {
         return mockMvc;
     }
 
-    public void setMockMvc(MockMvc mockMvc) {
+    public void setMockMvc(MockMvc mockMvc)
+    {
         this.mockMvc = mockMvc;
     }
 
-    public Authentication getMockAuthentication() {
+    public Authentication getMockAuthentication()
+    {
         return mockAuthentication;
     }
 
-    public void setMockAuthentication(Authentication mockAuthentication) {
+    public void setMockAuthentication(Authentication mockAuthentication)
+    {
         this.mockAuthentication = mockAuthentication;
     }
 
-    public ExceptionHandlerExceptionResolver getExceptionResolver() {
+    public ExceptionHandlerExceptionResolver getExceptionResolver()
+    {
         return exceptionResolver;
     }
 
-    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver) {
+    public void setExceptionResolver(ExceptionHandlerExceptionResolver exceptionResolver)
+    {
         this.exceptionResolver = exceptionResolver;
     }
 

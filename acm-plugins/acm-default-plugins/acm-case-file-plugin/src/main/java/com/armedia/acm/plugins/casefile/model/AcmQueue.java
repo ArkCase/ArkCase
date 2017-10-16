@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.casefile.model;
 
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import java.util.Date;
 @XmlRootElement
 @Entity
 @Table(name = "acm_queue")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class AcmQueue implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -3949175334101994270L;
@@ -150,5 +153,19 @@ public class AcmQueue implements Serializable, AcmEntity
     public void setModifier(String modifier)
     {
         this.modifier = modifier;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "AcmQueue{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", displayOrder=" + displayOrder +
+                ", created=" + created +
+                ", creator='" + creator + '\'' +
+                ", modified=" + modified +
+                ", modifier='" + modifier + '\'' +
+                '}';
     }
 }

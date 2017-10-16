@@ -14,7 +14,9 @@
     <property name="cmParticipantTypeLength" value="255" dbms="mysql,mssql"/>
 
     <!-- copied this change set from the users service when we moved participants from user into its own module -->
-    <changeSet id="07-users-add-participant-table" author="dmiller" logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml">
+    <changeSet id="07-users-add-participant-table" author="dmiller"
+               logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml"
+               dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_participant">
             <column name="cm_participant_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
@@ -50,7 +52,44 @@
         </createIndex>
     </changeSet>
 
-    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="">
+    <changeSet id="07-users-add-participant-table" author="dmiller"
+               logicalFilePath="/com/armedia/acm/ddl/tables/user-service-database-tables.xml" dbms="mysql">
+        <createTable tableName="acm_participant">
+            <column name="cm_participant_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_participant"/>
+            </column>
+            <column name="cm_object_type" type="VARCHAR(${cmObjectTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_type" type="VARCHAR(${cmParticipantTypeLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_ldap_id" type="VARCHAR(${cmParticipantLdapIdLength})">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_participant" indexName="idx_acm_participant_object">
+            <column name="cm_object_id"/>
+            <column name="cm_object_type"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_participant_privilege">
             <column name="cm_privilege_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_acm_participant_privilege"/>
@@ -62,6 +101,41 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_privilege_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_participant_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_object_action" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_type" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_access_reason" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <createIndex tableName="acm_participant_privilege" indexName="idx_privilege_part_id">
+            <column name="cm_participant_id"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="participants-01-privilege-table" author="dmiller" logicalFilePath="" dbms="mysql">
+        <createTable tableName="acm_participant_privilege">
+            <column name="cm_privilege_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_acm_participant_privilege"/>
+            </column>
+            <column name="cm_privilege_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_privilege_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_privilege_modifier" type="VARCHAR(1024)">
@@ -114,6 +188,193 @@
                 <constraints nullable="false"/>
             </column>
         </addColumn>
+    </changeSet>
+    
+    <changeSet id="11-update-participants-for-person-and-organization" author="bojan.milenkoski" dbms="mysql">
+        <preConditions onFail="WARN">
+            <and>
+                <dbms type="mysql"/>
+                <tableExists tableName="acm_person"/>
+                <tableExists tableName="acm_organization"/>
+            </and>
+        </preConditions>
+        <sql endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">
+            <comment>Insert participants for persons and organizations</comment>
+            <![CDATA[
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_person) * 2
+GO
+
+            insert into acm_participant
+            SELECT 
+            @rownum := @rownum + 1 AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+            , (SELECT @rownum:= (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1)) AS s
+GO
+
+            insert into acm_participant
+            SELECT
+            @rownum := @rownum + 1 AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_person_creator AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+            , (SELECT @rownum:= (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1)) AS s
+GO
+
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_organization) * 2
+GO
+
+            insert into acm_participant
+            SELECT 
+            @rownum := @rownum + 1 AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+            , (SELECT @rownum:= (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1)) AS s
+GO
+
+            insert into acm_participant
+            SELECT
+            @rownum := @rownum + 1 AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_organization_creator AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+            , (SELECT @rownum:= (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1)) AS s
+GO
+
+            UPDATE acm_person
+            SET cm_person_modified = NOW()
+GO
+
+            UPDATE acm_organization
+            SET cm_organization_modified = NOW()
+GO
+            ]]>  
+        </sql>
+    </changeSet>
+    <changeSet id="11-update-participants-for-person-and-organization" author="bojan.milenkoski" dbms="postgresql">
+        <preConditions onFail="WARN">
+            <and>
+                <dbms type="mysql"/>
+                <tableExists tableName="acm_person"/>
+                <tableExists tableName="acm_organization"/>
+            </and>
+        </preConditions>
+        <sql endDelimiter="\nGO"
+            splitStatements="true"
+            stripComments="true">
+            <comment>Insert participants for persons and organizations</comment>
+            <![CDATA[
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_person) * 2
+GO
+
+            insert into acm_participant
+            SELECT 
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'PERSON' AS cm_object_type,
+            cm_person_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_person_creator AS cm_participant_ldap_id,
+            cm_person_created AS cm_participant_created,
+            cm_person_creator AS cm_participant_creator,
+            cm_person_created AS cm_participant_modified,
+            cm_person_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_person
+GO
+
+            update acm_participant_id
+            set cm_seq_num = cm_seq_num + (select count(*) from acm_organization) * 2
+GO
+
+            insert into acm_participant
+            SELECT 
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            '*' AS cm_participant_type,
+            '*' AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+GO
+
+            insert into acm_participant
+            SELECT
+            ROW_NUMBER () OVER () + (select cm_participant_id from acm_participant order by cm_participant_id desc limit 1) AS cm_participant_id,
+            'ORGANIZATION' AS cm_object_type,
+            cm_organization_id AS cm_object_id,
+            'owner' AS cm_participant_type,
+            cm_organization_creator AS cm_participant_ldap_id,
+            cm_organization_created AS cm_participant_created,
+            cm_organization_creator AS cm_participant_creator,
+            cm_organization_created AS cm_participant_modified,
+            cm_organization_creator AS cm_participant_modifier,
+            'com.armedia.acm.services.participants.model.AcmParticipant' AS cm_class_name
+            FROM acm_organization
+GO
+
+            UPDATE acm_person
+            SET cm_person_modified = NOW()
+GO
+
+            UPDATE acm_organization
+            SET cm_organization_modified = NOW()
+GO
+            ]]>  
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

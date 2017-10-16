@@ -5,25 +5,22 @@ package com.armedia.acm.form.time.service;
 
 import com.armedia.acm.form.config.xml.ApproverItem;
 import com.armedia.acm.form.time.model.TimeForm;
-import com.armedia.acm.form.time.model.TimeFormConstants;
 import com.armedia.acm.form.time.model.TimeItem;
 import com.armedia.acm.frevvo.config.FrevvoFormChargeAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.frevvo.model.Details;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
-import com.armedia.acm.frevvo.model.Options;
-import com.armedia.acm.frevvo.model.OptionsAndDetailsByType;
 import com.armedia.acm.objectonverter.DateFormats;
-import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.services.search.model.SearchConstants;
-import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.google.common.base.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author riste.tutureski
@@ -49,8 +46,6 @@ public class TimeService extends FrevvoFormChargeAbstractService
     private AcmTimesheetDao acmTimesheetDao;
     private TimesheetEventPublisher timesheetEventPublisher;
     private TimeFactory timeFactory;
-    private SearchResults searchResults;
-    private AcmPluginManager acmPluginManager;
 
     @Override
     public Object init()
@@ -73,7 +68,8 @@ public class TimeService extends FrevvoFormChargeAbstractService
             }
 
             periodDate = dateFormat.parse(period);
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             LOG.error("Could not parse date sent from Frevvo.", e);
         }
@@ -89,14 +85,29 @@ public class TimeService extends FrevvoFormChargeAbstractService
             {
                 form = getTimeFactory().asFrevvoTimeForm(timesheet);
                 form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
-            } else
+                if (form.getItems() != null)
+                {
+                    String objectIdString = getRequest().getParameter("_id");
+                    String objectType = getRequest().getParameter("_type");
+                    String objectNumber = getRequest().getParameter("_number");
+
+                    TimeItem found = findTimeItem(form.getItems());
+                    if (found == null && StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType)
+                            && StringUtils.isNotEmpty(objectNumber))
+                    {
+                        form.getItems().add(getTimeItem());
+                    }
+                }
+            }
+            else
             {
-                form.setItems(Arrays.asList(new TimeItem()));
+                form.setItems(Arrays.asList(getTimeItem()));
             }
 
         }
 
         form.setPeriod(periodDate);
+        form.setPeriodUI(periodDate);
         form.setUser(userId);
         form.setTotals(Arrays.asList(new String()));
 
@@ -108,6 +119,67 @@ public class TimeService extends FrevvoFormChargeAbstractService
         result = convertFromObjectToXML(form);
 
         return result;
+    }
+
+    private TimeItem getTimeItem()
+    {
+        TimeItem timeItem = new TimeItem();
+
+        String objectIdString = getRequest().getParameter("_id");
+        String objectType = getRequest().getParameter("_type");
+        String objectNumber = getRequest().getParameter("_number");
+
+        if (StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType) && StringUtils.isNotEmpty(objectNumber))
+        {
+            Long objectId = null;
+
+            try
+            {
+                objectId = Long.parseLong(objectIdString);
+            }
+            catch (Exception e)
+            {
+                LOG.warn("Cannot convert string [{}] to long type. null value will be used instead", objectIdString);
+
+            }
+
+            timeItem.setObjectId(objectId);
+            timeItem.setType(objectType);
+            timeItem.setCode(objectNumber);
+        }
+
+        return timeItem;
+    }
+
+    private TimeItem findTimeItem(List<TimeItem> timeItems)
+    {
+        TimeItem timeItem = null;
+
+        String objectIdString = getRequest().getParameter("_id");
+        String objectType = getRequest().getParameter("_type");
+
+        if (timeItems != null && StringUtils.isNotEmpty(objectIdString) && StringUtils.isNotEmpty(objectType))
+        {
+            try
+            {
+                final Long objectId = Long.parseLong(objectIdString);
+                Optional<TimeItem> found = timeItems.stream()
+                        .filter(item -> Objects.equal(item.getObjectId(), objectId) && Objects.equal(item.getType(), objectType))
+                        .findFirst();
+
+                if (found != null && found.isPresent())
+                {
+                    timeItem = found.get();
+                }
+            }
+            catch (Exception e)
+            {
+                LOG.warn("Cannot convert string [{}] to long type. null item will be returned", objectIdString);
+
+            }
+        }
+
+        return timeItem;
     }
 
     @Override
@@ -147,24 +219,25 @@ public class TimeService extends FrevvoFormChargeAbstractService
         // Create timesheet folder (if not exist)
         String rootFolder = (String) getTimesheetService().getProperties().get(TimesheetConstants.ROOT_FOLDER_KEY);
         String timesheetTitle = getTimesheetService().createName(timesheet);
-        AcmContainer container = createContainer(rootFolder, timesheet.getUser().getUserId(), timesheet.getId(), TimesheetConstants.OBJECT_TYPE, timesheetTitle);
+        AcmContainer container = createContainer(rootFolder, timesheet.getUser().getUserId(), timesheet.getId(),
+                TimesheetConstants.OBJECT_TYPE, timesheetTitle);
         timesheet.setContainer(container);
         timesheet.setTitle(timesheetTitle);
 
         AcmTimesheet saved = getTimesheetService().save(timesheet, submissionName);
 
-        form = getTimeFactory().asFrevvoTimeForm(saved);
-
         // Take user id and ip address
         String userId = getAuthentication().getName();
         String ipAddress = (String) getRequest().getSession().getAttribute("acm_ip_address");
 
-        boolean startWorkflow = getTimesheetService().checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
+        boolean startWorkflow = getTimesheetService()
+                .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
-        FrevvoUploadedFiles uploadedFiles = null;
-        uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(), FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+        FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
+                FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
 
-        getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles, startWorkflow);
+        getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,
+                startWorkflow);
 
         return true;
     }
@@ -189,52 +262,26 @@ public class TimeService extends FrevvoFormChargeAbstractService
         form.setPeriod(new Date());
 
         LOG.debug("setting form types");
-        List<String> types = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".types"), ",");
+        List<String> types = getStandardLookupEntries("timesheetTypes");
 
         LOG.debug("setting charge codes");
-        // Set charge codes for each type and details for them
-        OptionsAndDetailsByType optionsAndDetailsByType = getCodeOptionsAndDetails(FrevvoFormName.TIMESHEET, types);
-
-        LOG.debug("getting options");
-        Map<String, Options> codeOptions = optionsAndDetailsByType.getOptionsByType();
-        LOG.debug("getting detail maps");
-        Map<String, Map<String, Details>> codeOptionsDetails = optionsAndDetailsByType.getOptionsDetailsByType();
 
         LOG.debug("creating time item");
         TimeItem item = new TimeItem();
         item.setTypeOptions(types);
-        item.setCodeOptions(codeOptions);
-        item.setCodeDetails(codeOptionsDetails);
         form.setItems(Arrays.asList(item));
 
         // Init Statuses
         LOG.debug("setting statuses");
-        form.setStatusOptions(convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".statuses"), ","));
+        form.setStatusOptions(getStandardLookupEntries("timesheetStatuses"));
 
         LOG.debug("Creating json");
         // Create JSON and back to the Frevvo form
         JSONObject json = createResponse(form);
 
-        LOG.debug("JSON to return  - " + json.toString());
+        LOG.debug("JSON to return  - {}", json.toString());
 
         return json;
-    }
-
-    @Override
-    public Options getOptions(String type, String source)
-    {
-        Options options = new Options();
-
-        if (TimeFormConstants.OTHER.toUpperCase().equals(type))
-        {
-            List<String> optionsOther = convertToList((String) getProperties().get(FrevvoFormName.TIMESHEET + ".type.other"), ",");
-            options.addAll(optionsOther);
-        } else
-        {
-            options = getCodeOptionsByObjectType(type, source);
-        }
-
-        return options;
     }
 
     @Override
@@ -283,8 +330,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         return timesheetEventPublisher;
     }
 
-    public void setTimesheetEventPublisher(
-            TimesheetEventPublisher timesheetEventPublisher)
+    public void setTimesheetEventPublisher(TimesheetEventPublisher timesheetEventPublisher)
     {
         this.timesheetEventPublisher = timesheetEventPublisher;
     }
@@ -297,26 +343,6 @@ public class TimeService extends FrevvoFormChargeAbstractService
     public void setTimeFactory(TimeFactory timeFactory)
     {
         this.timeFactory = timeFactory;
-    }
-
-    public SearchResults getSearchResults()
-    {
-        return searchResults;
-    }
-
-    public void setSearchResults(SearchResults searchResults)
-    {
-        this.searchResults = searchResults;
-    }
-
-    public AcmPluginManager getAcmPluginManager()
-    {
-        return acmPluginManager;
-    }
-
-    public void setAcmPluginManager(AcmPluginManager acmPluginManager)
-    {
-        this.acmPluginManager = acmPluginManager;
     }
 
     @Override

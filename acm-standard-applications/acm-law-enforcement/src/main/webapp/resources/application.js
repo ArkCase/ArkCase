@@ -1,9 +1,5 @@
 'use strict';
 
-var ACM_SETTINGS = {
-    LANG: 'en'
-};
-
 // Start by defining the main module and adding the module dependencies
 var app = angular.module(ApplicationConfiguration.applicationModuleName,
     ApplicationConfiguration.applicationModuleVendorDependencies);
@@ -16,14 +12,24 @@ angular
             '$locationProvider',
             '$translateProvider',
             '$translatePartialLoaderProvider',
+            'tmhDynamicLocaleProvider',
             '$httpProvider',
-            function ($locationProvider, $translateProvider,
-                      $translatePartialLoaderProvider, $httpProvider) {
+            'AnalyticsProvider',
+            function ($locationProvider, $translateProvider, $translatePartialLoaderProvider,
+                      dynamicLocaleProvider, $httpProvider, AnalyticsProvider) {
                 $locationProvider.hashPrefix('!');
 
                 $httpProvider.interceptors.push(httpInterceptor);
 
                 $httpProvider.interceptors.push(noCacheInterceptor);
+
+                $httpProvider.defaults.transformResponse.splice(0, 0, function (data, headersGetter) {
+                    var contentType = headersGetter()['content-type'] || '';
+                    if (data && contentType.indexOf('application/json') > -1) {
+                        return JSOG.parse(data);
+                    }
+                    return data;
+                });
 
                 function noCacheInterceptor() {
                     return {
@@ -45,15 +51,54 @@ angular
                 }
 
                 // Initialize angular-translate
-                $translateProvider
-                    .useLoader(
-                        '$translatePartialLoader', {
-                            urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
-                        });
+                $translateProvider.useLoader('$translatePartialLoader', {
+                    urlTemplate: 'api/latest/plugin/admin/labelmanagement/resource?ns={part}&lang={lang}'
+                });
+                $translateProvider.determinePreferredLanguage(function () {
+                    var preferredLocale = "en";
 
-                $translateProvider
-                    .preferredLanguage(ACM_SETTINGS.LANG);
-                // $translateProvider.useSanitizeValueStrategy('sanitize');
+                    // handle incompatible old format; this code will be removed after locale setting implementation
+                    // is stable and long enough for all user and developers to update to this code
+                    if (localStorage.AcmLocale) {
+                        var lastLocale = angular.fromJson(localStorage.AcmLocale);
+                        if (!lastLocale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales) {
+                            localStorage.AcmLocale = null;
+                        } else if (0 >= lastLocale.locales.length) {
+                            localStorage.AcmLocale = null;
+                        } else if (lastLocale.locales[0].locale) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].native) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.locales[0].currencySymbol) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.code) {
+                            localStorage.AcmLocale = null;
+                        } else if (!lastLocale.iso) {
+                            localStorage.AcmLocale = null;
+                        }
+                    }
+                    //TODO: remove above block
+
+                    if (localStorage.AcmLocale && "null" != localStorage.AcmLocale) {
+                        var lastLocale = angular.fromJson(localStorage.AcmLocale);
+                        if (lastLocale && lastLocale.code) {
+                            preferredLocale = lastLocale.code;
+                        }
+                    }
+
+                    dynamicLocaleProvider.localeLocationPattern('modules/common/angular-i18n/angular-locale_{{locale}}.js');
+                    dynamicLocaleProvider.defaultLocale('en');
+
+                    return preferredLocale;
+                });
+
+                // The 'escape' strategy seems to cause failed translation of {{'xxx' | translate}}, and also
+                // when texts contain '&'. Disable this until the bug is fixed by Angular.
+                //
+                //$translateProvider.useSanitizeValueStrategy('escape');
+
 
                 // Add HTTP error interceptor
                 function httpInterceptor($q, $window, $rootScope,
@@ -88,7 +133,7 @@ angular
                         if (response.status === 403) {
                             // user is authenticated but tries to modify some entity
                             // with no granted permission
-                            $rootScope.$broadcast('accessDenied', 'User has no granted permission for this action');
+                            MessageService.error('User has no granted permission for this action');
                         }
 
                         // Send error message to MessageService if
@@ -130,36 +175,29 @@ angular
                         return isSuppressed;
                     }
                 }
-            }
-        ]).run(
-    ['$translate', '$translatePartialLoader',
-        function ($translate, $translatePartialLoader) {
-            $translatePartialLoader.addPart('core');
-            $translatePartialLoader.addPart('welcome');
-            $translate.refresh();
-        }
-    ]);
 
-// Load language info before start Angular application
+                if (typeof GOOGLE_ANALYTICS_ENABLED === 'undefined') { // sanity check
+                    // this means that "api/latest/plugin/admin/googleAnalytics/config.js" couldn't
+                    // be generated (very unlikely, but possible) and we are disabling Google Analytics
+                    AnalyticsProvider.disableAnalytics(true);
+                } else {
+                    AnalyticsProvider.disableAnalytics(!GOOGLE_ANALYTICS_ENABLED); // configuration toggle
+                    AnalyticsProvider.setAccount(GOOGLE_ANALYTICS_TRACKING_ID); // configuration property
+                    AnalyticsProvider.enterDebugMode(GOOGLE_ANALYTICS_DEBUG); // configuration debug flag
+                    AnalyticsProvider.setPageEvent('$stateChangeSuccess');
+                }
+            }
+        ]).run(['$translate', '$translatePartialLoader',
+    function ($translate, $translatePartialLoader) {
+        $translatePartialLoader.addPart('core');
+        $translatePartialLoader.addPart('welcome');
+        $translate.refresh();
+    }
+]);
+
+
 angular
     .element(document)
-    .ready(
-        function () {
-            $
-                .getJSON(
-                    'api/latest/plugin/admin/labelmanagement/default-language',
-                    function (result) {
-                        ACM_SETTINGS.LANG = result.defaultLang || ACM_SETTINGS.LANG;
-                        angular
-                            .bootstrap(
-                                document, [ApplicationConfiguration.applicationModuleName]);
-                    })
-                .fail(
-                    function () {
-                        // If language is missed then use
-                        // default lang settings (en)
-                        angular
-                            .bootstrap(
-                                document, [ApplicationConfiguration.applicationModuleName]);
-                    });
-        });
+    .ready(function () {
+        angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
+    });

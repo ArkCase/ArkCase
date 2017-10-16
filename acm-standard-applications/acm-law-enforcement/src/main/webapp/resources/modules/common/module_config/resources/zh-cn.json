@@ -1,0 +1,453 @@
+{
+  "common": {
+    "select.option.none": "（选择一个）",
+    "value.unknown": "未知",
+
+    "defaultDateFormat": "zh-cn_MM/DD/YYYY",
+    "defaultTimeFormat": "zh-cn_hh:mm:ss",
+    "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "zh-cn_MM/dd/yyyy",
+    "defaultDateUIFormat": "zh-cn_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
+  },
+  "common.addOrganization": {
+    "title": "zh-cn_Add Parent Organization",
+    "addNew.label": "zh-cn_Add new Organization",
+    "selectExisting.label": "zh-cn_Select existing organization",
+    "organization.label": "zh-cn_Organization",
+    "description": "zh-cn_Description",
+    "type.label": "zh-cn_Organization Association Type",
+    "type.label.default.text": "zh-cn_No parent Organization",
+    "type.label.text": "zh-cn_Parent Organization",
+    "btnCancel.text": "zh-cn_Cancel",
+    "btnOk.text": "zh-cn_Save Organization",
+    "setPrimary.label": "zh-cn_Set As Primary?",
+    "radioName": "zh-cn_Choice primary",
+    "radioYes.text": "zh-cn_Yes",
+    "radioNo.text": "zh-cn_No",
+    "duplicateOrganizationRoleErrorMessage": "zh-cn_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "zh-cn_Add person",
+    "addNew.label": "zh-cn_Add new Person",
+    "selectExisting.label": "zh-cn_Select existing person",
+    "person.label": "zh-cn_Person",
+    "type.label": "zh-cn_Person Association Type",
+    "btnCancel.text": "zh-cn_Cancel",
+    "btnOk.text": "zh-cn_Save Person",
+    "setPrimary.label": "zh-cn_Set As Primary?",
+    "radioName": "zh-cn_Choice primary",
+    "radioYes.text": "zh-cn_Yes",
+    "radioNo.text": "zh-cn_No",
+    "duplicatePersonRoleErrorMessage": "zh-cn_Person already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "zh-cn_Edit Parent Organization"
+  },
+  "common.service": {
+    "error.invalidData": "不正确数据"
+  },
+  "common.objects": {
+    "progressNoData": "[ 无数据 ]",
+    "progressLoading": "加载数据 ",
+    "progressError": "无法加载数据 "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "zh-cn_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "zh-cn_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "zh-cn_Action was successful",
+      "error": "zh-cn_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "zh-cn_Refresh",
+    "waitUploading": "zh-cn_Uploading...",
+    "confirmVersion": "zh-cn_Are you sure to set back to older version?",
+    "declareSuccessful": "zh-cn_Declare successful. Refreshing Document Tree...",
+    "prevItems": "zh-cn_ items above...",
+    "prevItemsTooltip": "zh-cn_Review previous items",
+    "moreItems": "zh-cn_ more items...",
+    "moreItemsTooltip": "zh-cn_Load more items",
+    "moreItemsBegin": "zh-cn_More items...",
+    "email": {
+      "defaultTitle": "zh-cn_ArkCase Documents",
+      "headerForLinks": "zh-cn_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "zh-cn_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "zh-cn_Documents from ArkCase",
+      "bodyForAttachment": "zh-cn_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "zh-cn_Hello,",
+      "footerForAttachment": "zh-cn_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "zh-cn_(Select Item)",
+      "editWithWebDAV": "zh-cn_Edit"
+    },
+    "table.columns": {
+      "title": "zh-cn_Title",
+      "type": "zh-cn_Type",
+      "created": "zh-cn_Created",
+      "modified": "zh-cn_Modified",
+      "modifier": "zh-cn_Modified By",
+      "version": "zh-cn_Version",
+      "status": "zh-cn_Status"
+    },
+    "dndDialog": {
+      "title": "zh-cn_Drag and Drop",
+      "radReplace.text": "zh-cn_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "zh-cn_Create document(s) in parent folder",
+      "selFileTypes.label": "zh-cn_File Type:",
+      "optFileType.prompt": "zh-cn_[choose file type]",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_OK"
+    },
+    "emailDialog": {
+      "title": "zh-cn_Email",
+      "recipients": "zh-cn_Recipients:",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Send Email",
+      "gridColumns": {
+        "name": "zh-cn_Name",
+        "email": "zh-cn_Email"
+      }
+    },
+    "comment": {
+      "title": "zh-cn_Checkin New Document",
+      "addComent": "zh-cn_Detailed Note",
+      "btnCancel.text": "zh-cn_Cancel",
+      "btnOk.text": "zh-cn_Checkin",
+      "chooseFiles": "zh-cn_Choose Files",
+      "noFiles": "zh-cn_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "zh-cn_(Error)"
+    },
+    "lockedTitle": "zh-cn_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "zh-cn_Are you sure you want to delete this folder?",
+      "body.message": "zh-cn_The folder contains:",
+      "body.content.files": "zh-cn_files",
+      "body.content.folders": "zh-cn_folders",
+      "btn.delete.folder": "zh-cn_Yes",
+      "btn.cancel.delete.folder": "zh-cn_No"
+    },
+    "fileTypesDialog": {
+      "header": "zh-cn_Please select type of the Document",
+      "btnOK": "zh-cn_OK",
+      "btnCancel": "zh-cn_Cancel"
+    }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "以上的记录...",
+    "btnPrev.toolTip": "查看以上的记录",
+    "btnNext.titleUnknownSize": "更多记录...",
+    "btnNext.title": "更多记录...",
+    "btnNext.toolTip": "加载更多记录",
+    "edtQuery.placeHolder": "搜索",
+    "btnQuery.text": "搜索!",
+    "errorNode.title": "(错误)",
+    "errorNode.toolTip": "(错误)",
+    "noAccessNode.title": "(无访问权限)",
+    "noAccessNode.toolTip": "(无访问权限)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "zh-cn_items per page",
+    "pagerCountMiddleLabel": "zh-cn_ of ",
+    "pagerCountLabel": "zh-cn_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "zh-cn_Choose",
+    "not_authorized": "zh-cn_Not Authorized",
+    "tooltip.move_right": "zh-cn_Move Right",
+    "tooltip.move_left": "zh-cn_Move Left",
+    "authorized": "zh-cn_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "搜索",
+    "btnSearch.text": "搜索",
+    "btnOk.text": "確定",
+    "btnCancel.text": "消除",
+    "edtPlaceholder": "鍵入搜索內容",
+    "noData.text": "無結果"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "显示更多",
+    "showLess.button.text": "显示更少",
+    "results.text": "结果",
+    "noResults.text": "无结果",
+    "tooltip": {
+      "collapseFacetList": "缩减分类表",
+      "expandFacetList": "展开分类表"
+    },
+    "facet":{
+      "names.modifyUser%":"修改用户",
+      "names.taskPriority%":"任务优先级",
+      "fields.taskPriority.low%":"低级",
+      "fields.taskPriority.medium%":"中级",
+      "fields.taskPriority.high%":"高级",
+      "fields.taskPriority.expedite%":"加急",
+      "names.group%":"群组",
+      "names.tagToken%":"标签令牌",
+      "names.assignee%":"指定人员",
+      "names.documentRepository%":"文档库名称",
+      "names.taskStatus%":"任务状态",
+      "fields.taskStatus.active%":"活跃",
+      "fields.taskStatus.draft%":"草稿",
+      "fields.taskStatus.closed%":"已关闭",
+      "fields.taskStatus.record%":"记录",
+      "fields.taskStatus.inactive%":"不活跃",
+      "fields.taskStatus.inApproval%":"批准",
+      "fields.taskStatus.delete%":"删除",
+      "fields.taskStatus.approved%":"已批准",
+      "fields.taskStatus.unclaimed%":"取消申权",
+      "fields.taskStatus.valid%":"有效",
+      "names.documentLanguage%":"文档语言",
+      "names.createUser%":"原创用户",
+      "names.postalCode%":"邮政编码",
+      "names.incidentType%":"事件类型",
+      "fields.incidentType.agricultural%":"农业",
+      "fields.incidentType.arson%":"纵火",
+      "fields.incidentType.backgroundInvestigation%":"背景调查",
+      "fields.incidentType.benefitsAppeal%":"福利上诉",
+      "fields.incidentType.businessDispute%":"更好商业的纠纷",
+      "fields.incidentType.clinicalFraud%":"临床调查员欺诈",
+      "fields.incidentType.congressional%":"国会响应",
+      "fields.incidentType.disabilityWaiver%":"残疾豁免请求",
+      "fields.incidentType.domesticDispute%":"家庭纠纷",
+      "fields.incidentType.drugTrafficking%":"贩毒运毒",
+      "fields.incidentType.educationWaiver%":"教育豁免申请书",
+      "fields.incidentType.eeoHarassment%":"EEO/骚扰",
+      "fields.incidentType.embezzlement%":"贪污",
+      "fields.incidentType.extortion%":"勒索",
+      "fields.incidentType.fraud%":"欺诈",
+      "fields.incidentType.government%":"政府",
+      "fields.incidentType.investorComplaint%":"投资者投诉",
+      "fields.incidentType.laborRacketeering%":"劳动敲诈",
+      "fields.incidentType.local%":"本地",
+      "fields.incidentType.murder%":"谋杀",
+      "fields.incidentType.newDrugFraud%":"新药申请欺诈",
+      "fields.incidentType.payoff%":"行贿",
+      "fields.incidentType.pensionWaiver%":"退休金请求",
+      "fields.incidentType.pollution%":"污染",
+      "fields.incidentType.productTampering%":"产品篡改",
+      "fields.incidentType.assetTheftMisuse%":"盗用或滥用资产",
+      "names.objectType%":"对象类型",
+      "fields.objectType.participant%":"参与者",
+      "fields.objectType.contactMethod%":"联系方式",
+      "fields.objectType.task%":"任务",
+      "fields.objectType.file%":"文件",
+      "fields.objectType.person%":"成员",
+      "fields.objectType.personAssociation%":"成员相关",
+      "fields.objectType.reference%":"参考",
+      "fields.objectType.location%":"位置",
+      "fields.objectType.organization%":"组织",
+      "fields.objectType.organizationAssociation%":"组织协会",
+      "fields.objectType.caseFile%":"案例文件",
+      "fields.objectType.complaint%":"投诉",
+      "fields.objectType.associatedTag%":"关联标签",
+      "fields.objectType.group%":"群体",
+      "fields.objectType.costsheet%":"成本单",
+      "fields.objectType.note%":"注释",
+      "fields.objectType.docRepo%":"文档库存",
+      "fields.objectType.personAlias%":"别名",
+      "fields.objectType.timesheet%":"时间表",
+      "fields.objectType.subscription%":"订阅",
+      "fields.objectType.user%":"用户",
+      "fields.objectType.objectLock%":"对象锁定",
+      "names.state%":"状态",
+      "names.parentType%":"原属类型",
+      "fields.parentType.container%":"容器",
+      "fields.parentType.caseFile%":"案例文件",
+      "fields.parentType.complaint%":"投诉",
+      "fields.parentType.organization%":"组织",
+      "fields.parentType.person%":"成员",
+      "fields.parentType.task%":"任务",
+      "fields.parentType.file%":"文件",
+      "fields.parentType.group%":"群组",
+      "fields.parentType.docRepo%":"文档库存",
+      "fields.parentType.costsheet%":"成本单",
+      "fields.parentType.timesheet%":"时间表",
+      "names.owner%":"拥有者",
+      "names.parentObjectType%":"原属对象类型",
+      "fields.parentObjectType.container%":"容器",
+      "fields.parentObjectType.caseFile%":"案例文件",
+      "fields.parentObjectType.complaint%":"投诉",
+      "fields.parentObjectType.organization%":"组织",
+      "fields.parentObjectType.person%":"成员",
+      "fields.parentObjectType.task%":"任务",
+      "fields.parentObjectType.file%":"文件",
+      "fields.parentObjectType.group%":"群组",
+      "fields.parentObjectType.docRepo%":"文档库存",
+      "fields.parentObjectType.costsheet%":"成本单",
+      "fields.parentObjectType.timesheet%":"时间表",
+      "names.personOrganization%":"人员组织类型",
+      "names.city%":"城市",
+      "names.createDate%":"创建日期",
+      "fields.createDate.previousWeek%":"上周",
+      "fields.createDate.previousMonth%":"上个月",
+      "fields.createDate.previousYear%":"上一年",
+      "names.dueDate%":"到期日",
+      "fields.dueDate.previousWeek%":"上周",
+      "fields.dueDate.previousMonth%":"上个月",
+      "fields.dueDate.previousYear%":"上一年",
+      "names.incidentDate%":"事件日期",
+      "fields.incidentDate.previousWeek%":"上周",
+      "fields.incidentDate.previousMonth%":"上个月",
+      "fields.incidentDate.previousYear%":"上一年",
+      "names.modifyDate%":"修改日期",
+      "fields.modifyDate.previousWeek%":"上周",
+      "fields.modifyDate.previousMonth%":"上一个月",
+      "fields.modifyDate.previousYear%":"上一年"
+    }
+  },
+  "common.directive.coreNotes": {
+    "title": "注释",
+    "modal.addNote": "zh-cn_Add Note",
+    "modal.editNote": "zh-cn_Edit Record",
+    "modal.notes.label": "zh-cn_Note",
+    "modal.btnOk.text": "zh-cn_Save",
+    "modal.btnCancel.text": "zh-cn_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "zh-cn_People",
+    "contactMethods": {
+      "title": "zh-cn_Contact Methods",
+      "modal": {
+        "addContactMethod": "zh-cn_Add Contact Method",
+        "editContactMethod": "zh-cn_Edit Record",
+        "contactMethodTypes.label": "zh-cn_Contact Method Types",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "organizations": {
+      "title": "zh-cn_Organizations",
+      "modal": {
+        "addOrganization": "zh-cn_Add Organization",
+        "editOrganization": "zh-cn_Edit Record",
+        "organizationTypes.label": "zh-cn_Organization Types",
+        "selectExisting.label": "zh-cn_Select Existing",
+        "addNew.label": "zh-cn_Add New",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save",
+        "dialogOrganizationPicker": {
+          "header": "zh-cn_Choose Organization",
+          "table.columns": {
+            "type": "zh-cn_Organization Type",
+            "name": "zh-cn_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "zh-cn_Addresses",
+      "modal": {
+        "addAddress": "zh-cn_Add Address",
+        "editAddress": "zh-cn_Edit Record",
+        "addressTypes.label": "zh-cn_Address Types",
+        "street.label": "zh-cn_Street",
+        "city.label": "zh-cn_City",
+        "zip.label": "zh-cn_Zip",
+        "state.label": "zh-cn_State",
+        "country.label": "zh-cn_Country",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "aliases": {
+      "title": "zh-cn_Aliases",
+      "modal": {
+        "addAlias": "zh-cn_Add Alias",
+        "editAlias": "zh-cn_Edit Record",
+        "aliasTypes.label": "zh-cn_Alias Types",
+        "value.label": "zh-cn_Value",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    },
+    "people": {
+      "title": "zh-cn_People",
+      "modal": {
+        "addPeople": "zh-cn_Add Person",
+        "editPeople": "zh-cn_Edit Record",
+        "personTypes.label": "zh-cn_Person Types",
+        "givenName.label": "zh-cn_First Name",
+        "familyName.label": "zh-cn_Last Name",
+        "btnCancel.text": "zh-cn_Cancel",
+        "btnOk.text": "zh-cn_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "zh-cn_Calendar",
+    "start.label": "zh-cn_Start: ",
+    "end.label": "zh-cn_End: ",
+    "message": {
+      "error.accessDenied": "zh-cn_Access denied to calendar service.",
+      "error.serviceConfiguration": "zh-cn_Invalid calendar service configuration.",
+      "error.serviceCredentials": "zh-cn_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "zh-cn_Internal Server Error occurred."
+    }
+  },
+  "common.directive.coreParticipants": {
+    "title": "zh-cn_Participants",
+    "modal.addParticipant.label": "zh-cn_Add Participant",
+    "modal.editParticipant.label": "zh-cn_Edit Record",
+    "modal.participantType.label": "zh-cn_Participant Type ",
+    "modal.participantName.label": "zh-cn_Participant Name",
+    "modal.btnOk.text": "zh-cn_Save",
+    "modal.btnCancel.text": "zh-cn_Cancel",
+    "modal.dialogUserPicker.header": "zh-cn_Search User",
+    "modal.dialogGroupPicker.header": "zh-cn_Search Group",
+    "message": {
+      "error.groupType": "zh-cn_The owning group cannot be a person.",
+      "error.userType": "zh-cn_ User type cannot be a group.",
+      "error.assigneeUnique": "zh-cn_Only one assignee is allowed.",
+      "error.owninggroupUnique": "zh-cn_Only one owning group is allowed.",
+      "error.noAccessCombo": "zh-cn_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+    }
+  },
+  "common.directive.progressIndicator": {
+    "progressCompletion": "zh-cn_% Complete"
+  },
+  "common.directive.folderActions": {
+    "button.addFile": "zh-cn_Add File",
+    "button.addFolder": "zh-cn_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "zh-cn_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "zh-cn_Case File",
+    "COMPLAINT": "zh-cn_Complaint",
+    "TASK": "zh-cn_Task",
+    "TIMESHEET": "zh-cn_Timesheet",
+    "COSTSHEET": "zh-cn_Costsheet",
+    "FILE": "zh-cn_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "zh-cn_Choose User",
+    "table.columns": {
+      "name": "zh-cn_Name",
+      "type": "zh-cn_Type",
+      "title": "zh-cn_Title",
+      "id": "zh-cn_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "zh-cn_{{objectTypeString}} with id {{objectId}} was created."
+}

@@ -7,17 +7,18 @@ import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookListItemsFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.crypto.AcmCryptoUtils;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.dao.OutlookPasswordDao;
+import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.service.outlook.model.EmailWithAttachmentsDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksDTO;
-import com.armedia.acm.service.outlook.model.EmailWithEmbeddedLinksResultDTO;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookDTO;
@@ -31,12 +32,17 @@ import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookEventPublisher;
 import com.armedia.acm.service.outlook.service.OutlookFolderService;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
-import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
-import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+import com.armedia.acm.services.email.model.EmailBodyBuilder;
+import com.armedia.acm.services.email.model.EmailBuilder;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithAttachmentsDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksResultDTO;
+import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -49,6 +55,7 @@ import java.util.Base64;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -84,6 +91,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private OutlookDao dao;
+    private AcmOutlookFolderCreatorDao folderCreatorDao;
     private EcmFileService ecmFileService;
     private AcmContainerDao acmContainerDao;
 
@@ -94,8 +102,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     private String systemUserPass;
     private String systemUserId;
 
-    private AuthenticationTokenService authenticationTokenService;
-    private AuthenticationTokenDao authenticationTokenDao;
+    private AcmEmailContentGeneratorService acmEmailContentGeneratorService;
     private AcmCryptoUtils acmCryptoUtils;
     private OutlookPasswordDao outlookPasswordDao;
 
@@ -317,29 +324,59 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendPlainEmail(java.util.stream.Stream,
+     * com.armedia.acm.services.email.model.EmailBuilder, com.armedia.acm.services.email.model.EmailBodyBuilder)
+     */
     @Override
-    public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user,
-            Authentication authentication) throws Exception
+    public <T> void sendPlainEmail(Stream<T> emailsDataStream, EmailBuilder<T> emailBuilder, EmailBodyBuilder<T> emailBodyBuilder)
+            throws Exception
     {
-
-        if (getSendFromSystemUser())
-        {
-            user = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
-        }
-
-        sendEmail(emailWithAttachmentsDTO, user, authentication);
+        throw new UnsupportedOperationException("Not supported.");
     }
 
     @Override
-    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, AcmOutlookUser user, Authentication authentication)
+    public void sendEmailWithAttachments(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmUser user)
             throws Exception
     {
-        ExchangeService service = connect(user);
+        AcmOutlookUser outlookUser;
+        if (getSendFromSystemUser())
+        {
+            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        } else
+        {
+            OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+            outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
+        }
+
+        sendEmail(emailWithAttachmentsDTO, authentication, outlookUser);
+    }
+
+    @Override
+    public void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmUser user) throws Exception
+    {
+        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
+
+        sendEmail(emailWithAttachmentsDTO, authentication, outlookUser);
+    }
+
+    /**
+     * @param emailWithAttachmentsDTO
+     * @param authentication
+     * @param outlookUser
+     * @throws Exception
+     */
+    private void sendEmail(EmailWithAttachmentsDTO emailWithAttachmentsDTO, Authentication authentication, AcmOutlookUser outlookUser)
+            throws Exception
+    {
+        ExchangeService service = connect(outlookUser);
         EmailMessage emailMessage = new EmailMessage(service);
         emailMessage.setSubject(emailWithAttachmentsDTO.getSubject());
-        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getHeader() + "\r\r"
-                + emailWithAttachmentsDTO.getBody() + "\r\r\r" + emailWithAttachmentsDTO.getFooter()));
-        emailMessage.getBody().setBodyType(BodyType.Text);
+        emailMessage.setBody(MessageBody.getMessageBodyFromText(emailWithAttachmentsDTO.getMessageBody()));
+        emailMessage.getBody().setBodyType(BodyType.HTML);
         emailMessage.getToRecipients().add(systemUserEmail);
 
         if (emailWithAttachmentsDTO.getEmailAddresses() != null && !emailWithAttachmentsDTO.getEmailAddresses().isEmpty())
@@ -382,9 +419,103 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
-    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO, AcmOutlookUser outlookUser,
-            Authentication authentication) throws Exception
+    public void sendEmailWithAttachmentsAndLinks(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO,
+            Authentication authentication, AcmUser user) throws Exception
     {
+
+        AcmOutlookUser outlookUser;
+
+        if (getSendFromSystemUser())
+        {
+            outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
+        } else
+        {
+            OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+            outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
+        }
+
+        sendEmail(emailWithAttachmentsAndLinksDTO, authentication, outlookUser);
+    }
+
+    @Override
+    public void sendEmail(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, Authentication authentication, AcmUser user)
+            throws Exception
+    {
+        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
+
+        sendEmail(emailWithAttachmentsAndLinksDTO, authentication, outlookUser);
+    }
+
+    /**
+     * @param emailWithAttachmentsAndLinksDTO
+     * @param authentication
+     * @param outlookUser
+     */
+    private void sendEmail(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, Authentication authentication,
+            AcmOutlookUser outlookUser)
+    {
+        ExchangeService service = connect(outlookUser);
+
+        if (emailWithAttachmentsAndLinksDTO.getEmailAddresses() != null && !emailWithAttachmentsAndLinksDTO.getEmailAddresses().isEmpty())
+        {
+            for (String emailAddress : emailWithAttachmentsAndLinksDTO.getEmailAddresses())
+            {
+
+                try
+                {
+                    EmailMessage emailMessage = new EmailMessage(service);
+                    emailMessage.getToRecipients().add(emailAddress);
+                    emailMessage.setSubject(emailWithAttachmentsAndLinksDTO.getSubject());
+                    emailMessage.setBody(MessageBody
+                            .getMessageBodyFromText(generateBody(emailWithAttachmentsAndLinksDTO, emailAddress, authentication)));
+                    emailMessage.getBody().setBodyType(BodyType.HTML);
+
+                    List<EcmFile> attachedFiles = new ArrayList<>();
+                    addAttachments(emailWithAttachmentsAndLinksDTO, emailMessage, attachedFiles);
+
+                    emailMessage.sendAndSaveCopy();
+
+                    /*
+                     * // Fires an audit event for each successfully emailed file for (EcmFile emailedFile :
+                     * attachedFiles) { outlookEventPublisher.publishFileEmailedEvent(emailedFile, authentication); }
+                     */
+
+                } catch (Exception e)
+                {
+                    log.error(String.format("Could not send email to %s from %s.", emailAddress, outlookUser.getEmailAddress()));
+                }
+            }
+        }
+    }
+
+    private void addAttachments(EmailWithAttachmentsAndLinksDTO emailWithAttachmentsAndLinksDTO, EmailMessage emailMessage,
+            List<EcmFile> attachedFiles) throws MuleException, AcmUserActionFailedException, ServiceLocalException
+    {
+        if (emailWithAttachmentsAndLinksDTO.getAttachmentIds() != null && !emailWithAttachmentsAndLinksDTO.getAttachmentIds().isEmpty())
+        {
+            for (Long attachmentId : emailWithAttachmentsAndLinksDTO.getAttachmentIds())
+            {
+                InputStream contents = getEcmFileService().downloadAsInputStream(attachmentId);
+                EcmFile ecmFile = getEcmFileService().findById(attachmentId);
+                String fileName = ecmFile.getFileName();
+                if (ecmFile.getFileActiveVersionNameExtension() != null)
+                {
+                    fileName = fileName + ecmFile.getFileActiveVersionNameExtension();
+                }
+                emailMessage.getAttachments().addFileAttachment(fileName, contents);
+                attachedFiles.add(ecmFile);
+            }
+        }
+    }
+
+    @Override
+    public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO emailDTO,
+            Authentication authentication, AcmUser user) throws Exception
+    {
+
+        OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
+        AcmOutlookUser outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
 
         if (getSendFromSystemUser())
         {
@@ -406,7 +537,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     emailMessage.getToRecipients().add(emailAddress);
                     emailMessage.setSubject(emailDTO.getSubject());
                     emailMessage.setBody(MessageBody.getMessageBodyFromText(generateBody(emailDTO, emailAddress, authentication)));
-                    emailMessage.getBody().setBodyType(BodyType.Text);
+                    emailMessage.getBody().setBodyType(BodyType.HTML);
 
                     emailMessage.sendAndSaveCopy();
 
@@ -427,28 +558,7 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     private String generateBody(EmailWithEmbeddedLinksDTO emailDTO, String emailAddress, Authentication authentication)
     {
-        StringBuilder generatedBody = new StringBuilder(emailDTO.getHeader()).append("\r\r");
-
-        for (Long fileId : emailDTO.getFileIds())
-        {
-            String token = generateAndSaveAuthenticationToken(fileId, emailAddress, emailDTO, authentication);
-            generatedBody.append(emailDTO.getBaseUrl()).append(fileId).append("&acm_email_ticket=").append(token).append("\r\r");
-        }
-
-        return generatedBody.append("\r\r").append(emailDTO.getFooter()).toString();
-    }
-
-    private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailWithEmbeddedLinksDTO emailDTO,
-            Authentication authentication)
-    {
-        String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
-        AuthenticationToken authenticationToken = new AuthenticationToken();
-        authenticationToken.setKey(token);
-        authenticationToken.setStatus(AuthenticationTokenConstants.ACTIVE);
-        authenticationToken.setEmail(emailAddress);
-        authenticationToken.setFileId(fileId);
-        getAuthenticationTokenDao().save(authenticationToken);
-        return token;
+        return getAcmEmailContentGeneratorService().generateEmailBody(emailDTO, emailAddress, authentication);
     }
 
     @Override
@@ -657,8 +767,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     }
 
     @Override
-    public OutlookFolder createFolder(AcmOutlookUser user, WellKnownFolderName parentFolderName, OutlookFolder newFolder)
-            throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
+    public OutlookFolder createFolder(AcmOutlookUser user, Long objectId, String objectType, WellKnownFolderName parentFolderName,
+            OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {
         ExchangeService service = connect(user);
 
@@ -670,6 +780,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         } catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
+        }
+
+        try
+        {
+            AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreator(user.getEmailAddress(), user.getOutlookPassword());
+            folderCreatorDao.recordFolderCreator(folderCreator, objectId, objectType);
+        } catch (AcmOutlookFolderCreatorDaoException e)
+        {
+            disconnectAndRetry(user, new AcmOutlookException(e));
         }
 
         return retval;
@@ -843,6 +962,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         this.dao = dao;
     }
 
+    /**
+     * @param folderCreatorDao
+     *            the folderCreatorDao to set
+     */
+    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
+    {
+        this.folderCreatorDao = folderCreatorDao;
+    }
+
     public EcmFileService getEcmFileService()
     {
         return ecmFileService;
@@ -901,26 +1029,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     public void setSystemUserId(String systemUserId)
     {
         this.systemUserId = systemUserId;
-    }
-
-    public AuthenticationTokenService getAuthenticationTokenService()
-    {
-        return authenticationTokenService;
-    }
-
-    public void setAuthenticationTokenService(AuthenticationTokenService authenticationTokenService)
-    {
-        this.authenticationTokenService = authenticationTokenService;
-    }
-
-    public AuthenticationTokenDao getAuthenticationTokenDao()
-    {
-        return authenticationTokenDao;
-    }
-
-    public void setAuthenticationTokenDao(AuthenticationTokenDao authenticationTokenDao)
-    {
-        this.authenticationTokenDao = authenticationTokenDao;
     }
 
     public AcmContainerDao getAcmContainerDao()
@@ -990,4 +1098,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         this.outlookPasswordDao = outlookPasswordDao;
     }
 
+    public AcmEmailContentGeneratorService getAcmEmailContentGeneratorService()
+    {
+        return acmEmailContentGeneratorService;
+    }
+
+    public void setAcmEmailContentGeneratorService(AcmEmailContentGeneratorService acmEmailContentGeneratorService)
+    {
+        this.acmEmailContentGeneratorService = acmEmailContentGeneratorService;
+    }
 }

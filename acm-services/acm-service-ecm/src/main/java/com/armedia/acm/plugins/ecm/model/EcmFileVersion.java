@@ -2,7 +2,9 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +17,12 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "acm_file_version")
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 {
     private static final String OBJECT_TYPE = "FILE_VERSION";
@@ -57,6 +59,39 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
 
     @Column(name = "cm_file_version_name_extension")
     private String versionFileNameExtension;
+
+    @Column(name = "cm_media_gps_iso_6709")
+    private String gpsIso6709;
+
+    @Column(name = "cm_media_gps_latitude_degrees")
+    private Double gpsLatitudeDegrees;
+
+    @Column(name = "cm_media_gps_longitude_degrees")
+    private Double gpsLongitudeDegrees;
+
+    @Column(name = "cm_media_gps_readable")
+    private String gpsReadable;
+
+    @Column(name = "cm_media_created_date")
+    private Date mediaCreated;
+
+    @Column(name = "cm_media_height_pixels")
+    private Integer heightPixels;
+
+    @Column(name = "cm_media_width_pixels")
+    private Integer widthPixels;
+
+    @Column(name = "cm_media_device_make")
+    private String deviceMake;
+
+    @Column(name = "cm_media_device_model")
+    private String deviceModel;
+
+    @Column(name = "cm_media_duration_seconds")
+    private Double durationSeconds;
+
+    @Column(name = "cm_file_size_bytes")
+    private Long fileSizeBytes;
 
     @JsonIgnore
     @ManyToOne
@@ -170,6 +205,116 @@ public class EcmFileVersion implements AcmEntity, Serializable, AcmObject
     public void setFile(EcmFile file)
     {
         this.file = file;
+    }
+
+    public String getGpsIso6709()
+    {
+        return gpsIso6709;
+    }
+
+    public void setGpsIso6709(String gpsIso6709)
+    {
+        this.gpsIso6709 = gpsIso6709;
+    }
+
+    public Double getGpsLatitudeDegrees()
+    {
+        return gpsLatitudeDegrees;
+    }
+
+    public void setGpsLatitudeDegrees(Double gpsLatitudeDegrees)
+    {
+        this.gpsLatitudeDegrees = gpsLatitudeDegrees;
+    }
+
+    public Double getGpsLongitudeDegrees()
+    {
+        return gpsLongitudeDegrees;
+    }
+
+    public void setGpsLongitudeDegrees(Double gpsLongitudeDegrees)
+    {
+        this.gpsLongitudeDegrees = gpsLongitudeDegrees;
+    }
+
+    public String getGpsReadable()
+    {
+        return gpsReadable;
+    }
+
+    public void setGpsReadable(String gpsReadable)
+    {
+        this.gpsReadable = gpsReadable;
+    }
+
+    public Integer getHeightPixels()
+    {
+        return heightPixels;
+    }
+
+    public void setHeightPixels(Integer heightPixels)
+    {
+        this.heightPixels = heightPixels;
+    }
+
+    public Integer getWidthPixels()
+    {
+        return widthPixels;
+    }
+
+    public void setWidthPixels(Integer widthPixels)
+    {
+        this.widthPixels = widthPixels;
+    }
+
+    public String getDeviceMake()
+    {
+        return deviceMake;
+    }
+
+    public void setDeviceMake(String deviceMake)
+    {
+        this.deviceMake = deviceMake;
+    }
+
+    public String getDeviceModel()
+    {
+        return deviceModel;
+    }
+
+    public void setDeviceModel(String deviceModel)
+    {
+        this.deviceModel = deviceModel;
+    }
+
+    public Double getDurationSeconds()
+    {
+        return durationSeconds;
+    }
+
+    public void setDurationSeconds(Double durationSeconds)
+    {
+        this.durationSeconds = durationSeconds;
+    }
+
+    public Date getMediaCreated()
+    {
+        return mediaCreated;
+    }
+
+    public void setMediaCreated(Date mediaCreated)
+    {
+        this.mediaCreated = mediaCreated;
+    }
+
+    public Long getFileSizeBytes()
+    {
+        return fileSizeBytes;
+    }
+
+    public void setFileSizeBytes(Long fileSizeBytes)
+    {
+        this.fileSizeBytes = fileSizeBytes;
     }
 
     @JsonIgnore

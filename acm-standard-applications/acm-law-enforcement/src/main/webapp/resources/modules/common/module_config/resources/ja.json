@@ -1,0 +1,453 @@
+{
+  "common": {
+    "select.option.none": "（選択する）",
+    "value.unknown": "不明",
+
+    "defaultDateFormat": "ja_MM/DD/YYYY",
+    "defaultTimeFormat": "ja_hh:mm:ss",
+    "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "ja_MM/dd/yyyy",
+    "defaultDateUIFormat": "ja_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
+  },
+  "common.addOrganization": {
+    "title": "ja_Add Parent Organization",
+    "addNew.label": "ja_Add new Organization",
+    "selectExisting.label": "ja_Select existing organization",
+    "organization.label": "ja_Organization",
+    "description": "ja_Description",
+    "type.label": "ja_Organization Association Type",
+    "type.label.default.text": "ja_No parent Organization",
+    "type.label.text": "ja_Parent Organization",
+    "btnCancel.text": "ja_Cancel",
+    "btnOk.text": "ja_Save Organization",
+    "setPrimary.label": "ja_Set As Primary?",
+    "radioName": "ja_Choice primary",
+    "radioYes.text": "ja_Yes",
+    "radioNo.text": "ja_No",
+    "duplicateOrganizationRoleErrorMessage": "ja_Organization already has the selected association"
+  },
+  "common.addPerson": {
+    "title": "ja_Add person",
+    "addNew.label": "ja_Add new Person",
+    "selectExisting.label": "ja_Select existing person",
+    "person.label": "ja_Person",
+    "type.label": "ja_Person Association Type",
+    "btnCancel.text": "ja_Cancel",
+    "btnOk.text": "ja_Save Person",
+    "setPrimary.label": "ja_Set As Primary?",
+    "radioName": "ja_Choice primary",
+    "radioYes.text": "ja_Yes",
+    "radioNo.text": "ja_No",
+    "duplicatePersonRoleErrorMessage": "ja_Person already has the selected association"
+  },
+  "common.editOrganization": {
+    "title": "ja_Edit Parent Organization"
+  },
+  "common.service": {
+    "error.invalidData": "無効なデータ"
+  },
+  "common.objects": {
+    "progressNoData": "[ データなし]",
+    "progressLoading": "データの読み込み中 ",
+    "progressError": "データの読み込みに失敗しました "
+  },
+  "common.frevvo": {
+    "defaultDateFormat": "ja_YYYY-MM-DD"
+  },
+  "common.service.messageService": {
+    "authorizationError": "ja_You are not authorized to take this action",
+    "actionMessages": {
+      "success": "ja_Action was successful",
+      "error": "ja_Action error"
+    }
+  },
+  "common.directive.docTree": {
+    "btnRefresh": "ja_Refresh",
+    "waitUploading": "ja_Uploading...",
+    "confirmVersion": "ja_Are you sure to set back to older version?",
+    "declareSuccessful": "ja_Declare successful. Refreshing Document Tree...",
+    "prevItems": "ja_ items above...",
+    "prevItemsTooltip": "ja_Review previous items",
+    "moreItems": "ja_ more items...",
+    "moreItemsTooltip": "ja_Load more items",
+    "moreItemsBegin": "ja_More items...",
+    "email": {
+      "defaultTitle": "ja_ArkCase Documents",
+      "headerForLinks": "ja_Please follow the links below to view the document(s). Links expire in 3 days.",
+      "footerForLinks": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
+      "subjectForAttachment": "ja_Documents from ArkCase",
+      "bodyForAttachment": "ja_Please find attached the documents sent to you from ArkCase.",
+      "headerForAttachment": "ja_Hello,",
+      "footerForAttachment": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+    },
+    "menu": {
+      "noop": "ja_(Select Item)",
+      "editWithWebDAV": "ja_Edit"
+    },
+    "table.columns": {
+      "title": "ja_Title",
+      "type": "ja_Type",
+      "created": "ja_Created",
+      "modified": "ja_Modified",
+      "modifier": "ja_Modified By",
+      "version": "ja_Version",
+      "status": "ja_Status"
+    },
+    "dndDialog": {
+      "title": "ja_Drag and Drop",
+      "radReplace.text": "ja_Replace document (If more then one files are dropped, only first one is used)",
+      "radUploadToParent.text": "ja_Create document(s) in parent folder",
+      "selFileTypes.label": "ja_File Type:",
+      "optFileType.prompt": "ja_[choose file type]",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_OK"
+    },
+    "emailDialog": {
+      "title": "ja_Email",
+      "recipients": "ja_Recipients:",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Send Email",
+      "gridColumns": {
+        "name": "ja_Name",
+        "email": "ja_Email"
+      }
+    },
+    "comment": {
+      "title": "ja_Checkin New Document",
+      "addComent": "ja_Detailed Note",
+      "btnCancel.text": "ja_Cancel",
+      "btnOk.text": "ja_Checkin",
+      "chooseFiles": "ja_Choose Files",
+      "noFiles": "ja_No Files Selected"
+    },
+    "error": {
+      "nodeTitle": "ja_(Error)"
+    },
+    "lockedTitle": "ja_This document is locked by ",
+    "delete.confirmation.dialog": {
+      "header": "ja_Are you sure you want to delete this folder?",
+      "body.message": "ja_The folder contains:",
+      "body.content.files": "ja_files",
+      "body.content.folders": "ja_folders",
+      "btn.delete.folder": "ja_Yes",
+      "btn.cancel.delete.folder": "ja_No"
+    },
+    "fileTypesDialog": {
+      "header": "ja_Please select type of the Document",
+      "btnOK": "ja_OK",
+      "btnCancel": "ja_Cancel"
+    }
+  },
+  "common.directive.objectTree": {
+    "btnPrev.title": "記録上の...",
+    "btnPrev.toolTip": "レコードの上を参照",
+    "btnNext.titleUnknownSize": "複数のレコード...",
+    "btnNext.title": "複数のレコード...",
+    "btnNext.toolTip": "複数のレコードのロード",
+    "edtQuery.placeHolder": "検索",
+    "btnQuery.text": "開始!",
+    "errorNode.title": "(エラー)",
+    "errorNode.toolTip": "(エラー)",
+    "noAccessNode.title": "(アクセス権なし)",
+    "noAccessNode.toolTip": "(アクセス権なし)"
+  },
+  "common.directive.simplePager": {
+    "rowCountLabel": "ja_items per page",
+    "pagerCountMiddleLabel": "ja_ of ",
+    "pagerCountLabel": "ja_ items"
+  },
+  "common.directive.objectAuthorizationRoles": {
+    "choose": "ja_Choose",
+    "not_authorized": "ja_Not Authorized",
+    "tooltip.move_right": "ja_Move Right",
+    "tooltip.move_left": "ja_Move Left",
+    "authorized": "ja_Authorized"
+  },
+  "common.directive.searchModal": {
+    "header": "検索",
+    "btnSearch.text": "検索",
+    "btnOk.text": "OK",
+    "btnCancel.text": "キャンセル",
+    "edtPlaceholder": "検索するには入力",
+    "noData.text": "結果なし"
+  },
+  "common.directive.search": {
+    "showMore.button.text": "もっと表示",
+    "showLess.button.text": "少ない表示",
+    "results.text": "結果",
+    "noResults.text": "結果なし",
+    "tooltip": {
+      "collapseFacetList": "縮小分類テーブル",
+      "expandFacetList": "分類テーブルを展開する"
+    },
+    "facet": {
+      "names.modifyUser%": "ユーザーの変更",
+      "names.taskPriority%": "任務の優先度",
+      "fields.taskPriority.medium%": "中位",
+      "fields.taskPriority.low%": "低い",
+      "fields.taskPriority.high%": "高い",
+      "fields.taskPriority.expedite%": "優先度",
+      "names.group%": "群",
+      "names.tagToken%": "タグトークン",
+      "names.assignee%": "譲受人フルネーム",
+      "names.documentRepository%": "文書リポジトリ名",
+      "names.taskStatus%": "任務ステータス",
+      "fields.taskStatus.active%": "アクティブ",
+      "fields.taskStatus.draft%": "ドラフト",
+      "fields.taskStatus.closed%": "閉まっている",
+      "fields.taskStatus.record%": "記録",
+      "fields.taskStatus.inactive%": "非アクティブ",
+      "fields.taskStatus.inApproval%": "承認中",
+      "fields.taskStatus.delete%": "削除",
+      "fields.taskStatus.approved%": "承認済み",
+      "fields.taskStatus.unclaimed%": "未請求",
+      "fields.taskStatus.valid%": "有効",
+      "names.documentLanguage%": "言語の文書",
+      "names.createUser%": "ユーザーの作成",
+      "names.postalCode%": "郵便番号",
+      "names.incidentType%": "事件の種類",
+      "fields.incidentType.agricultural%": "農業",
+      "fields.incidentType.arson%": "放火",
+      "fields.incidentType.backgroundInvestigation%": "背景調査",
+      "fields.incidentType.benefitsAppeal%": "福祉上訴",
+      "fields.incidentType.businessDispute%": "ビジネス紛争の改善",
+      "fields.incidentType.clinicalFraud%": "臨床調査者の詐欺",
+      "fields.incidentType.congressional%": "議会の対応",
+      "fields.incidentType.disabilityWaiver%": "障害免除の要求",
+      "fields.incidentType.domesticDispute%": "家族紛争",
+      "fields.incidentType.drugTrafficking%": "麻薬密売",
+      "fields.incidentType.educationWaiver%": "教育免除要求",
+      "fields.incidentType.eeoHarassment%": "EEO / 嫌がらせ",
+      "fields.incidentType.embezzle%": "横領",
+      "fields.incidentType.extortion%": "強要",
+      "fields.incidentType.fraud%": "詐欺",
+      "fields.incidentType.government%": "政府",
+      "fields.incidentType.investorComplaint%": "投資人の苦情",
+      "fields.incidentType.laborRacketeering%": "労働脅迫",
+      "fields.incidentType.local%": "ローカル",
+      "fields.incidentType.murder%": "殺人",
+      "fields.incidentType.newDrugFraud%": "新薬申請詐欺",
+      "fields.incidentType.payoff%": "賄賂",
+      "fields.incidentType.pensionWaiver%": "年金免除申請",
+      "fields.incidentType.pollution%": "汚染",
+      "fields.incidentType.productTampering%": "製品改ざん",
+      "fields.incidentType.assetTheftMisuse%": "資産の盗難または誤用",
+      "names.objectType%": "オ対象種類",
+      "fields.objectType.participant%": "参加者",
+      "fields.objectType.contactMethod%": "接触方式",
+      "fields.objectType.task%": "任務",
+      "fields.objectType.file%": "文書",
+      "fields.objectType.person%": "人員",
+      "fields.objectType.personAssociation%": "人員関連",
+      "fields.objectType.reference%": "参照",
+      "fields.objectType.location%": "場所",
+      "fields.objectType.organization%": "組織",
+      "fields.objectType.organizationAssociation%": "組織関連",
+      "fields.objectType.caseFile%": "案件文書",
+      "fields.objectType.complaint%": "訴状",
+      "fields.objectType.associatedTag%": "関連タグ",
+      "fields.objectType.group%": "群",
+      "fields.objectType.costsheet%": "費用シート",
+      "fields.objectType.note%": "注解",
+      "fields.objectType.docRepo%": "文書保存",
+      "fields.objectType.personAlias%": "人物別名",
+      "fields.objectType.timesheet%": "時間シート",
+      "fields.objectType.subscription%": "購読",
+      "fields.objectType.user%": "ユーザー",
+      "fields.objectType.objectLock%": "オ対象ロック",
+      "names.state%": "州",
+      "names.parentType%": "親種類",
+      "fields.parentType.container%": "容器",
+      "fields.parentType.caseFile%": "案件文書",
+      "fields.parentType.complaint%": "訴状",
+      "fields.parentType.organization%": "組織",
+      "fields.parentType.person%": "人員",
+      "fields.parentType.task%": "任務",
+      "fields.parentType.file%": "文書",
+      "fields.parentType.group%": "%群",
+      "fields.parentType.docRepo%": "文書保存",
+      "fields.parentType.costsheet%": "費用シート",
+      "fields.parentType.timesheet%": "時間シート",
+      "names.owner%": "所有者",
+      "names.parentObjectType%": "親オ対象種類",
+      "fields.parentObjectType.container%": "容器",
+      "fields.parentObjectType.caseFile%": "案件文書",
+      "fields.parentObjectType.complaint%": "訴状",
+      "fields.parentObjectType.organization%": "組織",
+      "fields.parentObjectType.person%": "人員",
+      "fields.parentObjectType.task%": "任務",
+      "fields.parentObjectType.file%": "文書",
+      "fields.parentObjectType.group%": "群",
+      "fields.parentObjectType.docRepo%": "文書保存",
+      "fields.parentObjectType.costsheet%": "費用シート",
+      "fields.parentObjectType.timesheet%": "時間シート",
+      "names.personOrganization%": "人物、組織種類",
+      "names.city%": "街",
+      "names.createDate%": "作成日",
+      "fields.createDate.previousWeek%": "前週",
+      "fields.createDate.previousMonth%": "前月",
+      "fields.createDate.previousYear%": "前年",
+      "names.dueDate%": "期限日",
+      "fields.dueDate.previousWeek%": "前週",
+      "fields.dueDate.previousMonth%": "前月",
+      "fields.dueDate.previousYear%": "前年",
+      "names.incidentDate%": "事件の日付",
+      "fields.incidentDate.previousWeek%": "前週",
+      "fields.incidentDate.previousMonth%": "前月",
+      "fields.incidentDate.previousYear%": "前年",
+      "names.modifyDate%": "変更日",
+      "fields.modifyDate.previousWeek%": "前週",
+      "fields.modifyDate.previousMonth%": "前月",
+      "fields.modifyDate.previousYear%": "前年"
+    }
+  },
+  "common.directive.coreNotes": {
+    "title": "ja_Notes",
+    "modal.addNote": "ja_Add Note",
+    "modal.editNote": "ja_Edit Record",
+    "modal.notes.label": "ja_Note",
+    "modal.btnOk.text": "ja_Save",
+    "modal.btnCancel.text": "ja_Cancel"
+  },
+  "common.directive.corePeople": {
+    "title": "ja_People",
+    "contactMethods": {
+      "title": "ja_Contact Methods",
+      "modal": {
+        "addContactMethod": "ja_Add Contact Method",
+        "editContactMethod": "ja_Edit Record",
+        "contactMethodTypes.label": "ja_Contact Method Types",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "organizations": {
+      "title": "ja_Organizations",
+      "modal": {
+        "addOrganization": "ja_Add Organization",
+        "editOrganization": "ja_Edit Record",
+        "organizationTypes.label": "ja_Organization Types",
+        "selectExisting.label": "ja_Select Existing",
+        "addNew.label": "ja_Add New",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save",
+        "dialogOrganizationPicker": {
+          "header": "ja_Choose Organization",
+          "table.columns": {
+            "type": "ja_Organization Type",
+            "name": "ja_Value"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "title": "ja_Addresses",
+      "modal": {
+        "addAddress": "ja_Add Address",
+        "editAddress": "ja_Edit Record",
+        "addressTypes.label": "ja_Address Types",
+        "street.label": "ja_Street",
+        "city.label": "ja_City",
+        "zip.label": "ja_Zip",
+        "state.label": "ja_State",
+        "country.label": "ja_Country",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "aliases": {
+      "title": "ja_Aliases",
+      "modal": {
+        "addAlias": "ja_Add Alias",
+        "editAlias": "ja_Edit Record",
+        "aliasTypes.label": "ja_Alias Types",
+        "value.label": "ja_Value",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    },
+    "people": {
+      "title": "ja_People",
+      "modal": {
+        "addPeople": "ja_Add Person",
+        "editPeople": "ja_Edit Record",
+        "personTypes.label": "ja_Person Types",
+        "givenName.label": "ja_First Name",
+        "familyName.label": "ja_Last Name",
+        "btnCancel.text": "ja_Cancel",
+        "btnOk.text": "ja_Save"
+      }
+    }
+  },
+  "common.directive.coreCalendar": {
+    "title": "ja_Calendar",
+    "start.label": "ja_Start: ",
+    "end.label": "ja_End: ",
+    "message": {
+      "error.accessDenied": "ja_Access denied to calendar service.",
+      "error.serviceConfiguration": "ja_Invalid calendar service configuration.",
+      "error.serviceCredentials": "ja_Invalid Credentials. Please contact the system administrator.",
+      "error.internalServerError": "ja_Internal Server Error occurred."
+    }
+  },
+  "common.directive.coreParticipants": {
+    "title": "ja_Participants",
+    "modal.addParticipant.label": "ja_Add Participant",
+    "modal.editParticipant.label": "ja_Edit Record",
+    "modal.participantType.label": "ja_Participant Type ",
+    "modal.participantName.label": "ja_Participant Name",
+    "modal.btnOk.text": "ja_Save",
+    "modal.btnCancel.text": "ja_Cancel",
+    "modal.dialogUserPicker.header": "ja_Search User",
+    "modal.dialogGroupPicker.header": "ja_Search 群",
+    "message": {
+      "error.groupType": "ja_The owning group cannot be a person.",
+      "error.userType": "ja_ User type cannot be a group.",
+      "error.assigneeUnique": "ja_Only one assignee is allowed.",
+      "error.owninggroupUnique": "ja_Only one owning group is allowed.",
+      "error.noAccessCombo": "ja_The combination of No Access and Assignee is not allowed.",
+      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+    }
+  },
+  "common.directive.progressIndicator": {
+    "progressCompletion": "ja_% Complete"
+  },
+  "common.directive.folderActions": {
+    "button.addFile": "ja_Add File",
+    "button.addFolder": "ja_Add Folder"
+  },
+  "common.directive.downloadAllAsZip": {
+    "button": "Download All As Zip",
+    "message": {
+      "start": "Zip file is downloading",
+      "finish": "Zip file downloaded",
+      "containerError": "Unable to find container",
+      "downloadError": "Zip file download Failed"
+    }
+  },
+  "common.comp.acmLogin": {
+    "confirmLogout": "ja_For your protection, application is about to logout. Click Cancel to stay logged in."
+  },
+  "common.objectTypes": {
+    "CASE_FILE": "ja_Case File",
+    "COMPLAINT": "ja_Complaint",
+    "TASK": "ja_Task",
+    "TIMESHEET": "ja_Timesheet",
+    "COSTSHEET": "ja_Costsheet",
+    "FILE": "ja_File"
+  },
+  "frevvo.dialogUserPicker": {
+    "header": "ja_Choose User",
+    "table.columns": {
+      "name": "ja_Name",
+      "type": "ja_Type",
+      "title": "ja_Title",
+      "id": "ja_Username"
+    }
+  },
+  "common.objects.objectWasCreatedMessage": "ja_{{objectTypeString}} with id {{objectId}} was created."
+}

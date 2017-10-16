@@ -2,12 +2,12 @@
     <div class="col-xs-3 b-r"><label>{{'common.directive.objectAuthorizationRoles.choose' | translate}}&nbsp;
         {{objectTitle}}</label>
         <select ng-model="selectedObject" ng-change="selectObject()"
-                ng-options="d[objectDisplayName] for d in data" name="" size="10"
+                ng-options="d[objectDisplayName] | translate for d in data | orderObjectBy:'objectDisplayName'" name="" size="10"
                 class="form-control">
         </select>
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
-        <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized"
+        <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized| orderObjectBy:'roleDisplayName'"
                 name="" size="10" multiple class="form-control">
         </select>
     </div>
@@ -24,7 +24,7 @@
         <br/><br/><br/><br/><br/>
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
-        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized" size="10"
+        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized| orderObjectBy:'roleDisplayName'" size="10"
                 multiple class="form-control">
         </select>
     </div>

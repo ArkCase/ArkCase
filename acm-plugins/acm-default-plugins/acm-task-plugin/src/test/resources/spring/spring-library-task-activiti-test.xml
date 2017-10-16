@@ -33,7 +33,8 @@
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
 
+    <bean id="buckslipTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
 
-
+    </bean>
 
 </beans>

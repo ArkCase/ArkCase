@@ -3,6 +3,7 @@ package com.armedia.acm.services.search.web.api;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.TimePeriodForSearch;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,62 +21,61 @@ import javax.servlet.http.HttpServletResponse;
  * Created by marjan.stefanoski on 24.11.2014.
  */
 @Controller
-@RequestMapping( { "/api/v1/plugin/search", "/api/latest/plugin/search"} )
-public class ComplaintsSearchByCreatedDateAPIController {
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
+public class ComplaintsSearchByCreatedDateAPIController
+{
 
-        private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-        private ExecuteSolrQuery executeSolrQuery;
+    private ExecuteSolrQuery executeSolrQuery;
 
-        @RequestMapping(value = "/complaintsSearch/byTimeInterval", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/complaintsSearch/byTimeInterval", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 
-        @ResponseBody
-        public String complaints(
-                @RequestParam(value = "timePeriod", required = false, defaultValue = "all") String timePeriod,
-                @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows,
-                Authentication authentication,
-                HttpServletResponse httpResponse
-        ) throws MuleException {
+    @ResponseBody
+    public String complaints(@RequestParam(value = "timePeriod", required = false, defaultValue = "all") String timePeriod,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "5") int maxRows, Authentication authentication,
+            HttpServletResponse httpResponse) throws MuleException
+    {
 
-            if (log.isDebugEnabled()) {
-                if("all".equals(timePeriod)) {
-                    log.debug("User '" + authentication.getName() + "' is searching for all Case Files grouped by status");
-                }
-                log.debug("User '" + authentication.getName() + "' is searching for all Case Files grouped by status with dueDate the last:'" + timePeriod + "' ");
-            }
-
-            String query = "object_type_s:COMPLAINT";// AND creator_lcs:" + URLEncoder.encode(userId);
-            String sort = "create_date_tdt ASC";
-
-            switch (TimePeriodForSearch.getTimePeriod(timePeriod)){
-                case ALL:
-                    break;
-                case LAST_MONTH:
-                    query += "AND create_date_tdt:[NOW/DAY-1MONTH TO *]";
-                    break;
-                case LAST_YEAR:
-                    query += "AND create_date_tdt:[NOW/DAY-1YEAR TO *]";
-                    break;
-                case LAST_WEEK:
-                    query += "AND create_date_tdt:[NOW/DAY-7DAY TO *]";
-                    break;
-                default:
-                    break;
-            }
-
-
-            query = query.replaceAll(" ", "+");
-            sort = sort.replaceAll(" ", "+");
-
-            String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
-                    query, startRow, maxRows, sort);
-
-            httpResponse.addHeader("X-JSON", results);
-
-            return results;
-
+        if ("all".equals(timePeriod))
+        {
+            log.debug("User '{}' is searching for all Case Files grouped by status", authentication.getName());
         }
+        log.debug("User '{}' is searching for all Case Files grouped by status with dueDate the last:'{}' ", authentication.getName(),
+                timePeriod);
+
+        String query = "object_type_s:COMPLAINT";// AND creator_lcs:" + URLEncoder.encode(userId);
+        String sort = "create_date_tdt ASC";
+
+        switch (TimePeriodForSearch.getTimePeriod(timePeriod))
+        {
+        case ALL:
+            break;
+        case LAST_MONTH:
+            query += "AND create_date_tdt:[NOW/DAY-1MONTH TO *]";
+            break;
+        case LAST_YEAR:
+            query += "AND create_date_tdt:[NOW/DAY-1YEAR TO *]";
+            break;
+        case LAST_WEEK:
+            query += "AND create_date_tdt:[NOW/DAY-7DAY TO *]";
+            break;
+        default:
+            break;
+        }
+
+        query = query.replaceAll(" ", "+");
+        sort = sort.replaceAll(" ", "+");
+
+        String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, startRow,
+                maxRows, sort, false);
+
+        httpResponse.addHeader("X-JSON", results);
+
+        return results;
+
+    }
 
     public ExecuteSolrQuery getExecuteSolrQuery()
     {
@@ -87,5 +87,3 @@ public class ComplaintsSearchByCreatedDateAPIController {
         this.executeSolrQuery = executeSolrQuery;
     }
 }
-
-

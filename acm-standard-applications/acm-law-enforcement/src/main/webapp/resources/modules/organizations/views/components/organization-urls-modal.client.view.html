@@ -1,0 +1,57 @@
+<div class="modal-header">
+    <h3 ng-hide="isEdit">
+        <span translate>organizations.comp.urls.modal.addUrl</span>
+    </h3>
+
+    <h3 ng-show="isEdit">
+        <span translate>organizations.comp.urls.modal.editUrl</span>
+    </h3>
+</div>
+<div class="modal-body">
+    <form name="urlForm">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="urls"
+                       translate>organizations.comp.urls.modal.value.label</label><span
+                    class="required-asterisk">*</span>
+                <input id="urls" type="text" ng-model="url.value" class="input-md form-control" required="required"
+                       placeholder="{{ 'organizations.comp.urls.modal.value.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="urlTypes"
+                       translate>organizations.comp.urls.modal.type.label</label><span
+                    class="required-asterisk">*</span>
+                <select id="urlTypes" required="required"
+                        ng-model="url.subLookup" class="input-md form-control"
+                        ng-options="item.key as item.value | translate for item in urlTypes"></select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label translate>organizations.comp.urls.modal.setPrimary</label><span
+                    class="required-asterisk">*</span><br/>
+                <label><input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>organizations.comp.urls.modal.yes</translate>
+                </label>
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>organizations.comp.urls.modal.no</translate>
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
+                <label for="urlDescription" translate>organizations.comp.urls.modal.description</label>
+                <textarea id="urlDescription" class="input-md form-control" ng-model="url.description"></textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>organizations.comp.urls.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="urlForm.$invalid">
+        <span translate>organizations.comp.urls.modal.btnOk.text</span>
+    </button>
+</div>

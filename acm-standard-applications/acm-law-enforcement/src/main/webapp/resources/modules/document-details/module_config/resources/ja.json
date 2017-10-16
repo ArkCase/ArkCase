@@ -1,0 +1,105 @@
+{
+  "documentDetails": {
+    "title": "ja_Document details",
+    "creator": "ja_Creator",
+    "created": "ja_Created",
+    "assignee": "ja_Assignee",
+    "fileType": "ja_File type",
+    "status": "ja_Status",
+    "name": "ja_Name",
+    "comp.eventHistory": {
+      "title": "ja_Event History",
+      "table.columns": {
+        "eventType": "ja_Event Name",
+        "eventDate": "ja_Created",
+        "userId": "ja_User"
+      }
+    },
+    "comp.tags": {
+      "title": "ja_Tags",
+      "table.columns": {
+        "tag": "ja_Tag",
+        "created": "ja_Created",
+        "createdBy": "ja_Created By"
+      },
+      "modal": {
+        "title": "ja_Tag",
+        "search": "ja_Search for Tag",
+        "buttons": {
+          "cancel": "ja_Cancel",
+          "ok": "ja_Add Tag"
+        }
+      },
+      "message.tagExists": "ja_Tag with that name or description or text already exists",
+      "message.tagAssociated": "ja_already associated",
+      "message.delete.success": "ja_Tag deleted successfully",
+      "message.delete.error": "ja_Error deleting tag"
+    },
+    "comp.participants": {
+      "title": "ja_Participants",
+      "table.columns": {
+        "name": "ja_Name",
+        "type": "ja_Type"
+      },
+      "dialogUserPicker": {
+        "header": "ja_Choose User",
+        "table.columns": {
+          "name": "ja_Name",
+          "type": "ja_Type",
+          "title": "ja_Title",
+          "id": "ja_Username"
+        }
+      },
+      "dialogGroupPicker": {
+        "header": "ja_Choose Group",
+        "table.columns": {
+          "name": "ja_Name"
+        }
+      }
+    },
+    "comp.notes": {
+      "title": "ja_Notes",
+      "table.columns": {
+        "note": "ja_Note",
+        "tag": "ja_Document Version",
+        "created": "ja_Created",
+        "creator": "ja_Author"
+      }
+    },
+    "comp.versionHistory": {
+      "title": "ja_Version History",
+      "table.columns": {
+        "creator": "ja_User",
+        "created": "ja_Created",
+        "versionTag": "ja_Version"
+      }
+    },
+    "comp.details": {
+      "title": "ja_Details",
+      "label": {
+        "creator": "ja_Owner",
+        "modifier": "ja_Author",
+        "created": "ja_Creation Date",
+        "modified": "ja_Modified Date",
+        "description": "ja_Description",
+        "type": "ja_Type",
+        "organization": "ja_Source Organization",
+        "person": "ja_Source Entity",
+        "format": "ja_Format",
+        "size": "ja_Size",
+        "gps": "ja_Location",
+        "duration": "ja_Duration (seconds)",
+        "width": "ja_Width (pixels)",
+        "height": "ja_Height (pixels)",
+        "camera.type": "ja_Camera Type",
+        "camera.version": "ja_Camera Version",
+        "button.save": "ja_Save",
+        "button.wait": "ja_Please Wait"
+      },
+      "message": {
+        "save.success": "ja_File metadata are successfully updated",
+        "save.error": "ja_Unable to update file metadata"
+      }
+    }
+  }
+}

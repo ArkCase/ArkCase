@@ -1,24 +1,26 @@
 {
   "id": "tags",
   "title": "Tags",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "tags",
-      "menuItemTitle": "Tags",
+      "menuItemTitle": "tags.menus.leftnav.item",
       "moduleId": "tag",
       "iconClass": "fa fa-tags",
-      "position": 110
+      "position": 140
     }
   ],
   "components": [
     {
       "id": "tagsFacetedSearch",
-      "title": "Tags Faceted Search",
+      "title": "tags.comp.tagsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
-      "typeAheadColumn": "tag_token_lcs",
+      "typeAheadColumn": "title_parseable",
       "emptySearch": false,
       "columnDefs": [
         {
@@ -28,25 +30,29 @@
           "visible": false
         },
         {
-          "name": "tag_token_lcs",
+          "name": "name",
           "displayName": "tags.comp.grid.columns.name",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}}>{{row.entity.name}}</a>"
         },
         {
           "name": "object_type_s",
           "displayName": "tags.comp.grid.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels"
         },
         {
           "name": "title_parseable",
           "sortField": "title_parseable_lcs",
           "displayName": "tags.comp.grid.columns.title",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
         },
         {
-          "name": "parent_type_s",
+          "name": "parent_number_lcs",
           "displayName": "tags.comp.grid.columns.parent",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "assignee_full_name_lcs",
@@ -57,7 +63,7 @@
           "name": "modified_date_tdt",
           "displayName": "tags.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -68,9 +74,11 @@
       ],
       "paginationPageSize": 10,
       "start": 0,
-      "filter": "\"Object Type\": ASSOCIATED_TAG",
-      "multiFilter": "\"Tag Token\":",
-      "filterName": "Object Type"
+      "filter": "",
+      "multiFilter": "{!join from=parent_ref_s to=id}(object_type_s:ASSOCIATED_TAG AND catch_all:${tagName}*)",
+      "reportFileName": "tags",
+      "autoSuggestObjectType": "TAG",
+      "isAutoSuggestActive": true
     }
   ]
 }

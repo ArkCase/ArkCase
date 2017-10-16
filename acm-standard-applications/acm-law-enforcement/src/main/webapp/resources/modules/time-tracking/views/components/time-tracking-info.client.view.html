@@ -3,10 +3,11 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{objectInfo.container.containerObjectTitle || 'Unknown' | uppercase}}
+                    {{objectInfo.container.containerObjectTitle || 'common.value.unknown' | translate | uppercase}}
                 </div>
                 <small class="text-muted">
-                    Last Modified {{objectInfo.modified | date: ('common.defaultDateUIFormat' | translate)}}
+                    <span translate>timeTracking.comp.info.lastModified.label</span>
+                    {{objectInfo.modified | date: 'shortDate' }}
                 </small>
             </div>
         </div>

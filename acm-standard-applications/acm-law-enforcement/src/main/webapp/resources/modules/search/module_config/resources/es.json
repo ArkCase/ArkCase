@@ -1,0 +1,24 @@
+{
+  "search": {
+    "title": "Búsqueda",
+    "search.btn": "Búsqueda",
+    "export.btn": "Exportar",
+    "search.placeholder": "Escriba para buscar",
+    "menus": {
+      "leftnav.item": "Búsqueda"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "ID",
+          "name": "Nombre",
+          "type": "Tipo",
+          "title": "Título",
+          "parent": "Padre",
+          "assignee": "Cesionario",
+          "modified": "Modificado"
+        }
+      }
+    }
+  }
+}

@@ -1,21 +1,23 @@
 {
   "id": "notifications",
   "title": "Notifications",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "notifications",
-      "menuItemTitle": "Notifications",
+      "menuItemTitle": "notifications.menus.leftnav.item",
       "moduleId": "notification",
       "iconClass": "fa fa-bell-o",
-      "position": 90
+      "position": 120
     }
   ],
   "components": [
     {
       "id": "notificationsFacetedSearch",
-      "title": "Notifications Faceted Search",
+      "title": "notifications.comp.notificationsFacetedSearch.title",
       "enabled": "true",
+      "configurable": true,
       "type": "grid",
       "enableFiltering": false,
       "emptySearch": true,
@@ -31,17 +33,18 @@
           "name": "description_parseable",
           "displayName": "notifications.comp.grid.columns.description",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{row.entity.description_parseable}}</div>"
+          "cellTemplate": "<div>{{row.entity.description_parseable}} on {{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short' +':ss'}}</div>"
         },
         {
           "name": "parent_number_lcs",
-          "displayName": "notifications.comp.grid.columns.objNumber",
+          "displayName": "notifications.comp.grid.columns.parentNumber",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href'#' ng-click='grid.appScope.onClickObjLink($event, row.entity.parent_type_s, row.entity.parent_id_s)'>{{row.entity.parent_number_lcs}}</a>"
+          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' url='row.entity.notification_link_s' ng-if='row.entity.related_object_number_s'>{{row.entity.related_object_number_s}}</a><a arkcase-href object-data='row.entity' is-parent='true' url='row.entity.notification_link_s' ng-if='!row.entity.related_object_number_s'>{{row.entity.parent_number_lcs}}</a>"
         },
         {
           "name": "parent_type_s",
           "displayName": "notifications.comp.grid.columns.objType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
@@ -49,7 +52,7 @@
           "type": "date",
           "displayName": "notifications.comp.grid.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : ('common.defaultDateTimeUIFormat' | translate)}}</div>"
+          "cellTemplate": "<div>{{(row.entity.action_date_tdt || row.entity.modified_date_tdt) | date : 'short' +':ss'}}</div>"
         }
       ],
       "paginationPageSizes": [
@@ -62,7 +65,13 @@
       "start": 0,
       "filter": "\"Object Type\": NOTIFICATION & \"Owner\": userId",
       "filterName": "Object Type",
-      "reportFileName": "notifications"
+      "reportFileName": "notifications",
+      "autoSuggestObjectType": "NOTIFICATION",
+      "isAutoSuggestActive": true,
+      "hiddenFacets": [
+        "Owner",
+        "Document Repository Name"
+      ]
     }
   ]
 }

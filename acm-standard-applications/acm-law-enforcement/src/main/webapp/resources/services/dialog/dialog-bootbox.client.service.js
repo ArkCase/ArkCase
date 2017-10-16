@@ -11,8 +11,8 @@
  * This service provides wrap function to common bootbox dialogs
  */
 
-angular.module('services').factory('Dialog.BootboxService', ['UtilService'
-    , function (Util) {
+angular.module('services').factory('Dialog.BootboxService', ['UtilService', '$q'
+    , function (Util, $q) {
 
         var Service = {
 
@@ -38,7 +38,14 @@ angular.module('ngAppDemo', []).controller('ngAppDemoController', ['Dialog.Bootb
 </example>
              */
             alert: function (msg, callback) {
-                bootbox.alert(msg, callback);
+            	var deferred = $q.defer();
+                bootbox.alert({
+                    message: msg,
+                    callback: function(){
+                        deferred.resolve();                       
+                    }
+                });
+                return deferred.promise;
             }
 
             /**

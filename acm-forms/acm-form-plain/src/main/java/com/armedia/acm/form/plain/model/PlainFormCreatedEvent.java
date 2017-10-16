@@ -6,12 +6,9 @@ package com.armedia.acm.form.plain.model;
 public class PlainFormCreatedEvent extends PlainFormEvent
 {
     private final String EVENT_TYPE = "com.armedia.acm.form.plain.created";
-    /**
-     * Create a new ApplicationEvent.
-     *
-     * @param source the component that published the event (never {@code null})
-     */
-    public PlainFormCreatedEvent(PlainForm source, String formName, Long folderId, String cmisFolderId, String userId, String ipAddress)
+
+    public PlainFormCreatedEvent(PlainForm source, String formName, Long folderId, String cmisFolderId, String userId,
+                                 String ipAddress, Long pdfRenditionId, Long xmlRenditionId)
     {
         super(source);
 
@@ -21,5 +18,7 @@ public class PlainFormCreatedEvent extends PlainFormEvent
         setCmisFolderId(cmisFolderId);
         setUserId(userId);
         setIpAddress(ipAddress);
+        setPdfRenditionId(pdfRenditionId);
+        setXmlRenditionId(xmlRenditionId);
     }
 }

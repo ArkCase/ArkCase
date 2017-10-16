@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -76,13 +76,13 @@
             <artifactId>acm-web</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-audit</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-object-history</artifactId>
@@ -104,19 +104,15 @@
             <artifactId>acm-mule-context-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
-        
-        
-        
-        
-        
+
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-files-property-file-manager</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
-        
+
+
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-reload-properties</artifactId>
@@ -127,6 +123,25 @@
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-ms-outlook-integration</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar-integration-exchange</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- bean validation -->
@@ -150,9 +165,9 @@
 
         <!-- preconditions -->
         <dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-		</dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
 
 
         <!-- logging -->
@@ -166,12 +181,6 @@
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>${org.json.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson-mapper-asl.version}</version>
         </dependency>
 
         <dependency>
@@ -200,7 +209,6 @@
         </dependency>
 
 
-
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>
@@ -210,13 +218,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -233,6 +234,21 @@
         </dependency>
 
         <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-easymock</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.castor</groupId>
             <artifactId>castor-xml</artifactId>
             <scope>test</scope>
@@ -242,14 +258,14 @@
             <artifactId>spring-oxm</artifactId>
             <scope>test</scope>
         </dependency>
-        
+
         <!-- Reloading .property file without restarting the server -->
         <dependency>
-			<groupId>net.unicon.springframework</groupId>
-			<artifactId>springframework-addons</artifactId>
-		</dependency>
-		
-		<!-- mule -->
+            <groupId>net.unicon.springframework</groupId>
+            <artifactId>springframework-addons</artifactId>
+        </dependency>
+
+        <!-- mule -->
         <dependency>
             <groupId>org.mule</groupId>
             <artifactId>mule-core</artifactId>
@@ -269,7 +285,6 @@
         <dependency>
             <groupId>org.mule.transports</groupId>
             <artifactId>mule-transport-email</artifactId>
-            <version>${mule.version}</version>
         </dependency>
     </dependencies>
 </project>

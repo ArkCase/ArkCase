@@ -27,5 +27,10 @@
 		<property name="pluginManager" ref="acmPluginManager"/>
 		<property name="functionalAccessService" ref="functionalAccessService"/>
 	</bean>
-    
+
+	<bean id="getGroupFilteredAPIController" class="com.armedia.acm.services.functionalaccess.web.api.GetGroupFilteredAPIController">
+		<property name="executeSolrQuery" ref="executeSolrQuery"/>
+		<property name="functionalAccessService" ref="functionalAccessService"/>
+	</bean>
+
 </beans>

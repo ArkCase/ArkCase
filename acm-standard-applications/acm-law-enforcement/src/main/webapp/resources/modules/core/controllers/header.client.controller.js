@@ -1,8 +1,12 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus', '$state', 'ServCommService'
-    , function ($scope, Authentication, Menus, $state, ServCommService) {
-        $scope.$emit('req-component-config', 'header');
+angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
+    , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
+    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService'
+    , function ($scope, $q, $state, $translate
+        , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
+        , LocaleService, ConfigService, UserInfoService, MessageService) {
+
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
         $scope.menu = Menus.getMenu('topbar');
@@ -13,16 +17,35 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         $scope.inputQuery = '';
         $scope.data = {};
         $scope.data.inputQuery = '';
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'header') {
-                $scope.config = config;
-                $scope.start = config.searchParams.start;
-                $scope.count = config.searchParams.n;
+
+        ConfigService.getComponentConfig("core", "header").then(function (config) {
+            $scope.config = config;
+            $scope.start = Util.goodMapValue(config, "searchProperties.start", 0);
+            $scope.count = Util.goodMapValue(config, "searchProperties.n", 10);
+            $scope.typeAheadColumn = config.typeAheadColumn;
+        });
+
+        ServCommService.handleRequest();
+
+        $scope.queryTypeahead = function (typeaheadQuery) {
+            var deferred = $q.defer();
+            var typeAheadColumn = "title_parseable";
+            if ($scope.typeAheadColumn) {
+                typeAheadColumn = $scope.typeAheadColumn;
+            }
+            if (typeaheadQuery.length >= 2) {
+                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                    var results = _.pluck(res, typeAheadColumn);
+                    deferred.resolve(results);
+                });
+                return deferred.promise;
             }
         };
 
-        ServCommService.handleRequest();
+        var isSelected = false;
+        $scope.onSelect = function ($item, $model, $label) {
+            isSelected = true;
+        };
 
 
         $scope.toggleCollapsibleMenu = function () {
@@ -35,17 +58,55 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
         });
 
         $scope.search = function () {
-            $state.go('quick-search', {
+            $state.go('search', {
                 query: $scope.data.inputQuery
             });
         };
 
         $scope.keyDown = function (event) {
             if (event.keyCode == 13) {
-                $state.go('quick-search', {
-                    query: $scope.data.inputQuery
+                $scope.isSelected = isSelected;
+                $state.go('search', {
+                    query: $scope.data.inputQuery,
+                    isSelected: $scope.isSelected
                 });
             }
+            isSelected = false;
         };
+
+        // set application language for the user
+        $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
+            var userInfo = result[0];
+            var localeData = result[1];
+            $scope.localeDropdownOptions = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.localeSelected = LocaleService.requestLocale(userInfo.langCode);
+            LocaleService.useLocale($scope.localeSelected.code);
+        });
+
+        $scope.changeLocale = function ($event, localeNew) {
+            $event.preventDefault();
+
+            $scope.localeSelected = LocaleService.requestLocale(localeNew.code);
+            LocaleService.useLocale(localeNew.code);
+
+            Authentication.updateUserLang(localeNew.code).then(
+                function () {
+                }
+                , function (error) {
+                    MessageService.error(error.data ? error.data : error);
+                    return error;
+                }
+            );
+        };
+
+        // TODO delete UPDATE button and this function if not needed
+        $scope.updateLocales = function($event) {
+            $event.preventDefault();
+
+            LocaleService.getLatestSettings().then(function(data) {
+                $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
+                return data;
+            });
+        }
     }
 ]);

@@ -1,19 +1,15 @@
 <mule xmlns="http://www.mulesoft.org/schema/mule/core"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
       xmlns:spring="http://www.springframework.org/schema/beans"
-      xsi:schemaLocation="
-               http://www.mulesoft.org/schema/mule/core
+      xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core
                http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-               http://www.mulesoft.org/schema/mule/cmis
-               http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd
                http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-
     <spring:beans>
-        <spring:import resource="classpath:/spring/spring-library-cmis-configuration.xml"/>
+        <spring:bean id="cmisConfigRegistry" class="com.armedia.acm.cmis.CmisConfigRegistry"/>
         <spring:import resource="classpath:/spring/spring-library-acm-encryption.xml"/>
         <spring:import resource="classpath:/spring/spring-library-property-file-manager.xml"/>
+        <spring:import resource="file:${user.home}/.arkcase/acm/cmis/mule-config-*-cmis.xml"/>
     </spring:beans>
 
     <!-- We don't need a notification-listener since we register the listener during context startup.
@@ -21,29 +17,5 @@
     <notifications>
         <notification event="MESSAGE-PROCESSOR"/>
     </notifications>
-
-    <cmis:config
-            name="acmCmisConnector"
-            baseUrl="${cmis.baseUrl}"
-            username="${cmis.username}"
-            password="${cmis.password}"
-            useAlfrescoExtension="${cmis.useAlfrescoExtension}"
-            endpoint="${cmis.endpoint}"
-            repositoryId="#{ '${cmis.repositoryId}' == '' ? null : '${cmis.repositoryId}' }">
-        <!-- for Alfresco we don't need a repository ID, so if the property is empty, use null instead... that is what
-        the above expression does. Documentum does need a repository ID. -->
-
-        <!-- somehow we can't use a property for exhausted action. -->
-        <cmis:connection-pooling-profile
-                maxActive="${cmis.maxActive}"
-                maxIdle="${cmis.maxIdle}"
-                exhaustedAction="WHEN_EXHAUSTED_GROW"
-                maxWait="${cmis.maxWait}"
-                minEvictionMillis="${cmis.minEvictionMillis}"
-                evictionCheckIntervalMillis="${cmis.evictionCheckIntervalMillis}"/>
-        <reconnect count="${cmis.reconnectCount}" frequency="${cmis.reconnectFrequency}"/>
-
-    </cmis:config>
-
 
 </mule>

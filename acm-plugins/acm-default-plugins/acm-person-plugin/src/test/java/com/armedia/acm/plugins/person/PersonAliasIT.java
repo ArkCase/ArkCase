@@ -29,8 +29,19 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-search.xml"
-})
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-object-diff.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class PersonAliasIT
 {
@@ -64,6 +75,7 @@ public class PersonAliasIT
 
         Person p = pa.getPerson();
         p.setId(500L);
+        p.setCreator("creator");
 
         PersonAlias saved = personAliasDao.save(pa);
 
@@ -74,4 +86,3 @@ public class PersonAliasIT
         log.info("Person ID: " + saved.getId());
     }
 }
-

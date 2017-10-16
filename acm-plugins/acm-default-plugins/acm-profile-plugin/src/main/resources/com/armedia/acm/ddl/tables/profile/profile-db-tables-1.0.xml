@@ -146,14 +146,15 @@
     </changeSet>
 
     <changeSet id="11-acm_user_org-id" author="nebojsha.davidovikj">
-    <createTable tableName="acm_user_org_id">
-        <column name="cm_seq_num" type="${idType}"/>
-        <column name="cm_seq_name" type="VARCHAR(255)"/>
-    </createTable>
-    <insert tableName="acm_user_org_id">
-        <column name="cm_seq_num" value="100"></column>
-        <column name="cm_seq_name" value="acm_user_org"></column>
-    </insert>
-</changeSet>
+        <createTable tableName="acm_user_org_id">
+            <column name="cm_seq_num" type="${idType}"/>
+            <column name="cm_seq_name" type="VARCHAR(255)"/>
+        </createTable>
+        <insert tableName="acm_user_org_id">
+            <column name="cm_seq_num" value="100"></column>
+            <column name="cm_seq_name" value="acm_user_org"></column>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>
 

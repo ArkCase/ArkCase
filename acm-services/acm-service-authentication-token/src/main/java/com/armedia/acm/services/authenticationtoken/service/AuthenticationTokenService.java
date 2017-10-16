@@ -2,7 +2,10 @@ package com.armedia.acm.services.authenticationtoken.service;
 
 import org.springframework.cache.Cache;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.context.request.RequestContextHolder;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -25,7 +28,24 @@ public class AuthenticationTokenService
     {
         String key = UUID.randomUUID().toString();
         getAuthenticationTokenCache().put(key, auth);
+        storeTokenForAuthenticationPerSession(key);
         return key;
+    }
+
+    public void storeTokenForAuthenticationPerSession(String token)
+    {
+        String sessionId = RequestContextHolder.currentRequestAttributes().getSessionId();
+        Cache.ValueWrapper valueWrapper = getAuthenticationTokenCache().get(sessionId);
+        Set<String> tokens;
+        if (valueWrapper != null)
+        {
+            tokens = (Set<String>) valueWrapper.get();
+        } else
+        {
+            tokens = new HashSet<>();
+        }
+        tokens.add(token);
+        getAuthenticationTokenCache().put(sessionId, tokens);
     }
 
     public String getUncachedTokenForAuthentication(Authentication auth)
@@ -46,7 +66,7 @@ public class AuthenticationTokenService
     {
         Cache.ValueWrapper found = getAuthenticationTokenCache().get(key);
 
-        if ( found == null || found.get() == null )
+        if (found == null || found.get() == null)
         {
             throw new IllegalArgumentException("Authentication not found for key: '" + key + "'");
         }
@@ -54,7 +74,18 @@ public class AuthenticationTokenService
         return (Authentication) found.get();
     }
 
-
+    public void purgeTokenForAuthenticationPerSession(String sessionId)
+    {
+        Cache.ValueWrapper valueWrapper = getAuthenticationTokenCache().get(sessionId);
+        if (valueWrapper != null)
+        {
+            Set<String> tokens = (Set<String>) valueWrapper.get();
+            tokens.forEach(
+                    token -> getAuthenticationTokenCache().evict(token)
+            );
+            getAuthenticationTokenCache().evict(sessionId);
+        }
+    }
 
     public Cache getAuthenticationTokenCache()
     {

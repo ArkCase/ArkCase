@@ -99,6 +99,11 @@ public class CostsheetServiceImpl implements CostsheetService
         LOG.debug("Taking objects from Solr for object type {}", objectType);
 
         String authorQuery = "";
+        if (!searchQuery.equals("*"))
+        {
+            searchQuery = "\"" + searchQuery.replace("\"", "\\\"").replace("\\", "\\\\") + "\"";
+        }
+
         if (userId != null)
         {
             authorQuery = " AND author_s:" + userId;

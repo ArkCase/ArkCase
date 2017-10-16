@@ -72,4 +72,21 @@ public class UserPreferenceDao extends AcmAbstractDao<UserPreference>
     {
         return UserPreference.class;
     }
+
+    @Transactional
+    public void deleteByWidgetId(Long widgetId)
+    {
+        String queryString = "DELETE FROM UserPreference up WHERE up.widget.widgetId = :widgetId";
+        Query deleteQuery = getEm().createQuery(queryString);
+        deleteQuery.setParameter("widgetId", widgetId);
+        deleteQuery.executeUpdate();
+    }
+
+    public List<UserPreference> findByWidgetId(Long widgetId)
+    {
+        String queryString = "SELECT up FROM UserPreference up WHERE up.widget.widgetId = :widgetId";
+        TypedQuery<UserPreference> selectQuery = getEm().createQuery(queryString, UserPreference.class);
+        selectQuery.setParameter("widgetId", widgetId);
+        return selectQuery.getResultList();
+    }
 }

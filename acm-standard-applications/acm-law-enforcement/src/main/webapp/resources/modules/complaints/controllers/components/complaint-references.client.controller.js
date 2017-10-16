@@ -43,12 +43,20 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             $scope.gridOptions.data = references;
         };
 
-        $scope.onClickObjLink = function (event, rowEntity) {
+        $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
             var targetType = Util.goodMapValue(rowEntity, "targetType");
             var targetId = Util.goodMapValue(rowEntity, "targetId");
-            gridHelper.showObject(targetType, targetId);
+            var parentId = Util.goodMapValue(rowEntity, "parentId");
+            var parentType = Util.goodMapValue(rowEntity, "parentType");
+            var fileName = Util.goodMapValue(rowEntity, "targetName");
+
+            if(targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked){
+                gridHelper.openObject(targetId, parentId, parentType, fileName);
+            }else{
+                gridHelper.showObject(targetType, targetId);
+            }
 
             if (ObjectService.ObjectTypes.COMPLAINT == targetType) {
                 $scope.$emit('request-show-object', {objectId: targetId, objectType: targetType});
@@ -65,7 +73,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        // open addreference modal
+        // open add reference modal
         $scope.addReference = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -74,13 +82,14 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                    	var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.currentObjectId + "-COMPLAINT";
+                        var filter = $scope.modalConfig.searchFilter + "&-id:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
                         if ($scope.gridOptions.data.length > 0) {
                             for (var i = 0; i < $scope.gridOptions.data.length; i++) {
                                 var data = $scope.gridOptions.data[i];
                                 filter += "&-id:" + data.targetId + "-" + data.targetType;
                             }
                         }
+                        filter += "&-parent_ref_s:" + $scope.objectInfo.complaintId + "-" + ObjectService.ObjectTypes.COMPLAINT;
                         return filter.replace(/&/gi, '%26');
                     },
                     $config: function () {
@@ -98,7 +107,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                     reference.referenceNumber = chosenReference.name;
                     reference.referenceStatus = chosenReference.status_lcs;
                     reference.parentId = $stateParams.id;
-                    reference.parentType = 'COMPLAINT';
+                    reference.parentType = ObjectService.ObjectTypes.COMPLAINT;
                     referenceService.addReference(reference).then(
                         function (objectSaved) {
                             $scope.refresh();

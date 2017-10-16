@@ -9,7 +9,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class SetAuthorizedWidgetRolesAPIController
     private WidgetEventPublisher eventPublisher;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/set", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public RolesGroupByWidgetDto setAuthorizedWidgetRoles(
             @RequestBody RolesGroupByWidgetDto updateAuthorizedWidgetRoles,

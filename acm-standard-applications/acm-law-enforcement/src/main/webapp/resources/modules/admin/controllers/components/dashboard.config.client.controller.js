@@ -3,8 +3,10 @@
  */
 
 angular.module('admin')
-    .controller('Admin.DashboardConfigController', ['$scope', 'Admin.DashboardConfigService', 'ConfigService', function ($scope, dashboardConfigService, ConfigService) {
-
+    .controller('Admin.DashboardConfigController', ['$scope', 'Admin.DashboardConfigService', 'ConfigService', '$q', '$translate', 'MessageService'
+    , function ($scope, dashboardConfigService, ConfigService, $q, $translate, messageService) {
+    	
+    	var deferred = $q.defer();
         var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
         $scope.widgets = [];
         $scope.widgetsMap = [];
@@ -39,6 +41,12 @@ angular.module('admin')
         $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
             $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
             $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
-            dashboardConfigService.authorizeRolesForWidget($scope.widgetsMap[selectedObject.key]);
+            dashboardConfigService.authorizeRolesForWidget($scope.widgetsMap[selectedObject.key]).then(function() {
+                deferred.resolve();
+            }, function(){
+                deferred.reject();
+            });
+            
+            return deferred.promise;
         };
     }]);

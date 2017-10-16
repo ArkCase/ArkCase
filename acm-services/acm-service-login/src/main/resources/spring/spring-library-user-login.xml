@@ -4,28 +4,6 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="applicationRoleToUserGroupProperties"
-          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring
-        to be able to read the file; otherwise it will try to read from the
-        classpath -->
-        <property name="location" value="file:${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
-        <property name="ignoreResourceNotFound" value="true"/>
-        <property name="localOverride" value="false"/>
-        <!-- following properties are the default mapping of roles to
-             groups.  These properties will be overwritten by properties in the
-             properties file.  The properties file must have each key from the
-             below list. -->
-        <property name="properties">
-            <props>
-                <prop key="ROLE_INVESTIGATOR"></prop>
-                <prop key="ROLE_INVESTIGATOR_SUPERVISOR"></prop>
-                <prop key="ROLE_ANALYST"></prop>
-                <prop key="ROLE_CALLCENTER"></prop>
-            </props>
-        </property>
-    </bean>
-
     <bean id="acmAuthoritiesMapper" class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper" init-method="initBean">
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
@@ -36,7 +14,6 @@
         <property name="authoritiesMapper" ref="acmAuthoritiesMapper"/>
         <property name="authenticationEventPublisher" ref="ssAuthenticationEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
         <property name="groupService" ref="groupService"/>
     </bean>
 
@@ -88,6 +65,16 @@
         <property name="alwaysUseDefaultTargetUrl" value="false"/>
         <property name="sessionRegistry" ref="sessionRegistry"/>
         <property name="sessionAuthenticationStrategy" ref="concurrentSessionControlAuthenticationStrategy"/>
+        <property name="ignoreSavedUrls">
+            <list value-type="java.lang.String">
+                <value>/stomp</value>
+                <value>/api</value>
+                <value>/views/loggedout.jsp</value>
+                <value>/VirtualViewerJavaHTML5</value>
+                <value>/pentaho</value>
+                <value>/frevvo</value>
+            </list>
+        </property>
     </bean>
 
     <bean id="acmRedirectStrategy" class="com.armedia.acm.auth.AcmRedirectStrategy"/>
@@ -119,7 +106,7 @@
     </bean>
 
 
-    <beans profile="ldap,kerberos">
+    <beans profile="ldap,kerberos,externalAuth">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>

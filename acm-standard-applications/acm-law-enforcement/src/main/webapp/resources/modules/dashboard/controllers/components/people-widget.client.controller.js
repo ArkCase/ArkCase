@@ -4,27 +4,39 @@ angular.module('dashboard.people', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('people', {
-                    title: 'People',
-                    description: 'Displays people',
-                    controller: 'Dashboard.PeopleController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
-                    commonName: 'people'
-                }
-            );
+                title: 'dashboard.widgets.people.title',
+                description: 'dashboard.widgets.people.description',
+                controller: 'Dashboard.PeopleController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/people-widget.client.view.html',
+                commonName: 'people'
+            });
     })
-    .controller('Dashboard.PeopleController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
+    .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
 
-            var promiseConfig;
-            var promiseInfo;
-            var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
-            ];
+                var modules = [
+                        {
+                            name: "CASE_FILE",
+                            configName: "cases",
+                            getInfo: CaseInfoService.getCaseInfo,
+                            validateInfo: CaseInfoService.validateCaseInfo
+                        },
+                        {
+                            name: "COMPLAINT",
+                            configName: "complaints",
+                            getInfo: ComplaintInfoService.getComplaintInfo,
+                            validateInfo: ComplaintInfoService.validateComplaintInfo
+                        },
+                        {
+                            name: "ORGANIZATION",
+                            configName: "organizations",
+                            getInfo: OrganizationInfoService.getOrganizationInfo,
+                            validateInfo: OrganizationInfoService.validateOrganizationInfo
+                        }
+                ];
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
@@ -35,27 +47,32 @@ angular.module('dashboard.people', ['adf.provider'])
                 columnDefs: []
             };
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
+            var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "people";
-                        });
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+            new HelperObjectBrowserService.Component({
+                scope: $scope
+                , stateParams: $stateParams
+                , moduleId: module.configName
+                , componentId: "main"
+                , retrieveObjectInfo: module.getInfo
+                , validateObjectInfo: module.validateInfo
+                , onObjectInfoRetrieved: function (objectInfo) {
+                    onObjectInfoRetrieved(objectInfo);
+                }
+                , onConfigRetrieved: function (componentConfig) {
+                    onConfigRetrieved(componentConfig);
+                }
+            });
 
-                        $scope.gridOptions.data = info.personAssociations;
-                        $scope.gridOptions.totalItems = $scope.gridOptions.data.length;
-                    },
-                    function (err) {
+            var onObjectInfoRetrieved = function (objectInfo) {
+                gridHelper.setWidgetsGridData(objectInfo.personAssociations);
+            };
 
-                    }
-                );
-            }
+            var onConfigRetrieved = function (componentConfig) {
+                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                    return widget.id === "people";
+                });
+                gridHelper.setColumnDefs(widgetInfo);
+            };
         }
     ]);

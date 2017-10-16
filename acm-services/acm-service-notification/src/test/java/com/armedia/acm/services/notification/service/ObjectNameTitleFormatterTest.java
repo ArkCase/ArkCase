@@ -1,8 +1,5 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.core.AcmNotifiableEntity;
-import com.armedia.acm.data.AcmNotificationDao;
-import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import org.easymock.EasyMockSupport;
@@ -22,9 +19,7 @@ public class ObjectNameTitleFormatterTest extends EasyMockSupport
     static final Long RELATED_OBJECT_ID = 1L;
     static final String COMPLAINT_TITLE = "COMPLAINT_1";
     private Notification notification;
-    private AcmDataService mockDataService;
-    private AcmNotificationDao mockNotificationDao;
-    private AcmNotifiableEntity mockNotifiableEntity;
+    private NotificationUtils mockNotificationUtils;
     private ObjectNameTitleFormatter titleFormatter;
 
     @Before
@@ -37,20 +32,17 @@ public class ObjectNameTitleFormatterTest extends EasyMockSupport
         notification.setRelatedObjectId(RELATED_OBJECT_ID);
         notification.setParentType(PARENT_OBJECT_TYPE);
         notification.setParentId(PARENT_OBJECT_ID);
-        mockDataService = createMock(AcmDataService.class);
-        mockNotificationDao = createMock(AcmNotificationDao.class);
-        mockNotifiableEntity = createMock(AcmNotifiableEntity.class);
-        titleFormatter = new ObjectNameTitleFormatter();
+        mockNotificationUtils = createMock(NotificationUtils.class);
 
-        titleFormatter.setAcmDataService(mockDataService);
+        titleFormatter = new ObjectNameTitleFormatter();
+        titleFormatter.setNotificationUtils(mockNotificationUtils);
     }
 
     @Test
     public void testFormat()
     {
-        expect(mockDataService.getNotificationDaoByObjectType(RELATED_OBJECT_TYPE)).andReturn(mockNotificationDao);
-        expect(mockNotificationDao.findEntity(RELATED_OBJECT_ID)).andReturn(mockNotifiableEntity);
-        expect(mockNotifiableEntity.getNotifiableEntityTitle()).andReturn(COMPLAINT_TITLE);
+        expect(mockNotificationUtils.getNotificationParentOrRelatedObjectNumber(RELATED_OBJECT_TYPE, RELATED_OBJECT_ID))
+                .andReturn(COMPLAINT_TITLE);
 
         replayAll();
         String expectedTitle = titleFormatter.format(notification);

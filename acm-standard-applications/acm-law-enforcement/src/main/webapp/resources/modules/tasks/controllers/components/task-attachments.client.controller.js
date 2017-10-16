@@ -1,32 +1,16 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 
-    'PermissionsService', 'DocTreeExt.Core', 'Authentication'
-    , function ($scope, $stateParams, $modal
-        , Util, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService, DocTreeService, 
-        PermissionsService, DocTreeExtCore, Authentication) {
+angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$stateParams', '$q', '$modal', '$translate'
+    , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
+    , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
+    , function ($scope, $stateParams, $q, $modal, $translate
+        , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
+        , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
 
-		Authentication.queryUserInfo().then(
+        Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
-            }
-        );
-	
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                return formTypes;
-            }
-        );
-
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                return fileTypes;
             }
         );
 
@@ -45,9 +29,22 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             }
         });
 
+        var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.config = config;
             $scope.treeConfig = config.docTree;
+
+            $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
+                function (data) {
+                    $scope.treeConfig.formTypes = data[0];
+                    $scope.treeConfig.fileTypes = [];
+                    for(var i = 0; i < data[1].length; i++){
+                        $scope.treeConfig.fileTypes.push({"type": data[1][i].key, "label": $translate.instant(data[1][i].value)})
+                    }
+                    $scope.treeConfig.fileLanguages = data[2];
+                });
         };
 
         $scope.objectType = ObjectService.ObjectTypes.TASK;
@@ -55,25 +52,27 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
-            PermissionsService.getActionPermission('editAttachments', objectInfo).then(function(result) {
-                objectInfo.isReadOnly = !result;
+            PermissionsService.getActionPermission('editAttachments', objectInfo, {objectType: ObjectService.ObjectTypes.TASK}).then(function (result) {
+                $scope.isReadOnly = !result;
             });
         };
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
-            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, $scope.fileTypes);
+            var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
+            fileTypes = fileTypes.concat(Util.goodArray($scope.treeConfig.formTypes));
+            return DocTreeService.uploadFrevvoForm(type, folderId, onCloseForm, $scope.objectInfo, fileTypes);
         };
 
-        $scope.onInitTree = function(treeControl) {
+        $scope.onInitTree = function (treeControl) {
             $scope.treeControl = treeControl;
-            DocTreeExtCore.handleCheckout(treeControl, $scope);
-            DocTreeExtCore.handleCheckin(treeControl, $scope);
-            DocTreeExtCore.handleEditWithWebDAV(treeControl, $scope);
-            DocTreeExtCore.handleCancelEditing(treeControl, $scope);
-            
+            DocTreeExtCheckin.handleCheckout(treeControl, $scope);
+            DocTreeExtCheckin.handleCheckin(treeControl, $scope);
+            DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
+            DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
+
             treeControl.addCommandHandler({
                 name: "remove"
-                , onAllowCmd: function(nodes) {
+                , onAllowCmd: function (nodes) {
                     var len = 0;
                     if (Util.isArray(nodes[0].children)) {
                         len = nodes[0].children.length;
@@ -81,7 +80,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
                     if (0 != len) {
                         return 'disable';
                     } else {
-                        return $scope.objectInfo.isReadOnly ? 'disable' : '';
+                        return $scope.isReadOnly ? 'disable' : '';
                     }
                 }
             });
@@ -91,6 +90,24 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $scope.treeControl.refreshTree();
         };
 
+        $scope.sendEmail = function() {
+            var nodes = $scope.treeControl.getSelectedNodes();
+            var DocTree = $scope.treeControl.getDocTreeObject();
+            DocTreeExtEmail.openModal(DocTree, nodes);
+        };
+
         $scope.correspondenceForms = {};
+
+        $scope.onFilter = function () {
+            $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
+        };
+
+        $scope.onSearch = function () {
+            $scope.$bus.publish('onSearchDocTree', {searchFilter: $scope.searchFilter});
+        };
+
+        $scope.$bus.subscribe('removeSearchFilter', function () {
+            $scope.searchFilter = null;
+        });
     }
 ]);

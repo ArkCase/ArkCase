@@ -1,21 +1,23 @@
 {
   "id": "audit",
   "title": "Audit",
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "audit",
-      "menuItemTitle": "Audit",
+      "menuItemTitle": "audit.menus.leftnav.item",
       "moduleId": "audit",
       "iconClass": "fa fa-bolt",
-      "position": 140
+      "position": 170
     }
   ],
   "components": [
     {
       "id": "auditselection",
-      "title": "Audit",
+      "title": "audit.comp.auditselection.title",
       "enabled": true,
+      "configurable": true,
       "auditDropdown": [
         {
           "id": "",
@@ -36,13 +38,26 @@
         {
           "id": "FILE",
           "name": "Files"
+        },
+        {
+          "id": "DOC_REPO",
+          "name": "Documents"
+        },
+        {
+          "id": "PERSON",
+          "name": "People"
+        },
+        {
+          "id": "ORGANIZATION",
+          "name": "Organizations"
         }
       ]
     },
     {
       "id": "datepickers",
-      "title": "Audits",
-      "enabled": true
+      "title": "audit.comp.datepickers.title",
+      "enabled": true,
+      "configurable": true
     }
   ]
 }

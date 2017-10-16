@@ -1,35 +1,25 @@
 package com.armedia.acm.services.users.model.ldap;
 
-import java.util.Map;
-
-/**
- * Created by armdev on 5/28/14.
- */
 public class AcmLdapSyncConfig extends AcmLdapConfig
 {
     private String groupSearchBase;
     private String groupSearchFilter;
-    private Map<String, String> roleToGroupMap;
     private String auditUserId = AcmLdapConstants.DEFAULT_AUDIT_USER;
     private String userDomain;
     private String userSearchBase;
     private String userSearchFilter;
     private String allUsersFilter;
-    private String allUsersSearchBase;
+    private String allChangedUsersFilter;
+    private String allUsersSortingAttribute;
     private String groupSearchFilterForUser;
     private int syncPageSize = 500;
     private String allUsersPageFilter;
+    private String allChangedUsersPageFilter;
     private String groupSearchPageFilter;
-
-    public Map<String, String> getRoleToGroupMap()
-    {
-        return roleToGroupMap;
-    }
-
-    public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
-    {
-        this.roleToGroupMap = roleToGroupMap;
-    }
+    private String changedGroupSearchPageFilter;
+    private String changedGroupSearchFilter;
+    private String groupsSortingAttribute;
+    private String[] userSyncAttributes;
 
     public String getGroupSearchBase()
     {
@@ -111,14 +101,24 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
         this.allUsersFilter = allUsersFilter;
     }
 
-    public String getAllUsersSearchBase()
+    public String getAllChangedUsersFilter()
     {
-        return allUsersSearchBase;
+        return allChangedUsersFilter;
     }
 
-    public void setAllUsersSearchBase(String allUsersSearchBase)
+    public void setAllChangedUsersFilter(String allChangedUsersFilter)
     {
-        this.allUsersSearchBase = allUsersSearchBase;
+        this.allChangedUsersFilter = allChangedUsersFilter;
+    }
+
+    public String getAllUsersSortingAttribute()
+    {
+        return allUsersSortingAttribute;
+    }
+
+    public void setAllUsersSortingAttribute(String allUsersSortingAttribute)
+    {
+        this.allUsersSortingAttribute = allUsersSortingAttribute;
     }
 
     public int getSyncPageSize()
@@ -141,6 +141,16 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
         this.allUsersPageFilter = allUsersPageFilter;
     }
 
+    public String getAllChangedUsersPageFilter()
+    {
+        return allChangedUsersPageFilter;
+    }
+
+    public void setAllChangedUsersPageFilter(String allChangedUsersPageFilter)
+    {
+        this.allChangedUsersPageFilter = allChangedUsersPageFilter;
+    }
+
     public String getGroupSearchPageFilter()
     {
         return groupSearchPageFilter;
@@ -149,5 +159,45 @@ public class AcmLdapSyncConfig extends AcmLdapConfig
     public void setGroupSearchPageFilter(String groupSearchPageFilter)
     {
         this.groupSearchPageFilter = groupSearchPageFilter;
+    }
+
+    public String getChangedGroupSearchPageFilter()
+    {
+        return changedGroupSearchPageFilter;
+    }
+
+    public void setChangedGroupSearchPageFilter(String changedGroupSearchPageFilter)
+    {
+        this.changedGroupSearchPageFilter = changedGroupSearchPageFilter;
+    }
+
+    public String getChangedGroupSearchFilter()
+    {
+        return changedGroupSearchFilter;
+    }
+
+    public void setChangedGroupSearchFilter(String changedGroupSearchFilter)
+    {
+        this.changedGroupSearchFilter = changedGroupSearchFilter;
+    }
+
+    public String getGroupsSortingAttribute()
+    {
+        return groupsSortingAttribute;
+    }
+
+    public void setGroupsSortingAttribute(String groupsSortingAttribute)
+    {
+        this.groupsSortingAttribute = groupsSortingAttribute;
+    }
+
+    public String[] getUserSyncAttributes()
+    {
+        return userSyncAttributes;
+    }
+
+    public void setUserSyncAttributes(String[] userSyncAttributes)
+    {
+        this.userSyncAttributes = userSyncAttributes;
     }
 }

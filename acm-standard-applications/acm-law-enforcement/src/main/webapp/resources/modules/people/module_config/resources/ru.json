@@ -1,0 +1,481 @@
+{
+  "people": {
+    "title": "люди",
+    "progressNoComplaint": "[ Нет данных людей ]",
+    "progressLoading": "Загрузка людей",
+    "progressError": "Не удалось загрузить людей"
+  },
+  "people.menus": {
+    "leftnav.item": "люди",
+    "topbar.item": "Лицо"
+  },
+  "people.comp.main": {
+    "title": "Обзор"
+  },
+  "people.comp.info": {
+    "title": "Информация",
+    "phone.label": "Телефон",
+    "email.label": "Электронная почта",
+    "status.label": "Статус",
+    "organization.label": "Организация",
+    "identification.label": "Идентификация"
+  },
+  "people.comp.actions": {
+    "title": "Действия",
+    "export.button": "Экспорт",
+    "import.button": "Импорт",
+    "delete.button": "Удалить",
+    "activate.button": "Активировать",
+    "deactivate.button": "Деактивировать",
+    "merge.button": "Объединить"
+  },
+  "people.comp.details": {
+    "title": "Детали",
+    "informSaved": "ru_Person details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "people.comp.history": {
+    "title": "История",
+    "table.columns": {
+      "eventType": "ru_Event Name",
+      "eventDate": "ru_Date",
+      "userId": "ru_User"
+    }
+  },
+  "people.comp.pictures": {
+    "title": "Картинки",
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "upload": "ru_Upload"
+    },
+    "table.columns": {
+      "thumbnail": "ru_Thumbnail",
+      "title": "ru_Filename",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "dialog": {
+      "title": "ru_Upload Picture",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "cancel": "ru_Cancel",
+      "upload": "ru_Upload Picture",
+      "noPictureSelected": "ru_No Files Selected.",
+      "browse": "ru_Browse",
+      "description": "ru_Description"
+    },
+    "dialog.edit": {
+      "title": "ru_Edit Picture",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "change": "ru_Change Picture",
+      "save": "ru_Save changes"
+    }
+  },
+  "people.comp.addresses": {
+    "title": "местоположения",
+    "table.columns": {
+      "type": "ru_Type",
+      "streetAddress": "ru_Address 1",
+      "streetAddress2": "ru_Address 2",
+      "city": "ru_City",
+      "state": "ru_State",
+      "zip": "ru_Zip",
+      "country": "ru_Country",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "addNew": "ru_Add New",
+      "map": "ru_Map"
+    },
+    "modal": {
+      "addAddress": "ru_Add Location",
+      "editAddress": "ru_Edit Record",
+      "type.label": "ru_Address Type",
+      "type.placeholder": "ru_Enter Address Type",
+      "streetAddress.label": "ru_Address 1",
+      "streetAddress.placeholder": "ru_Enter Address 1",
+      "streetAddress2.label": "ru_Address 2",
+      "streetAddress2.placeholder": "ru_Enter Address 2",
+      "city.label": "ru_City",
+      "city.placeholder": "ru_Enter City",
+      "zip.label": "ru_Zip",
+      "zip.placeholder": "ru_Enter Zip",
+      "state.label": "ru_State",
+      "state.placeholder": "ru_Enter State",
+      "country.label": "ru_Country",
+      "country.placeholder": "ru_Enter Country",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Location",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No"
+    }
+  },
+  "people.comp.phones": {
+    "title": "телефонные номера",
+    "table.columns": {
+      "type": "ru_Type",
+      "value": "ru_Phone Number",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "addPhone": "ru_Add New Phone Number",
+      "editPhone": "ru_Edit Phone Number",
+      "title": "ru_Add New Phone Number",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Phone Number",
+      "type.label": "ru_Phone Type",
+      "type.placeholder": "ru_Enter Phone Type",
+      "value.label": "ru_Phone Number",
+      "value.placeholder": "ru_Enter Phone Number"
+    }
+  },
+  "people.comp.emails": {
+    "title": "электронная почта",
+    "table.columns": {
+      "type": "ru_Type",
+      "value": "ru_Email Address",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "title": "ru_Add New Email Address",
+      "addEmail": "ru_Add New Email Address",
+      "editEmail": "ru_Edit Email Address",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Email Address",
+      "type.label": "ru_Email Type",
+      "type.placeholder": "ru_Enter Email Type",
+      "value.label": "ru_Email Address",
+      "value.placeholder": "ru_Enter Email Address"
+    }
+  },
+  "people.comp.urls": {
+    "title": "URL-адреса",
+    "table.columns": {
+      "value": "ru_URL",
+      "type": "ru_Type",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "title": "ru_Add New URL",
+      "addUrl": "ru_Add New URL",
+      "editUrl": "ru_Edit URL",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "description": "ru_Description",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save URL",
+      "type.label": "ru_Type",
+      "type.placeholder": "ru_Enter Type",
+      "value.label": "ru_URL",
+      "value.placeholder": "ru_Enter URL"
+    }
+  },
+  "people.comp.participants": {
+    "title": "Участники",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
+  "people.comp.aliases": {
+    "title": "Псевдонимы",
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "upload": "ru_New Alias"
+    },
+    "table.columns": {
+      "type": "ru_Type",
+      "aliasValue": "ru_Alias",
+      "description": "ru_Description",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "modal": {
+      "aliasValue": "ru_Alias Value",
+      "type": "ru_Type",
+      "addAlias": "ru_Add New Alias",
+      "editAlias": "ru_Edit Alias",
+      "title": "ru_Insert New Alias",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Alias",
+      "value.label": "ru_Alias",
+      "value.placeholder": "ru_Enter Alias",
+      "description": "ru_Description",
+      "aliasType.label": "ru_Alias Type",
+      "aliasType.placeholder": "ru_Enter Alias Type"
+    }
+  },
+  "people.comp.ids": {
+    "title": "Идентификатор людей",
+    "table.columns": {
+      "type": "ru_Type",
+      "id": "ru_ID",
+      "number": "ru_Number",
+      "issuer": "ru_Issuer",
+      "yearIssued": "ru_Year Issued",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New"
+    },
+    "modal": {
+      "addID": "ru_Add New Identification",
+      "editID": "ru_Edit Identification",
+      "title": "ru_Add New Identification",
+      "setPrimary": "ru_Set as Primary?",
+      "yes": "ru_Yes",
+      "no": "ru_No",
+      "type.label": "ru_Type",
+      "type.placeholder": "ru_Enter Type",
+      "id.label": "ru_ID",
+      "id.placeholder": "ru_Enter ID",
+      "number.label": "ru_Number",
+      "number.placeholder": "ru_Enter Number",
+      "issuer.label": "ru_Issuer",
+      "issuer.placeholder": "ru_Enter Issuer",
+      "yearIssued.label": "ru_Year Issued",
+      "yearIssued.placeholder": "ru_Enter Year Issued",
+      "yearIssued.close.button": "ru_Close",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save ID"
+    }
+  },
+  "people.comp.organizations": {
+    "title": "Организации",
+    "table.columns": {
+      "type": "ru_Type",
+      "id": "ru_ID",
+      "value": "ru_Organization",
+      "identification": "ru_ID",
+      "contact": "ru_Primary Contact",
+      "phone": "ru_Phone",
+      "location": "ru_Location",
+      "created": "ru_Date Added",
+      "creator": "ru_Added By",
+      "modified": "ru_Last Modified",
+      "modifier": "ru_Modified By"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New",
+      "addExisting": "ru_Add Existing"
+    }
+  },
+  "people.comp.cases": {
+    "title": "Случаи",
+    "table.columns": {
+      "priority": "ru_Priority",
+      "id": "ru_ID",
+      "title": "ru_Title",
+      "status": "ru_Status",
+      "assignee": "ru_Assignee",
+      "modified": "ru_Modified"
+    }
+  },
+  "people.comp.complaints": {
+    "title": "Жалобы",
+    "table.columns": {
+      "priority": "ru_Priority",
+      "id": "ru_ID",
+      "title": "ru_Title",
+      "status": "ru_Status",
+      "assignee": "ru_Assignee",
+      "modified": "ru_Modified"
+    }
+  },
+  "people.comp.related": {
+    "title": "Связанные люди",
+    "table.columns": {
+      "firstName": "ru_First Name",
+      "lastName": "ru_Last Name",
+      "type": "ru_Relationship",
+      "description": "ru_Description",
+      "organization": "ru_Organization",
+      "phone": "ru_Phone",
+      "location": "ru_Location"
+    },
+    "modal": {
+      "title": "ru_Add Related Person",
+      "type.label": "ru_Relationship",
+      "type.placeholder": "ru_Enter Relationship",
+      "person.label": "ru_Person",
+      "person.placeholder": "ru_Search People",
+      "btnCancel.text": "ru_Cancel",
+      "btnOk.text": "ru_Save Related Person"
+    }
+  },
+  "people.comp.editPerson": {
+    "title": "ru_Person",
+    "addAnother": "ru_Add Another",
+    "remove": "ru_Remove",
+    "familyName": "ru_Last Name",
+    "familyName.placeholder": "ru_Enter Last Name",
+    "givenName": "ru_First Name",
+    "givenName.placeholder": "ru_Enter First Name",
+    "middleName": "ru_Middle Name",
+    "middleName.placeholder": "ru_Enter Middle Name",
+    "saveButton": "ru_Save Person",
+    "informCreated": "ru_{{personType}} {{firstName}} {{lastName}} was created.",
+    "informUpdated": "ru_{{firstName}} {{lastName}} Updated",
+    "communicationAccounts": {
+      "title": "ru_Communication Accounts",
+      "phone": "ru_Phone",
+      "phone.placeholder": "ru_Enter Phone",
+      "phoneType": "ru_Phone Type",
+      "email": "ru_Email",
+      "email.placeholder": "ru_Enter Email",
+      "emailType": "ru_Email Type",
+      "url": "ru_URL",
+      "url.placeholder": "ru_Enter URL",
+      "removeContactMethod": "ru_Remove",
+      "urlType": "ru_URL Type"
+    },
+    "organizations": {
+      "title": "ru_Organizations",
+      "searchExisting.placeholder": "ru_Search Existing Organizations",
+      "organizationType": "ru_Relation Type"
+    },
+    "picture": {
+      "title": "ru_Picture"
+    },
+    "locations": {
+      "title": "ru_Locations",
+      "country": "ru_Country",
+      "country.placeholder": "ru_Select Country",
+      "state": "ru_State",
+      "state.placeholder": "ru_Enter State",
+      "zip": "ru_Zip",
+      "zip.placeholder": "ru_Enter Zip",
+      "city": "ru_City",
+      "city.placeholder": "ru_Enter City",
+      "type": "ru_Address Type",
+      "type.placeholder": "ru_Select Address Type",
+      "streetAddress": "ru_Street Address",
+      "streetAddress.placeholder": "ru_Enter Street Address",
+      "streetAddress2": "ru_Street Address2",
+      "streetAddress2.placeholder": "ru_Enter Street Address2"
+    },
+    "identification": {
+      "title": "ru_Identifications",
+      "identificationID": "ru_Identification ID",
+      "identificationID.placeholder": "ru_Enter Identification ID",
+      "identificationType": "ru_Identification Type",
+      "identificationType.placeholder": "ru_Select Identification Type",
+      "identificationNumber": "ru_Identification Number",
+      "identificationNumber.placeholder": "ru_Enter Identification Number",
+      "identificationIssuer": "ru_Identification Issuer",
+      "identificationIssuer.placeholder": "ru_Enter Identification Issuer",
+      "identificationYearIssued": "ru_Identification Issued",
+      "identificationYearIssued.placeholder": "ru_Select Identification Issued",
+      "identificationYearIssued.close.button": "ru_Close"
+    }
+  },
+  "people.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "pictures.label": "Картинки",
+      "addresses.label": "местоположения",
+      "phones.label": "телефонные номера",
+      "emails.label": "электронная почта",
+      "urls.label": "URL-адреса",
+      "participants.label": "Участники",
+      "aliases.label": "Псевдонимы",
+      "organizations.label": "Организации",
+      "ids.label": "Идентификатор людей",
+      "complaints.label": "Жалобы",
+      "cases.label": "Случаи",
+      "related.label": "Связанные люди",
+      "history.label": "История"
+    },
+    "filters": {
+      "iHaveCreated": "Все, что я создал",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "createdDateAsc": "Дата сортировки по возрастанию",
+      "createdDateDesc": "Дата сортировки по убыванию",
+      "idAsc": "Сортировка людей по возрастанию",
+      "idDesc": "Сортировка людей по убыванию",
+      "nameAsc": "Сортировать по имени людей A-Z",
+      "nameDesc": "Сортировать по имени людей Z-A",
+      "noSort": "(Нет сортировки)"
+    }
+  }
+}

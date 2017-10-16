@@ -44,7 +44,7 @@ public class ClaimTaskAPIController
             getTaskDao().claimTask(taskId, authentication.getName());
             AcmTask claimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, claimedTask, "claim", true);
-            return claimedTask;
+            return getTaskDao().save(claimedTask);
         } catch (AcmTaskException e)
         {
             // gen up a fake task so we can audit the failure
@@ -69,7 +69,7 @@ public class ClaimTaskAPIController
             getTaskDao().unclaimTask(taskId);
             AcmTask unclaimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, unclaimedTask, "unclaim", true);
-            return unclaimedTask;
+            return getTaskDao().save(unclaimedTask);
         } catch (AcmTaskException e)
         {
             // gen up a fake task so we can audit the failure

@@ -1,0 +1,95 @@
+{
+  "costTracking": {
+    "title": "लागत ट्रैकिंग",
+    "progressNoCostsheet": "[ कोई भी लागत पत्रक नहीं चुना जाता है ]",
+    "progressLoading": "लागत पत्रक लोड हो रहा है",
+    "progressError": "लागत पत्रक लोड करने में विफल"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "लागत ट्रैकिंग",
+    "topbar.item": "कॉस्टशीट"
+  },
+  "costTracking.comp.main": {
+    "title": "अवलोकन"
+  },
+  "costTracking.comp.info": {
+    "title": "जानकारी",
+    "incidentDate": "घटना दिनांक",
+    "priority": "राथमिकता",
+    "assignedTo": "डेडलाइन ही आ रही है",
+    "subjectType": "विषय प्रकार",
+    "state": "राज्य"
+  },
+  "costTracking.comp.actions": {
+    "title": "क्रियाएं",
+    "new.button": "नई कॉस्टशीट",
+    "edit.button": "कॉस्टशीट संपादित करें"
+  },
+  "costTracking.comp.details": {
+    "title": "विवरण",
+    "informSaved": "hi_Costsheet details saved",
+    "table.columns": {
+      "title": "hi_Details",
+      "modified": "hi_Date Last Modified",
+      "modifier": "hi_User Last Modified"
+    }
+  },
+  "costTracking.comp.person": {
+    "title": "लोग",
+    "table.columns": {
+      "fullName": "hi_Full Name",
+      "userId": "hi_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "लागत सारांश",
+    "table.columns": {
+      "parentId": "hi_ID",
+      "parentNumber": "hi_Parent ID",
+      "parentType": "hi_Parent Type",
+      "value": "hi_Total Cost",
+      "title": "hi_Title",
+      "description": "hi_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "टैग",
+    "table.columns": {
+      "tag": "hi_Tag",
+      "created": "hi_Created",
+      "createdBy": "hi_Created By"
+    },
+    "modal": {
+    "title": "hi_Tag",
+    "search": "hi_Search for Tag",
+    "buttons": {
+          "cancel": "hi_Cancel",
+          "ok": "hi_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "hi_Tag with that name or description or text already exists",
+      "tagAssociated": "hi_already associated",
+      "delete": {
+        "success": "hi_Tag deleted successfully",
+        "error": "hi_Error deleting tag"
+      }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "विवरण",
+      "person.label": "लोग",
+      "summary.label": "लागत",
+      "tags.label": "टैग"
+    },
+    "sorters": {
+      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
+      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
+      "idAsc": "चढ़ाई में लागत पत्रक को सॉर्ट करें",
+      "idDesc": "लागत पत्रक आईडी उतरते क्रमबद्ध करें",
+      "nameDesc": "सॉर्ट इन एएनएससी",
+      "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  }
+}

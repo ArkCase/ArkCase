@@ -1,15 +1,19 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +23,8 @@ import org.slf4j.LoggerFactory;
  */
 @Entity
 @Table(name = "acm_person_alias")
-public class PersonAlias implements Serializable, AcmEntity
+@JsonIdentityInfo(generator = JSOGGenerator.class)
+public class PersonAlias implements Serializable, AcmEntity,AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -63,6 +68,15 @@ public class PersonAlias implements Serializable, AcmEntity
 
     @Column(name = "cm_person_alias_modifier")
     private String modifier;
+
+    @Column(name = "cm_description")
+    private String description;
+
+    @Override
+    public String getObjectType()
+    {
+        return PersonAliasConstants.OBJECT_TYPE;
+    }
 
     @XmlTransient
     public Long getId()
@@ -167,5 +181,14 @@ public class PersonAlias implements Serializable, AcmEntity
     public PersonAlias returnBase() {
     	return this;
     }
-    
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 }

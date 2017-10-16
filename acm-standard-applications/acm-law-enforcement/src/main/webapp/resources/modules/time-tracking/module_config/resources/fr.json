@@ -1,0 +1,89 @@
+{
+  "timeTracking": {
+    "title": "Suivi du temps",
+    "progressNoTimesheet": "[ Aucune feuille de temps n'est sélectionnée ]",
+    "progressLoading": "Feuille de temps de chargement",
+    "progressError": "Impossible de charger la feuille de temps"
+  },
+  "timeTracking.menus": {
+    "leftnav.item": "Suivi du temps",
+    "topbar.item": "Feuille de temp"
+  },
+  "timeTracking.comp.main": {
+    "title": "Vue d'ensemble"
+  },
+  "timeTracking.comp.info": {
+    "title": "Information",
+    "lastModified.label": "Dernière modification"
+  },
+  "timeTracking.comp.actions": {
+    "title": "Actes",
+    "new.button": "Nouvelle feuille",
+    "edit.button": "Modifier la feuille"
+  },
+  "timeTracking.comp.details": {
+    "title": "Détails",
+    "informSaved": "fr_Timesheet details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "timeTracking.comp.person": {
+    "title": "Personnes",
+    "table.columns": {
+      "fullName": "fr_Full Name",
+      "userId": "fr_Username"
+    }
+  },
+  "timeTracking.comp.summary": {
+    "title": "Résumé de l'heure",
+    "table.columns": {
+      "code": "fr_Parent ID",
+      "type": "fr_Parent Type",
+      "value": "fr_Total Hours",
+      "date": "fr_Date Charged",
+      "modified": "fr_Modified Date"
+    }
+  },
+  "timeTracking.comp.tags": {
+    "title": "étiquettes",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+      "title": "fr_Tag",
+      "search": "fr_Search for Tag",
+      "buttons": {
+        "cancel": "fr_Cancel",
+        "ok": "fr_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  },
+  "timeTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "person.label": "Personnes",
+      "summary.label": "Frais",
+      "tags.label": "étiquettes"
+    },
+    "sorters": {
+      "dateAsc": "Trier Date Asc",
+      "dateDesc": "Trier Date Déc",
+      "idAsc": "Trier ID de Temps Asc",
+      "idDesc": "Trier ID de Temps Déc",
+      "nameDesc": "Trier par nom Déc",
+      "noSort": "(Non Trier)"
+    }
+}

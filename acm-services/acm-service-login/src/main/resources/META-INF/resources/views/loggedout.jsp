@@ -13,6 +13,8 @@
 
 	<link rel="stylesheet" href="<%= request.getContextPath()%>/lib/bootstrap/dist/css/bootstrap.css">
 	<link rel="stylesheet" href="<%= request.getContextPath()%>/assets/css/login.css">
+	<!-- custom css-->
+	<link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
 <div class="login-wrapper">
@@ -42,7 +44,7 @@
 <footer id="footer">
 	<div class="text-center padder">
 		<p>
-			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016</span></small>
+			<small><span>ArkCase</span><br>&copy;<span>2014, 2015, 2016, 2017</span></small>
 		</p>
 	</div>
 </footer>

@@ -3,7 +3,7 @@
         <p ng-hide="frevvoFormUrl">
             <span translate>frevvo.errorForm</span>
         </p>
-        <iframe ng-src="{{frevvoFormUrl}}" ng-if="frevvoFormUrl" class="new-iframe">
+        <iframe iframe-onload="iframeLoaded()" id="frevvoFormIframe" ng-src="{{frevvoFormUrl}}" ng-if="frevvoFormUrl" class="new-iframe">
         </iframe>
     </div>
 </div>

@@ -1,0 +1,8 @@
+{
+  "my-documents": {
+    "title": "Meus documentos"
+  },
+  "my-documents.menus": {
+    "leftnav.item": "Meus Documentos"
+  }
+}

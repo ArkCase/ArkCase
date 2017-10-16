@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
@@ -17,5 +18,5 @@ public interface MergeCaseService
     @Transactional
     CaseFile mergeCases(Authentication auth,
                         String ipAddress,
-                        MergeCaseOptions mergeCaseOptions) throws MuleException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException, PipelineProcessException;
+                        MergeCaseOptions mergeCaseOptions) throws MuleException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException, PipelineProcessException, AcmAccessControlException;
 }

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-tool-integrations</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,13 +15,22 @@
     </description>
 
     <dependencies>
+        <!--acm -->
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-encryption</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.armedia.acm</groupId>
+            <artifactId>acm-web</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
         </dependency>
 
         <!-- spring -->
@@ -32,6 +41,16 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+        </dependency>
+
+        <!-- apache -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
 
         <!-- logging -->

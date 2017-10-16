@@ -73,4 +73,36 @@
             </column>
         </addColumn>
     </changeSet>
+
+    <changeSet id="06-acm_note-add-parent-title" author="johnfaniyi">
+        <addColumn tableName="acm_note">
+            <column name="cm_parent_object_title" type="VARCHAR(1024)">
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-acm_note-add-author" author="manoj.dhungana">
+        <addColumn tableName="acm_note">
+            <column name="cm_note_author" type="VARCHAR(128)"/>
+        </addColumn>
+        <sql>UPDATE acm_note SET cm_note_author=cm_note_creator</sql>
+    </changeSet>
+
+    <changeSet id="07-acm_note-set-created-date-default-value" author="matt.reese" dbms="mysql">
+        <sql>ALTER TABLE acm_note MODIFY cm_note_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP</sql>
+    </changeSet>
+
+    <!-- adding discriminator column for oracle,postgresql,mssql ... need for extensibility -->
+    <changeSet id="08-acm_note-add-class-name" author="riste.tutureski" dbms="oracle,postgresql,mssql">
+        <addColumn tableName="acm_note">
+            <column name="cm_class_name" type="VARCHAR(512)"/>
+        </addColumn>
+    </changeSet>
+    <!-- adding discriminator column for mysql ... need for extensibility -->
+    <changeSet id="08-acm_note-add-class-name" author="riste.tutureski" dbms="mysql">
+        <addColumn tableName="acm_note">
+            <column name="cm_class_name" type="TEXT"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

@@ -12,6 +12,7 @@ angular.module('complaints').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                         $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('complaints');
                         return $translate.refresh();
                     }]
@@ -71,6 +72,11 @@ angular.module('complaints').config(['$stateProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-people.client.view.html'
             })
 
+            .state('complaints.organizations', {
+                url: '/:id/organizations',
+                templateUrl: 'modules/complaints/views/components/complaint-organizations.client.view.html'
+            })
+
             .state('complaints.references', {
                 url: '/:id/references',
                 templateUrl: 'modules/complaints/views/components/complaint-references.client.view.html'
@@ -96,5 +102,14 @@ angular.module('complaints').config(['$stateProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-tags.client.view.html'
             })
 
+            .state('complaints.approvalRouting', {
+                url: '/:type/:id/approvals',
+                templateUrl: 'modules/complaints/views/components/complaint-approval-routing.client.view.html'
+            })
+
     }
-]);
+
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

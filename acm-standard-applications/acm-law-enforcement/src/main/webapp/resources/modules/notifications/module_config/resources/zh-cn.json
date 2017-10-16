@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "通知",
+    "search.btn": "zh-cn_Search",
+    "export.btn": "zh-cn_Export",
+    "search.placeholder": "zh-cn_Search for notifications",
+    "menus": {
+      "leftnav.item": "通知"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-cn_ID",
+          "description": "zh-cn_Description",
+          "objNumber": "zh-cn_Object Number",
+          "parentNumber": "zh-cn_Parent Number",
+          "objType": "zh-cn_Object Type",
+          "modified": "zh-cn_Modified"
+        }
+      }
+    }
+  }
+}

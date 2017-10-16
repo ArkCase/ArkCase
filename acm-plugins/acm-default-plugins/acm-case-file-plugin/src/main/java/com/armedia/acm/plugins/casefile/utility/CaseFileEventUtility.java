@@ -26,9 +26,19 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
 
     public void raiseEvent(CaseFile caseFile, String caseState, Date eventDate, String ipAddress, String userId, Authentication auth)
     {
-        String eventType = "com.armedia.acm.casefile.event." + caseState;
+        String eventType = "com.armedia.acm.casefile." + caseState;
         eventDate = eventDate == null ? new Date() : eventDate;
         CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDate, true, auth);
+
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseCustomEvent(CaseFile caseFile, String caseState, String eventDescription, Date eventDate, String ipAddress,
+            String userId, Authentication auth)
+    {
+        String eventType = "com.armedia.acm.casefile." + caseState;
+        eventDate = eventDate == null ? new Date() : eventDate;
+        CaseEvent event = new CaseEvent(caseFile, ipAddress, userId, eventType, eventDescription, eventDate, true, auth);
 
         applicationEventPublisher.publishEvent(event);
     }
@@ -40,6 +50,17 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         event.setSucceeded(true);
         event.setIpAddress(ipAddress);
         event.setEventStatus(eventStatus);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+    public void raiseCaseFileModifiedEvent(CaseFile source, String ipAddress, String eventStatus, String description)
+    {
+
+        CaseFileModifiedEvent event = new CaseFileModifiedEvent(source);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setEventStatus(eventStatus);
+        event.setEventDescription(description);
         applicationEventPublisher.publishEvent(event);
     }
 
@@ -55,6 +76,20 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
+    public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus, String description)
+    {
+        CaseFileParticipantsModifiedEvent event = new CaseFileParticipantsModifiedEvent(participant);
+        event.setEventStatus(eventStatus);
+        event.setSucceeded(true);
+        event.setIpAddress(ipAddress);
+        event.setParentObjectId(source.getId());
+        event.setParentObjectType(source.getObjectType());
+        event.setParentObjectName(source.getCaseNumber());
+        event.setEventDescription(description);
+        applicationEventPublisher.publishEvent(event);
+    }
+
+
     public void raiseCaseFileCreated(CaseFile source, Authentication authentication)
     {
 
@@ -64,7 +99,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_CREATED, new Date(), true, authentication);
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_CREATED, new Date(), true,
+                authentication);
         applicationEventPublisher.publishEvent(event);
     }
 
@@ -76,7 +112,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
             ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
         }
 
-        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true, authentication);
+        CaseEvent event = new CaseEvent(source, ipAddress, authentication.getName(), CaseFileConstants.EVENT_TYPE_VIEWED, new Date(), true,
+                authentication);
         applicationEventPublisher.publishEvent(event);
     }
 

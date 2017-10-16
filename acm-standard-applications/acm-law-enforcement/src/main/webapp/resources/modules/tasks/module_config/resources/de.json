@@ -1,0 +1,363 @@
+{
+  "tasks": {
+    "title": "Aufgaben",
+    "progressNoCase": "[ Keine Aufgabe Daten ]",
+    "progressLoading": "Aufgabe laden",
+    "progressError": "Fehler beim Laden der Aufgabe"
+  },
+  "tasks.menus": {
+    "leftnav.item": "Aufgaben",
+    "topbar.item": "Aufgabe"
+  },
+  "tasks.comp.main": {
+    "title": "Übersicht"
+  },
+  "tasks.comp.info": {
+    "title": "Informationen",
+    "taskId": "Aufgabenstellung:",
+    "percentage.label": "% der Fertigstellung",
+    "assignee.label": "Zugewiesen",
+    "priority.label": "Priorität",
+    "startDate.label": "Anfangsdatum",
+    "dueDate.label": "Fälligkeitsdatum",
+    "state.label": "Zustand",
+    "overdue.tooltip": "Aufgabe ist überfällig",
+    "deadline.tooltip": "Fälligkeitsdatum ist Annäherung",
+    "owningGroup.label": "Besitzgruppe"
+  },
+  "tasks.comp.parentinfo": {
+    "title": "Übergeordnete Info",
+    "taskId": "Aufgabenstellung:",
+    "case": {
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
+    },
+    "complaint": {
+      "subjectType.label": "Thema Typ",
+      "incidentDate.label": "Vorfallsdatum",
+      "priority.label": "Priorität",
+      "assignee.label": "Zugewiesen",
+      "owningGroup.label": "Besitzgruppe"
+    },
+    "costsheet": {
+      "approver.label": "Genehmiger"
+    },
+    "timesheet": {
+      "approver.label": "Genehmiger"
+    }
+  },
+  "tasks.comp.actions": {
+    "title": "Aktionen",
+    "diagram.button": "Prozessdiagramm",
+    "eSignature.button": "Zeichen",
+    "subscribe.button": "Abonnieren",
+    "unsubscribe.button": "Abbestellen",
+    "reject.button": "Ablehnen",
+    "delete.button": "Löschen",
+    "complete.button": "Komplett",
+    "approve.button": "Dokument genehmigen",
+    "rework.button": "Wiederholen Arbeit",
+    "claim.button": "Anspruch",
+    "unclaim.button": "Unbeanspruchung",
+    "error.outcomeFieldMissing": "Kann die Aufgabe nicht verpassen, weil der fehlende erforderliche Wert",
+    "modal": {
+      "errorHeaderText": "Fehler",
+      "btnOk.text": "Okay",
+      "btnClose.text": "Schließen"
+    }
+  },
+  "tasks.comp.details": {
+    "title": "Details",
+    "informSaved": "de_Task details saved",
+    "table.columns": {
+      "details": "de_Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "tasks.comp.reworkdetails": {
+    "title": "Wiederholen Arbeit",
+    "informSaved": "de_Rework details saved",
+    "table.columns": {
+      "title": "de_Rework Details",
+      "modified": "de_Date Last Modified",
+      "modifier": "de_User Last Modified"
+    }
+  },
+  "tasks.comp.parentdocs": {
+    "title": "Übergeordnete Dokumente",
+    "noParentDataMessage": "de_No parent documents for standalone task",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
+  },
+  "tasks.comp.attachments": {
+    "title": "Anhänge",
+    "sendEmail": "de_Send Email",
+    "filterInputPlaceholder": "de_Filter",
+    "searchInputPlaceholder": "de_Search"
+  },
+  "tasks.comp.notes": {
+    "title": "Notizen",
+    "table.columns": {
+      "note": "de_Note",
+      "created": "de_Created",
+      "creator": "de_Author"
+    }
+  },
+  "tasks.comp.references": {
+    "title": "Referenzen",
+    "table.columns": {
+      "targetName": "de_Number",
+      "targetTitle": "de_Title",
+      "modified": "de_Modified",
+      "targetType": "de_Reference Type",
+      "status": "de_Status"
+    }
+  },
+  "tasks.comp.rejcomments": {
+    "title": "Kommentare ablehnen",
+    "table.columns": {
+      "note": "de_Comment",
+      "created": "de_Created",
+      "creator": "de_Author"
+    }
+  },
+  "tasks.comp.workflow": {
+    "title": "Arbeitsablauf",
+    "table.columns": {
+      "participant": "de_Participant",
+      "role": "de_Role",
+      "status": "de_Status",
+      "startDateTime": "de_Start",
+      "endDateTime": "de_End"
+    }
+  },
+  "tasks.comp.diagram": {
+    "title": "de_Process Diagram",
+    "error.loading": "de_Diagram can't be loaded"
+  },
+  "tasks.comp.signatures": {
+    "title": "eSignaturen",
+    "table.columns": {
+      "signedDate": "de_Date",
+      "signedBy": "de_Signed By"
+    }
+  },
+  "tasks.comp.docsreview": {
+    "title": "Dokumente unter Überprüfung",
+    "table.columns": {
+      "fileId": "de_ID",
+      "fileName": "de_Title",
+      "created": "de_Created",
+      "creator": "de_Author",
+      "status": "de_Status"
+    }
+  },
+  "tasks.comp.history": {
+    "title": "Geschichte",
+    "table.columns": {
+      "eventType": "de_Event Name",
+      "eventDate": "de_Date",
+      "userId": "de_User"
+    }
+  },
+  "tasks.comp.tags": {
+    "title": "Etiketten",
+    "table.columns": {
+      "tag": "de_Tag",
+      "created": "de_Created",
+      "createdBy": "de_Created By"
+    },
+    "modal": {
+      "title": "de_Tag",
+      "search": "de_Search for Tag",
+      "buttons": {
+        "cancel": "de_Cancel",
+        "ok": "de_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "de_Tag with that name or description or text already exists",
+      "tagAssociated": "de_already associated",
+      "delete": {
+        "success": "de_Tag deleted successfully",
+        "error": "de_Error deleting tag"
+      }
+    }
+  },
+  "tasks.newTask": {
+    "title": "de_New Task",
+    "assignee.button": "de_Choose Assignee",
+    "assignee.label": "de_Assign To",
+    "assignee.placeholder": "de_Please choose assignee by clicking the button above",
+    "assigneeOrGroup.placeholder": "de_Please choose assignee or group by clicking the button above",
+    "priority.placeholder": "de_Select Priority",
+    "priority.label": "de_Priority",
+    "status.placeholder": "de_Select Status",
+    "status.label": "de_Status",
+    "associateNumber.label": "de_Associate with Complaint or Case",
+    "associateNumber.placeholder": "de_Complaint or Case #",
+    "associateType.label": "de_Parent Type",
+    "subject.label": "de_Subject",
+    "taskStartDate.label": "de_Start Date",
+    "dueDate.label": "de_Due Date",
+    "datepicker.close": "de_Done",
+    "percentComplete.label": "de_% Complete",
+    "notes.label": "de_Notes",
+    "saveButton": "de_Save",
+    "overdue.tooltip": "de_Task is Overdue",
+    "deadline.tooltip": "de_Deadline is Approaching",
+    "groupToggle.label": "de_Group Task?",
+    "group.placeholder": "de_Please select a group."
+  },
+  "tasks.userOrGroupSearch": {
+    "id": "de_userSearch",
+    "title": "de_User/Group Search",
+    "search": {
+      "btn": "de_Search",
+      "placeholder": "de_Search for the user or group to assign to this task."
+    },
+    "cancelButton": "de_Cancel",
+    "confirmButton": "de_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "de_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "de_Name",
+      "type": "de_Type",
+      "title": "de_Title",
+      "username": "de_Username"
+    }
+  },
+  "tasks.objectSearch": {
+    "id": "de_objectSearch",
+    "title": "de_Object Search",
+    "search": {
+      "btn": "de_Search",
+      "placeholder": "de_Search for the case or complaint to this task."
+    },
+    "cancelButton": "de_Cancel",
+    "confirmButton": "de_Confirm",
+    "enabled": true,
+    "userFacetFilter": "de_\"Object Type\": ",
+    "objectGridColumns": {
+      "name": "de_Number",
+      "type": "de_Type",
+      "title": "de_Title",
+      "username": "de_Assignee"
+    }
+  },
+  "tasks.comp.addreference": {
+    "title": "de_Add Reference",
+    "cancelButton": "de_Cancel",
+    "confirmButton": "de_Add",
+    "search": {
+      "placeholder": "de_Search for case, complaint, file, task",
+      "btn": "de_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "de_Id",
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "parent": "de_Parent",
+        "assignee": "de_Assignee",
+        "modified": "de_Modified"
+      }
+    }
+  },
+  "tasks.comp.participants": {
+    "title": "de_Participants",
+    "table.columns": {
+      "type": "de_Type",
+      "name": "de_Name"
+    },
+    "dialogUserPicker": {
+      "header": "de_Choose User",
+      "table.columns": {
+        "name": "de_Name",
+        "type": "de_Type",
+        "title": "de_Title",
+        "id": "de_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "de_Choose Group",
+      "table.columns": {
+        "name": "de_Name"
+      }
+    }
+  },
+  "tasks.comp.assigneePickerModal": {
+    "title": "de_Change Assignee",
+    "assigneeNamelabel": "de_Assignee Name",
+    "btnCancelText": "de_Cancel",
+    "btnSaveText": "de_Save",
+    "searchAssigneeHeader": "de_Search Assignee"
+  },
+  "tasks.comp.groupPickerModal": {
+    "title": "de_Change Group",
+    "groupNamelabel": "de_Group Name",
+    "btnCancelText": "de_Cancel",
+    "btnSaveText": "de_Save",
+    "searchGroupHeader": "de_Search Group"
+  },
+  "tasks.comp.approvalRouting": {
+    "title": "de_Future Approvers",
+    "addNewTooltip": "de_Add new approver",
+    "noBuckslipMessage": "No Data",
+    "button": {
+      "save.tooltip": "de_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "de_Full Name"
+    }
+  },
+  "tasks.comp.pastApprovals": {
+    "title": "de_Past Approvers",
+    "noBuckslipMessage": "No Data",
+    "table.columns": {
+      "approvalDate": "de_Approval Date",
+      "approverId": "de_Approver",
+      "approverFullName": "de_Full Name",
+      "approverDecision": "de_Approver Decision"
+    }
+  },
+  "tasks.tree": {
+    "nodeTypes": {
+      "details.label": "Details",
+      "reworkDetails.label": "Wiederholen Arbeit",
+      "docReview.label": "Dokumente unter Überprüfung",
+      "parentDoc.label": "Übergeordnete Dokumente",
+      "attachments.label": "Anhänge",
+      "references.label": "Referenzen",
+      "notes.label": "Notizen",
+      "workflow.label": "Arbeitsablauf",
+      "history.label": "Geschichte",
+      "eSignatures.label": "eSignaturen",
+      "tags.label": "Etiketten",
+      "reject.label": "Kommentare ablehnen"
+    },
+    "filters": {
+      "myTasks": "Meine Aufgaben",
+      "opened": "Alle offenen Aufgaben",
+      "completed": "Alle abgeschlossenen Aufgaben",
+      "dueToday": "Alle Aufgaben heute",
+      "myDueToday": "Alle meine Aufgaben fällig",
+      "overdue": "Alle Aufgaben überfällig",
+      "myOverdue": "Alle meine Aufgaben überfällig",
+      "noFilter": "(Kein Filter)"
+    },
+    "sorters": {
+      "createdDateAsc": "Sortieren Erstellungsdatum Asc",
+      "createdDateDesc": "Sortieren Erstellungsdatum Desc",
+      "nameAsc": "Sortieren Aufgabennname Asc",
+      "nameDesc": "Sortieren Aufgabennname Desc",
+      "noSort": "(Keine Sortierung)"
+    }
+  }
+}

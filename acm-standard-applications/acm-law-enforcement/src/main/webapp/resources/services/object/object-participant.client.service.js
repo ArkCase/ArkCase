@@ -10,8 +10,8 @@
 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
-angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', 'UtilService',
-    function ($resource, $translate, Util) {
+angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', '$q', 'UtilService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
+    function ($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder) {
         var Service = $resource('api/v1/service', {}, {
 
             /**
@@ -110,6 +110,39 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
 
         /**
          * @ngdoc method
+         * @name findParticipantById
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Query participant of an object by Id
+         *
+         * @param {String} participantId  Participant id
+         *
+         * @returns {Object} participant data
+         */
+        Service.findParticipantById = function (participantId) {
+            // determine exact object type so that the validation passes in object-participant.client.service.js
+            var df = $q.defer();
+            var filter = 'fq="id":(' + participantId + '-USER OR ' + participantId + '-GROUP)';
+            var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(participantId + '*', filter, 10, 0);
+            SearchService.queryFilteredSearch({
+                    query: query
+                },
+                function (data) {
+                    if (SearchService.validateSolrData(data)) {
+                        var participantData = data.response.docs;
+                        if (Service.isParticipantValid(participantData)) {
+                            return df.resolve(participantData);
+                        }
+                    }
+                    return df.resolve([]);
+                }
+            )
+            return df.promise;
+        };
+
+        /**
+         * @ngdoc method
          * @name retrieveParticipants
          * @methodOf services:Object.ParticipantService
          *
@@ -184,7 +217,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.removeParticipant = function(userId, participantType, objectType, objectId) {
+        Service.removeParticipant = function (userId, participantType, objectType, objectId) {
             return Util.serviceCall({
                 service: Service.delete
                 , param: {
@@ -214,7 +247,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.changeParticipantRole = function(participantId, participantType) {
+        Service.changeParticipantRole = function (participantId, participantType) {
             return Util.serviceCall({
                 service: Service.changeRole
                 , param: {
@@ -227,6 +260,45 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                     }
                 }
             })
+        };
+
+        /**
+         * @ngdoc method
+         * @name isParticipantValid
+         * @methodOf services:Object.ParticipantService
+         * @description Check if the participant is valid
+         * @param {Object} data Participant object to be validated
+         * @returns {boolean} Promise
+         */
+        Service.isParticipantValid = function (data) {
+            if (Util.isArrayEmpty(data)) {
+                //group/user is invalid (e.g. sync error/stale data)
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.userOrGroupNotFound"));
+                return false;
+            }
+            if (Util.isArrayEmpty(data) && data.length > 1) {
+                //can't have two participants with same id
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                return false;
+            }
+            return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name validateType
+         * @methodOf services:Object.ParticipantService
+         * @description Check if the type of participant is consistent with the given USER or GROUP type
+         * @param {Object} data Participant object to be validated
+         * @param {Object} type Given type
+         * @returns {boolean} Promise
+         */
+        Service.validateType = function (data, type) {
+            if (data.participantType == "owning group" && type != "GROUP") {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.groupType"));
+                return false;
+            }
+            return true;
         };
 
         /**
@@ -246,6 +318,23 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
             if (!Util.isArray(data)) {
+                return false;
+            }
+            if (_.filter(data, function (pa) {
+                    return Util.compare("assignee", pa.participantType);
+                }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
+                return false;
+            }
+            if (_.filter(data, function (pa) {
+                    return Util.compare("owning group", pa.participantType);
+                }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
+                return false;
+            }
+            if (_.filter(data, function (pa) {
+                    return Util.compare(" ", pa.participantType);
+                }).length > 1) {
                 return false;
             }
             return true;
@@ -297,7 +386,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} Promise
          */
-        Service.validateRemovedParticipant = function(data){
+        Service.validateRemovedParticipant = function (data) {
             if (Util.isEmpty(data)) {
                 return false;
             }

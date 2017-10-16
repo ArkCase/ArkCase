@@ -15,7 +15,7 @@
                 doc:name="Create a folder by path"
                 address="vm://createFolderByPath.in"
                 exchange-pattern="request-response"/>
-        <cmis:get-or-create-folder-by-path  folderPath="#[message.inboundProperties.ecmFolderPath]"/>
+        <cmis:get-or-create-folder-by-path config-ref="#[message.inboundProperties.configRef]" folderPath="#[message.inboundProperties.ecmFolderPath]"/>
 
         <logger level="INFO" category="com.armedia.acm.plugins.ecm" message="PATH: #[message.inboundProperties.ecmFolderPath]"/>
         <catch-exception-strategy>

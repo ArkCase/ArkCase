@@ -1,0 +1,26 @@
+{
+  "audit": {
+    "title": "Auditoria",
+    "menus": {
+      "leftnav.item": "Auditoria"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "pt_Report Name",
+        "inputID": "pt_ID",
+        "dateFrom": "pt_From",
+        "dateTo": "pt_To"
+      },
+      "placeholder": {
+        "selectAudit": "pt_ALL",
+        "inputId": "pt_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "pt_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "pt_Done"
+    }
+  }
+}

@@ -5,7 +5,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.tag.dao.TagDao;
 import com.armedia.acm.services.tag.model.AcmTag;
-import com.armedia.acm.services.users.dao.ldap.UserDao;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import java.util.Date;
@@ -61,6 +61,7 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
+
         return solr;
     }
 
@@ -78,6 +79,8 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
         solr.setAuthor(in.getCreator());
         solr.setLast_modified_tdt(in.getModified());
         solr.setModifier_s(in.getModifier());
+        solr.setTitle_parseable(in.getTagText());
+        solr.setDescription_parseable(in.getTagDescription());
 
         solr.setAdditionalProperty("tags_s", in.getTagName());
 

@@ -4,73 +4,109 @@ angular.module('dashboard.references', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('references', {
-                    title: 'References',
-                    description: 'Displays references',
-                    controller: 'Dashboard.ReferencesController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html',
-                    commonName: 'references'
-                }
-            );
-    })
-    .controller('Dashboard.ReferencesController', ['$scope', '$translate', '$stateParams', '$q','UtilService'
-        , 'Case.InfoService', 'Complaint.InfoService','Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService', 'ObjectService',
-        function ($scope, $translate, $stateParams, $q, Util, CaseInfoService, ComplaintInfoService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService, ObjectService) {
-
-            var promiseConfig;
-            var promiseInfo;
-            var modules = [
-                {name: "CASE_FILE", configName: "cases", getInfo: CaseInfoService.getCaseInfo}
-                , {name: "COMPLAINT", configName: "complaints", getInfo: ComplaintInfoService.getComplaintInfo}
-            ];
-
-            var module = _.find(modules, function (module) {
-                return module.name == $stateParams.type;
+                title: 'dashboard.widgets.references.title',
+                description: 'dashboard.widgets.references.description',
+                controller: 'Dashboard.ReferencesController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/references-widget.client.view.html',
+                commonName: 'references'
             });
+    })
+    .controller('Dashboard.ReferencesController', ['$scope', '$stateParams', '$translate',
+        'Case.InfoService', 'Complaint.InfoService', 'Task.InfoService', 'Helper.ObjectBrowserService', 'ObjectService', 'Helper.UiGridService', 'DocumentRepository.InfoService',
+            function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, TaskInfoService, HelperObjectBrowserService, ObjectService, HelperUiGridService, DocumentRepositoryInfoService) {
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
-
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseInfo = module.getInfo(currentObjectId);
-
-                $q.all([promiseConfig, promiseInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "references";
-                        });
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
-
-                        /**
-                         * Complaints and CaseFiles return their references in a different way.
-                         */
-                        var references = [];
-                        if(module.name == ObjectService.ObjectTypes.COMPLAINT){
-                            _.forEach(info.childObjects, function (childObject) {
-                                if (ComplaintInfoService.validateReferenceRecord(childObject)) {
-                                    references.push(childObject);
-                                }
-                            });
-                            $scope.gridOptions.data = references ? references : [];
-                            $scope.gridOptions.totalItems = references ? references.length : 0;
-                        } else {
-                            references = info.references;
-                            $scope.gridOptions.data = references ? references : [];
-                            $scope.gridOptions.totalItems = references ? references.length : 0;
-                        }
-                    },
-                    function (err) {
-
+                var modules = [
+                    {
+                        name: "CASE_FILE",
+                        configName: "cases",
+                        getInfo: CaseInfoService.getCaseInfo,
+                        validateInfo: CaseInfoService.validateCaseInfo
                     }
-                );
+                    ,
+                    {
+                        name: "COMPLAINT",
+                        configName: "complaints",
+                        getInfo: ComplaintInfoService.getComplaintInfo,
+                        validateInfo: ComplaintInfoService.validateComplaintInfo
+                    }
+                    ,
+                    {
+                        name: "TASK",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo
+                    }
+                    ,
+                    {
+                        name: "ADHOC",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo
+                    }
+                    ,
+                    {
+                        name: "DOC_REPO",
+                        configName: "document-repository",
+                        getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                    }
+                ];
+
+                var module = _.find(modules, function (module) {
+                    return module.name == $stateParams.type;
+                });
+
+                $scope.gridOptions = {
+                    enableColumnResizing: true,
+                    columnDefs: []
+                };
+
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                var promiseUsers = gridHelper.getUsers();
+
+                new HelperObjectBrowserService.Component({
+                    scope: $scope
+                    , stateParams: $stateParams
+                    , moduleId: module.configName
+                    , componentId: "main"
+                    , retrieveObjectInfo: module.getInfo
+                    , validateObjectInfo: module.validateInfo
+                    , onObjectInfoRetrieved: function (objectInfo) {
+                        onObjectInfoRetrieved(objectInfo);
+                    }
+                    , onConfigRetrieved: function (componentConfig) {
+                        onConfigRetrieved(componentConfig);
+                    }
+                });
+
+                var onObjectInfoRetrieved = function (objectInfo) {
+
+                    /**
+                     * Complaints and CaseFiles return their references in a different way.
+                     */
+                    if (module.name == ObjectService.ObjectTypes.COMPLAINT) {
+                        var references = [];
+                        _.forEach(objectInfo.childObjects, function (childObject) {
+                            if (ComplaintInfoService.validateReferenceRecord(childObject)) {
+                                references.push(childObject);
+                            }
+                        });
+                        gridHelper.setWidgetsGridData(references);
+                    } else {
+                        gridHelper.setWidgetsGridData(objectInfo.references);
+                    }
+
+                };
+
+                var onConfigRetrieved = function (componentConfig) {
+                    var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                        return widget.id === "references";
+                    });
+                    gridHelper.setColumnDefs(widgetInfo);
+                    gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                };
+
             }
-        }
     ]);

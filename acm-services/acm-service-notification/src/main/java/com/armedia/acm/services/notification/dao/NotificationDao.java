@@ -6,6 +6,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.services.notification.service.CustomTitleFormatter;
+import com.armedia.acm.services.notification.service.NotificationUtils;
 import com.armedia.acm.services.notification.service.UsersNotified;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Date;
 
 public class NotificationDao extends AcmAbstractDao<Notification>
 {
@@ -28,6 +29,8 @@ public class NotificationDao extends AcmAbstractDao<Notification>
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private NotificationUtils notificationUtils;
 
     @Override
     protected Class<Notification> getPersistenceClass()
@@ -40,19 +43,6 @@ public class NotificationDao extends AcmAbstractDao<Notification>
     {
         return NotificationConstants.OBJECT_TYPE;
     }
-
-    /*public Notification findNotificationsById(Long id)
-    {
-        Query notifications = getEntityManager().createQuery(
-                "SELECT notification " + "FROM Notification notification "+
-                "WHERE notification.id = :notificationId "
-        );
-
-        notifications.setParameter("notificationId", id);
-        Notification notificationFound = (Notification) notifications.getSingleResult();
-
-        return notificationFound;
-    }*/
 
     @Transactional
     public int purgeNotifications(Date threshold)
@@ -112,14 +102,13 @@ public class NotificationDao extends AcmAbstractDao<Notification>
     }
 
     /**
-     * This method is used only for notification rules. We have two possibilities - when we want to create notifications ('create' should be true)
-     * and get already existing notifications that rich the rules that we want to update
+     * This method is used only for notification rules. We have two possibilities - when we want to create notifications
+     * ('create' should be true) and get already existing notifications that rich the rules that we want to update
      *
      * @param parameters
      * @param firstResult
      * @param maxResult
-     * @param query
-     * @param create
+     * @param rule
      * @return
      */
     public List<Notification> executeQuery(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
@@ -146,10 +135,11 @@ public class NotificationDao extends AcmAbstractDao<Notification>
      * @param parameters
      * @param firstResult
      * @param maxResult
-     * @param query
+     * @param rule
      * @return
      */
-    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult, NotificationRule rule)
+    private List<Notification> createNotifications(Map<String, Object> parameters, int firstResult, int maxResult,
+                                                   NotificationRule rule)
     {
         TypedQuery<Object[]> select = getEm().createQuery(rule.getJpaQuery(), Object[].class);
 
@@ -169,18 +159,39 @@ public class NotificationDao extends AcmAbstractDao<Notification>
             Long objectId = relatedObjectType != null ? relatedObjectId : parentId;
             UsersNotified usersNotified = rule.getUsersNotified();
             List<Notification> notificationsForAssociatedUsers = usersNotified.getNotifications(obj, objectId, objectType);
-            notificationsForAssociatedUsers.stream()
-                    .filter(notification -> rule.getCustomTitleFormatter() != null)
-                    .forEach(notification -> {
-                        CustomTitleFormatter customTitleFormatter = rule.getCustomTitleFormatter();
-                        String title = customTitleFormatter.format(notification);
-                        notification.setTitle(title);
-                        notification.setNote(String.format("%s. Link: %s", title, NotificationConstants.ANCHOR_PLACEHOLDER));
-                    });
+
+            setNotificationsTitle(notificationsForAssociatedUsers, rule);
+            setNotificationsRelatedObjectNumber(notificationsForAssociatedUsers);
+
             notifications.addAll(notificationsForAssociatedUsers);
         }
 
         return notifications;
+    }
+
+    private void setNotificationsTitle(List<Notification> notifications, NotificationRule rule)
+    {
+        CustomTitleFormatter customTitleFormatter = rule.getCustomTitleFormatter();
+        if (customTitleFormatter != null)
+        {
+            notifications.forEach(notification ->
+            {
+                String title = customTitleFormatter.format(notification);
+                notification.setTitle(title);
+                notification.setNote(title);
+            });
+        }
+    }
+
+    private void setNotificationsRelatedObjectNumber(List<Notification> notifications)
+    {
+        notifications.forEach(notification ->
+        {
+            String relatedObjectNumber = getNotificationUtils()
+                    .getNotificationParentOrRelatedObjectNumber(notification.getRelatedObjectType(),
+                            notification.getRelatedObjectId());
+            notification.setRelatedObjectNumber(relatedObjectNumber);
+        });
     }
 
     /**
@@ -212,7 +223,8 @@ public class NotificationDao extends AcmAbstractDao<Notification>
     }
 
     /**
-     * This method will populate query parameters. If JPQL don't have specific property, that will be excluded from adding them in the query
+     * This method will populate query parameters. If JPQL don't have specific property, that will be excluded from
+     * adding them in the query
      *
      * @param query
      * @param parameters
@@ -249,6 +261,15 @@ public class NotificationDao extends AcmAbstractDao<Notification>
         return entityManager;
     }
 
+    public NotificationUtils getNotificationUtils()
+    {
+        return notificationUtils;
+    }
+
+    public void setNotificationUtils(NotificationUtils notificationUtils)
+    {
+        this.notificationUtils = notificationUtils;
+    }
 }
 
 

@@ -31,8 +31,9 @@ public interface EcmFileConstants
 
     String USER_ACTION_SET_FILE_ACTIVE_VERSION = "SET ACTIVE VERSION TO";
 
-    String USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM = " DOWNLOAD FILE AS INPUTSTREAM";
+    String USER_ACTION_UPDATE_FILE = "UPDATE FILE";
 
+    String USER_ACTION_DOWNLOAD_FILE_AS_INPUTSTREAM = " DOWNLOAD FILE AS INPUTSTREAM";
 
     String FOLDER_LIST_DEFAULT_SORT_PARAM = "name_lcs";
 
@@ -40,9 +41,13 @@ public interface EcmFileConstants
 
     String SUCCESS_CHANGE_STATUS_TO_RECORD_MSG = "DECLARED AS RECORD";
 
+    String FIND_CONTAINER_QUERY_BY_FOLDER_ID = "SELECT e FROM AcmContainer e WHERE e.folder.id = :folderId";
 
-    String FIND_CONTAINER_QUERY =
-            "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
+    String FIND_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
+
+    String FIND_CMIS_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType AND e.cmisRepositoryId = :cmisRepositoryId";
+
+    String FIND_CONTAINERS_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId IN :objectIds AND e.containerObjectType = :objectType";
 
     String PROPERTY_KEY_DEFAULT_FOLDER_BASE_PATH = "ecm.defaultBasePath";
     String PROPERTY_PREFIX_FOLDER_PATH_BY_TYPE = "ecm.defaultPath.";
@@ -93,4 +98,13 @@ public interface EcmFileConstants
 
     String FIND_CONTAINER_BY_CALENDAR_FOLDER_QUERY = "SELECT c FROM AcmContainer c WHERE c.calendarFolderId = :folderId";
     String FILE_MIME_TYPE = "fileMimeType";
+
+    // Multiple CMIS configurations constants
+    String CONFIGURATION_REFERENCE = "configRef";
+    String VERSIONING_STATE = "versioningState";
+    String DEFAULT_CMIS_REPOSITORY_ID = "alfresco";
+    String ALL_VERSIONS = "allVersions";
+
+    String ECM_SYNC_NODE_TYPE_FOLDER = "folder";
+    String ECM_SYNC_NODE_TYPE_DOCUMENT = "document";
 }

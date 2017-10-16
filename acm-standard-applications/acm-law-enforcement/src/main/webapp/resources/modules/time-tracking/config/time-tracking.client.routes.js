@@ -49,4 +49,7 @@ angular.module('time-tracking').config(['$stateProvider',
             })
 
 	}
-]);
+]).run(['Helper.DashboardService', function (DashboardHelper) {
+    DashboardHelper.addLocales();
+}])
+;

@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('document-details').controller('Document.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate',
-    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate) {
+angular.module('document-details').controller('Document.TagsModalController', ['$scope', '$q', '$modalInstance', 'ConfigService', 'Object.TagsService', 'Tags.TagsService', 'MessageService', '$translate', 'Search.AutoSuggestService',
+    function ($scope, $q, $modalInstance, ConfigService, ObjectTagsService, TagsService, messageService, $translate, AutoSuggestService) {
 
         $scope.tags = [];
         $scope.modalInstance = $modalInstance;
@@ -22,6 +22,10 @@ angular.module('document-details').controller('Document.TagsModalController', ['
 
         function checkTag(selectedTag) {
             // Check if tag is created. If not, create new tag
+            if (selectedTag.id) {
+                selectedTag.object_id_s = selectedTag.id.indexOf("-") >= 0 ? selectedTag.id.split("-")[0] : selectedTag.id;
+            }
+            selectedTag.tags_s = selectedTag.title_parseable;
             if(!selectedTag.object_id_s) {
                 var tagsCreated = _.filter($scope.createdTags, function (tag) {
                     return tag.tagName == selectedTag.tags_s || tag.tagDescription == selectedTag.tags_s
@@ -36,6 +40,8 @@ angular.module('document-details').controller('Document.TagsModalController', ['
                             });
                             var tagToAdd = angular.copy(tagCreated);
                             tagToAdd.tags_s = selectedTag.tags_s;
+                            tagToAdd.title_parseable = selectedTag.tags_s;
+                            tagToAdd.id = tagToAdd.id + '-TAG';
                             $scope.tags.push(tagToAdd);
                         }
                     )
@@ -54,10 +60,7 @@ angular.module('document-details').controller('Document.TagsModalController', ['
         // Load tags information
         function loadTags(query) {
             var deferred = $q.defer();
-            TagsService.searchTags({
-                query: query,
-                filter: 'fq=' + $scope.config.filters
-            }).then(function (tags) {
+            AutoSuggestService.autoSuggest(query, "QUICK", $scope.config.autoSuggestObjectType).then(function (tags) {
                 deferred.resolve(tags);
             });
             return deferred.promise;

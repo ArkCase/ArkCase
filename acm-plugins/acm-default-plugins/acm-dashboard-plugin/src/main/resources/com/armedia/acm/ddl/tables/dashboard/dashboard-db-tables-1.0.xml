@@ -1,6 +1,6 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
     
@@ -128,6 +128,14 @@
             <column name="cm_seq_name" value="acm_user_preference"></column>
         </insert>
 
+    </changeSet>
+
+    <changeSet id="07-widen-dashboard_config-column" author="jovan.ivanovski" dbms="mysql">
+        <modifyDataType tableName="acm_dashboard" columnName="cm_dashboard_config" newDataType="TEXT"/>
+    </changeSet>
+
+    <changeSet id="07-widen-dashboard_config-column" author="jovan.ivanovski" dbms="mssql,oracle,postgresql">
+        <modifyDataType tableName="acm_dashboard" columnName="cm_dashboard_config" newDataType="VARCHAR(4000)"/>
     </changeSet>
 </databaseChangeLog>
 

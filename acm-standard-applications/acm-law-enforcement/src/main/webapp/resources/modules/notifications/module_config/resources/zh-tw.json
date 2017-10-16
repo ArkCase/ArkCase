@@ -1,0 +1,23 @@
+{
+  "notifications": {
+    "title": "通知",
+    "search.btn": "搜索",
+    "export.btn": "zh-tw_Export",
+    "search.placeholder": "zh-tw_Search for notifications",
+    "menus": {
+      "leftnav.item": "通知"
+    },
+    "comp":{
+      "grid": {
+        "columns": {
+          "id": "zh-tw_ID",
+          "description": "zh-tw_Description",
+          "objNumber": "zh-tw_Object Number",
+          "parentNumber": "zh-tw_Parent Number",
+          "objType": "zh-tw_Object Type",
+          "modified": "zh-tw_Modified"
+        }
+      }
+    }
+  }
+}

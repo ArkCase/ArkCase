@@ -1,0 +1,95 @@
+{
+  "costTracking": {
+    "title": "Suivi des coûts",
+    "progressNoCostsheet": "[ Aucune feuille de coûts n'est sélectionnée ]",
+    "progressLoading": "Feuille de coûts de chargement",
+    "progressError": "Impossible de charger la feuille de coûts"
+  },
+  "costTracking.menus": {
+    "leftnav.item": "Suivi des coûts",
+    "topbar.item": "Coûts"
+  },
+  "costTracking.comp.main": {
+    "title": "Vue d'ensemble"
+  },
+  "costTracking.comp.info": {
+    "title": "Information",
+    "incidentDate": "Date d'incident",
+    "priority": "Priorité",
+    "assignedTo": "Assigné à",
+    "subjectType": "Type de sujet",
+    "state": "État"
+  },
+  "costTracking.comp.actions": {
+    "title": "Actes",
+    "new.button": "Nouvelle feuille ",
+    "edit.button": "Modifier la feuille"
+  },
+  "costTracking.comp.details": {
+    "title": "Détails",
+    "informSaved": "fr_Costsheet details saved",
+    "table.columns": {
+      "title": "fr_Details",
+      "modified": "fr_Date Last Modified",
+      "modifier": "fr_User Last Modified"
+    }
+  },
+  "costTracking.comp.person": {
+    "title": "Personnes",
+    "table.columns": {
+      "fullName": "fr_Full Name",
+      "userId": "fr_Username"
+    }
+  },
+  "costTracking.comp.summary": {
+    "title": "Résumé des coûts",
+    "table.columns": {
+      "parentId": "fr_ID",
+      "parentNumber": "fr_Parent ID",
+      "parentType": "fr_Parent Type",
+      "value": "fr_Total Cost",
+      "title": "fr_Title",
+      "description": "fr_Description"
+    }
+  },
+  "costTracking.comp.tags": {
+    "title": "étiquettes",
+    "table.columns": {
+      "tag": "fr_Tag",
+      "created": "fr_Created",
+      "createdBy": "fr_Created By"
+    },
+    "modal": {
+    "title": "fr_Tag",
+    "search": "fr_Search for Tag",
+    "buttons": {
+          "cancel": "fr_Cancel",
+          "ok": "fr_Add Tag"
+     }
+    },
+    "message": {
+      "tagExists": "fr_Tag with that name or description or text already exists",
+      "tagAssociated": "fr_already associated",
+      "delete": {
+        "success": "fr_Tag deleted successfully",
+        "error": "fr_Error deleting tag"
+      }
+    }
+  },
+  "costTracking.tree": {
+    "nodeTypes": {
+      "details.label": "Détails",
+      "person.label": "Personnes",
+      "summary.label": "Frais",
+      "tags.label": "étiquettes"
+    },
+    "sorters": {
+      "dateAsc": "Trier Date Asc",
+      "dateDesc": "Trier Date Déc",
+      "idAsc": "Trier ID de Coût Asc",
+      "idDesc": "Trier ID de Coût Déc",
+      "nameDesc": "Trier par nom Déc",
+      "noSort": "(Non Trier)"
+    }
+  }
+}

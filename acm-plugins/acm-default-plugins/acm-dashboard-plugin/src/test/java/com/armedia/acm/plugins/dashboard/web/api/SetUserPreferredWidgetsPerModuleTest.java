@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.dashboard.web.api;
 
 import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDto;
 import com.armedia.acm.plugins.dashboard.service.UserPreferenceService;
-import org.codehaus.jackson.map.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;

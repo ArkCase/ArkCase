@@ -30,14 +30,15 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
         <timer-interceptor/>
 
         <cmis:create-document-by-id-from-content
-            content-ref="#[message.inboundProperties.inputStream]"
-            filename="#[payload.fileName]"
-            folderId="#[message.inboundProperties.cmisFolderId]"
-            mimeType="#[payload.fileActiveVersionMimeType]"
-            objectType="cmis:document"
-            versioningState="MAJOR"/>
+                config-ref="#[message.inboundProperties.configRef]"
+                content-ref="#[message.inboundProperties.inputStream]"
+                filename="#[payload.fileName]"
+                folderId="#[message.inboundProperties.cmisFolderId]"
+                mimeType="#[payload.fileActiveVersionMimeType]"
+                objectType="cmis:document"
+                versioningState="#[message.inboundProperties.versioningState]"/>
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
-        <cmis:get-object-by-id objectId="#[payload.id]"/>
+        <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[payload.id]"/>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 

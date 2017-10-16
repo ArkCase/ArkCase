@@ -9,13 +9,17 @@ import com.armedia.acm.plugins.businessprocess.service.QueueService;
 import com.armedia.acm.plugins.businessprocess.service.StartBusinessProcessService;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse;
 import com.armedia.acm.plugins.casefile.web.api.CaseFileEnqueueResponse.ErrorReason;
+import com.armedia.acm.service.objectlock.model.AcmObjectLockConstants;
+import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +44,8 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
 
     private StartBusinessProcessService startBusinessProcessService;
 
+    private SaveCaseFileBusinessRule saveCaseFileBusinessRule;
+
     public CaseFileDao getCaseFileDao()
     {
         return caseFileDao;
@@ -54,6 +60,9 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
     {
         return leaveCurrentQueueBusinessRule;
     }
+
+
+    private AcmObjectLockService acmObjectLockService;
 
     public void setLeaveCurrentQueueBusinessRule(LeaveCurrentQueueBusinessRule leaveCurrentQueueBusinessRule)
     {
@@ -120,13 +129,23 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         this.startBusinessProcessService = startBusinessProcessService;
     }
 
+    public SaveCaseFileBusinessRule getSaveCaseFileBusinessRule()
+    {
+        return saveCaseFileBusinessRule;
+    }
+
+    public void setSaveCaseFileBusinessRule(SaveCaseFileBusinessRule saveCaseFileBusinessRule)
+    {
+        this.saveCaseFileBusinessRule = saveCaseFileBusinessRule;
+    }
+
     @Override
     @Transactional
     public CaseFileEnqueueResponse enqueueCaseFile(Long caseId, String nextQueue, CaseFilePipelineContext context)
     {
         // since we will make changes to this CaseFile, we should not detach it; the caseFileDao detaches
         // the object, so we won't use the dao.find() method here.
-        CaseFile caseFile = caseFileDao.getEm().find(CaseFile.class, caseId);
+        CaseFile caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseId);
 
         context.setNewCase(false);
         context.setEnqueueName(nextQueue);
@@ -140,7 +159,17 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         List<String> nextPossibleQueues = verifyNextPossibleQueues(context, caseFile);
         if (nextPossibleQueues.isEmpty() || !nextPossibleQueues.contains(nextQueue))
         {
-            return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, nextQueue, caseFile);
+            List<String> errorList = null;
+            if (nextPossibleQueues.isEmpty())
+            {
+                errorList = Arrays.asList(String.format("From the %s queue, it is not possible to move to any other queue.", nextQueue));
+            }
+            else if (!nextPossibleQueues.contains(nextQueue))
+            {
+                errorList = Arrays.asList(
+                        String.format("From the %s queue, it is not possible to move to the %s queue.", nextQueue, nextPossibleQueues));
+            }
+            return new CaseFileEnqueueResponse(ErrorReason.NEXT_POSSIBLE, errorList, nextQueue, caseFile);
         }
 
         List<String> cannotEnterReasons = verifyNextConditions(context, caseFile);
@@ -152,7 +181,12 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         startLeaveProcess(context, caseFile);
         startEnterProcess(context, caseFile);
 
-        // we don't need to explicitly save the case file.  Since the casefile is a managed entity (because we did
+
+        getAcmObjectLockService().removeLock(caseId, CaseFileConstants.OBJECT_TYPE, AcmObjectLockConstants.OBJECT_LOCK,
+                context.getAuthentication());
+
+
+        // we don't need to explicitly save the case file. Since the casefile is a managed entity (because we did
         // not detach it) any changes we made are automatically applied at the end of the transaction.
 
         return new CaseFileEnqueueResponse(ErrorReason.NO_ERROR, nextQueue, caseFile);
@@ -163,15 +197,15 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         LeaveCurrentQueueModel<CaseFile, CaseFilePipelineContext> leaveModel = new LeaveCurrentQueueModel<>();
         leaveModel.setBusinessObject(caseFile);
         leaveModel.setPipelineContext(context);
-        leaveModel = leaveCurrentQueueBusinessRule.applyRules(leaveModel);
+        leaveModel = getLeaveCurrentQueueBusinessRule().applyRules(leaveModel);
 
         return leaveModel.getCannotLeaveReasons();
     }
 
     private List<String> verifyNextPossibleQueues(CaseFilePipelineContext context, CaseFile caseFile)
     {
-        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = queueService.nextPossibleQueues(caseFile,
-                context, caseFileNextPossibleQueuesBusinessRule);
+        NextPossibleQueuesModel<CaseFile, CaseFilePipelineContext> nextPossibleQueuesModel = getQueueService().nextPossibleQueues(caseFile,
+                context, getCaseFileNextPossibleQueuesBusinessRule());
         return nextPossibleQueuesModel.getNextPossibleQueues();
     }
 
@@ -180,7 +214,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         EnterQueueModel<CaseFile, CaseFilePipelineContext> enterModel = new EnterQueueModel<>();
         enterModel.setBusinessObject(caseFile);
         enterModel.setPipelineContext(context);
-        enterModel = enterQueueBusinessRule.applyRules(enterModel);
+        enterModel = getEnterQueueBusinessRule().applyRules(enterModel);
 
         return enterModel.getCannotEnterReasons();
     }
@@ -190,13 +224,13 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         OnLeaveQueueModel<CaseFile, CaseFilePipelineContext> onLeaveModel = new OnLeaveQueueModel<>();
         onLeaveModel.setBusinessObject(caseFile);
         onLeaveModel.setPipelineContext(context);
-        onLeaveModel = onLeaveQueueBusinessRule.applyRules(onLeaveModel);
+        onLeaveModel = getOnLeaveQueueBusinessRule().applyRules(onLeaveModel);
 
         String leaveProcessName = onLeaveModel.getBusinessProcessName();
         if (leaveProcessName != null && !leaveProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);
-            startBusinessProcessService.startBusinessProcess(leaveProcessName, processVariables);
+            getStartBusinessProcessService().startBusinessProcess(leaveProcessName, processVariables);
         }
     }
 
@@ -205,7 +239,7 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         OnEnterQueueModel<CaseFile, CaseFilePipelineContext> onEnterModel = new OnEnterQueueModel<>();
         onEnterModel.setBusinessObject(caseFile);
         onEnterModel.setPipelineContext(context);
-        onEnterModel = onEnterQueueBusinessRule.applyRules(onEnterModel);
+        onEnterModel = getOnEnterQueueBusinessRule().applyRules(onEnterModel);
 
         String enterProcessName = onEnterModel.getBusinessProcessName();
 
@@ -213,7 +247,16 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         if (enterProcessName != null && !enterProcessName.isEmpty())
         {
             Map<String, Object> processVariables = createProcessVariables(caseFile);
-            startBusinessProcessService.startBusinessProcess(enterProcessName, processVariables);
+            processVariables.put("NEW_QUEUE_NAME", onEnterModel.getBusinessObjectNewQueueName());
+            processVariables.put("NEW_OBJECT_STATUS", onEnterModel.getBusinessObjectNewStatus());
+            processVariables.put("ASSIGNEES", onEnterModel.getTaskAssignees());
+            processVariables.put("TASK_NAME", onEnterModel.getTaskName());
+            processVariables.put("TASK_OWNING_GROUP", onEnterModel.getTaskOwningGroup());
+            getStartBusinessProcessService().startBusinessProcess(enterProcessName, processVariables);
+
+            getCaseFileDao().getEm().flush();
+            caseFile = getCaseFileDao().find(caseFile.getId());
+            getSaveCaseFileBusinessRule().applyRules(caseFile);
         }
     }
 
@@ -223,6 +266,17 @@ public class EnqueueCaseFileServiceImpl implements EnqueueCaseFileService
         processVariables.put("OBJECT_TYPE", "CASE_FILE");
         processVariables.put("OBJECT_ID", caseFile.getId());
         return processVariables;
+    }
+
+
+    public AcmObjectLockService getAcmObjectLockService()
+    {
+        return acmObjectLockService;
+    }
+
+    public void setAcmObjectLockService(AcmObjectLockService acmObjectLockService)
+    {
+        this.acmObjectLockService = acmObjectLockService;
     }
 
 }

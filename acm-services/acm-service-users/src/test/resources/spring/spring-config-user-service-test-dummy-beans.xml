@@ -10,11 +10,6 @@
         <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
     </bean>
 
-    <!-- dummy bean for the drools deployer -->
-    <bean id="drlDeployer" class="java.lang.String">
-        <constructor-arg value="This is a dummy bean.  Don't expect anything real in here."/>
-    </bean>
-
     <bean id="exceptionResolver"
           class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
@@ -22,6 +17,29 @@
         <property name="specificConfigFiles">
             <list/>
         </property>
+    </bean>
+
+    <bean id="acmApplication" class="com.armedia.acm.core.AcmApplication"/>
+
+    <bean id="configList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <bean class="com.armedia.acm.services.config.model.JsonConfig">
+                    <property name="configName" value="languageSettings"/>
+                    <property name="configDescription" value="Language Setting"/>
+                    <property name="json" ref="languageJsonSettings"/>
+                </bean>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="languageJsonSettings"  class="org.apache.commons.io.IOUtils" factory-method="toString">
+        <constructor-arg type="java.io.InputStream">
+            <bean class="java.io.FileInputStream" destroy-method="close">
+                <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>
+            </bean>
+        </constructor-arg>
+        <constructor-arg value="UTF-8"/>
     </bean>
 
 </beans>

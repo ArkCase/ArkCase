@@ -1,0 +1,24 @@
+{
+  "core": {
+    "userInfo": {
+      "addedMenu": {
+        "help": "Aide",
+        "logout": "Déconnexion"
+      }
+    },
+    "leftNav": {
+      "title": "Navigation"
+    },
+    "topBar": {
+      "new": "Nouveau",
+      "toggle.btn": "fr_Toggle navigation",
+      "search.placeholder": "fr_Search ArkCase",
+      "locale.updateList": "Mise à jour"
+    },
+    "loginWarning": {
+      "btnOK.text": "fr_OK",
+      "btnCancel.text": "fr_Cancel",
+      "checkbox_warning.label": "fr_I acknowledge this warning."
+    }
+  }
+}

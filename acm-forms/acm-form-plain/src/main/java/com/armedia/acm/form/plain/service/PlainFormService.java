@@ -3,15 +3,15 @@
  */
 package com.armedia.acm.form.plain.service;
 
+import com.armedia.acm.form.plain.model.PlainForm;
 import com.armedia.acm.form.plain.model.PlainFormCreatedEvent;
+import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
+import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.armedia.acm.form.plain.model.PlainForm;
-import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 
 /**
  * @author riste.tutureski
@@ -53,10 +53,12 @@ public class PlainFormService extends FrevvoFormAbstractService {
 			LOG.error("Cannot take CMIS folder id to be able to save attachments.", e);
 			return false;
 		}
-		
-		saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
 
-		PlainFormCreatedEvent event = new PlainFormCreatedEvent(form, getFormName(), folderId, cmisFolderId, getAuthentication().getName(), getUserIpAddress());
+		FrevvoUploadedFiles uploaded = saveAttachments(attachments, cmisFolderId, form.getObjectType(), form.getObjectId());
+
+		PlainFormCreatedEvent event = new PlainFormCreatedEvent(
+				form, getFormName(), folderId, cmisFolderId, getAuthentication().getName(), getUserIpAddress(),
+				uploaded.getPdfRendition().getFileId(), uploaded.getFormXml().getFileId());
 		getApplicationEventPublisher().publishEvent(event);
 		
 		return true;

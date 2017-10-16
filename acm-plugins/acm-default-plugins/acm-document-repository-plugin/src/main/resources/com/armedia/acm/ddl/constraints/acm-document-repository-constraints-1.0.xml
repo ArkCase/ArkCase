@@ -1,0 +1,32 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="document-repository-constraint-01-restricted-flag" author="ncuculova">
+        <addForeignKeyConstraint
+                baseTableName="acm_document_repository"
+                baseColumnNames="cm_doc_repo_restricted_flag"
+                constraintName="fk_doc_repo_restricted_flag"
+                referencedTableName="acm_boolean_lu"
+                referencedColumnNames="cm_value"
+                deferrable="${deferrable}"
+                initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="document-repository-constraint-02-container-id" author="ncuculova">
+        <preConditions>
+            <and>
+                <tableExists tableName="acm_container"/>
+                <columnExists tableName="acm_document_repository" columnName="cm_container_id"/>
+            </and>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_document_repository" baseColumnNames="cm_container_id"
+                                 constraintName="fk_doc_repo_container_id"
+                                 referencedTableName="acm_container"
+                                 referencedColumnNames="cm_container_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+</databaseChangeLog>

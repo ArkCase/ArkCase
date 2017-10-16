@@ -1,10 +1,12 @@
 'use strict';
 
-angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService'
-    , function ($q, $rootScope, Store, ObjectAuditService) {
+angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootScope', 'Acm.StoreService', 'Object.AuditService', 'TimeTracking.InfoService'
+    , function ($q, $rootScope, Store, ObjectAuditService, TimeTrackingInfoService) {
         var Service = {};
 
         Service.handleMessage = handleMessage;
+
+        Service.handleGenericMessage = handleGenericMessage;
 
         return Service;
 
@@ -23,9 +25,14 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
         }
 
+        function handleGenericMessage(message) {
+            var eventName = message.eventType;
+            $rootScope.$bus.publish(eventName, message);
+        }
+
         function handleCache(message) {
             // remove this object from cache
-            if (message.action == 'UPDATE') {
+            if (message.action == 'UPDATE' || message.action == 'DELETE') {
                 handleCacheObject(message.objectType, message.objectId);
             }
             handleCacheLists(message.objectType, message.objectId);
@@ -35,19 +42,34 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 handleCacheLists(message.parentObjectType, message.parentObjectId);
                 handleSubCacheLists(message.parentObjectType, message.parentObjectId);
             }
+            // A timesheet does not have parent id/type field, but could have multiple complaint/case "parent" objects
+            if (message.objectType == 'TIMESHEET' || message.parentObjectType == 'TIMESHEET') {
+                var timesheetId = message.objectType == 'TIMESHEET' ? message.objectId : message.parentObjectId;
+                TimeTrackingInfoService.getTimesheetParentObjectsTypeId(timesheetId).then(function (parentObjectsTypeId) {
+                    angular.forEach(parentObjectsTypeId, function (data) {
+                        handleCacheObject(data.type, data.objectId);
+                        handleCacheLists(data.type, data.objectId);
+                        handleSubCacheLists(data.type, data.objectId);
+                    });
+                });
+            }
         }
 
         function publishMessage(message) {
+            var eventName;
             // publish event for this object
             if (message.action == 'INSERT') {
-                var eventName = "object.inserted";
-            } else {
-                var eventName = "object.changed/" + message.objectType + "/" + message.objectId;
+                eventName = "object.inserted";
+            } else if (message.action == 'DELETE') {
+                eventName = "object.deleted";
+            }
+            else {
+                eventName = "object.changed/" + message.objectType + "/" + message.objectId;
             }
             $rootScope.$bus.publish(eventName, message);
             // publish event for this object's parent, if any
             if (message.parentObjectType != null && message.parentObjectId != null) {
-                var eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
+                eventName = "object.changed/" + message.parentObjectType + "/" + message.parentObjectId;
                 $rootScope.$bus.publish(eventName, message);
             }
         }
@@ -62,17 +84,17 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 }
             }
         }
-        
+
         function handleSubCacheLists(objectType, objectId) {
             // invalidate audit cache
             var cacheKey = objectType + '.' + objectId;
-            var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA)
+            var cacheStore = new Store.CacheFifo(ObjectAuditService.CacheNames.AUDIT_DATA);
             var cacheKeys = cacheStore.keys();
-            _.each(cacheKeys, function (key){
-                if(key == null) {
+            _.each(cacheKeys, function (key) {
+                if (key == null) {
                     return;
                 }
-                if(key.indexOf(cacheKey) == 0) {
+                if (key.indexOf(cacheKey) == 0) {
                     cacheStore.remove(key);
                 }
             });
@@ -125,6 +147,14 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
                 removeFromCache(subKey, 'CostSheets');
                 removeFromCache(subKey, 'TimeSheets');
             }
+
+            if (objectType === 'TASK') {
+                var cacheInfo = new Store.CacheFifo('TaskDiagram');
+                var item = cacheInfo.get(objectId);
+                if (item != null) {
+                    cacheInfo.remove(objectId);
+                }
+            }
         }
 
         function getCacheInfoName(objectType) {
@@ -139,6 +169,9 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (objectType == 'COMPLAINT') {
                 cacheInfoStoreName = 'ComplaintInfo';
             }
+            if (objectType == 'DOC_REPO') {
+                cacheInfoStoreName = 'DocumentRepositoryInfo';
+            }
             if (objectType == 'TASK') {
                 cacheInfoStoreName = 'TaskInfo';
             }
@@ -147,6 +180,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
             if (objectType == 'TIMESHEET') {
                 cacheInfoStoreName = 'TimesheetInfo';
+            }
+            if (objectType == 'PERSON') {
+                cacheInfoStoreName = 'PersonInfo';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheInfoStoreName = 'OrganizationInfo';
             }
             return cacheInfoStoreName;
         }
@@ -159,6 +198,9 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             if (objectType == 'COMPLAINT') {
                 cacheListStoreName = 'ComplaintList';
             }
+            if (objectType == 'DOC_REPO') {
+                cacheListStoreName = 'DocumentRepositoryInfo';
+            }
             if (objectType == 'TASK') {
                 cacheListStoreName = 'TaskList';
             }
@@ -167,6 +209,12 @@ angular.module('services').factory('Websockets.MessageHandler', ['$q', '$rootSco
             }
             if (objectType == 'TIMESHEET') {
                 cacheListStoreName = 'TimesheetList';
+            }
+            if (objectType == 'PERSON') {
+                cacheListStoreName = 'PersonList';
+            }
+            if (objectType == 'ORGANIZATION') {
+                cacheListStoreName = 'OrganizationList';
             }
             return cacheListStoreName;
         }

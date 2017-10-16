@@ -46,22 +46,21 @@ import java.util.concurrent.TimeUnit;
  * file that contains the scheduler and scheduled tasks configuration. A sample JSON configuration file: <code>
    {
     "scheduleEnabled": "true",
-    "scheduleIntervalInMinutes": "1",
+    "scheduleIntervalInSeconds": "60",
     "tasks": [{
-        "howOftenInMinutes": "5",
+        "howOftenInSeconds": "300",
         "name": "billingQueuePurger",
         "beanName": "scheduledBillingQueuePurger"
     },{
-        "howOftenInMinutes": "10",
+        "howOftenInSeconds": "600",
         "name": "queueLogger",
         "beanName": "scheduledQueueLogger"
     }]
    }
  * </code>
  *
- * @see AcmSchedulableBean#executeTask()
- *
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 24, 2016
+ * @see AcmSchedulableBean#executeTask()
  */
 public class AcmScheduler implements ApplicationListener<AbstractConfigurationFileEvent>
 {
@@ -139,7 +138,6 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      * @param springContextHolder
      *            needed for obtaining instances of Spring beans by name. Beans defined in the tasks section of the JSON
      *            configuration file must implement the <code>AcmSchedulableBean</code> interface.
-     *
      * @see AcmSchedulerConstants#SCHEDULE_INTERVAL_KEY for the key value in the JSON configuration representing the
      *      frequency at which the scheduler is run.
      * @see AcmSchedulerConstants#TASKS_KEY for the key value in the JSON configuration refering to the JSON array
@@ -262,7 +260,6 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      *
      * @param configuration
      *            JSON object that was created by parsing the contents of the configuration file.
-     *
      * @see AcmSchedulerConstants#TASKS_KEY
      * @see #tasks
      * @see AcmSchedulerConstants#NAME_KEY
@@ -283,8 +280,9 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         {
             JSONObject taskConfiguration = tasksConfigurations.getJSONObject(i);
             String taskName = taskConfiguration.getString(NAME_KEY);
-            // how often in the configuration is given in minutes, needs to be converted in milliseconds.
-            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 60 * 1000;
+            keys.add(taskName);
+            // how often in the configuration is given in seconds, needs to be converted in milliseconds.
+            long howOften = taskConfiguration.getLong(HOW_OFTEN_KEY) * 1000;
             if (tasks.containsKey(taskName))
             {
                 AcmSchedulerTask task = tasks.get(taskName);
@@ -294,10 +292,10 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 String beanName = taskConfiguration.getString(BEAN_NAME_KEY);
                 try
                 {
-                    AcmSchedulableBean schedulableBean = springContextHolder.getBeanByName(beanName, AcmSchedulableBean.class);
+                    AcmSchedulableBean schedulableBean = springContextHolder.getBeanByNameIncludingChildContexts(beanName,
+                            AcmSchedulableBean.class);
                     AcmSchedulerTask task = new AcmSchedulerTask(howOften,
                             taskConfiguration.has(TASK_LAST_RUN_KEY) ? taskConfiguration.getLong(TASK_LAST_RUN_KEY) : 0, schedulableBean);
-                    keys.add(taskName);
                     tasks.put(taskName, task);
                     log.debug("Added task {} for bean named {} to run every {} minutes.", taskName, beanName,
                             taskConfiguration.getString(HOW_OFTEN_KEY));
@@ -323,8 +321,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private void setupScheduler(JSONObject configuration)
     {
-        // the interval in the configuration is given in minutes, needs to be converted in milliseconds.
-        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 60 * 1000;
+        // the interval in the configuration is given in seconds, needs to be converted in milliseconds.
+        long scheduleInterval = configuration.getLong(SCHEDULE_INTERVAL_KEY) * 1000;
 
         if (scheduleInterval != this.scheduleInterval)
         {
@@ -350,17 +348,14 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
      */
     private Runnable schedulerRunnable(long scheduleInterval)
     {
-        return () ->
-        {
+        return () -> {
 
             CountDownLatch taskCompletedSignal = new CountDownLatch(tasks.size());
-            tasks.forEach((taskName, task) ->
-            {
+            tasks.forEach((taskName, task) -> {
                 task.startTask(taskName, taskExecutor, taskCompletedSignal);
             });
 
-            Runnable configurationUpdater = () ->
-            {
+            Runnable configurationUpdater = () -> {
                 try
                 {
                     log.debug("Waiting for {} tasks to complete.", taskCompletedSignal.getCount());
@@ -410,7 +405,7 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
             }
 
-            FileUtils.write(configFile, configuration.toString());
+            FileUtils.write(configFile, configuration.toString(4));
 
             FileTime lastModified = getConfigLastModifiedTime(configFile);
 
@@ -419,6 +414,26 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         } catch (IOException | JSONException e)
         {
             log.error("Could not write scheduler configuration to file {}, error was: {}.", configurationPath, e);
+        }
+    }
+
+    public void updateConfiguration()
+    {
+        log.debug("Updating scheduler configuraton for Spring context update");
+
+        if (configurationPath == null)
+        {
+            log.warn("Configuration has not been loaded yet, so we can't update the configuration");
+            return;
+        }
+
+        File configFile = new File(configurationPath);
+        try
+        {
+            processSchedulerConfiguration(configFile);
+        } catch (IOException e)
+        {
+            log.error("Could not update scheduler configuration: {}", e.getMessage(), e);
         }
     }
 

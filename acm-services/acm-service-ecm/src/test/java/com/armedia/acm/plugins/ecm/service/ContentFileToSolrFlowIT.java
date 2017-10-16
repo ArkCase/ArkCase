@@ -1,11 +1,7 @@
 package com.armedia.acm.plugins.ecm.service;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +18,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-search-service-test-content-file-mule.xml", "/spring/spring-mule-activemq.xml",
-        "/spring/spring-library-cmis-configuration.xml" })
+@ContextConfiguration(locations = {"/spring/spring-library-search-service-test-content-file-mule.xml", "/spring/spring-mule-activemq.xml"})
 public class ContentFileToSolrFlowIT
 {
     @Autowired

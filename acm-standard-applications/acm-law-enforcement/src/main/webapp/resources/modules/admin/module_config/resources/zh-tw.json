@@ -1,0 +1,703 @@
+{
+  "admin": {
+    "title": "管理",
+    "security.title": "zh-tw_Security",
+    "security.functionalAccessControl": "zh-tw_Functional Access Control",
+    "security.functionalAccessControl.applicationRole": "zh-tw_Application Role",
+    "security.ldapConfig": "zh-tw_LDAP Configuration",
+    "security.ldapConfig.addNewDirectory": "zh-tw_Add New Directory",
+    "security.ldapConfig.addNewMember": "zh-tw_Add New Member",
+    "security.ldapConfig.addMembers": "zh-tw_Add Members",
+    "security.ldapConfig.addSubgroup": "zh-tw_Add Subgroup",
+    "security.ldapConfig.addExistingMembers": "zh-tw_Add Existing Members",
+    "security.ldapConfig.addLdapSubgroup": "zh-tw_Add LDAP Subgroup",
+    "security.ldapConfig.deleteLdapGroup": "zh-tw_Delete LDAP group",
+    "security.ldapConfig.removeGroup": "zh-tw_Remove Group",
+    "security.ldapConfig.addOrEditSupervisor": "zh-tw_Add/Edit Supervisor",
+    "security.ldapConfig.editMember": "zh-tw_Edit Member",
+    "security.ldapConfig.removeMember": "zh-tw_Remove Member",
+    "security.ldapConfig.table.ldapUrl": "zh-tw_LDAP Url",
+    "security.ldapConfig.table.directoryName": "zh-tw_Directory Name",
+    "security.ldapConfig.data": {
+      "userAttributesTemplate": "zh-tw_Ldap User Attributes Template",
+      "groupAttributesTemplate": "zh-tw_Ldap Group Attributes Template",
+      "addNewDirectory": "zh-tw_Add New Directory",
+      "editRecord": "zh-tw_Edit Record",
+      "id": "zh-tw_ID",
+      "directoryType": "zh-tw_Select directory server",
+      "ldapUrl": "zh-tw_LDAP Url",
+      "base": "zh-tw_Base",
+      "directoryName": "zh-tw_Directory Name",
+      "authUserDn": "zh-tw_Auth User Dn",
+      "authUserPassword": "zh-tw_Auth User Password",
+      "userSearchBase": "zh-tw_Users Search Base",
+      "userSearchFilter": "zh-tw_User Search Filter",
+      "allUsersFilter": "zh-tw_All Users Filter",
+      "allUsersPageFilter": "zh-tw_All Users Page Filter",
+      "allUsersSortingAttribute": "zh-tw_Sorting attribute for users",
+      "groupSearchBase": "zh-tw_Group Search Base",
+      "groupSearchFilterForUser": "zh-tw_Group Search Filter For User",
+      "userIdAttributeName": "zh-tw_User Id Attribute Name",
+      "userDomain": "zh-tw_User domain",
+      "userDomainNote": "zh-tw_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
+      "syncPageSize": "zh-tw_Sync Page Size",
+      "groupSearchFilter": "zh-tw_Group Search Filter",
+      "groupsSortingAttribute": "zh-tw_Sorting attribute for groups",
+      "groupSearchPageFilter": "zh-tw_Group Search Page Filter",
+      "enableEditingLdapUsers": "zh-tw_Enable managing users and groups",
+      "cancel": "zh-tw_Cancel",
+      "ok": "zh-tw_OK"
+    },
+    "menus": {
+      "leftnav.item": "管理"
+    },
+    "security.ldapConfig.data.placeholders": {
+      "id": "zh-tw_Enter directory name",
+      "ldapUrl": "zh-tw_Enter connection URL",
+      "base": "zh-tw_Enter base domain component (e.g. dc=example,dc=com)",
+      "authUserDn": "zh-tw_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
+      "authUserPassword": "zh-tw_Enter password for authentication user",
+      "userSearchBase": "zh-tw_Enter users search base (e.g. ou=users)",
+      "userSearchFilter": "zh-tw_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
+      "allUsersFilter": "zh-tw_Enter search filter for all users (e.g. (objectClass=person))",
+      "allUsersPageFilter": "zh-tw_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
+      "allUsersSortingAttribute": "zh-tw_Enter sorting attribute for users (e.g. 'uidNumber')",
+      "groupSearchBase": "zh-tw_Enter search base for groups (e.g. ou=groups)",
+      "groupSearchFilterForUser": "zh-tw_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
+      "userIdAttributeName": "zh-tw_Enter attribute used for user id (e.g. 'uid')",
+      "userDomain": "zh-tw_Enter user domain",
+      "syncPageSize": "zh-tw_Enter paging size",
+      "groupSearchFilter": "zh-tw_Enter search filter for groups (e.g. (objectClass=group))",
+      "groupsSortingAttribute": "zh-tw_Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "groupSearchPageFilter": "zh-tw_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
+      "enableEditingLdapUsers": "zh-tw_Check if managing users and groups to your DS is allowed"
+    },
+    "security.ldapConfig.messages": {
+      "delete.success": "zh-tw_Successfully deleted row.",
+      "delete.error": "zh-tw_Error deleting row.",
+      "insert.success": "zh-tw_Successfully inserted new row.",
+      "insert.error": "zh-tw_Error inserting new row.",
+      "update.success": "zh-tw_Successfully updated row.",
+      "update.error": "zh-tw_Error updating row.",
+      "insert.template.success": "zh-tw_Successfully created template",
+      "insert.template.error": "zh-tw_Error creating the template"
+    },
+    "security.ldapConfig.dialog": {
+      "cancel": "zh-tw_Cancel",
+      "ok": "zh-tw_OK",
+      "confirm.delete": {
+        "deleteBtn": "zh-tw_Delete",
+        "cancelBtn": "zh-tw_Cancel",
+        "headerText": "zh-tw_Are you sure?",
+        "bodyText": "zh-tw_This record will be deleted. Are you sure?"
+      }
+    },
+    "admin.security.addNew": "zh-tw_Add New Directory",
+    "security.organizationalHierarchy": {
+      "title": "zh-tw_Organizational Hierarchy",
+      "btn": {
+        "createAdHocGroup": "zh-tw_createAdHocGroup"
+      },
+      "createGroupDialog": {
+        "ldapGroup": {
+          "title": "zh-tw_Add LDAP Group"
+        },
+        "adHocGroup": {
+          "title": "zh-tw_Add Ad-Hoc Group"
+        },
+        "selectDirectory": "zh-tw_--Choose Directory Config--",
+        "disabledGroupWarning": "zh-tw_Adding new LDAP groups is not allowed for this directory!",
+        "name": "zh-tw_Name",
+        "namePlaceholder": "zh-tw_Enter group name",
+        "description": "zh-tw_Description",
+        "descriptionPlaceholder": "zh-tw_Enter Description",
+        "btn": {
+          "ok": "zh-tw_Add Group",
+          "cancel": "zh-tw_Cancel"
+        }
+      },
+      "addSubGroupDialog": {
+        "title": "zh-tw_Add Subgroup to",
+        "name": "zh-tw_Name",
+        "namePlaceholder": "zh-tw_Enter group name",
+        "description": "zh-tw_Description",
+        "descriptionPlaceholder": "zh-tw_Enter Description",
+        "btn": {
+          "ok": "zh-tw_Add Ad-Hoc Group",
+          "cancel": "zh-tw_Cancel"
+        }
+      },
+      "addMembers": {
+        "title": "zh-tw_Add Members",
+        "btn": {
+          "search": "zh-tw_Go!",
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add",
+          "searchPlaceholder": "zh-tw_Enter to search for members."
+        }
+      },
+      "createUserDialog": {
+        "addLdapMember": {
+          "title": "zh-tw_Add Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Add Ldap User"
+          },
+          "username": "zh-tw_Enter username",
+          "firstName": "zh-tw_Enter first name",
+          "lastName": "zh-tw_Enter last name",
+          "email": "zh-tw_Enter email",
+          "password": "zh-tw_Enter password",
+          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "minLengthForPassword": "zh-tw_7",
+          "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+        },
+        "editLdapMember": {
+          "title": "zh-tw_Edit Ldap Member",
+          "btn": {
+            "cancel": "zh-tw_Cancel",
+            "ok": "zh-tw_Edit Ldap User"
+          }
+        },
+        "username": "zh-tw_UserName",
+        "firstName": "zh-tw_FirstName",
+        "lastName": "zh-tw_LastName",
+        "email": "zh-tw_Email",
+        "password": "zh-tw_Password"
+      },
+      "addMembersGridColumns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      },
+      "addSupervisor": {
+        "title": "zh-tw_Add Supervisor",
+        "btn": {
+          "search": "zh-tw_Go!",
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_Add",
+          "searchPlaceholder": "zh-tw_Enter to search for supervisor."
+        }
+      },
+      "addSupervisorGridColumns": {
+        "name": "zh-tw_Name",
+        "type": "zh-tw_Type",
+        "title": "zh-tw_Title",
+        "parent": "zh-tw_Parent",
+        "assignee": "zh-tw_Assignee",
+        "modified": "zh-tw_Modified"
+      },
+      "dialog.group": {
+        "confirm.delete": {
+          "cancelBtn": "zh-tw_Cancel",
+          "deleteBtn": "zh-tw_Delete",
+          "headerText": "zh-tw_You are about to delete group: ",
+          "bodyText": "zh-tw_Are you sure?"
+        }
+      },
+      "dialog.member": {
+        "confirm.delete": {
+          "cancelBtn": "zh-tw_Cancel",
+          "deleteBtn": "zh-tw_Delete",
+          "headerText": "zh-tw_You are about to delete member: ",
+          "bodyText": "zh-tw_Are you sure?"
+        }
+      },
+      "messages": {
+        "delete": {
+          "group": {
+            "success": "zh-tw_success",
+            "error": "zh-tw_error"
+          },
+          "member": {
+            "success": "zh-tw_success",
+            "error": "zh-tw_error"
+          }
+        }
+      }
+    },
+    "security.selectPrivileges": "zh-tw_Create Role/Select Privileges",
+    "security.selectPrivileges.applicationRole": "zh-tw_Application Role",
+    "security.selectPrivileges.createRole": "zh-tw_Create Role",
+    "security.selectPrivileges.editRole": "zh-tw_Edit Role",
+    "security.selectPrivileges.applyChanges": "zh-tw_Apply Changes",
+    "security.selectPrivileges.enterRoleName": "zh-tw_Enter the role name in the box below.",
+    "security.selectPrivileges.cancel": "zh-tw_Cancel",
+    "security.selectPrivileges.name": "zh-tw_Name",
+    "security.modules": "zh-tw_Modules",
+    "security.modules.module": "zh-tw_Module",
+    "security.ldap.user.management": {
+      "title": "zh-tw_LDAP User Management",
+      "cloneButton": "zh-tw_Clone User",
+      "user": "zh-tw_User"
+    },
+    "security.calendarConfiguration": {
+      "title": "zh-tw_Calendar Configuration",
+      "calendarConfigForm": {
+        "email.placeholder": "zh-tw_Enter System Email Address",
+        "password.placeholder": "zh-tw_Enter System Password",
+        "purge.placeholder": "zh-tw_Choose Purge Option",
+        "purgeDays.placeholder": "zh-tw_Enter Days",
+        "save.button": "zh-tw_Save",
+        "validate.button": "zh-tw_Validate",
+        "purge.label": "zh-tw_Purge",
+        "email.label": "zh-tw_System Email Address",
+        "password.label": "zh-tw_System Password",
+        "purgeDays.label": "zh-tw_Days",
+        "emailValid": "zh-tw_System Email Address is valid",
+        "emailNotValid": "zh-tw_System Email Address is not valid",
+        "enableCalendarIntegration.checkbox": "zh-tw_Enable Calendar Integration",
+        "purgeOptions": {
+          "retainIndefinitely": "zh-tw_Retain Indefinitely",
+          "objectClosed": "zh-tw_Object = 'Closed'",
+          "objectClosedXDays": "zh-tw_Object = 'Closed' + X Days"
+        },
+        "configurableObjectTypes": {
+          "cases.label": "zh-tw_Cases",
+          "complaints.label": "zh-tw_Complaints",
+          "tasks.label": "zh-tw_Tasks"
+        }
+      }
+    },
+    "security.calendarCredentialsConfiguration": {
+      "title": "zh-tw_Calendar Credentials Configuration",
+      "accountConfigForm": {
+        "account": "zh-tw_System Email Address",
+        "password": "zh-tw_System Password",
+        "password.placeholder": "zh-tw_System Password",
+        "save.button": "zh-tw_Save",
+        "validate.button": "zh-tw_Validate"
+      },
+      "modal": {
+        "title": "zh-tw_Outlook folder override",
+        "message": "zh-tw_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
+        "confirm.button": "zh-tw_Confirm",
+        "cancel.button": "zh-tw_Cancel"
+      },
+      "message": {
+        "credentials.valid": "zh-tw_Credentials are valid",
+        "credentials.invalid": "zh-tw_Credentials are not valid",
+        "credentials.error": "zh-tw_An error has occurred while checking the credentials",
+        "save.successful": "zh-tw_Outlook folder creator saved successfully",
+        "save.fail": "zh-tw_Outlook folder creator not saved"
+      }
+    },
+    "security.emailConfiguration": {
+      "title": "zh-tw_Document Delivery Policy",
+      "emailConfigForm": {
+        "save.button": "zh-tw_Save",
+        "deliveryMethods.label": "zh-tw_Delivery Methods",
+        "enableDocumentEmail.checkbox": "zh-tw_Documents can be emailed",
+        "enableDocumentAttach.checkbox": "zh-tw_Documents can be attached to emails",
+        "enableDocumentHyperlink.checkbox": "zh-tw_Documents can be sent as hyperlinks",
+        "serverSettings.label": "zh-tw_Server Settings",
+        "serverType.label": "zh-tw_Server Type",
+        "serverType.placeholder": "zh-tw_Choose Email Server Type",
+        "serverTypeOptions": {
+          "smtp": "zh-tw_SMTP",
+          "outlook": "zh-tw_Microsoft Exchange"
+        },
+        "serverType.configuredExchange.label": "zh-tw_For details refer to Microsoft Exchange Configuration",
+        "server.label": "zh-tw_Server Address",
+        "server.placeholder": "zh-tw_Enter Server Address",
+        "port.label": "zh-tw_Port",
+        "port.placeholder": "zh-tw_Enter Port",
+        "encryption.label": "zh-tw_Encryption",
+        "encryption.placeholder": "zh-tw_Choose Encryption",
+        "encryptionOptions": {
+          "off": "zh-tw_OFF",
+          "ssl-tls": "zh-tw_SSL/TLS",
+          "starttls": "zh-tw_STARTTLS"
+        },
+        "username.label": "zh-tw_Username",
+        "username.placeholder": "zh-tw_Enter Username",
+        "password.label": "zh-tw_Password",
+        "password.placeholder": "zh-tw_Enter Password",
+        "userFrom.label": "zh-tw_From",
+        "userFrom.placeholder": "zh-tw_Enter Email From field",
+        "validate.label": "zh-tw_SMTP Validation",
+        "validate.button": "zh-tw_Validate",
+        "smtpValid": "zh-tw_SMTP settings are valid",
+        "smtpNotValid": "zh-tw_SMTP settings are not valid"
+      }
+    },
+    "security.emailTemplates": {
+      "title": "zh-tw_Email Templates",
+      "table.columns": {
+        "templateName": "zh-tw_Template Name",
+        "emailPattern": "zh-tw_Email Pattern",
+        "source": "zh-tw_Source",
+        "objectTypes": "zh-tw_Object Types",
+        "actions": "zh-tw_Actions",
+        "modified": "zh-tw_Modified Date",
+        "modifier": "zh-tw_Modified By"
+      },
+      "modal": {
+        "title": "zh-tw_Email Template",
+        "templateName.label": "zh-tw_Template Name",
+        "templateName.placeholder": "zh-tw_Enter Template Name",
+        "emailPattern.label": "zh-tw_Email Pattern",
+        "emailPattern.placeholder": "zh-tw_Enter Email Pattern",
+        "source.label": "zh-tw_Source",
+        "objectTypes.label": "zh-tw_Object Types",
+        "actions.label": "zh-tw_Actions",
+        "manual.label": "zh-tw_Manual",
+        "automated.label": "zh-tw_Automated",
+        "browse": "zh-tw_Browse",
+        "save": "zh-tw_Save",
+        "cancel": "zh-tw_Cancel"
+      }
+    },
+    "security.exchangeConfiguration": {
+      "title": "zh-tw_Microsoft Exchange Configuration",
+      "exchangeConfigForm": {
+        "save.button": "zh-tw_Save",
+        "enableExchangeIntegration.checkbox": "zh-tw_Enable Microsoft Exchange Integration",
+        "exchangeServerVersion.label": "zh-tw_Exchange Server Version",
+        "exchangeServerVersion.placeholder": "zh-tw_Choose Server Version",
+        "exchangeServerVersionOptions": {
+          "Exchange2007": "zh-tw_Exchange2007",
+          "Exchange2007_SP1": "zh-tw_Exchange2007_SP1",
+          "Exchange2010": "zh-tw_Exchange2010",
+          "Exchange2010_SP1": "zh-tw_Exchange2010_SP1",
+          "Exchange2010_SP2": "zh-tw_Exchange2010_SP2",
+          "Exchange2013": "zh-tw_Exchange2013",
+          "Exchange2013_SP1": "zh-tw_Exchange2013_SP1"
+        },
+        "enableAutodiscovery.checkbox": "zh-tw_Enable Autodiscovery",
+        "clientAccessServer.label": "zh-tw_Client Access Server",
+        "clientAccessServer.description": "zh-tw_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
+        "clientAccessServer.placeholder": "zh-tw_Enter Client Access Server",
+        "exchangeDefaultAccess.label": "zh-tw_Exchange Default Access",
+        "exchangeDefaultAccess.placeholder": "zh-tw_Choose Exchange Default Access",
+        "exchangeDefaultAccessOptions": {
+          "None": "zh-tw_None",
+          "Owner": "zh-tw_Owner",
+          "PublishingEditor": "zh-tw_PublishingEditor",
+          "Editor": "zh-tw_Editor",
+          "PublishingAuthor": "zh-tw_PublishingAuthor",
+          "Author": "zh-tw_Author",
+          "NoneditingAuthor": "zh-tw_NoneditingAuthor",
+          "Reviewer": "zh-tw_Reviewer",
+          "Contributor": "zh-tw_Contributor",
+          "FreeBusyTimeOnly": "zh-tw_FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "zh-tw_FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "zh-tw_Custom"
+        }
+      }
+    },
+    "dashboard.title": "zh-tw_Dashboard",
+    "dashboard.config": "zh-tw_Dashboard Configuration",
+    "dashboard.widgets": "zh-tw_Widgets",
+    "reports": {
+      "title": "zh-tw_Reports",
+      "config": "zh-tw_Reports Configuration",
+      "btn": {
+        "reportDesigner": "zh-tw_Report Designer",
+        "sync": "zh-tw_Synchronise"
+      }
+    },
+    "forms.title": "zh-tw_Forms",
+    "forms.config": "zh-tw_Form Configuration",
+    "workflows.title": "zh-tw_Workflows",
+    "workflows.config": "zh-tw_Workflow Configuration",
+    "workflows.config.bpmn.upload": "zh-tw_Upload",
+    "workflows.config.bpmn.addNewWorkflow": "zh-tw_Upload Workflow",
+    "workflows.config.bpmn.modal": {
+      "label.description": "zh-tw_Description",
+      "label.noFileSelected": "zh-tw_No File Selected",
+      "btnCancel.text": "zh-tw_Cancel",
+      "btnOk.text": "zh-tw_Upload Workflow"
+    },
+    "workflows.config.activate": {
+      "error": "zh-tw_Cant make this process active!",
+      "success": "zh-tw_Process succesfully activated."
+    },
+    "workflows.config.showHistory.dialog": {
+      "title": "zh-tw_History",
+      "body": "zh-tw_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
+      "cancel": "zh-tw_Cancel",
+      "activate": "zh-tw_Make Active"
+    },
+    "workflows.config.grid": {
+      "businessProcess": "zh-tw_Business Process",
+      "description": "zh-tw_Description",
+      "active": "zh-tw_Active",
+      "modified": "zh-tw_Modified",
+      "creator": "zh-tw_Author"
+    },
+    "workflows.config.btn": {
+      "createNew": "zh-tw_Create New Model",
+      "createNewUrl": "https://activiti.alfresco.com",
+      "uploadNew": "zh-tw_Upload New BPMN"
+    },
+    "workflows.config.links": {
+      "download": "zh-tw_Download",
+      "replaceFile": "zh-tw_Replace File",
+      "versionHistory": "zh-tw_Version History",
+      "diagram": "zh-tw_Process Diagram"
+    },
+    "workflows.config.upload": {
+      "success": "zh-tw_Successfully uploaded new process definition",
+      "error": "zh-tw_Error uploading new process definition"
+    },
+    "workflows.config.diagram": {
+      "title": "zh-tw_Process Diagram",
+      "error.loading": "zh-tw_Diagram can't be loaded",
+      "modal": {
+        "btnClose.text": "zh-tw_Close"
+      }
+    },
+    "formWorkflows.title": "zh-tw_Form/Workflow Link",
+    "formWorkflows.link": "zh-tw_Link Forms/Workflows",
+    "formWorkflows.link.undo": "zh-tw_Undo",
+    "formWorkflows.link.saveChanges": "zh-tw_Save Changes",
+    "formWorkflows.link.editRole.save.success": "zh-tw_Link Forms/Workflows configuration saved successfully",
+    "formWorkflows.link.editRole.save.error": "zh-tw_Can't save Link Forms/Workflows configuration",
+    "application": {
+      "title": "應用",
+      "locale.config": {
+        "title": "區域設置",
+        "defaultLabel": "默認區域環境:"
+      },
+      "labels.config": {
+        "title": "標籤設置",
+        "progressMessage": "更新標籤...",
+        "data": {
+          "description": "描述",
+          "defaultValue": "默認值",
+          "id": "號碼",
+          "value": "數值"
+        },
+        "btnReset": {
+          "label": "重置...",
+          "title": "將標籤資源重置為默認值"
+        },
+        "setToDefault": {
+          "dialog.title": "將標籤資源重置為默認值",
+          "chkResetCustom.label": "清除自定義標籤?",
+          "btnCancel.label": "取消",
+          "btnCancel.title": "關閉對話框,不改變任何標籤",
+          "btnReset.label": "重置",
+          "btnReset.title": "將標籤重置為默認值，並清除自定義值",
+          "btnRefresh.label": "重置",
+          "btnRefresh.title": "將標籤重置為默認值，但保持自定義值不變",
+          "resetCustom.confirm": "您確定要刪除所選的自定義資源嗎?"
+        }
+      },
+      "module.config": {
+        "title": "zh-tw_Module Configuration"
+      },
+      "userName.config": {
+        "title": "zh-tw_Username Display Configuration",
+        "userId.label": "zh-tw_Use User Identifier",
+        "userName.label": "zh-tw_Use Full Username",
+        "apply": "zh-tw_Apply",
+        "modal.title": "zh-tw_Information",
+        "modal.info": "zh-tw_Settings will take effect after refresh",
+        "modal.ok": "zh-tw_OK"
+      },
+      "login.config": {
+        "title": "zh-tw_Login Configuration",
+        "idleLimit.label": "zh-tw_Login idle limit (in milliseconds)",
+        "inform": "zh-tw_Settings will take effect for all new user sessions",
+        "apply.label": "zh-tw_Apply"
+      },
+      "auditHistory.config": {
+        "title": "zh-tw_Audit History",
+        "historyDays.label": "zh-tw_Keep Audit and Notification events (in days)",
+        "inform": "zh-tw_Setting successfully saved",
+        "apply.label": "zh-tw_Apply"
+      }
+    },
+    "branding.title": "zh-tw_Branding",
+    "branding.logo": "zh-tw_Logo",
+    "branding.logo.messages": {
+      "upload.success": "zh-tw_Custom logo files updated. Refresh browser page to see result.",
+      "upload.error": "zh-tw_Error uploading custom logo files."
+    },
+    "branding.logo.header.title": "zh-tw_Header",
+    "branding.logo.login.title": "zh-tw_Login Page",
+    "branding.logo.warningMessage": "zh-tw_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.btn": {
+      "chooseHeader": "zh-tw_Choose Header logo",
+      "chooseLogin": "zh-tw_Choose Login logo",
+      "saveFiles": "zh-tw_Save"
+    },
+    "branding": {
+      "customCss": "zh-tw_Custom CSS",
+      "customCss.save.success": "zh-tw_Custom CSS updated. Refresh browser page to see result.",
+      "customCss.save.error": "zh-tw_Error saving Custom CSS.",
+      "customCss.save": "zh-tw_Save"
+    },
+    "correspondenceManagement": {
+      "title": "zh-tw_Correspondence Management",
+      "templates": "zh-tw_Correspondence Templates",
+      "templates.addNewTemplate": "zh-tw_Upload Template",
+      "templates.addTemplate": "zh-tw_Upload",
+      "templates.versionTemplate": "zh-tw_Versions",
+      "templates.deleteTemplate": "zh-tw_Delete",
+      "templates.editTemplate": "zh-tw_Edit Template",
+      "templates.grid": {
+        "id": "zh-tw_ID",
+        "title": "zh-tw_Title",
+        "label": "zh-tw_Display Name",
+        "path": "zh-tw_Path",
+        "created": "zh-tw_Created",
+        "modified": "zh-tw_Modified",
+        "creator": "zh-tw_Creator",
+        "modifier": "zh-tw_Modified By",
+        "activated": "zh-tw_Status",
+        "objectType": "zh-tw_Object Type",
+        "version": "zh-tw_Version",
+        "templateVersionActive": "zh-tw_Active"
+      },
+      "templates.fieldNames.label": "zh-tw_Map fields to values from the template",
+      "templates.querySelect": {
+        "header.text": "zh-tw_Select Query",
+        "btnCancel.text": "zh-tw_Cancel",
+        "btnOk.text": "zh-tw_Select Query",
+        "table.columns": {
+          "beanId": "zh-tw_Bean ID",
+          "jpaQuery": "zh-tw_JPA Query",
+          "objectType": "zh-tw_Query Type"
+        }
+      },
+      "templates.modal": {
+        "objectTypes.label": "zh-tw_Object Types",
+        "querySelect.label": "zh-tw_Query Select",
+        "label.label": "zh-tw_Display Name",
+        "btnCancel.text": "zh-tw_Cancel",
+        "btnOk.text": "zh-tw_Upload Template"
+      },
+      "templates.version.modal": {
+        "btnOk.text": "zh-tw_OK"
+      },
+      "mergefields": "zh-tw_Merge Fields Configuration",
+      "mergefields.saveMergeFields": "zh-tw_Save",
+      "mergefields.versionMergeFields": "zh-tw_Versions",
+      "mergefields.grid": {
+        "fieldId": "zh-tw_ID",
+        "fieldValue": "zh-tw_Value",
+        "fieldDescription": "zh-tw_Description"
+      },
+      "mergefields.version.grid": {
+        "mergingVersion": "zh-tw_Version",
+        "modified": "zh-tw_Modified",
+        "modifier": "zh-tw_Modified By",
+        "mergingActiveVersion": "zh-tw_Active"
+      },
+      "mergefields.version.modal": {
+        "btnLoadVersion.text": "zh-tw_Load Version",
+        "btnCancel.text": "zh-tw_Cancel"
+      }
+    },
+    "forms.defaultValue": "zh-tw_Select Target",
+    "forms.addForm": "zh-tw_Add Plain Form",
+    "forms.data": {
+      "name": "zh-tw_Form Name",
+      "applicationName": "zh-tw_Application name",
+      "description": "zh-tw_Description",
+      "target": "zh-tw_Target"
+    },
+    "forms.message.delete.success": "zh-tw_Successfully deleted row.",
+    "forms.message.delete.error": "zh-tw_Error deleting row.",
+    "documentManagement": {
+      "title": "zh-tw_Document Management",
+      "cmisConfiguration": "zh-tw_CMIS Configuration",
+      "cmisConfiguration.addNewConfig": "zh-tw_Add New CMIS Config",
+      "cmisConfiguration.addNewConfig.modal": {
+        "header": {
+          "new": "zh-tw_New CMIS Configuration",
+          "edit": "zh-tw_Edit CMIS Configuration"
+        },
+        "dialog": {
+          "cancel": "zh-tw_Cancel",
+          "ok": "zh-tw_OK"
+        },
+        "guidelineMessage": {
+          "repositoryId": "zh-tw_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+        }
+      },
+      "cmisConfiguration.data": {
+        "id": {
+          "label": "zh-tw_CMIS ID",
+          "placeholder": "zh-tw_CMIS ID"
+        },
+        "baseUrl": {
+          "label": "zh-tw_Base URL",
+          "placeholder": "zh-tw_Base URL"
+        },
+        "username": {
+          "label": "zh-tw_Username",
+          "placeholder": "zh-tw_Username"
+        },
+        "password": {
+          "label": "zh-tw_Password",
+          "placeholder": "zh-tw_Password"
+        },
+        "useAlfrescoExtension": {
+          "label": "zh-tw_Use Alfresco Extension",
+          "placeholder": "zh-tw_Use Alfresco Extension"
+        },
+        "endpoint": {
+          "label": "zh-tw_Endpoint",
+          "placeholder": "zh-tw_Endpoint"
+        },
+        "maxIdle": {
+          "label": "zh-tw_Maximum Idle",
+          "placeholder": "zh-tw_Maximum Idle"
+        },
+        "maxActive": {
+          "label": "zh-tw_Maximum Active",
+          "placeholder": "zh-tw_Maximum Active"
+        },
+        "maxWait": {
+          "label": "zh-tw_Maximum Wait",
+          "placeholder": "zh-tw_Maximum Wait"
+        },
+        "minEvictionMillis": {
+          "label": "zh-tw_Minimum Eviction Milliseconds",
+          "placeholder": "zh-tw_Minimum Eviction Milliseconds"
+        },
+        "evictionCheckIntervalMillis": {
+          "label": "zh-tw_Eviction Check Interval Milliseconds",
+          "placeholder": "zh-tw_Eviction Check Interval Milliseconds"
+        },
+        "reconnectCount": {
+          "label": "zh-tw_Reconnect Count",
+          "placeholder": "zh-tw_Reconnect Count"
+        },
+        "reconnectFrequency": {
+          "label": "zh-tw_Reconnect Frequency",
+          "placeholder": "zh-tw_Reconnect Frequency"
+        },
+        "repositoryId": {
+          "label": "zh-tw_Repository Id",
+          "placeholder": "zh-tw_Repository Id"
+        },
+        "versioningState": {
+          "label": "zh-tw_Versioning State",
+          "placeholder": "zh-tw_Versioning State"
+        }
+      },
+      "cmisConfiguration.deleteDialog": {
+        "cancelBtn": "zh-tw_Cancel",
+        "deleteBtn": "zh-tw_Cofirm Delete",
+        "headerText": "zh-tw_You are about to delete CMIS Configuration:",
+        "bodyText": "zh-tw_Are you sure?"
+      },
+      "cmisConfiguration.messages": {
+        "delete.success": "zh-tw_Successfully deleted configuration.",
+        "delete.error": "zh-tw_Error deleting configuration.",
+        "insert.success": "zh-tw_Successfully created new configuration row.",
+        "insert.error": "zh-tw_Error creating new configuration row.",
+        "update.success": "zh-tw_Successfully updated configuration row.",
+        "update.error": "zh-tw_Error updating configuration row."
+      }
+    }
+  }
+}

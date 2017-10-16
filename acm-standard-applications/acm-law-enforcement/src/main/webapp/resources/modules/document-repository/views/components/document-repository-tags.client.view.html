@@ -1,0 +1,22 @@
+<div ng-controller="DocumentRepository.TagsController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>document-repository.comp.tags.title</span>
+                <div class="pull-right">
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()">
+                        <i class="fa fa-lg fa-plus"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-selection
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid"></div>
+        </div>
+    </div>
+</div>

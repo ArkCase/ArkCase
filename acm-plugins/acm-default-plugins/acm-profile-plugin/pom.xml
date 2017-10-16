@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.0.58-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -56,6 +56,19 @@
             <version>${acm.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-calendar-integration-exchange</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-email-smtp</artifactId>
+            <version>${acm.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
         <!-- date time -->
         <dependency>
             <groupId>joda-time</groupId>
@@ -101,11 +114,7 @@
         </dependency>
 
         <!-- json -->
-        <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+
 
         <!-- servlet -->
         <dependency>
@@ -130,15 +139,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.oracle</groupId>
-            <artifactId>jdbc</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-        	<groupId>com.armedia.acm.acm-services</groupId>
-        	<artifactId>acm-service-ms-outlook-integration</artifactId>
-        	<version>${acm.version}</version>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ms-outlook-integration</artifactId>
+            <version>${acm.version}</version>
         </dependency>
     </dependencies>
 

@@ -1,0 +1,8 @@
+{
+  "my-documents": {
+    "title": "我的文件"
+  },
+  "my-documents.menus": {
+    "leftnav.item": "我的文件"
+  }
+}

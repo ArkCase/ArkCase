@@ -1,48 +1,48 @@
 {
   "id": "cost-tracking",
   "title": "Cost Tracking",
+  "configurable": true,
   "initialLinksShown": true,
-  "hasOverviewWidgets": true,
   "menus": [
     {
       "menuId": "leftnav",
       "menuItemURL": "cost-tracking.main",
-      "menuItemTitle": "Cost Tracking",
+      "menuItemTitle": "costTracking.menus.leftnav.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
-      "position": 120
+      "position": 150
     },
     {
       "menuId": "topbar",
       "menuItemURL": "frevvo.new-costsheet",
-      "menuItemTitle": "Costsheet",
+      "menuItemTitle": "costTracking.menus.topbar.item",
       "moduleId": "cost",
       "iconClass": "fa fa-money",
-      "position": 50
+      "position": 70
     }
   ],
   "tree": {
     "pageSize": 32,
     "sorters": [
       {
-        "desc": "Sort Date Ascending",
+        "desc": "costTracking.tree.sorters.dateAsc",
         "name": "create_tdt ASC",
         "default": true
       },
       {
-        "desc": "Sort Date Decending",
+        "desc": "costTracking.tree.sorters.dateDesc",
         "name": "create_tdt DESC"
       },
       {
-        "desc": "Sort Costsheet ID Ascending",
+        "desc": "costTracking.tree.sorters.idAsc",
         "name": "id ASC"
       },
       {
-        "desc": "Sort Costsheet ID Decending",
+        "desc": "costTracking.tree.sorters.idDesc",
         "name": "id DESC"
       },
       {
-        "desc": "Sort By Costsheet Name",
+        "desc": "costTracking.tree.sorters.nameDesc",
         "name": "name DESC"
       }
     ],
@@ -67,7 +67,7 @@
       },
       {
         "type": "p/COSTSHEET/detail",
-        "label": "Detail",
+        "label": "costTracking.tree.nodeTypes.details.label",
         "icon": "fa fa-info-circle",
         "components": [
           "details"
@@ -75,7 +75,7 @@
       },
       {
         "type": "p/COSTSHEET/person",
-        "label": "Person",
+        "label": "costTracking.tree.nodeTypes.person.label",
         "icon": "fa fa-user",
         "components": [
           "person"
@@ -83,7 +83,7 @@
       },
       {
         "type": "p/COSTSHEET/summary",
-        "label": "Expenses",
+        "label": "costTracking.tree.nodeTypes.summary.label",
         "icon": "fa fa-money",
         "components": [
           "summary"
@@ -91,7 +91,7 @@
       },
       {
         "type": "p/COSTSHEET/tags",
-        "label": "Tags",
+        "label": "costTracking.tree.nodeTypes.tags.label",
         "icon": "fa fa-tags",
         "components": [
           "tags"
@@ -102,9 +102,10 @@
   "components": [
     {
       "id": "main",
-      "title": "Overview",
+      "title": "costTracking.comp.main.title",
       "icon": "fa fa-tachometer",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false,
       "widgets": [
@@ -122,7 +123,7 @@
               "name": "modified",
               "displayName": "costTracking.comp.details.table.columns.modified",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
+              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
             },
             {
               "name": "modifier",
@@ -138,12 +139,12 @@
           "columnDefs": [
             {
               "name": "fullName",
-              "displayName": "costTracking.comp.people.table.columns.fullName",
+              "displayName": "costTracking.comp.person.table.columns.fullName",
               "headerCellFilter": "translate"
             },
             {
               "name": "userId",
-              "displayName": "costTracking.comp.people.table.columns.userId",
+              "displayName": "costTracking.comp.person.table.columns.userId",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
             }
@@ -155,36 +156,59 @@
         },
         {
           "id": "tags",
-          "type": "component"
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "tagName",
+              "displayName": "costTracking.comp.tags.table.columns.tag",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "created",
+              "displayName": "costTracking.comp.tags.table.columns.created",
+              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "creator",
+              "displayName": "costTracking.comp.tags.table.columns.createdBy",
+              "headerCellFilter": "translate",
+              "lookup": "userFullNames"
+            }
+          ]
         }
       ]
     },
     {
       "id": "info",
-      "title": "Info",
+      "title": "costTracking.comp.info.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "actions",
-      "title": "Actions",
+      "title": "costTracking.comp.actions.title",
       "enabled": false,
+      "configurable": true,
       "type": "empty",
       "editable": false
     },
     {
       "id": "details",
-      "title": "Details",
+      "title": "costTracking.comp.details.title",
       "icon": "fa fa-info-circle",
       "enabled": true,
+      "configurable": true,
       "type": "empty"
     },
     {
       "id": "person",
-      "title": "Person",
+      "title": "costTracking.comp.person.title",
       "icon": "fa fa-user",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -197,12 +221,12 @@
       "columnDefs": [
         {
           "name": "fullName",
-          "displayName": "costTracking.comp.people.table.columns.fullName",
+          "displayName": "costTracking.comp.person.table.columns.fullName",
           "headerCellFilter": "translate"
         },
         {
           "name": "userId",
-          "displayName": "costTracking.comp.people.table.columns.userId",
+          "displayName": "costTracking.comp.person.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
         }
@@ -210,9 +234,10 @@
     },
     {
       "id": "summary",
-      "title": "Expenses",
+      "title": "costTracking.comp.summary.title",
       "icon": "fa fa-money",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
       "enableFiltering": true,
       "paginationPageSizes": [
@@ -238,6 +263,7 @@
         {
           "name": "parentType",
           "displayName": "costTracking.comp.summary.table.columns.parentType",
+          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
           "headerCellFilter": "translate"
         },
         {
@@ -260,11 +286,13 @@
     },
     {
       "id": "tags",
-      "title": "Tags",
+      "title": "costTracking.comp.tags.title",
       "icon": "fa fa-tags",
       "enabled": true,
+      "configurable": true,
       "type": "grid",
-      "typeAheadColumn": "tags_s",
+      "autoSuggestObjectType": "TAG",
+      "typeAheadColumn": "title_parseable",
       "enableFiltering": true,
       "paginationPageSizes": [
         5,
@@ -282,7 +310,7 @@
         {
           "name": "created",
           "displayName": "costTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : ('common.defaultDateUIFormat' | translate)}}</div>",
+          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
           "headerCellFilter": "translate"
         },
         {

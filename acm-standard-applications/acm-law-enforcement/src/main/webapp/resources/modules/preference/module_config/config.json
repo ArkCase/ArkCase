@@ -1,11 +1,12 @@
 {
   "id": "preference",
   "title": "Preferences",
+  "configurable": false,
   "menus": [
     {
       "menuId": "usermenu",
       "menuItemURL": "preference",
-      "menuItemTitle": "Preferences",
+      "menuItemTitle": "preference.menus.usermenu.item",
       "moduleId": "none",
       "iconClass": "glyphicon glyphicon-asterisk",
       "position": 120
@@ -14,67 +15,156 @@
   "timeFormat": "MM-DD-YYYY",
   "moduleWidgetPreferences": [
     {
-      "name": "CASE",
-      "allowedWidgets": [
-        "details",
-        "people",
-        "documents",
-        "participants",
-        "notes",
-        "tasks",
-        "references",
-        "history",
-        "correspondence",
-        "time",
-        "cost",
-        "calendar"
-      ]
-    },
-    {
+      "id": "complaints",
+      "title": "Complaints",
       "name": "COMPLAINT",
       "allowedWidgets": [
         "details",
         "locations",
         "people",
+        "organizations",
         "documents",
         "participants",
         "notes",
         "tasks",
         "references",
         "history",
-        "correspondence",
         "time",
         "cost",
-        "calendar"
+        "tags",
+        "calendar",
+        "approvalRouting"
       ]
     },
     {
+      "id": "cases",
+      "title": "Cases",
+      "name": "CASE",
+      "allowedWidgets": [
+        "details",
+        "people",
+        "organizations",
+        "documents",
+        "participants",
+        "notes",
+        "tasks",
+        "references",
+        "history",
+        "time",
+        "cost",
+        "tags",
+        "calendar",
+        "approvalRouting"
+      ]
+    },
+    {
+      "id": "tasks",
+      "title": "Tasks",
       "name": "TASK",
       "allowedWidgets": [
         "details",
-        "documents",
-        "notes",
-        "history",
         "reworkDetails",
         "docReview",
+        "parentDocs",
+        "documents",
+        "notes",
+        "references",
         "workflow",
-        "signature"
+        "history",
+        "signature",
+        "tags"
       ]
     },
     {
+      "id": "people",
+      "title": "People",
+      "name": "PERSON",
+      "allowedWidgets": [
+        "details",
+        "pictures",
+        "locations",
+        "phones",
+        "emails",
+        "urls",
+        "participants",
+        "aliases",
+        "organizations",
+        "ids",
+        "complaints",
+        "cases",
+        "related",
+        "history"
+      ]
+    },
+    {
+      "id": "organizations",
+      "title": "Organizations",
+      "name": "ORGANIZATION",
+      "allowedWidgets": [
+        "details",
+        "locations",
+        "phones",
+        "faxes",
+        "emails",
+        "urls",
+        "participants",
+        "dbas",
+        "people",
+        "ids",
+        "complaints",
+        "cases",
+        "relOrganizations",
+        "history"
+      ]
+    },
+    {
+      "id": "document-repository",
+      "title": "Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history",
+        "tags"
+      ]
+    },
+    {
+      "id": "my-documents",
+      "title": "My Documents",
+      "name": "DOC_REPO",
+      "allowedWidgets": [
+        "details",
+        "documents",
+        "participants",
+        "notes",
+        "references",
+        "history",
+        "tags"
+      ]
+    },
+    {
+      "id": "cost-tracking",
+      "title": "Cost Tracking",
       "name": "COST",
       "allowedWidgets": [
         "details",
         "person",
-        "expenses"
+        "expenses",
+        "tags"
       ]
     },
     {
+      "id": "time-tracking",
+      "title": "Time Tracking",
       "name": "TIME",
       "allowedWidgets": [
         "details",
         "person",
-        "hoursSummary"
+        "hoursSummary",
+        "tags"
       ]
     }
   ]

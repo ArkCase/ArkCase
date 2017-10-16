@@ -1,0 +1,392 @@
+{
+  "complaints": {
+    "title": "Жалобы",
+    "progressNoComplaint": "[ Нет данных о жалобах ]",
+    "progressLoading": "Загрузка жалобы",
+    "progressError": "Не удалось загрузить жалобу"
+  },
+  "complaints.menus": {
+    "leftnav.item": "Жалобы",
+    "topbar.item": "Жалоба"
+  },
+  "complaints.comp.main": {
+    "title": "Обзор"
+  },
+  "complaints.comp.info": {
+    "title": "Информация",
+    "complaintId": "Идентификатор жалобы:",
+    "complaintNumber": "Номер жалобы:",
+    "courtRoomName": "Название судебного зала:",
+    "type.label": "Тип",
+    "created.label": "Дата создания",
+    "priority.label": "Приоритет",
+    "assignee.label": "Назначено",
+    "owningGroup.label": "Собственная группа",
+    "dueDate.label": "Дата погашения"
+  },
+  "complaints.comp.actions": {
+    "title": "Действия",
+    "restrict": "Ограничить?",
+    "new.button": "Новая жалоба",
+    "close.button": "Закрыть жалобу",
+    "subscribe.button": "Подписаться",
+    "unsubscribe.button": "Отменить подписку",
+    "claim.button": "Требование",
+    "unclaim.button": "Снятие Требование"
+  },
+  "complaints.comp.details": {
+    "title": "Детали",
+    "informSaved": "ru_Complaint details saved",
+    "table.columns": {
+      "title": "ru_Details",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    }
+  },
+  "complaints.comp.documents": {
+    "title": "Документы",
+    "sendEmail": "ru_Send Email",
+    "filterInputPlaceholder": "ru_Filter",
+    "searchInputPlaceholder": "ru_Search"
+  },
+  "complaints.comp.people": {
+    "title": "Люди",
+    "table.columns": {
+      "entity": "ru_Entity",
+      "type": "ru_Type",
+      "firstName": "ru_FirstName",
+      "lastName": "ru_LastName"
+    },
+    "contactMethods": {
+      "title": "ru_ContactMethods",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "organizations": {
+      "title": "Организации",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "addresses": {
+      "title": "ru_Locations",
+      "table.columns": {
+        "type": "ru_Type",
+        "streetAddress": "ru_Address",
+        "city": "ru_City",
+        "state": "ru_State",
+        "zip": "ru_Zip",
+        "country": "ru_Country",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "aliases": {
+      "title": "ru_Aliases",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    },
+    "securityTags": {
+      "title": "ru_Security Tags",
+      "table.columns": {
+        "type": "ru_Type",
+        "value": "ru_Value",
+        "created": "ru_Date Added",
+        "creator": "ru_Added By",
+        "modified": "ru_Last Modified",
+        "modifier": "ru_Modified By"
+      }
+    }
+  },
+  "complaints.comp.organizations": {
+    "title": "Организации",
+    "table.columns": {
+      "name": "ru_Organization Name",
+      "associationType": "ru_Role",
+      "type": "ru_Organization Type",
+      "identification": "ru_ID",
+      "value": "ru_Organization",
+      "contact": "ru_Primary Contact",
+      "phone": "ru_Phone",
+      "location": "ru_Location"
+    },
+    "actions": {
+      "delete": "ru_Delete",
+      "setPrimary": "ru_Set as Primary",
+      "addNew": "ru_Add New",
+      "addExisting": "ru_Add New"
+    }
+  },
+  "complaints.comp.participants": {
+    "title": "Участники",
+    "table.columns": {
+      "type": "ru_Type",
+      "name": "ru_Name"
+    },
+    "dialogUserPicker": {
+      "header": "ru_Choose User",
+      "table.columns": {
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "id": "ru_Username"
+      }
+    },
+    "dialogGroupPicker": {
+      "header": "ru_Choose Group",
+      "table.columns": {
+        "name": "ru_Name"
+      }
+    }
+  },
+  "complaints.comp.locations": {
+    "title": "Местоположения",
+    "table.columns": {
+      "address": "ru_Address",
+      "type": "ru_Type",
+      "city": "ru_City",
+      "state": "ru_State",
+      "zip": "ru_Zip",
+      "modified": "ru_Date Last Modified",
+      "modifier": "ru_User Last Modified"
+    },
+    "modal": {
+      "addLocation": "ru_Add Location",
+      "editLocation": "ru_Edit Record",
+      "type.label": "ru_Type",
+      "street.label": "ru_Street",
+      "city.label": "ru_City",
+      "state.label": "ru_State",
+      "zip.label": "ru_Zip",
+      "btnOk.text": "ru_Save",
+      "btnCancel.text": "ru_Cancel"
+    }
+  },
+  "complaints.comp.notes": {
+    "title": "Заметки",
+    "table.columns": {
+      "note": "ru_Note",
+      "created": "ru_Created",
+      "creator": "ru_Author"
+    }
+  },
+  "complaints.comp.tasks": {
+    "title": "Задачи",
+    "table.columns": {
+      "title": "ru_Title",
+      "assignee": "ru_Assignee",
+      "created": "ru_Created",
+      "priority": "ru_Priority",
+      "due": "ru_Due",
+      "status": "ru_Status"
+    },
+    "table.overdue.tooltip": "ru_Task is Overdue",
+    "table.deadline.tooltip": "ru_Deadline is Approaching"
+  },
+  "complaints.comp.references": {
+    "title": "Ссылки",
+    "table.columns": {
+      "targetName": "ru_Number",
+      "targetTitle": "ru_Title",
+      "parentName": "ru_Parent",
+      "modified": "ru_Modified",
+      "targetType": "ru_Reference Type",
+      "status": "ru_Status"
+    }
+  },
+  "complaints.comp.history": {
+    "title": "История",
+    "table.columns": {
+      "eventType": "ru_Event Name",
+      "eventDate": "ru_Date",
+      "userId": "ru_User"
+    }
+  },
+  "complaints.comp.time": {
+    "title": "Время",
+    "table.columns": {
+      "name": "ru_Form Name",
+      "user": "ru_User",
+      "tally": "ru_Total Hours",
+      "modified": "ru_Modified Date",
+      "status": "ru_Status"
+    },
+    "formNamePrefix": "ru_Timesheet"
+  },
+  "complaints.comp.cost": {
+    "title": "Стоимость",
+    "table.columns": {
+      "name": "ru_Form Name",
+      "user": "ru_User",
+      "tally": "ru_Total Cost",
+      "modified": "ru_Modified Date",
+      "status": "ru_Status"
+    },
+    "formNamePrefix": "ru_Costsheet"
+  },
+  "complaints.comp.tags": {
+    "title": "Теги",
+    "table.columns": {
+      "tag": "ru_Tag",
+      "created": "ru_Created",
+      "createdBy": "ru_Created By"
+    },
+    "modal": {
+      "title": "ru_Tag",
+      "search": "ru_Search for Tag",
+      "buttons": {
+        "cancel": "ru_Cancel",
+        "ok": "ru_Add Tag"
+      }
+    },
+    "message": {
+      "tagExists": "ru_Tag with that name or description or text already exists",
+      "tagAssociated": "ru_already associated",
+      "delete": {
+        "success": "ru_Tag deleted successfully",
+        "error": "ru_Error deleting tag"
+      }
+    }
+  },
+  "complaints.comp.calendar": {
+    "title": "Календарь"
+  },
+  "complaints.comp.referenceSearchGrid": {
+    "title": "Поиск ссылок"
+  },
+  "complaints.comp.addreference": {
+    "title": "ru_Add Reference",
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Add",
+    "search": {
+      "placeholder": "ru_Search for case, complaint, file, task",
+      "btn": "ru_Search"
+    },
+    "grid": {
+      "columns": {
+        "id": "ru_Id",
+        "name": "ru_Name",
+        "type": "ru_Type",
+        "title": "ru_Title",
+        "parent": "ru_Parent",
+        "assignee": "ru_Assignee",
+        "modified": "ru_Modified"
+      }
+    }
+  },
+  "complaints.comp.assigneePickerModal": {
+    "title": "ru_Change Assignee",
+    "assigneeNamelabel": "ru_Assignee Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchAssigneeHeader": "ru_Search Assignee"
+  },
+  "complaints.comp.groupPickerModal": {
+    "title": "ru_Change Group",
+    "groupNamelabel": "ru_Group Name",
+    "btnCancelText": "ru_Cancel",
+    "btnSaveText": "ru_Save",
+    "searchGroupHeader": "ru_Search Group"
+  },
+  "complaints.comp.approvalRouting": {
+    "title": "Маршрутизация Одобрения",
+    "addNewTooltip": "ru_Add new approver",
+    "noBuckslipMessage": "ru_No Data",
+    "button": {
+      "save.tooltip": "ru_Save Changes"
+    },
+    "table.columns": {
+      "fullName": "ru_Full Name"
+    },
+    "assignee.label": "ru_Assignee",
+    "owningGroup.label": "ru_Owning Group",
+    "priority.label": "ru_Priority",
+    "startDate.label": "ru_Start Date",
+    "dueDate.label": "ru_Due Date",
+    "state.label": "ru_State"
+  },
+  "complaints.comp.pastApprovals": {
+    "title": "Прошедшие утверждения",
+    "noBuckslipMessage": "ru_No Data",
+    "table.columns": {
+      "approvalDate": "ru_Approval Date",
+      "approverId": "ru_Approver",
+      "approverFullName": "ru_Approver",
+      "approverDecision": "ru_Approver Decision"
+    }
+  },
+  "complaints.userOrGroupSearch": {
+    "id": "ru_userSearch",
+    "title": "ru_User/Group Search",
+    "search": {
+      "btn": "ru_Search",
+      "placeholder": "ru_Search for the user or group."
+    },
+    "cancelButton": "ru_Cancel",
+    "confirmButton": "ru_Confirm",
+    "enabled": true,
+    "userOrGroupFacetFilter": "ru_\"object_type_s\":(GROUP OR USER)",
+    "assigneeGridColumns": {
+      "name": "ru_Name",
+      "type": "ru_Type",
+      "title": "ru_Title",
+      "username": "ru_Username"
+    }
+  },
+  "complaints.tree": {
+    "nodeTypes": {
+      "details.label": "Детали",
+      "locations.label": "Местоположения",
+      "people.label": "Люди",
+      "organizations.label": "Организации",
+      "documents.label": "Документы",
+      "participants.label": "Участники",
+      "notes.label": "Заметки",
+      "tasks.label": "Задачи",
+      "references.label": "Ссылки",
+      "history.label": "История",
+      "time.label": "Время",
+      "cost.label": "Стоимость",
+      "tags.label": "Теги",
+      "calendar.label": "Календарь",
+      "approvalRouting.label": "Маршрутизация Одобрения"
+    },
+    "filters": {
+      "opened": "Все открытые жалобы",
+      "iHaveCreated": "Все, что я создал",
+      "iAmAssigned": "Все назначено",
+      "iAmFollowing": "Все, за чем я слежу",
+      "closedNoFurtherAction": "Все закрыты без дальнейших действий",
+      "closedReferExternal": "Все закрыты Ссылки",
+      "closedOpenInvestigation": "Все закрытые открытые расследования",
+      "noFilter": "(Нет фильтра)"
+    },
+    "sorters": {
+      "incidentDateAsc": "Сортировка даты инцидента Asc",
+      "incidentDateDesc": "Сортировка даты инцидента Desc",
+      "createdDateAsc": "Сортировка Дата создания Asc",
+      "createdDateDesc": "Сортировка Дата создания Desc",
+      "nameAsc": "Сортировать по имени Asc",
+      "noSort": "(нет Сортировать)"
+    }
+  }
+}

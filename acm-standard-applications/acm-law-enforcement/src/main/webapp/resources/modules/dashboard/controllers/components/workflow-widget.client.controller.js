@@ -4,65 +4,84 @@ angular.module('dashboard.workflow', ['adf.provider'])
     .config(function (dashboardProvider) {
         dashboardProvider
             .widget('workflow', {
-                    title: 'Workflow',
-                    description: 'Displays workflow',
-                    controller: 'Dashboard.WorkflowOverviewController',
-                    reload: true,
-                    templateUrl: 'modules/dashboard/views/components/workflow.client.view.html',
-                    commonName: 'workflow'
-                }
-            );
-    })
-    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$translate', '$stateParams', '$q', 'UtilService'
-        , 'Task.InfoService', 'Task.HistoryService', 'Authentication', 'Dashboard.DashboardService', 'ConfigService'
-        , 'Helper.ObjectBrowserService',
-        function ($scope, $translate, $stateParams, $q, Util, TaskInfoService, TaskHistoryService, Authentication
-            , DashboardService, ConfigService, HelperObjectBrowserService) {
-
-            var promiseConfig;
-            var promiseTaskInfo;
-            var promiseQueryTaskHistory;
-
-            var modules = [
-                {name: "TASK", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
-                , {name: "ADHOC", configName: "tasks", getInfo: TaskInfoService.getTaskInfo, getHistory : TaskHistoryService.queryTaskHistory}
-            ];
-
-            var module = _.find(modules, function (module) {
-                return module.name == $stateParams.type;
+                title: 'dashboard.widgets.workflow.title',
+                description: 'dashboard.widgets.workflow.description',
+                controller: 'Dashboard.WorkflowOverviewController',
+                reload: true,
+                templateUrl: 'modules/dashboard/views/components/workflow.client.view.html',
+                commonName: 'workflow'
             });
+    })
+    .controller('Dashboard.WorkflowOverviewController', ['$scope', '$stateParams', '$translate',
+        'Task.InfoService', 'Task.HistoryService', 'Helper.ObjectBrowserService', 'UtilService', 'Helper.UiGridService',
+            function ($scope, $stateParams, $translate,
+                      TaskInfoService, TaskHistoryService, HelperObjectBrowserService, Util, HelperUiGridService) {
 
-            $scope.gridOptions = {
-                enableColumnResizing: true,
-                columnDefs: []
-            };
+                var modules = [
+                    {
+                        name: "TASK",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo,
+                        getHistory: TaskHistoryService.queryTaskHistory
+                    }
+                    , {
+                        name: "ADHOC",
+                        configName: "tasks",
+                        getInfo: TaskInfoService.getTaskInfo,
+                        validateInfo: TaskInfoService.validateTaskInfo,
+                        getHistory: TaskHistoryService.queryTaskHistory
+                    }
+                ];
 
-            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-            if (module && Util.goodPositive(currentObjectId, false)) {
-                promiseConfig = ConfigService.getModuleConfig(module.configName);
-                promiseTaskInfo = module.getInfo(currentObjectId);
+                var module = _.find(modules, function (module) {
+                    return module.name == $stateParams.type;
+                });
 
+                $scope.gridOptions = {
+                    enableColumnResizing: true,
+                    columnDefs: []
+                };
 
-                $q.all([promiseConfig, promiseTaskInfo]).then(function (data) {
-                        var config = _.find(data[0].components, {id: "main"});
-                        var info = data[1];
-                        var widgetInfo = _.find(config.widgets, function (widget) {
-                            return widget.id === "workflow";
-                        });
+                var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-                        $scope.config = config;
-                        $scope.gridOptions.columnDefs = widgetInfo.columnDefs;
+                new HelperObjectBrowserService.Component({
+                    scope: $scope
+                    , stateParams: $stateParams
+                    , moduleId: module.configName
+                    , componentId: "main"
+                    , retrieveObjectInfo: module.getInfo
+                    , validateObjectInfo: module.validateInfo
+                    , onObjectInfoRetrieved: function (objectInfo) {
+                        onObjectInfoRetrieved(objectInfo);
+                    }
+                    , onConfigRetrieved: function (componentConfig) {
+                        onConfigRetrieved(componentConfig);
+                    }
+                });
 
-                        promiseQueryTaskHistory = module.getHistory(info).then( function (taskHistoryInfo){
-                            var taskHistory = taskHistoryInfo[0];
+                var onObjectInfoRetrieved = function (objectInfo) {
+                    module.getHistory(objectInfo).then(function (taskHistoryInfo) {
+                        var taskHistory = taskHistoryInfo[0];
+                        if(!Util.isEmpty(taskHistory)) {
                             $scope.gridOptions.data = [taskHistory];
                             $scope.gridOptions.totalItems = taskHistoryInfo.length;
-                        });
-                    },
-                    function (err) {
+                            $scope.gridOptions.noData = false;
+                        }
+                        else {
+                            $scope.gridOptions.data = [];
+                            $scope.gridOptions.totalItems = 0;
+                            $scope.gridOptions.noData = true;
+                            $scope.noDataMessage = $translate.instant('dashboard.widgets.workflow.noDataMessage');
+                        }
+                    });
+                };
 
-                    }
-                );
+                var onConfigRetrieved = function (componentConfig) {
+                    var widgetInfo = _.find(componentConfig.widgets, function (widget) {
+                        return widget.id === "workflow";
+                    });
+                    gridHelper.setColumnDefs(widgetInfo);
+                };
             }
-        }
     ]);

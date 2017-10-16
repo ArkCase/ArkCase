@@ -1,0 +1,27 @@
+{
+  "audit": {
+    "title": "审计",
+    "menus": {
+      "leftnav.item": "审计"
+    },
+    "navigation": {
+      "label": {
+        "reportName": "zh-cn_Report Name",
+        "inputID": "zh-cn_ID",
+        "dateFrom": "zh-cn_From",
+        "dateTo": "zh-cn_To"
+      },
+      "placeholder": {
+        "selectAudit": "zh-cn_ALL",
+        "inputId": "zh-cn_#"
+      },
+      "button": {
+        "generateAuditReport.btn": "zh-cn_Generate Audit Report"
+      }
+    },
+    "datepickers":{
+      "close": "zh-cn_Done"
+    }
+  }
+}
+

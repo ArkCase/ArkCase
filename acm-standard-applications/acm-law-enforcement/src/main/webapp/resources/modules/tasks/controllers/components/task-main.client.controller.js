@@ -1,37 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.MainController', ['$scope', '$stateParams', '$translate'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ObjectService', 'Object.NoteService', 'Object.AuditService'
-    , 'Object.SignatureService', 'Task.InfoService', 'Task.HistoryService', 'dashboard', 'Dashboard.DashboardService'
-    , function ($scope, $stateParams, $translate
-        , Store, Util, ConfigService, ObjectService, ObjectNoteService, ObjectAuditService
-        , ObjectSignatureService, TaskInfoService, TaskHistoryService, dashboard, DashboardService) {
+angular.module('tasks').controller('Tasks.MainController', ['$scope', 'Acm.StoreService', 'UtilService', 'Helper.DashboardService'
+    , function ($scope, Store, Util, DashboardHelper) {
 
-        ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
-            $scope.components = moduleConfig.components;
-            $scope.config = _.find(moduleConfig.components, {id: "main"});
-
-            return moduleConfig;
-        });
-
-        _.forEach(dashboard.widgets, function (widget, widgetId) {
-            widget.title = $translate.instant('dashboard.widgets.' + widgetId + '.title');
-            widget.description = $translate.instant('dashboard.widgets.' + widgetId + '.description');
-        });
-
-        $scope.dashboard = {
-            structure: '12',
-            collapsible: false,
-            maximizable: false,
-            taskModel: {
-                titleTemplateUrl: 'modules/dashboard/views/module-dashboard-title.client.view.html'
-            }
-        };
-
-        DashboardService.getConfig({moduleName: "TASK"}, function (data) {
-            $scope.dashboard.taskModel = angular.fromJson(data.dashboardConfig);
-            $scope.dashboard.taskModel.titleTemplateUrl = 'modules/dashboard/views/module-dashboard-title.client.view.html';
-            $scope.$emit("collapsed", data.collapsed);
+        new DashboardHelper.Dashboard({
+            scope: $scope
+            , moduleId: "tasks"
+            , dashboardName: "TASK"
         });
 
         $scope.shallInclude = function (component) {
