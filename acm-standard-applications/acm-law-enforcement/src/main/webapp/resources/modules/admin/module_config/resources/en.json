@@ -432,7 +432,7 @@
     "workflows.config.grid": {
       "businessProcess": "Business Process",
       "description": "Description",
-      "active": "Active",
+      "active": "Actions",
       "modified": "Modified",
       "creator": "Author"
     },
