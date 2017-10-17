@@ -769,6 +769,7 @@
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
     "cancelButton": "Cancel",
+    "details.title": "Details",
     "parentOrganization": "Parent Organization",
     "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {
