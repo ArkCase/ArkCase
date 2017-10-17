@@ -37,7 +37,7 @@
             </button>
             <button class="btn btn-sm btn-default" ng-click="onClickOutcome(outcome.name)"
                     ng-repeat="outcome in objectInfo.availableOutcomes" ng-show="showBtnOutcomes">
-                {{outcome.description}}
+                {{outcome.description | translateData: 'tasks.comp.actions.taskOutcomes' : lang}}
             </button>
             <button class="btn btn-sm btn-default" ng-click="claimTask()" ng-show="showClaimBtn()">
                 <i class="fa fa-hand-paper-o"></i>

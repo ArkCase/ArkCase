@@ -1,13 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'Authentication'
-    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Object.SignatureService', 'ObjectService'
-    , 'Helper.ObjectBrowserService', '$translate'
-    , function ($scope, $state, $stateParams, $modal
-        , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectSignatureService, ObjectService
-        , HelperObjectBrowserService, $translate) {
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$translate'
+    , 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService'
+    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'Helper.LocaleService'
+    , function ($scope, $state, $stateParams, $modal, $translate
+        , Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService
+        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, LocaleHelper
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -19,6 +18,10 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             , onObjectInfoRetrieved: function (objectInfo) {
                 onObjectInfoRetrieved(objectInfo);
             }
+        });
+
+        new LocaleHelper.Locale({
+            scope: $scope
         });
 
         var promiseQueryUser = Authentication.queryUserInfo();

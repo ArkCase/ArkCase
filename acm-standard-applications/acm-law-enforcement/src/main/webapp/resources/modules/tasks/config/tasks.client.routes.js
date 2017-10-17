@@ -10,10 +10,12 @@ angular.module('tasks').config(['$stateProvider',
                 url: '/tasks',
                 templateUrl: 'modules/tasks/views/tasks.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                        , function ($translate, $translatePartialLoader, LocaleService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('tasks');
+                        $translate.buildDataLookups(LocaleService.getLabelResources(["tasks"], "en"));
                         return $translate.refresh();
                     }]
                 }
