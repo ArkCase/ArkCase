@@ -327,5 +327,35 @@
         "noDataMessage": "Derzeit keine verwandten Personen zum Anzeigen"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "News Widget"
+  },
+  "dashboard.comp.weather": {
+    "title": "Wetter Widget"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mein Fall-Widget"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Mein Aufgaben-Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Mein Beschwerden-Widget"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Workflow-Bericht"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Neue Beschwerden"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Neue Fälle"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Fälle nach Warteschlange"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Teamarbeit"
   }
 }

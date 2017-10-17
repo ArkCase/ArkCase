@@ -14,7 +14,6 @@ import com.armedia.acm.calendar.service.Attendee.AttendeeType;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
@@ -23,7 +22,17 @@ import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.services.users.model.AcmUser;
-
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
+import microsoft.exchange.webservices.data.core.service.folder.Folder;
+import microsoft.exchange.webservices.data.core.service.item.Appointment;
+import microsoft.exchange.webservices.data.property.complex.Attachment;
+import microsoft.exchange.webservices.data.property.complex.FolderId;
+import microsoft.exchange.webservices.data.property.complex.ItemId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,21 +49,10 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import microsoft.exchange.webservices.data.core.ExchangeService;
-import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import microsoft.exchange.webservices.data.core.enumeration.service.ConflictResolutionMode;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
-import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
-import microsoft.exchange.webservices.data.core.service.folder.Folder;
-import microsoft.exchange.webservices.data.core.service.item.Appointment;
-import microsoft.exchange.webservices.data.property.complex.Attachment;
-import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.ItemId;
+import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.*;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
- *
  */
 public class ExchangeCalendarService
         implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<CalendarConfigurationEvent>, InitializingBean
@@ -64,7 +62,6 @@ public class ExchangeCalendarService
 
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
-     *
      */
     public class ExchangeCalendarExcpetionMapper<CSE extends CalendarServiceException> implements CalendarExceptionMapper<CSE>
     {
@@ -85,13 +82,20 @@ public class ExchangeCalendarService
             if (exception instanceof CalendarServiceAccessDeniedException)
             {
                 errorDetails.put("error_cause", "ACCESS_DENIED");
-            } else if (exception instanceof CalendarServiceConfigurationException)
+            }
+            else if (exception instanceof CalendarServiceConfigurationException)
             {
                 errorDetails.put("error_cause", "SERVICE_CONFIGURATION");
-            } else if (exception instanceof CalendarServiceBindToRemoteException)
+            }
+            else if (exception instanceof CalendarServiceBindToRemoteException)
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
-            } else
+            }
+            else if (ce.getMessage().matches(".*Error while retrieving.*"))
+            {
+                errorDetails.put("error_cause", "CALENDAR_INTEGRATION");
+            }
+            else
             {
                 errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
             }
@@ -110,7 +114,8 @@ public class ExchangeCalendarService
             if (exception instanceof CalendarServiceAccessDeniedException || exception instanceof CalendarServiceBindToRemoteException)
             {
                 return HttpStatus.FORBIDDEN;
-            } else
+            }
+            else
             {
                 return HttpStatus.INTERNAL_SERVER_ERROR;
             }
@@ -186,11 +191,11 @@ public class ExchangeCalendarService
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
-        boolean restricted = handler.isRestricted(objectId);
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.READ))
+
+        if (!handler.checkPermission(auth, objectType, objectId, READ))
         {
             log.warn("User [{}] does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
                     objectType);
@@ -199,6 +204,7 @@ public class ExchangeCalendarService
                             objectId, objectType));
         }
         return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
+
     }
 
     /*
@@ -209,7 +215,7 @@ public class ExchangeCalendarService
      */
     @Override
     public List<AcmCalendarInfo> listCalendars(AcmUser user, Authentication auth, String objectType, String sort, String sortDirection,
-            int start, int maxItems) throws CalendarServiceException
+                                               int start, int maxItems) throws CalendarServiceException
     {
         List<AcmCalendarInfo> result = new ArrayList<>();
         if (objectType != null)
@@ -222,7 +228,8 @@ public class ExchangeCalendarService
                 ServiceConnector connector = getConnector(auth.getName(), objectType);
                 result.addAll(handler.listCalendars(connector, user, auth, sort, sortDirection, start, maxItems));
             }
-        } else
+        }
+        else
         {
             for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
             {
@@ -265,14 +272,12 @@ public class ExchangeCalendarService
                 .orElseThrow(() -> new CalendarServiceConfigurationException(
                         String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
-        boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
-
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(calendarEvent.getObjectId()),
                 calendarEvent.getObjectType());
 
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-        if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+        if (!handler.checkPermission(auth, calendarEvent.getObjectType(), calendarEvent.getObjectId(), WRITE))
         {
             log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                     calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -315,7 +320,7 @@ public class ExchangeCalendarService
      */
     @Override
     public void updateCalendarEvent(AcmUser user, Authentication auth, boolean updateMaster, AcmCalendarEvent calendarEvent,
-            MultipartFile[] attachments) throws CalendarServiceException
+                                    MultipartFile[] attachments) throws CalendarServiceException
     {
 
         log.debug("Updating calendar event for object with id: [{}] of [{}] type.", calendarEvent.getObjectId(),
@@ -335,12 +340,11 @@ public class ExchangeCalendarService
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", calendarEvent.getObjectType())));
 
-            boolean restricted = handler.isRestricted(calendarEvent.getObjectId());
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(calendarEvent.getObjectId()),
                     calendarEvent.getObjectType());
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (restricted && !handler.checkPermission(exchangeService, user, auth, calendarEvent.getObjectId(), PermissionType.WRITE))
+            if (!handler.checkPermission(auth, calendarEvent.getObjectType(), calendarEvent.getObjectId(), WRITE))
             {
                 log.warn("User [{}] does not have WRITE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         calendarEvent.getObjectId(), calendarEvent.getObjectType());
@@ -462,7 +466,7 @@ public class ExchangeCalendarService
      */
     @Override
     public void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId,
-            boolean deleteRecurring) throws CalendarServiceException
+                                    boolean deleteRecurring) throws CalendarServiceException
     {
         if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
         {
@@ -477,11 +481,10 @@ public class ExchangeCalendarService
                     .orElseThrow(() -> new CalendarServiceConfigurationException(
                             String.format("No CalendarEntityHandler registered for [%s] object type.", objectType)));
 
-            boolean restricted = handler.isRestricted(objectId);
             AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
             ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
-            if (restricted && !handler.checkPermission(exchangeService, user, auth, objectId, PermissionType.DELETE))
+            if (!handler.checkPermission(auth, objectType, objectId, DELETE))
             {
                 log.warn("User [{}] does not have DELETE permission to access object with [{}] id of [{}] type.", user.getFullName(),
                         objectId, objectType);
@@ -494,7 +497,8 @@ public class ExchangeCalendarService
             {
                 appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEventId));
                 outlookDao.deleteAppointmentItem(exchangeService, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
-            } else
+            }
+            else
             {
                 outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, false, DeleteMode.MoveToDeletedItems);
             }
@@ -561,8 +565,7 @@ public class ExchangeCalendarService
 
     /**
      * @param auth
-     * @param objectId
-     *            id of the object that outlook user is retrieved
+     * @param objectId   id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException
@@ -574,8 +577,7 @@ public class ExchangeCalendarService
 
     /**
      * @param userId
-     * @param objectId
-     *            id of the object that outlook user is retrieved
+     * @param objectId   id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException
@@ -618,8 +620,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param calendarAdminService
-     *            the calendarAdminService to set
+     * @param calendarAdminService the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
@@ -627,8 +628,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param entityHandlers
-     *            the entityHandlers to set
+     * @param entityHandlers the entityHandlers to set
      */
     public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
     {
@@ -636,8 +636,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param outlookDao
-     *            the outlookDao to set
+     * @param outlookDao the outlookDao to set
      */
     public void setOutlookDao(OutlookDao outlookDao)
     {
@@ -645,8 +644,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param folderCreatorDao
-     *            the folderCreatorDao to set
+     * @param folderCreatorDao the folderCreatorDao to set
      */
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {

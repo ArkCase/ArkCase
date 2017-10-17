@@ -652,6 +652,7 @@
     "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
     "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
     "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "CALENDAR_INTEGRATION": "common.directive.coreCalendar.message.error.calendarIntegration",
     "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
   },
   "dialogPersonPicker": {
