@@ -152,6 +152,7 @@ public class ObjectAssociationServiceImpl implements ObjectAssociationService
         // find if an association exists to the target object of the same type with the one being created
         Optional<ObjectAssociation> duplicate = existingAssociations.stream()
                 .filter(oa -> oa.getTargetId().equals(objectAssociation.getTargetId()))
+                .filter(oa -> oa.getTargetType().equals(objectAssociation.getTargetType()))
                 .filter(oa -> oa.getAssociationType().equals(objectAssociation.getAssociationType())).findAny();
 
         // if so, it is a duplicate and it is not allowed
