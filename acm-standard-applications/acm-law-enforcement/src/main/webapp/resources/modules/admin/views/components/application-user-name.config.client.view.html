@@ -1,12 +1,3 @@
-<div class="pull-right well">
-    <div class="btn-group">
-        <button class="btn btn-xs btn-link" ng-click="applyChanges()">
-            <i class="fa fa-save"></i>
-            <span translate>admin.application.userName.config.apply</span>
-        </button>
-    </div>
-</div>
-
 <panel-view header="{{'admin.application.userName.config.title' | translate}}" collapsible="false">
 
     <div ng-controller="Admin.UserNameConfigController" class="well-sm">
@@ -23,6 +14,14 @@
                     <input type="radio" ng-model="nameProperty" value="userId">
                     <span translate>admin.application.userName.config.userId.label</span>
                 </label>
+            </div>
+
+            <div class="form-group">
+                <button
+                        ng-click="applyChanges()"
+                        class="btn btn-sm btn-primary" translate>
+                    admin.application.userName.config.apply
+                </button>
             </div>
         </form>
     </div>
