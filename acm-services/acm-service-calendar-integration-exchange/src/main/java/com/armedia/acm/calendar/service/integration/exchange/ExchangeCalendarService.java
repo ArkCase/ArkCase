@@ -1,25 +1,5 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
-import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.WRITE;
-import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.DELETE;
-import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.READ;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationListener;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationEvent;
@@ -42,7 +22,6 @@ import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.services.users.model.AcmUser;
-
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -54,10 +33,26 @@ import microsoft.exchange.webservices.data.core.service.item.Appointment;
 import microsoft.exchange.webservices.data.property.complex.Attachment;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.*;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
- *
  */
 public class ExchangeCalendarService
         implements CalendarService, EmailCredentialsVerifierService, ApplicationListener<CalendarConfigurationEvent>, InitializingBean
@@ -67,7 +62,6 @@ public class ExchangeCalendarService
 
     /**
      * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Apr 12, 2017
-     *
      */
     public class ExchangeCalendarExcpetionMapper<CSE extends CalendarServiceException> implements CalendarExceptionMapper<CSE>
     {
@@ -88,16 +82,22 @@ public class ExchangeCalendarService
             if (exception instanceof CalendarServiceAccessDeniedException)
             {
                 errorDetails.put("error_cause", "ACCESS_DENIED");
-            } else if (exception instanceof CalendarServiceConfigurationException)
+            }
+            else if (exception instanceof CalendarServiceConfigurationException)
             {
                 errorDetails.put("error_cause", "SERVICE_CONFIGURATION");
-            } else if (exception instanceof CalendarServiceBindToRemoteException)
+            }
+            else if (exception instanceof CalendarServiceBindToRemoteException)
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
-            } else if (ce.getMessage().matches(".*Error while retrieving.*")){
+            }
+            else if (ce.getMessage().matches(".*Error while retrieving.*"))
+            {
                 errorDetails.put("error_cause", "CALENDAR_INTEGRATION");
-            } else {
-                    errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
+            }
+            else
+            {
+                errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
             }
             errorDetails.put("error_message", ce.getMessage());
             return errorDetails;
@@ -114,7 +114,8 @@ public class ExchangeCalendarService
             if (exception instanceof CalendarServiceAccessDeniedException || exception instanceof CalendarServiceBindToRemoteException)
             {
                 return HttpStatus.FORBIDDEN;
-            } else
+            }
+            else
             {
                 return HttpStatus.INTERNAL_SERVER_ERROR;
             }
@@ -214,7 +215,7 @@ public class ExchangeCalendarService
      */
     @Override
     public List<AcmCalendarInfo> listCalendars(AcmUser user, Authentication auth, String objectType, String sort, String sortDirection,
-            int start, int maxItems) throws CalendarServiceException
+                                               int start, int maxItems) throws CalendarServiceException
     {
         List<AcmCalendarInfo> result = new ArrayList<>();
         if (objectType != null)
@@ -227,7 +228,8 @@ public class ExchangeCalendarService
                 ServiceConnector connector = getConnector(auth.getName(), objectType);
                 result.addAll(handler.listCalendars(connector, user, auth, sort, sortDirection, start, maxItems));
             }
-        } else
+        }
+        else
         {
             for (Entry<String, CalendarEntityHandler> handlerEntry : entityHandlers.entrySet())
             {
@@ -318,7 +320,7 @@ public class ExchangeCalendarService
      */
     @Override
     public void updateCalendarEvent(AcmUser user, Authentication auth, boolean updateMaster, AcmCalendarEvent calendarEvent,
-            MultipartFile[] attachments) throws CalendarServiceException
+                                    MultipartFile[] attachments) throws CalendarServiceException
     {
 
         log.debug("Updating calendar event for object with id: [{}] of [{}] type.", calendarEvent.getObjectId(),
@@ -464,7 +466,7 @@ public class ExchangeCalendarService
      */
     @Override
     public void deleteCalendarEvent(AcmUser user, Authentication auth, String objectType, String objectId, String calendarEventId,
-            boolean deleteRecurring) throws CalendarServiceException
+                                    boolean deleteRecurring) throws CalendarServiceException
     {
         if (!configurationsByType.containsKey(objectType) || !configurationsByType.get(objectType).isIntegrationEnabled())
         {
@@ -495,7 +497,8 @@ public class ExchangeCalendarService
             {
                 appointment = Appointment.bindToRecurringMaster(exchangeService, new ItemId(calendarEventId));
                 outlookDao.deleteAppointmentItem(exchangeService, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
-            } else
+            }
+            else
             {
                 outlookDao.deleteAppointmentItem(exchangeService, calendarEventId, false, DeleteMode.MoveToDeletedItems);
             }
@@ -562,8 +565,7 @@ public class ExchangeCalendarService
 
     /**
      * @param auth
-     * @param objectId
-     *            id of the object that outlook user is retrieved
+     * @param objectId   id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException
@@ -575,8 +577,7 @@ public class ExchangeCalendarService
 
     /**
      * @param userId
-     * @param objectId
-     *            id of the object that outlook user is retrieved
+     * @param objectId   id of the object that outlook user is retrieved
      * @param objectType
      * @return
      * @throws CalendarServiceException
@@ -619,8 +620,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param calendarAdminService
-     *            the calendarAdminService to set
+     * @param calendarAdminService the calendarAdminService to set
      */
     public void setCalendarAdminService(CalendarAdminService calendarAdminService)
     {
@@ -628,8 +628,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param entityHandlers
-     *            the entityHandlers to set
+     * @param entityHandlers the entityHandlers to set
      */
     public void setEntityHandlers(Map<String, CalendarEntityHandler> entityHandlers)
     {
@@ -637,8 +636,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param outlookDao
-     *            the outlookDao to set
+     * @param outlookDao the outlookDao to set
      */
     public void setOutlookDao(OutlookDao outlookDao)
     {
@@ -646,8 +644,7 @@ public class ExchangeCalendarService
     }
 
     /**
-     * @param folderCreatorDao
-     *            the folderCreatorDao to set
+     * @param folderCreatorDao the folderCreatorDao to set
      */
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
