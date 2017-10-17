@@ -171,6 +171,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
+                addNewEnabled: false,
                 types: $scope.organizationTypes,
                 isFirstOrganization: Util.isEmpty(associationFound) ? true : false
             };

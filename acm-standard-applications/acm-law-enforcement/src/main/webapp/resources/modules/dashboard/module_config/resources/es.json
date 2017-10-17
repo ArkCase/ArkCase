@@ -327,5 +327,35 @@
         "noDataMessage": "Actualmente no hay personas relacionadas para mostrar"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Widget de noticias"
+  },
+  "dashboard.comp.weather": {
+    "title": "Widget de tiempo"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mi widget de casos"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "My Tasks Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Mi widget de reclamaciones"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Informe de flujo de trabajo"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Nuevas quejas"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Nuevos casos"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Casos por cola"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Carga de trabajo del equipo"
   }
 }

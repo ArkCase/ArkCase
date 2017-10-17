@@ -281,7 +281,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         user.setGroups(groups);
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
-        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         replayAll();
@@ -314,7 +314,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         MuleMessage mockMuleMessage = createMock(MuleMessage.class);
