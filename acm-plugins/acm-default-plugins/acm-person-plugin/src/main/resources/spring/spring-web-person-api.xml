@@ -57,6 +57,5 @@
         <property name="personService" ref="personService"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
         <property name="facetedSearchPath" value="forward:/api/v1/plugin/search/facetedSearch?filters=%s"/>
-        <property name="objectAssociationService" ref="objectAssociationService"/>
     </bean>
 </beans>
