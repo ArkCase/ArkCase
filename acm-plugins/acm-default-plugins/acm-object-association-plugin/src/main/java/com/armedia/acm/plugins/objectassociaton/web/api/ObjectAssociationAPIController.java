@@ -1,9 +1,7 @@
 package com.armedia.acm.plugins.objectassociaton.web.api;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
+import java.util.Objects;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Objects;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.AcmObjectAssociationException;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 
 /**
  * @author nebojsha.davidovikj
@@ -32,9 +34,7 @@ public class ObjectAssociationAPIController
     private ObjectAssociationService objectAssociationService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public String getObjectAssociations(
-            Authentication auth,
-            @RequestParam(value = "parent-id") Long parentId,
+    public String getObjectAssociations(Authentication auth, @RequestParam(value = "parent-id") Long parentId,
             @RequestParam(value = "parent-type", required = false) String parentType,
             @RequestParam(value = "target-type", required = false) String targetType,
             @RequestParam(value = "order-by", required = false) String orderBy,
@@ -44,24 +44,17 @@ public class ObjectAssociationAPIController
         return objectAssociationService.getAssociations(auth, parentId, parentType, targetType, orderBy, start, n);
     }
 
-    @RequestMapping(method = RequestMethod.DELETE,
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void deleteAssociation(
-            @PathVariable Long id,
-            Authentication auth) throws AcmUserActionFailedException
+    public void deleteAssociation(@PathVariable Long id, Authentication auth) throws AcmUserActionFailedException
     {
         log.debug("delete Object Association [{}]", id);
         objectAssociationService.deleteAssociation(id, auth);
     }
 
-    @RequestMapping(method = RequestMethod.POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ObjectAssociation saveAssociation(
-            @RequestBody ObjectAssociation objectAssociation,
-            Authentication auth) throws AcmUserActionFailedException
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ObjectAssociation saveAssociation(@RequestBody ObjectAssociation objectAssociation, Authentication auth)
+            throws AcmUserActionFailedException, AcmObjectAssociationException
     {
         log.debug("save Object Association [{}]", objectAssociation);
         Objects.requireNonNull(objectAssociation, "objectAssociatoin must not be null!");
@@ -76,11 +69,8 @@ public class ObjectAssociationAPIController
         return objectAssociationService.saveAssociation(objectAssociation, auth);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ObjectAssociation getAssociation(
-            @PathVariable Long id,
-            Authentication auth) throws AcmUserActionFailedException
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ObjectAssociation getAssociation(@PathVariable Long id, Authentication auth) throws AcmUserActionFailedException
     {
         log.debug("get Object Association [{}]", id);
         return objectAssociationService.getAssociation(id, auth);
@@ -95,6 +85,5 @@ public class ObjectAssociationAPIController
     {
         this.objectAssociationService = objectAssociationService;
     }
-
 
 }

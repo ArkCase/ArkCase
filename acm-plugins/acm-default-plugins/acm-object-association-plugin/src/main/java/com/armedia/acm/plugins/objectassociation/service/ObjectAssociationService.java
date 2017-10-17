@@ -1,14 +1,14 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
 
 public interface ObjectAssociationService
 {
@@ -23,44 +23,56 @@ public interface ObjectAssociationService
 
     List<ObjectAssociation> findByParentTypeAndId(String type, Long id);
 
-
     /**
-     * List Associations for given object id and type.
-     * Results are combined with target documents.
+     * List Associations for given object id and type. Results are combined with target documents.
      *
-     * @param auth       Authentication
-     * @param parentId   id of the owner of associations
-     * @param parentType type of the owner of associations
-     * @param targetType type of the target of associations
-     * @param orderBy    name of the field to order by
-     * @param start      which row to start
-     * @param limit      number of rows to retrieve
+     * @param auth
+     *            Authentication
+     * @param parentId
+     *            id of the owner of associations
+     * @param parentType
+     *            type of the owner of associations
+     * @param targetType
+     *            type of the target of associations
+     * @param orderBy
+     *            name of the field to order by
+     * @param start
+     *            which row to start
+     * @param limit
+     *            number of rows to retrieve
      * @return solr response
      */
-    String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, String orderBy, int start, int limit) throws AcmObjectNotFoundException;
+    String getAssociations(Authentication auth, Long parentId, String parentType, String targetType, String orderBy, int start, int limit)
+            throws AcmObjectNotFoundException;
 
     /**
      * saves object association
      *
-     * @param objectAssociation Object association
-     * @param auth              Authentication
+     * @param objectAssociation
+     *            Object association
+     * @param auth
+     *            Authentication
      * @return saved association
      */
-    ObjectAssociation saveAssociation(ObjectAssociation objectAssociation, Authentication auth);
+    ObjectAssociation saveAssociation(ObjectAssociation objectAssociation, Authentication auth) throws AcmObjectAssociationException;
 
     /**
      * Removes object association
      *
-     * @param id   id of the association
-     * @param auth Authentication
+     * @param id
+     *            id of the association
+     * @param auth
+     *            Authentication
      */
     void deleteAssociation(Long id, Authentication auth);
 
     /**
      * return object association for given id
      *
-     * @param id   id of the association
-     * @param auth Authentication
+     * @param id
+     *            id of the association
+     * @param auth
+     *            Authentication
      * @return object association
      */
     ObjectAssociation getAssociation(Long id, Authentication auth);
