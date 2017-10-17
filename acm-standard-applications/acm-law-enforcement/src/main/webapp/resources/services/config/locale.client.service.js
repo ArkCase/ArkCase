@@ -439,7 +439,6 @@ angular.module('services').config(function ($provide) {
         };
 
 
-
         /**
          * @ngdoc method
          * @name getIso

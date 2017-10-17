@@ -67,6 +67,14 @@
       "errorHeaderText": "错误",
       "btnOk.text": "确定",
       "btnClose.text": "关闭"
+    },
+    "taskOutcomes": {
+      "approve%": "cn_Approve Document",
+      "rework%": "cn_Send for Rework",
+      "resubmit%": "cn_Resubmit",
+      "cancel%": "cn_Cancel Document",
+      "concur%": "cn_Concur",
+      "nonConcur%": "cn_Non-Concur"
     }
   },
   "tasks.comp.details": {

@@ -2,12 +2,12 @@
 
 angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService'
-    , 'Object.ParticipantService', 'SearchService', 'Search.QueryBuilderService'
+    , 'Object.ModelService', 'MessageService', 'ObjectService', 'Object.ParticipantService', 'SearchService'
+    , 'Search.QueryBuilderService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Helper.LocaleService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService
-        , ObjectParticipantService, SearchService, SearchQueryBuilder
+        , ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService
+        , SearchQueryBuilder, HelperObjectBrowserService, HelperUiGridService,  LocaleHelper
     ) {
 
         new HelperObjectBrowserService.Component({
@@ -23,6 +23,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
         });
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+
+        new LocaleHelper.Locale({
+            scope: $scope
+            , onTranslateChangeSuccess: function (data) {
+                lookupPriorities();
+                lookupCaseTypes();
+            }
+        });
+
         var promiseUsers = gridHelper.getUsers();
 
         ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
@@ -82,11 +91,6 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
                 }
             );
         };
-
-        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
-            lookupPriorities();
-            lookupCaseTypes();
-        });
 
         var showModal = function (participant) {
             var modalScope = $scope.$new();
