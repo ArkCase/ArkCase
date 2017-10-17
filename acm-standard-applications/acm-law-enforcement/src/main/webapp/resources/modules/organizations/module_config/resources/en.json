@@ -31,7 +31,7 @@
     "activate.button": "Activate",
     "deactivate.button": "Deactivate",
     "merge.button": "Merge",
-    "restrict" : "Restrict?"
+    "restrict": "Restrict?"
   },
   "organizations.comp.details": {
     "title": "Details",
@@ -217,8 +217,8 @@
     }
   },
   "organizations.comp.participants": {
-  	"title": "Participants",
-  	"table.columns": {
+    "title": "Participants",
+    "table.columns": {
       "type": "Type",
       "name": "Name"
     },
@@ -379,6 +379,7 @@
     "table.columns": {
       "eventType": "Event Name",
       "eventDate": "Date",
+      "details.btn.text": "Details",
       "userId": "User"
     }
   },
@@ -476,6 +477,106 @@
       "nameAsc": "Sort By Organization Name A-Z",
       "nameDesc": "Sort By Organization Name Z-A",
       "noSort": "(No Sort)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "organization": {
+        "defaultPhone": "Default Phone Changed",
+        "defaultEmail": "Default Email Changed",
+        "defaultAddress": "Default Address Changed",
+        "defaultUrl": "Default Url Changed",
+        "defaultAlias": "Default Alias Changed",
+        "defaultIdentification": "Default Identification Changed",
+        "defaultPicture": "Default Picture Changed"
+      }
+    },
+    "value_changed": {
+      "organization": {
+        "details": "Organization - Details Changed",
+        "status": "Organization - Status Changed",
+        "organizationType": "Organization - Type Changed",
+        "organizationValue": "Organization - Name Changed",
+        "contactMethods.contactMethod": {
+          "subType": "Contact Method - Type Changed",
+          "value": "Contact Method - Value Changed"
+        },
+        "defaultPhone": {
+          "subType": "Default Phone - Type Changed",
+          "value": "Default Phone - Value Changed"
+        },
+        "defaultEmail": {
+          "subType": "Default Email - Type Changed",
+          "value": "Default Email - Value Changed"
+        },
+        "defaultUrl": {
+          "subType": "Default Url - Type Changed",
+          "value": "Default Url - Value Changed"
+        },
+        "defaultFax": {
+          "subType": "Default Fax - Type Changed",
+          "value": "Default Fax - Value Changed"
+        },
+        "addresses.address": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "defaultAddress": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        },
+        "defaultIdentification": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        }
+      }
+    },
+    "collection_element_added": {
+      "organization": {
+        "identifications.identification": "Identification Added",
+        "contactMethods.contactMethod": "Contact Method Added",
+        "personAliases.alias": "Alias Added",
+        "addresses.address": "Address Added",
+        "organizations.organization": "Organization Added",
+        "associationsToObjects": "Association Added",
+        "associationsFromObjects": "Association Added",
+        "organizationAssociations": "Organization Added"
+      }
+    },
+    "collection_element_removed": {
+      "organization": {
+        "identifications.identification": "Identification Removed",
+        "contactMethods.contactMethod": "Contact Method Removed",
+        "personAliases.alias": "Alias Removed",
+        "addresses.address": "Address Removed",
+        "organizations.organization": "Organization Removed",
+        "associationsToObjects": "Association Removed",
+        "associationsFromObjects": "Association Removed",
+        "organizationAssociations": "Organization Removed"
+      },
+      "personAliases.alias": {
+        "aliasType": "Alias - Type Changed",
+        "aliasValue": "Alias - Value Changed",
+        "description": "Alias - Description Changed"
+      }
     }
   }
 }

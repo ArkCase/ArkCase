@@ -94,9 +94,10 @@ public class ExchangeCalendarService
             } else if (exception instanceof CalendarServiceBindToRemoteException)
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
-            } else
-            {
-                errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
+            } else if (ce.getMessage().matches(".*Error while retrieving.*")){
+                errorDetails.put("error_cause", "CALENDAR_INTEGRATION");
+            } else {
+                    errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
             }
             errorDetails.put("error_message", ce.getMessage());
             return errorDetails;
@@ -192,6 +193,7 @@ public class ExchangeCalendarService
         AcmOutlookUser outlookUser = getOutlookUserForObject(auth, Long.valueOf(objectId), objectType);
         ExchangeService exchangeService = outlookDao.connect(outlookUser);
 
+
         if (!handler.checkPermission(auth, objectType, objectId, READ))
         {
             log.warn("User [{}] does not have READ permission to access object with [{}] id of [{}] type.", user.getFullName(), objectId,
@@ -201,6 +203,7 @@ public class ExchangeCalendarService
                             objectId, objectType));
         }
         return Optional.of(new ExchangeCalendar(exchangeService, handler, objectType, objectId));
+
     }
 
     /*

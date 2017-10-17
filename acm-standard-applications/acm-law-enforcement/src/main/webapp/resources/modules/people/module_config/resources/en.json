@@ -28,7 +28,7 @@
     "activate.button": "Activate",
     "deactivate.button": "Deactivate",
     "merge.button": "Merge",
-    "restrict" : "Restrict?"    
+    "restrict": "Restrict?"
   },
   "people.comp.details": {
     "title": "Details",
@@ -44,7 +44,8 @@
     "table.columns": {
       "eventType": "Event Name",
       "eventDate": "Date",
-      "userId": "User"
+      "userId": "User",
+      "details.btn.text": "Details"
     }
   },
   "people.comp.pictures": {
@@ -222,8 +223,8 @@
     }
   },
   "people.comp.participants": {
-      "title": "Participants",
-      "table.columns": {
+    "title": "Participants",
+    "table.columns": {
       "type": "Type",
       "name": "Name"
     },
@@ -481,6 +482,112 @@
       "nameAsc": "Sort By People Name A-Z",
       "nameDesc": "Sort By People Name Z-A",
       "noSort": "(No Sort)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "person": {
+        "defaultPhone": "Default Phone Changed",
+        "defaultEmail": "Default Email Changed",
+        "defaultAddress": "Default Address Changed",
+        "defaultUrl": "Default Url Changed",
+        "defaultAlias": "Default Alias Changed",
+        "defaultIdentification": "Default Identification Changed",
+        "defaultPicture": "Default Picture Changed"
+      }
+    },
+    "value_changed": {
+      "person": {
+        "details": "Person - Details Changed",
+        "title": "Person - Title Changed",
+        "company": "Person - Company Changed",
+        "status": "Person - Status Changed",
+        "givenName": "Person - Given Name Changed",
+        "middleName": "Person - Middle Name Changed",
+        "familyName": "Person - Family Name Changed",
+        "hairColor": "Person - Hair Color Changed",
+        "eyeColor": "Person - Eye Color Changed",
+        "heightInInches": "Person - Height In Inches Changed",
+        "weightInPounds": "Person - Weight in Inches Changed",
+        "dateOfBirth": "Person - Date Of Birth Changed",
+        "placeOfBirth": "Person - Place Of Birth Changed",
+        "dateMarried": "Person - Date Married Changed",
+        "contactMethods.contactMethod": {
+          "subType": "Contact Method - Type Changed",
+          "value": "Contact Method - Value Changed"
+        },
+        "defaultPhone": {
+          "subType": "Default Phone - Type Changed",
+          "value": "Default Phone - Value Changed"
+        },
+        "defaultEmail": {
+          "subType": "Default Email - Type Changed",
+          "value": "Default Email - Value Changed"
+        },
+        "defaultUrl": {
+          "subType": "Default Url - Type Changed",
+          "value": "Default Url - Value Changed"
+        },
+        "addresses.address": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "defaultAddress": {
+          "city": "Address - City Changed",
+          "zip": "Address - Zip Code Changed",
+          "streetAddress": "Address - Street Changed",
+          "streetAddress2": "Address - Street2 Changed",
+          "type": "Address - Type Changed",
+          "country": "Address - Country Changed",
+          "state": "Address - State Changed"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        },
+        "defaultIdentification": {
+          "identificationType": "Identification - Type Changed",
+          "identificationNumber": "Identification - Number Changed",
+          "identificationIssuer": "Identification - Issuer Changed",
+          "identificationYearIssued": "Identification - Year Issued Changed"
+        }
+      }
+    },
+    "collection_element_added": {
+      "person": {
+        "identifications.identification": "Identification Added",
+        "contactMethods.contactMethod": "Contact Method Added",
+        "personAliases.alias": "Alias Added",
+        "addresses.address": "Address Added",
+        "organizations.organization": "Organization Added",
+        "associationsToObjects": "Association Added",
+        "associationsFromObjects": "Association Added",
+        "organizationAssociations": "Organization Added"
+      }
+    },
+    "collection_element_removed": {
+      "person": {
+        "identifications.identification": "Identification Removed",
+        "contactMethods.contactMethod": "Contact Method Removed",
+        "personAliases.alias": "Alias Removed",
+        "addresses.address": "Address Removed",
+        "organizations.organization": "Organization Removed",
+        "associationsToObjects": "Association Removed",
+        "associationsFromObjects": "Association Removed",
+        "organizationAssociations": "Organization Removed"
+      },
+      "personAliases.alias": {
+        "aliasType": "Alias - Type Changed",
+        "aliasValue": "Alias - Value Changed",
+        "description": "Alias - Description Changed"
+      }
     }
   }
 }
