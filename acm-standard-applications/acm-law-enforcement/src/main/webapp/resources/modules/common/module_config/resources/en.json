@@ -2,7 +2,6 @@
   "common": {
     "select.option.none": "(Select One)",
     "value.unknown": "Unknown",
-
     "_1_": "Please do not use or add custom date formats, because it is error prone to be i18n compliant.",
     "_2_": "Please use one of the predefined formats: ",
     "_3_": "'medium'    - equivalent to 'MMM d, y h:mm:ss a' for en_US locale (e.g. Sep 3, 2010 12:05:08 PM)",
@@ -690,7 +689,7 @@
     "radioName": "Choice primary",
     "radioYes.text": "Yes",
     "radioNo.text": "No",
-    "duplicatePersonRoleErrorMessage": "Person already has the selected association" 
+    "duplicatePersonRoleErrorMessage": "Person already has the selected association"
   },
   "common.editPerson": {
     "title": "Edit person"
@@ -827,5 +826,18 @@
   },
   "common.labels": {
     "primary": " [Primary]"
+  },
+  "common.objectHistory": {
+    "modal": {
+      "title": "History Details",
+      "btn": {
+        "close": "Close"
+      },
+      "table.columns": {
+        "action": "Action",
+        "newValue": "New Value",
+        "oldValue": "Old Value"
+      }
+    }
   }
 }
