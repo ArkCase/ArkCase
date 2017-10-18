@@ -546,6 +546,7 @@
       "error.accessDenied": "Access denied to calendar service.",
       "error.serviceConfiguration": "Invalid calendar service configuration.",
       "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.calendarIntegration": "Calendar Integration Configuration Problem.",
       "error.internalServerError": "Internal Server Error occurred."
     }
   },
@@ -769,6 +770,7 @@
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
     "cancelButton": "Cancel",
+    "details.title": "Details",
     "parentOrganization": "Parent Organization",
     "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {

@@ -20,7 +20,7 @@ public class UserDTO
     public AcmUser toAcmUser(String userId, String defaultLang)
     {
         AcmUser acmUser = new AcmUser();
-        acmUser.setUserId(userId);
+        acmUser.setUserId(userId.toLowerCase());
         acmUser.setLang(defaultLang);
         updateAcmUser(acmUser);
         return acmUser;

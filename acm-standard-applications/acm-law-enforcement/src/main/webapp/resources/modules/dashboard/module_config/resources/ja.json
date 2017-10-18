@@ -327,5 +327,35 @@
         "noDataMessage": "現在表示する関連人はいません"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "ニュースウィジェット"
+  },
+  "dashboard.comp.weather": {
+    "title": "天気ウィジェット"
+  },
+  "dashboard.comp.myCases": {
+    "title": "私のケースウィジェット"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "私のタスクウィジェット"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "私の苦情ウィジェット"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "ワークフローレポート"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "新しい苦情"
+  },
+  "dashboard.comp.newCases": {
+    "title": "新しいケース"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "キューごとのケース"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "チームワークロード"
   }
 }

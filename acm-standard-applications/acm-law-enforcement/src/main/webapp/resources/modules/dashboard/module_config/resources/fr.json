@@ -327,5 +327,35 @@
         "noDataMessage": "Actuellement, aucune personne liée à afficher"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Widget Actualités"
+  },
+  "dashboard.comp.weather": {
+    "title": "Widget météo"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mon Widget Cas"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Mes tâches Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Widget Mes plaintes"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Rapport de flux de travail"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Nouvelles plaintes"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Nouveaux cas"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Cases par file d'attente"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Travail d'équipe"
   }
 }
