@@ -48,7 +48,6 @@ angular.module('admin').controller('Admin.LabelPickupClientController', ['$scope
             }
         };
 
-
         var nsPromise = LabelsConfigService.retrieveNamespaces().$promise;
         var settingsPromise = LabelsConfigService.retrieveSettings().$promise;
         var localSettingsPromise = LocaleService.getSettings();
@@ -62,8 +61,10 @@ angular.module('admin').controller('Admin.LabelPickupClientController', ['$scope
             $scope.gridOptions.paginationPageSize = labelsConfig.paginationPageSize;
 
             var namespaces = result[1];
-            var coreNamespace = _.find(namespaces, {id: 'core'});
-            $scope.selectedNamespace = coreNamespace;
+            $scope.selectedNamespaces = [];
+            angular.forEach(namespaces, function(value, key){
+                $scope.selectedNamespaces.push(value.id);
+            });
 
             $scope.settings = result[2];
             var localeCode = Util.goodMapValue($scope.settings, "localeCode", LocaleService.DEFAULT_CODE);
@@ -79,13 +80,21 @@ angular.module('admin').controller('Admin.LabelPickupClientController', ['$scope
 
 
         function reloadGrid() {
-            if ($scope.selectedNamespace && $scope.selectedLocale.code) {
+            if (!Util.isArrayEmpty($scope.selectedNamespaces) && $scope.selectedLocale.code) {
                 $scope.disabledInputs = true;
-                LabelsConfigService.retrieveResource({
-                        lang: $scope.selectedLocale.code,
-                        ns: $scope.selectedNamespace.id
-                    },
-                    function (data) {
+                LocaleService.getLabelResources($scope.selectedNamespaces, $scope.selectedLocale.code).then(
+                    function(result){
+                        var data = [];
+                        angular.forEach(result, function(value, key) {
+                            if (!Util.isEmpty(value)) {
+                                angular.forEach(value, function(v, k) {
+                                    var item = {};
+                                    item.id = k;
+                                    item.value = v;
+                                    data.push(item);
+                                });
+                            }
+                        });
                         //success
                         $scope.gridOptions.data = data;
 
@@ -94,11 +103,11 @@ angular.module('admin').controller('Admin.LabelPickupClientController', ['$scope
                         $timeout(function () {
                             $scope.disabledInputs = false;
                         }, 5000);
-                    },
-                    function () {
+                    },function(error){
                         //error
                         $scope.disabledInputs = false;
-                    });
+                    }
+                );
             }
         }
 
