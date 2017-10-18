@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label>&nbsp;</label>
-                <button type="button" class="btn btn-primary" ng-show="!editMode || isEditParent"
+                <button type="button" class="btn btn-primary" ng-show="(!editMode || isEditParent) && addNewEnabled"
                         ng-click="addNewOrganization()" translate>
                     common.addOrganization.addNew.label
                 </button>
@@ -47,7 +47,7 @@
             <div class="col-sm-6 form-group">
                 <label translate>common.addOrganization.type.label</label><span
                     class="required-asterisk">*</span>
-                <select ng-if="!isSelectedParent" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in types"
+                <select ng-if="!isSelectedParent" ng-change="isChanged()" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in types"
                         required></select>
 
                 <ng-switch ng-if="isSelectedParent" on="!!organizationValue">
@@ -77,7 +77,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>common.addOrganization.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isChanged">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isValid">
         <span translate>common.addOrganization.btnOk.text</span>
     </button>
 </div>

@@ -1,19 +1,22 @@
 <div ng-controller="Admin.LdapUserManagementController">
+    <div class="pull-right well">
+        <div class="btn-group">
+            <button class="btn btn-xs btn-link" ng-click="cloneUser()">
+                <i class="fa fa-clone"></i>
+                <span translate>admin.security.ldap.user.management.cloneButton</span>
+            </button>
+            <button class="btn btn-xs btn-link" ng-click="deleteUser()" ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
+                    {{ 'admin.security.ldap.user.management.deleteUserMsg' | translate}}">
+                <i class="fa fa-trash"></i>
+                <span translate>admin.security.ldap.user.management.deleteUserBtn</span>
+            </button>
+        </div>
+    </div>
     <panel-view header="{{'admin.security.ldap.user.management.title' | translate}}" collapsible="false">
         <div class="row">
             <object-authorization-roles data="appUsers" object-display-name="name" on-object-selected="onObjSelect"
                                         role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                                         object-title="{{'admin.security.ldap.user.management.user' | translate}}"/>
-        </div>
-        <div class="panel-body">
-            <button class="btn btn-sm btn-success" ng-click="cloneUser()">
-                <span translate>admin.security.ldap.user.management.cloneButton</span>
-            </button>
-            <button class="btn btn-sm btn-danger" ng-bootbox-confirm-action="deleteUser()"
-                    ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
-                    {{ 'admin.security.ldap.user.management.deleteUserMsg' | translate}}">
-                <span translate>admin.security.ldap.user.management.deleteUserBtn</span>
-            </button>
         </div>
     </panel-view>
 </div>

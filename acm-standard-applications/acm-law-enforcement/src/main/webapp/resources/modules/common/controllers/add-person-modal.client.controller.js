@@ -14,10 +14,12 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicatePersonRoleError = false;
 
-            $scope.pickerType =  params.pickerType;
+            $scope.pickerType = params.pickerType;
             $scope.pickerTypeDisabled = params.typeDisabled;
 
             $scope.showSetPrimary = params.showSetPrimary;
+            //if not set, than use 'true' as default
+            $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
 
             $scope.personId = params.personId;
             $scope.editMode = !!params.personId;
@@ -26,6 +28,11 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
             $scope.hideNoField = true;
+
+            if ($scope.editMode) {
+                $scope.addNewEnabled = false;
+            }
+
             if (params.isFirstPerson) {
                 $scope.isDefault = params.isFirstPerson;
                 $scope.hideNoField = !params.isFirstPerson;
