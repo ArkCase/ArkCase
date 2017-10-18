@@ -211,7 +211,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID";
                     }
                 }
             });
@@ -324,7 +324,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s;
+                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s + "%26status_lcs:VALID";
                     }
                 }
             });
@@ -452,7 +452,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                 //find child users
                 if (group && group.member_id_ss) {
-                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_')).then(function (payload) {
+                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_'), 'VALID').then(function (payload) {
                         //successfully users received, insert with groups in same array
                         var data = _.get(payload, 'data.response.docs');
                         if (data) {
@@ -751,7 +751,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID" ;
                     }
                 }
             });

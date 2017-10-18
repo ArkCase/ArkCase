@@ -6,8 +6,10 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -59,6 +61,14 @@ public interface GroupService
      * @return true or false
      */
     boolean isUUIDPresentInTheGroupName(String str);
+
+    /**
+     * @param groupName list users for this specific group
+     * @param userStatus optional value for "status_lcs" field to be included in the solr query
+     * @return solr results for user members in specific group
+     * @throws MuleException
+     */
+    String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException;
 
     /**
      * Creates or updates ad-hoc group based on the client info coming in from CRM
