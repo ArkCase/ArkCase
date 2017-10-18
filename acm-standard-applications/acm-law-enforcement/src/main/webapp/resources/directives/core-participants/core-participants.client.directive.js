@@ -25,7 +25,7 @@
  <core-participants participants-init="participantsInit"/>
  </file>
  <file name="app.js">
- angular.module('cases').controller('Cases.ParticipantsController', ['$scope', 'Case.InfoService', 'ObjectService',
+ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', 'Case.InfoService', 'ObjectService'
  , function ($scope, CaseInfoService, ObjectService) {
 
         $scope.participantsInit = {

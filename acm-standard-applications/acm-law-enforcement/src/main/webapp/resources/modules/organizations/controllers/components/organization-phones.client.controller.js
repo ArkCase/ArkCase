@@ -54,7 +54,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             $scope.gridOptions.data = phones;
         };
 
-        ObjectLookupService.getSubContactMethodType('email').then(
+        ObjectLookupService.getSubContactMethodType('phone').then(
             function (contactMethodTypes) {
                 $scope.phoneTypes = contactMethodTypes;
                 return contactMethodTypes;

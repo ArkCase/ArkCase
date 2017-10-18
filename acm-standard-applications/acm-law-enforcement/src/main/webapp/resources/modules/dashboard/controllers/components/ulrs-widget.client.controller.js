@@ -71,7 +71,7 @@ angular.module('dashboard.urls', ['adf.provider'])
                     gridHelper.setColumnDefs(widgetInfo);
                 };
 
-                ObjectLookupService.getSubContactMethodType('email').then(
+                ObjectLookupService.getSubContactMethodType('url').then(
                     function (contactMethodTypes) {
                         $scope.urlTypes = contactMethodTypes;
                         return contactMethodTypes;

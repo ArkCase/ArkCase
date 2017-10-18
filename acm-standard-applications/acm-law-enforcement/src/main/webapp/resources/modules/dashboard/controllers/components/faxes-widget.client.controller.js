@@ -65,7 +65,7 @@ angular.module('dashboard.faxes', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
-            ObjectLookupService.getSubContactMethodType('email').then(
+            ObjectLookupService.getSubContactMethodType('fax').then(
                     function (contactMethodTypes) {
                         $scope.faxTypes = contactMethodTypes;
                         return contactMethodTypes;
