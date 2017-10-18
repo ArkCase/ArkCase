@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'CreateNewItemDialogService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Case.InfoService', 'Task.AlertsService', 'ModalDialogService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, CreateNewItemDialogService) {
+        , HelperUiGridService, HelperObjectBrowserService, CaseInfoService, TaskAlertsService, ModalDialogService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -69,12 +69,17 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
         };
 
         $scope.addNew = function () {
-            var modalParams = {
-                parentType: ObjectService.ObjectTypes.CASE_FILE,
-                parentObject: $scope.objectInfo.caseNumber,
-                parentTitle: $scope.objectInfo.title
+            var modalMetadata = {
+                moduleName: "tasks",
+                templateUrl: "modules/tasks/views/components/task-new-task.client.view.html",
+                controllerName: "Tasks.NewTaskController",
+                params: {
+                    parentType: ObjectService.ObjectTypes.CASE_FILE,
+                    parentObject: $scope.objectInfo.caseNumber,
+                    parentTitle: $scope.objectInfo.title
+                }
             };
-            CreateNewItemDialogService.createNewTask(modalParams);
+            ModalDialogService.showModal(modalMetadata);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

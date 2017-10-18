@@ -1,8 +1,8 @@
-<div class="modal-header">
-    <h3><span translate>organizations.comp.newOrganization.title</span></h3>
-</div>
-<div class="modal-body">
-    <form name="organizationForm">
+<form name="organizationForm" ng-submit="save()">
+    <div class="modal-header">
+        <h3><span translate>organizations.comp.newOrganization.title</span></h3>
+    </div>
+    <div class="modal-body">
         <div class="row well-sm">
             <div class="col-sm-4 form-group">
                 <label for="organizationName" translate> organizations.comp.newOrganization.name </label>
@@ -92,11 +92,11 @@
                                            on-open-focus="false"
                                            close-text="{{'organizations.comp.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
                                     <span class="input-group-btn">
-                                             <button type="button" class="btn btn-default"
-                                                     ng-click="defaultOpened = !defaultOpened">
-                                                     <i class="fa fa-calendar"></i>
-                                             </button>
-                                      </span>
+                                         <button type="button" class="btn btn-default"
+                                                 ng-click="defaultOpened = !defaultOpened">
+                                                 <i class="fa fa-calendar"></i>
+                                         </button>
+                                  </span>
                                 </p>
                             </div>
                             <div class="col-sm-4 form-group">
@@ -158,11 +158,11 @@
                                                    on-open-focus="false"
                                                    close-text="{{'organizations.comp.newOrganization.identification.identificationYearIssued.close.button' | translate}}"/>
                                             <span class="input-group-btn">
-                                             <button type="button" class="btn btn-default"
-                                                     ng-click="identification.opened = !identification.opened">
-                                                     <i class="fa fa-calendar"></i>
-                                             </button>
-                                      </span>
+                                         <button type="button" class="btn btn-default"
+                                                 ng-click="identification.opened = !identification.opened">
+                                                 <i class="fa fa-calendar"></i>
+                                         </button>
+                                  </span>
                                         </p>
                                     </div>
                                 </div>
@@ -506,21 +506,20 @@
                 </div>
             </div>
         </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip"
-            data-title="Cancel"
-            ng-click="cancelModal()">
-        <span translate> organizations.comp.newOrganization.cancelButton </span>
-    </button>
-    <button type="button"
-            ng-disabled="organizationForm.$invalid || loading"
-            class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton"
-            data-title="Save"
-            ng-click="save()">
-        <i class="fa fa-floppy-o" ng-hide="loading"></i>
-        <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
-        <span translate>organizations.comp.newOrganization.saveButton</span>
-    </button>
-</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip"
+                data-title="Cancel"
+                ng-click="cancelModal()">
+            <span translate> organizations.comp.newOrganization.cancelButton </span>
+        </button>
+        <button type="submit"
+                ng-disabled="organizationForm.$invalid || loading"
+                class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton"
+                data-title="Save">
+            <i class="fa fa-floppy-o" ng-hide="loading"></i>
+            <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
+            <span translate>organizations.comp.newOrganization.saveButton</span>
+        </button>
+    </div>
+</form>

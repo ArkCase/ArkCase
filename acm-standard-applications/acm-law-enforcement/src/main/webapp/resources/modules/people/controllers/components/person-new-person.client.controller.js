@@ -154,7 +154,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     });
                     MessageService.info(personWasCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
-                    $scope.onModalSave();
+                    $scope.onModalClose();
                     $scope.loading = false;
                 },
                 function (error) {
@@ -336,7 +336,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
         };
 
         $scope.cancelModal = function() {
-            $scope.onModalCancel();
+            $scope.onModalDismiss();
         };
     }
 ]);

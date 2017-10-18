@@ -1,8 +1,8 @@
-<div class="modal-header">
-    <h3><span translate>document-repository.newRepository.title</span></h3>
-</div>
-<div class="modal-body">
-    <form name="repository" novalidate>
+<form name="repository" ng-submit="saveNewDocumentRepository()" novalidate>
+    <div class="modal-header">
+        <h3><span translate>document-repository.newRepository.title</span></h3>
+    </div>
+    <div class="modal-body">
         <div class="well-sm">
             <div class="row">
                 <div class="col-sm-6 form-group">
@@ -53,17 +53,16 @@
                 </div>
             </div>
         </div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-secondary btn-sm" id="cancelButton" ng-click="cancelModal()">
-        <span translate>document-repository.newRepository.cancelButton</span>
-    </button>
-    <button type="button" ng-disabled="repository.$invalid || loading"
-            class="btn btn-primary btn-sm" id="saveButton"
-            ng-click="saveNewDocumentRepository()">
-        <i class="fa fa-floppy-o" ng-hide="loading"></i>
-        <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
-        <span translate>document-repository.newRepository.saveButton</span>
-    </button>
-</div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-sm" id="cancelButton" ng-click="cancelModal()">
+            <span translate>document-repository.newRepository.cancelButton</span>
+        </button>
+        <button type="submit" ng-disabled="repository.$invalid || loading"
+                class="btn btn-primary btn-sm" id="saveButton">
+            <i class="fa fa-floppy-o" ng-hide="loading"></i>
+            <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
+            <span translate>document-repository.newRepository.saveButton</span>
+        </button>
+    </div>
+</form>

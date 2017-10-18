@@ -13,6 +13,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.userSearchConfig = null;
         $scope.objectSearchConfig = null;
         $scope.isAssocType = false;
+        $scope.loading = false;
 
         $scope.groupTask = false;
         $scope.chosenGroup = '';
@@ -73,18 +74,21 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
+            $scope.loading = true;
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
                 $scope.saved = false;
+                $scope.loading = false;
                 if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ":returnState") {
                     $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
                 } else {
                     ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
                 }
-                $scope.onModalSave();
+                $scope.onModalClose();
             }, function (err) {
                 $scope.saved = false;
+                $scope.loading = false;
                 if (!Util.isEmpty(err)) {
                     var statusCode = Util.goodMapValue(err, "status");
                     var message = Util.goodMapValue(err, "data.message");
@@ -222,7 +226,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.cancelModal = function() {
-            $scope.onModalCancel();
+            $scope.onModalDismiss();
         };
     }
 ]);
