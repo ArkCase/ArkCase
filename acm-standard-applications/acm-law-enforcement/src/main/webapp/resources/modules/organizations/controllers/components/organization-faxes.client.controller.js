@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.FaxesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -53,6 +53,12 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
             var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
             $scope.gridOptions.data = faxes;
         };
+
+        ObjectLookupService.getSubContactMethodType('fax').then(
+            function (contactMethodTypes) {
+                $scope.faxTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
 
         $scope.addNew = function () {
             var fax = {};
@@ -122,7 +128,7 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
                     fax = _.find($scope.objectInfo.contactMethods, {id: data.fax.id});
                 }
                 fax.type = 'fax';
-                fax.subType = data.fax.subType;
+                fax.subType = data.fax.subLookup;
                 fax.value = data.fax.value;
                 fax.description = data.fax.description;
 
