@@ -1,61 +1,78 @@
 {
   "profile": {
-    "title": "Profil utilisateur",
-    "unknown":"Unknown"
+    "title": "Profil de l'utilisateur",
+    "unknown": "Inconnu"
   },
   "profile.menus": {
     "usermenu.item": "Profil"
   },
-   "profile.subscriptions" : {
-    "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selected",
+  "profile.subscriptions": {
+    "title": "Abonnements",
+    "unsubscribeSelect": "Se désabonner sélectionné",
     "table.columns": {
-      "title": "fr_Title",
-      "created":"Created",
-      "parentId":"Parent ID",
-      "userId":"User ID"
+      "title": "Titre",
+      "created": "Créé",
+      "parentId": "ID de parent",
+      "userId": "Identifiant d'utilisateur"
     }
-    },
-   "profile.company": {
-     "title":"Company Detail",
-     "name":"Company Name",
-     "address1":"Address 1",
-     "address2":"Address 2",
-     "city":"City",
-     "state":"State",
-     "zip":"Zip",
-     "mainPhone":"Main Office Phone",
-     "fax":"Fax",
-     "website":"Website"
-   },
-   "profile.contact":{
-       "title":"Contact Information",
-       "location":"Location",
-       "im":"IM Account",
-       "officePhone":"Office Phone",
-       "mobilePhone":"Mobile Phone"
-   },
-   "profile.groups":{
-       "title":"Groups"
-   },
-   "profile.buttons":{
-       "password":"Change Password",
-       "message":"Enter your new password.",
-       "confirmation":"Enter your new password again.",
-       "cancel":"Cancel",
-       "outlookPassword":"Store Outlook Password"
-   },
-   "profile.picture":{
-       "title":"Change Picture",
-       "email":"Email Address",
-       "uploadImgError": "fr_You have uploaded an invalid image file type"
-   },
-   "profile.modal":{
-       "title":"Info",
-       "emptyPassword":"Password Can not be Empty",
-       "comfirmation":"Please re-enter your password.",
-       "differentPasswords":"Passwords do not match. Please try again.",
-       "ok":"OK",
-       "success":"Successfully Changed Password"
-   }
+  },
+  "profile.company": {
+    "title": "Détail de l'entreprise",
+    "name": "Nom de la compagnie",
+    "address1": "Adresse 1",
+    "address2": "Adresse 2",
+    "city": "Ville",
+    "state": "Etat",
+    "zip": "Code postal",
+    "mainPhone": "Téléphone principal du bureau",
+    "fax": "Fax",
+    "website": "Site Internet"
+  },
+  "profile.contact": {
+    "title": "Informations de contact",
+    "location": "Emplacement",
+    "im": "Compte de messagerie instantanée",
+    "officePhone": "Téléphone de bureau",
+    "mobilePhone": "Téléphone portable"
+  },
+  "profile.groups": {
+    "title": "Groupes"
+  },
+  "profile.buttons": {
+    "save": "Sauvegarder les modifications",
+    "message": "Entrez votre nouveau mot de passe.",
+    "confirmation": "Entrez à nouveau votre nouveau mot de passe.",
+    "cancel": "Annuler",
+    "outlookPassword": "Enregistrer le mot de passe Outlook",
+    "ldapPassword": "Changer le mot de passe"
+  },
+  "profile.picture": {
+    "title": "Changer l'image",
+    "email": "Adresse e-mail",
+    "uploadImgError": "Vous avez importé un type de fichier d'image non valide"
+  },
+  "profile.modal": {
+    "title": "Info",
+    "emptyPassword": "Le mot de passe ne peut pas être vide",
+    "comfirmation": "Veuillez retaper votre mot-de-passe.",
+    "differentPasswords": "Les mots de passe ne correspondent pas. Veuillez réessayer.",
+    "ok": "D'accord",
+    "success": "Mot de passe modifié avec succès",
+    "changePassword.header": "Changer le mot de passe"
+  },
+  "profile.comp.subscription": {
+    "title": "Abonnement"
+  },
+  "profile.comp.company": {
+    "title": "Compagnie"
+  },
+  "profile.comp.contact": {
+    "title": "Contact"
+  },
+  "profile.comp.group": {
+    "title": "Groupe"
+  },
+  "profile.comp.picture": {
+    "title": "Photo"
+  }
 }

@@ -281,7 +281,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              * Define ui-grid data
              */
             , setWidgetsGridData: function (widgetData) {
-                if(!Util.isArrayEmpty(widgetData)) {
+                if (!Util.isArrayEmpty(widgetData)) {
                     this.scope.gridOptions.data = widgetData;
                     this.scope.gridOptions.noData = false;
                     this.scope.gridOptions.totalItems = widgetData.length;
@@ -751,6 +751,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
 
                     $q.all([promiseQueryAudit]).then(function (data) {
                         var auditData = data[0];
+
                         that.scope.gridOptions = that.scope.gridOptions || {};
                         that.scope.gridOptions.data = auditData.resultPage;
                         that.scope.gridOptions.totalItems = auditData.totalCount;

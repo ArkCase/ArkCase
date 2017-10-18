@@ -1,3 +1,11 @@
+<div class="pull-right well">
+    <div class="btn-group">
+        <button class="btn btn-xs btn-link" ng-click="applyChanges()"><i
+                class="fa fa-save"/>
+            <span translate>admin.application.auditHistory.config.apply.label</span>
+        </button>
+    </div>
+</div>
 <panel-view header="{{'admin.application.auditHistory.config.title' | translate}}" collapsible="false">
     <div ng-controller="Admin.AuditHistoryController" class="well-sm">
         <form>
@@ -10,13 +18,6 @@
                        type="number"
                        id="historyDays"
                 />
-            </div>
-            <br/>
-
-            <div class="form-group">
-                <button ng-click="applyChanges()" class="btn btn-sm btn-primary" translate>
-                    admin.application.auditHistory.config.apply.label
-                </button>
             </div>
         </form>
     </div>

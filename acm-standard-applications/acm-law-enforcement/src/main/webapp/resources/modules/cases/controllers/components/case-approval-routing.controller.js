@@ -36,32 +36,33 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                     var objectId = _.result(_.find(tasks, function (task) {
                         return task.status_s === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
                     }), 'object_id_s');
-                    TaskInfoService.getTaskInfo(objectId).then(function (taskInfo) {
-                        $scope.$bus.publish('buckslip-task-object-updated', taskInfo);
-
-                        $scope.objectInfo = taskInfo;
-                        $scope.dateInfo = $scope.dateInfo || {};
-                        $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
-                        $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
-                        $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-                        $scope.owningGroup = ObjectModelService.getGroup($scope.objectInfo);
-
-
-                        //we should wait for userId before we compare it with assignee
-                        promiseUser.then(function (data) {
-                            $scope.userId = data.userId;
-
-                            if (!Util.isEmpty($scope.objectInfo.assignee)) {
-                                if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
-
-                                    if (!Util.goodValue($scope.objectInfo.completed, false)) {
-                                        $scope.$bus.publish('CHILD_OBJECT_OUTCOMES_FOUND', $scope.objectInfo.availableOutcomes);
+                    if (!Util.isEmpty(objectId)) {
+                        TaskInfoService.getTaskInfo(objectId).then(function (taskInfo) {
+                            $scope.$bus.publish('buckslip-task-object-updated', taskInfo);
+    
+                            $scope.objectInfo = taskInfo;
+                            $scope.dateInfo = $scope.dateInfo || {};
+                            $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
+                            $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
+                            $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
+                            $scope.owningGroup = ObjectModelService.getGroup($scope.objectInfo);
+    
+    
+                            //we should wait for userId before we compare it with assignee
+                            promiseUser.then(function (data) {
+                                $scope.userId = data.userId;
+    
+                                if (!Util.isEmpty($scope.objectInfo.assignee)) {
+                                    if (Util.compare($scope.userId, $scope.objectInfo.assignee)) {
+    
+                                        if (!Util.goodValue($scope.objectInfo.completed, false)) {
+                                            $scope.$bus.publish('CHILD_OBJECT_OUTCOMES_FOUND', $scope.objectInfo.availableOutcomes);
+                                        }
                                     }
                                 }
-                            }
+                            });
                         });
-                    });
-
+                    }
                 });
             }
         };

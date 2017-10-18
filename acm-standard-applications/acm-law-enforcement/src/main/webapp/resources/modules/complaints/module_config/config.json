@@ -709,7 +709,7 @@
           "name": "organization.defaultPerson.givenName",
           "displayName": "complaints.comp.organizations.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.getPrimaryContact(row.entity)}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
@@ -721,7 +721,7 @@
           "name": "organization.defaultAddress.city",
           "displayName": "complaints.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
+          "cellTemplate": "<span class='ui-grid-cell-contents'>{{grid.appScope.getDefaultAddress(row.entity.organization.defaultAddress)}}</span>"
         }
       ]
     },

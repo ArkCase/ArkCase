@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.1.26-SNAPSHOT</version>
+        <version>3.1.27-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -28,6 +28,7 @@
         <module>acm-mule-context-manager</module>
         <module>acm-mule-module-cmis</module>
         <module>acm-object-converter</module>
+        <module>acm-object-diff</module>
         <module>acm-object-data-processing-api</module>
         <module>acm-pdf-utilities</module>
         <module>acm-proxy-http</module>

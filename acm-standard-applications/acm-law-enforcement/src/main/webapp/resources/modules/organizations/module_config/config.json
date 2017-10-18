@@ -620,10 +620,10 @@
               "headerCellFilter": "translate"
             },
             {
-              "name": "organization.defaultPerson.givenName",
+              "name": "organization.defaultPerson.value",
               "displayName": "organizations.comp.related.table.columns.contact",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName}} {{row.entity.defaultPerson.organization.familyName}}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.primary_contact_s}}</div>"
             }
           ]
         },
@@ -1337,7 +1337,7 @@
           "name": "organization.defaultIdentification.identificationNumber",
           "displayName": "organizations.comp.related.table.columns.identification",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultIdentification ? row.entity.organization.defaultIdentification.identificationNumber + '[' + row.entity.organization.defaultIdentification.identificationType + ']' : ''}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.default_identification_s}}</div>"
         },
         {
           "name": "organization.organizationType",
@@ -1346,22 +1346,22 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "organization.defaultPerson.givenName",
+          "name": "organization.defaultPerson.value",
           "displayName": "organizations.comp.related.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPerson.givenName + ' ' + row.entity.defaultPerson.organization.familyName}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.primary_contact_s}}</div>"
         },
         {
           "name": "organization.defaultPhone.value",
           "displayName": "organizations.comp.related.table.columns.phone",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultPhone ? row.entity.organization.defaultPhone.value + '[' + row.entity.organization.defaultPhone.subType + ']' : ''}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.default_phone_s}}</div>"
         },
         {
           "name": "organization.defaultAddress.city",
           "displayName": "organizations.comp.related.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.organization.defaultAddress ? row.entity.organization.defaultAddress.city + ',' + row.entity.organization.defaultAddress.state : ''}}</div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.target_object.default_location_s}}</div>"
         }
       ]
     },
@@ -1385,7 +1385,7 @@
           "name": "eventType",
           "displayName": "organizations.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'(' + (row.entity.diffDetailsAsJson ? row.entity.diffDetailsAsJson.length : '0') + ' Changes)'}}</div>"
         },
         {
           "name": "eventDate",
@@ -1398,6 +1398,11 @@
           "displayName": "organizations.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        },
+        {
+          "name": "details",
+          "displayName": "",
+          "cellTemplate": "<button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)' translate>organizations.comp.history.table.columns.details.btn.text</button>"
         }
       ]
     }

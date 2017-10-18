@@ -147,7 +147,6 @@
           "participants"
         ]
       },
-      
       {
         "type": "p/PERSON/ali",
         "label": "people.tree.nodeTypes.aliases.label",
@@ -1023,7 +1022,7 @@
         "paginationPageSize": 10,
         "start": 0
       }
-    },    
+    },
     {
       "id": "aliases",
       "title": "people.comp.aliases.title",
@@ -1127,7 +1126,7 @@
           "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
+          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
         }
       ]
     },
@@ -1380,9 +1379,9 @@
         },
         {
           "name": "location",
-          "field": "target_object.default_location_s",
           "displayName": "people.comp.related.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{grid.appScope.getLocation(row.entity.target_object.default_location_s)}}</span>"
         }
       ]
     },
@@ -1393,7 +1392,7 @@
       "enabled": true,
       "configurable": true,
       "type": "grid",
-      "enableFiltering": true,
+      "enableFiltering": false,
       "paginationPageSizes": [
         5,
         10,
@@ -1406,7 +1405,7 @@
           "name": "eventType",
           "displayName": "people.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'(' + (row.entity.diffDetailsAsJson ? row.entity.diffDetailsAsJson.length : '0') + ' Changes)'}}</div>"
         },
         {
           "name": "eventDate",
@@ -1419,6 +1418,11 @@
           "displayName": "people.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        },
+        {
+          "name": "details",
+          "displayName": "",
+          "cellTemplate": "<button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)' translate>people.comp.history.table.columns.details.btn.text</button>"
         }
       ]
     }
