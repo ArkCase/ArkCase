@@ -25,7 +25,8 @@
     "radioName": "hi_Choice primary",
     "radioYes.text": "hi_Yes",
     "radioNo.text": "hi_No",
-    "duplicateOrganizationRoleErrorMessage": "hi_Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "hi_Organization already has the selected association",
+    "notifyMessage": "hi_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "hi_Add person",

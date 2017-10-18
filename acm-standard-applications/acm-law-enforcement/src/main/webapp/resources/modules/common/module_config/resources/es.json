@@ -290,7 +290,8 @@
     "radioName": "es_Choice primary",
     "radioYes.text": "es_Yes",
     "radioNo.text": "es_No",
-    "duplicateOrganizationRoleErrorMessage": "es_Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "es_Organization already has the selected association",
+    "notifyMessage": "es_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "es_Add person",
