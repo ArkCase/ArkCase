@@ -23,6 +23,13 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
+        //if not set, than use 'true' as default
+        $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+
+            if ($scope.editMode) {
+                $scope.addNewEnabled = false;
+            }
+
             if (params.isSelectedParent) {
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {

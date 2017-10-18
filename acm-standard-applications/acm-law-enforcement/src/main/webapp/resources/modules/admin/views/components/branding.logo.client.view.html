@@ -1,3 +1,12 @@
+<div class="pull-right well">
+    <div class="btn-group">
+        <button class="btn btn-xs btn-link" ng-click="saveFiles()"><i
+                class="fa fa-save"/>
+            <span translate>admin.branding.logo.btn.saveFiles</span>
+        </button>
+    </div>
+</div>
+
 <panel-view header="{{'admin.branding.logo' | translate}}" collapsible="false">
     <div ng-controller="Admin.BrandingLogoController">
         <div class="clearfix">
@@ -37,11 +46,6 @@
             <p class="text-danger" translate>
                 admin.branding.logo.warningMessage
             </p>
-
-            <button class="btn btn-sm btn-default" ng-click="saveFiles()">
-                <i class="fa fa-save"/>
-                <span translate>admin.branding.logo.btn.saveFiles</span>
-            </button>
         </div>
     </div>
 </panel-view>

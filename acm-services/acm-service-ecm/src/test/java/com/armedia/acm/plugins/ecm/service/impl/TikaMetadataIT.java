@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -172,8 +173,7 @@ public class TikaMetadataIT
                 assertEquals(year, multimediaCreated.get(Calendar.YEAR));
                 assertEquals(month, multimediaCreated.get(Calendar.MONTH));
                 assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
-            }
-            else
+            } else
             {
                 assertNull(multimedia.getCreated());
             }
@@ -213,6 +213,35 @@ public class TikaMetadataIT
         List<String> expectedMimeTypes = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 , "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12"
                 , "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12", "application/vnd.ms-excel.sheet.binary.macroenabled.12");
+
+        for (Resource resource : resources)
+        {
+            try (InputStream is = resource.getInputStream())
+            {
+                EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(IOUtils.toByteArray(is), resource.getFile().getName());
+                assertTrue(expectedMimeTypes.contains(file.getContentType()));
+            } catch (Exception e)
+            {
+                logger.error("could not process " + resource.getFilename(), e);
+                fail("could not process " + resource.getFilename());
+            }
+        }
+    }
+
+    /**
+     * This test should detect the document "Testdoc.doc" as "application/msword"
+     * Testdoc.doc was created by:
+     * 1. Create new word document
+     * 2. 'Save As' and change the type to '.doc'
+     *
+     * @throws Exception
+     */
+    @Test
+    public void detectDocFile() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/Testdoc.doc"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/msword");
 
         for (Resource resource : resources)
         {

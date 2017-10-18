@@ -3,6 +3,16 @@
     "title": "用户设置",
     "menus": {
       "usermenu.item": "用户设置"
+    },
+    "widgets.list": {
+      "defaultView": "默认视图",
+      "expanded": "扩展",
+      "collapsed": "收缩",
+      "disabled": "禁用",
+      "enabled": "启用"
+    },
+    "modules.list": {
+      "noModules": "没有在系统中找到模块"
     }
   }
 }
