@@ -54,7 +54,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             $scope.gridOptions.data = urls;
         };
 
-        ObjectLookupService.getSubContactMethodType('email').then(
+        ObjectLookupService.getSubContactMethodType('url').then(
             function (contactMethodTypes) {
                 $scope.urlTypes = contactMethodTypes;
                 return contactMethodTypes;

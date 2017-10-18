@@ -54,7 +54,7 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
             $scope.gridOptions.data = faxes;
         };
 
-        ObjectLookupService.getSubContactMethodType('email').then(
+        ObjectLookupService.getSubContactMethodType('fax').then(
             function (contactMethodTypes) {
                 $scope.faxTypes = contactMethodTypes;
                 return contactMethodTypes;
