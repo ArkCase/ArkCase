@@ -43,7 +43,7 @@
                        ng-model="organizationValue" readonly ng-disabled="editMode && !isEditParent"
                        placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
                        ng-click="pickOrganization()" required>
-                <small ng-if="hasSubCompany">The chosen organization has already a parent organization. If you continue the parent organization will be changed.</small>
+                <small ng-if="hasSubCompany">common.addOrganization.notifyMessage</small>
             </div>
             <div class="col-sm-6 form-group">
                 <label translate>common.addOrganization.type.label</label><span
