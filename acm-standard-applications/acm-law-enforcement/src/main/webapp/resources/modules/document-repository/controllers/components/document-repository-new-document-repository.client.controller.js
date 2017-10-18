@@ -77,7 +77,7 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
                     } else {
                         ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
                     }
-                    $scope.onModalSave();
+                    $scope.onModalClose();
                     $scope.loading = false;
                 }, function (error) {
                     $scope.loading = false;
@@ -108,7 +108,7 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
         };
 
         $scope.cancelModal = function() {
-            $scope.onModalCancel();
+            $scope.onModalDismiss();
         };
     }
 ]);

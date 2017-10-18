@@ -17,6 +17,11 @@
       "menuItemURL": "newOrganization",
       "menuItemTitle": "organizations.menus.topbar.item",
       "moduleId": "organization",
+      "modalDialog": {
+        "moduleName": "organizations",
+        "templateUrl": "modules/organizations/views/components/organization-new-organization.client.view.html",
+        "controllerName": "Organizations.NewOrganizationController"
+      },
       "iconClass": "fa fa-building",
       "position": 50
     }

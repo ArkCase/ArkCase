@@ -279,7 +279,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                     });
                     MessageService.info(organizationCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
-                    $scope.onModalSave();
+                    $scope.onModalClose();
                     $scope.loading = false;
                 }
                 , function (error) {
@@ -370,7 +370,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
         };
 
         $scope.cancelModal = function() {
-            $scope.onModalCancel();
+            $scope.onModalDismiss();
         };
     }
 ]);

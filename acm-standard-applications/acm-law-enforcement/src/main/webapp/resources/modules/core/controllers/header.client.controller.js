@@ -2,10 +2,10 @@
 
 angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
     , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
-    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService', 'CreateNewItemDialogService'
+    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService', 'ModalDialogService'
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
-        , LocaleService, ConfigService, UserInfoService, MessageService, CreateNewItemDialogService) {
+        , LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService) {
 
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -109,33 +109,12 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             });
         };
 
-        $scope.onCreateNew = function(event, itemType) {
+        $scope.onCreateNew = function(event, item) {
             event.preventDefault();
-            switch(itemType) {
-                case 'newTask':
-                    CreateNewItemDialogService.createNewTask();
-                    break;
-                case 'newPerson':
-                    CreateNewItemDialogService.createNewPerson();
-                    break;
-                case 'newOrganization':
-                    CreateNewItemDialogService.createNewOrganization();
-                    break;
-                case 'new-document-repository':
-                    CreateNewItemDialogService.createNewDocumentRepository();
-                    break;
-                case 'frevvo.new-timesheet':
-                    $state.go(itemType);
-                    break;
-                case 'frevvo.new-costsheet':
-                    $state.go(itemType);
-                    break;
-                case 'frevvo.new-case':
-                    $state.go(itemType);
-                    break;
-                case 'frevvo.new-complaint':
-                    $state.go(itemType);
-                    break;
+            if(!item.modalDialog) {
+                $state.go(item.link);
+            } else {
+                ModalDialogService.showModal(item.modalDialog);
             }
         };
     }

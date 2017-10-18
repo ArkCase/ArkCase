@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.TasksController', ['$scope', '$state', '$stateParams', '$q', '$translate'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Object.TaskService', 'Task.WorkflowService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'CreateNewItemDialogService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Complaint.InfoService', 'Task.AlertsService', 'ModalDialogService'
     , function ($scope, $state, $stateParams, $q, $translate
         , Util, ConfigService, ObjectService, ObjectTaskService, TaskWorkflowService
-        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, CreateNewItemDialogService) {
+        , HelperUiGridService, HelperObjectBrowserService, ComplaintInfoService, TaskAlertsService, ModalDialogService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -67,13 +67,17 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         $scope.addNew = function () {
-            var modalParams = {
-                parentType: ObjectService.ObjectTypes.COMPLAINT,
-                parentObject: $scope.objectInfo.complaintNumber,
-                parentTitle: $scope.objectInfo.title
+            var modalMetadata = {
+                moduleName: "tasks",
+                templateUrl: "modules/tasks/views/components/task-new-task.client.view.html",
+                controllerName: "Tasks.NewTaskController",
+                params: {
+                    parentType: ObjectService.ObjectTypes.COMPLAINT,
+                    parentObject: $scope.objectInfo.complaintNumber,
+                    parentTitle: $scope.objectInfo.title
+                }
             };
-            CreateNewItemDialogService.createNewTask(modalParams);
-
+            ModalDialogService.showModal(modalMetadata);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

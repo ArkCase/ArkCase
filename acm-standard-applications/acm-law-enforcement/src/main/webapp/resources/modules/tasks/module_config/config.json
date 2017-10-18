@@ -17,6 +17,11 @@
       "menuItemURL": "newTask",
       "menuItemTitle": "tasks.menus.topbar.item",
       "moduleId": "task",
+      "modalDialog": {
+        "moduleName": "tasks",
+        "templateUrl": "modules/tasks/views/components/task-new-task.client.view.html",
+        "controllerName": "Tasks.NewTaskController"
+      },
       "iconClass": "fa fa-check-circle",
       "position": 30
     }

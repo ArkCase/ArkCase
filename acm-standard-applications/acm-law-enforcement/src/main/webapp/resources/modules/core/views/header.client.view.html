@@ -20,7 +20,7 @@
                     <div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' ">
                         <div class="well-sm">
 
-                            <a ng-click="onCreateNew($event, item.link)"
+                            <a ng-click="onCreateNew($event, item)"
                                title="{{item.title | translate}}"
                                permission="{{item.permissionAction}}"
                                permission-action="hide"
