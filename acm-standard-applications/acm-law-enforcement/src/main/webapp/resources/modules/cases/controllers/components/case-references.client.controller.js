@@ -100,7 +100,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 var target = chosenReference;
                 if (target) {
                     association.parentId = parent.id;
-                    association.parentType = ObjectService.ObjectTypes.CASE_FILE;
+                    association.parentType = parent.objectType;
                     association.parentTitle = parent.title;
                     association.parentName = parent.caseNumber;
 
@@ -139,7 +139,9 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                             modified_date_tdt: payload.modified,
                             object_type_s: target.object_type_s,
                             status_lcs: target.status_lcs
-                        }
+                        },
+                        target_type_s: payload.targetType,
+                        target_id_s: payload.targetId
                     };
 
                     if (rowEntity.target_object.parent_ref_s) {
