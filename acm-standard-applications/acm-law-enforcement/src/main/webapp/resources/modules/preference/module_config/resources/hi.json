@@ -3,6 +3,16 @@
     "title": "प्राथमिकताएं",
     "menus": {
       "usermenu.item": "प्राथमिकताएं"
+    },
+    "widgets.list": {
+      "defaultView": "सहज दृश्य",
+      "expanded": "विस्तारित",
+      "collapsed": "संक्षिप्त किए गए",
+      "disabled": "विकलांग",
+      "enabled": "सक्रिय"
+    },
+    "modules.list": {
+      "noModules": "सिस्टम में कोई मॉड्यूल नहीं मिला"
     }
   }
 }
