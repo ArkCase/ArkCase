@@ -652,6 +652,7 @@
     "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
     "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
     "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "CALENDAR_INTEGRATION": "common.directive.coreCalendar.message.error.calendarIntegration",
     "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
   },
   "dialogPersonPicker": {
@@ -761,7 +762,7 @@
       },
       {
         "name": "title_parseable",
-        "displayName" : "common.dialogObjectPicker.table.columns.title",
+        "displayName": "common.dialogObjectPicker.table.columns.title",
         "headerCellFilter": "translate"
       }
     ],
@@ -773,5 +774,42 @@
     ],
     "paginationPageSize": 10,
     "start": 0
+  },
+  "objectHistoryGrid": {
+    "id": "objectHistoryModalGrid",
+    "title": "common.objectHistory.modal.title",
+    "icon": "fa fa-bell-o",
+    "enabled": true,
+    "configurable": true,
+    "type": "grid",
+    "enableFiltering": false,
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "columnDefs": [
+      {
+        "name": "action",
+        "displayName": "common.objectHistory.modal.table.columns.action",
+        "headerCellFilter": "translate",
+        "enableCellEdit": false,
+        "cellTemplate": "<div translate>{{'changes.'+row.entity.action+'.'+row.entity.path}}</div>"
+      },
+      {
+        "name": "oldValue",
+        "displayName": "common.objectHistory.modal.table.columns.oldValue",
+        "headerCellFilter": "translate",
+        "field": "oldValue"
+      },
+      {
+        "name": "newValue",
+        "displayName": "common.objectHistory.modal.table.columns.newValue",
+        "headerCellFilter": "translate",
+        "field": "newValue"
+      }
+    ]
   }
 }

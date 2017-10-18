@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <span translate>admin.application.lookups.config.modal.title</span>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div ui-grid="gridOptions"
+             ui-grid-resize-columns
+             ui-grid-selection
+             adjust-table-height="gridOptions.data.length"
+             ui-grid-auto-resize
+             ui-grid-pagination
+             class="grid">
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-secondary" ng-click="onClickCancel()">
+        <span translate>admin.application.lookups.config.modal.btnCancel.text</span>
+    </button>
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="lookupEntryForm.$invalid">
+        <span translate>admin.application.lookups.config.modal.btnOk.text</span>
+    </button>
+</div>

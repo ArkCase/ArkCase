@@ -39,7 +39,7 @@
                     <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{owningGroup || 'Unknown'}}
+                        {{owningGroup || 'common.value.unknown' | translate}}
                     </a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.owningGroup.label</span></small>
@@ -63,7 +63,7 @@
                        onaftersave="updateStartDate(dateInfo.taskStartDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{ (dateInfo.taskStartDate | date: 'shortDate' ) || 'Unknown'
+                        {{ (dateInfo.taskStartDate | date: 'shortDate' ) || 'common.value.unknown' | translate
                         }}</a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
@@ -78,7 +78,7 @@
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable" e-required>
-                        {{ (dateInfo.dueDate | date: 'shortDate' ) || 'Unknown' }}</a>
+                        {{ (dateInfo.dueDate | date: 'shortDate' ) || 'common.value.unknown' | translate }}</a>
                     <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}"
                        tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>
@@ -91,7 +91,7 @@
                 <small class="text-muted"><span translate>tasks.comp.info.dueDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted"><span translate>tasks.comp.info.state.label</span></small>
             </div>
 

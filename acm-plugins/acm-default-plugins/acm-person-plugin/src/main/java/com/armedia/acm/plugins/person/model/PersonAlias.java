@@ -1,20 +1,31 @@
 package com.armedia.acm.plugins.person.model;
 
+import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlTransient;
-
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -23,7 +34,8 @@ import org.slf4j.LoggerFactory;
 @Entity
 @Table(name = "acm_person_alias")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class PersonAlias implements Serializable, AcmEntity
+@JsonIgnoreProperties(value = {"objectType"}, allowGetters = true)
+public class PersonAlias implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -42,12 +54,12 @@ public class PersonAlias implements Serializable, AcmEntity
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="cm_person_id", nullable = false) 
+    @JoinColumn(name = "cm_person_id", nullable = false)
     private Person person;
 
     @Column(name = "cm_person_alias_type")
     private String aliasType;
-    
+
     @Transient
     private List<String> aliasTypes;
 
@@ -71,51 +83,63 @@ public class PersonAlias implements Serializable, AcmEntity
     @Column(name = "cm_description")
     private String description;
 
+    @Override
+    public String getObjectType()
+    {
+        return PersonAliasConstants.OBJECT_TYPE;
+    }
+
     @XmlTransient
     public Long getId()
     {
         return id;
     }
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
     @XmlTransient
-    public Person getPerson() {
+    public Person getPerson()
+    {
         return person;
     }
 
-    public void setPerson(Person person) {
+    public void setPerson(Person person)
+    {
         this.person = person;
     }
 
     @XmlTransient
-    public String getAliasType() {
+    public String getAliasType()
+    {
         return aliasType;
     }
 
-    public void setAliasType(String aliasType) {
+    public void setAliasType(String aliasType)
+    {
         this.aliasType = aliasType;
     }
-    
+
     @XmlTransient
-	public List<String> getAliasTypes() {
-		return aliasTypes;
-	}
+    public List<String> getAliasTypes()
+    {
+        return aliasTypes;
+    }
 
-	public void setAliasTypes(List<String> aliasTypes) {
-		this.aliasTypes = aliasTypes;
-	}
+    public void setAliasTypes(List<String> aliasTypes)
+    {
+        this.aliasTypes = aliasTypes;
+    }
 
-	@XmlTransient
-	public String getAliasValue() 
+    @XmlTransient
+    public String getAliasValue()
     {
         return aliasValue;
     }
 
-    public void setAliasValue(String aliasValue) 
+    public void setAliasValue(String aliasValue)
     {
         this.aliasValue = aliasValue;
     }
@@ -128,51 +152,53 @@ public class PersonAlias implements Serializable, AcmEntity
     }
 
     @Override
-    public void setCreated(Date created) 
+    public void setCreated(Date created)
     {
         this.created = created;
     }
 
     @XmlTransient
     @Override
-    public String getCreator() 
+    public String getCreator()
     {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) 
+    public void setCreator(String creator)
     {
         this.creator = creator;
     }
 
     @XmlTransient
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) 
+    public void setModified(Date modified)
     {
         this.modified = modified;
     }
 
     @XmlTransient
     @Override
-    public String getModifier() 
+    public String getModifier()
     {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) 
+    public void setModifier(String modifier)
     {
         this.modifier = modifier;
     }
 
-    public PersonAlias returnBase() {
-    	return this;
+    public PersonAlias returnBase()
+    {
+        return this;
     }
 
     public String getDescription()

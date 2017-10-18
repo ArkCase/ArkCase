@@ -106,9 +106,19 @@ public class AcmCalendarAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems) throws CalendarServiceException
     {
+
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-        AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException(""));
+
+        AcmCalendar calendar = null;
+        try
+        {
+            calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
+                    .orElseThrow(() -> new CalendarServiceException("Error while retrieving Exchange Calendar Integration."));
+        }
+        catch (Exception e) {
+            throw new CalendarServiceException(e.getMessage());
+        }
+
         return calendar.listItems(toZonedDate(setDefaultStart(after)), toZonedDate(setDefaultEnd(before)), sort, sortDirection, start,
                 maxItems);
     }

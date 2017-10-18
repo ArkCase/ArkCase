@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.26-SNAPSHOT</version>
+    <version>3.1.27-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -31,8 +32,7 @@
         <apache-commons-codec>1.9</apache-commons-codec>
         <apache-commons-net.version>3.3</apache-commons-net.version>
         <apache-httpcomponents-httpclient.version>4.5</apache-httpcomponents-httpclient.version>
-        <apache-poi.version>3.15</apache-poi.version>
-        <apache-tika-parsers.version>1.13</apache-tika-parsers.version>
+        <apache-tika-parsers.version>1.16</apache-tika-parsers.version>
         <aspectj.version>1.7.4</aspectj.version>
         <c3p0.version>0.9.2.1</c3p0.version>
         <camel.version>2.13.1</camel.version>
@@ -66,7 +66,7 @@
         <jstl.version>1.2</jstl.version>
         <junit.version>4.12</junit.version>
         <jsonassert.version>1.5.0</jsonassert.version>
-                
+
         <!-- do not update Liquibase past 3.1.1 until https://liquibase.jira.com/browse/CORE-1920 is closed -->
         <liquibase.version>3.1.1</liquibase.version>
 
@@ -99,7 +99,7 @@
         <springframework-addons.version>0.1</springframework-addons.version>
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
         <asm.version>5.0.3</asm.version>
-        <org.apache.poi.version>3.15</org.apache.poi.version>
+        <org.apache.poi.version>3.17</org.apache.poi.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
         <java.mail.version>1.5.6</java.mail.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>
@@ -1229,6 +1229,24 @@
             <dependency>
                 <groupId>org.apache.poi</groupId>
                 <artifactId>poi-ooxml</artifactId>
+                <version>${org.apache.poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>${org.apache.poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${org.apache.poi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml-schemas</artifactId>
                 <version>${org.apache.poi.version}</version>
             </dependency>
 

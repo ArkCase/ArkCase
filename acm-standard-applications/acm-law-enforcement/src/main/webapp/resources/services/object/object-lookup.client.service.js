@@ -252,6 +252,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                      break;
                  case "CASE_FILE":
                      return Service.getLookupByLookupName("caseFilePersonTypes");
+                 case "DOC_REPO":
+                     return Service.getLookupByLookupName("documentPersonTypes");
              }
            };
 
