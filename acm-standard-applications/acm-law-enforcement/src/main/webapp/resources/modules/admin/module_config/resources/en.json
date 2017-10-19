@@ -432,7 +432,7 @@
     "workflows.config.grid": {
       "businessProcess": "Business Process",
       "description": "Description",
-      "active": "Active",
+      "active": "Actions",
       "modified": "Modified",
       "creator": "Author"
     },
@@ -505,6 +505,7 @@
           "inverseValue" : "Inverse value"
         },
         "modal" : {
+          "title" : "Search Label",
           "editEntry" : "Edit lookup entry",
           "addEntry" : "Add lookup entry",
           "key.placeholder" : "Enter entry key",
