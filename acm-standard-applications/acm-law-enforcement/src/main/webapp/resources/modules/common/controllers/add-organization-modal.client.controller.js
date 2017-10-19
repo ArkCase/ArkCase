@@ -9,7 +9,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             });
 
             $scope.hasSubCompany = false;
-            $scope.pikedNewOrganization = null;
+            $scope.newOrganizationPicked = null;
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
@@ -124,7 +124,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.getOrganizationInfo = function (organizationId) {
                 OrganizationInfoService.getOrganizationInfo(organizationId)
                     .then(function (data) {
-                            $scope.pikedNewOrganization = data.parentOrganization;
+                            $scope.newOrganizationPicked = data.parentOrganization;
                             $scope.notifyOrganizationParent($scope.type);
                         }
                     );
@@ -136,14 +136,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             };
 
             $scope.notifyOrganizationParent = function (organizationType) {
-                if(!Util.isEmpty($scope.pikedNewOrganization)){
-                    if(!Util.isEmpty(organizationType)){
-                        $scope.hasSubCompany = organizationType.key === "subCompany" ? !Util.isEmpty($scope.pikedNewOrganization) : Util.isEmpty($scope.pikedNewOrganization);
-                    }
-                }else{
-                    $scope.hasSubCompany = false;
-                }
-            }
+                $scope.hasSubCompany = !Util.isEmpty(organizationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationType.key === "subCompany";
+            };
 
             $scope.addNewOrganization = function () {
                 $scope.isNew = true;
