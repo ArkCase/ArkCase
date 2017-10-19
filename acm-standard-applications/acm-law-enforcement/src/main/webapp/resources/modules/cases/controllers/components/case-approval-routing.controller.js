@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
-    , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
     , 'Task.WorkflowService', 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService'
     , 'Object.ModelService', 'MessageService'
     , function ($scope, $stateParams, $q, $translate, $modal
-        , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
+        , Util, UtilDateService, ConfigService, ObjectService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
         , TaskWorkflowService, PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService
         , ObjectModelService, MessageService) {

@@ -19,8 +19,8 @@
  </example>
  */
 
-angular.module('directives').directive('folderActions', ['ConfigService', 'Config.LocaleService', 'UtilService', '$modal', '$timeout'
-    , function (ConfigService, LocaleService, Util, $modal, $timeout) {
+angular.module('directives').directive('folderActions', ['ConfigService', 'Config.LocaleService', 'UtilService', '$modal', '$timeout', 'Object.LookupService', '$translate', 'ObjectService', '$q'
+    , function (ConfigService, LocaleService, Util, $modal, $timeout, ObjectLookupService, $translate, ObjectService, $q) {
         return {
             restrict: 'E',
             templateUrl: 'directives/doc-tree/folder-actions.html',
@@ -54,17 +54,50 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                 });
 
                 scope.onAddFile = function () {
-                    var fileTypes = folderActionsConfig['___children'];
-                    openFileTypeDialog(fileTypes, fileLanguages, function (type, language) {
-                        //disabled Modal language support
-                    	//context.command.trigger(type + "/" + language);
-                    	context.command.trigger(type);
-                    });
+
+                    var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
+                    var promiseFileTypes = ObjectLookupService.getFileTypes();
+
+                    $q.all([promiseFormTypes, promiseFileTypes]).then(
+                        function (data) {
+                            var formTypes = data[0];
+                            var fileTypes = [];
+                            for (var i = 0; i < data[1].length; i++) {
+                                fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
+                            }
+
+                            for (var i = 0; i < formTypes.length; i++) {
+                                fileTypes.push(formTypes[i]);
+                            }
+
+                            openFileTypeDialog(makeSubMenu(fileTypes), fileLanguages, function (type, language) {
+                                //disabled Modal language support
+                                //context.command.trigger(type + "/" + language);
+                                context.command.trigger(type);
+                            });
+                        });
                 };
 
                 scope.onAddFolder = function () {
                     context.command.trigger('newFolder');
                 };
+
+                function makeSubMenu(subTypes) {
+                    var menu = [], item;
+                    if (subTypes) {
+                        if (Util.isArray(subTypes)) {
+                            for (var i = 0; i < subTypes.length; i++) {
+                                item = {};
+                                item.title = $translate.instant(subTypes[i].value);
+                                item.cmd = "file/" + subTypes[i].key;
+                                item.data = {};
+                                item.data.uploadFile = true;
+                                menu.push(item);
+                            }
+                        }
+                    }
+                    return menu;
+                }
 
                 function openFileTypeDialog(fileTypes, fileLanguages, onSelect) {
                     $modal.open({
