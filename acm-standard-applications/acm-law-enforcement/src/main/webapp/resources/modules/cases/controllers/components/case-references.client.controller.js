@@ -100,7 +100,7 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                 var target = chosenReference;
                 if (target) {
                     association.parentId = parent.id;
-                    association.parentType = parent.objectType;
+                    association.parentType = ObjectService.ObjectTypes.CASE_FILE;
                     association.parentTitle = parent.title;
                     association.parentName = parent.caseNumber;
 
