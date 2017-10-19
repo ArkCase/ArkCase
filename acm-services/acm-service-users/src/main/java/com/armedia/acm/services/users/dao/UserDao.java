@@ -297,24 +297,24 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public boolean isUserPasswordExpired(String principal)
     {
         log.debug("Check password expiration for user [{}]", principal);
-        try
-        {
-            AcmUser user = findByUserId(principal);
-            if (user.getUserState() != AcmUserState.VALID)
-            {
-                return false;
-            }
-            LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
-            if (userPasswordExpirationDate != null)
-            {
-                return userPasswordExpirationDate.isBefore(LocalDate.now());
-            }
-            log.info("Password expiration date is not set for user [{}]", principal);
-        }
-        catch (NoResultException | NonUniqueResultException e)
+
+        AcmUser user = findByUserId(principal);
+        if (user == null)
         {
             log.debug("User [{}] not found!", principal);
+            return false;
         }
+
+        if (user.getUserState() != AcmUserState.VALID)
+        {
+            return false;
+        }
+        LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
+        if (userPasswordExpirationDate != null)
+        {
+            return userPasswordExpirationDate.isBefore(LocalDate.now());
+        }
+        log.info("Password expiration date is not set for user [{}]", principal);
         return false;
     }
 

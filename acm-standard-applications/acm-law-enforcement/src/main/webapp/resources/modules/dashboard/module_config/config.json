@@ -287,6 +287,13 @@
       "configurable": true,
       "redirectSettings": {
       }
+    },
+    {
+      "id": "teamWorkload",
+      "title": "dashboard.comp.teamWorkload.title",
+      "configurable": true,
+      "redirectSettings": {
+      }
     }
   ],
   "modules": [
