@@ -21,7 +21,6 @@ angular.module('people').controller('People.CasesController', ['$scope', '$q', '
                 return personTypes;
             });
 
-
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams

@@ -340,6 +340,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return Service.getLookupByLookupName("contactMethodTypes");
         };
 
+        Service.getSubContactMethodType = function(type){
+            return Service.getLookupByLookupName("contactMethodTypes").then(function (contactMethodTypes) {
+                var found = _.find(contactMethodTypes, {key: type});
+                if(!Util.isArray(found)){
+                    return found.subLookup;
+                }
+            });
+        };
+
         /**
          * @ngdoc method
          * @name getOrganizationTypes
