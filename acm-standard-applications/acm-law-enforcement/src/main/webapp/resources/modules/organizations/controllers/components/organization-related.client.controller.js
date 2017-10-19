@@ -15,9 +15,13 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         );
 
+        $scope.relationshipTypes = [];
         ObjectLookupService.getOrganizationRelationTypes().then(
             function (relationshipTypes) {
-                $scope.relationshipTypes = relationshipTypes;
+                for (var i = 0; i < relationshipTypes.length; i++) {
+                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                }
+
                 return relationshipTypes;
             });
 

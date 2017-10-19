@@ -1,19 +1,16 @@
 package com.armedia.acm.plugins.person.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -34,7 +31,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-object-history.xml",
         "/spring/spring-library-person-rules.xml",
-        "/spring/spring-library-organization-rules.xml" })
+        "/spring/spring-library-object-diff.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-object-association-plugin.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT
 {

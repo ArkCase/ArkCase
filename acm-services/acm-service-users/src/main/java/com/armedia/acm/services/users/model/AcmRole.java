@@ -2,6 +2,8 @@ package com.armedia.acm.services.users.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -14,7 +16,8 @@ public class AcmRole
     private String roleName;
 
     @Column(name = "cm_role_type")
-    private String roleType;
+    @Enumerated(EnumType.STRING)
+    private AcmRoleType roleType;
 
     public String getRoleName()
     {
@@ -26,14 +29,13 @@ public class AcmRole
         this.roleName = roleName;
     }
 
-    public String getRoleType()
+    public AcmRoleType getRoleType()
     {
         return roleType;
     }
 
-    public void setRoleType(String roleType)
+    public void setRoleType(AcmRoleType roleType)
     {
         this.roleType = roleType;
     }
-
 }

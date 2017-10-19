@@ -27,9 +27,6 @@ import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.person.dao.IdentificationDao;
 import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.xml.InitiatorPerson;
-import com.armedia.acm.plugins.person.model.xml.PeoplePerson;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -122,6 +119,8 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Create Frevvo form from CaseFile
         form = getCaseFileFactory().asFrevvoCaseFile(getCaseFile(), form, this);
 
+        updateXMLAttachment(attachments, getFormName(), form);
+
         // Save Attachments
         FrevvoUploadedFiles frevvoFiles = saveAttachments(getAttachmentFileType(form), attachments, form.getCmisFolderId(),
                 FrevvoFormName.CASE_FILE.toUpperCase(), form.getId());
@@ -208,12 +207,6 @@ public class CaseFileService extends FrevvoFormAbstractService
         // Init Case File types
         caseFileForm.setCaseTypes(getStandardLookupEntries("caseFileTypes"));
 
-        // Init Initiator information
-        caseFileForm.setInitiator(initInitiator());
-
-        // Init People information
-        caseFileForm.setPeople(initPeople());
-
         JSONObject json = createResponse(caseFileForm);
 
         return json;
@@ -227,46 +220,6 @@ public class CaseFileService extends FrevvoFormAbstractService
     public void setIdentificationDao(IdentificationDao personIdentificationDao)
     {
         this.identificationDao = personIdentificationDao;
-    }
-
-    protected InitiatorPerson initInitiator()
-    {
-        InitiatorPerson initiator = new InitiatorPerson();
-
-        initiator.setTitles(getStandardLookupEntries("personTitles"));
-        initiator.setContactMethods(initContactMethods());
-        initiator.setOrganizations(initOrganizations());
-        initiator.setAddresses(initAddresses());
-        initiator.setType(CaseFileFormConstants.PERSON_TYPE_INITIATOR);
-        initiator.setTypes(getStandardLookupEntries("caseFilePersonTypes"));
-
-        return initiator;
-    }
-
-    protected List<Person> initPeople()
-    {
-        List<Person> people = new ArrayList<>();
-
-        PeoplePerson peoplePerson = new PeoplePerson();
-
-        peoplePerson.setTitles(getStandardLookupEntries("personTitles"));
-        peoplePerson.setContactMethods(initContactMethods());
-        peoplePerson.setOrganizations(initOrganizations());
-        peoplePerson.setAddresses(initAddresses());
-
-        List<String> types = getStandardLookupEntries("caseFilePersonTypes");
-
-        // Remove "Initiator". It's first in the list
-        if (types != null && types.size() > 0)
-        {
-            types.remove(0);
-        }
-
-        peoplePerson.setTypes(types);
-
-        people.add(peoplePerson);
-
-        return people;
     }
 
     protected JSONObject initParticipantsAndGroupsInfo()
@@ -289,73 +242,6 @@ public class CaseFileService extends FrevvoFormAbstractService
         JSONObject json = createResponse(form);
 
         return json;
-    }
-
-    private List<ContactMethod> initContactMethods()
-    {
-        List<ContactMethod> contactMethods = new ArrayList<>();
-        List<String> contactMethodTypes = getStandardLookupEntries("deviceTypes");
-
-        ContactMethod contactMethod = new ContactMethod();
-
-        contactMethod.setTypes(contactMethodTypes);
-        contactMethod.setCreated(new Date());
-        contactMethod.setCreator(getUserFullName());
-
-        contactMethods.add(contactMethod);
-
-        return contactMethods;
-    }
-
-    private List<Organization> initOrganizations()
-    {
-        List<Organization> organizations = new ArrayList<>();
-        List<String> organizationsTypes = getStandardLookupEntries("organizationTypes");
-
-        Organization organization = new Organization();
-
-        organization.setOrganizationTypes(organizationsTypes);
-        organization.setCreated(new Date());
-        organization.setCreator(getUserFullName());
-
-        organizations.add(organization);
-
-        return organizations;
-    }
-
-    private List<PostalAddress> initAddresses()
-    {
-        List<PostalAddress> locations = new ArrayList<>();
-        List<String> locationTypes = getStandardLookupEntries("locationTypes");
-
-        PostalAddress location = new PostalAddress();
-
-        location.setTypes(locationTypes);
-        location.setCreated(new Date());
-        location.setCreator(getUserFullName());
-
-        locations.add(location);
-
-        return locations;
-    }
-
-    private String getUserFullName()
-    {
-        String fullName = null;
-
-        String userId = getAuthentication().getName();
-
-        if (userId != null)
-        {
-            AcmUser user = getUserDao().findByUserId(userId);
-
-            if (user != null)
-            {
-                return user.getFullName();
-            }
-        }
-
-        return fullName;
     }
 
     private CaseFileForm handleCaseReinvestigation(CaseFileForm form)

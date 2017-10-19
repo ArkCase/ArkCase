@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -67,7 +68,7 @@ public class LdapDatabaseSyncService
     }
 
     @Transactional
-    public void saveAcmRoles(List<String> applicationRoles, String roleType)
+    public void saveAcmRoles(List<String> applicationRoles, AcmRoleType roleType)
     {
         log.info("Saving AcmRoles [{}]", applicationRoles.size());
         applicationRoles.forEach(role -> {

@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.AddressesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,16 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             $scope.objectInfo = objectInfo;
             $scope.gridOptions.data = $scope.objectInfo.addresses;
         };
+
+        ObjectLookupService.getAddressTypes().then(
+            function (addressTypes) {
+                $scope.addressTypes = addressTypes;
+                return addressTypes;
+            });
+
+        ObjectLookupService.getCountries().then(function (countries) {
+            $scope.countries = countries;
+        });
 
         //Addresses
         $scope.addNew = function () {

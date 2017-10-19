@@ -4,6 +4,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.test.context.ContextConfiguration;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -38,6 +41,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-data-access-control.xml",
         "/spring/spring-library-data-source.xml",
         "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-folder-watcher.xml",
         "/spring/spring-library-ms-outlook-integration.xml",
         "/spring/spring-library-note.xml",
@@ -54,7 +58,9 @@ import static org.junit.Assert.*;
         "/spring/spring-library-drools-rule-monitor.xml",
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-email.xml",
-        "/spring/spring-library-email-smtp.xml"
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-calendar-config-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
@@ -95,6 +101,9 @@ public class BuckslipArkcaseIT
         ian.setUserId("ian-acm");
         ann.setUserId("ann-acm");
         albert.setUserId("albert-acm");
+
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
+        MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         auditPropertyEntityAdapter.setUserId("TEST");
 

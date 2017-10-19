@@ -1,7 +1,5 @@
 package com.armedia.acm.calendar.service.integration.exchange.web.api;
 
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
@@ -9,6 +7,7 @@ import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtens
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,30 +27,34 @@ import java.util.Map;
 @RequestMapping({ "/api/v1/service/calendar/exchange/configure", "/api/latest/service/calendar/exchange/configure" })
 public class AcmExchangeCalendarManagementAPIController
 {
-    private AcmOutlookFolderCreatorDao folderCreatorDao;
 
-    private OutlookCalendarAdminServiceExtension outlookCalendarAdminService;
+    private OutlookCalendarAdminServiceExtension calendarAdminService;
 
     @RequestMapping(path = "/credentials/invalid", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     List<AcmOutlookFolderCreator> findFolderCreatorsWithInvalidCredentials()
     {
-        List<AcmOutlookFolderCreator> invalidUsers = outlookCalendarAdminService.findFolderCreatorsWithInvalidCredentials();
+        List<AcmOutlookFolderCreator> invalidUsers = calendarAdminService.findFolderCreatorsWithInvalidCredentials();
         return invalidUsers;
     }
 
     @RequestMapping(method = RequestMethod.PUT)
-    public ResponseEntity<AcmOutlookFolderCreator> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator)
-            throws AcmOutlookFolderCreatorDaoException
+    public ResponseEntity<AcmOutlookFolderCreator> updateConfiguration(@RequestBody AcmOutlookFolderCreator updatedCreator,
+            Authentication authentication) throws AcmOutlookFolderCreatorDaoException
     {
-        folderCreatorDao.updateFolderCreator(updatedCreator);
+        AcmOutlookFolderCreator updatedCreatorCopy = new AcmOutlookFolderCreator(updatedCreator.getSystemEmailAddress(),
+                updatedCreator.getSystemPassword());
+        updatedCreatorCopy.setId(updatedCreator.getId());
+
+        calendarAdminService.updateFolderCreatorAndRecreateFoldersIfNecessary(updatedCreatorCopy, authentication.getName());
         updatedCreator.setSystemPassword(null);
+
         return ResponseEntity.status(HttpStatus.OK).body(updatedCreator);
     }
 
-    @ExceptionHandler(CalendarServiceException.class)
+    @ExceptionHandler(AcmOutlookFolderCreatorDaoException.class)
     @ResponseBody
-    public ResponseEntity<?> handleConfigurationException(CalendarServiceException ce)
+    public ResponseEntity<?> handleConfigurationException(AcmOutlookFolderCreatorDaoException ce)
     {
         Map<String, Object> errorDetails = new HashMap<>();
         errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
@@ -60,21 +63,12 @@ public class AcmExchangeCalendarManagementAPIController
     }
 
     /**
-     * @param folderCreatorDao
-     *            the folderCreatorDao to set
+     * @param calendarAdminService
+     *            the calendarAdminService to set
      */
-    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
+    public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
     {
-        this.folderCreatorDao = folderCreatorDao;
-    }
-
-    /**
-     * @param outlookCalendarAdminService
-     *            the outlookCalendarAdminService to set
-     */
-    public void setOutlookCalendarAdminService(OutlookCalendarAdminServiceExtension outlookCalendarAdminService)
-    {
-        this.outlookCalendarAdminService = outlookCalendarAdminService;
+        this.calendarAdminService = calendarAdminService;
     }
 
 }

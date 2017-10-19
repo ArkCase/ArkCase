@@ -33,7 +33,9 @@
       "userSearchBase": "Users Search Base",
       "userSearchFilter": "User Search Filter",
       "allUsersFilter": "All Users Filter",
+      "allChangedUsersFilter": "All Changed Users Filter",
       "allUsersPageFilter": "All Users Page Filter",
+      "allChangedUsersPageFilter": "All Changed Users Page Filter",
       "allUsersSortingAttribute": "Sorting attribute for users",
       "groupSearchBase": "Group Search Base",
       "groupSearchFilterForUser": "Group Search Filter For User",
@@ -42,9 +44,12 @@
       "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
       "syncPageSize": "Sync Page Size",
       "groupSearchFilter": "Group Search Filter",
+      "changedGroupSearchFilter": "Changed Group Search Filter",
       "groupsSortingAttribute": "Sorting attribute for groups",
       "groupSearchPageFilter": "Group Search Page Filter",
+      "changedGroupSearchPageFilter": "Changed Group Search Page Filter",
       "enableEditingLdapUsers": "Enable managing users and groups",
+      "syncEnabled": "Enable synchronize users",
       "cancel": "Cancel",
       "ok": "OK"
     },
@@ -427,7 +432,7 @@
     "workflows.config.grid": {
       "businessProcess": "Business Process",
       "description": "Description",
-      "active": "Active",
+      "active": "Actions",
       "modified": "Modified",
       "creator": "Author"
     },
@@ -500,6 +505,7 @@
           "inverseValue" : "Inverse value"
         },
         "modal" : {
+          "title" : "Search Label",
           "editEntry" : "Edit lookup entry",
           "addEntry" : "Add lookup entry",
           "key.placeholder" : "Enter entry key",
