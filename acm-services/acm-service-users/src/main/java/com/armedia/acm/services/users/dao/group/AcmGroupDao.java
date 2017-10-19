@@ -155,7 +155,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                         "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
         query.setParameter("groupStatus", AcmGroupStatus.DELETE.name());
-        query.setParameter("userRoleState", "VALID");
+        query.setParameter("userRoleState", AcmUserRoleState.VALID);
         query.setParameter("directoryName", directoryName);
         query.setParameter("userState", AcmUserState.VALID);
 

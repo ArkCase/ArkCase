@@ -55,14 +55,14 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         // create calendar folder
         if (autoCreateFolderForCaseFile && pipelineContext.isNewCase())
         {
-            createOutlookFolder(user.get(), entity, pipelineContext);
+            createOutlookFolder(user.get(), entity);
         }
         log.info("CaseFile entity post - autoCreateFolderForCaseFile  CaseFileOutlookHandler : [{}]", entity);
 
         if (!pipelineContext.isNewCase() && !StringUtils.isEmpty(entity.getContainer().getCalendarFolderId()))
         {
             // update folder participants
-            updateOutlookFolderParticipants(user.get(), entity, pipelineContext);
+            updateOutlookFolderParticipants(user.get(), entity);
         }
         log.trace("CaseFile exiting CaseFileOutlookHandler : [{}]", entity);
 
@@ -91,7 +91,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         return calendarAdminService.getHandlerOutlookUser(pipelineContext.getAuthentication().getName(), CaseFileConstants.OBJECT_TYPE);
     }
 
-    private void createOutlookFolder(AcmOutlookUser outlookUser, CaseFile caseFile, CaseFilePipelineContext pipelineContext)
+    private void createOutlookFolder(AcmOutlookUser outlookUser, CaseFile caseFile)
     {
         try
         {
@@ -103,7 +103,7 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         }
     }
 
-    private void updateOutlookFolderParticipants(AcmOutlookUser outlookUser, CaseFile caseFile, CaseFilePipelineContext pipelineContext)
+    private void updateOutlookFolderParticipants(AcmOutlookUser outlookUser, CaseFile caseFile)
     {
         try
         {

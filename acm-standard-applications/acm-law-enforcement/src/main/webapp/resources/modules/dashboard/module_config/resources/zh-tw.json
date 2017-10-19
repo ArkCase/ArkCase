@@ -327,5 +327,35 @@
         "noDataMessage": "目前沒有相關人員信息可以顯示"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "新聞小組"
+  },
+  "dashboard.comp.weather": {
+    "title": "天氣小部件"
+  },
+  "dashboard.comp.myCases": {
+    "title": "我的案例小部件"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "我的任務小部件"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "我的投訴小組"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "工作流程報告"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "新投訴"
+  },
+  "dashboard.comp.newCases": {
+    "title": "新案例"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "案例由隊列"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "團隊工作量"
   }
 }

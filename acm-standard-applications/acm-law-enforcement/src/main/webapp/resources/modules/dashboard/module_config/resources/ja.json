@@ -6,10 +6,10 @@
     },
     "widgets": {
       "casesByQueue": {
-        "title": "キューによるアクティブ案件ファイル",
-        "description": "アクティブな案件ファイルをキューで表示する",
+        "title": "キューによるアクティブ案件文書",
+        "description": "アクティブな案件文書をキューで表示する",
         "xAxis": "キュー",
-        "yAxis": "案件ファイルの数",
+        "yAxis": "案件文書の数",
         "noDataMessage": "現在、案件情報はありません"
       },
       "casesByStatus": {
@@ -35,7 +35,7 @@
             "priority": "優先度",
             "created": "作成日",
             "modified": "変更日",
-            "dueDate": "期日",
+            "dueDate": "期限日",
             "status": "ステータス",
             "assignee": "譲受人"
           },
@@ -53,7 +53,7 @@
             "priority": "優先度",
             "created": "作成日",
             "modified": "変更日",
-            "dueDate": "期日",
+            "dueDate": "期限日",
             "status": "ステータス",
             "assignee": "譲受人"
           },
@@ -63,8 +63,8 @@
         }
       },
       "myTasks": {
-        "title": "私のタスク",
-        "description": "自分のタスクを表示する",
+        "title": "私の任務",
+        "description": "自分の任務を表示する",
         "rowNumbers.label": "デフォルトの行番号",
         "rowNumbers.placeholder": "デフォルトの行番号を入力してください",
         "table": {
@@ -74,12 +74,12 @@
             "priority": "優先度",
             "dueDate": "期限日",
             "status": "ステータス",
-            "objectId": "オブジェクト識別番号"
+            "objectId": "オ対象識別番号"
           },
-          "overdue.tooltip": "タスクが期限切れです",
+          "overdue.tooltip": "任務が期限切れです",
           "deadline.tooltip": "締め切りに近づいています"
         },
-        "noDataMessage": "現在、タスク情報はありません"
+        "noDataMessage": "現在、任務情報はありません"
       },
       "newComplaints": {
         "title": "新しい訴状",
@@ -103,14 +103,14 @@
         "title": "チームワークロード",
         "description": "チームワークロードを表示する",
         "dueDate": {
-          "label": "期日を選択",
+          "label": "期限日を選択",
           "pastDue": "過去の延滞",
           "dueTomorrow": "明日の期限",
           "dueWeek": "七日後の期限",
           "dueMonth": "月後の期限",
           "all": "すべて"
         },
-        "noDataMessage": "現在チームタスク情報はありません"
+        "noDataMessage": "現在チーム任務情報はありません"
       },
       "workflowReport": {
         "title": "ワークフローレポート",
@@ -119,11 +119,11 @@
         "rowNumbers.placeholder": "デフォルトの行番号を入力してください",
         "table": {
           "header": {
-            "taskId": "タスク識別番号",
-            "taskParentType": "親タイプ",
+            "taskId": "任務識別番号",
+            "taskParentType": "親種類",
             "taskParentName": "親の名前",
             "processName": "ビジネスプロセス名",
-            "taskName": "タスク名"
+            "taskName": "任務名"
           }
         },
         "noDataMessage": "現在、ワークフローレポート情報はありません"
@@ -177,9 +177,9 @@
         "noDataMessage": "現在、表示する案件はありません"
       },
       "documents": {
-        "title": "ドキュメント",
-        "description": "フォルダごとのドキュメントのチャートを表示する",
-        "noDataMessage": "現在表示するドキュメントがありません"
+        "title": "文書",
+        "description": "フォルダごとの文書のチャートを表示する",
+        "noDataMessage": "現在表示する文書がありません"
       },
       "locations": {
         "title": "場所",
@@ -212,9 +212,9 @@
         "noDataMessage": "現在、表示するDBAはありません"
       },
       "tasks": {
-        "title": "タスク",
-        "description": "タスクの詳細を表示する",
-        "noDataMessage": "現在、表示するタスクはありません"
+        "title": "任務",
+        "description": "任務の詳細を表示する",
+        "noDataMessage": "現在、表示する任務はありません"
       },
       "participants": {
         "title": "参加者",
@@ -262,14 +262,14 @@
         "noDataMessage": "現在、表示するリワークの詳細はありません"
       },
       "docReview": {
-        "title": "レビュー中のドキュメント",
+        "title": "レビュー中の文書",
         "description": "レビュー中の文書を表示する",
-        "noDataMessage": "現在、表示するレビュー中のドキュメントはありません"
+        "noDataMessage": "現在、表示するレビュー中の文書はありません"
       },
       "parentDocs": {
         "title": "起源の文書",
         "description": "起源の文書を表示する",
-        "noDataMessage": "現在、表示する親ドキュメントはありません"
+        "noDataMessage": "現在、表示する親文書はありません"
       },
       "workflow": {
         "title": "ワークフローの概要",
@@ -327,5 +327,35 @@
         "noDataMessage": "現在表示する関連人はいません"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "ニュースウィジェット"
+  },
+  "dashboard.comp.weather": {
+    "title": "天気ウィジェット"
+  },
+  "dashboard.comp.myCases": {
+    "title": "私のケースウィジェット"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "私のタスクウィジェット"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "私の苦情ウィジェット"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "ワークフローレポート"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "新しい苦情"
+  },
+  "dashboard.comp.newCases": {
+    "title": "新しいケース"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "キューごとのケース"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "チームワークロード"
   }
 }

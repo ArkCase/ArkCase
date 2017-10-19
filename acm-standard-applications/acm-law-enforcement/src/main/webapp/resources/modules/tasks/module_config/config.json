@@ -375,10 +375,10 @@
               "name": "fileName",
               "displayName": "tasks.comp.docsreview.table.columns.fileName",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.title' title='{{row.entity.title}}' class='ui-grid-cell-contents'></div>"
+              "cellTemplate": "<div ng-bind-html='row.entity.fileName' title='{{row.entity.fileName}}' class='ui-grid-cell-contents'></div>"
             },
             {
-              "name": "created",
+              "name": "createDate",
               "displayName": "tasks.comp.docsreview.table.columns.created",
               "headerCellFilter": "translate",
               "cellTemplate": "<div>{{ row.entity.createDate | date : 'shortDate' }}</div>"
@@ -857,7 +857,7 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onDownloadFile($event, row.entity)'>{{row.entity.fileName}}</a>"
         },
         {
-          "name": "created",
+          "name": "createDate",
           "displayName": "tasks.comp.docsreview.table.columns.created",
           "headerCellFilter": "translate",
           "cellTemplate": "<div>{{ row.entity.createDate | date : 'shortDate' }}</div>"
@@ -867,7 +867,8 @@
           "displayName": "tasks.comp.docsreview.table.columns.creator",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
-          "fullNameField": "creator_full_name_lcs"
+          "fullNameField": "creator_full_name_lcs",
+          "cellTemplate": "<div ng-bind-html='row.entity.creator' title='{{row.entity.creator}}' class='ui-grid-cell-contents'></div>"
         },
         {
           "name": "status",
@@ -925,7 +926,8 @@
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
-        }
+        },
+        "hideMenu": true
       }
     },
     {

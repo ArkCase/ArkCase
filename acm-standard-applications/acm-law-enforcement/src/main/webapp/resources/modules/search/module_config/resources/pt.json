@@ -1,22 +1,22 @@
 {
   "search": {
     "title": "Pesquisa",
-    "search.btn": "Pesquisa",
-    "export.btn": "pt_Export",
-    "search.placeholder": "pt_Type in to search",
+    "search.btn": "Pesquisar",
+    "export.btn": "Exportar",
+    "search.placeholder": "Digite para pesquisar",
     "menus": {
       "leftnav.item": "Pesquisa"
     },
     "comp":{
       "grid": {
         "columns": {
-          "id": "pt_ID",
-          "name": "pt_Name",
-          "type": "pt_Type",
-          "title": "pt_Title",
-          "parent": "pt_Parent",
-          "assignee": "pt_Assignee",
-          "modified": "pt_Modified"
+          "id": "ID",
+          "name": "Nome",
+          "type": "Tipo",
+          "title": "Título",
+          "parent": "Pai",
+          "assignee": "Assignee",
+          "modified": "Modificado"
         }
       }
     }

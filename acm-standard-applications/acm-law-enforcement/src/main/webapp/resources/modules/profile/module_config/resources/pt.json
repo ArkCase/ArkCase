@@ -1,61 +1,78 @@
 {
   "profile": {
     "title": "Perfil do Usuário",
-    "unknown":"Unknown"
+    "unknown": "Desconhecido"
   },
   "profile.menus": {
     "usermenu.item": "Perfil"
   },
-   "profile.subscriptions" : {
-    "title":"Subscriptions",
-    "unsubscribeSelect":"Unsubscribe Selected",
+  "profile.subscriptions": {
+    "title": "Assinaturas",
+    "unsubscribeSelect": "Cancelar a inscrição selecionada",
     "table.columns": {
-      "title": "pt_Title",
-      "created":"Created",
-      "parentId":"Parent ID",
-      "userId":"User ID"
+      "title": "Título",
+      "created": "Criada",
+      "parentId": "ID do pai",
+      "userId": "ID do usuário"
     }
-    },
-   "profile.company": {
-     "title":"Company Detail",
-     "name":"Company Name",
-     "address1":"Address 1",
-     "address2":"Address 2",
-     "city":"City",
-     "state":"State",
-     "zip":"Zip",
-     "mainPhone":"Main Office Phone",
-     "fax":"Fax",
-     "website":"Website"
-   },
-   "profile.contact":{
-       "title":"Contact Information",
-       "location":"Location",
-       "im":"IM Account",
-       "officePhone":"Office Phone",
-       "mobilePhone":"Mobile Phone"
-   },
-   "profile.groups":{
-       "title":"Groups"
-   },
-   "profile.buttons":{
-       "password":"Change Password",
-       "message":"Enter your new password.",
-       "confirmation":"Enter your new password again.",
-       "cancel":"Cancel",
-       "outlookPassword":"Store Outlook Password"
-   },
-   "profile.picture":{
-       "title":"Change Picture",
-       "email":"Email Address",
-       "uploadImgError": "pt_You have uploaded an invalid image file type"
-   },
-   "profile.modal":{
-       "title":"Info",
-       "emptyPassword":"Password Can not be Empty",
-       "comfirmation":"Please re-enter your password.",
-       "differentPasswords":"Passwords do not match. Please try again.",
-       "ok":"OK",
-       "success":"Successfully Changed Password"
-   }
+  },
+  "profile.company": {
+    "title": "Detalhe da empresa",
+    "name": "Nome da empresa",
+    "address1": "Endereço 1",
+    "address2": "Endereço 2",
+    "city": "Cidade",
+    "state": "Estado",
+    "zip": "CEP",
+    "mainPhone": "Telefone do escritório principal",
+    "fax": "Fax",
+    "website": "Local na rede Internet"
+  },
+  "profile.contact": {
+    "title": "Informações de contato",
+    "location": "Localização",
+    "im": "Conta IM",
+    "officePhone": "Telefone do escritório",
+    "mobilePhone": "Celular"
+  },
+  "profile.groups": {
+    "title": "Grupos"
+  },
+  "profile.buttons": {
+    "save": "Salvar alterações",
+    "message": "Digite sua nova senha.",
+    "confirmation": "Digite sua nova senha novamente.",
+    "cancel": "Cancelar",
+    "outlookPassword": "Armazenar Senha do Outlook",
+    "ldapPassword": "Mudar senha"
+  },
+  "profile.picture": {
+    "title": "Alterar imagem",
+    "email": "Endereço de e-mail",
+    "uploadImgError": "Você enviou um tipo de arquivo de imagem inválido"
+  },
+  "profile.modal": {
+    "title": "Info",
+    "emptyPassword": "A senha não pode estar vazia",
+    "comfirmation": "Por favor, digite sua senha novamente.",
+    "differentPasswords": "As senhas não correspondem. Por favor, tente novamente.",
+    "ok": "OK",
+    "success": "Senha alterada com sucesso",
+    "changePassword.header": "Mudar senha"
+  },
+  "profile.comp.subscription": {
+    "title": "Inscrição"
+  },
+  "profile.comp.company": {
+    "title": "Empresa"
+  },
+  "profile.comp.contact": {
+    "title": "Contato"
+  },
+  "profile.comp.group": {
+    "title": "Grupo"
+  },
+  "profile.comp.picture": {
+    "title": "Cenário"
+  }
 }

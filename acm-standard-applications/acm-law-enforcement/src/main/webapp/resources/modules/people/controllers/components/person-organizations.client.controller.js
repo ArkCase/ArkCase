@@ -133,18 +133,22 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         {
             var primaryContact = organizationAssiciation.organization.primaryContact;
             if (!!primaryContact) {
-                return (primaryContact.person.givenName.trim() + ' ' + primaryContact.person.familyName.trim()).trim();
+                var getPrimaryConactGivenName = Util.goodValue(primaryContact.person.givenName);
+                var getPrimaryConactFamilyName = Util.goodValue(primaryContact.person.familyName);
+                return (getPrimaryConactGivenName.trim() + ' ' + getPrimaryConactFamilyName.trim()).trim();
             }
 
             return '';
         };
 
         $scope.addOrganization = function () {
+            $scope.isFirstOrganization = $scope.gridOptions.data.length == 0 ? true : false;
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.organizationTypes,
-                returnValueValidationFunction : validateOrganizationAssociation
+                returnValueValidationFunction : validateOrganizationAssociation,
+                isFirstOrganization: $scope.isFirstOrganization
             };
 
             var modalInstance = $modal.open({

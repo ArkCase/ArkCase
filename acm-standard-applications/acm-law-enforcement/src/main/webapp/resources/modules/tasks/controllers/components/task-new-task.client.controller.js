@@ -71,7 +71,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
-            $scope.config.data.dueDate = UtilDateService.dateToIso($scope.config.data.dueDate);
+            $scope.config.data.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
                 $scope.saved = false;
                 if ($stateParams.returnState != null && $stateParams.returnState != ":returnState") {

@@ -147,7 +147,6 @@
           "participants"
         ]
       },
-      
       {
         "type": "p/PERSON/ali",
         "label": "people.tree.nodeTypes.aliases.label",
@@ -300,7 +299,8 @@
             {
               "name": "subType",
               "displayName": "people.comp.phones.table.columns.type",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -331,7 +331,8 @@
             {
               "name": "subType",
               "displayName": "people.comp.emails.table.columns.type",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -362,7 +363,8 @@
             {
               "name": "subType",
               "displayName": "people.comp.urls.table.columns.type",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
@@ -468,12 +470,8 @@
             {
               "name": "identificationType",
               "displayName": "people.comp.ids.table.columns.type",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "identificationID",
-              "displayName": "people.comp.ids.table.columns.id",
-              "headerCellFilter": "translate"
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
             },
             {
               "name": "identificationNumber",
@@ -592,7 +590,8 @@
               "name": "association_type_s",
               "displayName": "people.comp.related.table.columns.type",
               "headerCellFilter": "translate",
-              "lookup": "personTypes"
+              "lookup": "personTypes",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
             },
             {
               "name": "firstName",
@@ -628,6 +627,7 @@
               "name": "participantType",
               "displayName": "people.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -739,7 +739,7 @@
           "name": "type",
           "displayName": "people.comp.addresses.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{row.entity.type}}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
           "width": "*"
         },
         {
@@ -770,7 +770,8 @@
         {
           "name": "country",
           "displayName": "people.comp.addresses.table.columns.country",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.countries, row.entity.country) | translate }}</div>"
         },
         {
           "name": "modified",
@@ -806,7 +807,8 @@
         {
           "name": "subType",
           "displayName": "people.comp.phones.table.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.phoneTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -854,7 +856,8 @@
         {
           "name": "subType",
           "displayName": "people.comp.emails.table.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.emailTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -902,7 +905,8 @@
         {
           "name": "subType",
           "displayName": "people.comp.urls.table.columns.type",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
         },
         {
           "name": "value",
@@ -953,6 +957,7 @@
           "name": "participantType",
           "displayName": "people.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {
@@ -1017,7 +1022,7 @@
         "paginationPageSize": 10,
         "start": 0
       }
-    },    
+    },
     {
       "id": "aliases",
       "title": "people.comp.aliases.title",
@@ -1045,7 +1050,8 @@
           "field": "aliasType",
           "displayName": "people.comp.aliases.table.columns.type",
           "enableCellEdit": false,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.aliasTypes, row.entity.aliasType) | translate }}</div>"
         },
         {
           "name": "description",
@@ -1102,13 +1108,13 @@
           "name": "organization.organizationToPersonAssociationType",
           "displayName": "people.comp.related.table.columns.type",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organizationToPersonAssociationType}}</span>"
+          "cellTemplate": "<span>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate}}</span>"
         },
         {
           "name": "organizationType",
           "displayName": "people.comp.organizations.table.columns.contact",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organization.defaultContact ? row.entity.organization.defaultContact.value + '[' + row.entity.organization.defaultContact.type + ']' : ''}}</span>"
+          "cellTemplate": "<span>{{grid.appScope.getPrimaryContact(row.entity)}}</span>"
         },
         {
           "name": "phone",
@@ -1120,7 +1126,7 @@
           "name": "location",
           "displayName": "people.comp.organizations.table.columns.location",
           "headerCellFilter": "translate",
-          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : ''}}</span>"
+          "cellTemplate": "<span>{{row.entity.organization.defaultAddress ? (row.entity.organization.defaultAddress.state ? (row.entity.organization.defaultAddress.city + ', ' + row.entity.organization.defaultAddress.state) : row.entity.organization.defaultAddress.city) : ''}}</span>"
         }
       ]
     },
@@ -1143,12 +1149,8 @@
         {
           "name": "identificationType",
           "displayName": "people.comp.ids.table.columns.type",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "identificationID",
-          "displayName": "people.comp.ids.table.columns.id",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.identificationTypes, row.entity.identificationType) | translate }}</div>"
         },
         {
           "name": "identificationNumber",
@@ -1203,7 +1205,8 @@
           "name": "type",
           "field": "type_lcs",
           "displayName": "people.comp.cases.table.columns.role",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>"
         },
         {
           "name": "priority",
@@ -1270,7 +1273,8 @@
           "name": "type",
           "field": "type_lcs",
           "displayName": "people.comp.complaints.table.columns.role",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.type_lcs) | translate }}</div>"
         },
         {
           "name": "priority",
@@ -1338,7 +1342,8 @@
           "name": "association_type_s",
           "displayName": "people.comp.related.table.columns.type",
           "headerCellFilter": "translate",
-          "lookup": "personTypes"
+          "lookup": "personTypes",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.relationshipTypes, row.entity.association_type_s) | translate }}</div>"
         },
         {
           "name": "firstName",
@@ -1374,9 +1379,9 @@
         },
         {
           "name": "location",
-          "field": "target_object.default_location_s",
           "displayName": "people.comp.related.table.columns.location",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<span>{{grid.appScope.getLocation(row.entity.target_object.default_location_s)}}</span>"
         }
       ]
     },
@@ -1387,7 +1392,7 @@
       "enabled": true,
       "configurable": true,
       "type": "grid",
-      "enableFiltering": true,
+      "enableFiltering": false,
       "paginationPageSizes": [
         5,
         10,
@@ -1400,7 +1405,7 @@
           "name": "eventType",
           "displayName": "people.comp.history.table.columns.eventType",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
+          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}} {{'(' + (row.entity.diffDetailsAsJson ? row.entity.diffDetailsAsJson.length : '0') + ' Changes)'}}</div>"
         },
         {
           "name": "eventDate",
@@ -1413,6 +1418,11 @@
           "displayName": "people.comp.history.table.columns.userId",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
+        },
+        {
+          "name": "details",
+          "displayName": "",
+          "cellTemplate": "<button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1' ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)' translate>people.comp.history.table.columns.details.btn.text</button>"
         }
       ]
     }

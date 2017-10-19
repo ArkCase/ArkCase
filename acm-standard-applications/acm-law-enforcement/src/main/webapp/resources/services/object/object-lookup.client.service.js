@@ -252,6 +252,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                      break;
                  case "CASE_FILE":
                      return Service.getLookupByLookupName("caseFilePersonTypes");
+                 case "DOC_REPO":
+                     return Service.getLookupByLookupName("documentPersonTypes");
              }
            };
 
@@ -336,6 +338,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          */
         Service.getContactMethodTypes = function () {
             return Service.getLookupByLookupName("contactMethodTypes");
+        };
+
+        Service.getSubContactMethodType = function(type){
+            return Service.getLookupByLookupName("contactMethodTypes").then(function (contactMethodTypes) {
+                var found = _.find(contactMethodTypes, {key: type});
+                if(!Util.isArray(found)){
+                    return found.subLookup;
+                }
+            });
         };
 
         /**
