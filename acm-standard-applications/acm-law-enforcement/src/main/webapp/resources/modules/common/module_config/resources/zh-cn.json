@@ -26,7 +26,7 @@
     "radioYes.text": "zh-cn_Yes",
     "radioNo.text": "zh-cn_No",
     "duplicateOrganizationRoleErrorMessage": "zh-cn_Organization already has the selected association",
-    "notifyMessage": "zh-cn_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
+    "notifyParentOrgWillBeChanged": "zh-cn_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "zh-cn_Add person",
