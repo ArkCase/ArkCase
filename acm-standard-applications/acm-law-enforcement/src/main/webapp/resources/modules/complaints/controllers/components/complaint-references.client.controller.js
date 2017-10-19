@@ -106,7 +106,7 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 var target = chosenReference;
                 if (target) {
                     association.parentId = parent.id;
-                    association.parentType = parent.objectType;
+                    association.parentType = ObjectService.ObjectTypes.COMPLAINT;
                     association.parentTitle = parent.title;
                     association.parentName = parent.complaintNumber;
 
