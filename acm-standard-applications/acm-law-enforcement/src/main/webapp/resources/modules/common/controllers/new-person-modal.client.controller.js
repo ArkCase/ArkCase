@@ -201,8 +201,15 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             });
 
             modalInstance.result.then(function (data) {
-                if (data.organization.organizationId) {
-                    setOrganizationAssociation(association, data);
+                if (data.organization) {
+                    if (!data.organization.organizationId) {
+                        OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                            data.organization = organization;
+                            setOrganizationAssociation(association, data);
+                        });
+                    }else {
+                        setOrganizationAssociation(association, data);
+                    }
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                         data.organization = organization;
