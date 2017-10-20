@@ -47,7 +47,7 @@
     </bean>
 
     <bean id="getUsersByGroupAPIController" class="com.armedia.acm.services.users.web.api.GetUsersByGroupAPIController">
-        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="acmUserAPIController" class="com.armedia.acm.services.users.web.api.AcmUserAPIController"
