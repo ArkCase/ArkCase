@@ -105,9 +105,9 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                 var parent = $scope.objectInfo;
                 var target = chosenReference;
                 if (target) {
-                    association.parentId = parent.id;
+                    association.parentId = parent.complaintId;
                     association.parentType = ObjectService.ObjectTypes.COMPLAINT;
-                    association.parentTitle = parent.title;
+                    association.parentTitle = parent.complaintTitle;
                     association.parentName = parent.complaintNumber;
 
                     association.targetId = target.object_id_s;
@@ -126,9 +126,9 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
                     association.inverseAssociation.parentTitle = target.title_parseable;
                     association.inverseAssociation.parentName = target.name;
 
-                    association.inverseAssociation.targetId = parent.id;
+                    association.inverseAssociation.targetId = parent.complaintId;
                     association.inverseAssociation.targetType = ObjectService.ObjectTypes.COMPLAINT;
-                    association.inverseAssociation.targetTitle = parent.title;
+                    association.inverseAssociation.targetTitle = parent.complaintTitle;
                     association.inverseAssociation.targetName = parent.complaintNumber;
 
                     association.inverseAssociation.associationType = 'REFERENCE';
