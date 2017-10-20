@@ -245,17 +245,26 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-         Service.getPersonTypes = function(objectType){
-             switch(objectType){
-                 case "COMPLAINT":
-                     return Service.getLookupByLookupName("complaintPersonTypes");
-                     break;
-                 case "CASE_FILE":
-                     return Service.getLookupByLookupName("caseFilePersonTypes");
-                 case "DOC_REPO":
-                     return Service.getLookupByLookupName("documentPersonTypes");
-             }
-           };
+        Service.getPersonTypes = function(objectType, initiator){
+            switch(objectType){
+                case "COMPLAINT":
+                    if(initiator){
+                        return Service.getLookupByLookupName("complaintPersonInitiatorTypes");
+                    }
+                    else {
+                        return Service.getLookupByLookupName("complaintPersonTypes");
+                    }
+                case "CASE_FILE":
+                    if(initiator){
+                        return Service.getLookupByLookupName("caseFilePersonInitiatorTypes");
+                    }
+                    else {
+                        return Service.getLookupByLookupName("caseFilePersonTypes");
+                    }
+                case "DOC_REPO":
+                    return Service.getLookupByLookupName("documentPersonTypes");
+            }
+        };
 
         /**
          * @ngdoc method
@@ -423,7 +432,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         Service.getCaseFileTypes = function () {
             return Service.getLookupByLookupName("caseFileTypes");
         };
-        
+
         /**
          * @ngdoc method
          * @name getComplaintTypes
@@ -437,7 +446,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         Service.getComplaintTypes = function () {
             return Service.getLookupByLookupName("complaintTypes");
         };
-        
+
         /**
          * @ngdoc method
          * @name getObjectTypes
