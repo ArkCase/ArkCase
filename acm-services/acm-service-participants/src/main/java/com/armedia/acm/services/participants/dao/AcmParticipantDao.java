@@ -2,11 +2,14 @@ package com.armedia.acm.services.participants.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +113,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
                 "WHERE ap.objectId = :objectId " +
                 "AND ap.objectType = :objectType";
 
-        Query query = getEm().createQuery(jpql);
+        TypedQuery<AcmParticipant> query = getEm().createQuery(jpql, AcmParticipant.class);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
 
