@@ -7,6 +7,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmNotAuthorizedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
+import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
@@ -31,6 +32,13 @@ import java.util.Map;
 public class AcmSpringMvcErrorManager
 {
     private Logger log = LoggerFactory.getLogger(getClass());
+
+    @ExceptionHandler(AcmParticipantsException.class)
+    public void handleException(HttpServletResponse response, AcmParticipantsException e)
+    {
+        log.error("Participants exception: " + e.getMessage(), e);
+        sendResponse(HttpStatus.BAD_REQUEST, response, e.getMessage());
+    }
 
     @ExceptionHandler(AcmObjectNotFoundException.class)
     public void handleException(HttpServletResponse response, AcmObjectNotFoundException e)

@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.documentrepository.service.impl;
 
-
 import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEven
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.services.note.dao.NoteDao;
@@ -22,6 +23,7 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -49,6 +51,8 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
+    private EcmFileParticipantService fileParticipantService;
+
     @Override
     public DocumentRepository findById(Long id)
     {
@@ -63,8 +67,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     @Override
     @Transactional
-    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
-            throws PipelineProcessException
+    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication) throws PipelineProcessException
     {
         boolean isNew = documentRepository.getId() == null;
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
@@ -80,10 +83,30 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
             pipelineContext.setDocumentRepository(existingDocumentRepository);
         }
 
-        return pipelineManager.executeOperation(documentRepository, pipelineContext, () ->
-        {
+        return pipelineManager.executeOperation(documentRepository, pipelineContext, () -> {
             log.debug("Saving document repository: {}", documentRepository.getName());
+
+            DocumentRepository originalDocumentRepository = null;
+            if (documentRepository.getId() != null)
+            {
+                originalDocumentRepository = getDocumentRepositoryDao().find(documentRepository.getId());
+            }
+
             DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
+            try
+            {
+                getFileParticipantService().inheritParticipantsFromAssignedObject(documentRepository.getParticipants(),
+                        originalDocumentRepository == null ? new ArrayList<>() : originalDocumentRepository.getParticipants(),
+                        documentRepository.getContainer().getFolder());
+                getFileParticipantService().inheritParticipantsFromAssignedObject(documentRepository.getParticipants(),
+                        originalDocumentRepository == null ? new ArrayList<>() : originalDocumentRepository.getParticipants(),
+                        documentRepository.getContainer().getAttachmentFolder());
+            }
+            catch (AcmAccessControlException e)
+            {
+                throw new PipelineProcessException(e);
+            }
+
             publishAuditEvents(pipelineContext.getAuditEventTypes(), savedDocumentRepository);
             return savedDocumentRepository;
         });
@@ -91,8 +114,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     private void publishAuditEvents(List<String> auditEventTypes, DocumentRepository documentRepository)
     {
-        auditEventTypes.forEach(eventType ->
-        {
+        auditEventTypes.forEach(eventType -> {
             DocumentRepositoryEvent event = new DocumentRepositoryEvent(documentRepository, eventType);
             event.setIpAddress(AuthenticationUtils.getUserIpAddress());
             event.setSucceeded(true);
@@ -118,10 +140,11 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
         try
         {
-            docRepoTagList = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(id,
-                    DocumentRepositoryConstants.OBJECT_TYPE, authentication);
+            docRepoTagList = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(id, DocumentRepositoryConstants.OBJECT_TYPE,
+                    authentication);
 
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.info("There aren't any tags associated to Document Repository: {} with id: {}", docRepoName, id);
         }
@@ -132,10 +155,11 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
             try
             {
                 getAssociatedTagService().removeAssociatedTag(acmAssociatedTag);
-            } catch (SQLException e)
+            }
+            catch (SQLException e)
             {
-                log.warn("Can't delete tag: {} associated to DocumentRepository: {} with id: {}",
-                        acmAssociatedTag.getTag().getTagName(), docRepoName, id);
+                log.warn("Can't delete tag: {} associated to DocumentRepository: {} with id: {}", acmAssociatedTag.getTag().getTagName(),
+                        docRepoName, id);
             }
         }
 
@@ -151,7 +175,6 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     {
         return documentRepositoryDao;
     }
-
 
     public void setDocumentRepositoryDao(DocumentRepositoryDao documentRepositoryDao)
     {
@@ -216,5 +239,15 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public void setDocumentRepositoryEventPublisher(DocumentRepositoryEventPublisher documentRepositoryEventPublisher)
     {
         this.documentRepositoryEventPublisher = documentRepositoryEventPublisher;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

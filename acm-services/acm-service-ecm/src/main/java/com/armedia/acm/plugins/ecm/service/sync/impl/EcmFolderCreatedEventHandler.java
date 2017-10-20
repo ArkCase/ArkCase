@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -7,6 +8,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -24,6 +27,7 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmFolderService folderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private EcmFileParticipantService fileParticipantService;
 
     public void onEcmFolderCreated(EcmEvent folderCreated)
     {
@@ -49,8 +53,11 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             getAuditPropertyEntityAdapter().setUserId(folderCreated.getUserId());
             AcmFolder created = getFolderDao().save(newFolder);
 
+            getFileParticipantService().setFolderParticipantsFromParentFolder(created);
+
             log.debug("Finished creating new folder with node id {}, ArkCase id {}", folderCreated.getNodeId(), created.getId());
-        } catch (PersistenceException pe)
+        }
+        catch (PersistenceException | AcmAccessControlException pe)
         {
             log.error("Cannot create new folder with CMIS ID {}: [{}]", folderCreated.getNodeId(), pe.getMessage(), pe);
         }
@@ -76,7 +83,8 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
             log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
             return found;
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.debug("No such folder in ArkCase: {}", folderCmisId);
             return null;
@@ -85,8 +93,8 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
 
     protected boolean isNewFolderEvent(EcmEvent ecmEvent)
     {
-        return EcmEventType.CREATE.equals(ecmEvent.getEcmEventType()) &&
-                EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER.equals(ecmEvent.getNodeType());
+        return EcmEventType.CREATE.equals(ecmEvent.getEcmEventType())
+                && EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER.equals(ecmEvent.getNodeType());
     }
 
     @Override
@@ -126,5 +134,15 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

@@ -124,6 +124,11 @@
             <artifactId>acm-service-calendar</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ecm</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- JSON -->
         <dependency>

@@ -14,6 +14,7 @@ angular.module('document-repository').config(['$stateProvider',
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('document-repository');
+                        $translatePartialLoader.addPart('document-details');
                         return $translate.refresh();
                     }]
                 }

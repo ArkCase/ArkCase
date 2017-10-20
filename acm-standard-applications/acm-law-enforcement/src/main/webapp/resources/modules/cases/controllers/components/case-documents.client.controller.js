@@ -48,7 +48,6 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                     }
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
-                    $scope.treeControl.refreshTree();
                 });
         };
 

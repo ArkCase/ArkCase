@@ -35,77 +35,13 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 url: 'api/v1/service/participant/:objectType/:objectId',
                 isArray: true
             },
-
-            /**
-             * @ngdoc method
-             * @name save
-             * @methodOf services:Object.ParticipantService
-             *
-             * @description
-             * Create a new participant.
-             *
-             * @param {Object} params Map of input parameter
-             * @param {String} params.userId  User ID
-             * @param {String} params.participantType  Participant Type
-             * @param {String} params.objectType  Object type
-             * @param {String} params.objectId  Object ID
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            save: {
-                method: 'PUT',
-                url: 'api/v1/service/participant/:userId/:participantType/:objectType/:objectId',
-                cache: false
-            },
-
-            /**
-             * @ngdoc method
-             * @name delete
-             * @methodOf services:Object.ParticipantService
-             *
-             * @description
-             * Delete participant.
-             *
-             * @param {Object} params Map of input parameter
-             * @param {String} params.userId  User ID
-             * @param {String} params.participantType  Participant Type
-             * @param {String} params.objectType  Object type
-             * @param {String} params.objectId  Object ID
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            delete: {
-                method: 'DELETE',
-                url: 'api/v1/service/participant/:userId/:participantType/:objectType/:objectId',
-                cache: false
-            },
-
-            /**
-             * @ngdoc method
-             * @name changeRole
-             * @methodOf services:Object.ParticipantService
-             *
-             * @description
-             * Change role for participant.
-             *
-             * @param {Object} params Map of input parameter
-             * @param {String} params.participantId  Participant ID
-             * @param {String} params.participantType  Participant Type
-             * @param {Function} onSuccess (Optional)Callback function of success query
-             * @param {Function} onError (Optional) Callback function when fail
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            changeRole: {
-                method: 'DELETE',
-                url: 'api/v1/service/participant/:participantId/:participantType',
-                cache: false
+            
+            postEcmObjectParticipants: {
+                method: 'POST',
+                url: 'api/latest/service/ecm/participants/:objectType/:objectId',
+                cache: false,
+                isArray: true
             }
-
         });
 
         /**
@@ -171,99 +107,6 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
 
         /**
          * @ngdoc method
-         * @name addNewParticipant
-         * @methodOf services:Object.ParticipantService
-         *
-         * @description
-         * Query list of participants of an object
-         *
-         * @param {String} userId  User ID
-         * @param {String} participantType  Participant Type
-         * @param {String} objectType  Object type
-         * @param {Number} objectId  Object ID
-         *
-         * @returns {Object} Promise
-         */
-        Service.addNewParticipant = function (userId, participantType, objectType, objectId) {
-            return Util.serviceCall({
-                service: Service.save
-                , param: {
-                    userId: userId,
-                    participantType: participantType,
-                    objectType: objectType,
-                    objectId: objectId
-                }
-                , data: {}
-                , onSuccess: function (data) {
-                    if (Service.validateParticipant(data)) {
-                        return data;
-                    }
-                }
-            })
-        };
-
-        /**
-         * @ngdoc method
-         * @name removeParticipant
-         * @methodOf services:Object.ParticipantService
-         *
-         * @description
-         * Remove participant of an object.
-         *
-         * @param {String} userId  User ID
-         * @param {String} participantType  Participant Type
-         * @param {String} objectType  Object type
-         * @param {Number} objectId  Object ID
-         *
-         * @returns {Object} Promise
-         */
-        Service.removeParticipant = function (userId, participantType, objectType, objectId) {
-            return Util.serviceCall({
-                service: Service.delete
-                , param: {
-                    userId: userId,
-                    participantType: participantType,
-                    objectType: objectType,
-                    objectId: objectId
-                }
-                , onSuccess: function (data) {
-                    if (Service.validateRemovedParticipant(data)) {
-                        return data;
-                    }
-                }
-            })
-        };
-
-        /**
-         * @ngdoc method
-         * @name changeParticipantRole
-         * @methodOf services:Object.ParticipantService
-         *
-         * @description
-         * Change role for participant of an object.
-         *
-         * @param {String} participantId  Participant ID
-         * @param {String} participantType  Participant Type
-         *
-         * @returns {Object} Promise
-         */
-        Service.changeParticipantRole = function (participantId, participantType) {
-            return Util.serviceCall({
-                service: Service.changeRole
-                , param: {
-                    participantId: participantId,
-                    participantType: participantType
-                }
-                , onSuccess: function (data) {
-                    if (Service.validateParticipant(data)) {
-                        return data;
-                    }
-                }
-            })
-        };
-
-        /**
-         * @ngdoc method
          * @name isParticipantValid
          * @methodOf services:Object.ParticipantService
          * @description Check if the participant is valid
@@ -309,34 +152,59 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          * @description
          * Validate participants.
          *
-         * @param {Object} data  Data to be validated
+         * @param {Object} participants  Participants array to be validated
          *
-         * @returns {Object} Promise
+         * @returns {Boolean} true if participants are valid, otherwise false
          */
-        Service.validateParticipants = function (data) {
-            if (Util.isEmpty(data)) {
+        Service.validateParticipants = function (participants) {
+            if (Util.isEmpty(participants)) {
                 return false;
             }
-            if (!Util.isArray(data)) {
+            if (!Util.isArray(participants)) {
                 return false;
             }
-            if (_.filter(data, function (pa) {
+
+            // missing participant Ldap id
+            if (_.find(participants, function(participant) { return !participant.participantLdapId && participant.participantType != "assignee"; })) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.emptyParticipantLdapId"));
+                return false;
+            }
+            
+            // missing participantType
+            if (_.find(participants, function(participant) { return !participant.participantType; })) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.emptyParticipantType"));
+                return false;
+            }
+
+            // multiple assignees
+            if (_.filter(participants, function (pa) {
                     return Util.compare("assignee", pa.participantType);
                 }).length > 1) {
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
                 return false;
             }
-            if (_.filter(data, function (pa) {
+            
+            // multiple owning groups
+            if (_.filter(participants, function (pa) {
                     return Util.compare("owning group", pa.participantType);
                 }).length > 1) {
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
-            if (_.filter(data, function (pa) {
+
+            // don't understand this check. Is " " a valid participant type?
+            if (_.filter(participants, function (pa) {
                     return Util.compare(" ", pa.participantType);
                 }).length > 1) {
                 return false;
             }
+
+            // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
+            if (_.chain(participants).groupBy('participantLdapId').filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                return false;
+            }
+
             return true;
         };
 
@@ -398,6 +266,88 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
             }
             return true;
         };
+
+        Service.getFileParticipantsAsObjectInfo = function(fileId) {
+            return Service.getObjectParticipantsAsObjectInfo("FILE", fileId);
+        };
+        
+        Service.getFolderParticipantsAsObjectInfo = function(folderId) {
+            return Service.getObjectParticipantsAsObjectInfo("FOLDER", folderId);
+        };
+
+        Service.getObjectParticipantsAsObjectInfo = function(objectType, objectId) {
+            return Service.retrieveParticipants(objectType, objectId).then(function(data) {
+                return { "participants" : data };
+            });
+        };
+        
+        /**
+         * @ngdoc method
+         * @name validateFileParticipants
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Validate file participants
+         *
+         * @param {Object} data  Object with 'participants' property to be validated
+         *
+         * @returns {Boolean} Return true if data is valid
+         */
+        Service.validateObjectParticipants = function (data) {
+            return Service.validateParticipants(data.participants);
+        };
+
+        /**
+         * @ngdoc method
+         * @name saveFileParticipants
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Save file participants
+         *
+         * @param {Object} data  Object with 'participants' array property to be saved and 'objectId' property as the fileId
+         */
+        Service.saveFileParticipants = function (data) {
+            return Service.saveEcmObjectParticipants("FILE", data);
+        };
+        
+        /**
+         * @ngdoc method
+         * @name saveFolderParticipants
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Save folder participants
+         *
+         * @param {Object} data  Object with 'participants' array property to be saved and 'objectId' property as the folderId
+         */
+        Service.saveFolderParticipants = function (data) {
+            return Service.saveEcmObjectParticipants("FOLDER", data);
+        };
+        
+        /**
+         * @ngdoc method
+         * @name saveEcmObjectParticipants
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Save ecm file or folder participants
+         *
+         * @param {Object} data         Object with 'participants' array property to be saved and 'objectId' property as Id for the object
+         * @param {String} objectType   The object type to set the participants on
+         */
+        Service.saveEcmObjectParticipants = function (objectType, data) {
+            if (Service.validateObjectParticipants(data)) {
+                return Util.serviceCall({
+                    service: Service.postEcmObjectParticipants
+                    , param: { objectType: objectType, objectId: data.objectId}
+                    , data: data.participants
+                    , onSuccess: function(data){
+                        return { "participants" : data };
+                    }
+                });                
+            } 
+        }
 
         return Service;
     }

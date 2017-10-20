@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpdateLocator<AcmTask>
 {
     private TaskDao taskDao;
+    private EcmFileParticipantService fileParticipantService;
 
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
@@ -26,11 +30,16 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
     }
 
     @Override
-    public void save(AcmTask task)
+    public void save(AcmTask task) throws AcmAccessControlException
     {
         try
         {
+            AcmTask originalTask = getTaskDao().findById(task.getId());
             getTaskDao().save(task);
+            getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), originalTask.getParticipants(),
+                    task.getContainer().getFolder());
+            getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), originalTask.getParticipants(),
+                    task.getContainer().getAttachmentFolder());
         }
         catch (AcmTaskException e)
         {
@@ -46,5 +55,15 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
     public void setTaskDao(TaskDao taskDao)
     {
         this.taskDao = taskDao;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

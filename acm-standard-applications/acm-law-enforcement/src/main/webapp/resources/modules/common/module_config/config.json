@@ -14,7 +14,8 @@
       "DocTreeExt.Email",
       "DocTreeExt.WebDAV",
       "DocTreeExt.Record",
-      "DocTreeExt.Template"
+      "DocTreeExt.Template",
+      "DocTreeExt.Participants"
     ],
     "columnDefs": [
       {
@@ -182,6 +183,13 @@
             "title": "----"
           },
           {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
             "title": "Cut",
             "cmd": "cut",
@@ -270,6 +278,13 @@
             "title": "----"
           },
           {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
             "title": "Cut",
             "cmd": "cut",
@@ -349,6 +364,13 @@
             "title": "----"
           },
           {
+            "title": "Participants",
+            "cmd": "showParticipants"
+          },
+          {
+            "title": "----"
+          },
+          {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
             "title": "Paste",
             "cmd": "paste",
@@ -370,6 +392,13 @@
           {
             "title": "New Correspondence",
             "cmd": "subMenuCorrespondenceForms"
+          },
+          {
+            "title": "----"
+          },
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
           },
           {
             "title": "----"
@@ -410,6 +439,13 @@
             "data": {
               "readOnly": true
             }
+          },
+          {
+            "title": "----"
+          },
+          {
+            "title": "Participants",
+            "cmd": "showParticipants"
           },
           {
             "title": "----"

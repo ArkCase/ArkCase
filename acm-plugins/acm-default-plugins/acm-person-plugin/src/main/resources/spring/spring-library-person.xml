@@ -44,6 +44,7 @@
         <property name="personOwnFolder" value="${person.folder.own.spel}"/>
         <property name="picturesFolder" value="${person.folder.pictures}"/>
         <property name="personPipelineManager" ref="personPipelineManager"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">

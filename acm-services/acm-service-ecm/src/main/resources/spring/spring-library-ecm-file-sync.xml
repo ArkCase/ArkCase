@@ -11,6 +11,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="ecmFileCreatedEventHandler"

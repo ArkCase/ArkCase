@@ -74,6 +74,14 @@
         "approver": "Approver",
         "follower": "Follower"
       },
+      "documentsParticipantTypes": {
+        "group-write": "Group Write",
+        "group-read": "Group Read",
+        "group-no-access": "Group No Access", 
+        "write": "Write",
+        "read": "Read",
+        "no-access": "No Access"
+      },
       "personOrganizationRelationTypes": {
         "owner": "Owner",
         "owned": "Owned",

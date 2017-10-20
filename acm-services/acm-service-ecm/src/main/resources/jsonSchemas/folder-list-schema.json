@@ -1,6 +1,3 @@
-/**
- * Folder List Schema
- */
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Folder List Schema",

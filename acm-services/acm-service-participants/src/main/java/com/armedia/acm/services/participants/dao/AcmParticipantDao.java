@@ -2,11 +2,13 @@ package com.armedia.acm.services.participants.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,18 +30,17 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     public List<AcmParticipant> saveParticipants(List<AcmParticipant> participantList)
     {
         List<AcmParticipant> retval = new ArrayList<>();
-        if ( participantList != null )
+        if (participantList != null)
         {
-            for ( AcmParticipant ap : participantList )
+            for (AcmParticipant ap : participantList)
             {
-                log.debug("saving AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() +
-                    ", obj id: " + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " +
-                    ap.getParticipantLdapId());
+                log.debug("saving AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() + ", obj id: "
+                        + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " + ap.getParticipantLdapId());
                 log.debug("Participant with id '" + ap.getId() + "' is known to the EM? " + getEm().contains(ap));
                 AcmParticipant merged = getEm().merge(ap);
 
                 // only persist if it has not already been merged....
-                if ( ap.getId() == null )
+                if (ap.getId() == null)
                 {
                     log.debug("Persisting since the participant ID is null");
                     getEm().persist(merged);
@@ -58,14 +59,10 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
     public boolean hasObjectAccess(String userId, Long objectId, String objectType, String objectAction, String accessType)
     {
-        String jpql = "" +
-                "SELECT count(app.id) AS numFound " +
-                "FROM AcmParticipantPrivilege app " +
-                "WHERE ( app.participant.participantLdapId = :userid OR app.participant.participantLdapId = '*' )" +
-                "AND app.participant.objectId = :objectId " +
-                "AND app.participant.objectType = :objectType " +
-                "AND app.objectAction = :action " +
-                "AND app.accessType = :accessType";
+        String jpql = "" + "SELECT count(app.id) AS numFound " + "FROM AcmParticipantPrivilege app "
+                + "WHERE ( app.participant.participantLdapId = :userid OR app.participant.participantLdapId = '*' )"
+                + "AND app.participant.objectId = :objectId " + "AND app.participant.objectType = :objectType "
+                + "AND app.objectAction = :action " + "AND app.accessType = :accessType";
 
         Query find = getEm().createQuery(jpql);
         find.setParameter("userid", userId);
@@ -81,15 +78,10 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
     public boolean hasObjectAccessViaGroup(String userId, Long objectId, String objectType, String objectAction, String accessType)
     {
-        String jpql = "" +
-                "SELECT count(app.id) AS numFound " +
-                "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.userMembers m " +
-                "WHERE app.participant.objectId = :objectId " +
-                "AND app.participant.objectType = :objectType " +
-                "AND app.objectAction = :action " +
-                "AND app.accessType = :accessType " +
-                "AND app.participant.participantLdapId = ag.name " +
-                "AND m.userId = :userid";
+        String jpql = "" + "SELECT count(app.id) AS numFound " + "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.userMembers m "
+                + "WHERE app.participant.objectId = :objectId " + "AND app.participant.objectType = :objectType "
+                + "AND app.objectAction = :action " + "AND app.accessType = :accessType "
+                + "AND app.participant.participantLdapId = ag.name " + "AND m.userId = :userid";
 
         Query find = getEm().createQuery(jpql);
         find.setParameter("userid", userId);
@@ -105,10 +97,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
     {
 
-        String jpql = "SELECT ap " +
-                "FROM AcmParticipant ap " +
-                "WHERE ap.objectId = :objectId " +
-                "AND ap.objectType = :objectType";
+        String jpql = "SELECT ap " + "FROM AcmParticipant ap " + "WHERE ap.objectId = :objectId " + "AND ap.objectType = :objectType";
 
         Query query = getEm().createQuery(jpql);
         query.setParameter("objectId", objectId);
@@ -122,11 +111,11 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     @Transactional
     public int removeAllOtherParticipantsForObject(String objectType, Long objectId, List<AcmParticipant> keepTheseParticipants)
     {
-        // a simple delete query will not cascade deletes to related objects.  So we need to delete
+        // a simple delete query will not cascade deletes to related objects. So we need to delete
         // one by one :-(
 
         List<Long> keepTheseIds = new ArrayList<>(keepTheseParticipants.size());
-        for ( AcmParticipant keep : keepTheseParticipants )
+        for (AcmParticipant keep : keepTheseParticipants)
         {
             keepTheseIds.add(keep.getId());
         }
@@ -135,13 +124,12 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
         int deleted = 0;
 
-        for ( AcmParticipant ap : current )
+        for (AcmParticipant ap : current)
         {
-            if ( ! keepTheseIds.contains(ap.getId()) )
+            if (!keepTheseIds.contains(ap.getId()))
             {
-                log.debug("Removing AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() +
-                        ", obj id: " + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " +
-                        ap.getParticipantLdapId());
+                log.debug("Removing AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() + ", obj id: "
+                        + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " + ap.getParticipantLdapId());
                 AcmParticipant merged = getEm().merge(ap);
                 getEm().remove(merged);
                 deleted++;
@@ -151,15 +139,12 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return deleted;
     }
 
+    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
+            Long objectId)
+    {
 
-    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType,String objectType, Long objectId) {
-
-        Query query = getEm().createQuery(
-                "SELECT par FROM AcmParticipant par " +
-                        "WHERE par.participantType =:participantType " +
-                        "AND par.objectId =:objectId " +
-                        "AND par.objectType =:objectType " +
-                        "AND par.participantLdapId =:userId");
+        Query query = getEm().createQuery("SELECT par FROM AcmParticipant par " + "WHERE par.participantType =:participantType "
+                + "AND par.objectId =:objectId " + "AND par.objectType =:objectType " + "AND par.participantLdapId =:userId");
         query.setParameter("participantType", participantType);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
@@ -167,15 +152,20 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
         List<AcmParticipant> results = query.getResultList();
         AcmParticipant acmParticipant = null;
-        if (!results.isEmpty()) {
+        if (!results.isEmpty())
+        {
             acmParticipant = results.get(0);
         }
         return acmParticipant;
     }
 
     @Transactional
-    public void deleteParticipant(Long id) throws Exception {
-        AcmParticipant participant = getEm().find(getPersistenceClass(),id);
-        getEm().remove(participant);
+    public void deleteParticipant(Long id)
+    {
+        AcmParticipant participant = getEm().find(getPersistenceClass(), id);
+        if (participant != null)
+        {
+            getEm().remove(participant);
+        }
     }
 }

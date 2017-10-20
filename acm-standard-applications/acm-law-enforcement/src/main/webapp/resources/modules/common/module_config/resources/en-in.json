@@ -11,7 +11,7 @@
     "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
   },
   "common.addOrganization": {
-    "title": "Add Parent Organization",
+    "title": "Add Organization",
     "addNew.label": "Add new Organization",
     "selectExisting.label": "Select existing organization",
     "organization.label": "Organization",
@@ -26,9 +26,6 @@
     "radioYes.text": "Yes",
     "radioNo.text": "No",
     "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
-  },
-  "common.editOrganization": {
-    "title": "Edit Parent Organization"
   },
   "common.service": {
     "error.invalidData": "Invalid data"
@@ -731,20 +728,6 @@
       "id": "ID",
       "title": "Title"
     }
-  },
-  "common.addOrganization": {
-    "title": "Add Organization",
-    "addNew.label": "Add new Organization",
-    "selectExisting.label": "Select existing organization",
-    "organization.label": "Organization",
-    "description": "Description",
-    "type.label": "Organization Association Type",
-    "btnCancel.text": "Cancel",
-    "btnOk.text": "Save Organization",
-    "setPrimary.label": "Set As Primary?",
-    "radioYes.text": "Yes",
-    "radioNo.text": "No",
-    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
   },
   "common.addObjectAssociation": {
     "title.add": "Add {{objectLabel}} Association",

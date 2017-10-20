@@ -1,6 +1,3 @@
-/**
- * Copy FileDTO schema
- */
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Copy File DTO Schema",

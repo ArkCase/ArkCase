@@ -6,6 +6,7 @@ angular.module('cases').controller('Cases.ParticipantsController', ['$scope', '$
         $scope.participantsInit = {
             moduleId: 'cases',
             componentId: 'participants',
+            showReplaceChildrenParticipants: true,
             retrieveObjectInfo: CaseInfoService.getCaseInfo,
             validateObjectInfo: CaseInfoService.validateCaseInfo,
             saveObjectInfo: CaseInfoService.saveCaseInfo,

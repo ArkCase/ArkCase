@@ -27,7 +27,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , MY_DOC_REPO: "MY_DOC_REPO"
                 , PERSON: "PERSON"
                 , ORGANIZATION: "ORGANIZATION"
-
+                , FOLDER: "FOLDER"
             }
 
             , LockTypes: {

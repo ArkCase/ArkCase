@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.pipeline.DocumentRepositoryPipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -12,9 +13,10 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
  */
 public class DocumentRepositoryContainerHandler implements PipelineHandler<DocumentRepository, DocumentRepositoryPipelineContext>
 {
+    private EcmFileParticipantService fileParticipantService;
+
     @Override
-    public void execute(DocumentRepository entity, DocumentRepositoryPipelineContext pipelineContext)
-            throws PipelineProcessException
+    public void execute(DocumentRepository entity, DocumentRepositoryPipelineContext pipelineContext) throws PipelineProcessException
     {
         if (entity.getContainer() == null)
         {
@@ -27,6 +29,8 @@ public class DocumentRepositoryContainerHandler implements PipelineHandler<Docum
         {
             AcmFolder folder = new AcmFolder();
             folder.setName("ROOT");
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(entity.getParticipants()));
+
             entity.getContainer().setFolder(folder);
             entity.getContainer().setAttachmentFolder(folder);
         }
@@ -34,9 +38,18 @@ public class DocumentRepositoryContainerHandler implements PipelineHandler<Docum
     }
 
     @Override
-    public void rollback(DocumentRepository entity, DocumentRepositoryPipelineContext pipelineContext)
-            throws PipelineProcessException
+    public void rollback(DocumentRepository entity, DocumentRepositoryPipelineContext pipelineContext) throws PipelineProcessException
     {
         // nothing to do here, there is no rollback action to be executed
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

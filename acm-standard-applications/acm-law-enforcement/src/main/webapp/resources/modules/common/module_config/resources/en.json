@@ -92,6 +92,10 @@
       "btnCancel.text": "Cancel",
       "btnOk.text": "Send Email"
     },
+    "participantsDialog": {
+      "titlePart": "Participants for ",
+      "title": "Participants"
+    },
     "recipientsDialog": {
       "title": "Choose Recipients",
       "search.placeholder": "Search Recipients",
@@ -551,14 +555,18 @@
   },
   "common.directive.coreParticipants": {
     "title": "Participants",
-    "modal.addParticipant.label": "Add Participant",
-    "modal.editParticipant.label": "Edit Record",
-    "modal.participantType.label": "Participant Type ",
-    "modal.participantName.label": "Participant Name",
-    "modal.btnOk.text": "Save",
-    "modal.btnCancel.text": "Cancel",
-    "modal.dialogUserPicker.header": "Search User",
-    "modal.dialogGroupPicker.header": "Search Group",
+    "replaceFolderChildrenParticipants": "Replace child documents participants",
+    "modal" : {
+	  "addParticipant.label": "Add Participant",
+	  "editParticipant.label": "Edit Record",
+	  "participantType.label": "Participant Type ",
+	  "participantName.label": "Participant Name",
+	  "btnOk.text": "Save",
+	  "btnCancel.text": "Cancel",
+	  "dialogUserPicker.header": "Search User",
+	  "dialogGroupPicker.header": "Search Group",
+	  "replaceChildrenParticipant": "replace children participant"
+    },
     "message": {
       "error.groupType": "The owning group cannot be a person.",
       "error.userType": " User type cannot be a group.",
@@ -568,7 +576,9 @@
       "error.owninggroupDelete": "Deleting owning group is not allowed.",
       "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
       "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
-      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+      "error.emptyParticipantLdapId": "Participant name cannot be empty",
+      "error.emptyParticipantType": "Participant type cannot be empty"
     }
   },
   "common.directive.progressIndicator": {

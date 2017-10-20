@@ -10,13 +10,8 @@ angular.module('document-details').controller('Document.ParticipantsController',
         $scope.chosenUser = null;
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
-
-        var promiseTypes = ObjectLookupService.getParticipantTypes().then(
-            function (participantTypes) {
-                $scope.participantTypes = participantTypes;
-                return participantTypes;
-            }
-        );
+        
+        // TODO: Use core-participants directive in document-details
 
         var promiseConfig = ConfigService.getComponentConfig("document-details", "participants").then(function (config) {
             gridHelper.addButton(config, "edit");
