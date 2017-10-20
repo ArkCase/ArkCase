@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.IDsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,12 @@ angular.module('people').controller('People.IDsController', ['$scope', '$q', '$s
             $scope.objectInfo = objectInfo;
             $scope.gridOptions.data = $scope.objectInfo.identifications;
         };
+
+        ObjectLookupService.getIdentificationTypes().then(
+            function (identificationTypes) {
+                $scope.identificationTypes = identificationTypes;
+                return identificationTypes;
+            });
 
         $scope.addNew = function () {
             var identification = {};

@@ -20,10 +20,11 @@
                     <div class="col-xs-4" ng-repeat="item in menu.items | orderBy: 'position' ">
                         <div class="well-sm">
 
-                            <a data-ui-sref="{{item.link}}"
+                            <a ng-click="onCreateNew($event, item)"
                                title="{{item.title | translate}}"
                                permission="{{item.permissionAction}}"
-                               permission-action="hide">
+                               permission-action="hide"
+                               class="cursor-pointer">
                                 <i ng-if="item.iconClass" class="navigation-icon {{item.iconClass}}"> </i>
                                 <span class="text-muted" translate>{{item.title}}</span>
                             </a>

@@ -251,7 +251,9 @@ angular.module('core').service('Menus', ['$q', 'PermissionsService', 'Admin.Modu
                 isPublic: true,
                 position: menuObj.position || 0,
                 iconClass: menuObj.iconClass,
-                permissionAction: menuObj.permissionAction || 'noAction'
+                permissionAction: menuObj.permissionAction || 'noAction',
+                modalDialog: menuObj.modalDialog
+
             });
         }
 
