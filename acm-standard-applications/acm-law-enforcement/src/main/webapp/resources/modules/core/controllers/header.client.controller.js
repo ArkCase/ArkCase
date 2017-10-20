@@ -2,10 +2,10 @@
 
 angular.module('core').controller('HeaderController', ['$scope', '$q', '$state', '$translate'
     , 'UtilService', 'Acm.StoreService', 'Authentication', 'Menus', 'ServCommService', 'Search.AutoSuggestService'
-    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService'
+    , 'Config.LocaleService', 'ConfigService', 'Profile.UserInfoService', 'MessageService', 'ModalDialogService'
     , function ($scope, $q, $state, $translate
         , Util, Store, Authentication, Menus, ServCommService, AutoSuggestService
-        , LocaleService, ConfigService, UserInfoService, MessageService) {
+        , LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService) {
 
         $scope.authentication = Authentication;
         $scope.isCollapsed = false;
@@ -18,10 +18,10 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $scope.data = {};
         $scope.data.inputQuery = '';
 
-        ConfigService.getComponentConfig("core", "header").then(function (config) {
+        ConfigService.getComponentConfig('core', 'header').then(function (config) {
             $scope.config = config;
-            $scope.start = Util.goodMapValue(config, "searchProperties.start", 0);
-            $scope.count = Util.goodMapValue(config, "searchProperties.n", 10);
+            $scope.start = Util.goodMapValue(config, 'searchProperties.start', 0);
+            $scope.count = Util.goodMapValue(config, 'searchProperties.n', 10);
             $scope.typeAheadColumn = config.typeAheadColumn;
         });
 
@@ -34,7 +34,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
                 typeAheadColumn = $scope.typeAheadColumn;
             }
             if (typeaheadQuery.length >= 2) {
-                AutoSuggestService.autoSuggest(typeaheadQuery, "QUICK", null).then(function (res) {
+                AutoSuggestService.autoSuggest(typeaheadQuery, 'QUICK', null).then(function (res) {
                     var results = _.pluck(res, typeAheadColumn);
                     deferred.resolve(results);
                 });
@@ -78,7 +78,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
         $q.all([Authentication.queryUserInfo(), LocaleService.getSettings()]).then(function(result) {
             var userInfo = result[0];
             var localeData = result[1];
-            $scope.localeDropdownOptions = Util.goodMapValue(localeData, "locales", LocaleService.DEFAULT_LOCALES);
+            $scope.localeDropdownOptions = Util.goodMapValue(localeData, 'locales', LocaleService.DEFAULT_LOCALES);
             $scope.localeSelected = LocaleService.requestLocale(userInfo.langCode);
             LocaleService.useLocale($scope.localeSelected.code);
         });
@@ -104,9 +104,18 @@ angular.module('core').controller('HeaderController', ['$scope', '$q', '$state',
             $event.preventDefault();
 
             LocaleService.getLatestSettings().then(function(data) {
-                $scope.localeDropdownOptions = Util.goodMapValue(data, "locales", LocaleService.DEFAULT_LOCALES);
+                $scope.localeDropdownOptions = Util.goodMapValue(data, 'locales', LocaleService.DEFAULT_LOCALES);
                 return data;
             });
-        }
+        };
+
+        $scope.onCreateNew = function(event, item) {
+            event.preventDefault();
+            if(!item.modalDialog) {
+                $state.go(item.link);
+            } else {
+                ModalDialogService.showModal(item.modalDialog);
+            }
+        };
     }
 ]);

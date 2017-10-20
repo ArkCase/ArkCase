@@ -18,6 +18,11 @@
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
       "moduleId": "document-repository",
+      "modalDialog": {
+        "moduleName": "document-repository",
+        "templateUrl": "modules/document-repository/views/components/document-repository-new-document-repository.client.view.html",
+        "controllerName": "DocumentRepository.NewDocumentRepositoryController"
+      },
       "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
       "position": 60

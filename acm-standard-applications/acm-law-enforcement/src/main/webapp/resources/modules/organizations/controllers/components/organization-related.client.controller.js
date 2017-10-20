@@ -15,9 +15,13 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         );
 
+        $scope.relationshipTypes = [];
         ObjectLookupService.getOrganizationRelationTypes().then(
             function (relationshipTypes) {
-                $scope.relationshipTypes = relationshipTypes;
+                for (var i = 0; i < relationshipTypes.length; i++) {
+                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                }
+
                 return relationshipTypes;
             });
 
@@ -168,9 +172,36 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 rowEntity.object_id_s = payload.associationId;
                 rowEntity.association_type_s = payload.associationType;
                 rowEntity.target_object.type_lcs = target.organizationType;
-                rowEntity.target_object.object_id_s = target.organizationId;
+                if (!Util.isEmpty(target.defaultIdentification)) {
+                    if (!Util.isEmpty(target.defaultIdentification.identificationType)) {
+                        rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber + " " + target.defaultIdentification.identificationType;
+                    } else {
+                        rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber;
+                    }
+                }
                 rowEntity.target_object.title_parseable = target.organizationValue;
                 rowEntity.target_object.value_parseable = target.organizationValue;
+                if (!Util.isEmpty(target.primaryContact)) {
+                    if (!Util.isEmpty(target.primaryContact.person.familyName)) {
+                        rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName + " " + target.primaryContact.person.familyName;
+                    } else {
+                        rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName;
+                    }
+
+                }
+                if (!Util.isEmpty(target.defaultPhone)) {
+                    rowEntity.target_object.default_phone_s = target.defaultPhone.value + " [" + target.defaultPhone.subType + "]";
+                } else {
+                    rowEntity.target_object.default_phone_s = "";
+                }
+
+                if (!Util.isEmpty(target.defaultAddress)) {
+                    if (!Util.isEmpty(target.defaultAddress.state)) {
+                        rowEntity.target_object.default_location_s = target.defaultAddress.city + ", " + target.defaultAddress.state;
+                    } else {
+                        rowEntity.target_object.default_location_s = target.defaultAddress.city;
+                    }
+                }
                 //wait 2.5 sec and refresh because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {

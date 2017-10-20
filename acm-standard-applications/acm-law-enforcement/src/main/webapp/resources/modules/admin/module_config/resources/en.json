@@ -505,6 +505,7 @@
           "inverseValue" : "Inverse value"
         },
         "modal" : {
+          "title" : "Search Label",
           "editEntry" : "Edit lookup entry",
           "addEntry" : "Add lookup entry",
           "key.placeholder" : "Enter entry key",
