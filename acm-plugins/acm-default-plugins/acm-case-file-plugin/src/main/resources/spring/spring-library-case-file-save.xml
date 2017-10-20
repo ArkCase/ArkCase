@@ -7,6 +7,7 @@
           class="com.armedia.acm.plugins.casefile.service.SaveCaseServiceImpl">
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="pipelineManager" ref="caseFilePipelineManager"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="caseFilePipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -36,7 +37,9 @@
 
 
     <bean id="caseFileContainerHandler"
-          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileContainerHandler"/>
+          class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileContainerHandler">
+          <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
     <bean id="caseFileEcmFolderHandler"
           class="com.armedia.acm.plugins.casefile.pipeline.postsave.CaseFileEcmFolderHandler">
         <property name="ecmFileService" ref="ecmFileService"/>

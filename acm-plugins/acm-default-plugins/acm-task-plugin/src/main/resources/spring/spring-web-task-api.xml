@@ -35,6 +35,7 @@
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="findTaskByIdAPIController" class="com.armedia.acm.plugins.task.web.api.FindTaskByIdAPIController">
@@ -44,6 +45,7 @@
 
     <bean id="saveTaskAPIController" class="com.armedia.acm.plugins.task.web.api.SaveTaskAPIController">
         <property name="taskDao" ref="acmTaskDao"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
     </bean>
 

@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
@@ -26,6 +27,7 @@ import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -56,6 +58,7 @@ public class PersonServiceImpl implements PersonService
     private PipelineManager<Person, PersonPipelineContext> personPipelineManager;
 
     private PersonDao personDao;
+    private EcmFileParticipantService fileParticipantService;
     /**
      * Root folder for all People
      */
@@ -160,7 +163,8 @@ public class PersonServiceImpl implements PersonService
                     String value = identification.getIdentificationNumber();
 
                     person = (Person) FrevvoFormUtils.set(person, key, value);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     log.debug(
                             "Silent catch of exception while setting value of the property in the object Person. The property name maybe not exist, but execution should go forward.");
@@ -262,7 +266,8 @@ public class PersonServiceImpl implements PersonService
             metadata.setFileName(fileName);
             uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId,
                     picturesFolderObj.getCmisFolderId(), uniqueFileName, image.getInputStream(), metadata);
-        } else
+        }
+        else
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
@@ -289,6 +294,7 @@ public class PersonServiceImpl implements PersonService
         container.setContainerObjectTitle(person.getGivenName() + "-" + person.getFamilyName() + "-" + person.getId());
         AcmFolder folder = new AcmFolder();
         folder.setName("ROOT");
+        folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(person.getParticipants()));
 
         String cmisFolderId = ecmFileService.createFolder(peopleRootFolder + personRootFolderName);
         folder.setCmisFolderId(cmisFolderId);
@@ -334,10 +340,12 @@ public class PersonServiceImpl implements PersonService
                 {
                     String old = om.writeValueAsString(personDao.find(in.getId()));
                     oldPerson = om.readValue(old, Person.class);
-                } catch (JsonProcessingException e)
+                }
+                catch (JsonProcessingException e)
                 {
                     log.error("JsonProcessingException ", e);
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("IOException ", e);
                 }
@@ -351,9 +359,12 @@ public class PersonServiceImpl implements PersonService
     /**
      * Validates the {@link PersonOrganizationAssociation}.
      *
-     * @param person the {@link Person} to validate
-     * @throws AcmCreateObjectFailedException         when at least one of the {@link PersonOrganizationAssociation} is not valid.
-     * @throws AcmDuplicatePersonAssociationException when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @param person
+     *            the {@link Person} to validate
+     * @throws AcmCreateObjectFailedException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @throws AcmDuplicatePersonAssociationException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
      */
     private void validateOrganizationAssociations(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
@@ -398,9 +409,12 @@ public class PersonServiceImpl implements PersonService
     /**
      * save person data
      *
-     * @param person         person data
-     * @param pictures       person pictures
-     * @param authentication authentication
+     * @param person
+     *            person data
+     * @param pictures
+     *            person pictures
+     * @param authentication
+     *            authentication
      * @return Person saved person
      * @throws PipelineProcessException
      */
@@ -430,10 +444,12 @@ public class PersonServiceImpl implements PersonService
                     {
                         hasDefaultPicture = true;
                     }
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
-                } catch (AcmObjectNotFoundException e)
+                }
+                catch (AcmObjectNotFoundException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
                 }
@@ -492,7 +508,8 @@ public class PersonServiceImpl implements PersonService
     }
 
     /**
-     * @param personEventPublisher the personEventPublisher to set
+     * @param personEventPublisher
+     *            the personEventPublisher to set
      */
     public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
     {
@@ -507,5 +524,15 @@ public class PersonServiceImpl implements PersonService
     public void setPersonPipelineManager(PipelineManager<Person, PersonPipelineContext> personPipelineManager)
     {
         this.personPipelineManager = personPipelineManager;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

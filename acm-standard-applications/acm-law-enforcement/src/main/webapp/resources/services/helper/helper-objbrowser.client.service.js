@@ -303,7 +303,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         return objectInfo;
                     }, function (error) {
                         that.scope.objectInfo = null;
-                        //todo: display error
+                        MessageService.error($translate.instant("common.objects.progressError") + " " + objectId);
                         return error;
                     })
 
@@ -482,7 +482,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.moduleId = arg.moduleId;
                 that.componentId = arg.componentId;
                 that.retrieveObjectInfo = arg.retrieveObjectInfo;
-                that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
+                that.currentObjectId = (arg.objectId ? that.scope.currentObjectId = arg.objectId : that.scope.currentObjectId = Service.getCurrentObjectId());
 
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
@@ -538,8 +538,22 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
+                that.scope.$on('report-object-refreshed', function (e, objectId) {
+                    SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [objectId]);
+                    SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [objectId], function (objectInfo) {
+                        that.scope.objectInfo = objectInfo;
+                        that.scope.$broadcast('object-refreshed', objectInfo, true);
+                        return objectInfo;
+                    }, function (error) {
+                        that.scope.objectInfo = null;
+                        MessageService.error($translate.instant("common.objects.progressError") + " " + objectId);
+                        return error;
+                    })
+
+                });
+                
                 if (that.currentObjectId) {
-                    SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
+                    SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [that.currentObjectId], function (objectInfo) {
                         onObjectInfoUpdated(objectInfo, that.currentObjectId);
                         return objectInfo;
                     });

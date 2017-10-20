@@ -1,6 +1,3 @@
-/**
- * Outlook Inbox
- */
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "Outlook Inbox Schema",

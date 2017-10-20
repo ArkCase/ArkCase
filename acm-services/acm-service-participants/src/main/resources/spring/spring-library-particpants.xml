@@ -8,6 +8,7 @@
     <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService">
         <property name="participantDao" ref="acmParticipantDao"/>
         <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
+        <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>
     </bean>
 
     <bean id="acmParticipantEventPublisher"

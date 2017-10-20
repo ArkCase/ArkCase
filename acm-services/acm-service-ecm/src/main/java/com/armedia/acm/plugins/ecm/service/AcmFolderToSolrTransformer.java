@@ -4,9 +4,11 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
+import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,11 +84,16 @@ public class AcmFolderToSolrTransformer implements AcmObjectToSolrDocTransformer
                 AcmContainer container = getFolderService().findContainerByFolderIdTransactionIndependent(parentFolder.getId());
                 doc.getAdditionalProperties().put("parent_container_object_type_s", container.getContainerObjectType());
                 doc.getAdditionalProperties().put("parent_container_object_id_s", container.getContainerObjectId());
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.debug("Failed to index AcmContainer info fields for folder with id: [{}] ", in.getId(), e);
             }
         }
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
         return doc;
     }
 

@@ -14,6 +14,7 @@ angular.module('complaints').config(['$stateProvider',
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('complaints');
+                        $translatePartialLoader.addPart('document-details');
                         return $translate.refresh();
                     }]
                 }

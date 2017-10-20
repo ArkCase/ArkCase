@@ -59,6 +59,8 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     stateParams: $stateParams,
                     moduleId: scope.participantsInit.moduleId,
                     componentId: scope.participantsInit.componentId,
+                    objectId: scope.participantsInit.objectId,
+                    showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
                     retrieveObjectInfo: scope.participantsInit.retrieveObjectInfo,
                     validateObjectInfo: scope.participantsInit.validateObjectInfo,
                     onConfigRetrieved: function (componentConfig) {
@@ -92,10 +94,12 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 };
 
 
-                var showModal = function (participant, isEdit) {
+                var showModal = function (participant, isEdit, showReplaceChildrenParticipants) {
                     var modalScope = scope.$new();
+                    participant.replaceChildrenParticipant = true;
                     modalScope.participant = participant || {};
                     modalScope.isEdit = isEdit || false;
+                    modalScope.showReplaceChildrenParticipants = showReplaceChildrenParticipants || false;
                     modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
 
                     var params =  {};
@@ -141,6 +145,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 }
                                 else {
                                     participant.participantType = data.participant.participantType;
+                                    participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
                                 }
                             }
                             else {
@@ -153,6 +158,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 else {
                                     participant.participantType = data.participant.participantType;
                                     participant.className = scope.config.className;
+                                    participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
                                     scope.objectInfo.participants.push(participant);
                                 }
                             }
@@ -184,7 +190,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         participantTypes: scope.participantTypes,
                         config: scope.config
                     };
-                    showModal(item, false);
+                    showModal(item, false, scope.participantsInit.showReplaceChildrenParticipants);
                 };
 
                 scope.editRow = function (rowEntity) {
@@ -200,7 +206,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 selectedType: participantData[0].object_type_s ? participantData[0].object_type_s : "",
                                 config: scope.config
                             };
-                            showModal(item, true);
+                            showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                         }
                     })
                 };
@@ -223,27 +229,36 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         }
                     }
                 };
+                
+                scope.onClickReplaceChildrenParticipants = function () {
+                	len = scope.objectInfo.participants.length;
+                	for (i = 0; i < len; i++) {
+                		scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                	}                	
+                	saveObjectInfoAndRefresh();
+                }
 
                 var saveObjectInfoAndRefresh = function () {
                     var saveObject = Util.omitNg(scope.objectInfo);
+                    saveObject.objectId = scope.participantsInit.objectId;
                     scope.participantsInit.saveObjectInfo(saveObject).then(
                         function (objectSaved) {
                             refresh();
                             return objectSaved;
                         },
                         function (error) {
+                            MessageService.error(error.data);
+                            refresh();
                             return error;
                         }
                     );
                 };
 
                 var refresh = function () {
-                    scope.$emit('report-object-refreshed', $stateParams.id);
+                    scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId : $stateParams.id);
                 };
             },
             templateUrl: 'directives/core-participants/core-participants.client.view.html'
         }
     }
 ]);
-
-

@@ -18,6 +18,7 @@ import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,14 +49,13 @@ public class SplitCaseServiceImpl implements SplitCaseService
 
     @Override
     @Transactional
-    public CaseFile splitCase(Authentication auth,
-                              String ipAddress,
-                              SplitCaseOptions splitCaseOptions) throws PipelineProcessException, SplitCaseFileException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmFolderException, AcmObjectNotFoundException
+    public CaseFile splitCase(Authentication auth, String ipAddress, SplitCaseOptions splitCaseOptions)
+            throws PipelineProcessException, SplitCaseFileException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+            AcmFolderException, AcmObjectNotFoundException
     {
         CaseFile original = caseFileDao.find(splitCaseOptions.getCaseFileId());
         if (original == null)
             throw new SplitCaseFileException("Case file with id = (" + splitCaseOptions.getCaseFileId() + ") not found");
-
 
         CaseFile copyCaseFile = new CaseFile();
 
@@ -64,7 +64,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         caseFiles.put("copy", copyCaseFile);
         getSplitCaseFileBusinessRule().applyRules(caseFiles);
 
-        //add assignee to new case
+        // add assignee to new case
         AcmParticipant participant = new AcmParticipant();
         participant.setParticipantLdapId(auth.getName());
         participant.setParticipantType(ParticipantTypes.ASSIGNEE);
@@ -76,7 +76,6 @@ public class SplitCaseServiceImpl implements SplitCaseService
         if (typesToCopy.contains("participants"))
             copyParticipants(original, copyCaseFile, auth);
 
-
         ObjectAssociation childObjectCopy = new ObjectAssociation();
         childObjectCopy.setAssociationType("REFERENCE");
         childObjectCopy.setCategory("COPY_FROM");
@@ -86,10 +85,10 @@ public class SplitCaseServiceImpl implements SplitCaseService
         childObjectCopy.setTargetName(original.getCaseNumber());
         copyCaseFile.addChildObject(childObjectCopy);
 
-
         if (typesToCopy.contains("people"))
             copyPeople(original, copyCaseFile);
 
+        copyCaseFile.getParticipants().forEach(copyCaseFileParticipant -> copyCaseFileParticipant.setReplaceChildrenParticipant(true));
         copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
 
         ObjectAssociation childObjectOriginal = new ObjectAssociation();
@@ -107,7 +106,8 @@ public class SplitCaseServiceImpl implements SplitCaseService
             try
             {
                 copyTasks(original, copyCaseFile, auth, ipAddress);
-            } catch (AcmTaskException e)
+            }
+            catch (AcmTaskException e)
             {
                 log.error("Couldn't copy tasks.", e);
             }
@@ -118,7 +118,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
 
     private void copyParticipants(CaseFile original, CaseFile copyCaseFile, Authentication auth)
     {
-        //all participants are copied and assigned as followers, except current user is exist is not copied
+        // all participants are copied and assigned as followers, except current user is exist is not copied
         if (original.getParticipants() == null || original.getParticipants().isEmpty())
             return;
         if (copyCaseFile.getParticipants() == null)
@@ -156,7 +156,8 @@ public class SplitCaseServiceImpl implements SplitCaseService
         }
     }
 
-    private void copyDocumentsAndFolders(CaseFile saved, SplitCaseOptions options) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException
+    private void copyDocumentsAndFolders(CaseFile saved, SplitCaseOptions options)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmFolderException, AcmCreateObjectFailedException
     {
         for (SplitCaseOptions.AttachmentDTO attachmentDTO : options.getAttachments())
         {
@@ -164,29 +165,24 @@ public class SplitCaseServiceImpl implements SplitCaseService
             AcmFolder containerFolderOfCopy = containerOfCopy.getFolder();
             switch (attachmentDTO.getType())
             {
-                case "folder":
-                    acmFolderService.copyFolderStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
-                    break;
-                case "document":
-                    acmFolderService.copyDocumentStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
-                    break;
-                default:
-                    log.warn("Invalid type({}) for for splitting attachments", attachmentDTO.getType());
-                    break;
+            case "folder":
+                acmFolderService.copyFolderStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                break;
+            case "document":
+                acmFolderService.copyDocumentStructure(attachmentDTO.getId(), containerOfCopy, containerFolderOfCopy);
+                break;
+            default:
+                log.warn("Invalid type({}) for for splitting attachments", attachmentDTO.getType());
+                break;
             }
         }
     }
 
-
-    private void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+    private void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException,
+            AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-        acmTaskService.copyTasks(original.getId(),
-                original.getObjectType(),
-                copyCaseFile.getId(),
-                copyCaseFile.getObjectType(),
-                copyCaseFile.getTitle(),
-                auth,
-                ipAddress);
+        acmTaskService.copyTasks(original.getId(), original.getObjectType(), copyCaseFile.getId(), copyCaseFile.getObjectType(),
+                copyCaseFile.getTitle(), auth, ipAddress);
     }
 
     public void setSaveCaseService(SaveCaseService saveCaseService)

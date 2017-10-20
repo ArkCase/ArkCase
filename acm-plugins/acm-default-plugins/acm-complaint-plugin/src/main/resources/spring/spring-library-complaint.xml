@@ -112,7 +112,9 @@
 
     <!-- pre-save handlers -->
     <bean id="complaintContainerHandler"
-          class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler"/>
+          class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler">
+          <property name="fileParticipantService" ref="fileParticipantService"/>
+    </bean>
     <bean id="complaintParticipantRulesHandler"
           class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintParticipantRulesHandler">
         <property name="participantsRule" ref="participantsBusinessRule"/>
@@ -150,6 +152,7 @@
 
     <bean id="saveComplaintTransaction" class="com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction">
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="pipelineManager" ref="complaintPipelineManager"/>
     </bean>
 
@@ -212,6 +215,7 @@
     <bean id="complaintDataAccessUpdateLocator"
           class="com.armedia.acm.plugins.complaint.service.ComplaintDataAccessUpdateLocator">
         <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="complaintCaptureFileEventListener"

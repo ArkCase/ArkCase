@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataaccess.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 
 import java.util.Date;
@@ -12,5 +13,5 @@ public interface AcmObjectDataAccessBatchUpdateLocator<T extends AcmAssignedObje
 {
     List<T> getObjectsModifiedSince(Date lastUpdate, int start, int pageSize);
 
-    void save(T assignedObject);
+    void save(T assignedObject) throws AcmAccessControlException;
 }

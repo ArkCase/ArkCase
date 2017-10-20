@@ -88,6 +88,7 @@
     <bean id="caseFileDataAccessUpdateLocator"
           class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
         <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="acmQueueNamesProperties"
