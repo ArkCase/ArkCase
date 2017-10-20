@@ -320,6 +320,7 @@
               "name": "personType",
               "displayName": "complaints.comp.people.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
               "lookup": "personTypes"
             },
             {
@@ -369,6 +370,7 @@
               "name": "participantType",
               "displayName": "complaints.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -454,23 +456,41 @@
           "columnDefs": [
             {
               "name": "targetName",
+              "field": "target_object.name",
               "displayName": "complaints.comp.references.table.columns.targetName",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetName}}</a>"
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.target_object.name}}</a>"
             },
             {
               "name": "targetTitle",
+              "field": "target_object.title_parseable",
               "displayName": "complaints.comp.references.table.columns.targetTitle",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
+              "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
+            },
+            {
+              "name": "parentName",
+              "field": "target_object.parent_name",
+              "displayName": "complaints.comp.references.table.columns.parentName",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parentName}}>{{row.entity.target_object.parent_name}}</a>"
+            },
+            {
+              "name": "modified",
+              "field": "target_object.modified_date_tdt",
+              "displayName": "complaints.comp.references.table.columns.modified",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div>{{ row.entity.modified | date : ('common.defaultDateUIFormat' | translate)}}</div>"
             },
             {
               "name": "targetType",
+              "field": "target_object.object_type_s",
               "displayName": "complaints.comp.references.table.columns.targetType",
               "headerCellFilter": "translate"
             },
             {
               "name": "status",
+              "field": "target_object.status_lcs",
               "displayName": "complaints.comp.references.table.columns.status",
               "headerCellFilter": "translate"
             }
@@ -582,6 +602,7 @@
           "name": "type",
           "displayName": "complaints.comp.locations.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}</div>",
           "lookup": "addressTypes"
         },
         {
@@ -623,6 +644,7 @@
           "name": "personType",
           "displayName": "complaints.comp.people.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
           "lookup": "personTypes"
         },
         {
@@ -679,7 +701,8 @@
         {
           "name": "associationType",
           "displayName": "complaints.comp.organizations.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.associationType) | translate }}</div>"
         },
         {
           "name": "organization.organizationValue",
@@ -759,6 +782,7 @@
           "name": "participantType",
           "displayName": "complaints.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {

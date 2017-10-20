@@ -14,9 +14,9 @@ angular.module('dashboard.related', ['adf.provider'])
             );
     })
     .controller('Dashboard.RelatedController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'ObjectAssociation.Service', 'ObjectService', 'UtilService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Person.InfoService', 'ObjectAssociation.Service', 'ObjectService', 'UtilService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
         function ($scope, $stateParams, $translate,
-                  PersonInfoService, ObjectAssociationService, ObjectService, Util, HelperObjectBrowserService, HelperUiGridService) {
+                  PersonInfoService, ObjectAssociationService, ObjectService, Util, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
 
             var modules = [
                 {
@@ -77,5 +77,15 @@ angular.module('dashboard.related', ['adf.provider'])
                 var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
                 gridHelper.showObject(targetType, targetId);
             };
+
+            $scope.relationshipTypes = [];
+            ObjectLookupService.getPersonRelationTypes().then(
+                function (relationshipTypes) {
+                    for (var i = 0; i < relationshipTypes.length; i++) {
+                        $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    }
+
+                    return relationshipTypes;
+                });
         }
     ]);
