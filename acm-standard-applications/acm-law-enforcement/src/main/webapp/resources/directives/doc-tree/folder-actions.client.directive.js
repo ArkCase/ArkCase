@@ -61,9 +61,10 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                     $q.all([promiseFormTypes, promiseFileTypes]).then(
                         function (data) {
                             var formTypes = data[0];
+                            var lookupFileTypes = data[1];
                             var fileTypes = [];
-                            for (var i = 0; i < data[1].length; i++) {
-                                fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
+                            for (var i = 0; i < lookupFileTypes.length; i++) {
+                                fileTypes.push({"key": lookupFileTypes[i].key, "value": $translate.instant(lookupFileTypes[i].value)});
                             }
 
                             for (var i = 0; i < formTypes.length; i++) {
