@@ -215,7 +215,6 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         function setOrganizationAssociation(association, data) {
             association.person = {id: $scope.person.id};
             association.organization = data.organization;
-            association.organizationValue = data.organizationValue;
             association.personToOrganizationAssociationType = data.type;
             association.organizationToPersonAssociationType = data.inverseType;
 

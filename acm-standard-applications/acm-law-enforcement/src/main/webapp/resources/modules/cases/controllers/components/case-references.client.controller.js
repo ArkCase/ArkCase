@@ -139,7 +139,9 @@ angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$st
                             modified_date_tdt: payload.modified,
                             object_type_s: target.object_type_s,
                             status_lcs: target.status_lcs
-                        }
+                        },
+                        target_type_s: payload.targetType,
+                        target_id_s: payload.targetId
                     };
 
                     if (rowEntity.target_object.parent_ref_s) {
