@@ -277,6 +277,7 @@
               "name": "personType",
               "displayName": "cases.comp.people.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
               "lookup": "personTypes"
             },
             {
@@ -326,6 +327,7 @@
               "name": "participantType",
               "displayName": "cases.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -559,6 +561,7 @@
           "name": "personType",
           "displayName": "cases.comp.people.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
           "lookup": "personTypes"
         },
         {
@@ -615,7 +618,8 @@
         {
           "name": "associationType",
           "displayName": "cases.comp.organizations.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.associationType) | translate }}</div>"
         },
         {
           "name": "organization.organizationValue",
@@ -678,6 +682,7 @@
           "name": "participantType",
           "displayName": "cases.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {

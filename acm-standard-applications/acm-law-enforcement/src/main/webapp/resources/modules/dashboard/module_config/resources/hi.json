@@ -327,5 +327,35 @@
         "noDataMessage": "वर्तमान में कोई भी संबंधित लोगों को प्रदर्शित करने के लिए नहीं"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "समाचार विजेट"
+  },
+  "dashboard.comp.weather": {
+    "title": "समाचार विजेट..."
+  },
+  "dashboard.comp.myCases": {
+    "title": "मेरे मामले विजेट"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "मेरे कार्य विजेट"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "मेरी शिकायत विजेट"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "कार्यप्रवाह रिपोर्ट"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "नई शिकायतें"
+  },
+  "dashboard.comp.newCases": {
+    "title": "नई मामले"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "कतार द्वारा मामले"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "टीम कार्यभार"
   }
 }

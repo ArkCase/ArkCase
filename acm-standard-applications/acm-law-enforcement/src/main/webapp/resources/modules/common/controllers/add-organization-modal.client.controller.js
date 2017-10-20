@@ -1,13 +1,15 @@
 angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
-        , 'Object.LookupService', 'UtilService', 'ConfigService', 'params'
+        , 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-        , ObjectLookupService, Util, ConfigService, params) {
+        , ObjectLookupService, Util, ConfigService, OrganizationInfoService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
                 return moduleConfig;
             });
 
+            $scope.hasSubCompany = false;
+            $scope.newOrganizationPicked = null;
             $scope.selectExisting = 0;
             $scope.types = params.types;
             $scope.showDescription = params.showDescription;
@@ -27,6 +29,13 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
+            //if not set, than use 'true' as default
+            $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+
+            if ($scope.editMode) {
+                $scope.addNewEnabled = false;
+            }
+
             if (params.isSelectedParent) {
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
@@ -113,12 +122,27 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
+                        $scope.getOrganizationInfo($scope.organizationId);
                     }
                 });
             };
-            
-            $scope.isChanged = function () {
+
+            $scope.getOrganizationInfo = function (organizationId) {
+                OrganizationInfoService.getOrganizationInfo(organizationId)
+                    .then(function (data) {
+                            $scope.newOrganizationPicked = data.parentOrganization;
+                            $scope.notifyOrganizationParent($scope.type);
+                        }
+                    );
+            };
+
+            $scope.isChanged = function (organizationType) {
                 $scope.isValid = false;
+                $scope.notifyOrganizationParent(organizationType);
+            };
+
+            $scope.notifyOrganizationParent = function (organizationType) {
+                $scope.hasSubCompany = !Util.isEmpty(organizationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationType.key === "subCompany";
             };
 
             $scope.addNewOrganization = function () {
