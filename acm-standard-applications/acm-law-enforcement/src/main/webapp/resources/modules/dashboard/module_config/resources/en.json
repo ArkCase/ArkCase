@@ -379,5 +379,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "Team Workload"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Cases By Status"
   }
 }

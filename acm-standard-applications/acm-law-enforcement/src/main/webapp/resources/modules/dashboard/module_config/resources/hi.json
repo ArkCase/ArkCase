@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "टीम कार्यभार"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "स्थिति द्वारा स्थिति"
   }
 }
