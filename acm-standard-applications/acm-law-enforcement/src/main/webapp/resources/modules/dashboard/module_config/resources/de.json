@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "Teamarbeit"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Fälle nach Status"
   }
 }
