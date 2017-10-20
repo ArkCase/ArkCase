@@ -17,6 +17,11 @@
       "menuItemURL": "newPerson",
       "menuItemTitle": "people.menus.topbar.item",
       "moduleId": "person",
+      "modalDialog": {
+        "moduleName": "people",
+        "templateUrl": "modules/people/views/components/person-new-person.client.view.html",
+        "controllerName": "People.NewPersonController"
+      },
       "iconClass": "fa fa-user",
       "position": 40
     }
