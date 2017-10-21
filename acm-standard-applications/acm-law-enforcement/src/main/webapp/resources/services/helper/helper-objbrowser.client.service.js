@@ -507,7 +507,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         return arg.onConfigRetrieved(componentConfig);
                     }
                 };
-                that.scope.lang = LocaleService.getLocaleData().code;//xxxxxxxxxxxxxxxxxxxxxxxxxxx
+                that.scope.lang = LocaleService.getLocaleData().code;
                 that.scope.locale = $locale;
                 that.scope.currencySymbol = LocaleService.getCurrencySymbol($locale.id);
                 that.scope.$bus.subscribe('$translateChangeSuccess', function (data) {
