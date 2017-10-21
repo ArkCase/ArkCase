@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('cases').controller('Cases.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Case.LookupService', 'Case.InfoService'
     , 'Object.ModelService', 'MessageService', 'ObjectService', 'Object.ParticipantService', 'SearchService'
-    , 'Search.QueryBuilderService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Helper.LocaleService'
-    , function ($scope, $q, $stateParams, $translate, $modal
+    , 'Search.QueryBuilderService', 'Helper.ObjectBrowserService', 'Helper.UiGridService'
+    , function ($scope, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, CaseLookupService, CaseInfoService
         , ObjectModelService, MessageService, ObjectService, ObjectParticipantService, SearchService
-        , SearchQueryBuilder, HelperObjectBrowserService, HelperUiGridService,  LocaleHelper
+        , SearchQueryBuilder, HelperObjectBrowserService, HelperUiGridService
     ) {
 
         new HelperObjectBrowserService.Component({
@@ -24,27 +24,11 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-        new LocaleHelper.Locale({
-            scope: $scope
-            , onTranslateChangeSuccess: function (data) {
-                lookupPriorities();
-                lookupCaseTypes();
-            }
-        });
-
         var promiseUsers = gridHelper.getUsers();
 
         ConfigService.getComponentConfig("cases", "participants").then(function (componentConfig) {
             $scope.config = componentConfig;
         });
-
-        var getPrioritiesPromise = ObjectLookupService.getPriorities();
-        getPrioritiesPromise.then(
-            function (priorities) {
-                $scope.priorities = priorities;
-                return priorities;
-            }
-        );
 
         ObjectLookupService.getGroups().then(
             function (groups) {
@@ -57,13 +41,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             }
         );
 
-        var caseFileTypesPromise = ObjectLookupService.getCaseFileTypes();
-        caseFileTypesPromise.then(
-            function (caseTypes) {
-                $scope.caseTypes = caseTypes;
-                return caseTypes;
-            }
-        );
+        ObjectLookupService.getLookupByLookupName("priorities").then(function (priorities) {
+            $scope.priorities = priorities;
+            return priorities;
+        });
+
+        ObjectLookupService.getLookupByLookupName("caseFileTypes").then(function (caseTypes) {
+            $scope.caseTypes = caseTypes;
+            return caseTypes;
+        });
 
         $scope.openAssigneePickerModal = function () {
             var participant = {
@@ -74,23 +60,7 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             showModal(participant);
         };
 
-        var lookupPriorities = function() {
-            ObjectLookupService.getPriorities().then(
-                function (priorities) {
-                    $scope.priorities = priorities;
-                    return priorities;
-                }
-            );
-        };
 
-        var lookupCaseTypes = function() {
-            CaseLookupService.getCaseTypes().then(
-                function (caseTypes) {
-                    $scope.caseTypes = caseTypes;
-                    return caseTypes;
-                }
-            );
-        };
 
         var showModal = function (participant) {
             var modalScope = $scope.$new();
@@ -207,13 +177,10 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
 
         var onObjectInfoRetrieved = function (data) {
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
+            $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
             $scope.owningGroup = ObjectModelService.getGroup(data);
             $scope.assignee = ObjectModelService.getAssignee(data);
-            $q.all([getPrioritiesPromise, caseFileTypesPromise]).then(function() {
-                setCaseTypeValue();
-                setPriorityValue();
-            });
+
             CaseLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
                     var options = [];
@@ -226,20 +193,15 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
             );
         };
 
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
-
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
         	$scope.picker.opened = true;
         };
 
-        /**
-         * Persists the updated casefile metadata to the ArkCase database
-         */
-        function saveCase() {
+        // Updates the ArkCase database when the user changes a case attribute
+        // in a case top bar menu item and clicks the save check button
+        $scope.saveCase = function () {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            setCaseTypeValue();
-            setPriorityValue();
             if (CaseInfoService.validateCaseInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = CaseInfoService.saveCaseInfo(objectInfo);
@@ -255,44 +217,20 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$q', '$st
                 );
             }
             return promiseSaveInfo;
-        }
-
-
-        // Updates the ArkCase database when the user changes a case attribute
-        // in a case top bar menu item and clicks the save check button
-        $scope.saveCase = function () {
-            saveCase();
         };
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-            saveCase();
+            $scope.saveCase();
         };
         $scope.updateAssignee = function () {
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
-            saveCase();
+            $scope.saveCase();
         };
         $scope.updateDueDate = function () {
             var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
             $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-            saveCase();
+            $scope.saveCase();
         };
-        
-        var setCaseTypeValue = function() {
-            var caseType = _.findWhere($scope.caseTypes, {key : $scope.objectInfo.caseType});
-            if (caseType) {
-                $scope.caseTypeValue = caseType.value;
-            } else {
-                $scope.caseTypeValue = 'core.unknown';
-            }
-        }
-        
-        var setPriorityValue = function() {
-            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
-            if (priority) {
-                $scope.priorityValue = priority.value;
-            } else {
-                $scope.priorityValue = 'core.unknown';
-            }
-        }
+
     }
 ]);

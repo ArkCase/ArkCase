@@ -68,14 +68,6 @@
       "errorHeaderText": "Error",
       "btnOk.text": "OK",
       "btnClose.text": "Close"
-    },
-    "taskOutcomes": {
-      "approve%": "Approve Document",
-      "rework%": "Send for Rework",
-      "resubmit%": "Resubmit",
-      "cancel%": "Cancel Document",
-      "concur%": "Concur",
-      "nonConcur%": "Non-Concur"
     }
   },
   "tasks.comp.details": {

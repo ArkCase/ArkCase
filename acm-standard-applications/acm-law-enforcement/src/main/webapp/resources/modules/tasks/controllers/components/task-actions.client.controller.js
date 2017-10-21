@@ -2,12 +2,11 @@
 
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$translate'
     , 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService'
-    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'Helper.LocaleService'
+    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService'
     , function ($scope, $state, $stateParams, $modal, $translate
         , Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService
-        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, LocaleHelper
+        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService
     ) {
-
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -20,11 +19,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
-        new LocaleHelper.Locale({
-            scope: $scope
-        });
 
         var promiseQueryUser = Authentication.queryUserInfo();
+
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
@@ -81,10 +78,6 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             });
         };
 
-
-        //$scope.availableOutcomes0 = [{name: "APPROVE", description: "Approve Document", fields: ["value", "message"]}
-        //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
-        //];
 
         $scope.diagram = function () {
             var modalInstance = $modal.open({
