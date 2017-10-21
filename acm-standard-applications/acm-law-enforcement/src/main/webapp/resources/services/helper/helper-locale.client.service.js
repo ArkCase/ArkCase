@@ -10,8 +10,8 @@
  *
  * Helper.LocaleService save locale code in scope for later use
  */
-angular.module('services').factory('Helper.LocaleService', ['UtilService', 'Config.LocaleService'
-    , function (Util, LocaleService) {
+angular.module('services').factory('Helper.LocaleService', ['$locale', 'UtilService', 'Config.LocaleService'
+    , function ($locale, Util, LocaleService) {
 
         var Service = {
 
@@ -33,8 +33,12 @@ angular.module('services').factory('Helper.LocaleService', ['UtilService', 'Conf
                 var that = this;
                 that.scope = arg.scope;
                 that.scope.lang = LocaleService.getLocaleData().code;
+                that.scope.locale = $locale;
+                that.scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
                 that.scope.$bus.subscribe('$translateChangeSuccess', function (data) {
                     that.scope.lang = Util.goodMapValue(data, "lang", LocaleService.getLocaleData().code);
+                    that.scope.locale = $locale;
+                    that.scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
                     if (arg.onTranslateChangeSuccess) {
                         return arg.onTranslateChangeSuccess(data);
                     }

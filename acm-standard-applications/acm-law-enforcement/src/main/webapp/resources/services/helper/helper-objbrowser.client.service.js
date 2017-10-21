@@ -12,9 +12,13 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout', '$locale'
     , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService'
-    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService, ObjectService) {
+    , 'Config.LocaleService'
+    , function ($q, $resource, $translate, $timeout, $locale
+        , Store, Util, ConfigService, ServCommService, MessageService, ObjectService
+        , LocaleService
+    ) {
 
         var SyncDataLoader = {
             data: {},
@@ -503,6 +507,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         return arg.onConfigRetrieved(componentConfig);
                     }
                 };
+                that.scope.lang = LocaleService.getLocaleData().code;//xxxxxxxxxxxxxxxxxxxxxxxxxxx
+                that.scope.locale = $locale;
+                that.scope.currencySymbol = LocaleService.getCurrencySymbol($locale.id);
+                that.scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                    that.scope.lang = Util.goodMapValue(data, "lang", LocaleService.getLocaleData().code);
+                    that.scope.locale = $locale;
+                    that.scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
+                    if (arg.onTranslateChangeSuccess) {
+                        return arg.onTranslateChangeSuccess(data);
+                    }
+                });
 
                 that.deferConfigDone = $q.defer();
                 that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
