@@ -14,7 +14,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -29,10 +28,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -262,7 +257,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
     {
-        log.debug("Saving AcmUserRole [{}] for User [{}]", userRole.getRoleName(), userRole.getUserId());
         AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
         key.setRoleName(userRole.getRoleName());
         key.setUserId(userRole.getUserId());
@@ -270,12 +264,16 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         if (existing == null)
         {
+            log.debug("Saving [{}] AcmUserRole [{}] for User [{}]", userRole.getUserRoleState(), userRole.getRoleName(),
+                    userRole.getUserId());
             getEntityManager().persist(userRole);
             return userRole;
         }
 
         if (!Objects.equals(existing.getUserRoleState(), userRole.getUserRoleState()))
         {
+            log.debug("Change AcmUserRole [{}] for User [{}] to [{}]", userRole.getRoleName(), userRole.getUserId(),
+                    userRole.getUserRoleState());
             existing.setUserRoleState(userRole.getUserRoleState());
         }
 
