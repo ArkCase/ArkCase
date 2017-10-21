@@ -51,7 +51,7 @@ public interface SpringLdapDao
 
     default String buildGroupSearchFilter(AcmLdapSyncConfig syncConfig, Optional<String> lastSyncDate)
     {
-        return lastSyncDate.map(it -> String.format(syncConfig.getChangedGroupSearchFilter(), lastSyncDate))
+        return lastSyncDate.map(it -> String.format(syncConfig.getChangedGroupSearchFilter(), it))
                 .orElse(syncConfig.getGroupSearchFilter());
     }
 
@@ -65,7 +65,7 @@ public interface SpringLdapDao
 
     default String buildPagedGroupsSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, Optional<String> lastSyncDate)
     {
-        return lastSyncDate.map(it -> String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue, lastSyncDate))
+        return lastSyncDate.map(it -> String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue, it))
                 .orElse(String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue));
 
     }
@@ -74,7 +74,7 @@ public interface SpringLdapDao
     {
         // eg. allUsersPageFilter = (&(objectClass=person)(uidNumber>=%s))
         // allChangedUsersPageFilter = (&(objectClass=person)(uidNumber>=%s)(modifyTimestamp>=%s))
-        return lastSyncDate.map(it -> String.format(syncConfig.getAllChangedUsersPageFilter(), sortAttributeValue, lastSyncDate))
+        return lastSyncDate.map(it -> String.format(syncConfig.getAllChangedUsersPageFilter(), sortAttributeValue, it))
                 .orElse(String.format(syncConfig.getAllUsersPageFilter(), sortAttributeValue));
     }
 

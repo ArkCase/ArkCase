@@ -92,7 +92,6 @@ public class AcmUserRoleService
                     userRole.setUserId(user.getUserId());
                     userRole.setRoleName(role);
                     userRole.setUserRoleState(AcmUserRoleState.INVALID);
-                    log.debug("Saving AcmUserRole [{}] for User [{}]", role, user.getUserId());
                     userDao.saveAcmUserRole(userRole);
                 });
         userDao.getEntityManager().flush();

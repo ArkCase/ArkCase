@@ -57,6 +57,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             boolean skipFirst = false;
             while (searchUsers)
             {
+                log.debug("Search filter: [{}]", searchFilter);
                 // the context mapper will return null for disabled users
                 List<LdapUser> found = template.search(base, searchFilter, searchControls, userGroupsContextMapper, sortedAndPaged);
 
