@@ -1,19 +1,17 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.SimpleAuthenticationSource;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public interface SpringLdapDao
 {
@@ -59,13 +57,13 @@ public interface SpringLdapDao
     {
         // eg. allUsersFilter = (objectClass=person )
         // allChangedUsersFilter = (&(objectClass=person)(modifyTimestamp>=%s))
-        return lastSyncDate.map(it ->String.format(syncConfig.getAllChangedUsersFilter(), it))
+        return lastSyncDate.map(it -> String.format(syncConfig.getAllChangedUsersFilter(), it))
                 .orElse(syncConfig.getAllUsersFilter());
     }
 
     default String buildPagedGroupsSearchFilter(AcmLdapSyncConfig syncConfig, String sortAttributeValue, Optional<String> lastSyncDate)
     {
-        return lastSyncDate.map(it -> String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue, it))
+        return lastSyncDate.map(it -> String.format(syncConfig.getChangedGroupSearchPageFilter(), sortAttributeValue, it))
                 .orElse(String.format(syncConfig.getGroupSearchPageFilter(), sortAttributeValue));
 
     }
