@@ -25,7 +25,8 @@
     "radioName": "zh-tw_Choice primary",
     "radioYes.text": "zh-tw_Yes",
     "radioNo.text": "zh-tw_No",
-    "duplicateOrganizationRoleErrorMessage": "zh-tw_Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "zh-tw_Organization already has the selected association",
+    "notifyParentOrgWillBeChanged": "zh-tw_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "zh-tw_Add person",

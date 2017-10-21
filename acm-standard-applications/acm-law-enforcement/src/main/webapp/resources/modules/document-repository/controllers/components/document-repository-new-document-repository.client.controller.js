@@ -2,10 +2,11 @@
 
 angular.module('document-repository').controller('DocumentRepository.NewDocumentRepositoryController', ['$scope'
     , '$modal', '$translate', '$window', 'ConfigService', 'UtilService', 'Authentication'
-    , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService'
+    , 'Profile.UserInfoService', 'DocumentRepository.InfoService', 'MessageService', 'ObjectService', 'modalParams'
     , function ($scope, $modal, $translate, $window, ConfigService, Util, Authentication
-        , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService) {
+        , UserInfoService, DocumentRepositoryInfoService, MessageService, ObjectService, modalParams) {
 
+        $scope.modalParams = modalParams;
         $scope.docRepo = {};
         $scope.loading = false;
         var user = {};
@@ -76,6 +77,7 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
                     } else {
                         ObjectService.showObject(ObjectService.ObjectTypes.DOC_REPO, data.id);
                     }
+                    $scope.onModalClose();
                     $scope.loading = false;
                 }, function (error) {
                     $scope.loading = false;
@@ -101,12 +103,12 @@ angular.module('document-repository').controller('DocumentRepository.NewDocument
             }
         }
 
-        $scope.onCancel = function () {
-            $window.history.back();
-        };
-
         $scope.isPersonalDocRepo = function () {
             return $scope.docRepo.repositoryType === 'PERSONAL';
+        };
+
+        $scope.cancelModal = function() {
+            $scope.onModalDismiss();
         };
     }
 ]);
