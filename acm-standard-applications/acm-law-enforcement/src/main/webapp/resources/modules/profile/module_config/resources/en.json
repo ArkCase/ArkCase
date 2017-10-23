@@ -51,6 +51,9 @@
     "email": "Email Address",
     "uploadImgError": "You have uploaded an invalid image file type"
   },
+  "profile.signature": {
+    "title": "Change Signature"
+  },
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Password Can not be Empty",

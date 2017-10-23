@@ -51,6 +51,9 @@
     "email": "Endereço de e-mail",
     "uploadImgError": "Você enviou um tipo de arquivo de imagem inválido"
   },
+  "profile.signature": {
+    "title": "Mudar a assinatura"
+  },
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "A senha não pode estar vazia",

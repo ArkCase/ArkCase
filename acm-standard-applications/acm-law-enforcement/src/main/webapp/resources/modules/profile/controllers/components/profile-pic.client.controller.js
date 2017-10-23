@@ -6,6 +6,9 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
         $scope.changePic = function () {
             $("#file").click();
         };
+        $scope.changeSignature = function () {
+            $("#fileSignature").click();
+        };
         $scope.submit = function () {
             if ($scope.userPicture != null) {
                 UserInfoService.getUserInfo().then(function (data) {
@@ -33,6 +36,32 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
                 });
             }
         };
+        $scope.submitSignature = function () {
+            if ($scope.userSignature != null) {
+                UserInfoService.getUserInfo().then(function (data) {
+                    var userID = data.userOrgId;
+                    if ($scope.userSignature.$error) {
+                        DialogService.alert($translate.instant("profile.picture.uploadImgError"));
+                    }
+                    else {
+                        ProfilePictureService.changeSignature($scope.userSignature, userID)
+                            .success(function (fileInfo) {
+                                var ecmFileID = fileInfo[0].fileId;
+                                $scope.profileEcmSignatureFileID = ecmFileID;
+                                UserInfoService.getUserInfo().then(function (infoData) {
+                                    infoData.ecmSignatureFileId = $scope.profileEcmSignatureFileID;
+                                    UserInfoService.updateUserInfo(infoData);
+                                    $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nopic.png' :
+                                        'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmSignatureFileID + '&inline=true';
+                                });
+                            })
+                            .error(function () {
+                                $log.error('error during uploading user signature');
+                            });
+                    }
+                });
+            }
+        };
         $scope.update = function () {
             var profileInfo;
             UserInfoService.getUserInfo().then(function (infoData) {
@@ -49,7 +78,11 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
             $scope.profilePicTitle = data.title;
             $scope.profileEcmFileID = data.ecmFileId;
             $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png' :
-            'api/latest/plugin/ecm/download?ecmFileId='+$scope.profileEcmFileID+'&inline=true';
+                'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&inline=true';
+            // signature
+            $scope.profileEcmSignatureFileID = data.ecmSignatureFileId;
+            $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nopic.png' :
+                'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmSignatureFileID + '&inline=true';
         });
     }
 ]);
