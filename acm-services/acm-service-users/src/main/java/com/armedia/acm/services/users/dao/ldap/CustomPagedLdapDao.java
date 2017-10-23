@@ -1,12 +1,11 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.control.PagedResultsDirContextProcessor;
@@ -57,6 +56,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             boolean skipFirst = false;
             while (searchUsers)
             {
+                log.debug("Search filter: [{}]", searchFilter);
                 // the context mapper will return null for disabled users
                 List<LdapUser> found = template.search(base, searchFilter, searchControls, userGroupsContextMapper, sortedAndPaged);
 
@@ -79,7 +79,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
                 {
                     skipFirst = true;
                     LdapUser lastFound = found.get(found.size() - 1);
-                    searchFilter = buildPagedUsersSearchFilter(syncConfig, lastFound.getSortableValue(), ldapLastSyncDate);
+                    searchFilter = buildPagedUsersSearchFilter(syncConfig, lastFound.getSortableValue(), lastSyncTimestamp);
 
                     // A change to the search filter requires us to rebuild the search controls... even though
                     // the controls will have the same values as before.
@@ -146,7 +146,7 @@ public class CustomPagedLdapDao implements SpringLdapDao
             {
                 skipFirst = true;
                 LdapGroup lastFound = found.get(found.size() - 1);
-                searchFilter = buildPagedGroupsSearchFilter(config, lastFound.getSortableValue(), ldapLastSyncDate);
+                searchFilter = buildPagedGroupsSearchFilter(config, lastFound.getSortableValue(), lastSyncTimestamp);
 
                 // A change to the search filter requires us to rebuild the search controls... even though
                 // the controls will have the same values as before.
