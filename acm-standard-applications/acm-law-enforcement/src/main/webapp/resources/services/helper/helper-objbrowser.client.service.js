@@ -599,12 +599,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         if (found) {
                             selectNode = found;
                         } else {
-                            var treeDataTmp = {docs: [], total: 0};
-                            treeDataTmp.docs = _.clone(treeData.docs);
-                            treeDataTmp.total = treeData.total;
-                            treeDataTmp.docs.unshift(treeNode);
-                            treeData = treeDataTmp;
-                            selectNode = treeData.docs[0];
+                            var docs = _.clone(treeData.docs);
+                            docs.unshift(treeNode);
+                            treeData = {
+                                docs: docs,
+                                total: treeData.total + 1
+                            }
                         }
                     }
 
