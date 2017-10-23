@@ -48,5 +48,8 @@ public interface TaskConstants
 
     String VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS = "futureApprovers";
     String VARIABLE_NAME_PAST_APPROVERS = "pastApprovers";
+    String VARIABLE_NAME_PAST_TASKS = "pastTasks";
 
+    String VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS = "futureTasks";
+    String INITIATE_TASK_NAME = "rtInitiate";
 }

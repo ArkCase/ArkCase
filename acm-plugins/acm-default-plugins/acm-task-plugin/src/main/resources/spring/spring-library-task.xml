@@ -5,9 +5,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
              http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <bean id="buckslipTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
+    <bean id="buckslipTaskCompletedListener"
+          class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
+
+    <bean id="buckslipWithdrawnListener" class="com.armedia.acm.plugins.task.listener.BuckslipWithdrawnListener"/>
 
     <bean id="taskPluginProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
@@ -158,7 +161,8 @@
         </property>
     </bean>
 
-    <bean id="acmTaskActivitiEventHandler" class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
+    <bean id="acmTaskActivitiEventHandler"
+          class="com.armedia.acm.plugins.task.service.impl.AcmTaskActivitiEventHandler">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="taskDao" ref="acmTaskDao"/>
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>

@@ -13,8 +13,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.validation.constraints.NotNull;
@@ -34,7 +34,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private Long taskId;
     private String priority;
-    @Size(min=1)
+    @Size(min = 1)
     private String title;
 
     @NotNull
@@ -103,7 +103,13 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private boolean buckslipTask;
 
+    /**
+     * @deprecated use buckslipFutureTasks
+     */
+    @Deprecated
     private List<AcmUser> buckslipFutureApprovers;
+
+    private List<BuckslipFutureTask> buckslipFutureTasks;
 
     private String buckslipPastApprovers;
 
@@ -614,5 +620,15 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         }
 
         return new ArrayList<>();
+    }
+
+    public List<BuckslipFutureTask> getBuckslipFutureTasks()
+    {
+        return buckslipFutureTasks;
+    }
+
+    public void setBuckslipFutureTasks(List<BuckslipFutureTask> buckslipFutureTasks)
+    {
+        this.buckslipFutureTasks = buckslipFutureTasks;
     }
 }

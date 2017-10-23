@@ -3,6 +3,8 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.RepositoryService;
@@ -117,33 +119,47 @@ public class BuckslipArkcaseIT
         if (deployments == null || deployments.isEmpty())
         {
             repo.createDeployment()
-                    .addClasspathResource("activiti/ArkCase Buckslip Process.bpmn20.xml")
+                    .addClasspathResource("activiti/ArkCase Buckslip Process v3.bpmn20.xml")
                     .deploy();
         }
     }
 
-    private String startBuckslipProcess()
+    private String startBuckslipProcess() throws Exception
     {
 
         Long objectId = 500L;
         String objectType = "rockBand";
         String objectNumber = "20170116_101";
         String documentType = "Concert Contract";
-        List<String> futureApprovers = new ArrayList<>();
-        futureApprovers.add("ann-acm");
-        futureApprovers.add("samuel-acm");
-        futureApprovers.add("ian-acm");
+
+        List<BuckslipFutureTask> futureTasks = new ArrayList<>(3);
+
+        BuckslipFutureTask task1 = new BuckslipFutureTask();
+        task1.setApproverId("ann-acm");
+        task1.setTaskName("ann-acm task");
+        futureTasks.add(task1);
+
+        BuckslipFutureTask task2 = new BuckslipFutureTask();
+        task2.setApproverId("samuel-acm");
+        task2.setTaskName("samuel-acm task");
+        futureTasks.add(task2);
+
+        BuckslipFutureTask task3 = new BuckslipFutureTask();
+        task3.setApproverId("ian-acm");
+        task3.setTaskName("ian-acm task");
+        futureTasks.add(task3);
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put("OBJECT_ID", objectId);
         processVariables.put("OBJECT_TYPE", objectType);
         processVariables.put("OBJECT_NAME", objectNumber);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("approvers", futureApprovers);
         processVariables.put("taskDueDateExpression", "P3D");
+        processVariables.put("nonConcurEndsApprovals", "false");
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
+
+        acmTaskService.setBuckslipFutureTasks(Long.valueOf(pi.getProcessInstanceId()), futureTasks);
 
         return pi.getId();
     }
@@ -168,13 +184,16 @@ public class BuckslipArkcaseIT
     {
         assertNotNull(processId);
 
+        // first we have to initiate the process by signaling the initiate task
+        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("ann-acm", acmTask.getAssignee());
-        assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertEquals(2, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("samuel-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
         Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
@@ -183,8 +202,8 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("samuel-acm", acmTask.getAssignee());
-        assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertEquals(1, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
@@ -193,7 +212,7 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("ian-acm", acmTask.getAssignee());
-        assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
+        assertEquals(0, acmTask.getBuckslipFutureTasks().size());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
@@ -219,14 +238,17 @@ public class BuckslipArkcaseIT
     {
         assertNotNull(processId);
 
+        // first we have to initiate the process by signaling the initiate task
+        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+
         // should have a task for ann-acm... complete with 'CONCUR' outcome
 
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("ann-acm", acmTask.getAssignee());
-        assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
+        assertEquals(2, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("samuel-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
         Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
@@ -235,12 +257,15 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("samuel-acm", acmTask.getAssignee());
-        assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertEquals(1, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
 
         // add the approver 'albert-acm'
-        acmTask.getBuckslipFutureApprovers().add(albert);
+        BuckslipFutureTask forAlbert = new BuckslipFutureTask();
+        forAlbert.setApproverId("albert-acm");
+        forAlbert.setTaskName("Albert task");
+        acmTask.getBuckslipFutureTasks().add(forAlbert);
         taskDao.save(acmTask);
 
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
@@ -250,8 +275,8 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("ian-acm", acmTask.getAssignee());
-        assertEquals(1, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(albert));
+        assertEquals(1, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("albert-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
@@ -261,7 +286,7 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("albert-acm", acmTask.getAssignee());
-        assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
+        assertEquals(0, acmTask.getBuckslipFutureTasks().size());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ian-acm"));
@@ -284,26 +309,20 @@ public class BuckslipArkcaseIT
 
         assertNotNull(processId);
 
-        AcmUser samuel = new AcmUser();
-        samuel.setUserId("samuel-acm");
-        AcmUser ian = new AcmUser();
-        ian.setUserId("ian-acm");
-        AcmUser ann = new AcmUser();
-        ann.setUserId("ann-acm");
-        AcmUser albert = new AcmUser();
-        albert.setUserId("albert-acm");
+        // first we have to initiate the process by signaling the initiate task
+        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("ann-acm", acmTask.getAssignee());
-        assertEquals(2, acmTask.getBuckslipFutureApprovers().size());
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(samuel));
-        assertTrue(acmTask.getBuckslipFutureApprovers().contains(ian));
+        assertEquals(2, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("samuel-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
 
         // remove ian-acm
-        acmTask.getBuckslipFutureApprovers().remove(ian);
+        acmTask.getBuckslipFutureTasks().remove(1);
         taskDao.save(acmTask);
 
         Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
@@ -313,7 +332,7 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
         assertNotNull(acmTask);
         assertEquals("samuel-acm", acmTask.getAssignee());
-        assertEquals(0, acmTask.getBuckslipFutureApprovers().size());
+        assertEquals(0, acmTask.getBuckslipFutureTasks().size());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
@@ -322,5 +341,62 @@ public class BuckslipArkcaseIT
         // no more tasks
         acmTask = findAcmTaskForProcess();
         assertNull(acmTask);
+    }
+
+    @Test
+    public void withdrawApprovals() throws Exception
+    {
+
+        assertNotNull(processId);
+
+        // first we have to initiate the process by signaling the initiate task
+        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+
+
+        // should have a task for ann-acm... complete with 'CONCUR' outcome
+        AcmTask acmTask = findAcmTaskForProcess();
+        assertNotNull(acmTask);
+        assertEquals("ann-acm", acmTask.getAssignee());
+        assertEquals(2, acmTask.getBuckslipFutureTasks().size());
+        assertEquals("samuel-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
+        assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
+        assertEquals("[]", acmTask.getBuckslipPastApprovers());
+
+        Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
+        taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
+
+        // find the next task before we can withdraw
+        acmTask = findAcmTaskForProcess();
+
+        // we have a current task so the process should be withdrawable, but not initiatable
+        assertFalse(acmTaskService.isInitiatable(Long.valueOf(processId)));
+        assertTrue(acmTaskService.isWithdrawable(Long.valueOf(processId)));
+
+        // withdraw
+        acmTaskService.messageTask(acmTask.getTaskId(), "Withdraw Message");
+
+        // no more tasks
+        acmTask = findAcmTaskForProcess();
+        assertNull(acmTask);
+
+        // business-process-level information
+        assertTrue(acmTaskService.isInitiatable(Long.valueOf(processId)));
+        assertFalse(acmTaskService.isWithdrawable(Long.valueOf(processId)));
+        List<BuckslipFutureTask> buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(Long.valueOf(processId));
+        assertEquals(3, buckslipFutureTasks.size());
+        assertTrue(acmTaskService.getBuckslipPastTasks(Long.valueOf(processId)).contains("ann-acm"));
+
+        // add the approver 'albert-acm'
+        BuckslipFutureTask forAlbert = new BuckslipFutureTask();
+        forAlbert.setApproverId("albert-acm");
+        forAlbert.setTaskName("Albert task");
+        buckslipFutureTasks.add(forAlbert);
+
+        // call the service to set the new list of future tasks
+        acmTaskService.setBuckslipFutureTasks(Long.valueOf(processId), buckslipFutureTasks);
+
+        // now we should have 4... the original 3, plus albert
+        buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(Long.valueOf(processId));
+        assertEquals(4, buckslipFutureTasks.size());
     }
 }
