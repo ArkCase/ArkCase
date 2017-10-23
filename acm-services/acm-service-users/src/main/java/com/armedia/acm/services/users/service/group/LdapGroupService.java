@@ -50,6 +50,7 @@ public class LdapGroupService
         }
 
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -90,6 +91,7 @@ public class LdapGroupService
             throw new NameAlreadyBoundException(null);
         }
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
