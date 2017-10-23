@@ -16,6 +16,7 @@ public class LdapGroup
     private String sortableValue;
     private String description;
     private String directoryName;
+    private String displayName;
     private Set<String> members = new HashSet<>();
     private Set<String> memberUsers = new HashSet<>();
     private Set<LdapGroup> memberGroups = new HashSet<>();
@@ -38,6 +39,7 @@ public class LdapGroup
         acmGroup.setDescription(description);
         acmGroup.setStatus(AcmGroupStatus.ACTIVE); // TODO: fix status
         acmGroup.setAscendantsList(getAscendantsAsString());
+        acmGroup.setDisplayName(displayName);
         return acmGroup;
     }
 
@@ -137,6 +139,16 @@ public class LdapGroup
     public void setDirectoryName(String directoryName)
     {
         this.directoryName = directoryName;
+    }
+
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
     }
 
     public Set<String> getMembers()
