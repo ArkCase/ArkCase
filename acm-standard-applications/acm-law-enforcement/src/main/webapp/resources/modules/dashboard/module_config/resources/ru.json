@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "Командная нагрузка"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Случаи по статусу"
   }
 }
