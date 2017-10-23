@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "團隊工作量"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "個案按狀況"
   }
 }

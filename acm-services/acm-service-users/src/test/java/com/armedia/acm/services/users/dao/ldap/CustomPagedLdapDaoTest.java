@@ -3,8 +3,10 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +15,14 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 import javax.naming.directory.SearchControls;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
@@ -50,10 +55,16 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         syncConfig.setGroupSearchPageFilter("groupSearchPageFilter %s");
         syncConfig.setGroupSearchBase("CN=bands");
         syncConfig.setSyncPageSize(100);
+        syncConfig.setChangedGroupSearchPageFilter("(&(objectclass=group)(gidNumber>=%s)(modifyTimestamp>=%s))");
+        syncConfig.setChangedGroupSearchFilter("(&(objectclass=group)(modifyTimestamp>=%s))");
+        syncConfig.setAllChangedUsersPageFilter("(&(objectclass=user)(uidNumber>=%s)(modifyTimestamp>=%s))");
+        syncConfig.setAllChangedUsersFilter("(&(objectclass=user)(modifyTimestamp>=%s))");
+        syncConfig.setDirectoryType("openldap");
     }
 
     /**
      * AFDP-3185 test case.  "LDAP SyncFails on Index out of Bounds"
+     *
      * @throws Exception
      */
     @Test
@@ -119,6 +130,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
 
     /**
      * AFDP-3185 test case.  "LDAP SyncFails on Index out of Bounds"
+     *
      * @throws Exception
      */
     @Test
@@ -243,6 +255,138 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
         {
             assertFalse(user.getUserId().endsWith("@" + syncConfig.getUserDomain()));
         }
+    }
+
+    @Test
+    public void findChangedGroupsPaged_searchFiltersTest() throws Exception
+    {
+        List<LdapGroup> pageOne = new ArrayList<>();
+        pageOne.add(buildGroup("gnr"));
+        pageOne.add(buildGroup("nirvana"));
+        pageOne.add(buildGroup("eagles"));
+
+        List<LdapGroup> pageTwo = new ArrayList<>();
+        pageTwo.add(buildGroup("eagles"));
+        pageTwo.add(buildGroup("fleetwood mac"));
+        pageTwo.add(buildGroup("pink floyd"));
+
+        syncConfig.setSyncPageSize(3);
+
+        Capture<String> allChangedGroupsPageFilter1 = Capture.newInstance();
+        Capture<String> allChangedGroupsPageFilter2 = Capture.newInstance();
+        Capture<String> allChangedGroupsFilter = Capture.newInstance();
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getGroupSearchBase()),
+                capture(allChangedGroupsFilter),
+                anyObject(SearchControls.class),
+                anyObject(AcmGroupContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(pageOne);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getGroupSearchBase()),
+                capture(allChangedGroupsPageFilter1),
+                anyObject(SearchControls.class),
+                anyObject(AcmGroupContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(pageTwo);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getGroupSearchBase()),
+                capture(allChangedGroupsPageFilter2),
+                anyObject(SearchControls.class),
+                anyObject(AcmGroupContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(new ArrayList<>());
+
+        replayAll();
+
+        String ldapLastSyncDateTimestamp = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString();
+        List<LdapGroup> found = unit.findGroupsPaged(mockLdapTemplate, syncConfig, Optional.of(ldapLastSyncDateTimestamp));
+
+        verifyAll();
+
+        assertEquals(pageOne.size() + pageTwo.size() - 1, found.size());
+
+        String actualChangedGroupsFilter = allChangedGroupsFilter.getValue();
+        String actualChangedGroupsPageFilter1 = allChangedGroupsPageFilter1.getValue();
+        String actualChangedGroupsPageFilter2 = allChangedGroupsPageFilter2.getValue();
+
+        ldapLastSyncDateTimestamp = Directory.valueOf(syncConfig.getDirectoryType())
+                .convertToDirectorySpecificTimestamp(ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsFilter = String.format(syncConfig.getChangedGroupSearchFilter(), ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsPageFilter1 = String.format(syncConfig.getChangedGroupSearchPageFilter(), "eagles",
+                ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsPageFilter2 = String.format(syncConfig.getChangedGroupSearchPageFilter(), "pink floyd",
+                ldapLastSyncDateTimestamp);
+
+        assertEquals(expectedChangedGroupsFilter, actualChangedGroupsFilter);
+        assertEquals(expectedChangedGroupsPageFilter1, actualChangedGroupsPageFilter1);
+        assertEquals(expectedChangedGroupsPageFilter2, actualChangedGroupsPageFilter2);
+    }
+
+    @Test
+    public void findChangedUsersPaged_searchFiltersTest() throws Exception
+    {
+        List<LdapUser> pageOne = new ArrayList<>();
+        pageOne.add(buildUser("axlrose"));
+        pageOne.add(buildUser("kurtcobain"));
+        pageOne.add(buildUser("plesh"));
+
+        List<LdapUser> pageTwo = new ArrayList<>();
+        pageTwo.add(buildUser("plesh"));
+        pageTwo.add(buildUser("bkreutzmann"));
+        pageTwo.add(buildUser("davidgilmour"));
+
+        syncConfig.setSyncPageSize(3);
+
+        Capture<String> allChangedUsersPageFilter1 = Capture.newInstance();
+        Capture<String> allChangedUsersPageFilter2 = Capture.newInstance();
+        Capture<String> allChangedUsersFilter = Capture.newInstance();
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getUserSearchBase()),
+                capture(allChangedUsersFilter),
+                anyObject(SearchControls.class),
+                anyObject(AcmUserContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(pageOne);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getUserSearchBase()),
+                capture(allChangedUsersPageFilter1),
+                anyObject(SearchControls.class),
+                anyObject(AcmUserContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(pageTwo);
+
+        expect(mockLdapTemplate.search(
+                eq(syncConfig.getUserSearchBase()),
+                capture(allChangedUsersPageFilter2),
+                anyObject(SearchControls.class),
+                anyObject(AcmUserContextMapper.class),
+                anyObject(AggregateDirContextProcessor.class))).andReturn(new ArrayList<>());
+
+        replayAll();
+
+        String ldapLastSyncDateTimestamp = ZonedDateTime.now(ZoneOffset.UTC).minusDays(1).toString();
+        List<LdapUser> found = unit.findUsersPaged(mockLdapTemplate, syncConfig, Optional.of(ldapLastSyncDateTimestamp));
+
+        verifyAll();
+
+        assertEquals(pageOne.size() + pageTwo.size() - 1, found.size());
+
+        String actualChangedGroupsFilter = allChangedUsersFilter.getValue();
+        String actualChangedGroupsPageFilter1 = allChangedUsersPageFilter1.getValue();
+        String actualChangedGroupsPageFilter2 = allChangedUsersPageFilter2.getValue();
+
+        ldapLastSyncDateTimestamp = Directory.valueOf(syncConfig.getDirectoryType())
+                .convertToDirectorySpecificTimestamp(ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsFilter = String.format(syncConfig.getAllChangedUsersFilter(), ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsPageFilter1 = String.format(syncConfig.getAllChangedUsersPageFilter(), "plesh",
+                ldapLastSyncDateTimestamp);
+        String expectedChangedGroupsPageFilter2 = String.format(syncConfig.getAllChangedUsersPageFilter(), "davidgilmour",
+                ldapLastSyncDateTimestamp);
+
+        assertEquals(expectedChangedGroupsFilter, actualChangedGroupsFilter);
+        assertEquals(expectedChangedGroupsPageFilter1, actualChangedGroupsPageFilter1);
+        assertEquals(expectedChangedGroupsPageFilter2, actualChangedGroupsPageFilter2);
     }
 
     private LdapUser buildUser(String userid)
