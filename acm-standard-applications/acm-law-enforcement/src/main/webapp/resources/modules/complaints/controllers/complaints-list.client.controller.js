@@ -18,7 +18,7 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
                     objectId: data.objectId
                 });
                 if (frevvoRequest) {
-                    ObjectService.showObject(ObjectService.ObjectTypes.COMPLAINT, data.objectId);//showObject
+                    ObjectService.showObject(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
                     MessageService.info(objectWasCreatedMessage);
                 }
                 else {
