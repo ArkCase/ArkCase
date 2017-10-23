@@ -51,6 +51,9 @@
     "email": "电邮地址",
     "uploadImgError": "您上传图片的文件类型不正确"
   },
+  "profile.signature": {
+    "title": "更改签名"
+  },
   "profile.modal": {
     "title": "信息",
     "emptyPassword": "不接受空密码",

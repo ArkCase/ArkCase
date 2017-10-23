@@ -51,6 +51,9 @@
     "email": "Adresse e-mail",
     "uploadImgError": "Vous avez importé un type de fichier d'image non valide"
   },
+  "profile.signature": {
+    "title": "Modifier la signature"
+  },
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Le mot de passe ne peut pas être vide",

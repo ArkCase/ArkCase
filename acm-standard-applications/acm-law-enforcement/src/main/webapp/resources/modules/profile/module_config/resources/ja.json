@@ -51,6 +51,9 @@
     "email": "電子メールアドレス",
     "uploadImgError": "あなたは無効な画像ファイルタイプをアップロードしました"
   },
+  "profile.signature": {
+    "title": "署名の変更"
+  },
   "profile.modal": {
     "title": "情報",
     "emptyPassword": "空のパスワードを受け入れない",

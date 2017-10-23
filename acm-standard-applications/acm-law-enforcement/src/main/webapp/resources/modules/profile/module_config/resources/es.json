@@ -51,6 +51,9 @@
     "email": "Dirección de correo electrónico",
     "uploadImgError": "Has cargado un tipo de archivo de imagen no válido."
   },
+  "profile.signature": {
+    "title": "Cambiar Firma"
+  },
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "La contraseña no puede estar vacía",

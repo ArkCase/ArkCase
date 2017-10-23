@@ -51,6 +51,9 @@
     "email": "ईमेल पता",
     "uploadImgError": "आपने एक अमान्य छवि फ़ाइल प्रकार को अपलोड किया है"
   },
+  "profile.signature": {
+    "title": "हस्ताक्षर बदलें"
+  },
   "profile.modal": {
     "title": "जानकारी",
     "emptyPassword": "पासवर्ड रिक्त नहीं हो सकता",
