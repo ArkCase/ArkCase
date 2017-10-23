@@ -21,6 +21,7 @@ import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServic
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -31,8 +32,11 @@ import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.engine.ActivitiException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
@@ -46,6 +50,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -59,6 +64,7 @@ import java.util.List;
  */
 public class AcmTaskServiceImpl implements AcmTaskService
 {
+
     private Logger log = LoggerFactory.getLogger(getClass());
     private TaskDao taskDao;
     private NoteDao noteDao;
@@ -73,11 +79,79 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
+    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+
+    @Override
+    public boolean isInitiatable(Long businessProcessId) throws AcmTaskException
+    {
+        return taskDao.isWaitingOnReceiveTask(String.valueOf(businessProcessId), TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public boolean isWithdrawable(Long businessProcessId) throws AcmTaskException
+    {
+        String activitiId = String.valueOf(businessProcessId);
+        return taskDao.isProcessActive(activitiId) && !taskDao.isWaitingOnReceiveTask(activitiId, TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public List<BuckslipFutureTask> getBuckslipFutureTasks(Long businessProcessId) throws AcmTaskException
+    {
+        try
+        {
+            String futureTasksJson = taskDao.readProcessVariable(String.valueOf(businessProcessId), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+            if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
+            {
+                return objectMapper.readValue(futureTasksJson,
+                        objectMapper.getTypeFactory().constructParametricType(List.class, BuckslipFutureTask.class));
+            }
+
+            return new ArrayList<>();
+        } catch (IOException e)
+        {
+            throw new AcmTaskException(String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
+        }
+    }
+
+    @Override
+    public void setBuckslipFutureTasks(Long businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
+    {
+        try
+        {
+            String futureTasksJson = objectMapper.writeValueAsString(buckslipFutureTasks);
+            taskDao.writeProcessVariable(String.valueOf(businessProcessId),
+                    TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
+                    futureTasksJson);
+        } catch (JsonProcessingException e)
+        {
+            throw new AcmTaskException(String.format("Could not set future tasks: %s", e.getMessage()), e);
+        }
+    }
+
+    @Override
+    public String getBuckslipPastTasks(Long businessProcessId) throws AcmTaskException
+    {
+        String pastTasks = taskDao.readProcessVariable(String.valueOf(businessProcessId), TaskConstants.VARIABLE_NAME_PAST_TASKS);
+        return pastTasks;
+    }
+
+    @Override
+    public void signalTask(Long businessProcessId, String receiveTaskId) throws AcmTaskException
+    {
+        taskDao.signalTask(String.valueOf(businessProcessId), receiveTaskId);
+    }
+
+    @Override
+    public void messageTask(Long taskId, String messageName) throws AcmTaskException
+    {
+        taskDao.messageTask(String.valueOf(taskId), messageName);
+    }
+
     @Override
     public void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
                             Long parentId)
     {
-        if ( taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty()
+        if (taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty()
                 || owningGroup == null || owningGroup.trim().isEmpty() || parentType == null || parentType.trim().isEmpty()
                 || parentId == null)
         {
@@ -92,7 +166,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
         Date dueDate = Date.from(LocalDate.now().plusDays(3).atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-        for ( String assignee : taskAssignees.split(","))
+        for (String assignee : taskAssignees.split(","))
         {
             assignee = assignee.trim();
 
@@ -125,8 +199,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", user, true, "");
                 taskEventPublisher.publishTaskEvent(event);
-            }
-            catch (AcmTaskException ate)
+            } catch (AcmTaskException ate)
             {
                 log.error("Could not save task: {}", ate.getMessage(), ate);
             }

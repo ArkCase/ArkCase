@@ -1,0 +1,248 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:activiti="http://activiti.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.activiti.org/processdef" xmlns:modeler="http://activiti.com/modeler"
+             modeler:version="1.0ev" modeler:exportDateTime="20171020180137" modeler:modelId="1021796"
+             modeler:modelVersion="1" modeler:modelLastUpdated="1508518888969">
+    <message id="msgdefWithdraw" name="Withdraw Message"/>
+    <process id="ArkCaseBuckslipProcess" name="ArkCase Buckslip Process" isExecutable="true">
+        <extensionElements>
+            <activiti:executionListener event="start"
+                                        class="com.armedia.acm.plugins.task.listener.BuckslipWorkflowStartedListener"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler" modeler:variableName="moreTasks"
+                                        modeler:variableType="string"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler" modeler:variableName="pastTasks"
+                                        modeler:variableType="string"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler"
+                                        modeler:variableName="currentApprover" modeler:variableType="string"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler"
+                                        modeler:variableName="currentTaskName" modeler:variableType="string"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler"
+                                        modeler:variableName="futureTasks" modeler:variableType="string"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler"
+                                        modeler:variableName="isBuckslipWorkflow" modeler:variableType="boolean"/>
+            <modeler:executionvariables xmlns:modeler="http://activiti.com/modeler"
+                                        modeler:variableName="nonConcurEndsApprovals" modeler:variableType="boolean"/>
+        </extensionElements>
+        <startEvent id="startEvent1">
+            <extensionElements>
+                <modeler:editor-resource-id><![CDATA[startEvent1]]></modeler:editor-resource-id>
+            </extensionElements>
+        </startEvent>
+        <endEvent id="sid-B3B5F0F5-1F64-40CF-93B0-E65524A13946">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-B3B5F0F5-1F64-40CF-93B0-E65524A13946]]></modeler:editor-resource-id>
+            </extensionElements>
+        </endEvent>
+        <exclusiveGateway id="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E]]></modeler:editor-resource-id>
+            </extensionElements>
+        </exclusiveGateway>
+        <userTask id="sid-1627C673-1EF1-452E-91FE-23D39A530835" name="${currentTaskName}"
+                  activiti:assignee="${currentApprover}" activiti:dueDate="${taskDueDateExpression}">
+            <extensionElements>
+                <activiti:formProperty id="buckslipOutcome" name="Buckslip Outcome" type="enum" required="true">
+                    <activiti:value id="CONCUR" name="Concur"></activiti:value>
+                    <activiti:value id="NON_CONCUR" name="Non-Concur"></activiti:value>
+                </activiti:formProperty>
+                <activiti:taskListener event="complete" delegateExpression="#{buckslipTaskCompletedListener}"/>
+                <modeler:allow-send-email><![CDATA[true]]></modeler:allow-send-email>
+                <modeler:initiator-can-complete><![CDATA[false]]></modeler:initiator-can-complete>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-1627C673-1EF1-452E-91FE-23D39A530835]]></modeler:editor-resource-id>
+            </extensionElements>
+        </userTask>
+        <sequenceFlow id="sid-3638D415-6FC1-409E-8B39-C604351216C3" sourceRef="startEvent1" targetRef="rtInitiate">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-3638D415-6FC1-409E-8B39-C604351216C3]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <receiveTask id="rtInitiate" name="Wait for Initiate Action">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-67865E8E-D969-405D-9FAF-66FB277AB469]]></modeler:editor-resource-id>
+                <activiti:executionListener event="end" delegateExpression="#{buckslipTaskCompletedListener}"/>
+            </extensionElements>
+        </receiveTask>
+        <sequenceFlow id="sid-1CC6890C-C005-4AFD-985F-3D86E8B94CFA" sourceRef="rtInitiate"
+                      targetRef="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-1CC6890C-C005-4AFD-985F-3D86E8B94CFA]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <exclusiveGateway id="sid-F977ADC5-122A-4C1C-8163-663A1B105999">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-F977ADC5-122A-4C1C-8163-663A1B105999]]></modeler:editor-resource-id>
+            </extensionElements>
+        </exclusiveGateway>
+        <sequenceFlow id="sid-5AC48AD0-5F6F-4AD3-A0F9-5B50A94DB51C" sourceRef="sid-F977ADC5-122A-4C1C-8163-663A1B105999"
+                      targetRef="rtInitiate">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-5AC48AD0-5F6F-4AD3-A0F9-5B50A94DB51C]]></modeler:editor-resource-id>
+            </extensionElements>
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${nonConcurEndsApprovals == "true" && buckslipOutcome == "NON_CONCUR"}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-EC44260C-4FE8-4068-8F33-1FF806ACC2BC" name="stop the approval cycle?"
+                      sourceRef="sid-1627C673-1EF1-452E-91FE-23D39A530835"
+                      targetRef="sid-F977ADC5-122A-4C1C-8163-663A1B105999">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-EC44260C-4FE8-4068-8F33-1FF806ACC2BC]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <sequenceFlow id="sid-974D71CC-8C46-4274-983B-8AB414E8C0E3" name="more approvers?"
+                      sourceRef="sid-F977ADC5-122A-4C1C-8163-663A1B105999"
+                      targetRef="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-974D71CC-8C46-4274-983B-8AB414E8C0E3]]></modeler:editor-resource-id>
+            </extensionElements>
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${nonConcurEndsApprovals == "false" || buckslipOutcome == "CONCUR"}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-5E4C3F8C-0583-4A07-A5E1-F6B6D9DC0EFB" name="no more approvers"
+                      sourceRef="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E"
+                      targetRef="sid-B3B5F0F5-1F64-40CF-93B0-E65524A13946">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-5E4C3F8C-0583-4A07-A5E1-F6B6D9DC0EFB]]></modeler:editor-resource-id>
+            </extensionElements>
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${moreTasks == "false"}]]></conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="sid-CED677D7-8D2C-40AE-AF13-FBCA56665D4C" name="at least one more approver"
+                      sourceRef="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E"
+                      targetRef="sid-1627C673-1EF1-452E-91FE-23D39A530835">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-CED677D7-8D2C-40AE-AF13-FBCA56665D4C]]></modeler:editor-resource-id>
+            </extensionElements>
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${moreTasks == "true"}]]></conditionExpression>
+        </sequenceFlow>
+        <boundaryEvent id="msgWithdraw" name="withdraw" attachedToRef="sid-1627C673-1EF1-452E-91FE-23D39A530835"
+                       cancelActivity="true">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-80269CD1-8D63-4539-8EBC-A7EA8B833D6B]]></modeler:editor-resource-id>
+            </extensionElements>
+            <messageEventDefinition messageRef="msgdefWithdraw"/>
+        </boundaryEvent>
+        <serviceTask id="sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14" name="reset future approvers list"
+                     activiti:delegateExpression="#{buckslipWithdrawnListener}">
+
+            <extensionElements>
+                <activiti:executionListener event="start" delegateExpression="#{buckslipWithdrawnListener}"/>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14]]></modeler:editor-resource-id>
+            </extensionElements>
+        </serviceTask>
+        <sequenceFlow id="sid-B1EC334C-DF4A-4E1B-83F8-C8EB1D81AAAF" name="withdraw approval cycle"
+                      sourceRef="msgWithdraw" targetRef="sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-B1EC334C-DF4A-4E1B-83F8-C8EB1D81AAAF]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+        <sequenceFlow id="sid-257EB493-C530-42A7-B3BB-54A8556B373C" sourceRef="sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14"
+                      targetRef="rtInitiate">
+            <extensionElements>
+                <modeler:editor-resource-id>
+                    <![CDATA[sid-257EB493-C530-42A7-B3BB-54A8556B373C]]></modeler:editor-resource-id>
+            </extensionElements>
+        </sequenceFlow>
+    </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_ArkCaseBuckslipProcess">
+        <bpmndi:BPMNPlane bpmnElement="ArkCaseBuckslipProcess" id="BPMNPlane_ArkCaseBuckslipProcess">
+            <bpmndi:BPMNShape bpmnElement="startEvent1" id="BPMNShape_startEvent1">
+                <omgdc:Bounds height="30.0" width="30.0" x="90.0" y="265.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-B3B5F0F5-1F64-40CF-93B0-E65524A13946"
+                              id="BPMNShape_sid-B3B5F0F5-1F64-40CF-93B0-E65524A13946">
+                <omgdc:Bounds height="28.0" width="28.0" x="356.0" y="420.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E"
+                              id="BPMNShape_sid-CB88526F-C5F5-40D7-A326-A8A9DED67F5E">
+                <omgdc:Bounds height="40.0" width="40.0" x="350.0" y="260.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-1627C673-1EF1-452E-91FE-23D39A530835"
+                              id="BPMNShape_sid-1627C673-1EF1-452E-91FE-23D39A530835">
+                <omgdc:Bounds height="80.0" width="100.0" x="620.0" y="240.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="rtInitiate" id="BPMNShape_rtInitiate">
+                <omgdc:Bounds height="80.0" width="100.0" x="185.0" y="240.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-F977ADC5-122A-4C1C-8163-663A1B105999"
+                              id="BPMNShape_sid-F977ADC5-122A-4C1C-8163-663A1B105999">
+                <omgdc:Bounds height="40.0" width="40.0" x="350.0" y="30.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="msgWithdraw" id="BPMNShape_msgWithdraw">
+                <omgdc:Bounds height="30.0" width="30.0" x="705.6654079847978" y="263.8864745497847"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14"
+                              id="BPMNShape_sid-9613E2EA-F4F2-4FC5-9797-022D24EEAF14">
+                <omgdc:Bounds height="80.0" width="100.0" x="185.0" y="110.0"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sid-1CC6890C-C005-4AFD-985F-3D86E8B94CFA"
+                             id="BPMNEdge_sid-1CC6890C-C005-4AFD-985F-3D86E8B94CFA">
+                <omgdi:waypoint x="285.0" y="280.0"/>
+                <omgdi:waypoint x="350.0" y="280.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-B1EC334C-DF4A-4E1B-83F8-C8EB1D81AAAF"
+                             id="BPMNEdge_sid-B1EC334C-DF4A-4E1B-83F8-C8EB1D81AAAF">
+                <omgdi:waypoint x="735.6649391471086" y="279.0050701267061"/>
+                <omgdi:waypoint x="861.5" y="280.0"/>
+                <omgdi:waypoint x="861.5" y="22.0"/>
+                <omgdi:waypoint x="235.0" y="22.0"/>
+                <omgdi:waypoint x="235.0" y="110.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-257EB493-C530-42A7-B3BB-54A8556B373C"
+                             id="BPMNEdge_sid-257EB493-C530-42A7-B3BB-54A8556B373C">
+                <omgdi:waypoint x="235.0" y="190.0"/>
+                <omgdi:waypoint x="235.0" y="240.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-EC44260C-4FE8-4068-8F33-1FF806ACC2BC"
+                             id="BPMNEdge_sid-EC44260C-4FE8-4068-8F33-1FF806ACC2BC">
+                <omgdi:waypoint x="670.0" y="240.0"/>
+                <omgdi:waypoint x="670.0" y="50.5"/>
+                <omgdi:waypoint x="389.5" y="50.5"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-974D71CC-8C46-4274-983B-8AB414E8C0E3"
+                             id="BPMNEdge_sid-974D71CC-8C46-4274-983B-8AB414E8C0E3">
+                <omgdi:waypoint x="370.4585152838428" y="69.5414847161572"/>
+                <omgdi:waypoint x="370.04347826086956" y="260.04347826086956"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-5E4C3F8C-0583-4A07-A5E1-F6B6D9DC0EFB"
+                             id="BPMNEdge_sid-5E4C3F8C-0583-4A07-A5E1-F6B6D9DC0EFB">
+                <omgdi:waypoint x="370.0" y="300.0"/>
+                <omgdi:waypoint x="370.0" y="420.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-CED677D7-8D2C-40AE-AF13-FBCA56665D4C"
+                             id="BPMNEdge_sid-CED677D7-8D2C-40AE-AF13-FBCA56665D4C">
+                <omgdi:waypoint x="390.0" y="280.0"/>
+                <omgdi:waypoint x="620.0" y="280.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-3638D415-6FC1-409E-8B39-C604351216C3"
+                             id="BPMNEdge_sid-3638D415-6FC1-409E-8B39-C604351216C3">
+                <omgdi:waypoint x="120.0" y="280.0"/>
+                <omgdi:waypoint x="185.0" y="280.0"/>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sid-5AC48AD0-5F6F-4AD3-A0F9-5B50A94DB51C"
+                             id="BPMNEdge_sid-5AC48AD0-5F6F-4AD3-A0F9-5B50A94DB51C">
+                <omgdi:waypoint x="363.0753424657534" y="63.07534246575342"/>
+                <omgdi:waypoint x="258.6165577342048" y="240.0"/>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>
