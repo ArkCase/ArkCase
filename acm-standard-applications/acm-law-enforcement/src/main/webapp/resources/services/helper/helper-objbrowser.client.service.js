@@ -586,131 +586,38 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
              */
             , onLoad: function (start, n, sort, filters, query) {
                 var that = this;
-                if (that.firstLoad && that.nodeId) {
-                    that.scope.treeData = null;
-                }
+                var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
+                var promiseNodeData = (that.nodeId)? that.getNodeData(that.nodeId) : Util.resolvePromise(null);
+                $q.all([promiseTreeData, promiseNodeData]).then(function(data){
+                    var treeData = data[0];
+                    var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
 
-                that.getTreeData(start, n, sort, filters, query).then(
-                    function (treeData) {
-                        if (that.firstLoad) {
-                            if (that.nodeId) {
-                                if (that.scope.treeData) {            //It must be set by getNodeData(), only 1 items in docs[] is expected
-                                    var found = that.findByNodeId(treeData.docs, that.scope.treeData.docs[0].nodeId);
-                                    if (!found) {
-                                        var clone = _.clone(treeData.docs);
-                                        clone.unshift(that.scope.treeData.docs[0]);
-                                        treeData.docs = clone;
-                                    }
-                                    that.firstLoad = false;
-                                } else {
-                                    if (0 < treeData.docs.length) {
-                                        var found = that.findByNodeId(treeData.docs, that.nodeId);
-                                        var selectNode = (found) ? found : treeData.docs[0];
-                                        that.scope.treeControl.select({
-                                            pageStart: start
-                                            , nodeType: selectNode.nodeType
-                                            , nodeId: selectNode.nodeId
-                                            , subKey: that.subKey
-                                        });
-                                    }
-                                    that.firstLoad = false;
-                                }
-
-
-                            } else {
-                                if (0 < treeData.docs.length) {
-                                    var selectNode = treeData.docs[0];
-                                    that.scope.treeControl.select({
-                                        pageStart: start
-                                        , nodeType: selectNode.nodeType
-                                        , nodeId: selectNode.nodeId
-                                        , subKey: that.subKey
-                                    });
-                                }
-                                that.firstLoad = false;
-                            }
+                    var objectInfo = data[1];
+                    if (objectInfo) {
+                        var treeNode = that.makeTreeNode(objectInfo);
+                        var found = _.find(treeData.docs, {nodeId: that.nodeId});
+                        if (found) {
+                            selectNode = found;
+                        } else {
+                            var treeDataTmp = {docs: [], total: 0};
+                            treeDataTmp.docs = _.clone(treeData.docs);
+                            treeDataTmp.total = treeData.total;
+                            treeDataTmp.docs.unshift(treeNode);
+                            treeData = treeDataTmp;
+                            selectNode = treeData.docs[0];
                         }
-
-                        that.scope.treeData = treeData;
-                        return treeData;
                     }
-                );
 
-
-                if (that.firstLoad && Util.goodPositive(that.nodeId)) {
-                    SyncDataLoader.load(that.moduleId, that.getNodeData, [that.nodeId],
-                        function (objectInfo) {
-                            var treeNode = that.makeTreeNode(objectInfo);
-                            that.scope.treeControl.select({
-                                pageStart: start
-                                , nodeType: treeNode.nodeType
-                                , nodeId: treeNode.nodeId
-                                , subKey: that.subKey
-                            });
-
-                            var treeData = {docs: [], total: 0};
-                            if (that.scope.treeData) {            //It must be set by getTreeData()
-                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
-                                if (!found) {
-                                    treeData.docs = _.clone(that.scope.treeData.docs);
-                                    treeData.total = that.scope.treeData.total;
-                                    treeData.docs.unshift(treeNode);
-                                } else {
-                                    treeData = that.scope.treeData; //use what is there already
-                                }
-                                that.firstLoad = false;
-
-                            } else {
-                                treeData.total = 1;
-                                treeData.docs.unshift(treeNode);
-                            }
-
-                            that.scope.treeData = treeData;
-                            return objectInfo;
-                        }
-                        , function (errorData) {
-                            
-                            var nodeType = errorData.status === 403 ? "NO_ACCESS" : "ERROR";
-
-                            that.scope.treeControl.select({
-                                pageStart: start
-                                , nodeType: nodeType
-                                , nodeId: that.nodeId
-                                , subKey: that.subKey
-                            });
-
-                            var treeData = {docs: [], total: 0};
-                            var nodeTitle = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
-                            var nodeToolTip = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");
-                            
-                            var errorNode = {
-                                nodeId: that.nodeId
-                                , nodeType: nodeType
-                                , nodeTitle: nodeTitle
-                                , nodeToolTip: nodeToolTip
-                            };
-                            
-                            if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
-                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
-                                if (!found) {
-                                    treeData.docs = _.clone(that.scope.treeData.docs);
-                                    treeData.total = that.scope.treeData.total;
-                                    treeData.docs.unshift(errorNode);
-                                } else {
-                                    treeData = that.scope.treeData; //use what is there already
-                                }
-                                that.firstLoad = false;
-
-                            } else {
-                                treeData.total = 1;
-                                treeData.docs.unshift(errorNode);
-                            }
-
-                            that.scope.treeData = treeData;
-                            return errorData;
-                        }
-                    );
-                }
+                    that.scope.treeData = treeData;
+                    if (selectNode) {
+                        that.scope.treeControl.select({
+                            pageStart: start
+                            , nodeType: selectNode.nodeType
+                            , nodeId: selectNode.nodeId
+                            , subKey: that.subKey
+                        });
+                    }
+                });
             }
 
             , onSelect: function (selectedObject) {
@@ -732,17 +639,6 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.state.go(stateName, params);
             }
 
-            , findByNodeId: function (docs, nodeId) {
-                //return _.find(docs, {nodeId: nodeId});   //somehow, _.find() does not always work
-                var found = null;
-                for (var i = 0; i < docs.length; i++) {
-                    if (docs[i].nodeId === nodeId) {
-                        found = docs[i];
-                        break;
-                    }
-                }
-                return found;
-            }
         };
 
         Service.Content.prototype = {

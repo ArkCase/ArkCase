@@ -12,14 +12,13 @@ angular.module('complaints').controller('ComplaintsListController', ['$scope', '
         $scope.$bus.subscribe(eventName, function (data) {
             if (data.objectType === ObjectService.ObjectTypes.COMPLAINT) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-complaint");
-
                 var objectTypeString = $translate.instant('common.objectTypes.' + data.objectType);
                 var objectWasCreatedMessage = $translate.instant('common.objects.objectWasCreatedMessage ', {
                     objectTypeString: objectTypeString,
                     objectId: data.objectId
                 });
                 if (frevvoRequest) {
-                    ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, data.objectId);
+                    ObjectService.showObject(ObjectService.ObjectTypes.COMPLAINT, data.objectId);//showObject
                     MessageService.info(objectWasCreatedMessage);
                 }
                 else {

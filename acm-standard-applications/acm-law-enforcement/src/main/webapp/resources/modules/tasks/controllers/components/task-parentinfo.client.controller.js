@@ -34,13 +34,13 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
 
         $scope.onClickTitle = function () {
             if ($scope.parentCaseInfo) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
+                ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, $scope.parentCaseInfo.id);
             } else if ($scope.parentComplaintInfo) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.complaintId);
+                ObjectService.showObject(ObjectService.ObjectTypes.COMPLAINT, $scope.parentComplaintInfo.complaintId);
             } else if ($scope.parentCostsheetInfo) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.COSTSHEET, $scope.parentCostsheetInfo.id);
+                ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, $scope.parentCostsheetInfo.id);
             } else if ($scope.parentTimesheetInfo) {
-                ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, $scope.parentTimesheetInfo.id);
+                ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, $scope.parentTimesheetInfo.id);
             } else {
                 $log.error('parentCaseInfo is undefined, cannot redirect to the parent case');
             }

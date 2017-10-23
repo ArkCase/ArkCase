@@ -35,7 +35,7 @@ angular.module('services').factory('ObjectService', ['$state', '$window', '$log'
                 , CHECKOUT_LOCK: "CHECKOUT_LOCK"
                 , CHECKIN_LOCK: "CHECKIN_LOCK"
                 , CANCEL_LOCK: "CANCEL_LOCK"
-                , OBJECT_LOCK: "OBJECT_LOCK "
+                , OBJECT_LOCK: "OBJECT_LOCK"
             }
 
             , gotoUrl: function (objType, objId) {
