@@ -12,7 +12,8 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.caseType || 'common.value.unknown' | translate}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.caseType | translateData: 'core.lookups.categories' : lang
+                    || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.subjectType.label</span>
                 </small>
@@ -24,7 +25,8 @@
                 </small>
             </div>
             <div class="col-xs-12 col-md-4">
-                <div class="h4 font-bold">{{parentCaseInfo.priority || 'common.value.unknown' | translate}}</div>
+                <div class="h4 font-bold">{{parentCaseInfo.priority | translateData: 'core.lookups.priorities' : lang
+                    || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.priority.label</span>
                 </small>
@@ -32,7 +34,6 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentCaseInfo.creator || 'common.value.unknown' | translate}}</div>-->
                 <div class="h4 font-bold">{{assignee | mapKeyValue: assignableUsers:'object_id_s':'name' ||
                     'Unknown'}}
                 </div>
@@ -82,7 +83,6 @@
         </div>
         <div class="row">
             <div class="col-xs-12 col-md-4">
-                <!--<div class="h4 font-bold">{{parentComplaintInfo.creator || 'common.value.unknown' | translate}}</div>-->
                 <div class="h4 font-bold">{{assignee || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.complaint.assignee.label</span>

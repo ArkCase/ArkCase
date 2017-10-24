@@ -483,6 +483,14 @@
           "full": "全部",
           "partial": "局部"
         }
+      },
+      "taskOutcomes": {
+        "approve": "批准文件",
+        "rework": "返工文件",
+        "resubmit": "重新提交",
+        "cancel": "取消文件",
+        "concur": "同意",
+        "nonConcur": "不同意"
       }
     },
     "userInfo": {
