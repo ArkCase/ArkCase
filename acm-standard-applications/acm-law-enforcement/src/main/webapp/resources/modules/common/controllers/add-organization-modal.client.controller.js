@@ -1,7 +1,7 @@
 angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
-        , 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService','$timeout', 'params'
+        , 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService', 'params'
         , function ($scope, $modal, $modalInstance, $translate
-        , ObjectLookupService, Util, ConfigService, OrganizationInfoService, $timeout, params) {
+        , ObjectLookupService, Util, ConfigService, OrganizationInfoService, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
                 $scope.config = moduleConfig;
