@@ -22,6 +22,7 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
+import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -37,7 +38,9 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.ImmutableMap;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -58,6 +61,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -82,24 +87,74 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
 
     @Override
-    public boolean isInitiatable(Long businessProcessId) throws AcmTaskException
+    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException
     {
-        return taskDao.isWaitingOnReceiveTask(String.valueOf(businessProcessId), TaskConstants.INITIATE_TASK_NAME);
+        Map<String, Object> matchProcessVariables = ImmutableMap.of(
+                TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId,
+                TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType,
+                TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW, Boolean.TRUE);
+        List<ProcessInstance> processInstances = taskDao.findProcessesByProcessVariables(matchProcessVariables);
+        List<BuckslipProcess> buckslipProcesses = new ArrayList<>(processInstances.size());
+        for (ProcessInstance pi : processInstances)
+        {
+            BuckslipProcess bp = new BuckslipProcess();
+            bp.setBusinessProcessId(pi.getProcessInstanceId());
+            bp.setBusinessProcessName(pi.getProcessDefinitionId());
+            bp.setObjectType(objectType);
+            bp.setObjectId(objectId);
+            bp.setNonConcurEndsApprovals((Boolean) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS));
+            bp.setPastTasks(((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PAST_TASKS)));
+
+            String futureTasksJson = ((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS));
+            try
+            {
+                List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ?
+                        new ArrayList<>() :
+                        objectMapper.readValue(futureTasksJson,
+                                objectMapper.getTypeFactory().constructParametricType(List.class, BuckslipFutureTask.class));
+                bp.setFutureTasks(futureTasks);
+            } catch (IOException e)
+            {
+                log.error("could not read future tasks: {}", e.getMessage(), e);
+            }
+
+            buckslipProcesses.add(bp);
+        }
+
+        return buckslipProcesses;
     }
 
     @Override
-    public boolean isWithdrawable(Long businessProcessId) throws AcmTaskException
+    public BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException
     {
-        String activitiId = String.valueOf(businessProcessId);
-        return taskDao.isProcessActive(activitiId) && !taskDao.isWaitingOnReceiveTask(activitiId, TaskConstants.INITIATE_TASK_NAME);
+        setBuckslipFutureTasks(in.getBusinessProcessId(), in.getFutureTasks());
+        taskDao.writeProcessVariable(in.getBusinessProcessId(), TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS,
+                in.getNonConcurEndsApprovals());
+
+        List<BuckslipProcess> processes = getBuckslipProcessesForObject(in.getObjectType(), in.getObjectId());
+        BuckslipProcess updated = processes.stream().filter(bp -> Objects.equals(in.getBusinessProcessId(), bp.getBusinessProcessId()))
+                .findFirst().orElse(null);
+        return updated;
     }
 
     @Override
-    public List<BuckslipFutureTask> getBuckslipFutureTasks(Long businessProcessId) throws AcmTaskException
+    public boolean isInitiatable(String businessProcessId) throws AcmTaskException
+    {
+        return taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public boolean isWithdrawable(String businessProcessId) throws AcmTaskException
+    {
+        return taskDao.isProcessActive(businessProcessId) && !taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException
     {
         try
         {
-            String futureTasksJson = taskDao.readProcessVariable(String.valueOf(businessProcessId), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+            String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
             if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
             {
                 return objectMapper.readValue(futureTasksJson,
@@ -114,12 +169,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public void setBuckslipFutureTasks(Long businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
+    public void setBuckslipFutureTasks(String businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
     {
         try
         {
             String futureTasksJson = objectMapper.writeValueAsString(buckslipFutureTasks);
-            taskDao.writeProcessVariable(String.valueOf(businessProcessId),
+            taskDao.writeProcessVariable(businessProcessId,
                     TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
                     futureTasksJson);
         } catch (JsonProcessingException e)
@@ -129,16 +184,16 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public String getBuckslipPastTasks(Long businessProcessId) throws AcmTaskException
+    public String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException
     {
-        String pastTasks = taskDao.readProcessVariable(String.valueOf(businessProcessId), TaskConstants.VARIABLE_NAME_PAST_TASKS);
+        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS);
         return pastTasks;
     }
 
     @Override
-    public void signalTask(Long businessProcessId, String receiveTaskId) throws AcmTaskException
+    public void signalTask(String businessProcessId, String receiveTaskId) throws AcmTaskException
     {
-        taskDao.signalTask(String.valueOf(businessProcessId), receiveTaskId);
+        taskDao.signalTask(businessProcessId, receiveTaskId);
     }
 
     @Override
