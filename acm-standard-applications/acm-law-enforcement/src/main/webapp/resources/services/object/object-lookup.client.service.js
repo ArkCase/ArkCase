@@ -165,8 +165,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                         formTypes = [];
                         _.each(plainForms, function (plainForm) {
                             var formType = {};
-                            formType.type = plainForm.key;
-                            formType.label = Util.goodValue(plainForm.name);
+                            formType.key = plainForm.key;
+                            formType.value = Util.goodValue(plainForm.name);
                             formType.url = Util.goodValue(plainForm.url);
                             formType.urlParameters = Util.goodArray(plainForm.urlParameters);
                             formType.form = true;
