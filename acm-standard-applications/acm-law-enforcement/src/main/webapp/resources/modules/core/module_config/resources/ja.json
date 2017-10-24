@@ -483,6 +483,14 @@
           "full": "フル",
           "partial": "部分"
         }
+      },
+      "taskOutcomes": {
+        "approve": "文書を承認する",
+        "rework": "リワークファイル",
+        "resubmit": "再送信",
+        "cancel": "文書を取り消す",
+        "concur": "同意する",
+        "nonConcur": "同意しない"
       }
     },
     "userInfo": {
