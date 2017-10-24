@@ -1973,33 +1973,20 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 if (!Util.isEmpty(subTypes[i].label)) {
                                     item.title = subTypes[i].label;
                                 }
-                                if (!Util.isEmpty(subTypes[i].type)) {
-                                    if (!Util.isEmpty(subTypes[i].form)) {
-                                        item.cmd = "form/" + subTypes[i].type;
-                                    }
-                                    else {
-                                        item.cmd = "file/" + subTypes[i].type;
-                                        item.data = {};
-                                        item.data.uploadFile = true;
-
-// 											**DocTree language support for MVA demo**
-
-//                                        if(!Util.isArrayEmpty(DocTree.fileLanguages)) {
-//                                        	var languages = [];
-//                                            for(var lang = 0; lang < DocTree.fileLanguages.length; lang++){
-//                                            	languages.push({
-//                                            		title: DocTree.fileLanguages[lang].desc,
-//                                            		cmd: item.cmd + "/" + DocTree.fileLanguages[lang].locale
-//                                            	});
-//                                            }
-//                                            item.children = languages;
-//                                        }
-                                    }
-                                }
-                                else if (!Util.isEmpty(subTypes[i].templateFilename)) {
+                                if (!Util.isEmpty(subTypes[i].templateFilename)) {
                                     item.cmd = "template/" + subTypes[i].templateFilename;
                                     item.data = {};
                                     item.data.label = subTypes[i].label;
+                                } else if(!Util.isEmpty(subTypes[i].form)){
+                                    item.title = $translate.instant(subTypes[i].value);
+                                    item.cmd = "form/" + subTypes[i].key;
+                                    item.data = {};
+                                } else {
+                                    item.title = $translate.instant(subTypes[i].value);
+                                    item.cmd = "file/" + subTypes[i].key;
+                                    item.data = {};
+                                    item.data.uploadFile = true;
+
                                 }
                                 menu.push(item);
                             }
