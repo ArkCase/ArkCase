@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "Cambiar imagen",
     "email": "Dirección de correo electrónico",
-    "uploadImgError": "Has cargado un tipo de archivo de imagen no válido."
+    "uploadImgError": "Has cargado un tipo de archivo de imagen no válido.",
+    "uploadError": "No se pudo cargar la nueva imagen de perfil"
+  },
+  "profile.signature": {
+    "title": "Cambiar Firma",
+    "uploadError": "No se pudo cargar la nueva firma"
   },
   "profile.modal": {
     "title": "Info",
