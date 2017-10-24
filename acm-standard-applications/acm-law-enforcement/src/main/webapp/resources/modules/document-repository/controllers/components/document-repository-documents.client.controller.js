@@ -48,7 +48,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes=[];
                     for(var i = 0; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"type":data[1][i].key, "label": $translate.instant(data[1][i].value)});
+                        $scope.treeConfig.fileTypes.push({"key":data[1][i].key, "value": $translate.instant(data[1][i].value)});
                     }
                     $scope.treeConfig.fileLanguages = data[2]; 
                 });

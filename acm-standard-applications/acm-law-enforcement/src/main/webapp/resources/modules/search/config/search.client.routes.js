@@ -11,7 +11,7 @@ angular.module('search').config(['$stateProvider',
                     , function ($translate, $translatePartialLoader, LocaleService) {
                     $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('search');
-                    $translate.buildDataLookups(LocaleService.getLabelResources(["common", "search"], "en"));
+                    $translate.addDataDictFromLabels(LocaleService.getLabelResources(["common", "search"], "en"));
                     return $translate.refresh();
                 }]
             }

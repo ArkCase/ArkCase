@@ -109,44 +109,7 @@
           {
             "title": "New Document",
             "cmd": "subMenuFileTypes",
-            "___children": [
-              {
-                "title": "Electronic Communication",
-                "cmd": "form/electronicCommunicationFormUrl"
-              },
-              {
-                "title": "Report of Investigation",
-                "cmd": "form/roiFormUrl"
-              },
-              {
-                "title": "Medical Release",
-                "cmd": "file/mr"
-              },
-              {
-                "title": "General Release",
-                "cmd": "file/gr"
-              },
-              {
-                "title": "eDelivery",
-                "cmd": "file/ev"
-              },
-              {
-                "title": "SF86 Signature",
-                "cmd": "file/sig"
-              },
-              {
-                "title": "Notice of Investigation",
-                "cmd": "file/noi"
-              },
-              {
-                "title": "Witness Interview Request",
-                "cmd": "file/wir"
-              },
-              {
-                "title": "Other",
-                "cmd": "file/other"
-              }
-            ]
+            "___children": "fileTypes"
           },
           {
             "title": "New Correspondence",
