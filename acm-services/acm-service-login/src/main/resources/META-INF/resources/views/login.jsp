@@ -27,6 +27,7 @@ Time: 12:44
                 sessionStorage.removeItem('redirectURL');
             }
         }
+
         window.onload = addUrlHashToLocalStorage;
     </script>
 
@@ -37,28 +38,28 @@ Time: 12:44
 </head>
 <body>
 
-<!-- Modal -->
+<!-- Forgot Username Modal -->
 <div class="modal fade" id="forgot-username-modal" role="dialog">
     <div class="modal-dialog modal-sm">
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Forgot Username</h4>
-            </div>
-            <div class="modal-body">
-                <form id="forgot-username">
+            <form id="forgot-username">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Forgot Username</h4>
+                </div>
+                <div class="modal-body">
                     <p>Please enter your email address associated with your account and we will email your username.</p>
                     <div class="form-group">
                         <label for="email">Email Address</label>
-                        <input type="text" class="form-control" id="email" placeholder="Enter Email Address">
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address" required>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success pull-right" id="forgot-username-btn">Forgot Username</button>
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success pull-right" id="forgot-username-btn">Forgot Username</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -199,7 +200,11 @@ Time: 12:44
 </c:if>
 <script type="text/javascript">
     $(function () {
-        $("#forgot-username-btn").click(function () {
+        $('#forgot-username-success').hide();
+        $('#forgot-username-error').hide();
+
+        $('#forgot-username').on('submit', function (e) {
+            e.preventDefault();
             $('#forgot-username-success').hide();
             $('#forgot-username-error').hide();
             $('#forgot-username-modal').modal('hide');

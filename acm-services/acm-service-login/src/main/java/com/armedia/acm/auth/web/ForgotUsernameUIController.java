@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @RequestMapping("/forgot-username")
 public class ForgotUsernameUIController implements ApplicationEventPublisherAware
 {
@@ -19,13 +23,20 @@ public class ForgotUsernameUIController implements ApplicationEventPublisherAwar
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<String> setEmailAddress(@RequestParam String email)
     {
-        AcmUser user = userDao.findByEmailAddress(email);
-        if (user == null)
+        List<AcmUser> users = userDao.findByEmailAddress(email);
+        if (users.size() == 0)
         {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         } else
         {
-            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(user);
+            List<String> userAccounts = users.stream()
+                    .map(AcmUser::getUserId)
+                    .collect(Collectors.toList());
+
+            AbstractMap.SimpleImmutableEntry<String, List<String>> emailToUserAccount = new AbstractMap.SimpleImmutableEntry<>(email,
+                    userAccounts);
+
+            ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(emailToUserAccount);
             forgotUsernameEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotUsernameEvent);
         }
