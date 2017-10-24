@@ -334,20 +334,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
     }
 
-    public AcmUser findByEmailAddress(String email)
+    public List<AcmUser> findByEmailAddress(String email)
     {
-        String select = "SELECT user FROM AcmUser user WHERE user.mail = :email";
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
         TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
-        query.setParameter("email", email);
-        try
-        {
-            return query.getSingleResult();
-        }
-        catch (NoResultException | NonUniqueResultException e)
-        {
-            log.error("User with email address: [{}] was not found!", email);
-            return null;
-        }
+        query.setParameter("email", email.toLowerCase());
+        return query.getResultList();
     }
 
     public List<AcmUser> findByDirectory(String directoryName)
