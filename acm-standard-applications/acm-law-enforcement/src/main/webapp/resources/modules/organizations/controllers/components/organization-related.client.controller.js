@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.ExternalService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationExternalService, ObjectAssociationService, $timeout, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -88,7 +88,8 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             var params = {
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
-                showDescription: true
+                showDescription: true,
+                externalModalService: OrganizationExternalService
             };
             if (rowEntity) {
                 angular.extend(params, {
@@ -102,6 +103,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                     organizationId: $scope.organizationId
                 });
             }
+
 
             var modalInstance = $modal.open({
                 scope: $scope,
