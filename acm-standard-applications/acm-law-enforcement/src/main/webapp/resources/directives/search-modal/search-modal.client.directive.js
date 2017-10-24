@@ -130,29 +130,28 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                         organizationId: scope.id
                                     },
                                     function (data) {
-                                        updateFacets(data.facet_counts.facet_fields);
-                                        scope.gridOptions.data = data.response.docs;
-                                        if (scope.gridOptions.data.length < 1) {
-                                            scope.showNoData = true;
-                                        }
-                                        scope.gridOptions.totalItems = data.response.numFound;
+                                        modalSearchResult(data);
                                     });
                             } else {
                                 SearchService.queryFilteredSearch({
                                         query: query
                                     },
                                     function (data) {
-                                        updateFacets(data.facet_counts.facet_fields);
-                                        scope.gridOptions.data = data.response.docs;
-                                        if (scope.gridOptions.data.length < 1) {
-                                            scope.showNoData = true;
-                                        }
-                                        scope.gridOptions.totalItems = data.response.numFound;
+                                        modalSearchResult(data);
                                     });
                             }
                         }
                     }
                 };
+
+                function modalSearchResult(data) {
+                    updateFacets(data.facet_counts.facet_fields);
+                    scope.gridOptions.data = data.response.docs;
+                    if (scope.gridOptions.data.length < 1) {
+                        scope.showNoData = true;
+                    }
+                    scope.gridOptions.totalItems = data.response.numFound;
+                }
 
                 function updateFacets(facets) {
                     if (facets) {
