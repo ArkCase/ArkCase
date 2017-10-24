@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "Carga de trabajo del equipo"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Casos por estado"
   }
 }

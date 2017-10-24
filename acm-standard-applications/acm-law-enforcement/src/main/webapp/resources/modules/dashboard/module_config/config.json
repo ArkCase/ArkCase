@@ -294,6 +294,13 @@
       "configurable": true,
       "redirectSettings": {
       }
+    },
+    {
+      "id": "casesByStatus",
+      "title": "dashboard.comp.casesByStatus.title",
+      "configurable": true,
+      "redirectSettings": {
+      }
     }
   ],
   "modules": [
