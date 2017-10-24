@@ -483,6 +483,14 @@
           "full": "Cheio",
           "partial": "Parcial"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Aprovar documento",
+        "rework": "Enviar para retrabalho",
+        "resubmit": "Reenviar",
+        "cancel": "Cancelar documento",
+        "concur": "Concordo",
+        "nonConcur": "Não concordo"
       }
     },
     "userInfo": {

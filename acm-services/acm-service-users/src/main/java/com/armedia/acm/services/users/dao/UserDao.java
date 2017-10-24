@@ -327,9 +327,17 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NoResultException | NonUniqueResultException e)
         {
-            log.error("User with password reset token: [{}] not found!", token, e.getMessage());
+            log.error("User with password reset token: [{}] not found!", token);
             return null;
         }
+    }
+
+    public List<AcmUser> findByEmailAddress(String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        return query.getResultList();
     }
 
     public List<AcmUser> findByDirectory(String directoryName)

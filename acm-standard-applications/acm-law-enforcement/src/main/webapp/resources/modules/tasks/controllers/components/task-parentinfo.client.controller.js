@@ -53,12 +53,6 @@ angular.module('tasks').controller('Tasks.ParentInfoController', ['$scope', '$st
                 return;
             }
 
-            //for test
-            //if (1148 == $scope.objectInfo.taskId) {
-            //    $scope.objectInfo.parentObjectType = "COMPLAINT";
-            //    $scope.objectInfo.parentObjectId = 123;
-            //}
-
 
             if (ObjectService.ObjectTypes.CASE_FILE == $scope.objectInfo.parentObjectType) {
                 CaseInfoService.getCaseInfo($scope.objectInfo.parentObjectId).then(
