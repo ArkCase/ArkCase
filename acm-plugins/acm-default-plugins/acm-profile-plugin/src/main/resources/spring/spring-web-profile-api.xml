@@ -6,7 +6,6 @@
     <bean id="profileInfoAPIController" class="com.armedia.acm.plugins.profile.web.api.ProfileInfoAPIController">
         <property name="userOrgService" ref="acmUserOrgService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="ecmFileDao" ref="ecmFileDao"/>
     </bean>
 
     <bean id="saveOutlookPasswordAPIController"

@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('profile').controller('Profile.PicController', ['$scope', '$rootScope', 'Profile.UserInfoService', 'Profile.ProfilePictureService','$log',
-                                                               'Dialog.BootboxService','$translate',
-    function ($scope, $rootScope, UserInfoService, ProfilePictureService,$log,DialogService,$translate) {
+    'Dialog.BootboxService', '$translate', 'MessageService',
+    function ($scope, $rootScope, UserInfoService, ProfilePictureService, $log, DialogService, $translate, messageService) {
         $scope.changePic = function () {
             $("#file").click();
         };
@@ -31,6 +31,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
                         })
                         .error(function () {
                             $log.error('error during uploading user profile picture');
+                            messageService.error($translate.instant('profile.picture.uploadError'));
                         });
                     }
                 });
@@ -57,6 +58,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
                             })
                             .error(function () {
                                 $log.error('error during uploading user signature');
+                                messageService.error($translate.instant('profile.signature.uploadError'));
                             });
                     }
                 });
