@@ -1,13 +1,13 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
+angular.module('complaints').controller('Complaints.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'Object.LookupService', 'Complaint.LookupService', 'Complaint.InfoService'
-    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', 'SearchService', 'Search.QueryBuilderService', "Config.LocaleService"
-    , function ($scope, $stateParams, $translate, $timeout
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'MessageService', 'ObjectService', 'Helper.UiGridService'
+    , 'Object.ParticipantService', 'SearchService', 'Search.QueryBuilderService'
+    , function ($scope, $stateParams, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectLookupService, ComplaintLookupService, ComplaintInfoService
-        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService, $modal
-        , ObjectParticipantService, $q, SearchService, SearchQueryBuilder, LocaleService
+        , ObjectModelService, HelperObjectBrowserService, MessageService, ObjectService, HelperUiGridService
+        , ObjectParticipantService, SearchService, SearchQueryBuilder
     ) {
 
         new HelperObjectBrowserService.Component({
@@ -29,14 +29,6 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             $scope.config = componentConfig;
         });
 
-        var getPrioritiesPromise = ObjectLookupService.getPriorities();
-        getPrioritiesPromise.then(
-            function (priorities) {
-                $scope.priorities = priorities;
-                return priorities;
-            }
-        );
-
         ObjectLookupService.getGroups().then(
             function (groups) {
                 var options = [];
@@ -48,15 +40,16 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             }
         );
 
-        var getComplaintTypesPromise = ObjectLookupService.getComplaintTypes();
-        getComplaintTypesPromise.then(
-            function (complaintTypes) {
-                $scope.complaintTypes = complaintTypes;
-                return complaintTypes;
-            }
-        );
+        ObjectLookupService.getLookupByLookupName("priorities").then(function (priorities) {
+            $scope.priorities = priorities;
+            return priorities;
+        });
 
-        $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
+        ObjectLookupService.getLookupByLookupName("complaintTypes").then(function (complaintTypes) {
+            $scope.complaintTypes = complaintTypes;
+            return complaintTypes;
+        });
+
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
             $scope.picker.opened = true;
@@ -188,15 +181,11 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
+            $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+
             $scope.assignee = ObjectModelService.getAssignee(objectInfo);
             $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
-            $q.all([getComplaintTypesPromise, getPrioritiesPromise]).then(function() {
-                setComplaintTypeValue();
-                setPriorityValue();
-            });
-            
-            //if (previousId != objectId) {
+
             ComplaintLookupService.getApprovers($scope.owningGroup, $scope.assignee).then(
                 function (approvers) {
                     var options = [];
@@ -209,13 +198,9 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             );
         };
 
-        /**
-         * Persists the updated complaint metadata to the ArkComplaint data
-         */
-        function saveComplaint() {
+
+        $scope.saveComplaint = function () {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            setComplaintTypeValue();
-            setPriorityValue();
             if (ComplaintInfoService.validateComplaintInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
                 promiseSaveInfo = ComplaintInfoService.saveComplaintInfo(objectInfo);
@@ -231,45 +216,20 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
                 );
             }
             return promiseSaveInfo;
-        }
-
-        $scope.saveComplaint = function () {
-            saveComplaint();
         };
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-            saveComplaint();
+            $scope.saveComplaint();
         };
         $scope.updateAssignee = function () {
             ObjectModelService.setAssignee($scope.objectInfo, $scope.assignee);
-            saveComplaint();
+            $scope.saveComplaint();
         };
         $scope.updateDueDate = function () {
             var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
             $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-            saveComplaint();
-        };
-        
-        var setComplaintTypeValue = function() {
-            var complaintType = _.findWhere($scope.complaintTypes, {key : $scope.objectInfo.complaintType});
-            if (complaintType) {
-                $scope.complaintTypeValue = complaintType.value;
-            } else {
-                $scope.complaintTypeValue = 'core.unknown';
-            }
-        };
-        
-        var setPriorityValue = function() {
-            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
-            if (priority) {
-                $scope.priorityValue = priority.value;
-            } else {
-                $scope.priorityValue = 'core.unknown';
-            }
+            $scope.saveComplaint();
         };
 
-        $scope.$bus.subscribe('$translateChangeSuccess', function (data) {
-            $scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang)
-        });
     }
 ]);

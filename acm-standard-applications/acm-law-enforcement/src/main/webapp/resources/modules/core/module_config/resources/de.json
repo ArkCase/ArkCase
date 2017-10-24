@@ -41,7 +41,7 @@
         "dba": "DBA"
       },
       "fileTypes": {
-        "ev": "e-Lieferung",
+        "ev": "E-Lieferung",
         "gr": "Allgemeine Freigabe",
         "mr": "Medizinische Freigabe",
         "noi": "Beachtenuntersuchung",
@@ -483,6 +483,14 @@
           "full": "Voll",
           "partial": "Teilweise"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Dokument genehmigen",
+        "rework": "Zur Nachbesserung senden",
+        "resubmit": "Erneut senden",
+        "cancel": "Dokument abbrechen",
+        "concur": "Samenvallen",
+        "nonConcur": "Niet in overeenstemming"
       }
     },
     "userInfo": {

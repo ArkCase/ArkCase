@@ -483,6 +483,14 @@
           "full": "Полный",
           "partial": "Частичный"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Утвердить документ",
+        "rework": "Отправить для Rework",
+        "resubmit": "Resubmit",
+        "cancel": "Отменить документ",
+        "concur": "Совпадать",
+        "nonConcur": "Отклонять"
       }
     },
     "userInfo": {

@@ -41,7 +41,7 @@
         "dba": "DBA"
       },
       "fileTypes": {
-        "ev": "e-Livraison",
+        "ev": "E-Livraison",
         "gr": "Libération général",
         "mr": "Libération médicale",
         "noi": "Avis d'enquête",
@@ -483,6 +483,14 @@
           "full": "Plein",
           "partial": "Partiel"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Approuver le document",
+        "rework": "Envoyer pour retravailler",
+        "resubmit": "Renvoyer",
+        "cancel": "Annuler le document",
+        "concur": "Concurrir",
+        "nonConcur": "No concurra"
       }
     },
     "userInfo": {
