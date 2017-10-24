@@ -1,6 +1,6 @@
-angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$rootScope', '$modal', '$modalInstance', '$translate'
+angular.module('common').controller('Common.AddOrganizationModalController', ['$scope', '$modal', '$modalInstance', '$translate'
         , 'Object.LookupService', 'UtilService', 'ConfigService', 'Organization.InfoService','$timeout', 'params'
-        , function ($scope, $rootScope, $modal, $modalInstance, $translate
+        , function ($scope, $modal, $modalInstance, $translate
         , ObjectLookupService, Util, ConfigService, OrganizationInfoService, $timeout, params) {
 
             ConfigService.getModuleConfig("common").then(function (moduleConfig) {
@@ -29,18 +29,14 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
-
             if (!Util.isEmpty(params.externalModalService)) {
                 $scope.externalModalService = params.externalModalService;
             }
-
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
-
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
-
             if (params.isSelectedParent) {
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {

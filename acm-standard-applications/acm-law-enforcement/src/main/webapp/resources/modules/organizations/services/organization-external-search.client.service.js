@@ -16,10 +16,10 @@ angular.module('services').factory('Organization.ExternalService', ['$resource',
             /**
              * @ngdoc method
              * @name queryFilteredSearch
-             * @methodOf services:Search.SearchService
+             * @methodOf organization:External Search.SearchService
              *
              * @description
-             * Performs "Faceted Search" REST call by supplying default filters
+             * Performs "Search by organization id which exclude the organization itself and it's ancestors" REST call by supplying default filters
              *
              * @param {String} query Query to send to the server
              * @returns {HttpPromise} Future info about faceted search
