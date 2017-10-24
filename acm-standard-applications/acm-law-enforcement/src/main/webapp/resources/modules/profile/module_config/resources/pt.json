@@ -49,10 +49,12 @@
   "profile.picture": {
     "title": "Alterar imagem",
     "email": "Endereço de e-mail",
-    "uploadImgError": "Você enviou um tipo de arquivo de imagem inválido"
+    "uploadImgError": "Você enviou um tipo de arquivo de imagem inválido",
+    "uploadError": "Fazendo o upload de nova imagem de perfil falhou"
   },
   "profile.signature": {
-    "title": "Mudar a assinatura"
+    "title": "Mudar a assinatura",
+    "uploadError": "Fazendo o upload da nova assinatura falhou"
   },
   "profile.modal": {
     "title": "Info",
