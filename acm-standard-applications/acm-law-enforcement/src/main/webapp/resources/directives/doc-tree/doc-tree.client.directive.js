@@ -1951,23 +1951,42 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     return menuDeferred.promise;
                 }
 
+
+                // To create a menu like this:
+                //        var menu = [
+                //            {title: "Electronic Communication", cmd: "form/electronicCommunicationFormUrl"}
+                //            ,{title: "Report of Investigation", cmd: "form/roiFormUrl"}
+                //            ,{title: "Medical Release", cmd: "file/mr"}
+                //            ,{title: "General Release", cmd: "file/gr"}
+                //            ,{title: "eDelivery", cmd: "file/ev"}
+                //            ,{title: "SF86 Signature", cmd: "file/sig"}
+                //            ,{title: "Notice of Investigation", cmd: "file/noi"}
+                //            ,{title: "Witness Interview Request", cmd: "file/wir"}
+                //            ,{title: "Other", cmd: "file/other"}
+                //        ];
                 , makeSubMenu: function (subTypes) {
                     var menu = [], item;
                     if (subTypes) {
                         if (Util.isArray(subTypes)) {
                             for (var i = 0; i < subTypes.length; i++) {
                                 item = {};
-
+                                if (!Util.isEmpty(subTypes[i].label)) {
+                                    item.title = subTypes[i].label;
+                                }
                                 if (!Util.isEmpty(subTypes[i].templateFilename)) {
-                                    item.title = $translate.instant(subTypes[i].label);
                                     item.cmd = "template/" + subTypes[i].templateFilename;
                                     item.data = {};
                                     item.data.label = subTypes[i].label;
+                                } else if(!Util.isEmpty(subTypes[i].form)){
+                                    item.title = $translate.instant(subTypes[i].value);
+                                    item.cmd = "form/" + subTypes[i].key;
+                                    item.data = {};
                                 } else {
                                     item.title = $translate.instant(subTypes[i].value);
                                     item.cmd = "file/" + subTypes[i].key;
                                     item.data = {};
                                     item.data.uploadFile = true;
+
                                 }
                                 menu.push(item);
                             }

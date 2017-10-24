@@ -89,10 +89,24 @@ angular.module('directives').directive('folderActions', ['ConfigService', 'Confi
                         if (Util.isArray(subTypes)) {
                             for (var i = 0; i < subTypes.length; i++) {
                                 item = {};
-                                item.title = $translate.instant(subTypes[i].value);
-                                item.cmd = "file/" + subTypes[i].key;
-                                item.data = {};
-                                item.data.uploadFile = true;
+                                if (!Util.isEmpty(subTypes[i].label)) {
+                                    item.title = subTypes[i].label;
+                                }
+                                if (!Util.isEmpty(subTypes[i].templateFilename)) {
+                                    item.cmd = "template/" + subTypes[i].templateFilename;
+                                    item.data = {};
+                                    item.data.label = subTypes[i].label;
+                                } else if(!Util.isEmpty(subTypes[i].form)){
+                                    item.title = $translate.instant(subTypes[i].value);
+                                    item.cmd = "form/" + subTypes[i].key;
+                                    item.data = {};
+                                } else {
+                                    item.title = $translate.instant(subTypes[i].value);
+                                    item.cmd = "file/" + subTypes[i].key;
+                                    item.data = {};
+                                    item.data.uploadFile = true;
+
+                                }
                                 menu.push(item);
                             }
                         }
