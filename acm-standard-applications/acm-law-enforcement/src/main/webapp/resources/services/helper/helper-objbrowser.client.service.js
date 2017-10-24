@@ -586,16 +586,38 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
              */
             , onLoad: function (start, n, sort, filters, query) {
                 var that = this;
-                var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
-                var promiseNodeData = (that.nodeId)? that.getNodeData(that.nodeId) : Util.resolvePromise(null);
-                $q.all([promiseTreeData, promiseNodeData]).then(function(data){
-                    var treeData = data[0];
-                    var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
 
-                    var objectInfo = data[1];
-                    if (objectInfo) {
-                        var treeNode = that.makeTreeNode(objectInfo);
-                        var found = _.find(treeData.docs, {nodeId: that.nodeId});
+                var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
+
+                var deferNodeData = $q.defer();
+                if (that.nodeId) {
+                    that.getNodeData(that.nodeId).then(
+                        function(objectInfo) {
+                            var treeNode = that.makeTreeNode(objectInfo);
+                            deferNodeData.resolve(treeNode);
+                            return objectInfo;
+                        },
+                        function(errorData) {
+                            var treeNode = {
+                                nodeId: that.nodeId
+                                , nodeType: "ERROR"
+                                , nodeToolTip: Util.goodMapValue(errorData, "data")
+                            };
+                            deferNodeData.resolve(treeNode);
+                            return errorData;
+                        }
+                    );
+                } else {
+                    deferNodeData.resolve(null);
+                }
+
+                $q.all([promiseTreeData, deferNodeData.promise]).then(function(data){
+                    var treeData = Util.goodValue(data[0], {docs: [], total: 0});
+                    var treeNode = data[1];
+
+                    var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
+                    if (treeNode) {
+                        var found = that.findByNodeId(treeData.docs, treeNode.nodeId);
                         if (found) {
                             selectNode = found;
                         } else {
@@ -604,7 +626,8 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                             treeData = {
                                 docs: docs,
                                 total: treeData.total + 1
-                            }
+                            };
+                            selectNode = treeNode;
                         }
                     }
 
@@ -639,6 +662,14 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.state.go(stateName, params);
             }
 
+            , findByNodeId: function (docs, nodeId) {
+                if (nodeId) {
+                    if (_.isNumber(nodeId)) {
+                        nodeId = nodeId.toString();
+                    }
+                }
+                return _.find(docs, {nodeId: nodeId});
+            }
         };
 
         Service.Content.prototype = {

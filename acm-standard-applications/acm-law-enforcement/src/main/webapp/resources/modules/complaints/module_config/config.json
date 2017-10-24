@@ -248,6 +248,10 @@
         "components": [
           "approvalRouting"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
