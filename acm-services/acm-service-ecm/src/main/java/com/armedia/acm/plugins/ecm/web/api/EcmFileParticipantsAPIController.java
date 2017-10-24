@@ -13,6 +13,7 @@ import com.armedia.acm.services.participants.service.AcmParticipantService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +40,7 @@ public class EcmFileParticipantsAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'write')")
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmParticipant> saveParticipants(@PathVariable(value = "objectType") String objectType,
@@ -46,6 +49,11 @@ public class EcmFileParticipantsAPIController
     {
         log.info("Participants will be set on object [{}]:[{}]", objectType, objectId);
 
+        if (!objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && !objectType.equals(EcmFileConstants.OBJECT_FILE_TYPE))
+        {
+            throw new AcmAccessControlException(Arrays.asList(""),
+                    "The called method cannot be executed on objectType {" + objectType + "}!");
+        }
         getParticipantService().validateParticipants(participants);
 
         List<AcmParticipant> participantsToReturn = new ArrayList<>();
