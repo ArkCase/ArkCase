@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "Change Picture",
     "email": "Email Address",
-    "uploadImgError": "You have uploaded an invalid image file type"
+    "uploadImgError": "You have uploaded an invalid image file type",
+    "uploadError": "Uploading new profile picture failed"
+  },
+  "profile.signature": {
+    "title": "Change Signature",
+    "uploadError": "Uploading new signature failed"
   },
   "profile.modal": {
     "title": "Info",
