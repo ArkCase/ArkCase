@@ -12,25 +12,40 @@
  */
 angular.module('services').config(function ($provide) {
     $provide.decorator('$translate', function ($delegate) {
-        $delegate.dataLookups = {};
+        $delegate.dataDict = {};
 
 
         /**
          * @ngdoc method
-         * @name buildDataLookups
+         * @name resetDataDict
          * @methodOf services.service:$translate
          *
          * @description
-         * Build a reverse translation table. Data resource key must end with "%".
+         * Reset the reverse translation table
+         *
+         * @returns {Object} Return to itself for chain'able function calls.
+         */
+        $delegate.resetDataDict = function(getLabelResources) {
+            $delegate.dataDict = {};
+            return $delegate;
+        };
+
+        /**
+         * @ngdoc method
+         * @name addDataDictFromLabels
+         * @methodOf services.service:$translate
+         *
+         * @description
+         * Add entries from label resources to the reverse translation table. Data resource key must end with "%".
          *    "bar.foo.greeting%": "Hello There"
          * becomes
          *    "bar.foo.Hello There": "bar.foo.greeting%"
          *
          * @param {Object} getLabelResources  Promise of retrieving label resources
+         *
+         * @returns {Object} Return to itself for chain'able function calls.
          */
-        $delegate.buildDataLookups = function(getLabelResources) {
-            $delegate.dataLookups = {};
-
+        $delegate.addDataDictFromLabels = function(getLabelResources) {
             getLabelResources.then(function(resourceParts) {
                 _.each(resourceParts, function(resourcePart, langNs) {
                     var translationMap = resourcePart;
@@ -42,12 +57,57 @@ angular.module('services').config(function ($provide) {
                         _.each(picked, function(value, key) {
                             var lastIndex = key.lastIndexOf(".");
                             var category = key.substring(0, lastIndex);
-                            $delegate.dataLookups[category + "." + value] = key;
+                            $delegate.dataDict[category + "." + value] = key;
                         });
                     }
                 });
 
             });
+            return $delegate;
+        };
+
+        /**
+         * @ngdoc method
+         * @name addDataDictFromLookup
+         * @methodOf services.service:$translate
+         *
+         * @description
+         * Add entries from key-value pair list to the reverse translation table. Example of a list:
+         * var keyValueList = [{"key": "bar.foo.hello", "value": "Hello There"},
+         *                     {"key": "bar.foo.bye",   "value": "Good Bye"}];
+         *
+         * @param {Object} keyValueList  List of key-value pair list. It can be a promise that will return such list
+         * @param {String} (Optional)keyName  Key name of the key-value pair. Default value is "key"
+         * @param {String} (Optional)valueName  Value name of the key-value pair. Default value is "value"
+         *
+         * @returns {Object} Return to itself for chain'able function calls.
+         */
+        $delegate.addDataDictFromLookup = function(keyValueList, keyName, valueName) {
+            var keyName = keyName || "key";
+            var valueName = valueName || "value";
+
+            var addDataDictFromList = function(list) {
+                _.each(list, function(keyValue) {
+                    var value = keyValue[keyName];
+                    var key = keyValue[valueName];
+                    if (key && value) {
+                        var lastIndex = key.lastIndexOf(".");
+                        var category = key.substring(0, lastIndex);
+                        $delegate.dataDict[category + "." + value] = key;
+                    }
+                });
+            };
+
+            if (_.isArray(keyValueList)) {
+                addDataDictFromList(keyValueList);
+
+            } else if (keyValueList.then) {
+                keyValueList.then(function(list) {
+                    addDataDictFromList(list);
+                });
+            }
+
+            return $delegate;
         };
 
         /**
@@ -68,9 +128,13 @@ angular.module('services').config(function ($provide) {
          * @returns {String} Translated data
          */
         $delegate.data = function(data, category, interpolateParams, interpolationId, forceLanguage, sanitizeStrategy) {
+            if (!data) {
+                return "";
+            }
+
             data = data.trim();
             var key = (category)? category + "." + data : data;
-            var translationId = $delegate.dataLookups[key];
+            var translationId = $delegate.dataDict[key];
             if (translationId) {
                 return $delegate.instant(translationId, interpolateParams, interpolationId, forceLanguage, sanitizeStrategy);
             } else {
@@ -94,16 +158,16 @@ angular.module('services').config(function ($provide) {
         $delegate.getKey = function(data, category) {
             data = data.trim();
             var key = (category)? category + "." + data : data;
-            return $delegate.dataLookups[key];
+            return $delegate.dataDict[key];
         };
 
         return $delegate;
     });
 
-}).factory('Config.LocaleService', ['$resource', 'Acm.StoreService', 'UtilService'
-    , 'LookupService', '$translate', 'tmhDynamicLocale'
-    , function ($resource, Store, Util
-        , LookupService, $translate, dynamicLocale
+}).factory('Config.LocaleService', ['$resource', '$locale', '$translate', 'tmhDynamicLocale'
+    , 'Acm.StoreService', 'UtilService', 'LookupService'
+    , function ($resource, $locale, $translate, dynamicLocale
+        , Store, Util, LookupService
     ) {
         var Service = $resource('api/latest/plugin', {}, {
             _getLabelResource: {
@@ -418,6 +482,7 @@ angular.module('services').config(function ($provide) {
         Service.useLocale = function(localeCode) {
             $translate.use(localeCode);
             dynamicLocale.set(localeCode);
+            //$locale.currencySymbol = Service.getCurrencySymbol(localeCode);
         };
 
         /**
@@ -437,7 +502,6 @@ angular.module('services').config(function ($provide) {
             var locale = Service.findLocale(localeCode);
             return Util.goodMapValue(locale, "currencySymbol");
         };
-
 
 
         /**

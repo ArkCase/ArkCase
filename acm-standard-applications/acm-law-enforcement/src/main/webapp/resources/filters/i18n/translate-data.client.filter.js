@@ -12,12 +12,13 @@
  * {{ translate_expression | translateData[: category [:interpolateParams]] }}
  *
  * @param {string} category Prefix of resource key. Category of 'cases.comp.info.caseTypes.benefitsAppeal%' is 'cases.comp.info.caseTypes'
+ * @param {string} (Optional)lang Locale language code. This is needed when filter needs to respond to language changes in runtime
  *
  * @example
  <example module="ngView">
  <file name="index.html">
  <div ng-controller="TranslateCtrl">
- <scan>{{ 'Hello there!' | translateData: 'foo.bar' }}</scan>
+ <scan>{{ 'Hello there!' | translateData: 'foo.bar' : 'zh-cn' }}</scan>
  <!-- displays '你好!' -->
  </div>
  </file>
@@ -40,7 +41,8 @@
  </example>
  */
 angular.module('filters').filter('translateData', ['$translate', function ($translate) {
-    return function (input, category, interpolateParams) {
+    return function (input, category, lang, interpolateParams) {
+        //Passing param 'lang' here to force Angular to evaluate filter when language changes
         return $translate.data(input, category, interpolateParams);
     };
 }]);
