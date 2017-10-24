@@ -1,6 +1,8 @@
 package com.armedia.acm.plugins.profile.web.api;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
@@ -36,6 +38,11 @@ public class ProfileInfoAPIController
      */
     private EcmFileService ecmFileService;
 
+    /**
+     * Ecm file DAO.
+     */
+    private EcmFileDao ecmFileDao;
+
 
     @RequestMapping(value = "/get/{userId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -61,8 +68,9 @@ public class ProfileInfoAPIController
         Long ecmSignatureFileId = userOrgService.getUserOrgForUserId(authentication.getName()).getEcmSignatureFileId();
         if (ecmSignatureFileId != null)
         {
+            EcmFile ecmSignatureFile = ecmFileDao.find(ecmSignatureFileId);
             // MIME type of the file
-            response.setContentType("image/png");
+            response.setContentType(ecmSignatureFile.getFileActiveVersionMimeType());
             // Read from the file and write into the response
             try (OutputStream os = response.getOutputStream(); InputStream is = ecmFileService.downloadAsInputStream(ecmSignatureFileId))
             {
@@ -99,5 +107,15 @@ public class ProfileInfoAPIController
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public EcmFileDao getEcmFileDao()
+    {
+        return ecmFileDao;
+    }
+
+    public void setEcmFileDao(EcmFileDao ecmFileDao)
+    {
+        this.ecmFileDao = ecmFileDao;
     }
 }
