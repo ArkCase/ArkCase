@@ -6,11 +6,13 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,7 +28,7 @@ import java.util.Date;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class UpdateFileMetadataAPIController implements ApplicationEventPublisherAware
 {
 
@@ -35,21 +37,22 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile updateFile(
-            @RequestBody EcmFile file,
-            @PathVariable("fileId") Long fileId,
-            Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    public EcmFile updateFile(@RequestBody EcmFile file, @PathVariable("fileId") Long fileId, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         if (file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId()))
         {
             log.error("Invalid incoming file [{}]", file.toString());
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null, "Invalid incoming file", null);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
+                    "Invalid incoming file", null);
         }
 
-        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed (e.g participants)
+        // Explicitly set modified to force a save to trigger transformer to reindex data when child objects are changed
+        // (e.g participants)
         file.setModified(new Date());
 
         log.debug("Incoming file id to be updated [{}]", file.getId());
@@ -60,7 +63,8 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
             log.info("File update successful [{}]", file);
             return file;
         }
-        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId, "Failed to update file with fileId: " + fileId, null);
+        throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPDATE_FILE, EcmFileConstants.OBJECT_FILE_TYPE, fileId,
+                "Failed to update file with fileId: " + fileId, null);
     }
 
     private void publishFileUpdatedEvent(EcmFile file, Authentication authentication, boolean success)
@@ -86,6 +90,7 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
         return applicationEventPublisher;
     }
 
+    @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         this.applicationEventPublisher = applicationEventPublisher;

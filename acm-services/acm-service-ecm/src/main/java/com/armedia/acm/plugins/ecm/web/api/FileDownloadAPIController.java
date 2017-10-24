@@ -12,6 +12,7 @@ import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -19,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,12 +29,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping({"/api/v1/plugin/ecm", "/api/latest/plugin/ecm"})
+@RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
     private MuleContextManager muleContextManager;
@@ -49,14 +52,14 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read')")
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-                                 @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
-                                 @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
-                                 @RequestParam(value = "version", required = false, defaultValue = "") String version,
-                                 Authentication authentication, HttpSession httpSession, HttpServletResponse response)
-            throws IOException, MuleException, AcmObjectNotFoundException
+            @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
+            @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
+            @RequestParam(value = "version", required = false, defaultValue = "") String version, Authentication authentication,
+            HttpSession httpSession, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
     {
         log.info("Downloading file by ID '{}' for user '{}'", fileId, authentication.getName());
 
@@ -99,8 +102,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called for normal processing - file was found
-    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
-            throws IOException
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile,
+            String version) throws IOException
     {
         String mimeType = filePayload.getMimeType();
 
@@ -123,8 +126,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
 
         String fileName = filePayload.getFileName();
-        // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
-        // extension... so the extension can be null.  So we have to guard against it.
+        // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
+        // extension... so the extension can be null. So we have to guard against it.
         if (ecmFileVersion != null)
         {
             if (ecmFile != null && ecmFileVersion.getVersionFileNameExtension() != null
@@ -154,7 +157,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     // add file metadata so it can be displayed in Snowbound
                     response.setHeader("X-ArkCase-File-Metadata", objectMapper.writeValueAsString(ecmFile));
-                } catch (JsonProcessingException e)
+                }
+                catch (JsonProcessingException e)
                 {
                     log.warn("Unable to serialize document metadata for [{}:{}]", ecmFile.getId(), version, e);
                 }
@@ -169,17 +173,18 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     response.getOutputStream().write(buffer, 0, read);
                 }
-            }
-            while (read > 0);
+            } while (read > 0);
             response.getOutputStream().flush();
-        } finally
+        }
+        finally
         {
             if (fileIs != null)
             {
                 try
                 {
                     fileIs.close();
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
                 }

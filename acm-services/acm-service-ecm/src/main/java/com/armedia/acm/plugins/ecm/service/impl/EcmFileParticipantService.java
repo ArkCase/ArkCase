@@ -1,15 +1,11 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
-import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
@@ -17,14 +13,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
-import java.util.stream.Collectors;
 
 /**
  * Created by bojan.milenkoski on 06.10.2017
  */
 public class EcmFileParticipantService
 {
-    private AcmFolderService folderService;
     private AcmFolderDao folderDao;
     private EcmFileDao fileDao;
     private AcmParticipantService participantService;
@@ -76,47 +70,24 @@ public class EcmFileParticipantService
         });
         getFolderDao().save(folder);
 
-        List<AcmObject> childObjects = null;
-        try
-        {
-            childObjects = getFolderService().getFolderChildren(folder.getId());
-        }
-        catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
-        {
-            throw new AcmAccessControlException(Arrays.asList(e.getMessage()), e.getMessage());
-        }
-
         // set participants to child folders
-        List<AcmFolder> childFolders = childObjects.stream().filter(AcmFolder.class::isInstance).map(AcmFolder.class::cast)
-                .collect(Collectors.toList());
-        for (AcmFolder childFolder : childFolders)
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId());
+        for (AcmFolder subFolder : subfolders)
         {
-            setFolderParticipantsFromParentFolder(childFolder);
+            setFolderParticipantsFromParentFolder(subFolder);
         }
 
         // set participants to files in the folder
-        List<EcmFile> files = childObjects.stream().filter(EcmFile.class::isInstance).map(EcmFile.class::cast).collect(Collectors.toList());
-        files.forEach(file -> setFileParticipantsFromParentFolder(file));
+        getFileDao().findByFolderId(folder.getId()).forEach(file -> setFileParticipantsFromParentFolder(file));
     }
 
     public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant) throws AcmAccessControlException
     {
-        List<AcmObject> childObjects = null;
-        try
-        {
-            childObjects = getFolderService().getFolderChildren(folder.getId());
-        }
-        catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
-        {
-            throw new AcmAccessControlException(Arrays.asList(e.getMessage()), e.getMessage());
-        }
-
         // set participant to child folders
-        List<AcmFolder> childFolders = childObjects.stream().filter(AcmFolder.class::isInstance).map(AcmFolder.class::cast)
-                .collect(Collectors.toList());
-        for (AcmFolder childFolder : childFolders)
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId());
+        for (AcmFolder subFolder : subfolders)
         {
-            setParticipantToFolderChildren(childFolder, participant);
+            setParticipantToFolderChildren(subFolder, participant);
         }
 
         // set participant to current folder
@@ -130,7 +101,7 @@ public class EcmFileParticipantService
         }
 
         // set participant to files in folder
-        List<EcmFile> files = childObjects.stream().filter(EcmFile.class::isInstance).map(EcmFile.class::cast).collect(Collectors.toList());
+        List<EcmFile> files = getFileDao().findByFolderId(folder.getId());
         for (EcmFile file : files)
         {
             AcmParticipant existingFileParticipant = getParticipantService().getParticipantByParticipantTypeAndObjectTypeAndId(
@@ -147,31 +118,19 @@ public class EcmFileParticipantService
     public void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
             throws AcmAccessControlException
     {
-        List<AcmObject> childObjects = null;
-        try
-        {
-            childObjects = getFolderService().getFolderChildren(folder.getId());
-        }
-        catch (AcmUserActionFailedException | AcmObjectNotFoundException e)
-        {
-            throw new AcmAccessControlException(Arrays.asList(e.getMessage()), e.getMessage());
-        }
-
         // remove participant to child folders
-        List<AcmFolder> childFolders = childObjects.stream().filter(AcmFolder.class::isInstance).map(AcmFolder.class::cast)
-                .collect(Collectors.toList());
-        for (AcmFolder childFolder : childFolders)
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId());
+        for (AcmFolder subFolder : subfolders)
         {
-            removeParticipantFromFolderAndChildren(childFolder, participantLdapId, participantType);
+            removeParticipantFromFolderAndChildren(subFolder, participantLdapId, participantType);
         }
 
         // remove participant from current folder
         getParticipantService().removeParticipant(participantLdapId, participantType, EcmFileConstants.OBJECT_FOLDER_TYPE, folder.getId());
 
         // remove participants from files in folder
-        List<EcmFile> files = childObjects.stream().filter(EcmFile.class::isInstance).map(EcmFile.class::cast).collect(Collectors.toList());
-        files.forEach(file -> getParticipantService().removeParticipant(participantLdapId, participantType,
-                EcmFileConstants.OBJECT_FILE_TYPE, file.getId()));
+        getFileDao().findByFolderId(folder.getId()).forEach(file -> getParticipantService().removeParticipant(participantLdapId,
+                participantType, EcmFileConstants.OBJECT_FILE_TYPE, file.getId()));
     }
 
     public List<AcmParticipant> getFolderParticipantsFromParentAssignedObject(String objectType, Long objectId)
@@ -267,21 +226,19 @@ public class EcmFileParticipantService
      */
     private String getDocumentParticipantTypeFromAssignedObjectParticipantType(String assignedObjectParticipantType)
     {
-        return fileParticipantTypes.stream()
+        String documentParticipantType = fileParticipantTypes.stream()
                 .filter(fileParticipantType -> Arrays.asList(getEcmFileServiceProperties()
                         .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType).split(","))
                         .contains(assignedObjectParticipantType))
                 .findFirst().orElse(null);
-    }
 
-    public AcmFolderService getFolderService()
-    {
-        return folderService;
-    }
+        if (documentParticipantType == null)
+        {
+            throw new RuntimeException("No document participant type mapping found for participant type: " + assignedObjectParticipantType
+                    + ". Add mapping for new participant type in 'ecmFileService.properties'!");
+        }
 
-    public void setFolderService(AcmFolderService folderService)
-    {
-        this.folderService = folderService;
+        return documentParticipantType;
     }
 
     public EcmFileDao getFileDao()

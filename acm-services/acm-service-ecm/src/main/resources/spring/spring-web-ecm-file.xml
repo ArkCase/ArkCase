@@ -103,21 +103,25 @@
 
   <bean id="createFolderByPathAPIController"
         class="com.armedia.acm.plugins.ecm.web.api.CreateFolderByPathAPIController">
+    <property name="containerDao" ref="acmContainerFolderDao"/>
     <property name="folderService" ref="acmFolderService"/>
     <property name="folderEventPublisher" ref="folderEventPublisher"/>
     <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
     <property name="ecmFileService" ref="ecmFileService"/>
     <property name="fileEventPublisher" ref="fileEventPublisher"/>
+    <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
   </bean>
 
   <bean id="declareFileFolderAPIController"
         class="com.armedia.acm.plugins.ecm.web.api.DeclareFileFolderAPIController">
     <property name="ecmFileService" ref="ecmFileService"/>
+    <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
   </bean>
 
   <bean id="listFileFolderByCategory"
         class="com.armedia.acm.plugins.ecm.web.api.ListFileFolderByCategoryAPIController">
     <property name="ecmFileService" ref="ecmFileService"/>
+    <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
   </bean>
 
   <bean id="updateFileTypeAPIController" class="com.armedia.acm.plugins.ecm.web.api.UpdateFileTypeAPIController">

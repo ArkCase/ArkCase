@@ -8,9 +8,11 @@ import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.DeleteFolderInfo;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class DeleteFolderAPIController
 {
 
@@ -29,12 +31,11 @@ public class DeleteFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write')")
     @RequestMapping(value = "/folder/{folderId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmDeletedFolderDto deleteFolder(
-            @PathVariable("folderId") Long folderId,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public AcmDeletedFolderDto deleteFolder(@PathVariable("folderId") Long folderId, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException
     {
 
         log.info("Folder with id: [{}] will be deleted", folderId);
@@ -49,11 +50,13 @@ public class DeleteFolderAPIController
             log.info("Folder with id: [{}] successfully deleted", folderId);
             getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, false);
             return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.debug("Folder with id: [{}] not found in the DB", folderId);
             return prepareResult(AcmFolderConstants.SUCCESS_FOLDER_DELETE_MSG, folderId);
-        } catch (AcmUserActionFailedException e)
+        }
+        catch (AcmUserActionFailedException e)
         {
             log.error("Exception occurred while trying to delete folder with id: [{}]", folderId, e);
             getFolderEventPublisher().publishFolderDeletedEvent(source, authentication, ipAddress, false);
