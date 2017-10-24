@@ -51,7 +51,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 findGroups: '@',
                 defaultFilter: '@',
                 disableSearch: '@',
-                organizationId: '@',
+                id: '@',
                 externalModalService: '=',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
@@ -127,7 +127,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             if(!Util.isEmpty(scope.externalModalService)){
                                 scope.externalModalService.queryFilteredSearch({
                                         query: query,
-                                        organizationId: scope.organizationId
+                                        organizationId: scope.id
                                     },
                                     function (data) {
                                         updateFacets(data.facet_counts.facet_fields);
