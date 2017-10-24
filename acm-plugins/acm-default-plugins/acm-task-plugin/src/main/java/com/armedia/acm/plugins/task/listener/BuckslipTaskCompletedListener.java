@@ -54,10 +54,10 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
 
         String outcome = (String) delegateTask.getVariable("buckslipOutcome");
         log.debug("Task id {} has outcome {}", delegateTask.getId(), outcome);
-        String nonConcurEndsApprovals = (String) execution.getVariable("nonConcurEndsApprovals");
+        Boolean nonConcurEndsApprovals = (Boolean) execution.getVariable(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS);
         log.debug("Non-concur policy is to end approvals? {}", nonConcurEndsApprovals);
 
-        if ("true".equals(nonConcurEndsApprovals) && "NON_CONCUR".equals(outcome))
+        if (nonConcurEndsApprovals && "NON_CONCUR".equals(outcome))
         {
             getBuckslipTaskHelper().resetFutureApproversAfterWithdrawOrNonConcur(execution);
         }
@@ -73,7 +73,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             log.debug("Task ID: {}, past approvers {}", delegateTask.getId(), updatedTasks);
 
             // next, set the future approver and current approver variables
-            String futureTasks = (String) execution.getVariable("futureTasks");
+            String futureTasks = (String) execution.getVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
             updateProcessVariables(futureTasks, execution);
         }
 
@@ -98,7 +98,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             execution.setVariable("currentApprover", currentApprover);
             execution.setVariable("currentTaskName", taskName);
             execution.setVariable("moreTasks", moreTasks);
-            execution.setVariable("futureTasks", jsonFutureTasks.toString());
+            execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, jsonFutureTasks.toString());
 
         }
         else
@@ -106,7 +106,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             execution.setVariable("currentApprover", "");
             execution.setVariable("currentTaskName", "");
             execution.setVariable("moreTasks", "false");
-            execution.setVariable("futureTasks", "[]");
+            execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, "[]");
         }
     }
 

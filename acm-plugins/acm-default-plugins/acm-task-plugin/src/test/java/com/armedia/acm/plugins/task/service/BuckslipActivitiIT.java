@@ -130,12 +130,12 @@ public class BuckslipActivitiIT extends EasyMockSupport
         log.debug("JSON future tasks: {}", strFutureTasks);
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        processVariables.put("futureTasks", strFutureTasks);
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
         processVariables.put("taskDueDateExpression", "P3D");
-        processVariables.put("nonConcurEndsApprovals", nonConcurEndsApprovals ? "true" : "false");
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, nonConcurEndsApprovals);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -258,13 +258,12 @@ public class BuckslipActivitiIT extends EasyMockSupport
         String strFutureTasks = futureTasks.toString();
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("futureTasks", strFutureTasks);
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
         processVariables.put("taskDueDateExpression", "P3D");
-        processVariables.put("nonConcurEndsApprovals", "false");
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
         signalActivity(pi, TaskConstants.INITIATE_TASK_NAME);
@@ -350,13 +349,12 @@ public class BuckslipActivitiIT extends EasyMockSupport
         String strFutureTasks = futureTasks.toString();
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("futureTasks", strFutureTasks);
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
         processVariables.put("taskDueDateExpression", "P3D");
-        processVariables.put("nonConcurEndsApprovals", "false");
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 

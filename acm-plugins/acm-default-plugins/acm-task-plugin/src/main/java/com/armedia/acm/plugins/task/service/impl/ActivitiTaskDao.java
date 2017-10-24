@@ -51,6 +51,7 @@ import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
@@ -93,6 +94,18 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private AcmUserService acmUserService;
 
     private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+
+    @Override
+    public List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables)
+    {
+        ProcessInstanceQuery processInstanceQuery = getActivitiRuntimeService().
+                createProcessInstanceQuery().
+                includeProcessVariables().
+                orderByProcessInstanceId().asc();
+        matchProcessVariables.entrySet().stream().forEach(e -> processInstanceQuery.variableValueEquals(e.getKey(), e.getValue()));
+        List<ProcessInstance> retval = processInstanceQuery.list();
+        return retval;
+    }
 
     @Override
     public boolean isProcessActive(String businessProcessId) throws AcmTaskException

@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
+import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public interface AcmTaskService
      * @param receiveTaskId     BPMN/XML id of the receive task in the business process BPMN model (NOT the ID of a specific Activiti task)
      * @throws AcmTaskException
      */
-    void signalTask(Long businessProcessId, String receiveTaskId) throws AcmTaskException;
+    void signalTask(String businessProcessId, String receiveTaskId) throws AcmTaskException;
 
     /**
      * Send a message to an Activiti task.  Messages are used to alter the normal task flow, for instance when an
@@ -73,7 +74,7 @@ public interface AcmTaskService
      * @return
      * @throws AcmTaskException
      */
-    boolean isInitiatable(Long businessProcessId) throws AcmTaskException;
+    boolean isInitiatable(String businessProcessId) throws AcmTaskException;
 
     /**
      * Whether a given process can be withdrawn.  This method is designed for the ArkCase buckslip / routing workflow.
@@ -87,7 +88,7 @@ public interface AcmTaskService
      * @return
      * @throws AcmTaskException
      */
-    boolean isWithdrawable(Long businessProcessId) throws AcmTaskException;
+    boolean isWithdrawable(String businessProcessId) throws AcmTaskException;
 
     /**
      * Retrieves the list of future tasks for a business process.  Designed for the ArkCase buckslip / routing workflow.
@@ -96,7 +97,7 @@ public interface AcmTaskService
      * @return
      * @throws AcmTaskException
      */
-    List<BuckslipFutureTask> getBuckslipFutureTasks(Long businessProcessId) throws AcmTaskException;
+    List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException;
 
     /**
      * Sets the list of future tasks for a business process.  Designed for the ArkCase buckslip / routing workflow.
@@ -106,7 +107,7 @@ public interface AcmTaskService
      * @return
      * @throws AcmTaskException
      */
-    void setBuckslipFutureTasks(Long businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException;
+    void setBuckslipFutureTasks(String businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException;
 
     /**
      * Retrieves the set of completed tasks for a business process.  Designed for the ArkCase buckslip / routing workflow.
@@ -115,5 +116,24 @@ public interface AcmTaskService
      * @return
      * @throws AcmTaskException
      */
-    String getBuckslipPastTasks(Long businessProcessId) throws AcmTaskException;
+    String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException;
+
+    /**
+     * Retrieves a list of buckslip processes for a given object type and id; any particular object may have zero to
+     * many active buckslip processes.
+     *
+     * @param objectType CASE_FILE, COMPLAINT, ...
+     * @param objectId   Id of the desired object
+     */
+    List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException;
+
+    /**
+     * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>
+     * properties can be updated.  All other changes are ignored.
+     *
+     * @param in
+     * @return The updated process, or null if there is no existing active process with the given process id.
+     * @throws AcmTaskException
+     */
+    BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException;
 }

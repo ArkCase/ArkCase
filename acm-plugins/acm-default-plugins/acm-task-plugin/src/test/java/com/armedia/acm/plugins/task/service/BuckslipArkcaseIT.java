@@ -4,8 +4,8 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
+import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
-import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -87,30 +87,20 @@ public class BuckslipArkcaseIT
 
     final String processName = "ArkCaseBuckslipProcess";
 
-    private String processId;
-
-    AcmUser samuel = new AcmUser();
-    AcmUser ian = new AcmUser();
-    AcmUser ann = new AcmUser();
-    AcmUser albert = new AcmUser();
+    private BuckslipProcess buckslipProcess;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Before
     public void setUp() throws Exception
     {
-        samuel.setUserId("samuel-acm");
-        ian.setUserId("ian-acm");
-        ann.setUserId("ann-acm");
-        albert.setUserId("albert-acm");
-
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
 
         auditPropertyEntityAdapter.setUserId("TEST");
 
         deployProcessIfNeeded();
-        processId = startBuckslipProcess();
+        buckslipProcess = startBuckslipProcess();
     }
 
     private void deployProcessIfNeeded()
@@ -124,12 +114,11 @@ public class BuckslipArkcaseIT
         }
     }
 
-    private String startBuckslipProcess() throws Exception
+    private BuckslipProcess startBuckslipProcess() throws Exception
     {
 
         Long objectId = 500L;
-        String objectType = "rockBand";
-        String objectNumber = "20170116_101";
+        String objectType = UUID.randomUUID().toString();
         String documentType = "Concert Contract";
 
         List<BuckslipFutureTask> futureTasks = new ArrayList<>(3);
@@ -150,23 +139,28 @@ public class BuckslipArkcaseIT
         futureTasks.add(task3);
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
-        processVariables.put("OBJECT_NAME", objectNumber);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put("taskDueDateExpression", "P3D");
-        processVariables.put("nonConcurEndsApprovals", "false");
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey(processName, processVariables);
 
-        acmTaskService.setBuckslipFutureTasks(Long.valueOf(pi.getProcessInstanceId()), futureTasks);
+        List<BuckslipProcess> processes = acmTaskService.getBuckslipProcessesForObject(objectType, objectId);
+        assertEquals(1, processes.size());
 
-        return pi.getId();
+        processes.get(0).setFutureTasks(futureTasks);
+        BuckslipProcess updated = acmTaskService.updateBuckslipProcess(processes.get(0));
+        assertNotNull(updated);
+        assertEquals(pi.getProcessInstanceId(), updated.getBusinessProcessId());
+
+        return updated;
     }
 
     private AcmTask findAcmTaskForProcess()
     {
-        List<Task> tasks = ts.createTaskQuery().processInstanceId(processId).list();
+        List<Task> tasks = ts.createTaskQuery().processInstanceId(buckslipProcess.getBusinessProcessId()).list();
 
         if (tasks == null || tasks.isEmpty())
         {
@@ -182,10 +176,10 @@ public class BuckslipArkcaseIT
     @Test
     public void buckslipNoApproverChanges() throws Exception
     {
-        assertNotNull(processId);
+        assertNotNull(buckslipProcess.getBusinessProcessId());
 
         // first we have to initiate the process by signaling the initiate task
-        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+        acmTaskService.signalTask(buckslipProcess.getBusinessProcessId(), TaskConstants.INITIATE_TASK_NAME);
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
@@ -236,10 +230,10 @@ public class BuckslipArkcaseIT
     @Test
     public void buckslipAddApprover() throws Exception
     {
-        assertNotNull(processId);
+        assertNotNull(buckslipProcess.getBusinessProcessId());
 
         // first we have to initiate the process by signaling the initiate task
-        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+        acmTaskService.signalTask(buckslipProcess.getBusinessProcessId(), TaskConstants.INITIATE_TASK_NAME);
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
 
@@ -307,10 +301,10 @@ public class BuckslipArkcaseIT
     public void buckslipRemoveApprover() throws Exception
     {
 
-        assertNotNull(processId);
+        assertNotNull(buckslipProcess.getBusinessProcessId());
 
         // first we have to initiate the process by signaling the initiate task
-        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+        acmTaskService.signalTask(buckslipProcess.getBusinessProcessId(), TaskConstants.INITIATE_TASK_NAME);
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();
@@ -347,10 +341,10 @@ public class BuckslipArkcaseIT
     public void withdrawApprovals() throws Exception
     {
 
-        assertNotNull(processId);
+        assertNotNull(buckslipProcess.getBusinessProcessId());
 
         // first we have to initiate the process by signaling the initiate task
-        acmTaskService.signalTask(Long.valueOf(processId), TaskConstants.INITIATE_TASK_NAME);
+        acmTaskService.signalTask(buckslipProcess.getBusinessProcessId(), TaskConstants.INITIATE_TASK_NAME);
 
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
@@ -369,8 +363,8 @@ public class BuckslipArkcaseIT
         acmTask = findAcmTaskForProcess();
 
         // we have a current task so the process should be withdrawable, but not initiatable
-        assertFalse(acmTaskService.isInitiatable(Long.valueOf(processId)));
-        assertTrue(acmTaskService.isWithdrawable(Long.valueOf(processId)));
+        assertFalse(acmTaskService.isInitiatable(buckslipProcess.getBusinessProcessId()));
+        assertTrue(acmTaskService.isWithdrawable(buckslipProcess.getBusinessProcessId()));
 
         // withdraw
         acmTaskService.messageTask(acmTask.getTaskId(), "Withdraw Message");
@@ -380,11 +374,11 @@ public class BuckslipArkcaseIT
         assertNull(acmTask);
 
         // business-process-level information
-        assertTrue(acmTaskService.isInitiatable(Long.valueOf(processId)));
-        assertFalse(acmTaskService.isWithdrawable(Long.valueOf(processId)));
-        List<BuckslipFutureTask> buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(Long.valueOf(processId));
+        assertTrue(acmTaskService.isInitiatable(buckslipProcess.getBusinessProcessId()));
+        assertFalse(acmTaskService.isWithdrawable(buckslipProcess.getBusinessProcessId()));
+        List<BuckslipFutureTask> buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(buckslipProcess.getBusinessProcessId());
         assertEquals(3, buckslipFutureTasks.size());
-        assertTrue(acmTaskService.getBuckslipPastTasks(Long.valueOf(processId)).contains("ann-acm"));
+        assertTrue(acmTaskService.getBuckslipPastTasks(buckslipProcess.getBusinessProcessId()).contains("ann-acm"));
 
         // add the approver 'albert-acm'
         BuckslipFutureTask forAlbert = new BuckslipFutureTask();
@@ -393,10 +387,10 @@ public class BuckslipArkcaseIT
         buckslipFutureTasks.add(forAlbert);
 
         // call the service to set the new list of future tasks
-        acmTaskService.setBuckslipFutureTasks(Long.valueOf(processId), buckslipFutureTasks);
+        acmTaskService.setBuckslipFutureTasks(buckslipProcess.getBusinessProcessId(), buckslipFutureTasks);
 
         // now we should have 4... the original 3, plus albert
-        buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(Long.valueOf(processId));
+        buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(buckslipProcess.getBusinessProcessId());
         assertEquals(4, buckslipFutureTasks.size());
     }
 }

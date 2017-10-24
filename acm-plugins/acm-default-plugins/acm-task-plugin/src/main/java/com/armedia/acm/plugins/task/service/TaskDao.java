@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
@@ -145,4 +146,6 @@ public interface TaskDao
                                     String taskEventName);
 
     byte[] getDiagram(Long id) throws AcmTaskException;
+
+    List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables);
 }
