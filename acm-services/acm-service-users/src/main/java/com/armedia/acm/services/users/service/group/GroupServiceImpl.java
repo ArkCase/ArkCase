@@ -90,6 +90,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
     {
+        group.setDisplayName(group.getName());
         group.setName(group.getName() + "-UUID-" + UUID.getUUID());
         return groupDao.save(group);
     }
@@ -150,6 +151,7 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup newGroup = new AcmGroup();
         newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
+        newGroup.setDisplayName(newName);
         // copy the properties from the original found group.
         newGroup.setSupervisor(acmGroup.getSupervisor());
         newGroup.setType(acmGroup.getType());

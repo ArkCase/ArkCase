@@ -38,4 +38,40 @@
             AND cm_group_parent_name IS NOT NULL;
         </sql>
     </changeSet>
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mysql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="SUBSTRING_INDEX(cm_group_name, '-UUID-', 1)"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="02-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="postgresql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="split_part(cm_group_name, '-UUID-', 1)"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="03-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="cm_group_name"/>
+        </update>
+    </changeSet>
+    <changeSet id="04-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="SUBSTRING(cm_group_display_name,0,CHARINDEX('-UUID-',cm_group_display_name,0))"/>
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="05-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="cm_group_name"/>
+        </update>
+    </changeSet>
+    <changeSet id="06-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" value="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
+        </update>
+    </changeSet>
 </databaseChangeLog>

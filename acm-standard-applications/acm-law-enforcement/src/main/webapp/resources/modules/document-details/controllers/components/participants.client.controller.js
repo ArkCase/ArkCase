@@ -11,7 +11,7 @@ angular.module('document-details').controller('Document.ParticipantsController',
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
 
-        var promiseTypes = ObjectLookupService.getParticipantTypes().then(
+        var promiseTypes = ObjectLookupService.getParticipantTypes(ObjectService.ObjectTypes.CASE_FILE).then(
             function (participantTypes) {
                 $scope.participantTypes = participantTypes;
                 return participantTypes;

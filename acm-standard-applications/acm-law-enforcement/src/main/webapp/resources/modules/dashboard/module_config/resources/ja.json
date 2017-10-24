@@ -357,5 +357,8 @@
   },
   "dashboard.comp.teamWorkload": {
     "title": "チームワークロード"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "ステータス別のケース"
   }
 }
