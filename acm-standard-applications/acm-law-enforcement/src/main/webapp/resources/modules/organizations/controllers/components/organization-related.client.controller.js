@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.ExternalService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.SearchService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationExternalService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -89,7 +89,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
                 showDescription: true,
-                externalModalService: OrganizationExternalService
+                externalSearchService: OrganizationSearchService
             };
             if (rowEntity) {
                 angular.extend(params, {
