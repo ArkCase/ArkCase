@@ -79,14 +79,19 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
         emailsDataStream.forEach(emailData ->
         {
             emailBuilder.buildEmail(emailData, messageProps);
-            Exception exception = null;
+
             try
             {
                 MuleMessage received = muleContextManager.send(flow, emailBodyBuilder.buildEmailBody(emailData), messageProps);
-                exception = received.getInboundProperty("sendEmailException");
-            } catch (Exception e)
+                MuleException exception = received.getInboundProperty("sendEmailException");
+                if (exception != null)
+                {
+                    LOG.error("Email message not sent ...", exception);
+                }
+            }
+            catch (Exception e)
             {
-                LOG.error("Email message not sent ...", exception);
+                LOG.error("Email message not sent ...", e);
             }
 
         });
@@ -117,7 +122,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 MuleMessage received = muleContextManager.send(flow, in.getMessageBody(), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
-            } catch (MuleException e)
+            }
+            catch (MuleException e)
             {
                 LOG.error("Email message not sent ...", exception);
                 exception = e;
@@ -172,7 +178,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 MuleMessage received = muleContextManager.send(flow, makeNote(emailAddress, in, authentication), attachments, messageProps);
                 exception = received.getInboundProperty("sendEmailException");
 
-            } catch (MuleException e)
+            }
+            catch (MuleException e)
             {
                 LOG.error("Email message not sent ...", exception);
                 exception = e;
@@ -270,7 +277,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
                 messageProps.put("to", emailAddress);
                 MuleMessage received = muleContextManager.send(flow, makeNote(emailAddress, in, authentication), messageProps);
                 exception = received.getInboundProperty("sendEmailException");
-            } catch (MuleException e)
+            }
+            catch (MuleException e)
             {
                 exception = e;
             }
