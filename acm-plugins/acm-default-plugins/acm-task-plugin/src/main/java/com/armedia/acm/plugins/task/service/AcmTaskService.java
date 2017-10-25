@@ -120,12 +120,23 @@ public interface AcmTaskService
 
     /**
      * Retrieves a list of buckslip processes for a given object type and id; any particular object may have zero to
-     * many active buckslip processes.
+     * many active buckslip processes.  Use this method if the buckslip process was started on the given object.
      *
      * @param objectType CASE_FILE, COMPLAINT, ...
      * @param objectId   Id of the desired object
      */
     List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException;
+
+    /**
+     * Retrieves a list of buckslip processes for a given parent object type and id; any particular object may have zero to
+     * many active buckslip processes.  Use this method if the buckslip process was started on a child of the given
+     * object (e.g., on a file within a case).
+     *
+     * @param parentObjectType CASE_FILE, COMPLAINT, ...
+     * @param parentObjectId   Id of the desired object
+     */
+    List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException;
+
 
     /**
      * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>

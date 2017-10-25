@@ -24,6 +24,7 @@ public class BuckslipTaskHelper
         JSONArray futureTasks = new JSONArray(((String) pi.getProcessVariables().get("futureTasks")));
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
+        String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
 
         JSONArray newFutureTasks = new JSONArray();
 
@@ -36,6 +37,7 @@ public class BuckslipTaskHelper
             JSONObject past = pastApproversJson.getJSONObject(i);
             String pastApproverId = past.getString("approverId");
             String pastTaskName = past.getString("taskName");
+            String pastGroupName = past.getString("groupName");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first
             // withdraw-and-restart; now Ann will have two entries in the past tasks list; but we only want one new
@@ -57,6 +59,7 @@ public class BuckslipTaskHelper
                 JSONObject newFuture = new JSONObject();
                 newFuture.put("approverId", pastApproverId);
                 newFuture.put("taskName", pastTaskName);
+                newFuture.put("groupName", pastGroupName);
                 newFutureTasks.put(newFuture);
             }
 
@@ -71,6 +74,7 @@ public class BuckslipTaskHelper
             JSONObject currentTask = new JSONObject();
             currentTask.put("approverId", currentApprover);
             currentTask.put("taskName", currentTaskName);
+            currentTask.put("groupName", currentGroupName);
             newFutureTasks.put(currentTask);
         }
 

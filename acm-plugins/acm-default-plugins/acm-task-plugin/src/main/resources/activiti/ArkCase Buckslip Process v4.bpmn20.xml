@@ -45,7 +45,8 @@
             </extensionElements>
         </exclusiveGateway>
         <userTask id="sid-1627C673-1EF1-452E-91FE-23D39A530835" name="${currentTaskName}"
-                  activiti:assignee="${currentApprover}" activiti:dueDate="${taskDueDateExpression}">
+                  activiti:assignee="${currentApprover}" activiti:dueDate="${taskDueDateExpression}"
+                  activiti:candidateGroups="${currentGroup}">
             <extensionElements>
                 <activiti:formProperty id="buckslipOutcome" name="Buckslip Outcome" type="enum" required="true">
                     <activiti:value id="CONCUR" name="Concur"></activiti:value>
