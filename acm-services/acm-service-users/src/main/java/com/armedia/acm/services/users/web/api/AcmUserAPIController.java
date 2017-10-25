@@ -68,13 +68,15 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser createUser(@RequestBody @Valid UserDTO ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser createUser(@RequestBody UserDTO ldapUserCreateRequest, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            return acmUser;
         }
         catch (NameAlreadyBoundException e)
         {

@@ -10,13 +10,13 @@ Time: 12:44
     <meta charset="utf-8"/>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
     <c:if test="${warningEnabled}">
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <link rel="stylesheet"
               href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     </c:if>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
 
     <!-- Set the hash in localStorage, so when the user logs in the Angular application opens that state -->
     <script type="text/javascript">
@@ -57,6 +57,36 @@ Time: 12:44
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success pull-right" id="forgot-username-btn">Forgot Username</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Forgot Password Modal -->
+<div class="modal fade" id="forgot-password-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form id="forgot-password">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Forgot Password</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Please enter your username address and we will email you a reset password link.</p>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" placeholder="Enter Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="mail">Email Address</label>
+                        <input type="email" class="form-control" id="mail" placeholder="Enter Email Address" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success pull-right" id="forgot-password-btn">Forgot Password</button>
                     <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 </div>
             </form>
@@ -121,6 +151,15 @@ Time: 12:44
         User with this email does not exist in the system.
     </div>
 
+    <div id="forgot-password-success" style="display:none" class="alert alert-success">
+        We sent you reset password link. You should receive it in a few minutes.
+    </div>
+
+    <div id="forgot-password-error" style="display:none" class="alert alert-danger">
+        User with this username and email address does not exist in the system.
+    </div>
+
+
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
             <div class="list-group-item">
@@ -155,7 +194,9 @@ Time: 12:44
         <div class="pull-left">
             <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
         </div>
-        <div class="pull-right"><a href="#">Forgot Password</a></div>
+        <div class="pull-right">
+            <a data-toggle="modal" href="#forgot-password-modal">Forgot Password</a>
+        </div>
     </form>
 </div>
 
@@ -200,8 +241,13 @@ Time: 12:44
 </c:if>
 <script type="text/javascript">
     $(function () {
-        $('#forgot-username-success').hide();
-        $('#forgot-username-error').hide();
+
+        $('#forgot-username-modal').on('shown.bs.modal', function () {
+            $('#forgot-username-success').hide();
+            $('#forgot-username-error').hide();
+            $('#forgot-password-success').hide();
+            $('#forgot-password-error').hide();
+        });
 
         $('#forgot-username').on('submit', function (e) {
             e.preventDefault();
@@ -215,6 +261,28 @@ Time: 12:44
                         $('#forgot-username-success').show();
                     } else {
                         $('#forgot-username-error').show();
+                    }
+                });
+        });
+
+        $('#forgot-password-modal').on('shown.bs.modal', function () {
+            $('#forgot-password-success').hide();
+            $('#forgot-password-error').hide();
+            $('#forgot-username-success').hide();
+            $('#forgot-username-error').hide();
+        });
+
+        $('#forgot-password').on('submit', function (e) {
+            e.preventDefault();
+            $('#forgot-password-modal').modal('hide');
+            var username = $("#username").val();
+            var email = $("#mail").val();
+            $.post("<%= request.getContextPath()%>/forgot-password", {userId: username, email: email})
+                .always(function (data) {
+                    if (data.status === 200) {
+                        $('#forgot-password-success').show();
+                    } else {
+                        $('#forgot-password-error').show();
                     }
                 });
         });
