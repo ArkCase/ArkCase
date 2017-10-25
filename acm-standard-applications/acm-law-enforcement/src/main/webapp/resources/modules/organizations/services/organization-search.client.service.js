@@ -33,9 +33,6 @@ angular.module('services').factory('Organization.SearchService', ['$resource', '
             }
         });
 
-
-
-
         return Service;
     }
 ]);
