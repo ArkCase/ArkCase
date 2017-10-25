@@ -62,7 +62,7 @@ public class ResetPasswordService
 
     private EmailBuilder<AcmUser> emailBuilder = (acmUser, messageProps) ->
     {
-        messageProps.put("to", "nadica.cuculova@gmail.com");
+        messageProps.put("to", acmUser.getMail());
         messageProps.put("subject", passwordResetEmailSubject);
     };
 
