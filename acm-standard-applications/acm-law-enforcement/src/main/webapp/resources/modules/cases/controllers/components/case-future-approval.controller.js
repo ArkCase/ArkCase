@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService', 'Case.FutureApprovalService'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService) {
+        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService) {
 
         $scope.userSearchConfig = null;
         $scope.gridOptions = $scope.gridOptions || {};
@@ -108,6 +108,10 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 // Cancel button was clicked.
                 return [];
             });
+
+        };
+
+        $scope.initiateTask = function () {
 
         };
 
