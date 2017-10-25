@@ -16,7 +16,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-            $scope.editMode = !!params.organizationId;
+            if (!Util.isEmpty(params.targetOrganizationId)) {
+                $scope.editMode = !!params.organizationId;
+            } else {
+                $scope.editMode = !!params.targetOrganizationId;
+            }
             $scope.organizationId = params.organizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isValid = true;
@@ -25,13 +29,14 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
+            if (!Util.isEmpty(params.externalSearchService)) {
+                $scope.externalSearchService = params.externalSearchService;
+            }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
-
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
-
             if (params.isSelectedParent) {
                 $scope.organization = params.organization;
                 if (!!params.organization.parentOrganization) {
@@ -93,6 +98,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+                params.organizationId = $scope.organizationId;
+                params.externalSearchService = $scope.externalSearchService;
 
                 var modalInstance = $modal.open({
                     templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -101,6 +108,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                         $scope.header = params.header;
                         $scope.filter = params.filter;
                         $scope.config = params.config;
+                        $scope.organizationId = params.organizationId;
+                        $scope.externalSearchService = params.externalSearchService;
                     }],
                     animation: true,
                     size: 'lg',

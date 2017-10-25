@@ -59,4 +59,19 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
+    
+    <changeSet id="profile-constraint-04-container-id" author="bojan.milenkoski">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <foreignKeyConstraintExists foreignKeyName="fk_user_org_signature_fileid" foreignKeyTableName="acm_user_org"/>
+            </not>
+        </preConditions>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_signature_file_id"
+                                 constraintName="fk_user_org_signature_fileid"
+                                 referencedTableName="acm_file"
+                                 referencedColumnNames="cm_file_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+    
 </databaseChangeLog>

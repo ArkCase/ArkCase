@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.SearchService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -40,6 +40,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         });
 
+        $scope.organizationId = null;
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseUsers = gridHelper.getUsers();
@@ -60,6 +61,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.organizationId = objectInfo.organizationId;
             refreshGridData(objectInfo.organizationId, objectInfo.objectType);
         };
 
@@ -86,16 +88,22 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             var params = {
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
-                showDescription: true
+                showDescription: true,
+                externalSearchService: OrganizationSearchService
             };
             if (rowEntity) {
                 angular.extend(params, {
-                    organizationId: rowEntity.target_object.object_id_s,
+                    targetOrganizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
                     description: rowEntity.description_s
                 });
+            } else {
+                angular.extend(params, {
+                    organizationId: $scope.organizationId
+                });
             }
+
 
             var modalInstance = $modal.open({
                 scope: $scope,

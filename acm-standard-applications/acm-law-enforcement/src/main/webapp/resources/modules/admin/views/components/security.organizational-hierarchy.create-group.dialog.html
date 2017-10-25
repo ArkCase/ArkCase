@@ -7,7 +7,7 @@
     <div class="modal-body">
         <div class="form-group">
             <select id="selectDirectories" class="form-control" name="config" ng-model="selectedConfig.directory"
-                    ng-options="ds.id for ds in directoryServers" ng-if="addGroupModal">
+                    ng-options="ds.id for ds in directoryServers" ng-if="addLdapGroupModal">
                 <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
                     | translate }}
                 </option>
@@ -16,9 +16,9 @@
         <div class="form-group" ng-class="{ 'has-error' : error }">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.name' | translate }}</label>
             <input type="text" ng-model="group.name" class="form-control"
-                   ng-disabled="!selectedConfig.directory.enabled && addGroupModal"
+                   ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'
-                   | translate }}" ng-required="selectedConfig.directory.enabled || !addGroupModal">
+                   | translate }}" ng-required="selectedConfig.directory.enabled || !addLdapGroupModal">
             <p class="help-block" ng-show="error">
                 {{ error }}
             </p>
@@ -29,7 +29,7 @@
         <div class="form-group">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.description' | translate }}</label>
             <textarea type="text" ng-model="group.description" class="form-control"
-                      ng-disabled="!selectedConfig.directory.enabled && addGroupModal"
+                      ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal"
                       placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'
                       | translate }}">
         </textarea>
@@ -39,7 +39,8 @@
         <button type="button" class="btn btn-secondary" ng-click="cancel()">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
         </button>
-        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="groupForm.$invalid">
+        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="(groupForm.$invalid
+        || !selectedConfig.directory.enabled) && addLdapGroupModal">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
         </button>
     </div>

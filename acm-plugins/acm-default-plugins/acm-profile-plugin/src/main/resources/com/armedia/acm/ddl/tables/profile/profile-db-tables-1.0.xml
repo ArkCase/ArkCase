@@ -157,6 +157,12 @@
     </changeSet>
 
     <changeSet id="12-add-signature-fileId" author="ilinpetar">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <tableExists tableName="acm_file"/>
+                <columnExists tableName="acm_user_org" columnName="cm_file_id"/>
+            </and>
+        </preConditions>
         <addColumn tableName="acm_user_org">
             <column name="cm_ecm_signature_file_id" type="${fkIdType}"/>
         </addColumn>
@@ -166,6 +172,17 @@
                                  referencedColumnNames="cm_file_id"
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+    
+    <changeSet id="13-add-signature-fileId" author="bojan.milenkoski">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="acm_user_org" columnName="cm_ecm_signature_file_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="acm_user_org">
+            <column name="cm_ecm_signature_file_id" type="${fkIdType}"/>
+        </addColumn>        
     </changeSet>
 
 </databaseChangeLog>
