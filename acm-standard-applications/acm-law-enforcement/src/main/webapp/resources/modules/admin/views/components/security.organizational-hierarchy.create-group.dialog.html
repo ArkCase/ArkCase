@@ -7,7 +7,7 @@
     <div class="modal-body">
         <div class="form-group">
             <select id="selectDirectories" class="form-control" name="config" ng-model="selectedConfig.directory"
-                    ng-options="ds.id for ds in directoryServers" ng-if="addGroupModal">
+                    ng-options="ds.id for ds in directoryServers" ng-if="addGroupModal" >
                 <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
                     | translate }}
                 </option>
@@ -39,7 +39,7 @@
         <button type="button" class="btn btn-secondary" ng-click="cancel()">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
         </button>
-        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="groupForm.$invalid">
+        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="groupForm.$invalid || !selectedConfig.directory.enabled">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
         </button>
     </div>
