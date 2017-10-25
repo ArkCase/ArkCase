@@ -131,7 +131,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateGroups = function (data) {
-            if (!SearchService.validateSolrData(data)) {
+            if (!Util.validateSolrData(data)) {
                 return false;
             }
 

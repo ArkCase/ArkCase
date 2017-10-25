@@ -51,6 +51,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 findGroups: '@',
                 defaultFilter: '@',
                 disableSearch: '@',
+                id: '@',
+                externalSearchService: '=',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
                 searchControl: '=?',    //=? : two way binding but property is optional
@@ -122,19 +124,29 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                         if (query) {
                             scope.showNoData = false;
-                            SearchService.queryFilteredSearch({
-                                    query: query
-                                },
-                                function (data) {
-                                    updateFacets(data.facet_counts.facet_fields);
-                                    scope.gridOptions.data = data.response.docs;
-                                    if (scope.gridOptions.data.length < 1) {
-                                        scope.showNoData = true;
-                                    }
-                                    scope.gridOptions.totalItems = data.response.numFound;
-                                });
+                            if(!Util.isEmpty(scope.externalSearchService)){
+                                scope.externalSearchService.queryFilteredSearch({
+                                        query: query,
+                                        organizationId: scope.id
+                                    },
+                                    successSearchResult);
+                            } else {
+                                SearchService.queryFilteredSearch({
+                                        query: query
+                                    },
+                                    successSearchResult);
+                            }
                         }
                     }
+                };
+
+                function successSearchResult(data){
+                    updateFacets(data.facet_counts.facet_fields);
+                    scope.gridOptions.data = data.response.docs;
+                    if (scope.gridOptions.data.length < 1) {
+                        scope.showNoData = true;
+                    }
+                    scope.gridOptions.totalItems = data.response.numFound;
                 };
 
                 function updateFacets(facets) {
