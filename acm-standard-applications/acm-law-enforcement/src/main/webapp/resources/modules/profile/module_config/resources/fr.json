@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "Changer l'image",
     "email": "Adresse e-mail",
-    "uploadImgError": "Vous avez importé un type de fichier d'image non valide"
+    "uploadImgError": "Vous avez importé un type de fichier d'image non valide",
+    "uploadError": "Le téléchargement de la nouvelle image de profil a échoué"
+  },
+  "profile.signature": {
+    "title": "Modifier la signature",
+    "uploadError": "Le téléchargement de la nouvelle signature a échoué"
   },
   "profile.modal": {
     "title": "Info",
