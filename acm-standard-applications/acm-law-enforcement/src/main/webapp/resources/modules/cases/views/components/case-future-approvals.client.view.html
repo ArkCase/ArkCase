@@ -5,6 +5,11 @@
                 <span> {{'cases.comp.approvalRouting.title' | translate}}</span>
                 <div class="pull-right">
                     <span>
+                        <button tooltip="{{cases.comp.approvalRouting.button.initiate.tooltip}}" tooltip-append-to-body="true"
+                                tooltip-popup-delay="400"
+                                class="btn btn-default btn-xs"
+                                ng-click="initiateTask()">
+                                <span translate="" class="ng-scope">Initiate</span></button>
                         <button tooltip="{{addNewTooltip}}" tooltip-append-to-body="true" tooltip-popup-delay="400"
                                 class="btn btn-default btn-xs"
                                 ng-hide="gridButtonReadOnly()"

@@ -1239,7 +1239,43 @@
         },
         {
           "name": "fullName",
-          "displayName": "cases.comp.approvalRouting.table.columns.fullName",
+          "displayName": "cases.comp.approvalRouting.table.columns.assignee",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "aaa",
+          "displayName": "cases.comp.approvalRouting.table.columns.group",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "bbb",
+          "displayName": "cases.comp.approvalRouting.table.columns.subject",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "ccc",
+          "displayName": "cases.comp.approvalRouting.table.columns.details",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "ddd",
+          "displayName": "cases.comp.approvalRouting.table.columns.dueDate",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "eee",
+          "displayName": "cases.comp.approvalRouting.table.columns.status",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "fff",
+          "displayName": "cases.comp.approvalRouting.table.columns.addedBy",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
