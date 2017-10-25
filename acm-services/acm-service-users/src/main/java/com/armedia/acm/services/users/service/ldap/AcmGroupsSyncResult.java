@@ -84,7 +84,7 @@ public class AcmGroupsSyncResult
                     //check in existing acmGroups, if memberGroup is an already existing group
                     else if (currentGroupsByDnMap.containsKey(dn))
                     {
-                        AcmGroup acmGroup = currentGroups.get(dn);
+                        AcmGroup acmGroup = currentGroupsByDnMap.get(dn);
                         LdapGroup memberGroup = acmGroupToLdapGroup(acmGroup);
                         Set<LdapGroup> memberGroups = acmGroup.getMemberGroups().stream()
                                 .map(this::acmGroupToLdapGroup)
