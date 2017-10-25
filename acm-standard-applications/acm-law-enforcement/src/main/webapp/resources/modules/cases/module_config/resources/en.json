@@ -292,10 +292,17 @@
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {
-      "save.tooltip": "Save Changes"
+      "save.tooltip": "Save Changes",
+      "initiate.tooltip": "Initiate Task"
     },
     "table.columns": {
-      "fullName": "Full Name"
+      "assignee": "Assignee",
+      "group": "Owning Group",
+      "subject": "Subject",
+      "details": "Details",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "addedBy": "Added By"
     },
     "assignee.label": "Assignee",
     "owningGroup.label": "Owning Group",
