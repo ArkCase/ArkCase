@@ -210,6 +210,7 @@
               "name": "participantType",
               "displayName": "document-repository.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -370,6 +371,7 @@
           "name": "participantType",
           "displayName": "document-repository.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {

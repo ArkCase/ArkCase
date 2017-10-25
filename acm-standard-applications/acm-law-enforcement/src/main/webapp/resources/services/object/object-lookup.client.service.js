@@ -317,6 +317,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     break;
                 case "COMPLAINT":
                 case "CASE_FILE":
+                case "DOC_REPO":
                     return Service.getLookupByLookupName("entitiesParticipantTypes");
             }
         };
