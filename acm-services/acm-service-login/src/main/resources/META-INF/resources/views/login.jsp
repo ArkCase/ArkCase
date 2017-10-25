@@ -11,13 +11,12 @@ Time: 12:44
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>ACM | ArkCase | User Interface</title>
     <c:if test="${warningEnabled}">
-
-        <!-- add jquery link -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
         <link rel="stylesheet"
               href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
     </c:if>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="<%= request.getContextPath()%>/lib/bootstrap/dist/js/bootstrap.js"></script>
 
     <!-- Set the hash in localStorage, so when the user logs in the Angular application opens that state -->
     <script type="text/javascript">
@@ -28,6 +27,7 @@ Time: 12:44
                 sessionStorage.removeItem('redirectURL');
             }
         }
+
         window.onload = addUrlHashToLocalStorage;
     </script>
 
@@ -37,6 +37,33 @@ Time: 12:44
     <link rel="stylesheet" href="<%= request.getContextPath()%>/branding/customcss">
 </head>
 <body>
+
+<!-- Forgot Username Modal -->
+<div class="modal fade" id="forgot-username-modal" role="dialog">
+    <div class="modal-dialog modal-sm">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <form id="forgot-username">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Forgot Username</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Please enter your email address associated with your account and we will email your username.</p>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter Email Address" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success pull-right" id="forgot-username-btn">Forgot Username</button>
+                    <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div class="login-wrapper">
     <div class="logo">
         <img src="<%= request.getContextPath()%>/branding/loginlogo.png" style="max-width: 100%;">
@@ -86,6 +113,14 @@ Time: 12:44
         <div id="dialog" class="content-one"><p class="modal-body">${warningMessage}</p></div>
     </c:if>
 
+    <div id="forgot-username-success" style="display:none" class="alert alert-success">
+        We sent your username to the address you provided. If the address is valid, you should receive it in a few minutes.
+    </div>
+
+    <div id="forgot-username-error" style="display:none" class="alert alert-danger">
+        User with this email does not exist in the system.
+    </div>
+
     <form id="login-form" action="<%= request.getContextPath()%>/j_spring_security_check" method="post">
         <div class="list-group">
             <div class="list-group-item">
@@ -114,7 +149,13 @@ Time: 12:44
                 </div>
             </c:if>
         </div>
+
         <button id="submit" type="submit" class="btn btn-lg btn-primary btn-block">Log In</button>
+        <p></p>
+        <div class="pull-left">
+            <a data-toggle="modal" href="#forgot-username-modal">Forgot Username</a>
+        </div>
+        <div class="pull-right"><a href="#">Forgot Password</a></div>
     </form>
 </div>
 
@@ -148,6 +189,7 @@ Time: 12:44
             });
             showPopup();
         });
+
         function showPopup() {
             $("#dialog").dialog({
                 modal: true,
@@ -156,5 +198,28 @@ Time: 12:44
         }
     </script>
 </c:if>
+<script type="text/javascript">
+    $(function () {
+        $('#forgot-username-success').hide();
+        $('#forgot-username-error').hide();
+
+        $('#forgot-username').on('submit', function (e) {
+            e.preventDefault();
+            $('#forgot-username-success').hide();
+            $('#forgot-username-error').hide();
+            $('#forgot-username-modal').modal('hide');
+            var email = $("#email").val();
+            $.post("<%= request.getContextPath()%>/forgot-username", {email: email})
+                .always(function (data) {
+                    if (data.status === 200) {
+                        $('#forgot-username-success').show();
+                    } else {
+                        $('#forgot-username-error').show();
+                    }
+                });
+        });
+    });
+
+</script>
 
 </html>

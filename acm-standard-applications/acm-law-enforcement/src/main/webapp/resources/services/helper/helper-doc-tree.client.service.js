@@ -31,7 +31,7 @@ angular.module('services').factory('DocTreeService', ['UtilService', 'Object.Loo
              */
             uploadFrevvoForm: function (type, folderId, onCloseForm, objectType, fileTypes, containerId) {
                 if (objectType) {
-                    var fileType = _.find(fileTypes, {type: type});
+                    var fileType = _.find(fileTypes, {key: type});
                     if (ObjectLookupService.validatePlainForm(fileType)) {
                         var data = "_data=(";
 
