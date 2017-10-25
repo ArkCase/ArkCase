@@ -9,7 +9,7 @@
         <property name="passwordValidationService" ref="passwordValidationService"/>
     </bean>
 
-    <bean id="forgotUsernameUiController" class="com.armedia.acm.auth.web.ForgotUsernameUIController">
+    <bean id="forgotUsernamePasswordUiController" class="com.armedia.acm.auth.web.ForgotUsernamePasswordUIController">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
