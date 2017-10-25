@@ -94,14 +94,34 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType,
                 TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW, Boolean.TRUE);
         List<ProcessInstance> processInstances = taskDao.findProcessesByProcessVariables(matchProcessVariables);
+        List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
+
+        return buckslipProcesses;
+    }
+
+    @Override
+    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException
+    {
+        Map<String, Object> matchProcessVariables = ImmutableMap.of(
+                TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId,
+                TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType,
+                TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW, Boolean.TRUE);
+        List<ProcessInstance> processInstances = taskDao.findProcessesByProcessVariables(matchProcessVariables);
+        List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
+
+        return buckslipProcesses;
+    }
+
+    protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
+    {
         List<BuckslipProcess> buckslipProcesses = new ArrayList<>(processInstances.size());
         for (ProcessInstance pi : processInstances)
         {
             BuckslipProcess bp = new BuckslipProcess();
             bp.setBusinessProcessId(pi.getProcessInstanceId());
             bp.setBusinessProcessName(pi.getProcessDefinitionId());
-            bp.setObjectType(objectType);
-            bp.setObjectId(objectId);
+            bp.setObjectType((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            bp.setObjectId((Long) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
             bp.setNonConcurEndsApprovals((Boolean) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS));
             bp.setPastTasks(((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PAST_TASKS)));
 
@@ -120,7 +140,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             buckslipProcesses.add(bp);
         }
-
         return buckslipProcesses;
     }
 

@@ -63,7 +63,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/ArkCase Buckslip Process v3.bpmn20.xml")
+                .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
                 .deploy();
         userDaoMock = createMock(UserDao.class);
         buckslipTaskCompletedListener.setUserDao(userDaoMock);
@@ -113,16 +113,19 @@ public class BuckslipActivitiIT extends EasyMockSupport
         JSONObject task1 = new JSONObject();
         task1.put("approverId", "jerry");
         task1.put("taskName", "jerry task");
+        task1.put("groupName", "Grateful Dead");
         futureTasks.put(task1);
 
         JSONObject task2 = new JSONObject();
         task2.put("approverId", "bob");
         task2.put("taskName", "bob task");
+        task2.put("groupName", "Furthur");
         futureTasks.put(task2);
 
         JSONObject task3 = new JSONObject();
         task3.put("approverId", "phil");
         task3.put("taskName", "phil task");
+        task3.put("groupName", "phil lesh and friends");
         futureTasks.put(task3);
 
         String strFutureTasks = futureTasks.toString();
@@ -238,21 +241,25 @@ public class BuckslipActivitiIT extends EasyMockSupport
         JSONObject task1 = new JSONObject();
         task1.put("approverId", "jerry");
         task1.put("taskName", "jerry task");
+        task1.put("groupName", "Grateful Dead");
         futureTasks.put(task1);
 
         JSONObject task2 = new JSONObject();
         task2.put("approverId", "bob");
         task2.put("taskName", "bob task");
+        task2.put("groupName", "Furthur");
         futureTasks.put(task2);
 
         JSONObject task3 = new JSONObject();
         task3.put("approverId", "phil");
         task3.put("taskName", "phil task");
+        task3.put("groupName", "phil lesh and friends");
         futureTasks.put(task3);
 
         JSONObject task4 = new JSONObject();
         task4.put("approverId", "bill");
         task4.put("taskName", "bill task");
+        task4.put("groupName", "the other ones");
         futureTasks.put(task4);
 
         String strFutureTasks = futureTasks.toString();
@@ -339,11 +346,13 @@ public class BuckslipActivitiIT extends EasyMockSupport
         JSONObject task1 = new JSONObject();
         task1.put("approverId", "jerry");
         task1.put("taskName", "jerry task");
+        task1.put("groupName", "Grateful Dead");
         futureTasks.put(task1);
 
         JSONObject task2 = new JSONObject();
         task2.put("approverId", "bob");
         task2.put("taskName", "bob task");
+        task2.put("groupName", "Furthur");
         futureTasks.put(task2);
 
         String strFutureTasks = futureTasks.toString();
@@ -385,11 +394,13 @@ public class BuckslipActivitiIT extends EasyMockSupport
         JSONObject task3 = new JSONObject();
         task3.put("approverId", "phil");
         task3.put("taskName", "phil task");
+        task3.put("groupName", "phil lesh and friends");
         newFutureTasks.put(task3);
 
         JSONObject task4 = new JSONObject();
         task4.put("approverId", "bill");
         task4.put("taskName", "bill task");
+        task4.put("groupName", "The Other Ones");
         newFutureTasks.put(task4);
 
         // here is where we add tasks that were not there when we started the process.

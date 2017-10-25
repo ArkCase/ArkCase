@@ -67,8 +67,10 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             String pastTasks = (String) execution.getVariable(TaskConstants.VARIABLE_NAME_PAST_TASKS);
             String approver = delegateTask.getAssignee();
             String taskName = delegateTask.getName();
+            String groupName = (String) delegateTask.getVariable("currentGroup");
 
-            String updatedTasks = addTask(pastTasks, approver, taskName, outcome);
+            String updatedTasks = addTask(pastTasks, approver, taskName, groupName, outcome);
+
             execution.setVariable(TaskConstants.VARIABLE_NAME_PAST_TASKS, updatedTasks);
             log.debug("Task ID: {}, past approvers {}", delegateTask.getId(), updatedTasks);
 
@@ -90,13 +92,15 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             String moreTasks = "true";
             JSONObject futureTask = jsonFutureTasks.getJSONObject(0);
 
-            String currentApprover = futureTask.getString("approverId");
-            String taskName = futureTask.getString("taskName");
+            String currentApprover = futureTask.optString("approverId", "");
+            String taskName = futureTask.optString("taskName", "Review");
+            String group = futureTask.optString("groupName", "");
 
             jsonFutureTasks.remove(0);
 
             execution.setVariable("currentApprover", currentApprover);
             execution.setVariable("currentTaskName", taskName);
+            execution.setVariable("currentGroup", group);
             execution.setVariable("moreTasks", moreTasks);
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, jsonFutureTasks.toString());
 
@@ -110,7 +114,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         }
     }
 
-    private String addTask(String tasksSoFar, String approverId, String taskName, String outcome)
+    private String addTask(String tasksSoFar, String approverId, String taskName, String groupName, String outcome)
     {
         AcmUser user = userDao.findByUserId(approverId);
 
@@ -122,6 +126,8 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         {
             newJsonTask.put("approverFullName", user.getFullName());
         }
+
+        newJsonTask.put("groupName", groupName);
 
 
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);

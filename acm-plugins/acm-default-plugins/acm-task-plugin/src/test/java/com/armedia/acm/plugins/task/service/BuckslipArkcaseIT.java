@@ -109,7 +109,7 @@ public class BuckslipArkcaseIT
         if (deployments == null || deployments.isEmpty())
         {
             repo.createDeployment()
-                    .addClasspathResource("activiti/ArkCase Buckslip Process v3.bpmn20.xml")
+                    .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
                     .deploy();
         }
     }
@@ -119,6 +119,10 @@ public class BuckslipArkcaseIT
 
         Long objectId = 500L;
         String objectType = UUID.randomUUID().toString();
+
+        Long parentObjectId = 501L;
+        String parentObjectType = UUID.randomUUID().toString();
+
         String documentType = "Concert Contract";
 
         List<BuckslipFutureTask> futureTasks = new ArrayList<>(3);
@@ -126,21 +130,26 @@ public class BuckslipArkcaseIT
         BuckslipFutureTask task1 = new BuckslipFutureTask();
         task1.setApproverId("ann-acm");
         task1.setTaskName("ann-acm task");
+        task1.setGroupName("ann group");
         futureTasks.add(task1);
 
         BuckslipFutureTask task2 = new BuckslipFutureTask();
         task2.setApproverId("samuel-acm");
         task2.setTaskName("samuel-acm task");
+        task2.setGroupName("samuel group");
         futureTasks.add(task2);
 
         BuckslipFutureTask task3 = new BuckslipFutureTask();
         task3.setApproverId("ian-acm");
         task3.setTaskName("ian-acm task");
+        task3.setGroupName("ian group");
         futureTasks.add(task3);
 
         Map<String, Object> processVariables = new HashMap<>();
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType);
         processVariables.put("documentType", documentType);
         processVariables.put("taskDueDateExpression", "P3D");
         processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
@@ -150,8 +159,11 @@ public class BuckslipArkcaseIT
         List<BuckslipProcess> processes = acmTaskService.getBuckslipProcessesForObject(objectType, objectId);
         assertEquals(1, processes.size());
 
-        processes.get(0).setFutureTasks(futureTasks);
-        BuckslipProcess updated = acmTaskService.updateBuckslipProcess(processes.get(0));
+        List<BuckslipProcess> processesForParent = acmTaskService.getBuckslipProcessesForChildren(parentObjectType, parentObjectId);
+        assertEquals(1, processesForParent.size());
+
+        processesForParent.get(0).setFutureTasks(futureTasks);
+        BuckslipProcess updated = acmTaskService.updateBuckslipProcess(processesForParent.get(0));
         assertNotNull(updated);
         assertEquals(pi.getProcessInstanceId(), updated.getBusinessProcessId());
 
@@ -189,6 +201,10 @@ public class BuckslipArkcaseIT
         assertEquals("samuel-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
+        assertEquals("ann group", acmTask.getCandidateGroups().get(0));
+//        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(acmTask.getParticipants());
+//        assertNotNull(owningGroup);
+//        assertEquals("ann group", owningGroup);
         Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
