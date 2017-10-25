@@ -32,7 +32,7 @@
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                    ng-model="user.mail" required>
         </div>
-        <div class="form-group required" ng-if="addUser">
+        <div class="form-group required" ng-if="cloneUser && addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
             <div class="help-tip">

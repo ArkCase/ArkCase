@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,8 @@ public class MapperUtils
             {
                 DistinguishedName dn = new DistinguishedName(element);
                 return dn.getValue(key);
-            } catch (BadLdapGrammarException | IllegalArgumentException e)
+            }
+            catch (BadLdapGrammarException | IllegalArgumentException e)
             {
                 log.warn("No RDN with the requested key [{}]", key);
 
@@ -131,7 +133,8 @@ public class MapperUtils
         {
             passwordBytes = MapperUtils.encodeUTF16LE(password);
             return new BasicAttribute("unicodePwd", passwordBytes);
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             log.warn("UnsupportedEncodingException", e);
             throw new RuntimeException(e);
@@ -140,4 +143,13 @@ public class MapperUtils
 
     public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password ->
             new BasicAttribute("userPassword", password.getBytes());
+
+    public static String generatePassword()
+    {
+        String specialChar = RandomStringUtils.random(1, "[[~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-]]");
+        String lcsPart = RandomStringUtils.random(2, "abcdefghijklmnopqrstuvwxyz");
+        String ucsPart = RandomStringUtils.random(2, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+        String digitChar = RandomStringUtils.random(2, "0123456789");
+        return String.format("%s%s%s%s", specialChar, lcsPart, ucsPart, digitChar);
+    }
 }
