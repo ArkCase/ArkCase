@@ -129,29 +129,25 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                         query: query,
                                         organizationId: scope.id
                                     },
-                                    function (data) {
-                                        modalSearchResult(data);
-                                    });
+                                    successSearchResult);
                             } else {
                                 SearchService.queryFilteredSearch({
                                         query: query
                                     },
-                                    function (data) {
-                                        modalSearchResult(data);
-                                    });
+                                    successSearchResult);
                             }
                         }
                     }
                 };
 
-                function modalSearchResult(data) {
+                function successSearchResult(data){
                     updateFacets(data.facet_counts.facet_fields);
                     scope.gridOptions.data = data.response.docs;
                     if (scope.gridOptions.data.length < 1) {
                         scope.showNoData = true;
                     }
                     scope.gridOptions.totalItems = data.response.numFound;
-                }
+                };
 
                 function updateFacets(facets) {
                     if (facets) {
