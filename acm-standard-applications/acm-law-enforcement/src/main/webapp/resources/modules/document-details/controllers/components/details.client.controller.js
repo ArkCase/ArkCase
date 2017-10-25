@@ -45,12 +45,14 @@ angular.module('document-details').controller('Document.DetailsController',
                 }
             );
 
-            ObjectLookupService.getPersonTypes(_ecmFile.container.containerObjectType).then(function (personTypes) {
-                $scope.personTypes = personTypes;
-                return personTypes;
-            });
-
-
+            $scope.objectType = _ecmFile.container.containerObjectType;
+            
+            if ($scope.objectType != "TASK") {
+	            ObjectLookupService.getPersonTypes($scope.objectType).then(function (personTypes) {
+	                $scope.personTypes = personTypes;
+	                return personTypes;
+	            });
+            }
         });
 
         $scope.details = {};
