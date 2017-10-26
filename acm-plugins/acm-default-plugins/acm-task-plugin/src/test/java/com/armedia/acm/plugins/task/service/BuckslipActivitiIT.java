@@ -110,23 +110,11 @@ public class BuckslipActivitiIT extends EasyMockSupport
         String objectType = "rockBand";
         String documentType = "Concert Contract";
         JSONArray futureTasks = new JSONArray();
-        JSONObject task1 = new JSONObject();
-        task1.put("approverId", "jerry");
-        task1.put("taskName", "jerry task");
-        task1.put("groupName", "Grateful Dead");
-        futureTasks.put(task1);
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
 
-        JSONObject task2 = new JSONObject();
-        task2.put("approverId", "bob");
-        task2.put("taskName", "bob task");
-        task2.put("groupName", "Furthur");
-        futureTasks.put(task2);
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
 
-        JSONObject task3 = new JSONObject();
-        task3.put("approverId", "phil");
-        task3.put("taskName", "phil task");
-        task3.put("groupName", "phil lesh and friends");
-        futureTasks.put(task3);
+        makeTask(futureTasks, "phil", "phil task", "phil lesh and friends", 3);
 
         String strFutureTasks = futureTasks.toString();
 
@@ -137,8 +125,12 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
-        processVariables.put("taskDueDateExpression", "P3D");
-        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, nonConcurEndsApprovals);
+
+        // nonconcur is false by default
+        if (nonConcurEndsApprovals)
+        {
+            processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, nonConcurEndsApprovals);
+        }
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
 
@@ -238,29 +230,13 @@ public class BuckslipActivitiIT extends EasyMockSupport
         String documentType = "Concert Contract";
 
         JSONArray futureTasks = new JSONArray();
-        JSONObject task1 = new JSONObject();
-        task1.put("approverId", "jerry");
-        task1.put("taskName", "jerry task");
-        task1.put("groupName", "Grateful Dead");
-        futureTasks.put(task1);
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
 
-        JSONObject task2 = new JSONObject();
-        task2.put("approverId", "bob");
-        task2.put("taskName", "bob task");
-        task2.put("groupName", "Furthur");
-        futureTasks.put(task2);
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
 
-        JSONObject task3 = new JSONObject();
-        task3.put("approverId", "phil");
-        task3.put("taskName", "phil task");
-        task3.put("groupName", "phil lesh and friends");
-        futureTasks.put(task3);
+        makeTask(futureTasks, "phil", "phil task", "phil lesh and friends", 3);
 
-        JSONObject task4 = new JSONObject();
-        task4.put("approverId", "bill");
-        task4.put("taskName", "bill task");
-        task4.put("groupName", "the other ones");
-        futureTasks.put(task4);
+        makeTask(futureTasks, "bill", "bill task", "the other ones", 4);
 
         String strFutureTasks = futureTasks.toString();
 
@@ -269,7 +245,6 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
-        processVariables.put("taskDueDateExpression", "P3D");
         processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
@@ -325,6 +300,16 @@ public class BuckslipActivitiIT extends EasyMockSupport
         verifyAll();
     }
 
+    protected void makeTask(JSONArray futureTasks, String approverId, String taskName, String groupName, int taskDuration)
+    {
+        JSONObject task = new JSONObject();
+        task.put("approverId", approverId);
+        task.put("taskName", taskName);
+        task.put("groupName", groupName);
+        task.put("maxTaskDurationInDays", taskDuration);
+        futureTasks.put(task);
+    }
+
 
     @Test
     public void addAnApprover() throws Exception
@@ -343,17 +328,9 @@ public class BuckslipActivitiIT extends EasyMockSupport
         String documentType = "Concert Contract";
 
         JSONArray futureTasks = new JSONArray();
-        JSONObject task1 = new JSONObject();
-        task1.put("approverId", "jerry");
-        task1.put("taskName", "jerry task");
-        task1.put("groupName", "Grateful Dead");
-        futureTasks.put(task1);
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
 
-        JSONObject task2 = new JSONObject();
-        task2.put("approverId", "bob");
-        task2.put("taskName", "bob task");
-        task2.put("groupName", "Furthur");
-        futureTasks.put(task2);
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
 
         String strFutureTasks = futureTasks.toString();
 
@@ -362,7 +339,6 @@ public class BuckslipActivitiIT extends EasyMockSupport
         processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
         processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
-        processVariables.put("taskDueDateExpression", "P3D");
         processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
@@ -391,17 +367,9 @@ public class BuckslipActivitiIT extends EasyMockSupport
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
 
         JSONArray newFutureTasks = new JSONArray();
-        JSONObject task3 = new JSONObject();
-        task3.put("approverId", "phil");
-        task3.put("taskName", "phil task");
-        task3.put("groupName", "phil lesh and friends");
-        newFutureTasks.put(task3);
+        makeTask(newFutureTasks, "phil", "phil task", "phil lesh and friends", 3);
 
-        JSONObject task4 = new JSONObject();
-        task4.put("approverId", "bill");
-        task4.put("taskName", "bill task");
-        task4.put("groupName", "The Other Ones");
-        newFutureTasks.put(task4);
+        makeTask(newFutureTasks, "bill", "bill task", "The Other Ones", 4);
 
         // here is where we add tasks that were not there when we started the process.
         ts.setVariable(task.getId(), "futureTasks", newFutureTasks.toString());

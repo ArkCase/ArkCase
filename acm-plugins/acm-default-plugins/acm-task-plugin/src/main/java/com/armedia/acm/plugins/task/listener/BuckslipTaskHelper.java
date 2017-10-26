@@ -25,6 +25,7 @@ public class BuckslipTaskHelper
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
         String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
+        String taskDueDateExpression = (String) pi.getProcessVariables().get("taskDueDateExpression");
 
         JSONArray newFutureTasks = new JSONArray();
 
@@ -38,6 +39,7 @@ public class BuckslipTaskHelper
             String pastApproverId = past.getString("approverId");
             String pastTaskName = past.getString("taskName");
             String pastGroupName = past.getString("groupName");
+            int maxTaskDurationInDays = past.getInt("maxTaskDurationInDays");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first
             // withdraw-and-restart; now Ann will have two entries in the past tasks list; but we only want one new
@@ -60,6 +62,7 @@ public class BuckslipTaskHelper
                 newFuture.put("approverId", pastApproverId);
                 newFuture.put("taskName", pastTaskName);
                 newFuture.put("groupName", pastGroupName);
+                newFuture.put("maxTaskDurationInDays", maxTaskDurationInDays);
                 newFutureTasks.put(newFuture);
             }
 
@@ -75,6 +78,8 @@ public class BuckslipTaskHelper
             currentTask.put("approverId", currentApprover);
             currentTask.put("taskName", currentTaskName);
             currentTask.put("groupName", currentGroupName);
+            int maxTaskDurationInDays = getMaxTaskDurationInDays(taskDueDateExpression);
+            currentTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
             newFutureTasks.put(currentTask);
         }
 
@@ -87,5 +92,15 @@ public class BuckslipTaskHelper
 
         // when the approval cycle is restarted, everyone has to approve again
         delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks", newFutureTasks.toString());
+    }
+
+    public int getMaxTaskDurationInDays(String taskDueDateExpression)
+    {
+        // we can assume the due date expression is "P(some number)D", or more generally, remove the first and last
+        // char to get the number
+        String lostFirstChar = taskDueDateExpression.substring(1);
+        String lostSecondChar = lostFirstChar.substring(0, lostFirstChar.length() - 1);
+        log.debug("max task duration in days: {}", lostSecondChar);
+        return Integer.valueOf(lostSecondChar);
     }
 }

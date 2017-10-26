@@ -53,4 +53,5 @@ public interface TaskConstants
     String VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS = "futureTasks";
     String VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS = "nonConcurEndsApprovals";
     String INITIATE_TASK_NAME = "rtInitiate";
+    String VARIABLE_NAME_TASK_DUE_DATE_EXPRESSION = "taskDueDateExpression";
 }
