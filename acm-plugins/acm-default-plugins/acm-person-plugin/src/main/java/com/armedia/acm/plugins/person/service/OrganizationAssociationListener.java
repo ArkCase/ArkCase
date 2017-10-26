@@ -41,13 +41,13 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
         Organization child = null, parent = null;
         if (ObjectAssociationState.DELETE.equals(event.getObjectAssociationState()))
         {
-            if (SUB_COMPANY.equals(associationType))
+            if (SUB_COMPANY.equalsIgnoreCase(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getTargetId());
                 // parent is the parent in the context of the association, not the parent company!
                 parent = organizationDao.find(oa.getParentId());
-            } else if (PARENT_COMPANY.equals(associationType))
+            } else if (PARENT_COMPANY.equalsIgnoreCase(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getParentId());
@@ -62,7 +62,7 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
         } else if (ObjectAssociationState.NEW.equals(event.getObjectAssociationState())
                 || ObjectAssociationState.UPDATE.equals(event.getObjectAssociationState()))
         {
-            if (SUB_COMPANY.equals(associationType))
+            if (SUB_COMPANY.equalsIgnoreCase(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getTargetId());
@@ -73,7 +73,7 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
                 {
                     return;
                 }
-            } else if (PARENT_COMPANY.equals(associationType))
+            } else if (PARENT_COMPANY.equalsIgnoreCase(associationType))
             {
                 // child is the child in the context of the association, not the child company!
                 child = organizationDao.find(oa.getParentId());
