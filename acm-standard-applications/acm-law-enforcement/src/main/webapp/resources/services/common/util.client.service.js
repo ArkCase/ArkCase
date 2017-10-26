@@ -440,7 +440,7 @@ angular.module('services').factory('UtilService', ['$q', '$log', '$filter'
                 return d.promise;
             }
             , errorPromise: function (err) {
-                //console.log("UtilService.errorPromise() is phased out. It is renamed to rejectPromise()");
+                $log.warn("WARNING: UtilService.errorPromise() is phased out. It is renamed to rejectPromise()");
                 return Util.rejectPromise(err);
             }
 
