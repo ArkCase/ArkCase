@@ -23,7 +23,7 @@
       "groupAttributesTemplate": "Ldap-Gruppenattributvorlage",
       "addNewDirectory": "Neues Verzeichnis hinzufügen",
       "editRecord": "Datensatz bearbeiten",
-      "id": "De_ID",
+      "id": "ID",
       "directoryType": "Verzeichnisserver auswählen",
       "ldapUrl": "LDAP-URL",
       "base": "Base",
@@ -438,7 +438,7 @@
     },
     "workflows.config.btn": {
       "createNew": "Neues Modell erstellen",
-      "createNewUrl": "Https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Neues BPMN hochladen"
     },
     "workflows.config.links": {

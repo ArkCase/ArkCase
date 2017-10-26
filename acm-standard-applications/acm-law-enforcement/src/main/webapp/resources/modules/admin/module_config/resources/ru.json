@@ -438,7 +438,7 @@
     },
     "workflows.config.btn": {
       "createNew": "Создать новую модель",
-      "createNewUrl": "Https://activiti.alfresco.com",
+      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Загрузить новый BPMN"
     },
     "workflows.config.links": {
