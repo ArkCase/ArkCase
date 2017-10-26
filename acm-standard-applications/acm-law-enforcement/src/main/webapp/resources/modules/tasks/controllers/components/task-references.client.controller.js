@@ -127,7 +127,7 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
                         //success
                         //append new entity as last item in the grid
                         var rowEntity = {
-                            object_id_s: payload.id,
+                            object_id_s: payload.associationId,
                             target_object: {
                                 name: target.name,
                                 title_parseable: target.title_parseable,
