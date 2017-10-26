@@ -43,6 +43,7 @@ import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.users.model.AcmUser;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
@@ -137,6 +138,8 @@ public class ExchangeCalendarService
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     private Map<String, CalendarConfiguration> configurationsByType;
+
+    private OutlookFolderRecreator folderRecreator;
 
     /*
      * (non-Javadoc)
@@ -630,19 +633,20 @@ public class ExchangeCalendarService
     private AcmOutlookUser handleMissingFolderCreator(String userId, Long objectId, String objectType, CalendarEntityHandler handler,
             AcmOutlookFolderCreatorDaoException fce) throws CalendarServiceException
     {
+
+        CalendarConfiguration configuration = configurationsByType.get(objectType);
+        AcmOutlookUser user;
+        if (configuration != null && configuration.isIntegrationEnabled())
+        {
+            user = new AcmOutlookUser(userId, configuration.getSystemEmail(), configuration.getPassword());
+        }
+        else
+        {
+            throw new CalendarServiceException(fce);
+        }
+
         try
         {
-            CalendarConfiguration configuration = configurationsByType.get(objectType);
-            AcmOutlookUser user;
-            if (configuration != null && configuration.isIntegrationEnabled())
-            {
-                user = new AcmOutlookUser(userId, configuration.getSystemEmail(), configuration.getPassword());
-            }
-            else
-            {
-                throw new CalendarServiceException(fce);
-            }
-
             ExchangeService service = outlookDao.connect(user);
             String calendarId = handler.getCalendarId(objectId.toString());
             CalendarFolder.bind(service, new FolderId(calendarId));
@@ -656,14 +660,17 @@ public class ExchangeCalendarService
         }
         catch (Exception e)
         {
-            return tryToRecreateFolder(e);
+            return tryToRecreateFolder(objectId, objectType, user, e);
         }
     }
 
-    private AcmOutlookUser tryToRecreateFolder(Exception ppe) throws CalendarServiceException
+    private AcmOutlookUser tryToRecreateFolder(Long objectId, String objectType, AcmOutlookUser outlookUser, Exception ppe)
+            throws CalendarServiceException
     {
         // try to recreate folder here!
-        throw new CalendarServiceException(ppe);
+        folderRecreator.recreateFolder(objectType, objectId, outlookUser);
+
+        throw new CalendarServiceBindToRemoteException(ppe);
     }
 
     /*
@@ -727,6 +734,11 @@ public class ExchangeCalendarService
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
         this.folderCreatorDao = folderCreatorDao;
+    }
+
+    public void setFolderRecreator(OutlookFolderRecreator folderRecreator)
+    {
+        this.folderRecreator = folderRecreator;
     }
 
 }
