@@ -52,21 +52,48 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
 
             $scope.taskInfo = objectInfo;
 
-            //set future approvers info
-            if (!Util.isArrayEmpty($scope.taskInfo.buckslipFutureApprovers)) {
-                var data = [];
-                _.forEach(objectInfo.buckslipFutureApprovers, function (userProfile) {
-                    data.push(convertProfileToUser(userProfile));
-                });
-                $scope.gridOptions.data = data;
-                $scope.gridOptions.noData = false;
-            } else {
-                $scope.gridOptions.data = [];
-                $scope.gridOptions.noData = true;
-                $scope.noDataMessage = $translate.instant('cases.comp.approvalRouting.noBuckslipMessage');
-            }
-            $scope.oldData = angular.copy($scope.gridOptions.data);
+            //set future tasks
+            CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", $scope.taskInfo.id)
+                .then(function (response){
 
+                    var buckslipProcesses = response.data;
+                    var futureTasksGridData = [];
+
+                    if(!Util.isArrayEmpty(buckslipProcesses)){
+                        for(var i=0; i<buckslipProcesses.length; i++){
+                            for(var j=0; j<buckslipProcesses[i].futureTasks.length; j++){
+                                var approver = buckslipProcesses[i].futureTasks[j].approverId;
+                                var groupName = buckslipProcesses[i].futureTasks[j].groupName;
+                                var taskName = buckslipProcesses[i].futureTasks[j].taskName;
+                                var details = buckslipProcesses[i].futureTasks[j].details;
+                                var dueDate = buckslipProcesses[i].futureTasks[j].dueDate;
+                                var addedBy = buckslipProcesses[i].futureTasks[j].addedBy;
+
+                                var task = {
+                                    "fullName": approver,
+                                    "owningGroup": groupName,
+                                    "taskName": taskName,
+                                    "details": details,
+                                    "dueDate": dueDate,
+                                    "status": "",
+                                    "addedBy": addedBy
+                                }
+                                futureTasksGridData.push(task);
+                            }
+                        }
+                    }
+
+                    if(!Util.isArrayEmpty(futureTasksGridData)){
+                        $scope.gridOptions.data = futureTasksGridData;
+                        $scope.gridOptions.noData = false;
+                    }
+                    else{
+                        $scope.gridOptions.data = [];
+                        $scope.gridOptions.noData = true;
+                        $scope.noDataMessage = $translate.instant('cases.comp.approvalRouting.noBuckslipMessage');
+                    }
+                    $scope.oldData = angular.copy($scope.gridOptions.data);
+                });
         });
 
         $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);

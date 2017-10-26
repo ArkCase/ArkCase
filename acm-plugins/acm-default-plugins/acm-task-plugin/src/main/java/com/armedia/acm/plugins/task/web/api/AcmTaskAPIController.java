@@ -52,14 +52,14 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/getBuckslipProcessesForObject/objectType/{objectType}/objectId/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/getBuckslipProcessesForChildren/objectType/{objectType}/objectId/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId)
     {
         try
         {
             log.info("Trying to fetch buckslip processes for {}, with ID {}", objectType, objectId);
-            return new ResponseEntity<List<BuckslipProcess>>(getAcmTaskService().getBuckslipProcessesForObject(objectType, objectId), HttpStatus.OK);
+            return new ResponseEntity<List<BuckslipProcess>>(getAcmTaskService().getBuckslipProcessesForChildren(objectType, objectId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
