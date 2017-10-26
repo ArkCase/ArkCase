@@ -1244,37 +1244,37 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "aaa",
+          "name": "owningGroup",
           "displayName": "cases.comp.approvalRouting.table.columns.group",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "bbb",
+          "name": "taskName",
           "displayName": "cases.comp.approvalRouting.table.columns.subject",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "ccc",
+          "name": "details",
           "displayName": "cases.comp.approvalRouting.table.columns.details",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "ddd",
+          "name": "dueDate",
           "displayName": "cases.comp.approvalRouting.table.columns.dueDate",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "eee",
+          "name": "status",
           "displayName": "cases.comp.approvalRouting.table.columns.status",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "fff",
+          "name": "addedBy",
           "displayName": "cases.comp.approvalRouting.table.columns.addedBy",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"

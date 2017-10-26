@@ -25,10 +25,10 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
         });
     };
 
-    var _getBuckslipProcessesForObject = function (objectType, objectId) {
+    var _getBuckslipProcessesForChildren = function (objectType, objectId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/getBuckslipProcessesForObject/objectType/' + objectType + '/objectId/' + objectId
+            url: 'api/latest/plugin/task/getBuckslipProcessesForChildren/objectType/' + objectType + '/objectId/' + objectId
         });
     };
 
@@ -74,7 +74,7 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
     return {
         getBuckslipFutureTasks: _getBuckslipFutureTasks,
         getBuckslipPastTasks: _getBuckslipPastTasks,
-        getBuckslipProcessesForObject: _getBuckslipProcessesForObject,
+        getBuckslipProcessesForChildren: _getBuckslipProcessesForChildren,
         isWorkflowInitiable: _isWorkflowInitiable,
         isWorkflowWithdrawable: _isWorkflowWithdrawable,
         initiateRoutingWorkflow: _initiateRoutingWorkflow,
