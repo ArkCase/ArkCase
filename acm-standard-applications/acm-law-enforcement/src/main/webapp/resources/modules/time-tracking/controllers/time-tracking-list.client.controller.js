@@ -27,7 +27,7 @@ angular.module('time-tracking').controller('TimeTrackingListController', ['$scop
             if (data.objectType === ObjectService.ObjectTypes.TIMESHEET) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-timesheet");
                 if (frevvoRequest) {
-                    ObjectService.gotoUrl(ObjectService.ObjectTypes.TIMESHEET, data.objectId);
+                    ObjectService.showObject(ObjectService.ObjectTypes.TIMESHEET, data.objectId);
                 }
                 else {
                     MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");

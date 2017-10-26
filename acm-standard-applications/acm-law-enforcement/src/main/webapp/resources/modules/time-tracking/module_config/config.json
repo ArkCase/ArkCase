@@ -96,6 +96,10 @@
         "components": [
           "tags"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
