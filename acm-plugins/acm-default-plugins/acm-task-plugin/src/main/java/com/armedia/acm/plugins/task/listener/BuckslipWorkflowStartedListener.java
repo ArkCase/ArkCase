@@ -21,6 +21,12 @@ public class BuckslipWorkflowStartedListener implements ExecutionListener
         // initialize past approvers to "[]" (JSON empty array)
         delegateExecution.setVariable(TaskConstants.VARIABLE_NAME_PAST_TASKS, "[]");
 
+        // set nonConcurEndsApprovals to a default value if necessary
+        if (!delegateExecution.hasVariable(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS))
+        {
+            delegateExecution.setVariable(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
+        }
+
         LOG.debug("Starting a buckslip task with {} variables", delegateExecution.getVariables().size());
     }
 

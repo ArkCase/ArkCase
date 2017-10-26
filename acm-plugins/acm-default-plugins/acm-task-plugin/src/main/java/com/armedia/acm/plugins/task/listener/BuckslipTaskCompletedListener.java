@@ -68,8 +68,9 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             String approver = delegateTask.getAssignee();
             String taskName = delegateTask.getName();
             String groupName = (String) delegateTask.getVariable("currentGroup");
+            String taskDueDateExpression = (String) delegateTask.getVariable("taskDueDateExpression");
 
-            String updatedTasks = addTask(pastTasks, approver, taskName, groupName, outcome);
+            String updatedTasks = addTask(pastTasks, approver, taskName, groupName, taskDueDateExpression, outcome);
 
             execution.setVariable(TaskConstants.VARIABLE_NAME_PAST_TASKS, updatedTasks);
             log.debug("Task ID: {}, past approvers {}", delegateTask.getId(), updatedTasks);
@@ -95,6 +96,10 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             String currentApprover = futureTask.optString("approverId", "");
             String taskName = futureTask.optString("taskName", "Review");
             String group = futureTask.optString("groupName", "");
+            int maxTaskDurationInDays = futureTask.optInt("maxTaskDurationInDays", 3);
+            String taskDueDateExpression = String.format("P%sD", maxTaskDurationInDays);
+
+            log.debug("task due date expression: {}", taskDueDateExpression);
 
             jsonFutureTasks.remove(0);
 
@@ -102,6 +107,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             execution.setVariable("currentTaskName", taskName);
             execution.setVariable("currentGroup", group);
             execution.setVariable("moreTasks", moreTasks);
+            execution.setVariable("taskDueDateExpression", taskDueDateExpression);
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, jsonFutureTasks.toString());
 
         }
@@ -114,7 +120,8 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         }
     }
 
-    private String addTask(String tasksSoFar, String approverId, String taskName, String groupName, String outcome)
+    private String addTask(String tasksSoFar, String approverId, String taskName, String groupName,
+                           String taskDueDateExpression, String outcome)
     {
         AcmUser user = userDao.findByUserId(approverId);
 
@@ -138,10 +145,15 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         newJsonTask.put("approverDecision", outcome);
 
         newJsonTask.put("taskName", taskName);
+        int maxTaskDurationInDays = getBuckslipTaskHelper().getMaxTaskDurationInDays(taskDueDateExpression);
+
+
+        newJsonTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
 
         jsonTasks.put(newJsonTask);
         return jsonTasks.toString();
     }
+
 
     public void setUserDao(UserDao userDao)
     {

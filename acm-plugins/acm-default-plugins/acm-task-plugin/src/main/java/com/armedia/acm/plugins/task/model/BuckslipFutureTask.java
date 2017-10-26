@@ -10,6 +10,7 @@ public class BuckslipFutureTask
     private String details;
     private Date dueDate;
     private String addedBy;
+    private int maxTaskDurationInDays = 3;
 
     public String getApproverId()
     {
@@ -69,5 +70,19 @@ public class BuckslipFutureTask
     public void setAddedBy(String addedBy)
     {
         this.addedBy = addedBy;
+    }
+
+    public int getMaxTaskDurationInDays()
+    {
+        return maxTaskDurationInDays;
+    }
+
+    public void setMaxTaskDurationInDays(int maxTaskDurationInDays)
+    {
+        // must be non-negative
+        if (maxTaskDurationInDays >= 0)
+        {
+            this.maxTaskDurationInDays = maxTaskDurationInDays;
+        }
     }
 }
