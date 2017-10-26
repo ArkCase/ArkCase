@@ -664,13 +664,21 @@ public class ExchangeCalendarService
         }
     }
 
-    private AcmOutlookUser tryToRecreateFolder(Long objectId, String objectType, AcmOutlookUser outlookUser, Exception ppe)
+    private AcmOutlookUser tryToRecreateFolder(Long objectId, String objectType, AcmOutlookUser outlookUser, Exception be)
             throws CalendarServiceException
     {
-        // try to recreate folder here!
-        folderRecreator.recreateFolder(objectType, objectId, outlookUser);
+        try
+        {
+            folderRecreator.recreateFolder(objectType, objectId, outlookUser);
+            return outlookUser;
+        }
+        catch (CalendarServiceException cse)
+        {
+            CalendarServiceBindToRemoteException recreateException = new CalendarServiceBindToRemoteException(cse);
+            recreateException.addSuppressed(be);
+            throw recreateException;
+        }
 
-        throw new CalendarServiceBindToRemoteException(ppe);
     }
 
     /*
