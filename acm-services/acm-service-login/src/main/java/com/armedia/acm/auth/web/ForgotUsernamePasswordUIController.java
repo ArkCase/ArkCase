@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -14,14 +15,14 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RequestMapping("/forgot-username")
-public class ForgotUsernameUIController implements ApplicationEventPublisherAware
+@Controller
+public class ForgotUsernamePasswordUIController implements ApplicationEventPublisherAware
 {
     private UserDao userDao;
     private ApplicationEventPublisher eventPublisher;
 
-    @RequestMapping(method = RequestMethod.POST)
-    public ResponseEntity<String> setEmailAddress(@RequestParam String email)
+    @RequestMapping(value = "/forgot-username", method = RequestMethod.POST)
+    public ResponseEntity<String> publishForgotUsernameEvent(@RequestParam String email)
     {
         List<AcmUser> users = userDao.findByEmailAddress(email);
         if (users.size() == 0)
@@ -39,6 +40,22 @@ public class ForgotUsernameUIController implements ApplicationEventPublisherAwar
             ForgotUsernameEvent forgotUsernameEvent = new ForgotUsernameEvent(emailToUserAccount);
             forgotUsernameEvent.setSucceeded(true);
             eventPublisher.publishEvent(forgotUsernameEvent);
+        }
+        return new ResponseEntity<>("Success", HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/forgot-password", method = RequestMethod.POST)
+    public ResponseEntity<String> publishForgotPasswordEvent(@RequestParam String userId, @RequestParam String email)
+    {
+        AcmUser user = userDao.findByUserIdAndEmailAddress(userId, email);
+        if (user == null)
+        {
+            return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
+        } else
+        {
+            ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent(user);
+            forgotPasswordEvent.setSucceeded(true);
+            eventPublisher.publishEvent(forgotPasswordEvent);
         }
         return new ResponseEntity<>("Success", HttpStatus.OK);
     }
