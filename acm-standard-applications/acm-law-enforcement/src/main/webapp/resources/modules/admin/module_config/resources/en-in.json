@@ -33,7 +33,9 @@
       "userSearchBase": "Users Search Base",
       "userSearchFilter": "User Search Filter",
       "allUsersFilter": "All Users Filter",
+      "allChangedUsersFilter": "All Changed Users Filter",
       "allUsersPageFilter": "All Users Page Filter",
+      "allChangedUsersPageFilter": "All Changed Users Page Filter",
       "allUsersSortingAttribute": "Sorting attribute for users",
       "groupSearchBase": "Group Search Base",
       "groupSearchFilterForUser": "Group Search Filter For User",
@@ -42,9 +44,12 @@
       "userDomainNote": "(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
       "syncPageSize": "Sync Page Size",
       "groupSearchFilter": "Group Search Filter",
+      "changedGroupSearchFilter": "Changed Group Search Filter",
       "groupsSortingAttribute": "Sorting attribute for groups",
       "groupSearchPageFilter": "Group Search Page Filter",
+      "changedGroupSearchPageFilter": "Changed Group Search Page Filter",
       "enableEditingLdapUsers": "Enable managing users and groups",
+      "syncEnabled": "Enable synchronize users",
       "cancel": "Cancel",
       "ok": "OK"
     },
@@ -233,6 +238,8 @@
     "security.ldap.user.management": {
       "title": "LDAP User Management",
       "cloneButton": "Clone User",
+      "deleteUserBtn": "Delete User",
+      "deleteUserMsg": "Are you sure you want to delete this user?",
       "user": "User"
     },
     "security.calendarConfiguration": {
@@ -466,7 +473,7 @@
       },
       "labels.config": {
         "title": "Label Configuration",
-        "progressMessage": "Updating labels...",
+        "progressMessage": "Updating labels...Please wait",
         "data": {
           "description": "Description",
           "defaultValue": "Default Value",
@@ -487,6 +494,27 @@
           "btnRefresh.label": "Reset",
           "btnRefresh.title": "Reset labels to default values but keep customized labels unchanged",
           "resetCustom.confirm": "Are you sure you want remove selected custom resources?"
+        }
+      },
+      "lookups.config": {
+        "title": "Lookups Configuration",
+        "choose": "Choose Lookup",
+        "data": {
+          "key" : "Key",
+          "value" : "Value",
+          "inverseKey" : "Inverse key",
+          "inverseValue" : "Inverse value"
+        },
+        "modal" : {
+          "title" : "Search Label",
+          "editEntry" : "Edit lookup entry",
+          "addEntry" : "Add lookup entry",
+          "key.placeholder" : "Enter entry key",
+          "value.placeholder" : "Enter entry value as label key",
+          "inversekey.placeholder" : "Enter entry inverse key",
+          "inversevalue.placeholder" : "Enter entry inverse value as label key",
+          "btnCancel.text" : "Cancel",
+          "btnOk.text" : "Save entry"
         }
       },
       "module.config": {
@@ -700,5 +728,44 @@
         "update.error": "Error updating configuration row."
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "Security - Ldap config grid"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "Correspondence Management Merge Fields grid"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "Correspondence Management Merge Fields version grid"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "Correspondence Management Templates grid"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "Correspondance Management Template Versions grid"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "Application - Labels Config grid"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "Forms - Forms Config grid"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "Workflows - Workflows Config grid"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "Workflows - Workflows Config history dialog grid"
+  },
+  "admin.comp.usersPicker": {
+    "title": "Select users"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "Organization Hierarchy"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS Configuration Grid"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "Email templates"
   }
 }

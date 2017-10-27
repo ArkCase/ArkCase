@@ -207,6 +207,10 @@
         "components": [
           "history"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
