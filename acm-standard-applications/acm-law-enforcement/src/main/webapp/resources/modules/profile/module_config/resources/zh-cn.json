@@ -61,6 +61,8 @@
     "emptyPassword": "不接受空密码",
     "comfirmation": "请重新输入你的密码。",
     "differentPasswords": "密码不匹配。 请再试一次。",
+    "passwordContainsUsername": "zh-cn_Password should not contain the username.",
+    "invalidPattern": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "确认",
     "success": "成功更改密码",
     "changePassword.header": "更改密码"

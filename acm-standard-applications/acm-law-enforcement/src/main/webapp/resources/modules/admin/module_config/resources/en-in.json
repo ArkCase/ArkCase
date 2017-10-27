@@ -148,7 +148,7 @@
           "lastName": "Enter last name",
           "email": "Enter email",
           "password": "Enter password",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "en-in_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -163,7 +163,8 @@
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",
-        "password": "Password"
+        "password": "Password",
+        "confirmation": "en-in_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "Name",

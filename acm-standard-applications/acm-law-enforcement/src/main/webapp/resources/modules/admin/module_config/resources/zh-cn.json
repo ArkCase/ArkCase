@@ -148,7 +148,7 @@
           "lastName": "zh-cn_Enter last name",
           "email": "zh-cn_Enter email",
           "password": "zh-cn_Enter password",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "zh-cn_Enter your password again",
           "minLengthForPassword": "zh-cn_7",
           "passwordRuleText": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -163,7 +163,8 @@
         "firstName": "zh-cn_FirstName",
         "lastName": "zh-cn_LastName",
         "email": "zh-cn_Email",
-        "password": "zh-cn_Password"
+        "password": "zh-cn_Password",
+        "confirmation": "zh-cn_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "zh-cn_Name",

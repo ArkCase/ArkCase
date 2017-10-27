@@ -148,7 +148,7 @@
           "lastName": "pt_Enter last name",
           "email": "pt_Enter email",
           "password": "pt_Enter password",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "pt_Enter your password again",
           "minLengthForPassword": "pt_7",
           "passwordRuleText": "pt_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -163,7 +163,8 @@
         "firstName": "pt_FirstName",
         "lastName": "pt_LastName",
         "email": "pt_Email",
-        "password": "pt_Password"
+        "password": "pt_Password",
+        "confirmation": "pt_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "pt_Name",
