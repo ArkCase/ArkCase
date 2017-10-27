@@ -33,9 +33,12 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     @Override
     public void onApplicationEvent(ForgotUsernameEvent forgotUsernameEvent)
     {
-        AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>)
-                forgotUsernameEvent.getSource();
-        sendUsernameEmail(emailUserData);
+        if (forgotUsernameEvent.isSucceeded())
+        {
+            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>)
+                    forgotUsernameEvent.getSource();
+            sendUsernameEmail(emailUserData);
+        }
     }
 
     private void sendUsernameEmail(AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData)

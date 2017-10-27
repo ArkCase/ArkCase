@@ -129,7 +129,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                     query: query
                 },
                 function (data) {
-                    if (SearchService.validateSolrData(data)) {
+                    if (Util.validateSolrData(data)) {
                         var participantData = data.response.docs;
                         if (Service.isParticipantValid(participantData)) {
                             return df.resolve(participantData);
