@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.task.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import org.springframework.security.core.Authentication;
 

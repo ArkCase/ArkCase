@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.model;
 
+import com.armedia.acm.data.BuckslipFutureTask;
 import java.util.List;
 
 public class BuckslipProcess
