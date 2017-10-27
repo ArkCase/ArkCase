@@ -18,7 +18,13 @@
     "endDate" : {
       "label": "zh-cn_To"
     },
-
+    "states": {
+      "draft": "cn_Draft",
+      "inApproval": "cn_In Approval",
+      "active": "cn_Active",
+      "inActive": "cn_Inactive",
+      "closed": "cn_Closed"
+    },
     "dropdown": {
       "turnaround": "zh-cn_Turnaround Time by Requester",
       "requester": "zh-cn_Requester Type Summary",
@@ -29,7 +35,9 @@
       "exceptions": "zh-cn_Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "zh-cn_Done"
+      "close": "zh-cn_Done",
+      "clear": "cn_Clear",
+      "current": "cn_Today"
     },
     "btn": {
       "generateReport": "zh-cn_Generate report"

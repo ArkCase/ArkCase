@@ -8,17 +8,19 @@
  *
  * The Reports module's date pickers controller
  */
-angular.module('reports').controller('Reports.DatepickersController', ['$scope',
-    function ($scope) {
-        $scope.$on('component-config', applyConfig);
-        $scope.$emit('req-component-config', 'datepickers');
+angular.module('reports').controller('Reports.DatepickersController', ['$scope', 'Helper.LocaleService',
+    function ($scope, LocaleHelper) {
+        // $scope.$on('component-config', applyConfig);
+        // $scope.$emit('req-component-config', 'datepickers');
+        //
+        // $scope.config = null;
+        // function applyConfig(e, componentId, config) {
+        //     if (componentId == 'datepickers') {
+        //         $scope.config = config;
+        //     }
+        // }
 
-        $scope.config = null;
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'datepickers') {
-                $scope.config = config;
-            }
-        }
+        new LocaleHelper.Locale({scope: $scope});
 
         $scope.opened = {};
         $scope.opened.openedStart = false;

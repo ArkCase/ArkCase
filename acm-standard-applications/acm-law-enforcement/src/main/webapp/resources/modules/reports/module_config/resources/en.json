@@ -18,7 +18,13 @@
     "endDate" : {
       "label": "To"
     },
-
+    "states": {
+      "draft": "Draft",
+      "inApproval": "In Approval",
+      "active": "Active",
+      "inActive": "Inactive",
+      "closed": "Closed"
+    },
     "dropdown": {
       "turnaround": "Turnaround Time by Requester",
       "requester": "Requester Type Summary",
@@ -29,7 +35,9 @@
       "exceptions": "Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "Done"
+      "close": "Done",
+      "clear": "Clear",
+      "current": "Today"
     },
     "btn": {
       "generateReport": "Generate report"
