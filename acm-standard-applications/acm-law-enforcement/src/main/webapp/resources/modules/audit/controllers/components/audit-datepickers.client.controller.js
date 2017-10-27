@@ -9,16 +9,25 @@
  *
  * The Audit module Datepickers controller
  */
-angular.module('audit').controller('Audit.DatepickersController', ['$scope', '$filter',
-    function ($scope, $filter) {
-        $scope.$on('component-config', applyConfig);
-        $scope.$emit('req-component-config', 'datepickers');
-        $scope.config = null;
-        $scope.$on('fix-date-values', fixDateValues);
+angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Helper.LocaleService',
+    function ($scope, LocaleHelper) {
+
+        // $scope.config = null;
+        // $scope.$on('component-config', applyConfig);
+        // function applyConfig(e, componentId, config) {
+        //     if (componentId == 'datepickers') {
+        //         $scope.config = config;
+        //     }
+        // }
+        // $scope.$emit('req-component-config', 'datepickers');
+
+
+        new LocaleHelper.Locale({scope: $scope});
+
 
         $scope.dateFrom = new Date();
         $scope.dateTo = new Date();
-
+        $scope.$on('fix-date-values', fixDateValues);
         /**
          * @ngdoc method
          * @name fixDateValues
@@ -41,12 +50,6 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', '$f
         $scope.$watchGroup(['dateFrom','dateTo'], function(){
             $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
         });
-
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'datepickers') {
-                $scope.config = config;
-            }
-        }
 
         $scope.opened = {};
         $scope.opened.openedStart = false;

@@ -35,23 +35,23 @@
       "states": [
         {
           "id": "DRAFT",
-          "name": "Draft"
+          "name": "reports.states.draft"
         },
         {
           "id": "IN APPROVAL",
-          "name": "In Approval"
+          "name": "reports.states.inApproval"
         },
         {
           "id": "ACTIVE",
-          "name": "Active"
+          "name": "reports.states.active"
         },
         {
           "id": "INACTIVE",
-          "name": "Inactive"
+          "name": "reports.states.inActive"
         },
         {
           "id": "CLOSED",
-          "name": "Closed"
+          "name": "reports.states.closed"
         }
       ]
     }
