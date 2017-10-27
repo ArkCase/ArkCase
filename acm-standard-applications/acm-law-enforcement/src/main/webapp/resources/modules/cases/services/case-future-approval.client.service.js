@@ -49,14 +49,14 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
     var _initiateRoutingWorkflow = function (businessProcessId, receiveTaskId) {
         return $http({
             method: 'POST',
-            url: 'initiateRoutingWorkflow/businessProcessId/' + businessProcessId + '/receiveTaskId/' + receiveTaskId
+            url: 'api/latest/plugin/task/initiateRoutingWorkflow/businessProcessId/' + businessProcessId + '/receiveTaskId/' + receiveTaskId
         });
     };
 
     var _withdrawRoutingWorkflow = function (taskId, messageName) {
         return $http({
             method: 'POST',
-            url: 'withdrawRoutingWorkflow/taskId/' + taskId + '/messageName/' + messageName
+            url: 'api/latest/plugin/task/withdrawRoutingWorkflow/taskId/' + taskId + '/messageName/' + messageName
         });
     };
 

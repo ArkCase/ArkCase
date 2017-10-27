@@ -1,14 +1,13 @@
-package com.armedia.acm.plugins.task.model;
+package com.armedia.acm.data;
 
 import java.util.Date;
 
 public class BuckslipFutureTask
 {
     private String approverId;
-    private String groupName;
     private String taskName;
+    private String groupName;
     private String details;
-    private Date dueDate;
     private String addedBy;
     private int maxTaskDurationInDays = 3;
 
@@ -22,16 +21,6 @@ public class BuckslipFutureTask
         this.approverId = approverId;
     }
 
-    public String getGroupName()
-    {
-        return groupName;
-    }
-
-    public void setGroupName(String groupName)
-    {
-        this.groupName = groupName;
-    }
-
     public String getTaskName()
     {
         return taskName;
@@ -42,6 +31,16 @@ public class BuckslipFutureTask
         this.taskName = taskName;
     }
 
+    public String getGroupName()
+    {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName)
+    {
+        this.groupName = groupName;
+    }
+
     public String getDetails()
     {
         return details;
@@ -50,16 +49,6 @@ public class BuckslipFutureTask
     public void setDetails(String details)
     {
         this.details = details;
-    }
-
-    public Date getDueDate()
-    {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate)
-    {
-        this.dueDate = dueDate;
     }
 
     public String getAddedBy()

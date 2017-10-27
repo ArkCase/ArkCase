@@ -96,6 +96,8 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             String currentApprover = futureTask.optString("approverId", "");
             String taskName = futureTask.optString("taskName", "Review");
             String group = futureTask.optString("groupName", "");
+            String details = futureTask.optString("details", "");
+            String addedBy = futureTask.optString("addedBy", "");
             int maxTaskDurationInDays = futureTask.optInt("maxTaskDurationInDays", 3);
             String taskDueDateExpression = String.format("P%sD", maxTaskDurationInDays);
 
@@ -106,6 +108,8 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             execution.setVariable("currentApprover", currentApprover);
             execution.setVariable("currentTaskName", taskName);
             execution.setVariable("currentGroup", group);
+            execution.setVariable("details", details);
+            execution.setVariable("addedBy", addedBy);
             execution.setVariable("moreTasks", moreTasks);
             execution.setVariable("taskDueDateExpression", taskDueDateExpression);
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, jsonFutureTasks.toString());
@@ -115,6 +119,9 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         {
             execution.setVariable("currentApprover", "");
             execution.setVariable("currentTaskName", "");
+            execution.setVariable("currentGroup", "");
+            execution.setVariable("details", "");
+            execution.setVariable("addedBy", "");
             execution.setVariable("moreTasks", "false");
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, "[]");
         }

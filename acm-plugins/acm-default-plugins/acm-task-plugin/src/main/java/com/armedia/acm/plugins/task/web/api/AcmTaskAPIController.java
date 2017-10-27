@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import org.slf4j.Logger;

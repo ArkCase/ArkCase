@@ -25,6 +25,8 @@ public class BuckslipTaskHelper
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
         String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
+        String currentDetails = (String) pi.getProcessVariables().get("details");
+        String currentAddedBy = (String) pi.getProcessVariables().get("addedBy");
         String taskDueDateExpression = (String) pi.getProcessVariables().get("taskDueDateExpression");
 
         JSONArray newFutureTasks = new JSONArray();
@@ -39,6 +41,8 @@ public class BuckslipTaskHelper
             String pastApproverId = past.getString("approverId");
             String pastTaskName = past.getString("taskName");
             String pastGroupName = past.getString("groupName");
+            String pastDetails = past.getString("details");
+            String pastAddedBy = past.getString("addedBy");
             int maxTaskDurationInDays = past.getInt("maxTaskDurationInDays");
             // account for possibly many withdrawal cycles; suppose the same tasks have already been recorded more
             // than once (e.g. Ann has completed her original task, then completed the same task after the first
@@ -62,6 +66,8 @@ public class BuckslipTaskHelper
                 newFuture.put("approverId", pastApproverId);
                 newFuture.put("taskName", pastTaskName);
                 newFuture.put("groupName", pastGroupName);
+                newFuture.put("details", pastDetails);
+                newFuture.put("addedBy", pastAddedBy);
                 newFuture.put("maxTaskDurationInDays", maxTaskDurationInDays);
                 newFutureTasks.put(newFuture);
             }
@@ -78,6 +84,8 @@ public class BuckslipTaskHelper
             currentTask.put("approverId", currentApprover);
             currentTask.put("taskName", currentTaskName);
             currentTask.put("groupName", currentGroupName);
+            currentTask.put("details", currentDetails);
+            currentTask.put("addedBy", currentAddedBy);
             int maxTaskDurationInDays = getMaxTaskDurationInDays(taskDueDateExpression);
             currentTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
             newFutureTasks.put(currentTask);

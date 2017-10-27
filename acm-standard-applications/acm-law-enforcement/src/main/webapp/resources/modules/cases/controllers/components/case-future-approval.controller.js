@@ -56,18 +56,17 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", $scope.taskInfo.id)
                 .then(function (response){
 
-                    var buckslipProcesses = response.data;
+                    $scope.buckslipProcesses = response.data;
                     var futureTasksGridData = [];
 
-                    if(!Util.isArrayEmpty(buckslipProcesses)){
-                        for(var i=0; i<buckslipProcesses.length; i++){
-                            for(var j=0; j<buckslipProcesses[i].futureTasks.length; j++){
-                                var approver = buckslipProcesses[i].futureTasks[j].approverId;
-                                var groupName = buckslipProcesses[i].futureTasks[j].groupName;
-                                var taskName = buckslipProcesses[i].futureTasks[j].taskName;
-                                var details = buckslipProcesses[i].futureTasks[j].details;
-                                var dueDate = buckslipProcesses[i].futureTasks[j].dueDate;
-                                var addedBy = buckslipProcesses[i].futureTasks[j].addedBy;
+                    if(!Util.isArrayEmpty($scope.buckslipProcesses)){
+                            for(var i=0; i<$scope.buckslipProcesses[0].futureTasks.length; i++){
+                                var approver = $scope.buckslipProcesses[0].futureTasks[i].approverId;
+                                var groupName = $scope.buckslipProcesses[0].futureTasks[i].groupName;
+                                var taskName = $scope.buckslipProcesses[0].futureTasks[i].taskName;
+                                var details = $scope.buckslipProcesses[0].futureTasks[i].details;
+                                var dueDate = $scope.buckslipProcesses[0].futureTasks[i].dueDate;
+                                var addedBy = $scope.buckslipProcesses[0].futureTasks[i].addedBy;
 
                                 var task = {
                                     "fullName": approver,
@@ -80,7 +79,6 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                                 }
                                 futureTasksGridData.push(task);
                             }
-                        }
                     }
 
                     if(!Util.isArrayEmpty(futureTasksGridData)){
@@ -139,7 +137,13 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
         };
 
         $scope.initiateTask = function () {
+            if(!Util.isArrayEmpty($scope.buckslipProcesses)){
+                var processId = $scope.buckslipProcesses[0].businessProcessId;
+                CaseFutureApprovalService.initiateRoutingWorkflow(processId, "rtInitiate")
+                    .then(function (result){
 
+                    });
+            }
         };
 
         $scope.deleteRow = function (rowEntity) {
