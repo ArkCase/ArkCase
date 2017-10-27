@@ -148,7 +148,7 @@
           "lastName": "hi_Enter last name",
           "email": "hi_Enter email",
           "password": "hi_Enter password",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "hi_Enter your password again",
           "minLengthForPassword": "hi_7",
           "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
         },
@@ -163,7 +163,8 @@
         "firstName": "hi_FirstName",
         "lastName": "hi_LastName",
         "email": "hi_Email",
-        "password": "hi_Password"
+        "password": "hi_Password",
+        "confirmation": "hi_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "hi_Name",

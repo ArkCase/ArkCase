@@ -61,6 +61,8 @@
     "emptyPassword": "Le mot de passe ne peut pas être vide",
     "comfirmation": "Veuillez retaper votre mot-de-passe.",
     "differentPasswords": "Les mots de passe ne correspondent pas. Veuillez réessayer.",
+    "passwordContainsUsername": "fr_Password should not contain the username.",
+    "invalidPattern": "fr_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "D'accord",
     "success": "Mot de passe modifié avec succès",
     "changePassword.header": "Changer le mot de passe"

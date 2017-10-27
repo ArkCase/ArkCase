@@ -106,7 +106,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                controller: ['$scope', '$modalInstance', 'UtilService', function ($scope, $modalInstance, Util) {
                     $scope.addUser = true;
                     $scope.cloneUser = true;
                     $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
@@ -117,8 +117,14 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                         "user": $scope.user,
                         "selectedUser": selectedUser
                     };
+                    $scope.passwordErrorMessages = {
+                        invalidPatternMessage: '',
+                        containsUsernameMessage: '',
+                        notSamePasswordsMessage: ''
+                    };
                     $scope.ok = function () {
-                        $modalInstance.close($scope.data);
+                            $modalInstance.close($scope.data);
+
                     };
                 }],
                 size: 'sm'

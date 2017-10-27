@@ -61,6 +61,8 @@
     "emptyPassword": "Пароль не может быть пустым",
     "comfirmation": "Пожалуйста, введите еще раз ваш пароль.",
     "differentPasswords": "Пароли не совпадают. Пожалуйста, попробуйте еще раз.",
+    "passwordContainsUsername": "ru_Password should not contain the username.",
+    "invalidPattern": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "ОК",
     "success": "Успешно измененный пароль",
     "changePassword.header": "Изменить пароль"
