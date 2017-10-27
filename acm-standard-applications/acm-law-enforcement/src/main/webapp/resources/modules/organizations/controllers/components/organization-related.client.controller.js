@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('organizations').controller('Organizations.RelatedController', ['$rootScope', '$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
     , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
-    , function ($scope, $q, $stateParams, $translate, $modal
+    , function ($rootScope, $scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
         , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
 
@@ -218,7 +218,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 _.remove($scope.gridOptions.data, function (row) {
                     return row === rowEntity;
                 });
-                $scope.$emit('report-object-refreshed', $stateParams.id);
+                
                 //refresh grid after 2.5 sec because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {
@@ -233,5 +233,9 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
             gridHelper.showObject(targetType, targetId);
         };
+
+        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        });
     }
 ]);
