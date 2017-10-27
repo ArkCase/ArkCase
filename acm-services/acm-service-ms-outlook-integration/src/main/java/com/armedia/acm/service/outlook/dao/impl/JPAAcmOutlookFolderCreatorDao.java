@@ -1,17 +1,8 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.crypto.AcmCryptoUtils;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
-import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
-import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
-import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
-import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
-
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -20,9 +11,18 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.TypedQuery;
 
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Set;
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.AcmCryptoUtils;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDaoException;
+import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
+import com.armedia.acm.service.outlook.model.AcmOutlookObjectReference;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 8, 2017
@@ -61,7 +61,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             return query.getSingleResult();
-        } catch (PersistenceException e)
+        }
+        catch (PersistenceException e)
         {
             log.warn("Error while retrieving 'AcmOutlookObjectReference' instance for objectId [{}] and objectType [{}].", objectId,
                     objectType, e);
@@ -98,9 +99,11 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             {
                 log.debug("Outlook folder creator for system email address [{}] retrieved.", systemEmailAddress);
                 AcmOutlookFolderCreator outlookFolderCreator = resultList.get(0);
+                em.detach(outlookFolderCreator);
                 outlookFolderCreator.setSystemPassword(decryptValue(outlookFolderCreator.getSystemPassword()));
                 return outlookFolderCreator;
-            } else
+            }
+            else
             {
                 log.debug("Retrieving outlook folder creator for system email address [{}] does not exist, creating one.",
                         systemEmailAddress);
@@ -113,7 +116,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
                 return outlookFolderCreator;
             }
 
-        } catch (AcmEncryptionException | PersistenceException e)
+        }
+        catch (AcmEncryptionException | PersistenceException e)
         {
             log.warn("Error while retrieving 'AcmOutlookFolderCreator' instance for user with [{}] system email address.",
                     systemEmailAddress, e);
@@ -145,7 +149,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             return query.getSingleResult();
-        } catch (NoResultException | NonUniqueResultException e)
+        }
+        catch (NoResultException | NonUniqueResultException e)
         {
             throw new AcmOutlookFolderCreatorDaoException(e);
         }
@@ -173,7 +178,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             em.detach(outlookFolderCreator);
             outlookFolderCreator.setSystemPassword(decryptValue(outlookFolderCreator.getSystemPassword()));
             return outlookFolderCreator;
-        } catch (PersistenceException | AcmEncryptionException e)
+        }
+        catch (PersistenceException | AcmEncryptionException e)
         {
             log.warn(
                     "Error while retrieving 'AcmOutlookFolderCreator' instance associated with the AcmOutlookObjectReference instance with objectId [{}] and objectType [{}].",
@@ -203,7 +209,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         try
         {
             creator.setSystemPassword(encryptValue(creator.getSystemPassword()));
-        } catch (AcmEncryptionException e)
+        }
+        catch (AcmEncryptionException e)
         {
             log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with [{}] system email address.",
                     creator.getSystemEmailAddress(), e);
@@ -255,7 +262,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
 
             em.merge(existing);
 
-        } catch (AcmEncryptionException e)
+        }
+        catch (AcmEncryptionException e)
         {
             log.warn("Error while encrypting password for 'AcmOutlookFolderCreator' instance for user with id [{}]. Cannot update it.",
                     updatedCreator.getId(), e);
@@ -286,7 +294,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
             AcmOutlookFolderCreator retrievedCreator = query.getSingleResult();
 
             return retrievedCreator.getOutlookObjectReferences();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.warn("There is no 'AcmOutlookFolderCreator' instance with id [{}] stored in the database. Cannot update it.",
                     folderCreator.getId(), e);
