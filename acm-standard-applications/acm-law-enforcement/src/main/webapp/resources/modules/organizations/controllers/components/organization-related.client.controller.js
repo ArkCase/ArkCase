@@ -218,6 +218,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 _.remove($scope.gridOptions.data, function (row) {
                     return row === rowEntity;
                 });
+                $scope.$emit('report-object-refreshed', $stateParams.id);
                 //refresh grid after 2.5 sec because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {
