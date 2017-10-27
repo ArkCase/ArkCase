@@ -17,7 +17,7 @@ controller('Dashboard.TeamWorkloadController', ['$scope', 'config', '$translate'
             $scope.$parent.model.description = "";
         }
 
-        ConfigService.getComponentConfig("dashboard", "teamWorkload").then(function (config) {
+        ConfigService.getComponentConfig("dashboard", "teamWorkload").then(function (configuration) {
             DashboardService.queryTeamWorkload({due: config.due}, function (tasksByUser) {
 
                 var chartTitle = '';
