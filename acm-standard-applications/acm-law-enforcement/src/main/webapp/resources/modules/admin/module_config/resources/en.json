@@ -433,7 +433,7 @@
     "workflows.config.grid": {
       "businessProcess": "Business Process",
       "description": "Description",
-      "active": "Actions",
+      "active": "Active",
       "modified": "Modified",
       "creator": "Author"
     },
@@ -473,7 +473,7 @@
       },
       "labels.config": {
         "title": "Label Configuration",
-        "progressMessage": "Updating labels...",
+        "progressMessage": "Updating labels...Please wait",
         "data": {
           "description": "Description",
           "defaultValue": "Default Value",

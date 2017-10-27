@@ -1,472 +1,479 @@
 {
   "admin": {
     "title": "Отслеживание",
-    "security.title": "ru_Security",
-    "security.functionalAccessControl": "ru_Functional Access Control",
-    "security.functionalAccessControl.applicationRole": "ru_Application Role",
-    "security.ldapConfig": "ru_LDAP Configuration",
-    "security.ldapConfig.addNewDirectory": "ru_Add New Directory",
-    "security.ldapConfig.addNewMember": "ru_Add New Member",
-    "security.ldapConfig.addMembers": "ru_Add Members",
-    "security.ldapConfig.addSubgroup": "ru_Add Subgroup",
-    "security.ldapConfig.addExistingMembers": "ru_Add Existing Members",
-    "security.ldapConfig.addLdapSubgroup": "ru_Add LDAP Subgroup",
-    "security.ldapConfig.deleteLdapGroup": "ru_Delete LDAP group",
-    "security.ldapConfig.removeGroup": "ru_Remove Group",
-    "security.ldapConfig.addOrEditSupervisor": "ru_Add/Edit Supervisor",
-    "security.ldapConfig.editMember": "ru_Edit Member",
-    "security.ldapConfig.removeMember": "ru_Remove Member",
-    "security.ldapConfig.table.ldapUrl": "ru_LDAP Url",
-    "security.ldapConfig.table.directoryName": "ru_Directory Name",
+    "security.title": "Безопасность",
+    "security.functionalAccessControl": "Функциональный контроль доступа",
+    "security.functionalAccessControl.applicationRole": "Роль приложения",
+    "security.ldapConfig": "Конфигурация LDAP",
+    "security.ldapConfig.addNewDirectory": "Добавить новый каталог",
+    "security.ldapConfig.addNewMember": "Добавить участника",
+    "security.ldapConfig.addMembers": "Добавить участников",
+    "security.ldapConfig.addSubgroup": "Добавить подгруппу",
+    "security.ldapConfig.addExistingMembers": "Добавить существующих членов",
+    "security.ldapConfig.addLdapSubgroup": "Добавить подгруппу LDAP",
+    "security.ldapConfig.deleteLdapGroup": "Удалить группу LDAP",
+    "security.ldapConfig.removeGroup": "Удалить группу",
+    "security.ldapConfig.addOrEditSupervisor": "Добавить / редактировать супервизор",
+    "security.ldapConfig.editMember": "Редактировать участника",
+    "security.ldapConfig.removeMember": "Удалить участник",
+    "security.ldapConfig.table.ldapUrl": "URL-адрес LDAP",
+    "security.ldapConfig.table.directoryName": "Название каталога",
     "security.ldapConfig.data": {
-      "userAttributesTemplate": "ru_Ldap User Attributes Template",
-      "groupAttributesTemplate": "ru_Ldap Group Attributes Template",
-      "addNewDirectory": "ru_Add New Directory",
-      "editRecord": "ru_Edit Record",
-      "id": "ru_ID",
-      "directoryType": "ru_Select directory server",
-      "ldapUrl": "ru_LDAP Url",
-      "base": "ru_Base",
-      "directoryName": "ru_Directory Name",
-      "authUserDn": "ru_Auth User Dn",
-      "authUserPassword": "ru_Auth User Password",
-      "userSearchBase": "ru_Users Search Base",
-      "userSearchFilter": "ru_User Search Filter",
-      "allUsersFilter": "ru_All Users Filter",
-      "allUsersPageFilter": "ru_All Users Page Filter",
-      "allUsersSortingAttribute": "ru_Sorting attribute for users",
-      "groupSearchBase": "ru_Group Search Base",
-      "groupSearchFilterForUser": "ru_Group Search Filter For User",
-      "userIdAttributeName": "ru_User Id Attribute Name",
-      "userDomain": "ru_User domain",
-      "userDomainNote": "ru_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
-      "syncPageSize": "ru_Sync Page Size",
-      "groupSearchFilter": "ru_Group Search Filter",
-      "groupsSortingAttribute": "ru_Sorting attribute for groups",
-      "groupSearchPageFilter": "ru_Group Search Page Filter",
-      "enableEditingLdapUsers": "ru_Enable managing users and groups",
-      "cancel": "ru_Cancel",
-      "ok": "ru_OK"
+      "userAttributesTemplate": "Шаблон пользовательских атрибутов Ldap",
+      "groupAttributesTemplate": "Шаблон атрибутов группы Ldap",
+      "addNewDirectory": "Добавить новый каталог",
+      "editRecord": "Изменить запись",
+      "id": "ID",
+      "directoryType": "Выбрать сервер каталогов",
+      "ldapUrl": "URL-адрес LDAP",
+      "base": "База",
+      "directoryName": "Название каталога",
+      "authUserDn": "Пользователь Auth Dn",
+      "authUserPassword": "Пароль пользователя Auth",
+      "userSearchBase": "База поиска пользователей",
+      "userSearchFilter": "Фильтр пользовательского поиска",
+      "allUsersFilter": "Фильтр всех пользователей",
+      "allChangedUsersFilter": "Все измененные фильтры пользователей",
+      "allUsersPageFilter": "Фильтр всех пользователей",
+      "allChangedUsersPageFilter": "Фильтр всех измененных пользователей",
+      "allUsersSortingAttribute": "Атрибут сортировки для пользователей",
+      "groupSearchBase": "База поиска в группе",
+      "groupSearchFilterForUser": "Фильтр группового поиска для пользователя",
+      "userIdAttributeName": "Идентификатор имени идентификатора пользователя",
+      "userDomain": "Пользовательский домен",
+      "userDomainNote": "(Примечание: заполните домен пользователя для сценария SSO. Для аутентификации LDAP оставьте его пустым)",
+      "syncPageSize": "Размер страницы синхронизации",
+      "groupSearchFilter": "Фильтр группового поиска",
+      "changedGroupSearchFilter": "Измененный фильтр группового поиска",
+      "groupsSortingAttribute": "Атрибут сортировки для групп",
+      "groupSearchPageFilter": "Фильтр страницы группы",
+      "changedGroupSearchPageFilter": "Измененный фильтр группы поиска",
+      "enableEditingLdapUsers": "Включить управление пользователями и группами",
+      "syncEnabled": "Включить синхронизацию пользователей",
+      "cancel": "Отмена",
+      "ok": "ОК"
     },
     "menus": {
-      "leftnav.item": "Отслеживание"
+      "leftnav.item": "Администратор"
     },
     "security.ldapConfig.data.placeholders": {
-      "id": "ru_Enter directory name",
-      "ldapUrl": "ru_Enter connection URL",
-      "base": "ru_Enter base domain component (e.g. dc=example,dc=com)",
-      "authUserDn": "ru_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
-      "authUserPassword": "ru_Enter password for authentication user",
-      "userSearchBase": "ru_Enter users search base (e.g. ou=users)",
-      "userSearchFilter": "ru_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
-      "allUsersFilter": "ru_Enter search filter for all users (e.g. (objectClass=person))",
-      "allUsersPageFilter": "ru_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
-      "allUsersSortingAttribute": "ru_Enter sorting attribute for users (e.g. 'uidNumber')",
-      "groupSearchBase": "ru_Enter search base for groups (e.g. ou=groups)",
-      "groupSearchFilterForUser": "ru_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
-      "userIdAttributeName": "ru_Enter attribute used for user id (e.g. 'uid')",
-      "userDomain": "ru_Enter user domain",
-      "syncPageSize": "ru_Enter paging size",
-      "groupSearchFilter": "ru_Enter search filter for groups (e.g. (objectClass=group))",
-      "groupsSortingAttribute": "ru_Enter attribute for sorting groups (e.g. 'gidNumber')",
-      "groupSearchPageFilter": "ru_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-      "enableEditingLdapUsers": "ru_Check if managing users and groups to your DS is allowed"
+      "id": "Введите имя каталога",
+      "ldapUrl": "Введите URL соединения",
+      "base": "Введите компонент базового домена (например, dc = example, dc = com)",
+      "authUserDn": "Введите DN пользователя для аутентификации (например, cn = John Doe, ou = users, dc = example, dc = com)",
+      "authUserPassword": "Введите пароль для пользователя аутентификации",
+      "userSearchBase": "Введите базу поиска пользователей (например, ou = users)",
+      "userSearchFilter": "Введите поисковый фильтр для одного пользователя (например, (& (objectClass = person) (uid =% s))",
+      "allUsersFilter": "Введите фильтр поиска для всех пользователей (например, (objectClass = person))",
+      "allUsersPageFilter": "Введите фильтр, включая атрибут sort (например, (& (objectClass = person) (uidNumber> =% s)))",
+      "allUsersSortingAttribute": "Введите атрибут сортировки для пользователей (например, «uidNumber»)",
+      "groupSearchBase": "Введите базу поиска для групп (например, ou = groups)",
+      "groupSearchFilterForUser": "Введите поисковый фильтр для пользователя в группе (например, (& (objectClass = group) (member =% s)))",
+      "userIdAttributeName": "Введите атрибут, используемый для идентификатора пользователя (например, «uid»)",
+      "userDomain": "Введите домен пользователя",
+      "syncPageSize": "Введите размер подкачки",
+      "groupSearchFilter": "Введите поисковый фильтр для групп (например, (objectClass = group))",
+      "groupsSortingAttribute": "Введите атрибут для групп сортировки (например, «gidNumber»)",
+      "groupSearchPageFilter": "Введите фильтр, включая атрибут sort (например, (& (objectClass = group) (gidNumber> =% s)))",
+      "enableEditingLdapUsers": "Проверьте, разрешено ли управлять пользователями и группами на вашем DS"
     },
     "security.ldapConfig.messages": {
-      "delete.success": "ru_Successfully deleted row.",
-      "delete.error": "ru_Error deleting row.",
-      "insert.success": "ru_Successfully inserted new row.",
-      "insert.error": "ru_Error inserting new row.",
-      "update.success": "ru_Successfully updated row.",
-      "update.error": "ru_Error updating row.",
-      "insert.template.success": "ru_Successfully created template",
-      "insert.template.error": "ru_Error creating the template"
+      "delete.success": "Удаленная строка.",
+      "delete.error": "Ошибка удаления строки.",
+      "insert.success": "Успешно вставил новую строку.",
+      "insert.error": "Ошибка ввода новой строки.",
+      "update.success": "Успешно обновленная строка.",
+      "update.error": "Ошибка обновления строки.",
+      "insert.template.success": "Успешно созданный шаблон",
+      "insert.template.error": "Ошибка при создании шаблона"
     },
     "security.ldapConfig.dialog": {
-      "cancel": "ru_Cancel",
-      "ok": "ru_OK",
+      "cancel": "Отмена",
+      "ok": "ОК",
       "confirm.delete": {
-        "deleteBtn": "ru_Delete",
-        "cancelBtn": "ru_Cancel",
-        "headerText": "ru_Are you sure?",
-        "bodyText": "ru_This record will be deleted. Are you sure?"
+        "deleteBtn": "Удалить",
+        "cancelBtn": "Отмена",
+        "headerText": "Ты уверен?",
+        "bodyText": "Эта запись будет удалена. Ты уверен?"
       }
     },
-    "admin.security.addNew": "ru_Add New Directory",
+    "admin.security.addNew": "Добавить новый каталог",
     "security.organizationalHierarchy": {
-      "title": "ru_Organizational Hierarchy",
+      "title": "Организационная иерархия",
       "btn": {
-        "createAdHocGroup": "ru_createAdHocGroup"
+        "createAdHocGroup": "CreateAdHocGroup"
       },
       "createGroupDialog": {
         "ldapGroup": {
-          "title": "ru_Add LDAP Group"
+          "title": "Добавить группу LDAP"
         },
         "adHocGroup": {
-          "title": "ru_Add Ad-Hoc Group"
+          "title": "Добавить Ad-Hoc Group"
         },
-        "selectDirectory": "ru_--Choose Directory Config--",
-        "disabledGroupWarning": "ru_Adding new LDAP groups is not allowed for this directory!",
-        "name": "ru_Name",
-        "namePlaceholder": "ru_Enter group name",
-        "description": "ru_Description",
-        "descriptionPlaceholder": "ru_Enter Description",
+        "selectDirectory": "--Выберите конфигурацию каталога -",
+        "disabledGroupWarning": "Добавление новых групп LDAP не разрешено для этого каталога!",
+        "name": "Имя",
+        "namePlaceholder": "Введите имя группы",
+        "description": "Описание",
+        "descriptionPlaceholder": "Введите описание",
         "btn": {
-          "ok": "ru_Add Group",
-          "cancel": "ru_Cancel"
+          "ok": "Добавить группу",
+          "cancel": "Отмена"
         }
       },
       "addSubGroupDialog": {
-        "title": "ru_Add Subgroup to",
-        "name": "ru_Name",
-        "namePlaceholder": "ru_Enter group name",
-        "description": "ru_Description",
-        "descriptionPlaceholder": "ru_Enter Description",
+        "title": "Добавить подгруппу в",
+        "name": "Имя",
+        "namePlaceholder": "Введите имя группы",
+        "description": "Описание",
+        "descriptionPlaceholder": "Введите описание",
         "btn": {
-          "ok": "ru_Add Ad-Hoc Group",
-          "cancel": "ru_Cancel"
+          "ok": "Добавить Ad-Hoc Group",
+          "cancel": "Отмена"
         }
       },
       "addMembers": {
-        "title": "ru_Add Members",
+        "title": "Добавить участников",
         "btn": {
-          "search": "ru_Go!",
-          "cancel": "ru_Cancel",
-          "ok": "ru_Add",
-          "searchPlaceholder": "ru_Enter to search for members."
+          "search": "Идти!",
+          "cancel": "Отмена",
+          "ok": "Добавить",
+          "searchPlaceholder": "Введите для поиска участников."
         }
       },
       "createUserDialog": {
         "addLdapMember": {
-          "title": "ru_Add Ldap Member",
+          "title": "Добавить участника Ldap",
           "btn": {
-            "cancel": "ru_Cancel",
-            "ok": "ru_Add Ldap User"
+            "cancel": "Отмена",
+            "ok": "Добавить пользователя Ldap"
           },
-          "username": "ru_Enter username",
-          "firstName": "ru_Enter first name",
-          "lastName": "ru_Enter last name",
-          "email": "ru_Enter email",
-          "password": "ru_Enter password",
+          "username": "Введите имя пользователя",
+          "firstName": "Введите имя",
+          "lastName": "Введите фамилию",
+          "email": "Введите адрес электронной почты",
+          "password": "Введите пароль",
           "confirmation": "ru_Enter your password again",
-          "minLengthForPassword": "ru_7",
-          "passwordRuleText": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7",
+          "passwordRuleText": "Введите пароль, который не совпадает с именем пользователя, содержащим 7 символов с комбинацией по крайней мере одного специального символа, числа, прописных и строчных букв."
         },
         "editLdapMember": {
-          "title": "ru_Edit Ldap Member",
+          "title": "Изменить участника Ldap",
           "btn": {
-            "cancel": "ru_Cancel",
-            "ok": "ru_Edit Ldap User"
+            "cancel": "Отмена",
+            "ok": "Изменить пользователя Ldap"
           }
         },
-        "username": "ru_UserName",
-        "firstName": "ru_FirstName",
-        "lastName": "ru_LastName",
-        "email": "ru_Email",
-        "password": "ru_Password",
+        "username": "UserName",
+        "firstName": "Имя",
+        "lastName": "Фамилия",
+        "email": "Эл. адрес",
+        "password": "Пароль",
         "confirmation": "ru_Confirm Password"
       },
       "addMembersGridColumns": {
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "parent": "ru_Parent",
-        "assignee": "ru_Assignee",
-        "modified": "ru_Modified"
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "parent": "Родитель",
+        "assignee": "Правопреемник",
+        "modified": "Модифицированный"
       },
       "addSupervisor": {
-        "title": "ru_Add Supervisor",
+        "title": "Добавить супервизора",
         "btn": {
-          "search": "ru_Go!",
-          "cancel": "ru_Cancel",
-          "ok": "ru_Add",
-          "searchPlaceholder": "ru_Enter to search for supervisor."
+          "search": "Идти!",
+          "cancel": "Отмена",
+          "ok": "Добавить",
+          "searchPlaceholder": "Войдите в поиск супервизора."
         }
       },
       "addSupervisorGridColumns": {
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "parent": "ru_Parent",
-        "assignee": "ru_Assignee",
-        "modified": "ru_Modified"
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "parent": "Родитель",
+        "assignee": "Правопреемник",
+        "modified": "Модифицированный"
       },
       "dialog.group": {
         "confirm.delete": {
-          "cancelBtn": "ru_Cancel",
-          "deleteBtn": "ru_Delete",
-          "headerText": "ru_You are about to delete group: ",
-          "bodyText": "ru_Are you sure?"
+          "cancelBtn": "Отмена",
+          "deleteBtn": "Удалить",
+          "headerText": "Вы собираетесь удалить группу:",
+          "bodyText": "Ты уверен?"
         }
       },
       "dialog.member": {
         "confirm.delete": {
-          "cancelBtn": "ru_Cancel",
-          "deleteBtn": "ru_Delete",
-          "headerText": "ru_You are about to delete member: ",
-          "bodyText": "ru_Are you sure?"
+          "cancelBtn": "Отмена",
+          "deleteBtn": "Удалить",
+          "headerText": "Вы собираетесь удалить участника:",
+          "bodyText": "Ты уверен?"
         }
       },
       "messages": {
         "delete": {
           "group": {
-            "success": "ru_success",
-            "error": "ru_error"
+            "success": "Успех",
+            "error": "Ошибка"
           },
           "member": {
-            "success": "ru_success",
-            "error": "ru_error"
+            "success": "Успех",
+            "error": "Ошибка"
           }
         }
       }
     },
-    "security.selectPrivileges": "ru_Create Role/Select Privileges",
-    "security.selectPrivileges.applicationRole": "ru_Application Role",
-    "security.selectPrivileges.createRole": "ru_Create Role",
-    "security.selectPrivileges.editRole": "ru_Edit Role",
-    "security.selectPrivileges.applyChanges": "ru_Apply Changes",
-    "security.selectPrivileges.enterRoleName": "ru_Enter the role name in the box below.",
-    "security.selectPrivileges.cancel": "ru_Cancel",
-    "security.selectPrivileges.name": "ru_Name",
-    "security.modules": "ru_Modules",
-    "security.modules.module": "ru_Module",
+    "security.selectPrivileges": "Создание роли / выбора привилегий",
+    "security.selectPrivileges.applicationRole": "Роль приложения",
+    "security.selectPrivileges.createRole": "Создать роль",
+    "security.selectPrivileges.editRole": "Изменить роль",
+    "security.selectPrivileges.applyChanges": "Применить изменения",
+    "security.selectPrivileges.enterRoleName": "Введите имя роли в поле ниже.",
+    "security.selectPrivileges.cancel": "Отмена",
+    "security.selectPrivileges.name": "Имя",
+    "security.modules": "Модули",
+    "security.modules.module": "Модуль",
     "security.ldap.user.management": {
-      "title": "ru_LDAP User Management",
-      "cloneButton": "ru_Clone User",
-      "user": "ru_User"
+      "title": "Управление пользователями LDAP",
+      "cloneButton": "Пользователь Clone",
+      "deleteUserBtn": "Удалить пользователя",
+      "deleteUserMsg": "Вы уверены, что хотите удалить этого пользователя?",
+      "user": "Пользователь"
     },
     "security.calendarConfiguration": {
-      "title": "ru_Calendar Configuration",
+      "title": "Настройка календаря",
       "calendarConfigForm": {
-        "email.placeholder": "ru_Enter System Email Address",
-        "password.placeholder": "ru_Enter System Password",
-        "purge.placeholder": "ru_Choose Purge Option",
-        "purgeDays.placeholder": "ru_Enter Days",
-        "save.button": "ru_Save",
-        "validate.button": "ru_Validate",
-        "purge.label": "ru_Purge",
-        "email.label": "ru_System Email Address",
-        "password.label": "ru_System Password",
-        "purgeDays.label": "ru_Days",
-        "emailValid": "ru_System Email Address is valid",
-        "emailNotValid": "ru_System Email Address is not valid",
-        "enableCalendarIntegration.checkbox": "ru_Enable Calendar Integration",
+        "email.placeholder": "Введите системный адрес электронной почты",
+        "password.placeholder": "Введите системный пароль",
+        "purge.placeholder": "Выберите опцию Purge",
+        "purgeDays.placeholder": "Введите дни",
+        "save.button": "Сохранить",
+        "validate.button": "Утверждать",
+        "purge.label": "Чистка",
+        "email.label": "Адрес электронной почты системы",
+        "password.label": "Системный пароль",
+        "purgeDays.label": "Дней",
+        "emailValid": "Системный адрес электронной почты действителен",
+        "emailNotValid": "Недействительный адрес электронной почты системы",
+        "enableCalendarIntegration.checkbox": "Включить интеграцию с календарем",
         "purgeOptions": {
-          "retainIndefinitely": "ru_Retain Indefinitely",
-          "objectClosed": "ru_Object = 'Closed'",
-          "objectClosedXDays": "ru_Object = 'Closed' + X Days"
+          "retainIndefinitely": "Сохранять неопределенно",
+          "objectClosed": "Объект = 'Закрыто'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
         },
         "configurableObjectTypes": {
-          "cases.label": "ru_Cases",
-          "complaints.label": "ru_Complaints",
-          "tasks.label": "ru_Tasks"
+          "cases.label": "Случаи",
+          "complaints.label": "Жалобы",
+          "tasks.label": "Задания"
         }
       }
     },
     "security.calendarCredentialsConfiguration": {
-      "title": "ru_Calendar Credentials Configuration",
+      "title": "Конфигурация учетных данных календаря",
       "accountConfigForm": {
-        "account": "ru_System Email Address",
-        "password": "ru_System Password",
-        "password.placeholder": "ru_System Password",
-        "save.button": "ru_Save",
-        "validate.button": "ru_Validate"
+        "account": "Адрес электронной почты системы",
+        "password": "Системный пароль",
+        "password.placeholder": "Системный пароль",
+        "save.button": "Сохранить",
+        "validate.button": "Утверждать"
       },
       "modal": {
-        "title": "ru_Outlook folder override",
-        "message": "ru_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
-        "confirm.button": "ru_Confirm",
-        "cancel.button": "ru_Cancel"
+        "title": "Перенаправление папки Outlook",
+        "message": "Вы изменили свою учетную запись электронной почты системы. Связанные папки Outlook будут переопределены новыми. Пожалуйста, подтвердите свое действие.",
+        "confirm.button": "Подтвердить",
+        "cancel.button": "Отмена"
       },
       "message": {
-        "credentials.valid": "ru_Credentials are valid",
-        "credentials.invalid": "ru_Credentials are not valid",
-        "credentials.error": "ru_An error has occurred while checking the credentials",
-        "save.successful": "ru_Outlook folder creator saved successfully",
-        "save.fail": "ru_Outlook folder creator not saved"
+        "credentials.valid": "Учетные данные действительны",
+        "credentials.invalid": "Учетные данные недействительны",
+        "credentials.error": "При проверке учетных данных произошла ошибка",
+        "save.successful": "Создатель папки Outlook успешно сохранен",
+        "save.fail": "Создатель папки Outlook не сохранен"
       }
     },
     "security.emailConfiguration": {
-      "title": "ru_Document Delivery Policy",
+      "title": "Политика доставки документов",
       "emailConfigForm": {
-        "save.button": "ru_Save",
-        "deliveryMethods.label": "ru_Delivery Methods",
-        "enableDocumentEmail.checkbox": "ru_Documents can be emailed",
-        "enableDocumentAttach.checkbox": "ru_Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "ru_Documents can be sent as hyperlinks",
-        "serverSettings.label": "ru_Server Settings",
-        "serverType.label": "ru_Server Type",
-        "serverType.placeholder": "ru_Choose Email Server Type",
+        "save.button": "Сохранить",
+        "deliveryMethods.label": "Способы доставки",
+        "enableDocumentEmail.checkbox": "Документы можно отправить по электронной почте",
+        "enableDocumentAttach.checkbox": "Документы могут быть прикреплены к электронным письмам",
+        "enableDocumentHyperlink.checkbox": "Документы могут быть отправлены в виде гиперссылок",
+        "serverSettings.label": "Настройки сервера",
+        "serverType.label": "Тип сервера",
+        "serverType.placeholder": "Выберите тип почтового сервера",
         "serverTypeOptions": {
-          "smtp": "ru_SMTP",
-          "outlook": "ru_Microsoft Exchange"
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
         },
-        "serverType.configuredExchange.label": "ru_For details refer to Microsoft Exchange Configuration",
-        "server.label": "ru_Server Address",
-        "server.placeholder": "ru_Enter Server Address",
-        "port.label": "ru_Port",
-        "port.placeholder": "ru_Enter Port",
-        "encryption.label": "ru_Encryption",
-        "encryption.placeholder": "ru_Choose Encryption",
+        "serverType.configuredExchange.label": "Подробнее см. Конфигурация Microsoft Exchange",
+        "server.label": "Адрес сервера",
+        "server.placeholder": "Введите адрес сервера",
+        "port.label": "Порт",
+        "port.placeholder": "Введите порт",
+        "encryption.label": "Шифрование",
+        "encryption.placeholder": "Выберите Шифрование",
         "encryptionOptions": {
-          "off": "ru_OFF",
-          "ssl-tls": "ru_SSL/TLS",
-          "starttls": "ru_STARTTLS"
+          "off": "Выключить",
+          "ssl-tls": "SSL / TLS",
+          "starttls": "STARTTLS"
         },
-        "username.label": "ru_Username",
-        "username.placeholder": "ru_Enter Username",
-        "password.label": "ru_Password",
-        "password.placeholder": "ru_Enter Password",
-        "userFrom.label": "ru_From",
-        "userFrom.placeholder": "ru_Enter Email From field",
-        "validate.label": "ru_SMTP Validation",
-        "validate.button": "ru_Validate",
-        "smtpValid": "ru_SMTP settings are valid",
-        "smtpNotValid": "ru_SMTP settings are not valid"
+        "username.label": "Имя пользователя",
+        "username.placeholder": "Введите имя пользователя",
+        "password.label": "Пароль",
+        "password.placeholder": "Введите пароль",
+        "userFrom.label": "Из",
+        "userFrom.placeholder": "Введите адрес электронной почты из поля",
+        "validate.label": "Проверка SMTP",
+        "validate.button": "Утверждать",
+        "smtpValid": "Настройки SMTP действительны",
+        "smtpNotValid": "Недействительные настройки SMTP"
       }
     },
     "security.emailTemplates": {
-      "title": "ru_Email Templates",
+      "title": "Шаблоны для электронной почты",
       "table.columns": {
-        "templateName": "ru_Template Name",
-        "emailPattern": "ru_Email Pattern",
-        "source": "ru_Source",
-        "objectTypes": "ru_Object Types",
-        "actions": "ru_Actions",
-        "modified": "ru_Modified Date",
-        "modifier": "ru_Modified By"
+        "templateName": "Имя Шаблона",
+        "emailPattern": "Шаблон электронной почты",
+        "source": "Источник",
+        "objectTypes": "Типы объектов",
+        "actions": "Действия",
+        "modified": "Измененная дата",
+        "modifier": "Модифицирован"
       },
       "modal": {
-        "title": "ru_Email Template",
-        "templateName.label": "ru_Template Name",
-        "templateName.placeholder": "ru_Enter Template Name",
-        "emailPattern.label": "ru_Email Pattern",
-        "emailPattern.placeholder": "ru_Enter Email Pattern",
-        "source.label": "ru_Source",
-        "objectTypes.label": "ru_Object Types",
-        "actions.label": "ru_Actions",
-        "manual.label": "ru_Manual",
-        "automated.label": "ru_Automated",
-        "browse": "ru_Browse",
-        "save": "ru_Save",
-        "cancel": "ru_Cancel"
+        "title": "Шаблон электронной почты",
+        "templateName.label": "Имя Шаблона",
+        "templateName.placeholder": "Введите имя шаблона",
+        "emailPattern.label": "Шаблон электронной почты",
+        "emailPattern.placeholder": "Введите шаблон электронной почты",
+        "source.label": "Источник",
+        "objectTypes.label": "Типы объектов",
+        "actions.label": "Действия",
+        "manual.label": "Руководство",
+        "automated.label": "Автоматизированный",
+        "browse": "Просматривать",
+        "save": "Сохранить",
+        "cancel": "Отмена"
       }
     },
     "security.exchangeConfiguration": {
-      "title": "ru_Microsoft Exchange Configuration",
+      "title": "Конфигурация Microsoft Exchange",
       "exchangeConfigForm": {
-        "save.button": "ru_Save",
-        "enableExchangeIntegration.checkbox": "ru_Enable Microsoft Exchange Integration",
-        "exchangeServerVersion.label": "ru_Exchange Server Version",
-        "exchangeServerVersion.placeholder": "ru_Choose Server Version",
+        "save.button": "Сохранить",
+        "enableExchangeIntegration.checkbox": "Включить интеграцию Microsoft Exchange",
+        "exchangeServerVersion.label": "Версия сервера Exchange",
+        "exchangeServerVersion.placeholder": "Выберите версию сервера",
         "exchangeServerVersionOptions": {
-          "Exchange2007": "ru_Exchange2007",
-          "Exchange2007_SP1": "ru_Exchange2007_SP1",
-          "Exchange2010": "ru_Exchange2010",
-          "Exchange2010_SP1": "ru_Exchange2010_SP1",
-          "Exchange2010_SP2": "ru_Exchange2010_SP2",
-          "Exchange2013": "ru_Exchange2013",
-          "Exchange2013_SP1": "ru_Exchange2013_SP1"
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
         },
-        "enableAutodiscovery.checkbox": "ru_Enable Autodiscovery",
-        "clientAccessServer.label": "ru_Client Access Server",
-        "clientAccessServer.description": "ru_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
-        "clientAccessServer.placeholder": "ru_Enter Client Access Server",
-        "exchangeDefaultAccess.label": "ru_Exchange Default Access",
-        "exchangeDefaultAccess.placeholder": "ru_Choose Exchange Default Access",
+        "enableAutodiscovery.checkbox": "Включить автообнаружение",
+        "clientAccessServer.label": "Сервер клиентского доступа",
+        "clientAccessServer.description": "Перед изменением уровня доступа по умолчанию посетите страницу: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ для получения дополнительной информации.",
+        "clientAccessServer.placeholder": "Введите сервер клиентского доступа",
+        "exchangeDefaultAccess.label": "Обменный доступ по умолчанию",
+        "exchangeDefaultAccess.placeholder": "Выберите Exchange Default Access",
         "exchangeDefaultAccessOptions": {
-          "None": "ru_None",
-          "Owner": "ru_Owner",
-          "PublishingEditor": "ru_PublishingEditor",
-          "Editor": "ru_Editor",
-          "PublishingAuthor": "ru_PublishingAuthor",
-          "Author": "ru_Author",
-          "NoneditingAuthor": "ru_NoneditingAuthor",
-          "Reviewer": "ru_Reviewer",
-          "Contributor": "ru_Contributor",
-          "FreeBusyTimeOnly": "ru_FreeBusyTimeOnly",
-          "FreeBusyTimeAndSubjectAndLocation": "ru_FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "ru_Custom"
+          "None": "Никто",
+          "Owner": "Владелец",
+          "PublishingEditor": "PublishingEditor",
+          "Editor": "Редактор",
+          "PublishingAuthor": "PublishingAuthor",
+          "Author": "Автор",
+          "NoneditingAuthor": "NoneditingAuthor",
+          "Reviewer": "Рецензент",
+          "Contributor": "Участник",
+          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "Изготовленный на заказ"
         }
       }
     },
-    "dashboard.title": "ru_Dashboard",
-    "dashboard.config": "ru_Dashboard Configuration",
-    "dashboard.widgets": "ru_Widgets",
+    "dashboard.title": "Панель приборов",
+    "dashboard.config": "Конфигурация панели мониторинга",
+    "dashboard.widgets": "Виджеты",
     "reports": {
-      "title": "ru_Reports",
-      "config": "ru_Reports Configuration",
+      "title": "Отчеты",
+      "config": "Конфигурация отчетов",
       "btn": {
-        "reportDesigner": "ru_Report Designer",
-        "sync": "ru_Synchronise"
+        "reportDesigner": "Дизайнер отчетов",
+        "sync": "Синхронизировать"
       }
     },
-    "forms.title": "ru_Forms",
-    "forms.config": "ru_Form Configuration",
-    "workflows.title": "ru_Workflows",
-    "workflows.config": "ru_Workflow Configuration",
-    "workflows.config.bpmn.upload": "ru_Upload",
-    "workflows.config.bpmn.addNewWorkflow": "ru_Upload Workflow",
+    "forms.title": "Формы",
+    "forms.config": "Конфигурация формы",
+    "workflows.title": "Workflows",
+    "workflows.config": "Конфигурация рабочего процесса",
+    "workflows.config.bpmn.upload": "Загрузить",
+    "workflows.config.bpmn.addNewWorkflow": "Загрузить рабочий процесс",
     "workflows.config.bpmn.modal": {
-      "label.description": "ru_Description",
-      "label.noFileSelected": "ru_No File Selected",
-      "btnCancel.text": "ru_Cancel",
-      "btnOk.text": "ru_Upload Workflow"
+      "label.description": "Описание",
+      "label.noFileSelected": "Файл не выбран",
+      "btnCancel.text": "Отмена",
+      "btnOk.text": "Загрузить рабочий процесс"
     },
     "workflows.config.activate": {
-      "error": "ru_Cant make this process active!",
-      "success": "ru_Process succesfully activated."
+      "error": "Не могу сделать этот процесс активным!",
+      "success": "Процесс успешно активирован."
     },
     "workflows.config.showHistory.dialog": {
-      "title": "ru_History",
-      "body": "ru_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
-      "cancel": "ru_Cancel",
-      "activate": "ru_Make Active"
+      "title": "История",
+      "body": "Ниже приведена история предыдущих файлов BPMN. Чтобы восстановить предыдущий рабочий процесс, выберите рабочий процесс и нажмите «Сделать активным».",
+      "cancel": "Отмена",
+      "activate": "Сделать активным"
     },
     "workflows.config.grid": {
-      "businessProcess": "ru_Business Process",
-      "description": "ru_Description",
-      "active": "ru_Active",
-      "modified": "ru_Modified",
-      "creator": "ru_Author"
+      "businessProcess": "Бизнес-процесс",
+      "description": "Описание",
+      "active": "Активный",
+      "modified": "Модифицированный",
+      "creator": "Автор"
     },
     "workflows.config.btn": {
-      "createNew": "ru_Create New Model",
+      "createNew": "Создать новую модель",
       "createNewUrl": "https://activiti.alfresco.com",
-      "uploadNew": "ru_Upload New BPMN"
+      "uploadNew": "Загрузить новый BPMN"
     },
     "workflows.config.links": {
-      "download": "ru_Download",
-      "replaceFile": "ru_Replace File",
-      "versionHistory": "ru_Version History",
-      "diagram": "ru_Process Diagram"
+      "download": "Скачать",
+      "replaceFile": "Заменить файл",
+      "versionHistory": "История версий",
+      "diagram": "Технологическая схема"
     },
     "workflows.config.upload": {
-      "success": "ru_Successfully uploaded new process definition",
-      "error": "ru_Error uploading new process definition"
+      "success": "Успешно загружено новое определение процесса",
+      "error": "Ошибка при загрузке нового определения процесса"
     },
     "workflows.config.diagram": {
-      "title": "ru_Process Diagram",
-      "error.loading": "ru_Diagram can't be loaded",
+      "title": "Технологическая схема",
+      "error.loading": "Диаграмма не может быть загружена",
       "modal": {
-        "btnClose.text": "ru_Close"
+        "btnClose.text": "Закрыть"
       }
     },
-    "formWorkflows.title": "ru_Form/Workflow Link",
-    "formWorkflows.link": "ru_Link Forms/Workflows",
-    "formWorkflows.link.undo": "ru_Undo",
-    "formWorkflows.link.saveChanges": "ru_Save Changes",
-    "formWorkflows.link.editRole.save.success": "ru_Link Forms/Workflows configuration saved successfully",
-    "formWorkflows.link.editRole.save.error": "ru_Can't save Link Forms/Workflows configuration",
+    "formWorkflows.title": "Ссылка на форму / рабочий процесс",
+    "formWorkflows.link": "Связывание форм / рабочих процессов",
+    "formWorkflows.link.undo": "Расстегивать",
+    "formWorkflows.link.saveChanges": "Сохранить изменения",
+    "formWorkflows.link.editRole.save.success": "Конфигурация связных форм / рабочих процессов сохранена успешно",
+    "formWorkflows.link.editRole.save.error": "Не удается сохранить конфигурацию Link Forms / Workflows",
     "application": {
-      "title": "Приложение",
+      "title": "Заявка",
       "locale.config": {
         "title": "Конфигурация локали",
-        "defaultLabel": "локали по умолчанию:"
+        "defaultLabel": "Язык по умолчанию:"
       },
       "labels.config": {
-        "title": "Конфигурация метки",
-        "progressMessage": "Обновление меток...",
+        "title": "Конфигурация ярлыков",
+        "progressMessage": "Обновление ярлыков ... Пожалуйста, подождите",
         "data": {
           "description": "Описание",
           "defaultValue": "Значение по умолчанию",
@@ -479,226 +486,286 @@
         },
         "setToDefault": {
           "dialog.title": "Сбросить метки по умолчанию",
-          "chkResetCustom.label": "Очистить индивидуальные метки?",
-          "btnCancel.label": "Отменить",
-          "btnCancel.title": "Закройте диалог без каких-либо действий",
+          "chkResetCustom.label": "Также можно настроить индивидуальные ярлыки?",
+          "btnCancel.label": "Отмена",
+          "btnCancel.title": "Закройте диалоговое окно без каких-либо действий.",
           "btnReset.label": "Сброс",
-          "btnReset.title": "Очистить индивидуальные метки и сбросить их до значений по умолчанию",
+          "btnReset.title": "Очистить настроенные ярлыки и сбросить их до значений по умолчанию",
           "btnRefresh.label": "Сброс",
-          "btnRefresh.title": "Сбросить метки до значений по умолчанию, но не менять индивидуальные метки",
+          "btnRefresh.title": "Сбросьте метки до значений по умолчанию, но не изменяйте индивидуальные метки",
           "resetCustom.confirm": "Вы действительно хотите удалить выбранные пользовательские ресурсы?"
         }
       },
+      "lookups.config": {
+        "title": "Конфигурация поиска",
+        "choose": "Выберите Поиск",
+        "data": {
+          "key": "Ключ",
+          "value": "Значение",
+          "inverseKey": "Обратный ключ",
+          "inverseValue": "Обратное значение"
+        },
+        "modal": {
+          "title": "Поиск метки",
+          "editEntry": "Изменить запись",
+          "addEntry": "Добавить запись",
+          "key.placeholder": "Введите ключ ввода",
+          "value.placeholder": "Введите значение записи в качестве метки",
+          "inversekey.placeholder": "Введите вводный обратный ключ",
+          "inversevalue.placeholder": "Введите вводное обратное значение в виде метки",
+          "btnCancel.text": "Отмена",
+          "btnOk.text": "Сохранить запись"
+        }
+      },
       "module.config": {
-        "title": "ru_Module Configuration"
+        "title": "Конфигурация модуля"
       },
       "userName.config": {
-        "title": "ru_Username Display Configuration",
-        "userId.label": "ru_Use User Identifier",
-        "userName.label": "ru_Use Full Username",
-        "apply": "ru_Apply",
-        "modal.title": "ru_Information",
-        "modal.info": "ru_Settings will take effect after refresh",
-        "modal.ok": "ru_OK"
+        "title": "Конфигурация дисплея пользователя",
+        "userId.label": "Использовать идентификатор пользователя",
+        "userName.label": "Использовать полное имя пользователя",
+        "apply": "Подать заявление",
+        "modal.title": "Информация",
+        "modal.info": "Настройки вступят в силу после обновления",
+        "modal.ok": "ОК"
       },
       "login.config": {
-        "title": "ru_Login Configuration",
-        "idleLimit.label": "ru_Login idle limit (in milliseconds)",
-        "inform": "ru_Settings will take effect for all new user sessions",
-        "apply.label": "ru_Apply"
+        "title": "Конфигурация входа",
+        "idleLimit.label": "Предел простоя входа (в миллисекундах)",
+        "inform": "Настройки вступят в силу для всех новых пользовательских сеансов",
+        "apply.label": "Подать заявление"
       },
       "auditHistory.config": {
-        "title": "ru_Audit History",
-        "historyDays.label": "ru_Keep Audit and Notification events (in days)",
-        "inform": "ru_Setting successfully saved",
-        "apply.label": "ru_Apply"
+        "title": "История аудита",
+        "historyDays.label": "Сохранять события аудита и уведомления (в днях)",
+        "inform": "Установка успешно сохранена",
+        "apply.label": "Подать заявление"
       }
     },
-    "branding.title": "ru_Branding",
-    "branding.logo": "ru_Logo",
+    "branding.title": "Брендинг",
+    "branding.logo": "Логотип",
     "branding.logo.messages": {
-      "upload.success": "ru_Custom logo files updated. Refresh browser page to see result.",
-      "upload.error": "ru_Error uploading custom logo files."
+      "upload.success": "Пользовательские файлы логотипов обновлены. Обновите страницу браузера, чтобы увидеть результат.",
+      "upload.error": "Ошибка загрузки пользовательских файлов логотипа."
     },
-    "branding.logo.header.title": "ru_Header",
-    "branding.logo.login.title": "ru_Login Page",
-    "branding.logo.warningMessage": "ru_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.header.title": "Заголовок",
+    "branding.logo.login.title": "Страница авторизации",
+    "branding.logo.warningMessage": "Допускается только формат PNG. Рекомендуемое соотношение составляет от 1 до 4. Минимальная высота составляет 50 пикселей.",
     "branding.logo.btn": {
-      "chooseHeader": "ru_Choose Header logo",
-      "chooseLogin": "ru_Choose Login logo",
-      "saveFiles": "ru_Save"
+      "chooseHeader": "Выберите логотип заголовка",
+      "chooseLogin": "Выбрать логотип входа",
+      "saveFiles": "Сохранить"
     },
     "branding": {
-      "customCss": "ru_Custom CSS",
-      "customCss.save.success": "ru_Custom CSS updated. Refresh browser page to see result.",
-      "customCss.save.error": "ru_Error saving Custom CSS.",
-      "customCss.save": "ru_Save"
+      "customCss": "Пользовательские CSS",
+      "customCss.save.success": "Пользовательский CSS обновлен. Обновите страницу браузера, чтобы увидеть результат.",
+      "customCss.save.error": "Ошибка при сохранении пользовательского CSS.",
+      "customCss.save": "Сохранить"
     },
     "correspondenceManagement": {
-      "title": "ru_Correspondence Management",
-      "templates": "ru_Correspondence Templates",
-      "templates.addNewTemplate": "ru_Upload Template",
-      "templates.addTemplate": "ru_Upload",
-      "templates.versionTemplate": "ru_Versions",
-      "templates.deleteTemplate": "ru_Delete",
-      "templates.editTemplate": "ru_Edit Template",
+      "title": "Управление перепиской",
+      "templates": "Шаблоны переписки",
+      "templates.addNewTemplate": "Загрузить шаблон",
+      "templates.addTemplate": "Загрузить",
+      "templates.versionTemplate": "Версии",
+      "templates.deleteTemplate": "Удалить",
+      "templates.editTemplate": "Изменить шаблон",
       "templates.grid": {
-        "id": "ru_ID",
-        "title": "ru_Title",
-        "label": "ru_Display Name",
-        "path": "ru_Path",
-        "created": "ru_Created",
-        "modified": "ru_Modified",
-        "creator": "ru_Creator",
-        "modifier": "ru_Modified By",
-        "activated": "ru_Status",
-        "objectType": "ru_Object Type",
-        "version": "ru_Version",
-        "templateVersionActive": "ru_Active"
+        "id": "Я БЫ",
+        "title": "Заглавие",
+        "label": "Отображаемое имя",
+        "path": "Дорожка",
+        "created": "Созданный",
+        "modified": "Модифицированный",
+        "creator": "Творец",
+        "modifier": "Модифицирован",
+        "activated": "Положение дел",
+        "objectType": "Тип объекта",
+        "version": "Версия",
+        "templateVersionActive": "Активный"
       },
-      "templates.fieldNames.label": "ru_Map fields to values from the template",
+      "templates.fieldNames.label": "Поля карты для значений из шаблона",
       "templates.querySelect": {
-        "header.text": "ru_Select Query",
-        "btnCancel.text": "ru_Cancel",
-        "btnOk.text": "ru_Select Query",
+        "header.text": "Выбрать запрос",
+        "btnCancel.text": "Отмена",
+        "btnOk.text": "Выбрать запрос",
         "table.columns": {
-          "beanId": "ru_Bean ID",
-          "jpaQuery": "ru_JPA Query",
-          "objectType": "ru_Query Type"
+          "beanId": "Идентификатор бина",
+          "jpaQuery": "Запрос JPA",
+          "objectType": "Тип запроса"
         }
       },
       "templates.modal": {
-        "objectTypes.label": "ru_Object Types",
-        "querySelect.label": "ru_Query Select",
-        "label.label": "ru_Display Name",
-        "btnCancel.text": "ru_Cancel",
-        "btnOk.text": "ru_Upload Template"
+        "objectTypes.label": "Типы объектов",
+        "querySelect.label": "Выбор запроса",
+        "label.label": "Отображаемое имя",
+        "btnCancel.text": "Отмена",
+        "btnOk.text": "Загрузить шаблон"
       },
       "templates.version.modal": {
-        "btnOk.text": "ru_OK"
+        "btnOk.text": "ОК"
       },
-      "mergefields": "ru_Merge Fields Configuration",
-      "mergefields.saveMergeFields": "ru_Save",
-      "mergefields.versionMergeFields": "ru_Versions",
+      "mergefields": "Слияние полей",
+      "mergefields.saveMergeFields": "Сохранить",
+      "mergefields.versionMergeFields": "Версии",
       "mergefields.grid": {
-        "fieldId": "ru_ID",
-        "fieldValue": "ru_Value",
-        "fieldDescription": "ru_Description"
+        "fieldId": "Я БЫ",
+        "fieldValue": "Стоимость",
+        "fieldDescription": "Описание"
       },
       "mergefields.version.grid": {
-        "mergingVersion": "ru_Version",
-        "modified": "ru_Modified",
-        "modifier": "ru_Modified By",
-        "mergingActiveVersion": "ru_Active"
+        "mergingVersion": "Версия",
+        "modified": "Модифицированный",
+        "modifier": "Модифицирован",
+        "mergingActiveVersion": "Активный"
       },
       "mergefields.version.modal": {
-        "btnLoadVersion.text": "ru_Load Version",
-        "btnCancel.text": "ru_Cancel"
+        "btnLoadVersion.text": "Загрузить версию",
+        "btnCancel.text": "Отмена"
       }
     },
-    "forms.defaultValue": "ru_Select Target",
-    "forms.addForm": "ru_Add Plain Form",
+    "forms.defaultValue": "Выберите цель",
+    "forms.addForm": "Добавить обычную форму",
     "forms.data": {
-      "name": "ru_Form Name",
-      "applicationName": "ru_Application name",
-      "description": "ru_Description",
-      "target": "ru_Target"
+      "name": "Название формы",
+      "applicationName": "Имя приложения",
+      "description": "Описание",
+      "target": "Цель"
     },
-    "forms.message.delete.success": "ru_Successfully deleted row.",
-    "forms.message.delete.error": "ru_Error deleting row.",
+    "forms.message.delete.success": "Удаленная строка.",
+    "forms.message.delete.error": "Ошибка удаления строки.",
     "documentManagement": {
-      "title": "ru_Document Management",
-      "cmisConfiguration": "ru_CMIS Configuration",
-      "cmisConfiguration.addNewConfig": "ru_Add New CMIS Config",
+      "title": "Управление документами",
+      "cmisConfiguration": "Конфигурация CMIS",
+      "cmisConfiguration.addNewConfig": "Добавить новую конфигурацию CMIS",
       "cmisConfiguration.addNewConfig.modal": {
         "header": {
-          "new": "ru_New CMIS Configuration",
-          "edit": "ru_Edit CMIS Configuration"
+          "new": "Новая конфигурация CMIS",
+          "edit": "Изменить конфигурацию CMIS"
         },
         "dialog": {
-          "cancel": "ru_Cancel",
-          "ok": "ru_OK"
+          "cancel": "Отмена",
+          "ok": "ОК"
         },
         "guidelineMessage": {
-          "repositoryId": "ru_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+          "repositoryId": "Для Alfresco: оставить cmis.repositoryId blank. Для Documentum: установите cmis.repositoryId для имени docbase."
         }
       },
       "cmisConfiguration.data": {
         "id": {
-          "label": "ru_CMIS ID",
-          "placeholder": "ru_CMIS ID"
+          "label": "Идентификатор CMIS",
+          "placeholder": "Идентификатор CMIS"
         },
         "baseUrl": {
-          "label": "ru_Base URL",
-          "placeholder": "ru_Base URL"
+          "label": "Базовый URL",
+          "placeholder": "Базовый URL"
         },
         "username": {
-          "label": "ru_Username",
-          "placeholder": "ru_Username"
+          "label": "Имя пользователя",
+          "placeholder": "Имя пользователя"
         },
         "password": {
-          "label": "ru_Password",
-          "placeholder": "ru_Password"
+          "label": "Пароль",
+          "placeholder": "Пароль"
         },
         "useAlfrescoExtension": {
-          "label": "ru_Use Alfresco Extension",
-          "placeholder": "ru_Use Alfresco Extension"
+          "label": "Использовать расширение Alfresco",
+          "placeholder": "Использовать расширение Alfresco"
         },
         "endpoint": {
-          "label": "ru_Endpoint",
-          "placeholder": "ru_Endpoint"
+          "label": "Конечная точка",
+          "placeholder": "Конечная точка"
         },
         "maxIdle": {
-          "label": "ru_Maximum Idle",
-          "placeholder": "ru_Maximum Idle"
+          "label": "Максимальный холостой ход",
+          "placeholder": "Максимальный холостой ход"
         },
         "maxActive": {
-          "label": "ru_Maximum Active",
-          "placeholder": "ru_Maximum Active"
+          "label": "Максимальный активный",
+          "placeholder": "Максимальный активный"
         },
         "maxWait": {
-          "label": "ru_Maximum Wait",
-          "placeholder": "ru_Maximum Wait"
+          "label": "Максимальный срок",
+          "placeholder": "Максимальный срок"
         },
         "minEvictionMillis": {
-          "label": "ru_Minimum Eviction Milliseconds",
-          "placeholder": "ru_Minimum Eviction Milliseconds"
+          "label": "Минимальные миллисекунды выселения",
+          "placeholder": "Минимальные миллисекунды выселения"
         },
         "evictionCheckIntervalMillis": {
-          "label": "ru_Eviction Check Interval Milliseconds",
-          "placeholder": "ru_Eviction Check Interval Milliseconds"
+          "label": "Интервал проверки высева Миллисекунды",
+          "placeholder": "Интервал проверки высева Миллисекунды"
         },
         "reconnectCount": {
-          "label": "ru_Reconnect Count",
-          "placeholder": "ru_Reconnect Count"
+          "label": "Подключить счетчик",
+          "placeholder": "Подключить счетчик"
         },
         "reconnectFrequency": {
-          "label": "ru_Reconnect Frequency",
-          "placeholder": "ru_Reconnect Frequency"
+          "label": "Частота повторного подключения",
+          "placeholder": "Частота повторного подключения"
         },
         "repositoryId": {
-          "label": "ru_Repository Id",
-          "placeholder": "ru_Repository Id"
+          "label": "Идентификатор репозитория",
+          "placeholder": "Идентификатор репозитория"
         },
         "versioningState": {
-          "label": "ru_Versioning State",
-          "placeholder": "ru_Versioning State"
+          "label": "Состояние версии",
+          "placeholder": "Состояние версии"
         }
       },
       "cmisConfiguration.deleteDialog": {
-        "cancelBtn": "ru_Cancel",
-        "deleteBtn": "ru_Cofirm Delete",
-        "headerText": "ru_You are about to delete CMIS Configuration:",
-        "bodyText": "ru_Are you sure?"
+        "cancelBtn": "Отмена",
+        "deleteBtn": "Подтвердить удаление",
+        "headerText": "Вы собираетесь удалить конфигурацию CMIS:",
+        "bodyText": "Ты уверен?"
       },
       "cmisConfiguration.messages": {
-        "delete.success": "ru_Successfully deleted configuration.",
-        "delete.error": "ru_Error deleting configuration.",
-        "insert.success": "ru_Successfully created new configuration row.",
-        "insert.error": "ru_Error creating new configuration row.",
-        "update.success": "ru_Successfully updated configuration row.",
-        "update.error": "ru_Error updating configuration row."
+        "delete.success": "Удаленная конфигурация.",
+        "delete.error": "Ошибка удаления конфигурации.",
+        "insert.success": "Успешно создана новая строка конфигурации.",
+        "insert.error": "Ошибка при создании новой строки конфигурации.",
+        "update.success": "Успешно обновленная строка конфигурации.",
+        "update.error": "Ошибка обновления строки конфигурации."
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "Безопасность - конфигурация конфигурации Ldap"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "Сетка объединения полей слияния"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "Сетка слияния полей слияния"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "Сетка шаблонов"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "Коррекция шаблонов шаблонов соответствия"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "Приложение - Ярлыки Конфигурация сетки"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "Формы - Конфигурация форм"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "Workflows - Конфигурация сетки рабочих процессов"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "Workflows - Workflows Диалоговое окно конфигурации истории конфигурации"
+  },
+  "admin.comp.usersPicker": {
+    "title": "Выберите пользователей"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "Иерархия организации"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "Конфигурационная сетка CMIS"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "Шаблоны электронной почты"
   }
 }

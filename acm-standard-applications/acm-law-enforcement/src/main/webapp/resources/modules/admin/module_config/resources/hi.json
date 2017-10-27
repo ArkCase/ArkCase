@@ -1,463 +1,470 @@
 {
   "admin": {
     "title": "प्रशासन",
-    "security.title": "hi_Security",
-    "security.functionalAccessControl": "hi_Functional Access Control",
-    "security.functionalAccessControl.applicationRole": "hi_Application Role",
-    "security.ldapConfig": "hi_LDAP Configuration",
-    "security.ldapConfig.addNewDirectory": "hi_Add New Directory",
-    "security.ldapConfig.addNewMember": "hi_Add New Member",
-    "security.ldapConfig.addMembers": "hi_Add Members",
-    "security.ldapConfig.addSubgroup": "hi_Add Subgroup",
-    "security.ldapConfig.addExistingMembers": "hi_Add Existing Members",
-    "security.ldapConfig.addLdapSubgroup": "hi_Add LDAP Subgroup",
-    "security.ldapConfig.deleteLdapGroup": "hi_Delete LDAP group",
-    "security.ldapConfig.removeGroup": "hi_Remove Group",
-    "security.ldapConfig.addOrEditSupervisor": "hi_Add/Edit Supervisor",
-    "security.ldapConfig.editMember": "hi_Edit Member",
-    "security.ldapConfig.removeMember": "hi_Remove Member",
-    "security.ldapConfig.table.ldapUrl": "hi_LDAP Url",
-    "security.ldapConfig.table.directoryName": "hi_Directory Name",
+    "security.title": "सुरक्षा",
+    "security.functionalAccessControl": "कार्यात्मक एक्सेस कंट्रोल",
+    "security.functionalAccessControl.applicationRole": "आवेदन भूमिका",
+    "security.ldapConfig": "एलडीएपी कॉन्फ़िगरेशन",
+    "security.ldapConfig.addNewDirectory": "नई निर्देशिका जोड़ें",
+    "security.ldapConfig.addNewMember": "नए सदस्य जोड़ें",
+    "security.ldapConfig.addMembers": "सदस्य जोड़ें",
+    "security.ldapConfig.addSubgroup": "उप समूह जोड़ें",
+    "security.ldapConfig.addExistingMembers": "मौजूदा सदस्य जोड़ें",
+    "security.ldapConfig.addLdapSubgroup": "एलडीएपी उप-समूह जोड़ें",
+    "security.ldapConfig.deleteLdapGroup": "एलडीएपी समूह हटाएं",
+    "security.ldapConfig.removeGroup": "समूह निकालें",
+    "security.ldapConfig.addOrEditSupervisor": "सुपरवाइजर जोड़ें / संपादित करें",
+    "security.ldapConfig.editMember": "सदस्य संपादित करें",
+    "security.ldapConfig.removeMember": "सदस्य निकालें",
+    "security.ldapConfig.table.ldapUrl": "एलडीएपी यूआरएल",
+    "security.ldapConfig.table.directoryName": "डायरेक्टरी का नाम",
     "security.ldapConfig.data": {
-      "userAttributesTemplate": "hi_Ldap User Attributes Template",
-      "groupAttributesTemplate": "hi_Ldap Group Attributes Template",
-      "addNewDirectory": "hi_Add New Directory",
-      "editRecord": "hi_Edit Record",
-      "id": "hi_ID",
-      "directoryType": "hi_Select directory server",
-      "ldapUrl": "hi_LDAP Url",
-      "base": "hi_Base",
-      "directoryName": "hi_Directory Name",
-      "authUserDn": "hi_Auth User Dn",
-      "authUserPassword": "hi_Auth User Password",
-      "userSearchBase": "hi_Users Search Base",
-      "userSearchFilter": "hi_User Search Filter",
-      "allUsersFilter": "hi_All Users Filter",
-      "allUsersPageFilter": "hi_All Users Page Filter",
-      "allUsersSortingAttribute": "hi_Sorting attribute for users",
-      "groupSearchBase": "hi_Group Search Base",
-      "groupSearchFilterForUser": "hi_Group Search Filter For User",
-      "userIdAttributeName": "hi_User Id Attribute Name",
-      "userDomain": "hi_User domain",
-      "userDomainNote": "hi_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
-      "syncPageSize": "hi_Sync Page Size",
-      "groupSearchFilter": "hi_Group Search Filter",
-      "groupsSortingAttribute": "hi_Sorting attribute for groups",
-      "groupSearchPageFilter": "hi_Group Search Page Filter",
-      "enableEditingLdapUsers": "hi_Enable managing users and groups",
-      "cancel": "hi_Cancel",
-      "ok": "hi_OK"
+      "userAttributesTemplate": "एलडीएपी उपयोगकर्ता विशेषता टेम्पलेट",
+      "groupAttributesTemplate": "एलडीएपी समूह विशेषता टेम्पलेट",
+      "addNewDirectory": "नई निर्देशिका जोड़ें",
+      "editRecord": "रिकॉर्ड संपादित करें",
+      "id": "आईडी",
+      "directoryType": "निर्देशिका सर्वर का चयन करें",
+      "ldapUrl": "एलडीएपी यूआरएल",
+      "base": "आधार",
+      "directoryName": "डायरेक्टरी का नाम",
+      "authUserDn": "एथ यूजर डीएन",
+      "authUserPassword": "एथ यूजर पासवर्ड",
+      "userSearchBase": "उपयोगकर्ता खोज बेस",
+      "userSearchFilter": "उपयोगकर्ता खोज फ़िल्टर",
+      "allUsersFilter": "सभी उपयोगकर्ता फ़िल्टर",
+      "allChangedUsersFilter": "सभी बदले उपयोगकर्ता फ़िल्टर",
+      "allUsersPageFilter": "सभी उपयोगकर्ता पृष्ठ फ़िल्टर",
+      "allChangedUsersPageFilter": "सभी परिवर्तित उपयोगकर्ता पेज फ़िल्टर",
+      "allUsersSortingAttribute": "उपयोगकर्ता के लिए विशेषता छंटनी",
+      "groupSearchBase": "समूह खोज आधार",
+      "groupSearchFilterForUser": "उपयोगकर्ता के लिए समूह खोज फ़िल्टर",
+      "userIdAttributeName": "उपयोगकर्ता आईडी विशेषता नाम",
+      "userDomain": "उपयोगकर्ता डोमेन",
+      "userDomainNote": "(नोट: SSO परिदृश्य के लिए उपयोगकर्ता डोमेन को भरें। LDAP प्रमाणीकरण के लिए इसे खाली छोड़ दें)",
+      "syncPageSize": "पृष्ठ आकार समन्वयित करें",
+      "groupSearchFilter": "समूह खोज फ़िल्टर",
+      "changedGroupSearchFilter": "परिवर्तित समूह खोज फ़िल्टर",
+      "groupsSortingAttribute": "समूहों के लिए विशेषता छंटनी",
+      "groupSearchPageFilter": "समूह खोज पृष्ठ फ़िल्टर",
+      "changedGroupSearchPageFilter": "परिवर्तित समूह खोज पृष्ठ फ़िल्टर",
+      "enableEditingLdapUsers": "उपयोगकर्ताओं और समूहों को प्रबंधित करने में सक्षम करें",
+      "syncEnabled": "उपयोगकर्ताओं को सिंक्रनाइज़ सक्षम करें",
+      "cancel": "रद्द करना",
+      "ok": "ठीक"
     },
     "menus": {
       "leftnav.item": "प्रशासन"
     },
     "security.ldapConfig.data.placeholders": {
-      "id": "hi_Enter directory name",
-      "ldapUrl": "hi_Enter connection URL",
-      "base": "hi_Enter base domain component (e.g. dc=example,dc=com)",
-      "authUserDn": "hi_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
-      "authUserPassword": "hi_Enter password for authentication user",
-      "userSearchBase": "hi_Enter users search base (e.g. ou=users)",
-      "userSearchFilter": "hi_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
-      "allUsersFilter": "hi_Enter search filter for all users (e.g. (objectClass=person))",
-      "allUsersPageFilter": "hi_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
-      "allUsersSortingAttribute": "hi_Enter sorting attribute for users (e.g. 'uidNumber')",
-      "groupSearchBase": "hi_Enter search base for groups (e.g. ou=groups)",
-      "groupSearchFilterForUser": "hi_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
-      "userIdAttributeName": "hi_Enter attribute used for user id (e.g. 'uid')",
-      "userDomain": "hi_Enter user domain",
-      "syncPageSize": "hi_Enter paging size",
-      "groupSearchFilter": "hi_Enter search filter for groups (e.g. (objectClass=group))",
-      "groupsSortingAttribute": "hi_Enter attribute for sorting groups (e.g. 'gidNumber')",
-      "groupSearchPageFilter": "hi_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-      "enableEditingLdapUsers": "hi_Check if managing users and groups to your DS is allowed"
+      "id": "निर्देशिका नाम दर्ज करें",
+      "ldapUrl": "कनेक्शन URL दर्ज करें",
+      "base": "आधार डोमेन घटक दर्ज करें (उदा। डीसी = उदाहरण, डीसी = कॉम)",
+      "authUserDn": "प्रमाणीकरण के लिए उपयोगकर्ता डीएनएन दर्ज करें (जैसे सीएन = जॉन डो, ओ = यूजर, डीसी = उदाहरण, डीसी = कॉम)",
+      "authUserPassword": "प्रमाणीकरण उपयोगकर्ता के लिए पासवर्ड दर्ज करें",
+      "userSearchBase": "उपयोगकर्ताओं को खोज आधार दर्ज करें (उदाहरण के लिए = उपयोगकर्ता)",
+      "userSearchFilter": "एकल उपयोगकर्ता के लिए खोज फ़िल्टर दर्ज करें (उदा। (और (objectClass = व्यक्ति) (यूआईडी =% s))",
+      "allUsersFilter": "सभी उपयोगकर्ताओं के लिए खोज फ़िल्टर दर्ज करें (उदा। (ऑब्जेक्ट क्लास = व्यक्ति))",
+      "allUsersPageFilter": "सॉर्ट-एट्रिब्यूट सहित फिल्टर डालें (उदा। (& (ObjectClass = person) (यूआईडीएनंबर> =% s)))",
+      "allUsersSortingAttribute": "उपयोगकर्ताओं के लिए सॉर्टिंग विशेषता दर्ज करें (उदा। 'UidNumber')",
+      "groupSearchBase": "समूहों के लिए खोज आधार दर्ज करें (उदाहरण के लिए = = समूह)",
+      "groupSearchFilterForUser": "समूह में उपयोगकर्ता के लिए खोज फ़िल्टर दर्ज करें (उदा। (और (objectClass = समूह) (सदस्य =% s)))",
+      "userIdAttributeName": "उपयोगकर्ता आईडी के लिए उपयोग किया गया विशेषता दर्ज करें (जैसे 'यूआईडी')",
+      "userDomain": "उपयोगकर्ता डोमेन दर्ज करें",
+      "syncPageSize": "पेजिंग आकार दर्ज करें",
+      "groupSearchFilter": "समूहों के लिए खोज फ़िल्टर दर्ज करें (उदा। (ऑब्जेक्ट क्लास = समूह))",
+      "groupsSortingAttribute": "वर्गीकरण समूहों के लिए विशेषता दर्ज करें (उदा। 'GidNumber')",
+      "groupSearchPageFilter": "सॉर्ट-एट्रिब्यूट सहित फ़िल्टर दर्ज करें (उदा। (और (ऑब्जेक्ट क्लास = समूह) (gidNumber> =% s)))",
+      "enableEditingLdapUsers": "जांच करें कि उपयोगकर्ताओं और समूहों को आपके डीएस के प्रबंधन की अनुमति है या नहीं"
     },
     "security.ldapConfig.messages": {
-      "delete.success": "hi_Successfully deleted row.",
-      "delete.error": "hi_Error deleting row.",
-      "insert.success": "hi_Successfully inserted new row.",
-      "insert.error": "hi_Error inserting new row.",
-      "update.success": "hi_Successfully updated row.",
-      "update.error": "hi_Error updating row.",
-      "insert.template.success": "hi_Successfully created template",
-      "insert.template.error": "hi_Error creating the template"
+      "delete.success": "पंक्ति को सफलतापूर्वक हटा दिया गया",
+      "delete.error": "पंक्ति हटाने में त्रुटि",
+      "insert.success": "नई पंक्ति को सफलतापूर्वक सम्मिलित किया गया",
+      "insert.error": "नई पंक्ति डालने में त्रुटि।",
+      "update.success": "पंक्ति को सफलतापूर्वक अपडेट किया गया",
+      "update.error": "पंक्ति को अपडेट करने में त्रुटि",
+      "insert.template.success": "टेम्पलेट को सफलतापूर्वक बनाया गया",
+      "insert.template.error": "टेम्पलेट बनाने में त्रुटि"
     },
     "security.ldapConfig.dialog": {
-      "cancel": "hi_Cancel",
-      "ok": "hi_OK",
+      "cancel": "रद्द करना",
+      "ok": "ठीक",
       "confirm.delete": {
-        "deleteBtn": "hi_Delete",
-        "cancelBtn": "hi_Cancel",
-        "headerText": "hi_Are you sure?",
-        "bodyText": "hi_This record will be deleted. Are you sure?"
+        "deleteBtn": "हटाना",
+        "cancelBtn": "रद्द करना",
+        "headerText": "क्या आपको यकीन है?",
+        "bodyText": "यह रिकॉर्ड हटा दिया जाएगा। क्या आपको यकीन है?"
       }
     },
-    "admin.security.addNew": "hi_Add New Directory",
+    "admin.security.addNew": "नई निर्देशिका जोड़ें",
     "security.organizationalHierarchy": {
-      "title": "hi_Organizational Hierarchy",
+      "title": "संगठनात्मक पदानुक्रम",
       "btn": {
-        "createAdHocGroup": "hi_createAdHocGroup"
+        "createAdHocGroup": "createAdHocGroup"
       },
       "createGroupDialog": {
         "ldapGroup": {
-          "title": "hi_Add LDAP Group"
+          "title": "एलडीएपी समूह जोड़ें"
         },
         "adHocGroup": {
-          "title": "hi_Add Ad-Hoc Group"
+          "title": "एड-हॉक समूह जोड़ें"
         },
-        "selectDirectory": "hi_--Choose Directory Config--",
-        "disabledGroupWarning": "hi_Adding new LDAP groups is not allowed for this directory!",
-        "name": "hi_Name",
-        "namePlaceholder": "hi_Enter group name",
-        "description": "hi_Description",
-        "descriptionPlaceholder": "hi_Enter Description",
+        "selectDirectory": "- डायरेक्टरी कॉन्फिग चुनें -",
+        "disabledGroupWarning": "इस निर्देशिका के लिए नए एलडीएपी समूहों को जोड़ने की अनुमति नहीं है!",
+        "name": "नाम",
+        "namePlaceholder": "समूह नाम दर्ज करें",
+        "description": "विवरण",
+        "descriptionPlaceholder": "विवरण दर्ज करें",
         "btn": {
-          "ok": "hi_Add Group",
-          "cancel": "hi_Cancel"
+          "ok": "समूह जोड़ें",
+          "cancel": "रद्द करना"
         }
       },
       "addSubGroupDialog": {
-        "title": "hi_Add Subgroup to",
-        "name": "hi_Name",
-        "namePlaceholder": "hi_Enter group name",
-        "description": "hi_Description",
-        "descriptionPlaceholder": "hi_Enter Description",
+        "title": "सब-ग्रुप को इसमें जोड़ें",
+        "name": "नाम",
+        "namePlaceholder": "समूह नाम दर्ज करें",
+        "description": "विवरण",
+        "descriptionPlaceholder": "विवरण दर्ज करें",
         "btn": {
-          "ok": "hi_Add Ad-Hoc Group",
-          "cancel": "hi_Cancel"
+          "ok": "एड-हॉक समूह जोड़ें",
+          "cancel": "रद्द करना"
         }
       },
       "addMembers": {
-        "title": "hi_Add Members",
+        "title": "सदस्य जोड़ें",
         "btn": {
-          "search": "hi_Go!",
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add",
-          "searchPlaceholder": "hi_Enter to search for members."
+          "search": "चले जाओ!",
+          "cancel": "रद्द करना",
+          "ok": "जोड़ना",
+          "searchPlaceholder": "सदस्यों के लिए खोज करने के लिए दर्ज करें"
         }
       },
       "createUserDialog": {
         "addLdapMember": {
-          "title": "hi_Add Ldap Member",
+          "title": "एलडीएपी सदस्य जोड़ें",
           "btn": {
-            "cancel": "hi_Cancel",
-            "ok": "hi_Add Ldap User"
+            "cancel": "रद्द करना",
+            "ok": "एलडीएपी उपयोगकर्ता जोड़ें"
           },
-          "username": "hi_Enter username",
-          "firstName": "hi_Enter first name",
-          "lastName": "hi_Enter last name",
-          "email": "hi_Enter email",
-          "password": "hi_Enter password",
+          "username": "उपयोगकर्ता नाम दर्ज करें",
+          "firstName": "प्रथम नाम दर्ज करें",
+          "lastName": "अंतिम नाम दर्ज करो",
+          "email": "ईमेल दर्ज करें",
+          "password": "पास वर्ड दर्ज करें",
           "confirmation": "hi_Enter your password again",
-          "minLengthForPassword": "hi_7",
-          "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7",
+          "passwordRuleText": "एक पासवर्ड दर्ज करें जो यूज़रनेम के समान नहीं है, जिसमें कम से कम एक विशेष वर्ण, संख्या, अपरकेस और लोअरकेस अक्षरों के संयोजन के साथ 7 वर्ण हैं।"
         },
         "editLdapMember": {
-          "title": "hi_Edit Ldap Member",
+          "title": "Ldap सदस्य को संपादित करें",
           "btn": {
-            "cancel": "hi_Cancel",
-            "ok": "hi_Edit Ldap User"
+            "cancel": "रद्द करना",
+            "ok": "Ldap उपयोगकर्ता संपादित करें"
           }
         },
-        "username": "hi_UserName",
-        "firstName": "hi_FirstName",
-        "lastName": "hi_LastName",
-        "email": "hi_Email",
-        "password": "hi_Password",
+        "username": "उपयोगकर्ता नाम",
+        "firstName": "पहला नाम",
+        "lastName": "अंतिम नाम",
+        "email": "ईमेल",
+        "password": "पासवर्ड",
         "confirmation": "hi_Confirm Password"
       },
       "addMembersGridColumns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "parent": "hi_Parent",
-        "assignee": "hi_Assignee",
-        "modified": "hi_Modified"
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "parent": "माता-पिता",
+        "assignee": "संपत्ति-भागी",
+        "modified": "संशोधित"
       },
       "addSupervisor": {
-        "title": "hi_Add Supervisor",
+        "title": "पर्यवेक्षक जोड़ें",
         "btn": {
-          "search": "hi_Go!",
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add",
-          "searchPlaceholder": "hi_Enter to search for supervisor."
+          "search": "चले जाओ!",
+          "cancel": "रद्द करना",
+          "ok": "जोड़ना",
+          "searchPlaceholder": "पर्यवेक्षक के लिए खोज करने के लिए दर्ज करें"
         }
       },
       "addSupervisorGridColumns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "parent": "hi_Parent",
-        "assignee": "hi_Assignee",
-        "modified": "hi_Modified"
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "parent": "माता-पिता",
+        "assignee": "संपत्ति-भागी",
+        "modified": "संशोधित"
       },
       "dialog.group": {
         "confirm.delete": {
-          "cancelBtn": "hi_Cancel",
-          "deleteBtn": "hi_Delete",
-          "headerText": "hi_You are about to delete group: ",
-          "bodyText": "hi_Are you sure?"
+          "cancelBtn": "रद्द करना",
+          "deleteBtn": "हटाना",
+          "headerText": "आप समूह को हटाना चाहते हैं:",
+          "bodyText": "क्या आपको यकीन है?"
         }
       },
       "dialog.member": {
         "confirm.delete": {
-          "cancelBtn": "hi_Cancel",
-          "deleteBtn": "hi_Delete",
-          "headerText": "hi_You are about to delete member: ",
-          "bodyText": "hi_Are you sure?"
+          "cancelBtn": "रद्द करना",
+          "deleteBtn": "हटाना",
+          "headerText": "आप सदस्य को हटाना चाहते हैं:",
+          "bodyText": "क्या आपको यकीन है?"
         }
       },
       "messages": {
         "delete": {
           "group": {
-            "success": "hi_success",
-            "error": "hi_error"
+            "success": "सफलता",
+            "error": "त्रुटि"
           },
           "member": {
-            "success": "hi_success",
-            "error": "hi_error"
+            "success": "सफलता",
+            "error": "त्रुटि"
           }
         }
       }
     },
-    "security.selectPrivileges": "hi_Create Role/Select Privileges",
-    "security.selectPrivileges.applicationRole": "hi_Application Role",
-    "security.selectPrivileges.createRole": "hi_Create Role",
-    "security.selectPrivileges.editRole": "hi_Edit Role",
-    "security.selectPrivileges.applyChanges": "hi_Apply Changes",
-    "security.selectPrivileges.enterRoleName": "hi_Enter the role name in the box below.",
-    "security.selectPrivileges.cancel": "hi_Cancel",
-    "security.selectPrivileges.name": "hi_Name",
-    "security.modules": "hi_Modules",
-    "security.modules.module": "hi_Module",
+    "security.selectPrivileges": "भूमिका बनाएं / विशेषाधिकारों का चयन करें",
+    "security.selectPrivileges.applicationRole": "आवेदन भूमिका",
+    "security.selectPrivileges.createRole": "रोल बनाएं",
+    "security.selectPrivileges.editRole": "भूमिका संपादित करें",
+    "security.selectPrivileges.applyChanges": "परिवर्तन लागू करें",
+    "security.selectPrivileges.enterRoleName": "नीचे दिए गए बॉक्स में भूमिका का नाम दर्ज करें।",
+    "security.selectPrivileges.cancel": "रद्द करना",
+    "security.selectPrivileges.name": "नाम",
+    "security.modules": "मॉड्यूल",
+    "security.modules.module": "मॉड्यूल",
     "security.ldap.user.management": {
-      "title": "hi_LDAP User Management",
-      "cloneButton": "hi_Clone User",
-      "user": "hi_User"
+      "title": "एलडीएपी उपयोगकर्ता प्रबंधन",
+      "cloneButton": "क्लोन उपयोगकर्ता",
+      "deleteUserBtn": "उपयोगकर्ता हटाएं",
+      "deleteUserMsg": "क्या आप वाकई इस उपयोगकर्ता को हटाना चाहते हैं?",
+      "user": "उपयोगकर्ता"
     },
     "security.calendarConfiguration": {
-      "title": "hi_Calendar Configuration",
+      "title": "कैलेंडर कॉन्फ़िगरेशन",
       "calendarConfigForm": {
-        "email.placeholder": "hi_Enter System Email Address",
-        "password.placeholder": "hi_Enter System Password",
-        "purge.placeholder": "hi_Choose Purge Option",
-        "purgeDays.placeholder": "hi_Enter Days",
-        "save.button": "hi_Save",
-        "validate.button": "hi_Validate",
-        "purge.label": "hi_Purge",
-        "email.label": "hi_System Email Address",
-        "password.label": "hi_System Password",
-        "purgeDays.label": "hi_Days",
-        "emailValid": "hi_System Email Address is valid",
-        "emailNotValid": "hi_System Email Address is not valid",
-        "enableCalendarIntegration.checkbox": "hi_Enable Calendar Integration",
+        "email.placeholder": "सिस्टम ईमेल पता दर्ज करें",
+        "password.placeholder": "सिस्टम पासवर्ड दर्ज करें",
+        "purge.placeholder": "पर्ज विकल्प चुनें",
+        "purgeDays.placeholder": "दिन दर्ज करें",
+        "save.button": "बचाना",
+        "validate.button": "मान्य करें",
+        "purge.label": "शुद्ध करना",
+        "email.label": "सिस्टम ईमेल पता",
+        "password.label": "सिस्टम पासवर्ड",
+        "purgeDays.label": "दिन",
+        "emailValid": "सिस्टम ईमेल पता मान्य है",
+        "emailNotValid": "सिस्टम ईमेल पता मान्य नहीं है",
+        "enableCalendarIntegration.checkbox": "कैलेंडर एकीकरण सक्षम करें",
         "purgeOptions": {
-          "retainIndefinitely": "hi_Retain Indefinitely",
-          "objectClosed": "hi_Object = 'Closed'",
-          "objectClosedXDays": "hi_Object = 'Closed' + X Days"
+          "retainIndefinitely": "अनिश्चित काल तक बनाए रखें",
+          "objectClosed": "वस्तु = 'बंद'",
+          "objectClosedXDays": "वस्तु = 'बंद' + एक्स दिन"
         },
         "configurableObjectTypes": {
-          "cases.label": "hi_Cases",
-          "complaints.label": "hi_Complaints",
-          "tasks.label": "hi_Tasks"
+          "cases.label": "मामले",
+          "complaints.label": "शिकायतें",
+          "tasks.label": "कार्य"
         }
       }
     },
     "security.calendarCredentialsConfiguration": {
-      "title": "hi_Calendar Credentials Configuration",
+      "title": "कैलेंडर प्रमाणन कॉन्फ़िगरेशन",
       "accountConfigForm": {
-        "account": "hi_System Email Address",
-        "password": "hi_System Password",
-        "password.placeholder": "hi_System Password",
-        "save.button": "hi_Save",
-        "validate.button": "hi_Validate"
+        "account": "सिस्टम ईमेल पता",
+        "password": "सिस्टम पासवर्ड",
+        "password.placeholder": "सिस्टम पासवर्ड",
+        "save.button": "बचाना",
+        "validate.button": "मान्य करें"
       },
       "modal": {
-        "title": "hi_Outlook folder override",
-        "message": "hi_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
-        "confirm.button": "hi_Confirm",
-        "cancel.button": "hi_Cancel"
+        "title": "आउटलुक फ़ोल्डर ओवरराइड",
+        "message": "आपने अपना सिस्टम ईमेल खाता बदल दिया है। एसोसिएटेड दृष्टिकोण फ़ोल्डरों को नए लोगों के साथ ओवरराइड किया जाएगा कृपया अपनी कार्रवाई की पुष्टि करें",
+        "confirm.button": "की पुष्टि करें",
+        "cancel.button": "रद्द करना"
       },
       "message": {
-        "credentials.valid": "hi_Credentials are valid",
-        "credentials.invalid": "hi_Credentials are not valid",
-        "credentials.error": "hi_An error has occurred while checking the credentials",
-        "save.successful": "hi_Outlook folder creator saved successfully",
-        "save.fail": "hi_Outlook folder creator not saved"
+        "credentials.valid": "प्रमाणन मान्य हैं",
+        "credentials.invalid": "क्रेडेंशियल मान्य नहीं हैं",
+        "credentials.error": "क्रेडेंशियल्स की जांच करते समय कोई त्रुटि हुई",
+        "save.successful": "Outlook फ़ोल्डर निर्माता सफलतापूर्वक सहेजा गया",
+        "save.fail": "Outlook फ़ोल्डर निर्माता सहेजा नहीं गया"
       }
     },
     "security.emailConfiguration": {
-      "title": "hi_Document Delivery Policy",
+      "title": "दस्तावेज़ वितरण नीति",
       "emailConfigForm": {
-        "save.button": "hi_Save",
-        "deliveryMethods.label": "hi_Delivery Methods",
-        "enableDocumentEmail.checkbox": "hi_Documents can be emailed",
-        "enableDocumentAttach.checkbox": "hi_Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "hi_Documents can be sent as hyperlinks",
-        "serverSettings.label": "hi_Server Settings",
-        "serverType.label": "hi_Server Type",
-        "serverType.placeholder": "hi_Choose Email Server Type",
+        "save.button": "बचाना",
+        "deliveryMethods.label": "वितरण विधियाँ",
+        "enableDocumentEmail.checkbox": "दस्तावेजों को ईमेल किया जा सकता है",
+        "enableDocumentAttach.checkbox": "दस्तावेज़ ईमेल से जोड़ा जा सकता है",
+        "enableDocumentHyperlink.checkbox": "दस्तावेज़ हाइपरलिंक के रूप में भेजा जा सकता है",
+        "serverSettings.label": "सर्वर सेटिंग्स",
+        "serverType.label": "सर्वर प्रकार",
+        "serverType.placeholder": "ईमेल सर्वर प्रकार चुनें",
         "serverTypeOptions": {
-          "smtp": "hi_SMTP",
-          "outlook": "hi_Microsoft Exchange"
+          "smtp": "एसएमटीपी",
+          "outlook": "माइक्रोसॉफ़्ट विनमय"
         },
-        "serverType.configuredExchange.label": "hi_For details refer to Microsoft Exchange Configuration",
-        "server.label": "hi_Server Address",
-        "server.placeholder": "hi_Enter Server Address",
-        "port.label": "hi_Port",
-        "port.placeholder": "hi_Enter Port",
-        "encryption.label": "hi_Encryption",
-        "encryption.placeholder": "hi_Choose Encryption",
+        "serverType.configuredExchange.label": "विवरण के लिए माइक्रोसॉफ्ट एक्सचेंज कॉन्फ़िगरेशन देखें",
+        "server.label": "सर्वर का पता",
+        "server.placeholder": "सर्वर पता दर्ज करें",
+        "port.label": "बंदरगाह",
+        "port.placeholder": "पोर्ट दर्ज करें",
+        "encryption.label": "एन्क्रिप्शन",
+        "encryption.placeholder": "एन्क्रिप्शन चुनें",
         "encryptionOptions": {
-          "off": "hi_OFF",
-          "ssl-tls": "hi_SSL/TLS",
-          "starttls": "hi_STARTTLS"
+          "off": "बंद",
+          "ssl-tls": "SSL / TLS",
+          "starttls": "STARTTLS"
         },
-        "username.label": "hi_Username",
-        "username.placeholder": "hi_Enter Username",
-        "password.label": "hi_Password",
-        "password.placeholder": "hi_Enter Password",
-        "userFrom.label": "hi_From",
-        "userFrom.placeholder": "hi_Enter Email From field",
-        "validate.label": "hi_SMTP Validation",
-        "validate.button": "hi_Validate",
-        "smtpValid": "hi_SMTP settings are valid",
-        "smtpNotValid": "hi_SMTP settings are not valid"
+        "username.label": "उपयोगकर्ता नाम",
+        "username.placeholder": "उपयोगकर्ता नाम दर्ज करें",
+        "password.label": "पासवर्ड",
+        "password.placeholder": "पास वर्ड दर्ज करें",
+        "userFrom.label": "से",
+        "userFrom.placeholder": "फ़ील्ड से ईमेल दर्ज करें",
+        "validate.label": "एसएमटीपी सत्यापन",
+        "validate.button": "मान्य करें",
+        "smtpValid": "एसएमटीपी सेटिंग्स मान्य हैं",
+        "smtpNotValid": "SMTP सेटिंग्स मान्य नहीं हैं"
       }
     },
     "security.emailTemplates": {
-      "title": "hi_Email Templates",
+      "title": "ईमेल टेम्पलेट्स",
       "table.columns": {
-        "templateName": "hi_Template Name",
-        "emailPattern": "hi_Email Pattern",
-        "source": "hi_Source",
-        "objectTypes": "hi_Object Types",
-        "actions": "hi_Actions",
-        "modified": "hi_Modified Date",
-        "modifier": "hi_Modified By"
+        "templateName": "टेम्पलेट नाम",
+        "emailPattern": "ईमेल पैटर्न",
+        "source": "स्रोत",
+        "objectTypes": "ऑब्जेक्ट प्रकार",
+        "actions": "क्रिया",
+        "modified": "संशोधित तिथि",
+        "modifier": "द्वारा संशोधित"
       },
       "modal": {
-        "title": "hi_Email Template",
-        "templateName.label": "hi_Template Name",
-        "templateName.placeholder": "hi_Enter Template Name",
-        "emailPattern.label": "hi_Email Pattern",
-        "emailPattern.placeholder": "hi_Enter Email Pattern",
-        "source.label": "hi_Source",
-        "objectTypes.label": "hi_Object Types",
-        "actions.label": "hi_Actions",
-        "manual.label": "hi_Manual",
-        "automated.label": "hi_Automated",
-        "browse": "hi_Browse",
-        "save": "hi_Save",
-        "cancel": "hi_Cancel"
+        "title": "ईमेल टेम्पलेट",
+        "templateName.label": "टेम्पलेट नाम",
+        "templateName.placeholder": "टेम्पलेट नाम दर्ज करें",
+        "emailPattern.label": "ईमेल पैटर्न",
+        "emailPattern.placeholder": "ईमेल पैटर्न दर्ज करें",
+        "source.label": "स्रोत",
+        "objectTypes.label": "ऑब्जेक्ट प्रकार",
+        "actions.label": "क्रिया",
+        "manual.label": "गाइड",
+        "automated.label": "स्वचालित",
+        "browse": "ब्राउज",
+        "save": "बचाना",
+        "cancel": "रद्द करना"
       }
     },
     "security.exchangeConfiguration": {
-      "title": "hi_Microsoft Exchange Configuration",
+      "title": "माइक्रोसॉफ्ट एक्सचेंज विन्यास",
       "exchangeConfigForm": {
-        "save.button": "hi_Save",
-        "enableExchangeIntegration.checkbox": "hi_Enable Microsoft Exchange Integration",
-        "exchangeServerVersion.label": "hi_Exchange Server Version",
-        "exchangeServerVersion.placeholder": "hi_Choose Server Version",
+        "save.button": "बचाना",
+        "enableExchangeIntegration.checkbox": "माइक्रोसॉफ्ट एक्सचेंज एकीकरण सक्षम करें",
+        "exchangeServerVersion.label": "एक्सचेंज सर्वर संस्करण",
+        "exchangeServerVersion.placeholder": "सर्वर संस्करण चुनें",
         "exchangeServerVersionOptions": {
-          "Exchange2007": "hi_Exchange2007",
-          "Exchange2007_SP1": "hi_Exchange2007_SP1",
-          "Exchange2010": "hi_Exchange2010",
-          "Exchange2010_SP1": "hi_Exchange2010_SP1",
-          "Exchange2010_SP2": "hi_Exchange2010_SP2",
-          "Exchange2013": "hi_Exchange2013",
-          "Exchange2013_SP1": "hi_Exchange2013_SP1"
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
         },
-        "enableAutodiscovery.checkbox": "hi_Enable Autodiscovery",
-        "clientAccessServer.label": "hi_Client Access Server",
-        "clientAccessServer.description": "hi_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
-        "clientAccessServer.placeholder": "hi_Enter Client Access Server",
-        "exchangeDefaultAccess.label": "hi_Exchange Default Access",
-        "exchangeDefaultAccess.placeholder": "hi_Choose Exchange Default Access",
+        "enableAutodiscovery.checkbox": "Autodiscovery सक्षम करें",
+        "clientAccessServer.label": "क्लाइंट एक्सेस सर्वर",
+        "clientAccessServer.description": "डिफ़ॉल्ट पहुंच स्तर बदलने से पहले, पर जाएँ: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ अधिक जानकारी के लिए",
+        "clientAccessServer.placeholder": "क्लाइंट एक्सेस सर्वर दर्ज करें",
+        "exchangeDefaultAccess.label": "एक्सचेंज डिफ़ॉल्ट एक्सेस",
+        "exchangeDefaultAccess.placeholder": "एक्सचेंज डिफ़ॉल्ट एक्सेस चुनें",
         "exchangeDefaultAccessOptions": {
-          "None": "hi_None",
-          "Owner": "hi_Owner",
-          "PublishingEditor": "hi_PublishingEditor",
-          "Editor": "hi_Editor",
-          "PublishingAuthor": "hi_PublishingAuthor",
-          "Author": "hi_Author",
-          "NoneditingAuthor": "hi_NoneditingAuthor",
-          "Reviewer": "hi_Reviewer",
-          "Contributor": "hi_Contributor",
-          "FreeBusyTimeOnly": "hi_FreeBusyTimeOnly",
-          "FreeBusyTimeAndSubjectAndLocation": "hi_FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "hi_Custom"
+          "None": "कोई नहीं",
+          "Owner": "मालिक",
+          "PublishingEditor": "प्रकाशन संपादक",
+          "Editor": "संपादक",
+          "PublishingAuthor": "प्रकाशन लेखक",
+          "Author": "लेखक",
+          "NoneditingAuthor": "गैर-संपादन लेखक",
+          "Reviewer": "आलोचक",
+          "Contributor": "योगदान देने वाला",
+          "FreeBusyTimeOnly": "नि: शुल्क व्यस्त समय केवल",
+          "FreeBusyTimeAndSubjectAndLocation": "नि: शुल्क व्यस्त समय, विषय और स्थान",
+          "Custom": "रिवाज"
         }
       }
     },
-    "dashboard.title": "hi_Dashboard",
-    "dashboard.config": "hi_Dashboard Configuration",
-    "dashboard.widgets": "hi_Widgets",
+    "dashboard.title": "डैशबोर्ड",
+    "dashboard.config": "डैशबोर्ड कॉन्फ़िगरेशन",
+    "dashboard.widgets": "विजेट",
     "reports": {
-      "title": "hi_Reports",
-      "config": "hi_Reports Configuration",
+      "title": "रिपोर्ट",
+      "config": "रिपोर्ट कॉन्फ़िगरेशन",
       "btn": {
-        "reportDesigner": "hi_Report Designer",
-        "sync": "hi_Synchronise"
+        "reportDesigner": "रिपोर्ट डिजाइनर",
+        "sync": "सिंक्रनाइज़ करें"
       }
     },
-    "forms.title": "hi_Forms",
-    "forms.config": "hi_Form Configuration",
-    "workflows.title": "hi_Workflows",
-    "workflows.config": "hi_Workflow Configuration",
-    "workflows.config.bpmn.upload": "hi_Upload",
-    "workflows.config.bpmn.addNewWorkflow": "hi_Upload Workflow",
+    "forms.title": "फार्म",
+    "forms.config": "फॉर्म कॉन्फ़िगरेशन",
+    "workflows.title": "वर्कफ़्लो",
+    "workflows.config": "वर्कफ़्लो कॉन्फ़िगरेशन",
+    "workflows.config.bpmn.upload": "अपलोड",
+    "workflows.config.bpmn.addNewWorkflow": "कार्यप्रवाह अपलोड करें",
     "workflows.config.bpmn.modal": {
-      "label.description": "hi_Description",
-      "label.noFileSelected": "hi_No File Selected",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Upload Workflow"
+      "label.description": "विवरण",
+      "label.noFileSelected": "किसी भी फाइल का चयन नहीं",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "कार्यप्रवाह अपलोड करें"
     },
     "workflows.config.activate": {
-      "error": "hi_Cant make this process active!",
-      "success": "hi_Process succesfully activated."
+      "error": "इस प्रक्रिया को सक्रिय कर सकते हैं!",
+      "success": "प्रक्रिया सफलतापूर्वक सक्रिय"
     },
     "workflows.config.showHistory.dialog": {
-      "title": "hi_History",
-      "body": "hi_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
-      "cancel": "hi_Cancel",
-      "activate": "hi_Make Active"
+      "title": "इतिहास",
+      "body": "नीचे पिछले बीपीएमएन फ़ाइलों का एक इतिहास है। पिछले कार्यप्रवाह को बहाल करने के लिए, कार्यप्रवाह का चयन करें और सक्रिय करें क्लिक करें",
+      "cancel": "रद्द करना",
+      "activate": "सक्रिय बनाना"
     },
     "workflows.config.grid": {
-      "businessProcess": "hi_Business Process",
-      "description": "hi_Description",
-      "active": "hi_Active",
-      "modified": "hi_Modified",
-      "creator": "hi_Author"
+      "businessProcess": "व्यापार प्रक्रिया",
+      "description": "विवरण",
+      "active": "सक्रिय",
+      "modified": "संशोधित",
+      "creator": "लेखक"
     },
     "workflows.config.btn": {
-      "createNew": "hi_Create New Model",
+      "createNew": "नया मॉडल बनाएं",
       "createNewUrl": "https://activiti.alfresco.com",
-      "uploadNew": "hi_Upload New BPMN"
+      "uploadNew": "नई बीपीएमएन अपलोड करें"
     },
     "workflows.config.links": {
-      "download": "hi_Download",
-      "replaceFile": "hi_Replace File",
-      "versionHistory": "hi_Version History",
-      "diagram": "hi_Process Diagram"
+      "download": "डाउनलोड",
+      "replaceFile": "फ़ाइल को बदलें",
+      "versionHistory": "संस्करण इतिहास",
+      "diagram": "प्रक्रिया आरेख"
     },
     "workflows.config.upload": {
-      "success": "hi_Successfully uploaded new process definition",
-      "error": "hi_Error uploading new process definition"
+      "success": "नई प्रक्रिया परिभाषा सफलतापूर्वक अपलोड की गई",
+      "error": "नई प्रक्रिया परिभाषा अपलोड करने में त्रुटि"
     },
     "workflows.config.diagram": {
-      "title": "hi_Process Diagram",
-      "error.loading": "hi_Diagram can't be loaded",
+      "title": "प्रक्रिया आरेख",
+      "error.loading": "आरेख लोड नहीं किया जा सकता",
       "modal": {
-        "btnClose.text": "hi_Close"
+        "btnClose.text": "बंद करे"
       }
     },
-    "formWorkflows.title": "hi_Form/Workflow Link",
-    "formWorkflows.link": "hi_Link Forms/Workflows",
-    "formWorkflows.link.undo": "hi_Undo",
-    "formWorkflows.link.saveChanges": "hi_Save Changes",
-    "formWorkflows.link.editRole.save.success": "hi_Link Forms/Workflows configuration saved successfully",
-    "formWorkflows.link.editRole.save.error": "hi_Can't save Link Forms/Workflows configuration",
+    "formWorkflows.title": "फॉर्म / वर्कफ़्लो लिंक",
+    "formWorkflows.link": "लिंक फॉर्म / वर्कफ़्लो",
+    "formWorkflows.link.undo": "पूर्ववत करें",
+    "formWorkflows.link.saveChanges": "परिवर्तनों को सुरक्षित करें",
+    "formWorkflows.link.editRole.save.success": "लिंक फॉर्म / वर्कफ़्लो कॉन्फ़िगरेशन सफलतापूर्वक सहेजी गई",
+    "formWorkflows.link.editRole.save.error": "लिंक फॉर्म / वर्कफ़्लो कॉन्फ़िगरेशन को नहीं बचा सकता",
     "application": {
       "title": "एप्लिकेशन",
       "locale.config": {
@@ -466,7 +473,7 @@
       },
       "labels.config": {
         "title": "लेबल कॉन्फ़िगरेशन",
-        "progressMessage": "लेबल अपडेट कर रहा है...",
+        "progressMessage": "लेबल अपडेट कर रहा है ... कृपया प्रतीक्षा करें",
         "data": {
           "description": "विवरण",
           "defaultValue": "डिफ़ॉल्ट मान",
@@ -489,216 +496,276 @@
           "resetCustom.confirm": "क्या आप वाकई चयनित कस्टम संसाधनों को हटाना चाहते हैं?"
         }
       },
+      "lookups.config": {
+        "title": "लुकअप कॉन्फ़िगरेशन",
+        "choose": "लुकअप चुनें",
+        "data": {
+          "key": "कुंजी",
+          "value": "मूल्य",
+          "inverseKey": "उलटा कुंजी",
+          "inverseValue": "उलटा मूल्य"
+        },
+        "modal": {
+          "title": "खोज लेबल",
+          "editEntry": "लुकअप प्रविष्टि संपादित करें",
+          "addEntry": "लुकअप प्रविष्टि जोड़ें",
+          "key.placeholder": "प्रवेश कुंजी दर्ज करें",
+          "value.placeholder": "लेबल कुंजी के रूप में प्रवेश मूल्य दर्ज करें",
+          "inversekey.placeholder": "प्रवेश उलटा कुंजी दर्ज करें",
+          "inversevalue.placeholder": "लेबल कुंजी के रूप में प्रवेश उलटा मूल्य दर्ज करें",
+          "btnCancel.text": "रद्द करना",
+          "btnOk.text": "प्रवेश सहेजें"
+        }
+      },
       "module.config": {
-        "title": "hi_Module Configuration"
+        "title": "मॉड्यूल कॉन्फ़िगरेशन"
       },
       "userName.config": {
-        "title": "hi_Username Display Configuration",
-        "userId.label": "hi_Use User Identifier",
-        "userName.label": "hi_Use Full Username",
-        "apply": "hi_Apply",
-        "modal.title": "hi_Information",
-        "modal.info": "hi_Settings will take effect after refresh",
-        "modal.ok": "hi_OK"
+        "title": "उपयोगकर्ता नाम प्रदर्शन विन्यास",
+        "userId.label": "उपयोगकर्ता पहचानकर्ता का उपयोग करें",
+        "userName.label": "पूर्ण उपयोगकर्ता नाम का उपयोग करें",
+        "apply": "लागू करें",
+        "modal.title": "जानकारी",
+        "modal.info": "रीफ्रेश के बाद से सेटिंग प्रभावी हो जाएंगी",
+        "modal.ok": "ठीक"
       },
       "login.config": {
-        "title": "hi_Login Configuration",
-        "idleLimit.label": "hi_Login idle limit (in milliseconds)",
-        "inform": "hi_Settings will take effect for all new user sessions",
-        "apply.label": "hi_Apply"
+        "title": "लॉग इन कॉन्फ़िगरेशन",
+        "idleLimit.label": "निष्क्रिय सीमा लॉगिन करें (मिलीसेकंड में)",
+        "inform": "सभी नए उपयोगकर्ता सत्रों के लिए सेटिंग प्रभावी होगी",
+        "apply.label": "लागू करें"
       },
       "auditHistory.config": {
-        "title": "hi_Audit History",
-        "historyDays.label": "hi_Keep Audit and Notification events (in days)",
-        "inform": "hi_Setting successfully saved",
-        "apply.label": "hi_Apply"
+        "title": "ऑडिट इतिहास",
+        "historyDays.label": "ऑडिट और अधिसूचना ईवेंट (दिनों में) रखें",
+        "inform": "सेटिंग सफलतापूर्वक सहेजी गई",
+        "apply.label": "लागू करें"
       }
     },
-    "branding.title": "hi_Branding",
-    "branding.logo": "hi_Logo",
+    "branding.title": "ब्रांडिंग",
+    "branding.logo": "प्रतीक चिन्ह",
     "branding.logo.messages": {
-      "upload.success": "hi_Custom logo files updated. Refresh browser page to see result.",
-      "upload.error": "hi_Error uploading custom logo files."
+      "upload.success": "कस्टम लोगो फ़ाइलों को अपडेट किया गया परिणाम देखने के लिए ब्राउज़र पृष्ठ को रीफ्रेश करें",
+      "upload.error": "कस्टम लोगो फ़ाइलों को अपलोड करने में त्रुटि।"
     },
-    "branding.logo.header.title": "hi_Header",
-    "branding.logo.login.title": "hi_Login Page",
-    "branding.logo.warningMessage": "hi_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.header.title": "हैडर",
+    "branding.logo.login.title": "लॉगिन वाला पन्ना",
+    "branding.logo.warningMessage": "केवल PNG प्रारूप की अनुमति है अनुशंसित अनुपात 1 से 4 है। न्यूनतम ऊंचाई 50px है।",
     "branding.logo.btn": {
-      "chooseHeader": "hi_Choose Header logo",
-      "chooseLogin": "hi_Choose Login logo",
-      "saveFiles": "hi_Save"
+      "chooseHeader": "हेडर लोगो चुनें",
+      "chooseLogin": "लॉगिन लोगो चुनें",
+      "saveFiles": "बचाना"
     },
     "branding": {
-      "customCss": "hi_Custom CSS",
-      "customCss.save.success": "hi_Custom CSS updated. Refresh browser page to see result.",
-      "customCss.save.error": "hi_Error saving Custom CSS.",
-      "customCss.save": "hi_Save"
+      "customCss": "कस्टम सीएसएस",
+      "customCss.save.success": "कस्टम सीएसएस अद्यतन। परिणाम देखने के लिए ब्राउज़र पृष्ठ को रीफ्रेश करें",
+      "customCss.save.error": "कस्टम सीएसएस सहेजने में त्रुटि।",
+      "customCss.save": "बचाना"
     },
     "correspondenceManagement": {
-      "title": "hi_Correspondence Management",
-      "templates": "hi_Correspondence Templates",
-      "templates.addNewTemplate": "hi_Upload Template",
-      "templates.addTemplate": "hi_Upload",
-      "templates.versionTemplate": "hi_Versions",
-      "templates.deleteTemplate": "hi_Delete",
-      "templates.editTemplate": "hi_Edit Template",
+      "title": "पत्राचार प्रबंधन",
+      "templates": "पत्राचार टेम्पलेट्स",
+      "templates.addNewTemplate": "टेम्पलेट अपलोड करें",
+      "templates.addTemplate": "अपलोड",
+      "templates.versionTemplate": "संस्करण",
+      "templates.deleteTemplate": "हटाना",
+      "templates.editTemplate": "टेम्पलेट संपादित करें",
       "templates.grid": {
-        "id": "hi_ID",
-        "title": "hi_Title",
-        "label": "hi_Display Name",
-        "path": "hi_Path",
-        "created": "hi_Created",
-        "modified": "hi_Modified",
-        "creator": "hi_Creator",
-        "modifier": "hi_Modified By",
-        "activated": "hi_Status",
-        "objectType": "hi_Object Type",
-        "version": "hi_Version",
-        "templateVersionActive": "hi_Active"
+        "id": "आईडी",
+        "title": "शीर्षक",
+        "label": "प्रदर्शित होने वाला नाम",
+        "path": "पथ",
+        "created": "बनाया था",
+        "modified": "संशोधित",
+        "creator": "बनाने वाला",
+        "modifier": "द्वारा संशोधित",
+        "activated": "स्थिति",
+        "objectType": "वस्तु प्रकार",
+        "version": "संस्करण",
+        "templateVersionActive": "सक्रिय"
       },
-      "templates.fieldNames.label": "hi_Map fields to values from the template",
+      "templates.fieldNames.label": "टेम्प्लेट से मूल्यों के लिए मानचित्र फ़ील्ड",
       "templates.querySelect": {
-        "header.text": "hi_Select Query",
-        "btnCancel.text": "hi_Cancel",
-        "btnOk.text": "hi_Select Query",
+        "header.text": "क्वेरी का चयन करें",
+        "btnCancel.text": "रद्द करना",
+        "btnOk.text": "क्वेरी का चयन करें",
         "table.columns": {
-          "beanId": "hi_Bean ID",
-          "jpaQuery": "hi_JPA Query",
-          "objectType": "hi_Query Type"
+          "beanId": "बीन आईडी",
+          "jpaQuery": "जेपीए क्वेरी",
+          "objectType": "क्वेरी प्रकार"
         }
       },
       "templates.modal": {
-        "objectTypes.label": "hi_Object Types",
-        "querySelect.label": "hi_Query Select",
-        "label.label": "hi_Display Name",
-        "btnCancel.text": "hi_Cancel",
-        "btnOk.text": "hi_Upload Template"
+        "objectTypes.label": "ऑब्जेक्ट प्रकार",
+        "querySelect.label": "क्वेरी का चयन करें",
+        "label.label": "प्रदर्शित होने वाला नाम",
+        "btnCancel.text": "रद्द करना",
+        "btnOk.text": "टेम्पलेट अपलोड करें"
       },
       "templates.version.modal": {
-        "btnOk.text": "hi_OK"
+        "btnOk.text": "ठीक"
       },
-      "mergefields": "hi_Merge Fields Configuration",
-      "mergefields.saveMergeFields": "hi_Save",
-      "mergefields.versionMergeFields": "hi_Versions",
+      "mergefields": "फ़ील्ड कॉन्फ़िगरेशन मर्ज करें",
+      "mergefields.saveMergeFields": "बचाना",
+      "mergefields.versionMergeFields": "संस्करण",
       "mergefields.grid": {
-        "fieldId": "hi_ID",
-        "fieldValue": "hi_Value",
-        "fieldDescription": "hi_Description"
+        "fieldId": "आईडी",
+        "fieldValue": "मूल्य",
+        "fieldDescription": "विवरण"
       },
       "mergefields.version.grid": {
-        "mergingVersion": "hi_Version",
-        "modified": "hi_Modified",
-        "modifier": "hi_Modified By",
-        "mergingActiveVersion": "hi_Active"
+        "mergingVersion": "संस्करण",
+        "modified": "संशोधित",
+        "modifier": "द्वारा संशोधित",
+        "mergingActiveVersion": "सक्रिय"
       },
       "mergefields.version.modal": {
-        "btnLoadVersion.text": "hi_Load Version",
-        "btnCancel.text": "hi_Cancel"
+        "btnLoadVersion.text": "लोड संस्करण",
+        "btnCancel.text": "रद्द करना"
       }
     },
-    "forms.defaultValue": "hi_Select Target",
-    "forms.addForm": "hi_Add Plain Form",
+    "forms.defaultValue": "लक्ष्य चुनें",
+    "forms.addForm": "सादा रूप जोड़ें",
     "forms.data": {
-      "name": "hi_Form Name",
-      "applicationName": "hi_Application name",
-      "description": "hi_Description",
-      "target": "hi_Target"
+      "name": "फ़ार्म का नाम",
+      "applicationName": "आवेदन का नाम",
+      "description": "विवरण",
+      "target": "लक्ष्य"
     },
-    "forms.message.delete.success": "hi_Successfully deleted row.",
-    "forms.message.delete.error": "hi_Error deleting row.",
+    "forms.message.delete.success": "पंक्ति को सफलतापूर्वक हटा दिया गया",
+    "forms.message.delete.error": "पंक्ति हटाने में त्रुटि",
     "documentManagement": {
-      "title": "hi_Document Management",
-      "cmisConfiguration": "hi_CMIS Configuration",
-      "cmisConfiguration.addNewConfig": "hi_Add New CMIS Config",
+      "title": "दस्तावेज़ प्रबंधन",
+      "cmisConfiguration": "CMIS कॉन्फ़िगरेशन",
+      "cmisConfiguration.addNewConfig": "नई सीएमआईएस कॉन्फ़िग जोड़ें",
       "cmisConfiguration.addNewConfig.modal": {
         "header": {
-          "new": "hi_New CMIS Configuration",
-          "edit": "hi_Edit CMIS Configuration"
+          "new": "नया सीएमआईएस कॉन्फ़िगरेशन",
+          "edit": "CMIS कॉन्फ़िगरेशन को संपादित करें"
         },
         "dialog": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_OK"
+          "cancel": "रद्द करना",
+          "ok": "ठीक"
         },
         "guidelineMessage": {
-          "repositoryId": "hi_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+          "repositoryId": "अल्फ्रेस्को के लिए: छोड़ें सेमी। रिकॉस्पिरी रिक्त दस्तावेज़ के लिए: सेट cmis.repositoryId को डॉकबेस नाम पर।"
         }
       },
       "cmisConfiguration.data": {
         "id": {
-          "label": "hi_CMIS ID",
-          "placeholder": "hi_CMIS ID"
+          "label": "सीएमआईएस आईडी",
+          "placeholder": "सीएमआईएस आईडी"
         },
         "baseUrl": {
-          "label": "hi_Base URL",
-          "placeholder": "hi_Base URL"
+          "label": "आधार URL",
+          "placeholder": "आधार URL"
         },
         "username": {
-          "label": "hi_Username",
-          "placeholder": "hi_Username"
+          "label": "उपयोगकर्ता नाम",
+          "placeholder": "उपयोगकर्ता नाम"
         },
         "password": {
-          "label": "hi_Password",
-          "placeholder": "hi_Password"
+          "label": "पासवर्ड",
+          "placeholder": "पासवर्ड"
         },
         "useAlfrescoExtension": {
-          "label": "hi_Use Alfresco Extension",
-          "placeholder": "hi_Use Alfresco Extension"
+          "label": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें",
+          "placeholder": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें"
         },
         "endpoint": {
-          "label": "hi_Endpoint",
-          "placeholder": "hi_Endpoint"
+          "label": "endpoint",
+          "placeholder": "endpoint"
         },
         "maxIdle": {
-          "label": "hi_Maximum Idle",
-          "placeholder": "hi_Maximum Idle"
+          "label": "अधिकतम बेकार",
+          "placeholder": "अधिकतम बेकार"
         },
         "maxActive": {
-          "label": "hi_Maximum Active",
-          "placeholder": "hi_Maximum Active"
+          "label": "अधिकतम सक्रिय",
+          "placeholder": "अधिकतम सक्रिय"
         },
         "maxWait": {
-          "label": "hi_Maximum Wait",
-          "placeholder": "hi_Maximum Wait"
+          "label": "अधिकतम रुको",
+          "placeholder": "अधिकतम रुको"
         },
         "minEvictionMillis": {
-          "label": "hi_Minimum Eviction Milliseconds",
-          "placeholder": "hi_Minimum Eviction Milliseconds"
+          "label": "न्यूनतम इकलौती मिलिसेकंड्स",
+          "placeholder": "न्यूनतम इकलौती मिलिसेकंड्स"
         },
         "evictionCheckIntervalMillis": {
-          "label": "hi_Eviction Check Interval Milliseconds",
-          "placeholder": "hi_Eviction Check Interval Milliseconds"
+          "label": "बेदखली जांच अंतराल मिलिसेकंड्स",
+          "placeholder": "बेदखली जांच अंतराल मिलिसेकंड्स"
         },
         "reconnectCount": {
-          "label": "hi_Reconnect Count",
-          "placeholder": "hi_Reconnect Count"
+          "label": "रीकनेक्ट गणना",
+          "placeholder": "रीकनेक्ट गणना"
         },
         "reconnectFrequency": {
-          "label": "hi_Reconnect Frequency",
-          "placeholder": "hi_Reconnect Frequency"
+          "label": "फ़्रिक्वेंसी फिर से कनेक्ट करें",
+          "placeholder": "फ़्रिक्वेंसी फिर से कनेक्ट करें"
         },
         "repositoryId": {
-          "label": "hi_Repository Id",
-          "placeholder": "hi_Repository Id"
+          "label": "रिपॉजिटरी आईडी",
+          "placeholder": "रिपॉजिटरी आईडी"
         },
         "versioningState": {
-          "label": "hi_Versioning State",
-          "placeholder": "hi_Versioning State"
+          "label": "वर्जनिंग स्टेट",
+          "placeholder": "वर्जनिंग स्टेट"
         }
       },
       "cmisConfiguration.deleteDialog": {
-        "cancelBtn": "hi_Cancel",
-        "deleteBtn": "hi_Cofirm Delete",
-        "headerText": "hi_You are about to delete CMIS Configuration:",
-        "bodyText": "hi_Are you sure?"
+        "cancelBtn": "रद्द करना",
+        "deleteBtn": "कॉफ़र हटाएं",
+        "headerText": "आप CMIS कॉन्फ़िगरेशन को हटाना चाहते हैं:",
+        "bodyText": "क्या आपको यकीन है?"
       },
       "cmisConfiguration.messages": {
-        "delete.success": "hi_Successfully deleted configuration.",
-        "delete.error": "hi_Error deleting configuration.",
-        "insert.success": "hi_Successfully created new configuration row.",
-        "insert.error": "hi_Error creating new configuration row.",
-        "update.success": "hi_Successfully updated configuration row.",
-        "update.error": "hi_Error updating configuration row."
+        "delete.success": "कॉन्फ़िगरेशन को सफलतापूर्वक हटा दिया गया",
+        "delete.error": "कॉन्फ़िगरेशन को हटाने में त्रुटि",
+        "insert.success": "सफलतापूर्वक नई कॉन्फ़िगरेशन पंक्ति बनाई गई",
+        "insert.error": "नई कॉन्फ़िगरेशन पंक्ति बनाने में त्रुटि",
+        "update.success": "कॉन्फ़िगरेशन पंक्ति को सफलतापूर्वक अपडेट किया गया",
+        "update.error": "कॉन्फ़िगरेशन पंक्ति को अपडेट करने में त्रुटि"
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "सुरक्षा - एलडीएपी कॉन्फ़िग ग्रिड"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "पत्राचार प्रबंधन मर्ज फील्ड ग्रिड"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "पत्राचार प्रबंधन मर्ज फ़ील्ड संस्करण ग्रिड"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "पत्राचार प्रबंधन टेम्पलेट ग्रिड"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "संगत प्रबंधन टेम्पलेट संस्करण ग्रिड"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "अनुप्रयोग - लेबल कॉन्फ़िग ग्रिड"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "प्रपत्र - फॉर्म कॉन्फ़िग ग्रिड"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "कार्यप्रवाह - वर्कफ़्लो कॉन्फ़िग ग्रिड"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "कार्यप्रवाह - कार्यप्रवाह कॉन्फ़िग इतिहास संवाद ग्रिड"
+  },
+  "admin.comp.usersPicker": {
+    "title": "उपयोगकर्ता चुनें"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "संगठन पदानुक्रम"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS कॉन्फ़िगरेशन ग्रिड"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "ईमेल टेम्पलेट्स"
   }
 }

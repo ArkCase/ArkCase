@@ -1,463 +1,470 @@
 {
   "admin": {
     "title": "管理",
-    "security.title": "ja_Security",
-    "security.functionalAccessControl": "ja_Functional Access Control",
-    "security.functionalAccessControl.applicationRole": "ja_Application Role",
-    "security.ldapConfig": "ja_LDAP Configuration",
-    "security.ldapConfig.addNewDirectory": "ja_Add New Directory",
-    "security.ldapConfig.addNewMember": "ja_Add New Member",
-    "security.ldapConfig.addMembers": "ja_Add Members",
-    "security.ldapConfig.addSubgroup": "ja_Add Subgroup",
-    "security.ldapConfig.addExistingMembers": "ja_Add Existing Members",
-    "security.ldapConfig.addLdapSubgroup": "ja_Add LDAP Subgroup",
-    "security.ldapConfig.deleteLdapGroup": "ja_Delete LDAP group",
-    "security.ldapConfig.removeGroup": "ja_Remove Group",
-    "security.ldapConfig.addOrEditSupervisor": "ja_Add/Edit Supervisor",
-    "security.ldapConfig.editMember": "ja_Edit Member",
-    "security.ldapConfig.removeMember": "ja_Remove Member",
-    "security.ldapConfig.table.ldapUrl": "ja_LDAP Url",
-    "security.ldapConfig.table.directoryName": "ja_Directory Name",
+    "security.title": "安全",
+    "security.functionalAccessControl": "機能アクセス制御",
+    "security.functionalAccessControl.applicationRole": "役割を適用する",
+    "security.ldapConfig": "LDAPの設定",
+    "security.ldapConfig.addNewDirectory": "新しいディレクトリを追加する",
+    "security.ldapConfig.addNewMember": "新しいメンバーを追加",
+    "security.ldapConfig.addMembers": "メンバーを追加",
+    "security.ldapConfig.addSubgroup": "サブグループを追加",
+    "security.ldapConfig.addExistingMembers": "既存メンバーの追加",
+    "security.ldapConfig.addLdapSubgroup": "LDAPサブグループの追加",
+    "security.ldapConfig.deleteLdapGroup": "LDAPグループを削除する",
+    "security.ldapConfig.removeGroup": "グループを削除",
+    "security.ldapConfig.addOrEditSupervisor": "スーパーバイザの追加/編集",
+    "security.ldapConfig.editMember": "メンバーの編集",
+    "security.ldapConfig.removeMember": "メンバーを削除",
+    "security.ldapConfig.table.ldapUrl": "LDAPのURL",
+    "security.ldapConfig.table.directoryName": "ディレクトリ名",
     "security.ldapConfig.data": {
-      "userAttributesTemplate": "ja_Ldap User Attributes Template",
-      "groupAttributesTemplate": "ja_Ldap Group Attributes Template",
-      "addNewDirectory": "ja_Add New Directory",
-      "editRecord": "ja_Edit Record",
-      "id": "ja_ID",
-      "directoryType": "ja_Select directory server",
-      "ldapUrl": "ja_LDAP Url",
-      "base": "ja_Base",
-      "directoryName": "ja_Directory Name",
-      "authUserDn": "ja_Auth User Dn",
-      "authUserPassword": "ja_Auth User Password",
-      "userSearchBase": "ja_Users Search Base",
-      "userSearchFilter": "ja_User Search Filter",
-      "allUsersFilter": "ja_All Users Filter",
-      "allUsersPageFilter": "ja_All Users Page Filter",
-      "allUsersSortingAttribute": "ja_Sorting attribute for users",
-      "groupSearchBase": "ja_Group Search Base",
-      "groupSearchFilterForUser": "ja_Group Search Filter For User",
-      "userIdAttributeName": "ja_User Id Attribute Name",
-      "userDomain": "ja_User domain",
-      "userDomainNote": "ja_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
-      "syncPageSize": "ja_Sync Page Size",
-      "groupSearchFilter": "ja_Group Search Filter",
-      "groupsSortingAttribute": "ja_Sorting attribute for groups",
-      "groupSearchPageFilter": "ja_Group Search Page Filter",
-      "enableEditingLdapUsers": "ja_Enable managing users and groups",
-      "cancel": "ja_Cancel",
-      "ok": "ja_OK"
+      "userAttributesTemplate": "Ldapユーザー属性テンプレート",
+      "groupAttributesTemplate": "Ldapグループ属性テンプレート",
+      "addNewDirectory": "新しいディレクトリを追加する",
+      "editRecord": "レコードの編集",
+      "id": "ID",
+      "directoryType": "ディレクトリサーバーを選択",
+      "ldapUrl": "LDAPのURL",
+      "base": "ベース",
+      "directoryName": "ディレクトリ名",
+      "authUserDn": "認証ユーザーDn",
+      "authUserPassword": "認証ユーザーパスワード",
+      "userSearchBase": "ユーザー検索ベース",
+      "userSearchFilter": "ユーザー検索フィルタ",
+      "allUsersFilter": "すべてのユーザーフィルタ",
+      "allChangedUsersFilter": "すべての変更されたユーザーフィルタ",
+      "allUsersPageFilter": "すべてのユーザーページフィルタ",
+      "allChangedUsersPageFilter": "すべての変更されたユーザーページフィルタ",
+      "allUsersSortingAttribute": "ユーザーの属性の並べ替え",
+      "groupSearchBase": "グループ検索ベース",
+      "groupSearchFilterForUser": "ユーザのグループ検索フィルタ",
+      "userIdAttributeName": "ユーザーID属性名",
+      "userDomain": "ユーザードメイン",
+      "userDomainNote": "（注：LDAP認証の場合は、ユーザードメインのSSOシーンを記入してください）",
+      "syncPageSize": "ページサイズを同期する",
+      "groupSearchFilter": "グループ検索フィルタ",
+      "changedGroupSearchFilter": "変更されたグループ検索フィルタ",
+      "groupsSortingAttribute": "グループの属性のソート",
+      "groupSearchPageFilter": "グループ検索ページフィルタ",
+      "changedGroupSearchPageFilter": "変更されたグループ検索ページのフィルタ",
+      "enableEditingLdapUsers": "ユーザーとグループの管理を有効にする",
+      "syncEnabled": "ユーザーの同期を有​​効にする",
+      "cancel": "キャンセル",
+      "ok": "確認"
     },
     "menus": {
-      "leftnav.item": "ja_Admin"
+      "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
-      "id": "ja_Enter directory name",
-      "ldapUrl": "ja_Enter connection URL",
-      "base": "ja_Enter base domain component (e.g. dc=example,dc=com)",
-      "authUserDn": "ja_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
-      "authUserPassword": "ja_Enter password for authentication user",
-      "userSearchBase": "ja_Enter users search base (e.g. ou=users)",
-      "userSearchFilter": "ja_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
-      "allUsersFilter": "ja_Enter search filter for all users (e.g. (objectClass=person))",
-      "allUsersPageFilter": "ja_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
-      "allUsersSortingAttribute": "ja_Enter sorting attribute for users (e.g. 'uidNumber')",
-      "groupSearchBase": "ja_Enter search base for groups (e.g. ou=groups)",
-      "groupSearchFilterForUser": "ja_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
-      "userIdAttributeName": "ja_Enter attribute used for user id (e.g. 'uid')",
-      "userDomain": "ja_Enter user domain",
-      "syncPageSize": "ja_Enter paging size",
-      "groupSearchFilter": "ja_Enter search filter for groups (e.g. (objectClass=group))",
-      "groupsSortingAttribute": "ja_Enter attribute for sorting groups (e.g. 'gidNumber')",
-      "groupSearchPageFilter": "ja_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-      "enableEditingLdapUsers": "ja_Check if managing users and groups to your DS is allowed"
+      "id": "ディレクトリ名を入力",
+      "ldapUrl": "接続URLを入力",
+      "base": "ベースドメインコンポーネントを入力します（例：dc = example、dc = com）",
+      "authUserDn": "認証に使用するユーザーDNを入力します（例：cn = John Doe、ou = users、dc = example、dc = com）",
+      "authUserPassword": "認証ユーザーのパスワードを入力してください",
+      "userSearchBase": "ユーザーの検索ベースを入力します（例：ou =ユーザー）。",
+      "userSearchFilter": "シングルユーザーの検索フィルターを入力してください（例：（＆（objectClass = person）（uid =％s））",
+      "allUsersFilter": "すべてのユーザーの検索フィルタを入力してください（例：（objectClass = person））",
+      "allUsersPageFilter": "sort属性を含むフィルタを入力してください（例：（＆（objectClass = person）（uidNumber> =％s）））",
+      "allUsersSortingAttribute": "ユーザーの並べ替え属性を入力します（例： 'uidNumber'）。",
+      "groupSearchBase": "グループの検索ベースを入力します（例：ou = groups）",
+      "groupSearchFilterForUser": "グループ内のユーザーの検索フィルタを入力してください（例：（＆（objectClass = group）（member =％s）））",
+      "userIdAttributeName": "ユーザーIDに使用する属性を入力します（例： 'uid'）。",
+      "userDomain": "ユーザードメインを入力してください",
+      "syncPageSize": "ページングサイズを入力してください",
+      "groupSearchFilter": "グループの検索フィルターを入力してください（例：（objectClass = group））",
+      "groupsSortingAttribute": "グループをソートするための属性を入力します（例： 'gidNumber'）。",
+      "groupSearchPageFilter": "ソート属性を含むフィルタを入力します（例：（＆（objectClass = group）（gidNumber> =％s）））",
+      "enableEditingLdapUsers": "DSを管理するユーザーとグループが許可されているかどうかを確認する"
     },
     "security.ldapConfig.messages": {
-      "delete.success": "ja_Successfully deleted row.",
-      "delete.error": "ja_Error deleting row.",
-      "insert.success": "ja_Successfully inserted new row.",
-      "insert.error": "ja_Error inserting new row.",
-      "update.success": "ja_Successfully updated row.",
-      "update.error": "ja_Error updating row.",
-      "insert.template.success": "ja_Successfully created template",
-      "insert.template.error": "ja_Error creating the template"
+      "delete.success": "行が削除されました。",
+      "delete.error": "行の削除中にエラーが発生しました。",
+      "insert.success": "新しい行が挿入されました。",
+      "insert.error": "新しい行を挿入中にエラーが発生しました",
+      "update.success": "行を正常に更新しました。",
+      "update.error": "行の更新エラーです。",
+      "insert.template.success": "テンプレートを作成しました",
+      "insert.template.error": "テンプレート作成中にエラーが発生しました"
     },
     "security.ldapConfig.dialog": {
-      "cancel": "ja_Cancel",
-      "ok": "ja_OK",
+      "cancel": "キャンセル",
+      "ok": "確認",
       "confirm.delete": {
-        "deleteBtn": "ja_Delete",
-        "cancelBtn": "ja_Cancel",
-        "headerText": "ja_Are you sure?",
-        "bodyText": "ja_This record will be deleted. Are you sure?"
+        "deleteBtn": "削除",
+        "cancelBtn": "キャンセル",
+        "headerText": "本気ですか？",
+        "bodyText": "このレコードは削除されます。本気ですか？"
       }
     },
-    "admin.security.addNew": "ja_Add New Directory",
+    "admin.security.addNew": "新しいディレクトリを追加する",
     "security.organizationalHierarchy": {
-      "title": "ja_Organizational Hierarchy",
+      "title": "組織階層",
       "btn": {
-        "createAdHocGroup": "ja_createAdHocGroup"
+        "createAdHocGroup": "アドホックグループを作成する"
       },
       "createGroupDialog": {
         "ldapGroup": {
-          "title": "ja_Add LDAP Group"
+          "title": "LDAPグループを追加する"
         },
         "adHocGroup": {
-          "title": "ja_Add Ad-Hoc Group"
+          "title": "アドホックグループを追加する"
         },
-        "selectDirectory": "ja_--Choose Directory Config--",
-        "disabledGroupWarning": "ja_Adding new LDAP groups is not allowed for this directory!",
-        "name": "ja_Name",
-        "namePlaceholder": "ja_Enter group name",
-        "description": "ja_Description",
-        "descriptionPlaceholder": "ja_Enter Description",
+        "selectDirectory": "- ディレクトリ構成の選択 - ",
+        "disabledGroupWarning": "このディレクトリでは、新しいLDAPグループを追加することはできません！",
+        "name": "名前",
+        "namePlaceholder": "グループ名を入力",
+        "description": "説明",
+        "descriptionPlaceholder": "説明を入力",
         "btn": {
-          "ok": "ja_Add Group",
-          "cancel": "ja_Cancel"
+          "ok": "グループを追加",
+          "cancel": "キャンセル"
         }
       },
       "addSubGroupDialog": {
-        "title": "ja_Add Subgroup to",
-        "name": "ja_Name",
-        "namePlaceholder": "ja_Enter group name",
-        "description": "ja_Description",
-        "descriptionPlaceholder": "ja_Enter Description",
+        "title": "サブグループをに追加",
+        "name": "名前",
+        "namePlaceholder": "グループ名を入力",
+        "description": "説明",
+        "descriptionPlaceholder": "説明を入力",
         "btn": {
-          "ok": "ja_Add Ad-Hoc Group",
-          "cancel": "ja_Cancel"
+          "ok": "アドホックグループを追加する",
+          "cancel": "キャンセル"
         }
       },
       "addMembers": {
-        "title": "ja_Add Members",
+        "title": "メンバーを追加",
         "btn": {
-          "search": "ja_Go!",
-          "cancel": "ja_Cancel",
-          "ok": "ja_Add",
-          "searchPlaceholder": "ja_Enter to search for members."
+          "search": "始動",
+          "cancel": "キャンセル",
+          "ok": "追加",
+          "searchPlaceholder": "検索メンバーを入力"
         }
       },
       "createUserDialog": {
         "addLdapMember": {
-          "title": "ja_Add Ldap Member",
+          "title": "Ldapメンバーを追加",
           "btn": {
-            "cancel": "ja_Cancel",
-            "ok": "ja_Add Ldap User"
+            "cancel": "キャンセル",
+            "ok": "Ldapユーザーを追加"
           },
-          "username": "ja_Enter username",
-          "firstName": "ja_Enter first name",
-          "lastName": "ja_Enter last name",
-          "email": "ja_Enter email",
-          "password": "ja_Enter password",
+          "username": "ユーザー名を入力",
+          "firstName": "名を入力",
+          "lastName": "姓を入力",
+          "email": "電子メールを入力してください",
+          "password": "パスワードを入力してください",
           "confirmation": "ja_Enter your password again",
-          "minLengthForPassword": "ja_7",
-          "passwordRuleText": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7",
+          "passwordRuleText": "少なくとも1つの特殊文字、数字、大文字と小文字の組み合わせで7文字を含むユーザー名と同じではないパスワードを入力します。"
         },
         "editLdapMember": {
-          "title": "ja_Edit Ldap Member",
+          "title": "Ldapメンバーを編集",
           "btn": {
-            "cancel": "ja_Cancel",
-            "ok": "ja_Edit Ldap User"
+            "cancel": "キャンセル",
+            "ok": "Ldapユーザーを編集する"
           }
         },
-        "username": "ja_UserName",
-        "firstName": "ja_FirstName",
-        "lastName": "ja_LastName",
-        "email": "ja_Email",
-        "password": "ja_Password",
+        "username": "ユーザー名",
+        "firstName": "名前",
+        "lastName": "姓",
+        "email": "Eメール",
+        "password": "パスワード",
         "confirmation": "ja_Confirm Password"
       },
       "addMembersGridColumns": {
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "parent": "ja_Parent",
-        "assignee": "ja_Assignee",
-        "modified": "ja_Modified"
+        "name": "名前",
+        "type": "タイプ",
+        "title": "タイトル",
+        "parent": "親",
+        "assignee": "譲受人",
+        "modified": "日付を変更"
       },
       "addSupervisor": {
-        "title": "ja_Add Supervisor",
+        "title": "スーパーバイザーを追加",
         "btn": {
-          "search": "ja_Go!",
-          "cancel": "ja_Cancel",
-          "ok": "ja_Add",
-          "searchPlaceholder": "ja_Enter to search for supervisor."
+          "search": "行く！",
+          "cancel": "キャンセル",
+          "ok": "追加",
+          "searchPlaceholder": "検索監督者を入力します。"
         }
       },
       "addSupervisorGridColumns": {
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "parent": "ja_Parent",
-        "assignee": "ja_Assignee",
-        "modified": "ja_Modified"
+        "name": "名前",
+        "type": "タイプ",
+        "title": "タイトル",
+        "parent": "親",
+        "assignee": "譲受人",
+        "modified": "日付を変更"
       },
       "dialog.group": {
         "confirm.delete": {
-          "cancelBtn": "ja_Cancel",
-          "deleteBtn": "ja_Delete",
-          "headerText": "ja_You are about to delete group: ",
-          "bodyText": "ja_Are you sure?"
+          "cancelBtn": "キャンセル",
+          "deleteBtn": "削除",
+          "headerText": "グループを削除しようとしています：",
+          "bodyText": "本気ですか？"
         }
       },
       "dialog.member": {
         "confirm.delete": {
-          "cancelBtn": "ja_Cancel",
-          "deleteBtn": "ja_Delete",
-          "headerText": "ja_You are about to delete member: ",
-          "bodyText": "ja_Are you sure?"
+          "cancelBtn": "キャンセル",
+          "deleteBtn": "削除",
+          "headerText": "メンバーを削除しようとしています：",
+          "bodyText": "本気ですか？"
         }
       },
       "messages": {
         "delete": {
           "group": {
-            "success": "ja_success",
-            "error": "ja_error"
+            "success": "成功",
+            "error": "エラー"
           },
           "member": {
-            "success": "ja_success",
-            "error": "ja_error"
+            "success": "成功",
+            "error": "エラー"
           }
         }
       }
     },
-    "security.selectPrivileges": "ja_Create Role/Select Privileges",
-    "security.selectPrivileges.applicationRole": "ja_Application Role",
-    "security.selectPrivileges.createRole": "ja_Create Role",
-    "security.selectPrivileges.editRole": "ja_Edit Role",
-    "security.selectPrivileges.applyChanges": "ja_Apply Changes",
-    "security.selectPrivileges.enterRoleName": "ja_Enter the role name in the box below.",
-    "security.selectPrivileges.cancel": "ja_Cancel",
-    "security.selectPrivileges.name": "ja_Name",
-    "security.modules": "ja_Modules",
-    "security.modules.module": "ja_Module",
+    "security.selectPrivileges": "役割の作成/特権の選択",
+    "security.selectPrivileges.applicationRole": "役割の適用",
+    "security.selectPrivileges.createRole": "役割の作成",
+    "security.selectPrivileges.editRole": "役割の編集",
+    "security.selectPrivileges.applyChanges": "変更を適用する",
+    "security.selectPrivileges.enterRoleName": "下のボックスに役割名を入力します。",
+    "security.selectPrivileges.cancel": "キャンセル",
+    "security.selectPrivileges.name": "名前",
+    "security.modules": "モジュール",
+    "security.modules.module": "モジュール",
     "security.ldap.user.management": {
-      "title": "ja_LDAP User Management",
-      "cloneButton": "ja_Clone User",
-      "user": "ja_User"
+      "title": "LDAPユーザー管理",
+      "cloneButton": "ユーザーのクローン",
+      "deleteUserBtn": "ユーザーを削除",
+      "deleteUserMsg": "このユーザーを削除してもよろしいですか？",
+      "user": "ユーザー"
     },
     "security.calendarConfiguration": {
-      "title": "ja_Calendar Configuration",
+      "title": "カレンダー設定",
       "calendarConfigForm": {
-        "email.placeholder": "ja_Enter System Email Address",
-        "password.placeholder": "ja_Enter System Password",
-        "purge.placeholder": "ja_Choose Purge Option",
-        "purgeDays.placeholder": "ja_Enter Days",
-        "save.button": "ja_Save",
-        "validate.button": "ja_Validate",
-        "purge.label": "ja_Purge",
-        "email.label": "ja_System Email Address",
-        "password.label": "ja_System Password",
-        "purgeDays.label": "ja_Days",
-        "emailValid": "ja_System Email Address is valid",
-        "emailNotValid": "ja_System Email Address is not valid",
-        "enableCalendarIntegration.checkbox": "ja_Enable Calendar Integration",
+        "email.placeholder": "システム電子メールアドレスを入力してください",
+        "password.placeholder": "システムパスワードを入力してください",
+        "purge.placeholder": "パージオプションを選択",
+        "purgeDays.placeholder": "日を入力",
+        "save.button": "セーブ",
+        "validate.button": "検証",
+        "purge.label": "パージ",
+        "email.label": "システムの電子メールアドレス",
+        "password.label": "システムパスワード",
+        "purgeDays.label": "日々",
+        "emailValid": "システム電子メールアドレスが有効です",
+        "emailNotValid": "システム電子メールアドレスが無効です",
+        "enableCalendarIntegration.checkbox": "カレンダー統合を有効にする",
         "purgeOptions": {
-          "retainIndefinitely": "ja_Retain Indefinitely",
-          "objectClosed": "ja_Object = 'Closed'",
-          "objectClosedXDays": "ja_Object = 'Closed' + X Days"
+          "retainIndefinitely": "無期限に保持する",
+          "objectClosed": "Object = 'Closed'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
         },
         "configurableObjectTypes": {
-          "cases.label": "ja_Cases",
-          "complaints.label": "ja_Complaints",
-          "tasks.label": "ja_Tasks"
+          "cases.label": "案件",
+          "complaints.label": "訴状",
+          "tasks.label": "任務"
         }
       }
     },
     "security.calendarCredentialsConfiguration": {
-      "title": "ja_Calendar Credentials Configuration",
+      "title": "カレンダー資格情報の構成",
       "accountConfigForm": {
-        "account": "ja_System Email Address",
-        "password": "ja_System Password",
-        "password.placeholder": "ja_System Password",
-        "save.button": "ja_Save",
-        "validate.button": "ja_Validate"
+        "account": "システムの電子メールアドレス",
+        "password": "システムパスワード",
+        "password.placeholder": "システムパスワード",
+        "save.button": "保存する",
+        "validate.button": "検証"
       },
       "modal": {
-        "title": "ja_Outlook folder override",
-        "message": "ja_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
-        "confirm.button": "ja_Confirm",
-        "cancel.button": "ja_Cancel"
+        "title": "Outlookフォルダの上書き",
+        "message": "システム電子メールアカウントを変更しました。関連付けられたOutlookフォルダは新しいもので上書きされます。あなたの行動を確認してください。",
+        "confirm.button": "確認",
+        "cancel.button": "キャンセル"
       },
       "message": {
-        "credentials.valid": "ja_Credentials are valid",
-        "credentials.invalid": "ja_Credentials are not valid",
-        "credentials.error": "ja_An error has occurred while checking the credentials",
-        "save.successful": "ja_Outlook folder creator saved successfully",
-        "save.fail": "ja_Outlook folder creator not saved"
+        "credentials.valid": "資格情報は有効です",
+        "credentials.invalid": "資格情報が無効です",
+        "credentials.error": "資格情報の確認中にエラーが発生しました",
+        "save.successful": "Outlookフォルダの作成者が正常に保存されました",
+        "save.fail": "Outlookフォルダ作成者が保存されていません"
       }
     },
     "security.emailConfiguration": {
-      "title": "ja_Document Delivery Policy",
+      "title": "ドキュメント配信ポリシー",
       "emailConfigForm": {
-        "save.button": "ja_Save",
-        "deliveryMethods.label": "ja_Delivery Methods",
-        "enableDocumentEmail.checkbox": "ja_Documents can be emailed",
-        "enableDocumentAttach.checkbox": "ja_Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "ja_Documents can be sent as hyperlinks",
-        "serverSettings.label": "ja_Server Settings",
-        "serverType.label": "ja_Server Type",
-        "serverType.placeholder": "ja_Choose Email Server Type",
+        "save.button": "保存する",
+        "deliveryMethods.label": "配送方法",
+        "enableDocumentEmail.checkbox": "文書を電子メールで送ることができます",
+        "enableDocumentAttach.checkbox": "電子メールにドキュメントを添付することができます",
+        "enableDocumentHyperlink.checkbox": "ドキュメントはハイパーリンクとして送信できます",
+        "serverSettings.label": "サーバー設定",
+        "serverType.label": "サーバーの種類",
+        "serverType.placeholder": "メールサーバーの種類を選択する",
         "serverTypeOptions": {
-          "smtp": "ja_SMTP",
-          "outlook": "ja_Microsoft Exchange"
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
         },
-        "serverType.configuredExchange.label": "ja_For details refer to Microsoft Exchange Configuration",
-        "server.label": "ja_Server Address",
-        "server.placeholder": "ja_Enter Server Address",
-        "port.label": "ja_Port",
-        "port.placeholder": "ja_Enter Port",
-        "encryption.label": "ja_Encryption",
-        "encryption.placeholder": "ja_Choose Encryption",
+        "serverType.configuredExchange.label": "詳細については、Microsoft Exchangeの設定を参照してください。",
+        "server.label": "サーバーアドレス",
+        "server.placeholder": "サーバーアドレスを入力",
+        "port.label": "ポート",
+        "port.placeholder": "ポートに入る",
+        "encryption.label": "暗号化",
+        "encryption.placeholder": "暗号化を選択",
         "encryptionOptions": {
-          "off": "ja_OFF",
-          "ssl-tls": "ja_SSL/TLS",
-          "starttls": "ja_STARTTLS"
+          "off": "オフ",
+          "ssl-tls": "SSL / TLS",
+          "starttls": "STARTTLS"
         },
-        "username.label": "ja_Username",
-        "username.placeholder": "ja_Enter Username",
-        "password.label": "ja_Password",
-        "password.placeholder": "ja_Enter Password",
-        "userFrom.label": "ja_From",
-        "userFrom.placeholder": "ja_Enter Email From field",
-        "validate.label": "ja_SMTP Validation",
-        "validate.button": "ja_Validate",
-        "smtpValid": "ja_SMTP settings are valid",
-        "smtpNotValid": "ja_SMTP settings are not valid"
+        "username.label": "ユーザー名",
+        "username.placeholder": "ユーザー名を入力",
+        "password.label": "パスワード",
+        "password.placeholder": "パスワードを入力する",
+        "userFrom.label": "から",
+        "userFrom.placeholder": "メール送信元フィールド",
+        "validate.label": "SMTP検証",
+        "validate.button": "検証",
+        "smtpValid": "SMTP設定が有効です",
+        "smtpNotValid": "SMTP設定が無効です"
       }
     },
     "security.emailTemplates": {
-      "title": "ja_Email Templates",
+      "title": "メールテンプレート",
       "table.columns": {
-        "templateName": "ja_Template Name",
-        "emailPattern": "ja_Email Pattern",
-        "source": "ja_Source",
-        "objectTypes": "ja_Object Types",
-        "actions": "ja_Actions",
-        "modified": "ja_Modified Date",
-        "modifier": "ja_Modified By"
+        "templateName": "テンプレート名",
+        "emailPattern": "電子メールモード",
+        "source": "ソース",
+        "objectTypes": "オブジェクト型",
+        "actions": "行動",
+        "modified": "変更日",
+        "modifier": "変更者"
       },
       "modal": {
-        "title": "ja_Email Template",
-        "templateName.label": "ja_Template Name",
-        "templateName.placeholder": "ja_Enter Template Name",
-        "emailPattern.label": "ja_Email Pattern",
-        "emailPattern.placeholder": "ja_Enter Email Pattern",
-        "source.label": "ja_Source",
-        "objectTypes.label": "ja_Object Types",
-        "actions.label": "ja_Actions",
-        "manual.label": "ja_Manual",
-        "automated.label": "ja_Automated",
-        "browse": "ja_Browse",
-        "save": "ja_Save",
-        "cancel": "ja_Cancel"
+        "title": "メールテンプレート",
+        "templateName.label": "テンプレート名",
+        "templateName.placeholder": "テンプレート名を入力",
+        "emailPattern.label": "メールパターン",
+        "emailPattern.placeholder": "メールパターンを入力",
+        "source.label": "ソース",
+        "objectTypes.label": "オブジェクト型",
+        "actions.label": "行動",
+        "manual.label": "マニュアル",
+        "automated.label": "自動化された",
+        "browse": "ブラウズ",
+        "save": "保存する",
+        "cancel": "キャンセル"
       }
     },
     "security.exchangeConfiguration": {
-      "title": "ja_Microsoft Exchange Configuration",
+      "title": "Microsoft Exchangeの構成",
       "exchangeConfigForm": {
-        "save.button": "ja_Save",
-        "enableExchangeIntegration.checkbox": "ja_Enable Microsoft Exchange Integration",
-        "exchangeServerVersion.label": "ja_Exchange Server Version",
-        "exchangeServerVersion.placeholder": "ja_Choose Server Version",
+        "save.button": "保存する",
+        "enableExchangeIntegration.checkbox": "Microsoft Exchange統合を有効にする",
+        "exchangeServerVersion.label": "Exchange Serverのバージョン",
+        "exchangeServerVersion.placeholder": "サーバーのバージョンを選択",
         "exchangeServerVersionOptions": {
-          "Exchange2007": "ja_Exchange2007",
-          "Exchange2007_SP1": "ja_Exchange2007_SP1",
-          "Exchange2010": "ja_Exchange2010",
-          "Exchange2010_SP1": "ja_Exchange2010_SP1",
-          "Exchange2010_SP2": "ja_Exchange2010_SP2",
-          "Exchange2013": "ja_Exchange2013",
-          "Exchange2013_SP1": "ja_Exchange2013_SP1"
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
         },
-        "enableAutodiscovery.checkbox": "ja_Enable Autodiscovery",
-        "clientAccessServer.label": "ja_Client Access Server",
-        "clientAccessServer.description": "ja_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
-        "clientAccessServer.placeholder": "ja_Enter Client Access Server",
-        "exchangeDefaultAccess.label": "ja_Exchange Default Access",
-        "exchangeDefaultAccess.placeholder": "ja_Choose Exchange Default Access",
+        "enableAutodiscovery.checkbox": "自動検出を有効にする",
+        "clientAccessServer.label": "クライアントアクセスサーバー",
+        "clientAccessServer.description": "デフォルトのアクセスレベルを変更する前に、http：//help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/を参照してください。",
+        "clientAccessServer.placeholder": "クライアントアクセスサーバーに入る",
+        "exchangeDefaultAccess.label": "Exchangeデフォルトアクセス",
+        "exchangeDefaultAccess.placeholder": "Exchangeのデフォルトアクセスを選択する",
         "exchangeDefaultAccessOptions": {
-          "None": "ja_None",
-          "Owner": "ja_Owner",
-          "PublishingEditor": "ja_PublishingEditor",
-          "Editor": "ja_Editor",
-          "PublishingAuthor": "ja_PublishingAuthor",
-          "Author": "ja_Author",
-          "NoneditingAuthor": "ja_NoneditingAuthor",
-          "Reviewer": "ja_Reviewer",
-          "Contributor": "ja_Contributor",
-          "FreeBusyTimeOnly": "ja_FreeBusyTimeOnly",
-          "FreeBusyTimeAndSubjectAndLocation": "ja_FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "ja_Custom"
+          "None": "なし",
+          "Owner": "所有者",
+          "PublishingEditor": "出版編集",
+          "Editor": "編集",
+          "PublishingAuthor": "出版者",
+          "Author": "著者",
+          "NoneditingAuthor": "非編集者",
+          "Reviewer": "批評家",
+          "Contributor": "貢献者",
+          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+          "Custom": "カスタム"
         }
       }
     },
-    "dashboard.title": "ja_Dashboard",
-    "dashboard.config": "ja_Dashboard Configuration",
-    "dashboard.widgets": "ja_Widgets",
+    "dashboard.title": "ダッシュボード",
+    "dashboard.config": "ダッシュボードの設定",
+    "dashboard.widgets": "ウィジェット",
     "reports": {
-      "title": "ja_Reports",
-      "config": "ja_Reports Configuration",
+      "title": "レポート",
+      "config": "レポート設定",
       "btn": {
-        "reportDesigner": "ja_Report Designer",
-        "sync": "ja_Synchronise"
+        "reportDesigner": "レポートデザイナー",
+        "sync": "同期する"
       }
     },
-    "forms.title": "ja_Forms",
-    "forms.config": "ja_Form Configuration",
-    "workflows.title": "ja_Workflows",
-    "workflows.config": "ja_Workflow Configuration",
-    "workflows.config.bpmn.upload": "ja_Upload",
-    "workflows.config.bpmn.addNewWorkflow": "ja_Upload Workflow",
+    "forms.title": "フォーム",
+    "forms.config": "フォーム構成",
+    "workflows.title": "ワークフロー",
+    "workflows.config": "ワークフロー構成",
+    "workflows.config.bpmn.upload": "アップロード",
+    "workflows.config.bpmn.addNewWorkflow": "ワークフローのアップロード",
     "workflows.config.bpmn.modal": {
-      "label.description": "ja_Description",
-      "label.noFileSelected": "ja_No File Selected",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Upload Workflow"
+      "label.description": "説明",
+      "label.noFileSelected": "ファイル選択なし",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "ワークフローのアップロード"
     },
     "workflows.config.activate": {
-      "error": "ja_Cant make this process active!",
-      "success": "ja_Process succesfully activated."
+      "error": "このプロセスを有効にしてください！",
+      "success": "プロセスが正常に起動しました。"
     },
     "workflows.config.showHistory.dialog": {
-      "title": "ja_History",
-      "body": "ja_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
-      "cancel": "ja_Cancel",
-      "activate": "ja_Make Active"
+      "title": "歴史",
+      "body": "以下は、以前のBPMNファイルの履歴です。以前のワークフローを元に戻すには、ワークフローを選択して[アクティブにする]をクリックします",
+      "cancel": "キャンセル",
+      "activate": "アクティブにする"
     },
     "workflows.config.grid": {
-      "businessProcess": "ja_Business Process",
-      "description": "ja_Description",
-      "active": "ja_Active",
-      "modified": "ja_Modified",
-      "creator": "ja_Author"
+      "businessProcess": "ビジネスプロセス",
+      "description": "説明",
+      "active": "使用中",
+      "modified": "日付を変更",
+      "creator": "著者"
     },
     "workflows.config.btn": {
-      "createNew": "ja_Create New Model",
+      "createNew": "新しいモデルを作成する",
       "createNewUrl": "https://activiti.alfresco.com",
-      "uploadNew": "ja_Upload New BPMN"
+      "uploadNew": "新しいBPMNをアップロードする"
     },
     "workflows.config.links": {
-      "download": "ja_Download",
-      "replaceFile": "ja_Replace File",
-      "versionHistory": "ja_Version History",
-      "diagram": "ja_Process Diagram"
+      "download": "ダウンロード",
+      "replaceFile": "ファイルを置き換える",
+      "versionHistory": "バージョン履歴",
+      "diagram": "プロセス図"
     },
     "workflows.config.upload": {
-      "success": "ja_Successfully uploaded new process definition",
-      "error": "ja_Error uploading new process definition"
+      "success": "新しいプロセス定義を正常にアップロードしました",
+      "error": "新しいプロセス定義をアップロード中にエラーが発生しました"
     },
     "workflows.config.diagram": {
-      "title": "ja_Process Diagram",
-      "error.loading": "ja_Diagram can't be loaded",
+      "title": "プロセス図",
+      "error.loading": "図を読み込めません",
       "modal": {
-        "btnClose.text": "ja_Close"
+        "btnClose.text": "閉じる"
       }
     },
-    "formWorkflows.title": "ja_Form/Workflow Link",
-    "formWorkflows.link": "ja_Link Forms/Workflows",
-    "formWorkflows.link.undo": "ja_Undo",
-    "formWorkflows.link.saveChanges": "ja_Save Changes",
-    "formWorkflows.link.editRole.save.success": "ja_Link Forms/Workflows configuration saved successfully",
-    "formWorkflows.link.editRole.save.error": "ja_Can't save Link Forms/Workflows configuration",
+    "formWorkflows.title": "表と仕事の流れのリンク",
+    "formWorkflows.link": "接続する表/仕事の流れ",
+    "formWorkflows.link.undo": "元に戻す",
+    "formWorkflows.link.saveChanges": "変更内容を保存",
+    "formWorkflows.link.editRole.save.success": "リンクフォーム/ワークフローの設定が正常に保存されました",
+    "formWorkflows.link.editRole.save.error": "リンクフォーム/ワークフロー構成を保存できません",
     "application": {
       "title": "応用",
       "locale.config": {
@@ -466,7 +473,7 @@
       },
       "labels.config": {
         "title": "ラベル設定",
-        "progressMessage": "ラベルを更新しています...",
+        "progressMessage": "ラベルを更新中...しばらくお待ちください",
         "data": {
           "description": "説明",
           "defaultValue": "デフォルト値",
@@ -489,216 +496,276 @@
           "resetCustom.confirm": "選択したカスタムリソースを削除してもよろしいですか?"
         }
       },
+      "lookups.config": {
+        "title": "ルックアップ設定",
+        "choose": "ルックアップを選択",
+        "data": {
+          "key": "キー",
+          "value": "値",
+          "inverseKey": "逆キー",
+          "inverseValue": "逆値"
+        },
+        "modal": {
+          "title": "検索ラベル",
+          "editEntry": "検索エントリを編集する",
+          "addEntry": "検索エントリを追加する",
+          "key.placeholder": "入力キーを入力",
+          "value.placeholder": "ラベル値として入力値を入力",
+          "inversekey.placeholder": "入力逆キーを入力",
+          "inversevalue.placeholder": "ラベルキーとして入力逆値を入力",
+          "btnCancel.text": "キャンセル",
+          "btnOk.text": "エントリを保存"
+        }
+      },
       "module.config": {
-        "title": "ja_Module Configuration"
+        "title": "モジュール構成"
       },
       "userName.config": {
-        "title": "ja_Username Display Configuration",
-        "userId.label": "ja_Use User Identifier",
-        "userName.label": "ja_Use Full Username",
-        "apply": "ja_Apply",
-        "modal.title": "ja_Information",
-        "modal.info": "ja_Settings will take effect after refresh",
-        "modal.ok": "ja_OK"
+        "title": "ユーザー名の表示構成",
+        "userId.label": "ユーザ識別子を使用する",
+        "userName.label": "完全なユーザー名を使用する",
+        "apply": "適用",
+        "modal.title": "情報",
+        "modal.info": "設定はリフレッシュ後に有効になります",
+        "modal.ok": "[OK]"
       },
       "login.config": {
-        "title": "ja_Login Configuration",
-        "idleLimit.label": "ja_Login idle limit (in milliseconds)",
-        "inform": "ja_Settings will take effect for all new user sessions",
-        "apply.label": "ja_Apply"
+        "title": "ログインの設定",
+        "idleLimit.label": "ログインアイドル制限（ミリ秒単位）",
+        "inform": "設定はすべての新しいユーザーセッションに有効になります",
+        "apply.label": "適用"
       },
       "auditHistory.config": {
-        "title": "ja_Audit History",
-        "historyDays.label": "ja_Keep Audit and Notification events (in days)",
-        "inform": "ja_Setting successfully saved",
-        "apply.label": "ja_Apply"
+        "title": "監査履歴",
+        "historyDays.label": "監査および通知イベントの保存（日単位）",
+        "inform": "設定が保存されました",
+        "apply.label": "適用"
       }
     },
-    "branding.title": "ja_Branding",
-    "branding.logo": "ja_Logo",
+    "branding.title": "ブランディング",
+    "branding.logo": "商標",
     "branding.logo.messages": {
-      "upload.success": "ja_Custom logo files updated. Refresh browser page to see result.",
-      "upload.error": "ja_Error uploading custom logo files."
+      "upload.success": "カスタムロゴファイルが更新されました。結果を確認するには、ブラウザページを更新してください。",
+      "upload.error": "カスタムロゴファイルのアップロード中にエラーが発生しました。"
     },
-    "branding.logo.header.title": "ja_Header",
-    "branding.logo.login.title": "ja_Login Page",
-    "branding.logo.warningMessage": "ja_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.header.title": "ヘッダ",
+    "branding.logo.login.title": "ログインページ",
+    "branding.logo.warningMessage": "PNG形式のみが許可されます。推奨比率は1〜4です。最小高さは50pxです。",
     "branding.logo.btn": {
-      "chooseHeader": "ja_Choose Header logo",
-      "chooseLogin": "ja_Choose Login logo",
-      "saveFiles": "ja_Save"
+      "chooseHeader": "ヘッダロゴを選択",
+      "chooseLogin": "ログインロゴを選択",
+      "saveFiles": "保存する"
     },
     "branding": {
-      "customCss": "ja_Custom CSS",
-      "customCss.save.success": "ja_Custom CSS updated. Refresh browser page to see result.",
-      "customCss.save.error": "ja_Error saving Custom CSS.",
-      "customCss.save": "ja_Save"
+      "customCss": "カスタムCSS",
+      "customCss.save.success": "カスタムCSSが更新されました。結果を確認するには、ブラウザページを更新してください。",
+      "customCss.save.error": "カスタムCSSの保存中にエラーが発生しました",
+      "customCss.save": "保存する"
     },
     "correspondenceManagement": {
-      "title": "ja_Correspondence Management",
-      "templates": "ja_Correspondence Templates",
-      "templates.addNewTemplate": "ja_Upload Template",
-      "templates.addTemplate": "ja_Upload",
-      "templates.versionTemplate": "ja_Versions",
-      "templates.deleteTemplate": "ja_Delete",
-      "templates.editTemplate": "ja_Edit Template",
+      "title": "通信管理",
+      "templates": "連絡文書テンプレート",
+      "templates.addNewTemplate": "テンプレートをアップロードする",
+      "templates.addTemplate": "アップロード",
+      "templates.versionTemplate": "バージョン",
+      "templates.deleteTemplate": "削除",
+      "templates.editTemplate": "テンプレートの編集",
       "templates.grid": {
-        "id": "ja_ID",
-        "title": "ja_Title",
-        "label": "ja_Display Name",
-        "path": "ja_Path",
-        "created": "ja_Created",
-        "modified": "ja_Modified",
-        "creator": "ja_Creator",
-        "modifier": "ja_Modified By",
-        "activated": "ja_Status",
-        "objectType": "ja_Object Type",
-        "version": "ja_Version",
-        "templateVersionActive": "ja_Active"
+        "id": "ID",
+        "title": "タイトル",
+        "label": "表示名",
+        "path": "パス",
+        "created": "作成した",
+        "modified": "変更された",
+        "creator": "クリエイター",
+        "modifier": "変更者",
+        "activated": "状態",
+        "objectType": "オブジェクトタイプ",
+        "version": "バージョン",
+        "templateVersionActive": "アクティブ"
       },
-      "templates.fieldNames.label": "ja_Map fields to values from the template",
+      "templates.fieldNames.label": "フィールドをテンプレートの値にマップする",
       "templates.querySelect": {
-        "header.text": "ja_Select Query",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Select Query",
+        "header.text": "クエリを選択",
+        "btnCancel.text": "キャンセル",
+        "btnOk.text": "クエリを選択",
         "table.columns": {
-          "beanId": "ja_Bean ID",
-          "jpaQuery": "ja_JPA Query",
-          "objectType": "ja_Query Type"
+          "beanId": "ビーンID",
+          "jpaQuery": "JPAクエリ",
+          "objectType": "クエリの種類"
         }
       },
       "templates.modal": {
-        "objectTypes.label": "ja_Object Types",
-        "querySelect.label": "ja_Query Select",
-        "label.label": "ja_Display Name",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Upload Template"
+        "objectTypes.label": "オブジェクト型",
+        "querySelect.label": "クエリ選択",
+        "label.label": "表示名",
+        "btnCancel.text": "キャンセル",
+        "btnOk.text": "テンプレートをアップロードする"
       },
       "templates.version.modal": {
-        "btnOk.text": "ja_OK"
+        "btnOk.text": "OK"
       },
-      "mergefields": "ja_Merge Fields Configuration",
-      "mergefields.saveMergeFields": "ja_Save",
-      "mergefields.versionMergeFields": "ja_Versions",
+      "mergefields": "マージフィールドの設定",
+      "mergefields.saveMergeFields": "セーブ",
+      "mergefields.versionMergeFields": "バージョン",
       "mergefields.grid": {
-        "fieldId": "ja_ID",
-        "fieldValue": "ja_Value",
-        "fieldDescription": "ja_Description"
+        "fieldId": "ID",
+        "fieldValue": "値",
+        "fieldDescription": "説明"
       },
       "mergefields.version.grid": {
-        "mergingVersion": "ja_Version",
-        "modified": "ja_Modified",
-        "modifier": "ja_Modified By",
-        "mergingActiveVersion": "ja_Active"
+        "mergingVersion": "バージョン",
+        "modified": "日付を変更",
+        "modifier": "変更者",
+        "mergingActiveVersion": "効果的"
       },
       "mergefields.version.modal": {
-        "btnLoadVersion.text": "ja_Load Version",
-        "btnCancel.text": "ja_Cancel"
+        "btnLoadVersion.text": "バージョンをロードする",
+        "btnCancel.text": "キャンセル"
       }
     },
-    "forms.defaultValue": "ja_Select Target",
-    "forms.addForm": "ja_Add Plain Form",
+    "forms.defaultValue": "ターゲットを選択",
+    "forms.addForm": "平面を追加する",
     "forms.data": {
-      "name": "ja_Form Name",
-      "applicationName": "ja_Application name",
-      "description": "ja_Description",
-      "target": "ja_Target"
+      "name": "フォーム名",
+      "applicationName": "アプリケーション名",
+      "description": "説明",
+      "target": "ターゲット"
     },
-    "forms.message.delete.success": "ja_Successfully deleted row.",
-    "forms.message.delete.error": "ja_Error deleting row.",
+    "forms.message.delete.success": "行が削除されました。",
+    "forms.message.delete.error": "行の削除中にエラーが発生しました。",
     "documentManagement": {
-      "title": "ja_Document Management",
-      "cmisConfiguration": "ja_CMIS Configuration",
-      "cmisConfiguration.addNewConfig": "ja_Add New CMIS Config",
+      "title": "文書管理",
+      "cmisConfiguration": "CMISの設定",
+      "cmisConfiguration.addNewConfig": "新しいCMIS構成を追加する",
       "cmisConfiguration.addNewConfig.modal": {
         "header": {
-          "new": "ja_New CMIS Configuration",
-          "edit": "ja_Edit CMIS Configuration"
+          "new": "新しいCMIS構成",
+          "edit": "CMIS構成の編集"
         },
         "dialog": {
-          "cancel": "ja_Cancel",
-          "ok": "ja_OK"
+          "cancel": "キャンセル",
+          "ok": "[OK]"
         },
         "guidelineMessage": {
-          "repositoryId": "ja_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+          "repositoryId": "Alfrescoの場合：cmis.repositoryIdを空白のままにします。 Documentumの場合：cmis.repositoryIdにdocbase名を設定します。"
         }
       },
       "cmisConfiguration.data": {
         "id": {
-          "label": "ja_CMIS ID",
-          "placeholder": "ja_CMIS ID"
+          "label": "CMIS ID",
+          "placeholder": "CMIS ID"
         },
         "baseUrl": {
-          "label": "ja_Base URL",
-          "placeholder": "ja_Base URL"
+          "label": "ベースURL",
+          "placeholder": "ベースURL"
         },
         "username": {
-          "label": "ja_Username",
-          "placeholder": "ja_Username"
+          "label": "ユーザー名",
+          "placeholder": "ユーザー名"
         },
         "password": {
-          "label": "ja_Password",
-          "placeholder": "ja_Password"
+          "label": "パスワード",
+          "placeholder": "パスワード"
         },
         "useAlfrescoExtension": {
-          "label": "ja_Use Alfresco Extension",
-          "placeholder": "ja_Use Alfresco Extension"
+          "label": "Alfresco Extensionを使用する",
+          "placeholder": "Alfresco Extensionを使用する"
         },
         "endpoint": {
-          "label": "ja_Endpoint",
-          "placeholder": "ja_Endpoint"
+          "label": "終点",
+          "placeholder": "終点"
         },
         "maxIdle": {
-          "label": "ja_Maximum Idle",
-          "placeholder": "ja_Maximum Idle"
+          "label": "最大アイドル",
+          "placeholder": "最大アイドル"
         },
         "maxActive": {
-          "label": "ja_Maximum Active",
-          "placeholder": "ja_Maximum Active"
+          "label": "最大アクティブ",
+          "placeholder": "最大アクティブ"
         },
         "maxWait": {
-          "label": "ja_Maximum Wait",
-          "placeholder": "ja_Maximum Wait"
+          "label": "最大待機時間",
+          "placeholder": "最大待機時間"
         },
         "minEvictionMillis": {
-          "label": "ja_Minimum Eviction Milliseconds",
-          "placeholder": "ja_Minimum Eviction Milliseconds"
+          "label": "最小エビクションミリ秒",
+          "placeholder": "最小エビクションミリ秒"
         },
         "evictionCheckIntervalMillis": {
-          "label": "ja_Eviction Check Interval Milliseconds",
-          "placeholder": "ja_Eviction Check Interval Milliseconds"
+          "label": "エビクションチェック間隔（ミリ秒）",
+          "placeholder": "エビクションチェック間隔（ミリ秒）"
         },
         "reconnectCount": {
-          "label": "ja_Reconnect Count",
-          "placeholder": "ja_Reconnect Count"
+          "label": "再接続数",
+          "placeholder": "再接続数"
         },
         "reconnectFrequency": {
-          "label": "ja_Reconnect Frequency",
-          "placeholder": "ja_Reconnect Frequency"
+          "label": "再接続の頻度",
+          "placeholder": "再接続の頻度"
         },
         "repositoryId": {
-          "label": "ja_Repository Id",
-          "placeholder": "ja_Repository Id"
+          "label": "リポジトリID",
+          "placeholder": "リポジトリID"
         },
         "versioningState": {
-          "label": "ja_Versioning State",
-          "placeholder": "ja_Versioning State"
+          "label": "バージョン管理の状態",
+          "placeholder": "バージョン管理の状態"
         }
       },
       "cmisConfiguration.deleteDialog": {
-        "cancelBtn": "ja_Cancel",
-        "deleteBtn": "ja_Cofirm Delete",
-        "headerText": "ja_You are about to delete CMIS Configuration:",
-        "bodyText": "ja_Are you sure?"
+        "cancelBtn": "キャンセル",
+        "deleteBtn": "一致削除",
+        "headerText": "CMIS構成を削除しようとしています：",
+        "bodyText": "本気ですか？"
       },
       "cmisConfiguration.messages": {
-        "delete.success": "ja_Successfully deleted configuration.",
-        "delete.error": "ja_Error deleting configuration.",
-        "insert.success": "ja_Successfully created new configuration row.",
-        "insert.error": "ja_Error creating new configuration row.",
-        "update.success": "ja_Successfully updated configuration row.",
-        "update.error": "ja_Error updating configuration row."
+        "delete.success": "設定を削除しました。",
+        "delete.error": "設定の削除中にエラーが発生しました。",
+        "insert.success": "新しい構成行が正常に作成されました。",
+        "insert.error": "新しい設定行を作成中にエラーが発生しました。",
+        "update.success": "設定行が正常に更新されました。",
+        "update.error": "設定行の更新中にエラーが発生しました"
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "セキュリティ - Ldap設定グリッド"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "Correspondence Management Merge Fieldsグリッド"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "対応管理マージフィールドバージョングリッド"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "連絡文書管理テンプレートグリッド"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "Correspondance Management Template Versionsグリッド"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "アプリケーション - ラベルConfig Grid"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "フォーム - フォーム構成グリッド"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "ワークフロー - ワークフローConfigグリッド"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "ワークフロー - ワークフロー設定履歴ダイアロググリッド"
+  },
+  "admin.comp.usersPicker": {
+    "title": "ユーザーを選択"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "組織階層"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS構成グリッド"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "メールテンプレート"
   }
 }
