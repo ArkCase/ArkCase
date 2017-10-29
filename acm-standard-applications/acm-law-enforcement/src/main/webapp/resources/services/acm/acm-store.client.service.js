@@ -390,7 +390,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (null == Store.getOwner()) {
+                if (Store.getOwner()) {
                     return null;
                 }
 
@@ -491,7 +491,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (null == Store.getOwner()) {
+                if (Store.getOwner()) {
                     return null;
                 }
 
@@ -521,7 +521,6 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
             , set: function (data) {
                 if (Store.getOwner()) {
                     var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
-                    var item2 = Util.goodJsonObj(data, null);//xxxxxxxxxxxxxxxx
                     var key = this.getKey();
                     localStorage.setItem(key, item);
                 }
@@ -546,15 +545,6 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                     key = Store.getOwner() + ":" + this.name;
                 }
                 return key;
-            }
-
-            , set2: function (data) {
-                var that = this;
-                Store._deferOwner.promise.then(function(owner){
-                    var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
-                    localStorage.setItem(that.name, item);
-                    return owner;
-                });
             }
 
             /**
@@ -789,7 +779,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * @description
              * Return keys in array of CacheFifo.
              *
-             * @return {Array} Keys in array
+             * @returns {Array} Keys in array
              */
             , keys: function () {
                 var thisCache = this._getThis();
@@ -969,7 +959,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
         // Initialization
         //
 
-        // Following clean up possible leftover in previous builds. Remove following block after longer enough
+        // Following cleans up possible leftover in previous builds. Remove following block after longer enough
         // for all users run this build
         if (sessionStorage.AcmModuleConfigMap) {
             sessionStorage.removeItem("AcmUserInfo");
@@ -986,10 +976,8 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
         }
 
         //simple eviction strategy for now
-        if (0.05 >= Math.random()) {
+        if (0.05 >= Math.random()) {  //evict cache one out of 20 chances
             sessionStorage.clear();
-            //Store.Registry.clearSessionCache();
-            //Store.Registry.clearLocalCache();
         }
 
         return Store;
