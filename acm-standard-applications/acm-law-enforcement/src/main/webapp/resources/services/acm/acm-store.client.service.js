@@ -390,7 +390,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (Store.getOwner()) {
+                if (null == Store.getOwner()) {
                     return null;
                 }
 
@@ -491,7 +491,7 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (Store.getOwner()) {
+                if (null == Store.getOwner()) {
                     return null;
                 }
 
