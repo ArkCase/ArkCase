@@ -1,462 +1,469 @@
 {
   "admin": {
     "title": "管理",
-    "security.title": "zh-cn_Security",
-    "security.functionalAccessControl": "zh-cn_Functional Access Control",
-    "security.functionalAccessControl.applicationRole": "zh-cn_Application Role",
-    "security.ldapConfig": "zh-cn_LDAP Configuration",
-    "security.ldapConfig.addNewDirectory": "zh-cn_Add New Directory",
-    "security.ldapConfig.addNewMember": "zh-cn_Add New Member",
-    "security.ldapConfig.addMembers": "zh-cn_Add Members",
-    "security.ldapConfig.addSubgroup": "zh-cn_Add Subgroup",
-    "security.ldapConfig.addExistingMembers": "zh-cn_Add Existing Members",
-    "security.ldapConfig.addLdapSubgroup": "zh-cn_Add LDAP Subgroup",
-    "security.ldapConfig.deleteLdapGroup": "zh-cn_Delete LDAP group",
-    "security.ldapConfig.removeGroup": "zh-cn_Remove Group",
-    "security.ldapConfig.addOrEditSupervisor": "zh-cn_Add/Edit Supervisor",
-    "security.ldapConfig.editMember": "zh-cn_Edit Member",
-    "security.ldapConfig.removeMember": "zh-cn_Remove Member",
-    "security.ldapConfig.table.ldapUrl": "zh-cn_LDAP Url",
-    "security.ldapConfig.table.directoryName": "zh-cn_Directory Name",
+    "security.title": "安全",
+    "security.functionalAccessControl": "功能访问控制",
+    "security.functionalAccessControl.applicationRole": "应用角色",
+    "security.ldapConfig": "LDAP配置",
+    "security.ldapConfig.addNewDirectory": "添加新目录",
+    "security.ldapConfig.addNewMember": "添加新会员",
+    "security.ldapConfig.addMembers": "添加会员",
+    "security.ldapConfig.addSubgroup": "添加子组",
+    "security.ldapConfig.addExistingMembers": "添加现有成员",
+    "security.ldapConfig.addLdapSubgroup": "添加LDAP子组",
+    "security.ldapConfig.deleteLdapGroup": "删除LDAP组",
+    "security.ldapConfig.removeGroup": "删除组",
+    "security.ldapConfig.addOrEditSupervisor": "添加/编辑主管",
+    "security.ldapConfig.editMember": "编辑会员",
+    "security.ldapConfig.removeMember": "删除会员",
+    "security.ldapConfig.table.ldapUrl": "LDAP网址",
+    "security.ldapConfig.table.directoryName": "目录名称",
     "security.ldapConfig.data": {
-      "userAttributesTemplate": "zh-cn_Ldap User Attributes Template",
-      "groupAttributesTemplate": "zh-cn_Ldap Group Attributes Template",
-      "addNewDirectory": "zh-cn_Add New Directory",
-      "editRecord": "zh-cn_Edit Record",
-      "id": "zh-cn_ID",
-      "directoryType": "zh-cn_Select directory server",
-      "ldapUrl": "zh-cn_LDAP Url",
-      "base": "zh-cn_Base",
-      "directoryName": "zh-cn_Directory Name",
-      "authUserDn": "zh-cn_Auth User Dn",
-      "authUserPassword": "zh-cn_Auth User Password",
-      "userSearchBase": "zh-cn_Users Search Base",
-      "userSearchFilter": "zh-cn_User Search Filter",
-      "allUsersFilter": "zh-cn_All Users Filter",
-      "allUsersPageFilter": "zh-cn_All Users Page Filter",
-      "allUsersSortingAttribute": "zh-cn_Sorting attribute for users",
-      "groupSearchBase": "zh-cn_Group Search Base",
-      "groupSearchFilterForUser": "zh-cn_Group Search Filter For User",
-      "userIdAttributeName": "zh-cn_User Id Attribute Name",
-      "userDomain": "zh-cn_User domain",
-      "userDomainNote": "zh-cn_(Note: Fill in the user domain for SSO scenario. For LDAP authentication leave it blank)",
-      "syncPageSize": "zh-cn_Sync Page Size",
-      "groupSearchFilter": "zh-cn_Group Search Filter",
-      "groupsSortingAttribute": "zh-cn_Sorting attribute for groups",
-      "groupSearchPageFilter": "zh-cn_Group Search Page Filter",
-      "enableEditingLdapUsers": "zh-cn_Enable managing users and groups",
-      "cancel": "zh-cn_Cancel",
-      "ok": "zh-cn_OK"
+      "userAttributesTemplate": "Ldap用户属性模板",
+      "groupAttributesTemplate": "Ldap组属性模板",
+      "addNewDirectory": "添加新目录",
+      "editRecord": "编辑记录",
+      "id": "ID",
+      "directoryType": "选择目录服务器",
+      "ldapUrl": "LDAP网址",
+      "base": "基础",
+      "directoryName": "目录名称",
+      "authUserDn": "认证用户Dn",
+      "authUserPassword": "认证用户密码",
+      "userSearchBase": "用户搜索库",
+      "userSearchFilter": "用户搜索过滤器",
+      "allUsersFilter": "所有用户筛选",
+      "allChangedUsersFilter": "所有更改的用户过滤器",
+      "allUsersPageFilter": "所有用户页面过滤器",
+      "allChangedUsersPageFilter": "所有更改的用户页面过滤器",
+      "allUsersSortingAttribute": "为用户排序属性",
+      "groupSearchBase": "组搜索库",
+      "groupSearchFilterForUser": "用户组搜索过滤器",
+      "userIdAttributeName": "用户ID属性名称",
+      "userDomain": "用户域",
+      "userDomainNote": "（注意：填写SSO场景的用户域，对于LDAP认证，请留空）",
+      "syncPageSize": "同步页面大小",
+      "groupSearchFilter": "群组搜索过滤器",
+      "changedGroupSearchFilter": "更改了群组搜索过滤器",
+      "groupsSortingAttribute": "排序组的属性",
+      "groupSearchPageFilter": "组搜索页面过滤器",
+      "changedGroupSearchPageFilter": "更改了群组搜索页面过滤器",
+      "enableEditingLdapUsers": "启用管理用户和组",
+      "syncEnabled": "启用同步用户",
+      "cancel": "取消",
+      "ok": "确认"
     },
     "menus": {
       "leftnav.item": "管理"
     },
     "security.ldapConfig.data.placeholders": {
-      "id": "zh-cn_Enter directory name",
-      "ldapUrl": "zh-cn_Enter connection URL",
-      "base": "zh-cn_Enter base domain component (e.g. dc=example,dc=com)",
-      "authUserDn": "zh-cn_Enter user DN for authentication (e.g. cn=John Doe,ou=users,dc=example,dc=com)",
-      "authUserPassword": "zh-cn_Enter password for authentication user",
-      "userSearchBase": "zh-cn_Enter users search base (e.g. ou=users)",
-      "userSearchFilter": "zh-cn_Enter search filter for single user (e.g. (&(objectClass=person)(uid=%s))",
-      "allUsersFilter": "zh-cn_Enter search filter for all users (e.g. (objectClass=person))",
-      "allUsersPageFilter": "zh-cn_Enter filter including sort-attribute(e.g. (&(objectClass=person)(uidNumber>=%s)))",
-      "allUsersSortingAttribute": "zh-cn_Enter sorting attribute for users (e.g. 'uidNumber')",
-      "groupSearchBase": "zh-cn_Enter search base for groups (e.g. ou=groups)",
-      "groupSearchFilterForUser": "zh-cn_Enter search filter for user in group (e.g. (&(objectClass=group)(member=%s)))",
-      "userIdAttributeName": "zh-cn_Enter attribute used for user id (e.g. 'uid')",
-      "userDomain": "zh-cn_Enter user domain",
-      "syncPageSize": "zh-cn_Enter paging size",
-      "groupSearchFilter": "zh-cn_Enter search filter for groups (e.g. (objectClass=group))",
-      "groupsSortingAttribute": "zh-cn_Enter attribute for sorting groups (e.g. 'gidNumber')",
-      "groupSearchPageFilter": "zh-cn_Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
-      "enableEditingLdapUsers": "zh-cn_Check if managing users and groups to your DS is allowed"
+      "id": "输入文件夹名",
+      "ldapUrl": "输入连接URL",
+      "base": "输入基础域组件（例如dc = example，dc = com）",
+      "authUserDn": "输入用户DN进行身份验证（例如cn = John Doe，ou = users，dc = example，dc = com）",
+      "authUserPassword": "输入认证用户的密码",
+      "userSearchBase": "输入用户搜索库（例如ou = users）",
+      "userSearchFilter": "输入单个用户的搜索过滤器（例如（＆（objectClass = person）（uid =％s））",
+      "allUsersFilter": "为所有用户输入搜索过滤器（例如（objectClass = person））",
+      "allUsersPageFilter": "输入包含排序属性的过滤器（例如（＆（objectClass = person）（uidNumber> =％s）））",
+      "allUsersSortingAttribute": "输入用户的排序属性（例如“uidNumber”）",
+      "groupSearchBase": "输入组的搜索库（例如ou = groups）",
+      "groupSearchFilterForUser": "输入组中用户的搜索过滤器（例如（＆（objectClass = group）（member =％s）））",
+      "userIdAttributeName": "输入用于用户ID的属性（例如“uid”）",
+      "userDomain": "输入用户域",
+      "syncPageSize": "输入分页大小",
+      "groupSearchFilter": "输入组搜索过滤器（例如（objectClass = group））",
+      "groupsSortingAttribute": "输入排序组的属性（例如“gidNumber”）",
+      "groupSearchPageFilter": "输入包含sort-attribute（例如（＆（objectClass = group）（gidNumber> =％s））的过滤器））",
+      "enableEditingLdapUsers": "检查是否允许管理您的DS的用户和组"
     },
     "security.ldapConfig.messages": {
-      "delete.success": "zh-cn_Successfully deleted row.",
-      "delete.error": "zh-cn_Error deleting row.",
-      "insert.success": "zh-cn_Successfully inserted new row.",
-      "insert.error": "zh-cn_Error inserting new row.",
-      "update.success": "zh-cn_Successfully updated row.",
-      "update.error": "zh-cn_Error updating row.",
-      "insert.template.success": "zh-cn_Successfully created template",
-      "insert.template.error": "zh-cn_Error creating the template"
+      "delete.success": "成功删除行。",
+      "delete.error": "错误删除行。",
+      "insert.success": "成功插入新行。",
+      "insert.error": "插入新行时出错。",
+      "update.success": "成功更新行。",
+      "update.error": "错误更新行。",
+      "insert.template.success": "成功创建模板",
+      "insert.template.error": "创建模板时出错"
     },
     "security.ldapConfig.dialog": {
-      "cancel": "zh-cn_Cancel",
-      "ok": "zh-cn_OK",
+      "cancel": "取消",
+      "ok": "确定",
       "confirm.delete": {
-        "deleteBtn": "zh-cn_Delete",
-        "cancelBtn": "zh-cn_Cancel",
-        "headerText": "zh-cn_Are you sure?",
-        "bodyText": "zh-cn_This record will be deleted. Are you sure?"
+        "deleteBtn": "删除",
+        "cancelBtn": "取消",
+        "headerText": "你确定？",
+        "bodyText": "此记录将被删除。你确定？"
       }
     },
-    "admin.security.addNew": "zh-cn_Add New Directory",
+    "admin.security.addNew": "添加新目录",
     "security.organizationalHierarchy": {
-      "title": "zh-cn_Organizational Hierarchy",
+      "title": "组织层次",
       "btn": {
-        "createAdHocGroup": "zh-cn_createAdHocGroup"
+        "createAdHocGroup": "创建特设群组"
       },
       "createGroupDialog": {
         "ldapGroup": {
-          "title": "zh-cn_Add LDAP Group"
+          "title": "添加LDAP组"
         },
         "adHocGroup": {
-          "title": "zh-cn_Add Ad-Hoc Group"
+          "title": "添加专案组"
         },
-        "selectDirectory": "zh-cn_--Choose Directory Config--",
-        "disabledGroupWarning": "zh-cn_Adding new LDAP groups is not allowed for this directory!",
-        "name": "zh-cn_Name",
-        "namePlaceholder": "zh-cn_Enter group name",
-        "description": "zh-cn_Description",
-        "descriptionPlaceholder": "zh-cn_Enter Description",
+        "selectDirectory": "- 选择目录配置 - ",
+        "disabledGroupWarning": "此目录不允许添加新的LDAP组！",
+        "name": "名称",
+        "namePlaceholder": "输入组名",
+        "description": "描述",
+        "descriptionPlaceholder": "输入说明",
         "btn": {
-          "ok": "zh-cn_Add Group",
-          "cancel": "zh-cn_Cancel"
+          "ok": "添加组",
+          "cancel": "取消"
         }
       },
       "addSubGroupDialog": {
-        "title": "zh-cn_Add Subgroup to",
-        "name": "zh-cn_Name",
-        "namePlaceholder": "zh-cn_Enter group name",
-        "description": "zh-cn_Description",
-        "descriptionPlaceholder": "zh-cn_Enter Description",
+        "title": "将子组添加到",
+        "name": "名称",
+        "namePlaceholder": "输入组名",
+        "description": "描述",
+        "descriptionPlaceholder": "输入说明",
         "btn": {
-          "ok": "zh-cn_Add Ad-Hoc Group",
-          "cancel": "zh-cn_Cancel"
+          "ok": "添加专案组",
+          "cancel": "取消"
         }
       },
       "addMembers": {
-        "title": "zh-cn_Add Members",
+        "title": "添加会员",
         "btn": {
-          "search": "zh-cn_Go!",
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_Add",
-          "searchPlaceholder": "zh-cn_Enter to search for members."
+          "search": "开始！",
+          "cancel": "取消",
+          "ok": "加",
+          "searchPlaceholder": "输入搜索会员"
         }
       },
       "createUserDialog": {
         "addLdapMember": {
-          "title": "zh-cn_Add Ldap Member",
+          "title": "添加Ldap成员",
           "btn": {
-            "cancel": "zh-cn_Cancel",
-            "ok": "zh-cn_Add Ldap User"
+            "cancel": "取消",
+            "ok": "添加Ldap用户"
           },
-          "username": "zh-cn_Enter username",
-          "firstName": "zh-cn_Enter first name",
-          "lastName": "zh-cn_Enter last name",
-          "email": "zh-cn_Enter email",
-          "password": "zh-cn_Enter password",
+          "username": "输入用户名",
+          "firstName": "输入名字",
+          "lastName": "输入姓氏",
+          "email": "输入电子邮件",
+          "password": "输入密码",
           "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
-          "minLengthForPassword": "zh-cn_7",
-          "passwordRuleText": "zh-cn_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7",
+          "passwordRuleText": "输入与用户名不同的密码，其中包含至少包含一个特殊字符，数字，大写和小写字母的7个字符。"
         },
         "editLdapMember": {
-          "title": "zh-cn_Edit Ldap Member",
+          "title": "编辑Ldap成员",
           "btn": {
-            "cancel": "zh-cn_Cancel",
-            "ok": "zh-cn_Edit Ldap User"
+            "cancel": "取消",
+            "ok": "编辑Ldap用户"
           }
         },
-        "username": "zh-cn_UserName",
-        "firstName": "zh-cn_FirstName",
-        "lastName": "zh-cn_LastName",
-        "email": "zh-cn_Email",
-        "password": "zh-cn_Password"
+        "username": "用户名",
+        "firstName": "名字",
+        "lastName": "姓",
+        "email": "电子邮件",
+        "password": "密码"
       },
       "addMembersGridColumns": {
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "parent": "zh-cn_Parent",
-        "assignee": "zh-cn_Assignee",
-        "modified": "zh-cn_Modified"
+        "name": "名称",
+        "type": "类型",
+        "title": "标题",
+        "parent": "原属",
+        "assignee": "指定人员",
+        "modified": "更改日期"
       },
       "addSupervisor": {
-        "title": "zh-cn_Add Supervisor",
+        "title": "添加主管",
         "btn": {
-          "search": "zh-cn_Go!",
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_Add",
-          "searchPlaceholder": "zh-cn_Enter to search for supervisor."
+          "search": "开始！",
+          "cancel": "取消",
+          "ok": "添加",
+          "searchPlaceholder": "输入搜索主管。"
         }
       },
       "addSupervisorGridColumns": {
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "parent": "zh-cn_Parent",
-        "assignee": "zh-cn_Assignee",
-        "modified": "zh-cn_Modified"
+        "name": "名称",
+        "type": "类型",
+        "title": "标题",
+        "parent": "原属",
+        "assignee": "指定人员",
+        "modified": "更改日期"
       },
       "dialog.group": {
         "confirm.delete": {
-          "cancelBtn": "zh-cn_Cancel",
-          "deleteBtn": "zh-cn_Delete",
-          "headerText": "zh-cn_You are about to delete group: ",
-          "bodyText": "zh-cn_Are you sure?"
+          "cancelBtn": "取消",
+          "deleteBtn": "删除",
+          "headerText": "您即将删除组：",
+          "bodyText": "你确定？"
         }
       },
       "dialog.member": {
         "confirm.delete": {
-          "cancelBtn": "zh-cn_Cancel",
-          "deleteBtn": "zh-cn_Delete",
-          "headerText": "zh-cn_You are about to delete member: ",
-          "bodyText": "zh-cn_Are you sure?"
+          "cancelBtn": "取消",
+          "deleteBtn": "删除",
+          "headerText": "您即将删除会员：",
+          "bodyText": "你确定？"
         }
       },
       "messages": {
         "delete": {
           "group": {
-            "success": "zh-cn_success",
-            "error": "zh-cn_error"
+            "success": "成功",
+            "error": "错误"
           },
           "member": {
-            "success": "zh-cn_success",
-            "error": "zh-cn_error"
+            "success": "成功",
+            "error": "错误"
           }
         }
       }
     },
-    "security.selectPrivileges": "zh-cn_Create Role/Select Privileges",
-    "security.selectPrivileges.applicationRole": "zh-cn_Application Role",
-    "security.selectPrivileges.createRole": "zh-cn_Create Role",
-    "security.selectPrivileges.editRole": "zh-cn_Edit Role",
-    "security.selectPrivileges.applyChanges": "zh-cn_Apply Changes",
-    "security.selectPrivileges.enterRoleName": "zh-cn_Enter the role name in the box below.",
-    "security.selectPrivileges.cancel": "zh-cn_Cancel",
-    "security.selectPrivileges.name": "zh-cn_Name",
-    "security.modules": "zh-cn_Modules",
-    "security.modules.module": "zh-cn_Module",
+    "security.selectPrivileges": "创建角色并选择特权",
+    "security.selectPrivileges.applicationRole": "应用角色",
+    "security.selectPrivileges.createRole": "创建角色",
+    "security.selectPrivileges.editRole": "编辑角色",
+    "security.selectPrivileges.applyChanges": "应用更改",
+    "security.selectPrivileges.enterRoleName": "在下面的框中输入角色名称。",
+    "security.selectPrivileges.cancel": "取消",
+    "security.selectPrivileges.name": "名称",
+    "security.modules": "模块",
+    "security.modules.module": "模块",
     "security.ldap.user.management": {
-      "title": "zh-cn_LDAP User Management",
-      "cloneButton": "zh-cn_Clone User",
-      "user": "zh-cn_User"
+      "title": "LDAP用户管理",
+      "cloneButton": "复制用户",
+      "deleteUserBtn": "删除用户",
+      "deleteUserMsg": "您确定要删除此用户吗？",
+      "user": "用户"
     },
     "security.calendarConfiguration": {
-      "title": "zh-cn_Calendar Configuration",
+      "title": "日历配置",
       "calendarConfigForm": {
-        "email.placeholder": "zh-cn_Enter System Email Address",
-        "password.placeholder": "zh-cn_Enter System Password",
-        "purge.placeholder": "zh-cn_Choose Purge Option",
-        "purgeDays.placeholder": "zh-cn_Enter Days",
-        "save.button": "zh-cn_Save",
-        "validate.button": "zh-cn_Validate",
-        "purge.label": "zh-cn_Purge",
-        "email.label": "zh-cn_System Email Address",
-        "password.label": "zh-cn_System Password",
-        "purgeDays.label": "zh-cn_Days",
-        "emailValid": "zh-cn_System Email Address is valid",
-        "emailNotValid": "zh-cn_System Email Address is not valid",
-        "enableCalendarIntegration.checkbox": "zh-cn_Enable Calendar Integration",
+        "email.placeholder": "输入系统电子邮件地址",
+        "password.placeholder": "输入系统密码",
+        "purge.placeholder": "选择清除选项",
+        "purgeDays.placeholder": "输入天数",
+        "save.button": "保存",
+        "validate.button": "验证",
+        "purge.label": "清除",
+        "email.label": "系统电子邮件地址",
+        "password.label": "系统密码",
+        "purgeDays.label": "天",
+        "emailValid": "系统电子邮件地址有效",
+        "emailNotValid": "系统电子邮件地址无效",
+        "enableCalendarIntegration.checkbox": "启用日历集成",
         "purgeOptions": {
-          "retainIndefinitely": "zh-cn_Retain Indefinitely",
-          "objectClosed": "zh-cn_Object = 'Closed'",
-          "objectClosedXDays": "zh-cn_Object = 'Closed' + X Days"
+          "retainIndefinitely": "保留无限期",
+          "objectClosed": "对象='已关闭'",
+          "objectClosedXDays": "Object = 'Closed' + X Days"
         },
         "configurableObjectTypes": {
-          "cases.label": "zh-cn_Cases",
-          "complaints.label": "zh-cn_Complaints",
-          "tasks.label": "zh-cn_Tasks"
+          "cases.label": "案件",
+          "complaints.label": "投诉",
+          "tasks.label": "任务"
         }
       }
     },
     "security.calendarCredentialsConfiguration": {
-      "title": "zh-cn_Calendar Credentials Configuration",
+      "title": "日历凭据配置",
       "accountConfigForm": {
-        "account": "zh-cn_System Email Address",
-        "password": "zh-cn_System Password",
-        "password.placeholder": "zh-cn_System Password",
-        "save.button": "zh-cn_Save",
-        "validate.button": "zh-cn_Validate"
+        "account": "系统电子邮件地址",
+        "password": "系统密码",
+        "password.placeholder": "系统密码",
+        "save.button": "保存",
+        "validate.button": "验证"
       },
       "modal": {
-        "title": "zh-cn_Outlook folder override",
-        "message": "zh-cn_You have changed your system email account. Associated outlook folders will be overridden with new ones. Please confirm your action.",
-        "confirm.button": "zh-cn_Confirm",
-        "cancel.button": "zh-cn_Cancel"
+        "title": "Outlook文件夹覆盖",
+        "message": "您已更改系统电子邮件帐户。相关展望文件夹将被新的文件夹覆盖。请确认您的行动。",
+        "confirm.button": "确认",
+        "cancel.button": "取消"
       },
       "message": {
-        "credentials.valid": "zh-cn_Credentials are valid",
-        "credentials.invalid": "zh-cn_Credentials are not valid",
-        "credentials.error": "zh-cn_An error has occurred while checking the credentials",
-        "save.successful": "zh-cn_Outlook folder creator saved successfully",
-        "save.fail": "zh-cn_Outlook folder creator not saved"
+        "credentials.valid": "凭证有效",
+        "credentials.invalid": "证书无效",
+        "credentials.error": "检查凭据时发生错误",
+        "save.successful": "Outlook文件夹创建者已成功保存",
+        "save.fail": "Outlook文件夹创建者未保存"
       }
     },
     "security.emailConfiguration": {
-      "title": "zh-cn_Document Delivery Policy",
+      "title": "文件传递政策",
       "emailConfigForm": {
-        "save.button": "zh-cn_Save",
-        "deliveryMethods.label": "zh-cn_Delivery Methods",
-        "enableDocumentEmail.checkbox": "zh-cn_Documents can be emailed",
-        "enableDocumentAttach.checkbox": "zh-cn_Documents can be attached to emails",
-        "enableDocumentHyperlink.checkbox": "zh-cn_Documents can be sent as hyperlinks",
-        "serverSettings.label": "zh-cn_Server Settings",
-        "serverType.label": "zh-cn_Server Type",
-        "serverType.placeholder": "zh-cn_Choose Email Server Type",
+        "save.button": "保存",
+        "deliveryMethods.label": "交货方式",
+        "enableDocumentEmail.checkbox": "文件可以通过电子邮件发送",
+        "enableDocumentAttach.checkbox": "文件可以附加到电子邮件",
+        "enableDocumentHyperlink.checkbox": "文件可以作为超链接发送",
+        "serverSettings.label": "服务器设置",
+        "serverType.label": "服务器类型",
+        "serverType.placeholder": "选择邮件服务器类型",
         "serverTypeOptions": {
-          "smtp": "zh-cn_SMTP",
-          "outlook": "zh-cn_Microsoft Exchange"
+          "smtp": "SMTP",
+          "outlook": "Microsoft Exchange"
         },
-        "serverType.configuredExchange.label": "zh-cn_For details refer to Microsoft Exchange Configuration",
-        "server.label": "zh-cn_Server Address",
-        "server.placeholder": "zh-cn_Enter Server Address",
-        "port.label": "zh-cn_Port",
-        "port.placeholder": "zh-cn_Enter Port",
-        "encryption.label": "zh-cn_Encryption",
-        "encryption.placeholder": "zh-cn_Choose Encryption",
+        "serverType.configuredExchange.label": "有关详细信息，请参阅Microsoft Exchange配置",
+        "server.label": "服务器地址",
+        "server.placeholder": "输入服务器地址",
+        "port.label": "端口",
+        "port.placeholder": "端口",
+        "encryption.label": "加密",
+        "encryption.placeholder": "选择加密",
         "encryptionOptions": {
-          "off": "zh-cn_OFF",
-          "ssl-tls": "zh-cn_SSL/TLS",
-          "starttls": "zh-cn_STARTTLS"
+          "off": "关闭",
+          "ssl-tls": "SSL/TLS",
+          "starttls": "STARTTLS"
         },
-        "username.label": "zh-cn_Username",
-        "username.placeholder": "zh-cn_Enter Username",
-        "password.label": "zh-cn_Password",
-        "password.placeholder": "zh-cn_Enter Password",
-        "userFrom.label": "zh-cn_From",
-        "userFrom.placeholder": "zh-cn_Enter Email From field",
-        "validate.label": "zh-cn_SMTP Validation",
-        "validate.button": "zh-cn_Validate",
-        "smtpValid": "zh-cn_SMTP settings are valid",
-        "smtpNotValid": "zh-cn_SMTP settings are not valid"
+        "username.label": "用户名",
+        "username.placeholder": "输入用户名",
+        "password.label": "密码",
+        "password.placeholder": "输入密码",
+        "userFrom.label": "从",
+        "userFrom.placeholder": "从字段输入电子邮件",
+        "validate.label": "SMTP验证",
+        "validate.button": "验证",
+        "smtpValid": "SMTP设置有效",
+        "smtpNotValid": "SMTP设置无效"
       }
     },
     "security.emailTemplates": {
-      "title": "zh-cn_Email Templates",
+      "title": "电子邮件模板",
       "table.columns": {
-        "templateName": "zh-cn_Template Name",
-        "emailPattern": "zh-cn_Email Pattern",
-        "source": "zh-cn_Source",
-        "objectTypes": "zh-cn_Object Types",
-        "actions": "zh-cn_Actions",
-        "modified": "zh-cn_Modified Date",
-        "modifier": "zh-cn_Modified By"
+        "templateName": "模板名称",
+        "emailPattern": "电子邮件模式",
+        "source": "资源",
+        "objectTypes": "对象类型",
+        "actions": "操作",
+        "modified": "修改日期",
+        "modifier": "修改者"
       },
       "modal": {
-        "title": "zh-cn_Email Template",
-        "templateName.label": "zh-cn_Template Name",
-        "templateName.placeholder": "zh-cn_Enter Template Name",
-        "emailPattern.label": "zh-cn_Email Pattern",
-        "emailPattern.placeholder": "zh-cn_Enter Email Pattern",
-        "source.label": "zh-cn_Source",
-        "objectTypes.label": "zh-cn_Object Types",
-        "actions.label": "zh-cn_Actions",
-        "manual.label": "zh-cn_Manual",
-        "automated.label": "zh-cn_Automated",
-        "browse": "zh-cn_Browse",
-        "save": "zh-cn_Save",
-        "cancel": "zh-cn_Cancel"
+        "title": "电子邮件模板",
+        "templateName.label": "模板名称",
+        "templateName.placeholder": "输入模板名称",
+        "emailPattern.label": "电子邮件模式",
+        "emailPattern.placeholder": "输入电子邮件模式",
+        "source.label": "资源",
+        "objectTypes.label": "对象类型",
+        "actions.label": "操作",
+        "manual.label": "手册",
+        "automated.label": "自动化",
+        "browse": "浏览",
+        "save": "保存",
+        "cancel": "取消"
       }
     },
     "security.exchangeConfiguration": {
-      "title": "zh-cn_Microsoft Exchange Configuration",
+      "title": "Microsoft Exchange配置",
       "exchangeConfigForm": {
-        "save.button": "zh-cn_Save",
-        "enableExchangeIntegration.checkbox": "zh-cn_Enable Microsoft Exchange Integration",
-        "exchangeServerVersion.label": "zh-cn_Exchange Server Version",
-        "exchangeServerVersion.placeholder": "zh-cn_Choose Server Version",
+        "save.button": "保存",
+        "enableExchangeIntegration.checkbox": "启用Microsoft Exchange集成",
+        "exchangeServerVersion.label": "Exchange Server版本",
+        "exchangeServerVersion.placeholder": "选择服务器版本",
         "exchangeServerVersionOptions": {
-          "Exchange2007": "zh-cn_Exchange2007",
-          "Exchange2007_SP1": "zh-cn_Exchange2007_SP1",
-          "Exchange2010": "zh-cn_Exchange2010",
-          "Exchange2010_SP1": "zh-cn_Exchange2010_SP1",
-          "Exchange2010_SP2": "zh-cn_Exchange2010_SP2",
-          "Exchange2013": "zh-cn_Exchange2013",
-          "Exchange2013_SP1": "zh-cn_Exchange2013_SP1"
+          "Exchange2007": "Exchange2007",
+          "Exchange2007_SP1": "Exchange2007_SP1",
+          "Exchange2010": "Exchange2010",
+          "Exchange2010_SP1": "Exchange2010_SP1",
+          "Exchange2010_SP2": "Exchange2010_SP2",
+          "Exchange2013": "Exchange2013",
+          "Exchange2013_SP1": "Exchange2013_SP1"
         },
-        "enableAutodiscovery.checkbox": "zh-cn_Enable Autodiscovery",
-        "clientAccessServer.label": "zh-cn_Client Access Server",
-        "clientAccessServer.description": "zh-cn_Before changing default access level, visit: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ for further information",
-        "clientAccessServer.placeholder": "zh-cn_Enter Client Access Server",
-        "exchangeDefaultAccess.label": "zh-cn_Exchange Default Access",
-        "exchangeDefaultAccess.placeholder": "zh-cn_Choose Exchange Default Access",
+        "enableAutodiscovery.checkbox": "启用自动发现",
+        "clientAccessServer.label": "客户端访问服务器",
+        "clientAccessServer.description": "更改默认访问级别之前，请访问：http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/了解更多信息",
+        "clientAccessServer.placeholder": "进入客户端访问服务器",
+        "exchangeDefaultAccess.label": "Exchange默认访问",
+        "exchangeDefaultAccess.placeholder": "选择Exchange默认访问",
         "exchangeDefaultAccessOptions": {
-          "None": "zh-cn_None",
-          "Owner": "zh-cn_Owner",
-          "PublishingEditor": "zh-cn_PublishingEditor",
-          "Editor": "zh-cn_Editor",
-          "PublishingAuthor": "zh-cn_PublishingAuthor",
-          "Author": "zh-cn_Author",
-          "NoneditingAuthor": "zh-cn_NoneditingAuthor",
-          "Reviewer": "zh-cn_Reviewer",
-          "Contributor": "zh-cn_Contributor",
-          "FreeBusyTimeOnly": "zh-cn_FreeBusyTimeOnly",
-          "FreeBusyTimeAndSubjectAndLocation": "zh-cn_FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "zh-cn_Custom"
+          "None": "没有",
+          "Owner": "所有者",
+          "PublishingEditor": "出版编辑",
+          "Editor": "编辑",
+          "PublishingAuthor": "出版作者",
+          "Author": "作者",
+          "NoneditingAuthor": "非编辑作者",
+          "Reviewer": "评论家",
+          "Contributor": "贡献者",
+          "FreeBusyTimeOnly": "自由繁忙时间",
+          "FreeBusyTimeAndSubjectAndLocation": "自由繁忙时间，主题和位置",
+          "Custom": "定制"
         }
       }
     },
-    "dashboard.title": "zh-cn_Dashboard",
-    "dashboard.config": "zh-cn_Dashboard Configuration",
-    "dashboard.widgets": "zh-cn_Widgets",
+    "dashboard.title": "板面",
+    "dashboard.config": "板面配置",
+    "dashboard.widgets": "小工具",
     "reports": {
-      "title": "zh-cn_Reports",
-      "config": "zh-cn_Reports Configuration",
+      "title": "报告",
+      "config": "报表配置",
       "btn": {
-        "reportDesigner": "zh-cn_Report Designer",
-        "sync": "zh-cn_Synchronise"
+        "reportDesigner": "报表设计器",
+        "sync": "同步"
       }
     },
-    "forms.title": "zh-cn_Forms",
-    "forms.config": "zh-cn_Form Configuration",
-    "workflows.title": "zh-cn_Workflows",
-    "workflows.config": "zh-cn_Workflow Configuration",
-    "workflows.config.bpmn.upload": "zh-cn_Upload",
-    "workflows.config.bpmn.addNewWorkflow": "zh-cn_Upload Workflow",
+    "forms.title": "形式",
+    "forms.config": "表单配置",
+    "workflows.title": "工作流程",
+    "workflows.config": "工作流配置",
+    "workflows.config.bpmn.upload": "上传",
+    "workflows.config.bpmn.addNewWorkflow": "上传工作流程",
     "workflows.config.bpmn.modal": {
-      "label.description": "zh-cn_Description",
-      "label.noFileSelected": "zh-cn_No File Selected",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Upload Workflow"
+      "label.description": "描述",
+      "label.noFileSelected": "没有文件选择",
+      "btnCancel.text": "取消",
+      "btnOk.text": "上传工作流程"
     },
     "workflows.config.activate": {
-      "error": "zh-cn_Cant make this process active!",
-      "success": "zh-cn_Process succesfully activated."
+      "error": "无法让这个过程激活！",
+      "success": "处理成功激活。"
     },
     "workflows.config.showHistory.dialog": {
-      "title": "zh-cn_History",
-      "body": "zh-cn_Below is a history of previous BPMN files. To reinstate a previous workflow, select the workflow and click Make Active",
-      "cancel": "zh-cn_Cancel",
-      "activate": "zh-cn_Make Active"
+      "title": "历史",
+      "body": "以下是以前的BPMN文件的历史记录。要恢复以前的工作流程，请选择工作流程，然后单击“生效”",
+      "cancel": "取消",
+      "activate": "激活"
     },
     "workflows.config.grid": {
-      "businessProcess": "zh-cn_Business Process",
-      "description": "zh-cn_Description",
-      "active": "zh-cn_Active",
-      "modified": "zh-cn_Modified",
-      "creator": "zh-cn_Author"
+      "businessProcess": "业务流程",
+      "description": "描述",
+      "active": "在使用",
+      "modified": "更改日期",
+      "creator": "作者"
     },
     "workflows.config.btn": {
-      "createNew": "zh-cn_Create New Model",
+      "createNew": "创建新模型",
       "createNewUrl": "https://activiti.alfresco.com",
-      "uploadNew": "zh-cn_Upload New BPMN"
+      "uploadNew": "上传新的BPMN"
     },
     "workflows.config.links": {
-      "download": "zh-cn_Download",
-      "replaceFile": "zh-cn_Replace File",
-      "versionHistory": "zh-cn_Version History",
-      "diagram": "zh-cn_Process Diagram"
+      "download": "下载",
+      "replaceFile": "替换文件",
+      "versionHistory": "版本历史",
+      "diagram": "过程图"
     },
     "workflows.config.upload": {
-      "success": "zh-cn_Successfully uploaded new process definition",
-      "error": "zh-cn_Error uploading new process definition"
+      "success": "成功上传新流程定义",
+      "error": "上传新的流程定义时出错"
     },
     "workflows.config.diagram": {
-      "title": "zh-cn_Process Diagram",
-      "error.loading": "zh-cn_Diagram can't be loaded",
+      "title": "过程图",
+      "error.loading": "图无法加载",
       "modal": {
-        "btnClose.text": "zh-cn_Close"
+        "btnClose.text": "关闭"
       }
     },
-    "formWorkflows.title": "zh-cn_Form/Workflow Link",
-    "formWorkflows.link": "zh-cn_Link Forms/Workflows",
-    "formWorkflows.link.undo": "zh-cn_Undo",
-    "formWorkflows.link.saveChanges": "zh-cn_Save Changes",
-    "formWorkflows.link.editRole.save.success": "zh-cn_Link Forms/Workflows configuration saved successfully",
-    "formWorkflows.link.editRole.save.error": "zh-cn_Can't save Link Forms/Workflows configuration",
+    "formWorkflows.title": "表单/工作流程链接",
+    "formWorkflows.link": "链接表单/工作流程",
+    "formWorkflows.link.undo": "复原",
+    "formWorkflows.link.saveChanges": "保存更改",
+    "formWorkflows.link.editRole.save.success": "链接表单/工作流配置保存成功",
+    "formWorkflows.link.editRole.save.error": "无法保存链接表单/工作流配置",
     "application": {
       "title": "应用",
       "locale.config": {
@@ -465,7 +472,7 @@
       },
       "labels.config": {
         "title": "标签设置",
-        "progressMessage": "更新标签...",
+        "progressMessage": "正在更新标签...请稍候",
         "data": {
           "description": "描述",
           "defaultValue": "默认值",
@@ -488,216 +495,276 @@
           "resetCustom.confirm": "您确定要删除所选的自定义资源吗?"
         }
       },
+      "lookups.config": {
+        "title": "查找配置",
+        "choose": "选择查找",
+        "data": {
+          "key": "关键字",
+          "value": "数值",
+          "inverseKey": "反转键",
+          "inverseValue": "反转值"
+        },
+        "modal": {
+          "title": "搜索标签",
+          "editEntry": "编辑查询条目",
+          "addEntry": "添加查询条目",
+          "key.placeholder": "输入关键字值",
+          "value.placeholder": "输入标签值",
+          "inversekey.placeholder": "输入反向关键字值",
+          "inversevalue.placeholder": "输入反向标签值",
+          "btnCancel.text": "取消",
+          "btnOk.text": "保存条目"
+        }
+      },
       "module.config": {
-        "title": "zh-cn_Module Configuration"
+        "title": "模块配置"
       },
       "userName.config": {
-        "title": "zh-cn_Username Display Configuration",
-        "userId.label": "zh-cn_Use User Identifier",
-        "userName.label": "zh-cn_Use Full Username",
-        "apply": "zh-cn_Apply",
-        "modal.title": "zh-cn_Information",
-        "modal.info": "zh-cn_Settings will take effect after refresh",
-        "modal.ok": "zh-cn_OK"
+        "title": "用户名显示配置",
+        "userId.label": "使用用户标识符",
+        "userName.label": "使用完整用户名",
+        "apply": "应用",
+        "modal.title": "信息",
+        "modal.info": "设置将在刷新后生效",
+        "modal.ok": "确定"
       },
       "login.config": {
-        "title": "zh-cn_Login Configuration",
-        "idleLimit.label": "zh-cn_Login idle limit (in milliseconds)",
-        "inform": "zh-cn_Settings will take effect for all new user sessions",
-        "apply.label": "zh-cn_Apply"
+        "title": "登录配置",
+        "idleLimit.label": "登录空闲限制（以毫秒为单位）",
+        "inform": "设置将对所有新用户会话生效",
+        "apply.label": "应用"
       },
       "auditHistory.config": {
-        "title": "zh-cn_Audit History",
-        "historyDays.label": "zh-cn_Keep Audit and Notification events (in days)",
-        "inform": "zh-cn_Setting successfully saved",
-        "apply.label": "zh-cn_Apply"
+        "title": "审计历史",
+        "historyDays.label": "保持审计和通知事件（天）",
+        "inform": "设置成功保存",
+        "apply.label": "生效"
       }
     },
-    "branding.title": "zh-cn_Branding",
-    "branding.logo": "zh-cn_Logo",
+    "branding.title": "品牌",
+    "branding.logo": "商标",
     "branding.logo.messages": {
-      "upload.success": "zh-cn_Custom logo files updated. Refresh browser page to see result.",
-      "upload.error": "zh-cn_Error uploading custom logo files."
+      "upload.success": "自定义徽标文件已更新刷新浏览器页面查看结果。",
+      "upload.error": "上传自定义徽标文件时出错。"
     },
-    "branding.logo.header.title": "zh-cn_Header",
-    "branding.logo.login.title": "zh-cn_Login Page",
-    "branding.logo.warningMessage": "zh-cn_Only PNG format is allowed. Recommended ratio is 1 to 4. Minimum height is 50px.",
+    "branding.logo.header.title": "标头",
+    "branding.logo.login.title": "登录页面",
+    "branding.logo.warningMessage": "只允许使用PNG格式。推荐比例为1至4.最小高度为50像素。",
     "branding.logo.btn": {
-      "chooseHeader": "zh-cn_Choose Header logo",
-      "chooseLogin": "zh-cn_Choose Login logo",
-      "saveFiles": "zh-cn_Save"
+      "chooseHeader": "选择标题标志",
+      "chooseLogin": "选择登录标志",
+      "saveFiles": "保存"
     },
     "branding": {
-      "customCss": "zh-cn_Custom CSS",
-      "customCss.save.success": "zh-cn_Custom CSS updated. Refresh browser page to see result.",
-      "customCss.save.error": "zh-cn_Error saving Custom CSS.",
-      "customCss.save": "zh-cn_Save"
+      "customCss": "自定义CSS",
+      "customCss.save.success": "自定义CSS已更新。刷新浏览器页面查看结果。",
+      "customCss.save.error": "保存自定义CSS时出错。",
+      "customCss.save": "保存"
     },
     "correspondenceManagement": {
-      "title": "zh-cn_Correspondence Management",
-      "templates": "zh-cn_Correspondence Templates",
-      "templates.addNewTemplate": "zh-cn_Upload Template",
-      "templates.addTemplate": "zh-cn_Upload",
-      "templates.versionTemplate": "zh-cn_Versions",
-      "templates.deleteTemplate": "zh-cn_Delete",
-      "templates.editTemplate": "zh-cn_Edit Template",
+      "title": "通信管理",
+      "templates": "通信模板",
+      "templates.addNewTemplate": "上传模板",
+      "templates.addTemplate": "上传",
+      "templates.versionTemplate": "版本",
+      "templates.deleteTemplate": "删除",
+      "templates.editTemplate": "编辑模板",
       "templates.grid": {
-        "id": "zh-cn_ID",
-        "title": "zh-cn_Title",
-        "label": "zh-cn_Display Name",
-        "path": "zh-cn_Path",
-        "created": "zh-cn_Created",
-        "modified": "zh-cn_Modified",
-        "creator": "zh-cn_Creator",
-        "modifier": "zh-cn_Modified By",
-        "activated": "zh-cn_Status",
-        "objectType": "zh-cn_Object Type",
-        "version": "zh-cn_Version",
-        "templateVersionActive": "zh-cn_Active"
+        "id": "ID",
+        "title": "标题",
+        "label": "显示名称",
+        "path": "路径",
+        "created": "创建日期",
+        "modified": "更改日期",
+        "creator": "创造者",
+        "modifier": "更改者",
+        "activated": "状态",
+        "objectType": "对象类型",
+        "version": "版本",
+        "templateVersionActive": "有效"
       },
-      "templates.fieldNames.label": "zh-cn_Map fields to values from the template",
+      "templates.fieldNames.label": "将字段映射到模板中的值",
       "templates.querySelect": {
-        "header.text": "zh-cn_Select Query",
-        "btnCancel.text": "zh-cn_Cancel",
-        "btnOk.text": "zh-cn_Select Query",
+        "header.text": "选择查询",
+        "btnCancel.text": "取消",
+        "btnOk.text": "选择查询",
         "table.columns": {
-          "beanId": "zh-cn_Bean ID",
-          "jpaQuery": "zh-cn_JPA Query",
-          "objectType": "zh-cn_Query Type"
+          "beanId": "Bean ID",
+          "jpaQuery": "JPA查询",
+          "objectType": "查询类型"
         }
       },
       "templates.modal": {
-        "objectTypes.label": "zh-cn_Object Types",
-        "querySelect.label": "zh-cn_Query Select",
-        "label.label": "zh-cn_Display Name",
-        "btnCancel.text": "zh-cn_Cancel",
-        "btnOk.text": "zh-cn_Upload Template"
+        "objectTypes.label": "对象类型",
+        "querySelect.label": "查询选择",
+        "label.label": "显示名称",
+        "btnCancel.text": "取消",
+        "btnOk.text": "上传模板"
       },
       "templates.version.modal": {
-        "btnOk.text": "zh-cn_OK"
+        "btnOk.text": "确定"
       },
-      "mergefields": "zh-cn_Merge Fields Configuration",
-      "mergefields.saveMergeFields": "zh-cn_Save",
-      "mergefields.versionMergeFields": "zh-cn_Versions",
+      "mergefields": "合并字段配置",
+      "mergefields.saveMergeFields": "保存",
+      "mergefields.versionMergeFields": "版本",
       "mergefields.grid": {
-        "fieldId": "zh-cn_ID",
-        "fieldValue": "zh-cn_Value",
-        "fieldDescription": "zh-cn_Description"
+        "fieldId": "ID",
+        "fieldValue": "数值",
+        "fieldDescription": "描述"
       },
       "mergefields.version.grid": {
-        "mergingVersion": "zh-cn_Version",
-        "modified": "zh-cn_Modified",
-        "modifier": "zh-cn_Modified By",
-        "mergingActiveVersion": "zh-cn_Active"
+        "mergingVersion": "版本",
+        "modified": "更改日期",
+        "modifier": "更改者",
+        "mergingActiveVersion": "有效"
       },
       "mergefields.version.modal": {
-        "btnLoadVersion.text": "zh-cn_Load Version",
-        "btnCancel.text": "zh-cn_Cancel"
+        "btnLoadVersion.text": "加载版本",
+        "btnCancel.text": "取消"
       }
     },
-    "forms.defaultValue": "zh-cn_Select Target",
-    "forms.addForm": "zh-cn_Add Plain Form",
+    "forms.defaultValue": "选择目标",
+    "forms.addForm": "添加平面",
     "forms.data": {
-      "name": "zh-cn_Form Name",
-      "applicationName": "zh-cn_Application name",
-      "description": "zh-cn_Description",
-      "target": "zh-cn_Target"
+      "name": "表单名称",
+      "applicationName": "应用名称",
+      "description": "描述",
+      "target": "目标"
     },
-    "forms.message.delete.success": "zh-cn_Successfully deleted row.",
-    "forms.message.delete.error": "zh-cn_Error deleting row.",
+    "forms.message.delete.success": "成功删除行。",
+    "forms.message.delete.error": "错误删除行。",
     "documentManagement": {
-      "title": "zh-cn_Document Management",
-      "cmisConfiguration": "zh-cn_CMIS Configuration",
-      "cmisConfiguration.addNewConfig": "zh-cn_Add New CMIS Config",
+      "title": "文件管理",
+      "cmisConfiguration": "CMIS配置",
+      "cmisConfiguration.addNewConfig": "添加新的CMIS配置",
       "cmisConfiguration.addNewConfig.modal": {
         "header": {
-          "new": "zh-cn_New CMIS Configuration",
-          "edit": "zh-cn_Edit CMIS Configuration"
+          "new": "新的CMIS配置",
+          "edit": "编辑CMIS配置"
         },
         "dialog": {
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_OK"
+          "cancel": "取消",
+          "ok": "确定"
         },
         "guidelineMessage": {
-          "repositoryId": "zh-cn_For Alfresco: leave cmis.repositoryId blank. For Documentum: set cmis.repositoryId to the docbase name."
+          "repositoryId": "对于Alfresco：将cmis.repositoryId留空。对于Documentum：将cmis.repositoryId设置为docbase名称。"
         }
       },
       "cmisConfiguration.data": {
         "id": {
-          "label": "zh-cn_CMIS ID",
-          "placeholder": "zh-cn_CMIS ID"
+          "label": "CMIS ID",
+          "placeholder": "CMIS ID"
         },
         "baseUrl": {
-          "label": "zh-cn_Base URL",
-          "placeholder": "zh-cn_Base URL"
+          "label": "基本URL",
+          "placeholder": "基本URL"
         },
         "username": {
-          "label": "zh-cn_Username",
-          "placeholder": "zh-cn_Username"
+          "label": "用户名",
+          "placeholder": "用户名"
         },
         "password": {
-          "label": "zh-cn_Password",
-          "placeholder": "zh-cn_Password"
+          "label": "密码",
+          "placeholder": "密码"
         },
         "useAlfrescoExtension": {
-          "label": "zh-cn_Use Alfresco Extension",
-          "placeholder": "zh-cn_Use Alfresco Extension"
+          "label": "使用Alfresco扩展",
+          "placeholder": "使用Alfresco扩展"
         },
         "endpoint": {
-          "label": "zh-cn_Endpoint",
-          "placeholder": "zh-cn_Endpoint"
+          "label": "端点",
+          "placeholder": "端点"
         },
         "maxIdle": {
-          "label": "zh-cn_Maximum Idle",
-          "placeholder": "zh-cn_Maximum Idle"
+          "label": "最大空闲",
+          "placeholder": "最大空闲"
         },
         "maxActive": {
-          "label": "zh-cn_Maximum Active",
-          "placeholder": "zh-cn_Maximum Active"
+          "label": "最大活动",
+          "placeholder": "最大活动"
         },
         "maxWait": {
-          "label": "zh-cn_Maximum Wait",
-          "placeholder": "zh-cn_Maximum Wait"
+          "label": "最大等待",
+          "placeholder": "最大等待"
         },
         "minEvictionMillis": {
-          "label": "zh-cn_Minimum Eviction Milliseconds",
-          "placeholder": "zh-cn_Minimum Eviction Milliseconds"
+          "label": "最小驱逐毫秒",
+          "placeholder": "最小驱逐毫秒"
         },
         "evictionCheckIntervalMillis": {
-          "label": "zh-cn_Eviction Check Interval Milliseconds",
-          "placeholder": "zh-cn_Eviction Check Interval Milliseconds"
+          "label": "驱逐检查间隔毫秒",
+          "placeholder": "驱逐检查间隔毫秒"
         },
         "reconnectCount": {
-          "label": "zh-cn_Reconnect Count",
-          "placeholder": "zh-cn_Reconnect Count"
+          "label": "重新连接计数",
+          "placeholder": "重新连接计数"
         },
         "reconnectFrequency": {
-          "label": "zh-cn_Reconnect Frequency",
-          "placeholder": "zh-cn_Reconnect Frequency"
+          "label": "重新连接频率",
+          "placeholder": "重新连接频率"
         },
         "repositoryId": {
-          "label": "zh-cn_Repository Id",
-          "placeholder": "zh-cn_Repository Id"
+          "label": "存储库ID",
+          "placeholder": "存储库ID"
         },
         "versioningState": {
-          "label": "zh-cn_Versioning State",
-          "placeholder": "zh-cn_Versioning State"
+          "label": "版本控制状态",
+          "placeholder": "版本控制状态"
         }
       },
       "cmisConfiguration.deleteDialog": {
-        "cancelBtn": "zh-cn_Cancel",
-        "deleteBtn": "zh-cn_Cofirm Delete",
-        "headerText": "zh-cn_You are about to delete CMIS Configuration:",
-        "bodyText": "zh-cn_Are you sure?"
+        "cancelBtn": "取消",
+        "deleteBtn": "确认删除",
+        "headerText": "您即将删除CMIS配置：",
+        "bodyText": "你确定？"
       },
       "cmisConfiguration.messages": {
-        "delete.success": "zh-cn_Successfully deleted configuration.",
-        "delete.error": "zh-cn_Error deleting configuration.",
-        "insert.success": "zh-cn_Successfully created new configuration row.",
-        "insert.error": "zh-cn_Error creating new configuration row.",
-        "update.success": "zh-cn_Successfully updated configuration row.",
-        "update.error": "zh-cn_Error updating configuration row."
+        "delete.success": "成功删除配置",
+        "delete.error": "删除配置时出错。",
+        "insert.success": "成功创建新的配置行。",
+        "insert.error": "创建新配置行时出错。",
+        "update.success": "成功更新配置行。",
+        "update.error": "错误更新配置行。"
       }
     }
+  },
+  "admin.comp.securityLdapConfig": {
+    "title": "安全 - Ldap配置网格"
+  },
+  "admin.comp.correspondenceManagementMergeFields": {
+    "title": "通信管理合并字段网格"
+  },
+  "admin.comp.correspondenceManagementMergeFieldsVersions": {
+    "title": "通信管理合并字段版本网格"
+  },
+  "admin.comp.correspondenceManagementTemplates": {
+    "title": "通信管理模板网格"
+  },
+  "admin.comp.correspondenceManagementTemplateVersions": {
+    "title": "对应管理模板版本网格"
+  },
+  "admin.comp.labelsConfig": {
+    "title": "应用 - 标签配置网格"
+  },
+  "admin.comp.plainFormsConfig": {
+    "title": "表格 - 表格配置网格"
+  },
+  "admin.comp.workflowsConfig": {
+    "title": "工作流程 - 工作流配置网格"
+  },
+  "admin.comp.workflowsHistoryDialogConfig": {
+    "title": "工作流程 - 工作流程配置历史记录对话框"
+  },
+  "admin.comp.usersPicker": {
+    "title": "选择用户"
+  },
+  "admin.comp.orgHierarchy": {
+    "title": "组织层次结构"
+  },
+  "admin.comp.cmisConfiguration": {
+    "title": "CMIS配置网格"
+  },
+  "admin.comp.emailTemplates": {
+    "title": "电子邮件模板"
   }
 }

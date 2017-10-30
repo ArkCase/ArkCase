@@ -19,7 +19,6 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-
         };
 
         $scope.addParent = function (isSelectedParent) {

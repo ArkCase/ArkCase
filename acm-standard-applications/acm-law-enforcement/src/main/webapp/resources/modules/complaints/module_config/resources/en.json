@@ -150,9 +150,9 @@
     "table.columns": {
       "targetName": "Number",
       "targetTitle": "Title",
-      "parentName": "Parent",
+      "targetType": "Type",
+      "assignee": "Assignee",
       "modified": "Modified",
-      "targetType": "Reference Type",
       "status": "Status"
     }
   },

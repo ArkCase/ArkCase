@@ -1,7 +1,7 @@
 <section>
     <div class="well-small">
         <div ng-controller="Profile.PicController" class="row profile">
-            <div class="col-xs-4 text-center">
+            <div class="col-xs-3 text-center">
                 <div>
                     <img id="picLoading" class="img-circle img-responsive"  ng-src="{{imgSrc}}" fallback-err-src="modules/profile/img/nopic.png">
                     <div>
@@ -9,12 +9,26 @@
                             <span translate>profile.picture.title</span>
                         </u></a>
                     </div>
-                    <button ngf-select ng-model="userPicture"  id="file" 
-                    		ngf-pattern="'image/*'" ngf-accept="'image/*'" 
-                    		class="btn btn-sm btn-default hidden" ngf-change="submit()" ></button>
+                    <button ngf-select ng-model="userPicture" id="file"
+                            ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                            class="btn btn-sm btn-default hidden" ngf-change="submit()"></button>
                 </div>
             </div>
-            <div class="col-xs-8">
+            <div class="col-xs-3 text-center">
+                <div>
+                    <img id="signature" class="img-circle img-responsive" ng-src="{{imgSignatureSrc}}"
+                         fallback-err-src="modules/profile/img/nopic.png">
+                    <div>
+                        <a id="lnkChangeSignature" data-ui-sref="profile" ng-click="changeSignature()"><u>
+                            <span translate>profile.signature.title</span>
+                        </u></a>
+                    </div>
+                    <button ngf-select ng-model="userSignature" id="fileSignature"
+                            ngf-pattern="'image/*'" ngf-accept="'image/*'"
+                            class="btn btn-sm btn-default hidden" ngf-change="submitSignature()"></button>
+                </div>
+            </div>
+            <div class="col-xs-6">
                 <h4 id="fullName">{{profilePicFullName || 'common.value.unknown' | translate}}</h4>
                 <h4>  <a href="#"  editable-text="profilePicTitle" onaftersave="update()">{{ profilePicTitle || 'common.value.unknown' | translate}}</a></h4>
                 <h4 id="email">{{ profilePicEmail || 'common.value.unknown' | translate}}</h4>

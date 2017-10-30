@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "画像を変更する",
     "email": "電子メールアドレス",
-    "uploadImgError": "あなたは無効な画像ファイルタイプをアップロードしました"
+    "uploadImgError": "あなたは無効な画像ファイルタイプをアップロードしました",
+    "uploadError": "新しいプロフィール写真をアップロードできませんでした"
+  },
+  "profile.signature": {
+    "title": "署名の変更",
+    "uploadError": "新しい署名のアップロードに失敗しました"
   },
   "profile.modal": {
     "title": "情報",

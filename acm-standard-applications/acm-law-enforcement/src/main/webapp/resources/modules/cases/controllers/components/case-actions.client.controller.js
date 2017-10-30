@@ -120,7 +120,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
 
                     MergeSplitService.mergeCaseFile(caseInfo.id, caseSummary.object_id_s).then(
                         function (data) {
-                            ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                            ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
                         });
 
                 }
@@ -139,7 +139,7 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
                     if (caseSummary != null) {
                         MergeSplitService.splitCaseFile(caseSummary).then(
                             function (data) {
-                                ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.id);
+                                ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.id);
                             });
                     }
                 }

@@ -115,8 +115,9 @@
     "table.columns": {
       "targetName": "Number",
       "targetTitle": "Title",
+      "targetType": "Type",
+      "assignee": "Assignee",
       "modified": "Modified",
-      "targetType": "Reference Type",
       "status": "Status"
     }
   },
