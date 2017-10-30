@@ -291,9 +291,14 @@
     "title": "Approvers",
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
+    "processInitialize.successfull": "Process Initialized",
+    "processInitialize.fail": "Process Not Initialized",
+    "processWithdraw.successfull": "Process Withdrawn",
+    "processWithdraw.fail": "Process Not Withdrawn",
     "button": {
       "save.tooltip": "Save Changes",
-      "initiate.tooltip": "Initiate Task"
+      "initiate.tooltip": "Initiate Task",
+      "withdraw.tooltip": "Withdraw Task"
     },
     "table.columns": {
       "assignee": "Assignee",

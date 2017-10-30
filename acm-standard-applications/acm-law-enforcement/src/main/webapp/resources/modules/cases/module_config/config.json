@@ -1241,13 +1241,13 @@
           "cellTemplate": ""
         },
         {
-          "name": "fullName",
+          "name": "approverId",
           "displayName": "cases.comp.approvalRouting.table.columns.assignee",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
         {
-          "name": "owningGroup",
+          "name": "groupName",
           "displayName": "cases.comp.approvalRouting.table.columns.group",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
