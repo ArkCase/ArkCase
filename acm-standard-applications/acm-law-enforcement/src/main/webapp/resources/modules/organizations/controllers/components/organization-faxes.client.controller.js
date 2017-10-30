@@ -85,6 +85,7 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
                 id: rowEntity.id,
                 type: rowEntity.type,
                 subType: rowEntity.subType,
+                subLookup: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description
             };
