@@ -74,4 +74,38 @@
             <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
     </changeSet>
+
+
+    <changeSet id="07-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mysql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" valueComputed="SUBSTRING_INDEX(cm_group_name, '-UUID-', 1)"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="07-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="postgresql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" valueComputed="split_part(cm_group_name, '-UUID-', 1)"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="08-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+        <sql>UPDATE acm_group SET cm_group_display_name = cm_group_name</sql>
+    </changeSet>
+    <changeSet id="09-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" valueComputed="SUBSTRING(cm_group_display_name,0,CHARINDEX('-UUID-',cm_group_display_name,0))"/>
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
+        </update>
+    </changeSet>
+
+    <changeSet id="10-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+        <sql>UPDATE acm_group SET cm_group_display_name = cm_group_name</sql>
+    </changeSet>
+    <changeSet id="11-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
+        <update tableName="acm_group">
+            <column name="cm_group_display_name" valueComputed="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
+            <where>cm_group_display_name LIKE '%-UUID-%'</where>
+        </update>
+    </changeSet>
+
 </databaseChangeLog>

@@ -327,9 +327,43 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NoResultException | NonUniqueResultException e)
         {
-            log.error("User with password reset token: [{}] not found!", token, e.getMessage());
+            log.error("User with password reset token: [{}] not found!", token);
             return null;
         }
+    }
+
+    public List<AcmUser> findByEmailAddress(String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        return query.getResultList();
+    }
+
+    public AcmUser findByUserIdAndEmailAddress(String userId, String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE user.userId = :userId AND LOWER(user.mail) = :email";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        query.setParameter("userId", userId.toLowerCase());
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with id [{}] and email [{}]", userId, email);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with userId [{}] and email [{}]. More than one user has this name or address",
+                    userId, email);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by user id [{}] and email [{}]", userId, email, e);
+        }
+        return null;
     }
 
     public List<AcmUser> findByDirectory(String directoryName)

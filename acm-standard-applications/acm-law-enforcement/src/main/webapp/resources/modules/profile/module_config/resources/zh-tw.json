@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "更換圖片",
     "email": "電郵地址",
-    "uploadImgError": "您上傳圖片的文件類型不正確"
+    "uploadImgError": "您上传图片的文件类型不正确",
+    "uploadError": "上传新的个人资料图片失败"
+  },
+  "profile.signature": {
+    "title": "更改签名",
+    "uploadError": "上传新签名失败"
   },
   "profile.modal": {
     "title": "信息",

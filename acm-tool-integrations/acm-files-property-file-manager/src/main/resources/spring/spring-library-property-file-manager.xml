@@ -42,7 +42,7 @@
                 <value>file:${user.home}/.arkcase/acm/acmEmailSender.properties</value>
                 <value>file:${user.home}/.arkcase/acm/personPlugin.properties</value>
                 <value>file:${user.home}/.arkcase/acm/profilePlugin.properties</value>
-                <value>file:${user.home}/.arkcase/acm/resetPasswordNotifier.properties</value>
+                <value>file:${user.home}/.arkcase/acm/usernamePasswordNotifier.properties</value>
                 <value>file:${user.home}/.arkcase/acm/solr.properties</value>
                 <value>file:${user.home}/.arkcase/acm/sso/spring-config-armedia-sso.properties</value>
                 <value>file:${user.home}/.arkcase/acm/subscriptionPlugin.properties</value>

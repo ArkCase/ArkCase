@@ -41,7 +41,7 @@
         "dba": "DBA"
       },
       "fileTypes": {
-        "ev": "e-Entrega",
+        "ev": "E-Entrega",
         "gr": "Liberación General",
         "mr": "Liberación médica",
         "noi": "Aviso de investigación",
@@ -462,7 +462,7 @@
           "approved": "Aprobado"
         },
         "other": {
-          "leap": "SALTO",
+          "leap": "LEAP",
           "training": "Formación",
           "conference": "Conferencia"
         },
@@ -483,6 +483,14 @@
           "full": "Completo",
           "partial": "Parcial"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Aprobar documento",
+        "rework": "Enviar para volver a trabajar",
+        "resubmit": "Reenviar",
+        "cancel": "Cancelar documento",
+        "concur": "Concurrir",
+        "nonConcur": "No concurra"
       }
     },
     "userInfo": {
@@ -501,7 +509,7 @@
       "locale.updateList": "Actualizar sobre la lista"
     },
     "loginWarning": {
-      "btnOK.text": "DE ACUERDO",
+      "btnOK.text": "De Acuerdo",
       "btnCancel.text": "Cancelar",
       "checkbox_warning.label": "Reconozco esta advertencia."
     },

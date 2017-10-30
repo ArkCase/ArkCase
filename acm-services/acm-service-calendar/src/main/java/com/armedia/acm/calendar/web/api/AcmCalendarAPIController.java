@@ -2,14 +2,12 @@ package com.armedia.acm.calendar.web.api;
 
 import static com.armedia.acm.calendar.DateTimeAdjuster.adjustDateTimeString;
 
-import com.armedia.acm.calendar.service.AcmCalendar;
-import com.armedia.acm.calendar.service.AcmCalendarEvent;
-import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
-import com.armedia.acm.calendar.service.AcmCalendarInfo;
-import com.armedia.acm.calendar.service.CalendarExceptionMapper;
-import com.armedia.acm.calendar.service.CalendarService;
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.services.users.model.AcmUser;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,19 +23,22 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpSession;
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
+import com.armedia.acm.calendar.service.AcmCalendar;
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
+import com.armedia.acm.calendar.service.AcmCalendarInfo;
+import com.armedia.acm.calendar.service.CalendarExceptionMapper;
+import com.armedia.acm.calendar.service.CalendarService;
+import com.armedia.acm.calendar.service.CalendarServiceConfigurationException;
+import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.services.users.model.AcmUser;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
  *
  */
 @Controller
-@RequestMapping({ "/api/v1/service/calendar", "/api/latest/service/calendar" })
+@RequestMapping({"/api/v1/service/calendar", "/api/latest/service/calendar"})
 public class AcmCalendarAPIController
 {
 
@@ -75,7 +76,8 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException(""));
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        "Error while retrieving calendar configuration, most likely integration not enabled."));
         return calendar.getInfo();
     }
 
@@ -91,7 +93,8 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException(""));
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        "Error while retrieving calendar configuration, most likely integration not enabled."));
         return calendar.listItemsInfo(toZonedDate(setDefaultStart(after)), toZonedDate(setDefaultEnd(before)), sort, sortDirection, start,
                 maxItems);
     }
@@ -106,19 +109,10 @@ public class AcmCalendarAPIController
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "maxItems", required = false, defaultValue = "50") int maxItems) throws CalendarServiceException
     {
-
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
-
-        AcmCalendar calendar = null;
-        try
-        {
-            calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                    .orElseThrow(() -> new CalendarServiceException("Error while retrieving Exchange Calendar Integration."));
-        }
-        catch (Exception e) {
-            throw new CalendarServiceException(e.getMessage());
-        }
-
+        AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        "Error while retrieving calendar configuration, most likely integration not enabled."));
         return calendar.listItems(toZonedDate(setDefaultStart(after)), toZonedDate(setDefaultEnd(before)), sort, sortDirection, start,
                 maxItems);
     }
@@ -132,11 +126,12 @@ public class AcmCalendarAPIController
     {
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
-                .orElseThrow(() -> new CalendarServiceException(""));
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        "Error while retrieving calendar configuration, most likely integration not enabled."));
         return calendar.getEvent(eventId, retrieveMaster);
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(method = RequestMethod.POST, consumes = {"multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth, @RequestPart("data") AcmCalendarEvent calendarEvent,
             @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws CalendarServiceException
     {
@@ -145,7 +140,7 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
+    @RequestMapping(method = RequestMethod.PUT, consumes = {"multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
             @RequestParam(value = "updateMaster", required = false, defaultValue = "false") boolean updateMaster,
             @RequestPart("data") AcmCalendarEvent calendarEvent, @RequestPart(value = "file", required = false) MultipartFile[] attachments)

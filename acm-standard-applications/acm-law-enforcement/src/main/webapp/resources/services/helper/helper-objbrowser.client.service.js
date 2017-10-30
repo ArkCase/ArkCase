@@ -12,9 +12,13 @@
  * Content part consists list of Components.
  * Tree helper uses 'object-tree' directive. Content helper includes component links and data loading. Component helper includes common object info handling
  */
-angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout'
+angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resource', '$translate', '$timeout', '$locale'
     , 'Acm.StoreService', 'UtilService', 'ConfigService', 'ServCommService', 'MessageService', 'ObjectService'
-    , function ($q, $resource, $translate, $timeout, Store, Util, ConfigService, ServCommService, MessageService, ObjectService) {
+    , 'Config.LocaleService'
+    , function ($q, $resource, $translate, $timeout, $locale
+        , Store, Util, ConfigService, ServCommService, MessageService, ObjectService
+        , LocaleService
+    ) {
 
         var SyncDataLoader = {
             data: {},
@@ -503,6 +507,17 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         return arg.onConfigRetrieved(componentConfig);
                     }
                 };
+                that.scope.lang = LocaleService.getLocaleData().code;
+                that.scope.locale = $locale;
+                that.scope.currencySymbol = LocaleService.getCurrencySymbol($locale.id);
+                that.scope.$bus.subscribe('$translateChangeSuccess', function (data) {
+                    that.scope.lang = Util.goodMapValue(data, "lang", LocaleService.getLocaleData().code);
+                    that.scope.locale = $locale;
+                    that.scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
+                    if (arg.onTranslateChangeSuccess) {
+                        return arg.onTranslateChangeSuccess(data);
+                    }
+                });
 
                 that.deferConfigDone = $q.defer();
                 that.promiseConfig = ConfigService.getComponentConfig(that.moduleId, that.componentId);
@@ -586,131 +601,61 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
              */
             , onLoad: function (start, n, sort, filters, query) {
                 var that = this;
-                if (that.firstLoad && that.nodeId) {
-                    that.scope.treeData = null;
-                }
 
-                that.getTreeData(start, n, sort, filters, query).then(
-                    function (treeData) {
-                        if (that.firstLoad) {
-                            if (that.nodeId) {
-                                if (that.scope.treeData) {            //It must be set by getNodeData(), only 1 items in docs[] is expected
-                                    var found = that.findByNodeId(treeData.docs, that.scope.treeData.docs[0].nodeId);
-                                    if (!found) {
-                                        var clone = _.clone(treeData.docs);
-                                        clone.unshift(that.scope.treeData.docs[0]);
-                                        treeData.docs = clone;
-                                    }
-                                    that.firstLoad = false;
-                                } else {
-                                    if (0 < treeData.docs.length) {
-                                        var found = that.findByNodeId(treeData.docs, that.nodeId);
-                                        var selectNode = (found) ? found : treeData.docs[0];
-                                        that.scope.treeControl.select({
-                                            pageStart: start
-                                            , nodeType: selectNode.nodeType
-                                            , nodeId: selectNode.nodeId
-                                            , subKey: that.subKey
-                                        });
-                                    }
-                                    that.firstLoad = false;
-                                }
+                var promiseTreeData = that.getTreeData(start, n, sort, filters, query);
 
-
-                            } else {
-                                if (0 < treeData.docs.length) {
-                                    var selectNode = treeData.docs[0];
-                                    that.scope.treeControl.select({
-                                        pageStart: start
-                                        , nodeType: selectNode.nodeType
-                                        , nodeId: selectNode.nodeId
-                                        , subKey: that.subKey
-                                    });
-                                }
-                                that.firstLoad = false;
-                            }
-                        }
-
-                        that.scope.treeData = treeData;
-                        return treeData;
-                    }
-                );
-
-
-                if (that.firstLoad && Util.goodPositive(that.nodeId)) {
-                    SyncDataLoader.load(that.moduleId, that.getNodeData, [that.nodeId],
-                        function (objectInfo) {
+                var deferNodeData = $q.defer();
+                if (that.nodeId) {
+                    that.getNodeData(that.nodeId).then(
+                        function(objectInfo) {
                             var treeNode = that.makeTreeNode(objectInfo);
-                            that.scope.treeControl.select({
-                                pageStart: start
-                                , nodeType: treeNode.nodeType
-                                , nodeId: treeNode.nodeId
-                                , subKey: that.subKey
-                            });
-
-                            var treeData = {docs: [], total: 0};
-                            if (that.scope.treeData) {            //It must be set by getTreeData()
-                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
-                                if (!found) {
-                                    treeData.docs = _.clone(that.scope.treeData.docs);
-                                    treeData.total = that.scope.treeData.total;
-                                    treeData.docs.unshift(treeNode);
-                                } else {
-                                    treeData = that.scope.treeData; //use what is there already
-                                }
-                                that.firstLoad = false;
-
-                            } else {
-                                treeData.total = 1;
-                                treeData.docs.unshift(treeNode);
-                            }
-
-                            that.scope.treeData = treeData;
+                            deferNodeData.resolve(treeNode);
                             return objectInfo;
-                        }
-                        , function (errorData) {
-                            
-                            var nodeType = errorData.status === 403 ? "NO_ACCESS" : "ERROR";
-
-                            that.scope.treeControl.select({
-                                pageStart: start
-                                , nodeType: nodeType
-                                , nodeId: that.nodeId
-                                , subKey: that.subKey
-                            });
-
-                            var treeData = {docs: [], total: 0};
-                            var nodeTitle = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.title") : $translate.instant("common.directive.objectTree.errorNode.title");
-                            var nodeToolTip = errorData.status === 403 ? $translate.instant("common.directive.objectTree.noAccessNode.toolTip") : $translate.instant("common.directive.objectTree.errorNode.toolTip");
-                            
-                            var errorNode = {
+                        },
+                        function(errorData) {
+                            var treeNode = {
                                 nodeId: that.nodeId
-                                , nodeType: nodeType
-                                , nodeTitle: nodeTitle
-                                , nodeToolTip: nodeToolTip
+                                , nodeType: "ERROR"
+                                , nodeToolTip: Util.goodMapValue(errorData, "data")
                             };
-                            
-                            if (that.scope.treeData) {            //It must be set by CallTasksService.queryTasksTreeData()
-                                var found = that.findByNodeId(that.scope.treeData.docs, that.nodeId);
-                                if (!found) {
-                                    treeData.docs = _.clone(that.scope.treeData.docs);
-                                    treeData.total = that.scope.treeData.total;
-                                    treeData.docs.unshift(errorNode);
-                                } else {
-                                    treeData = that.scope.treeData; //use what is there already
-                                }
-                                that.firstLoad = false;
-
-                            } else {
-                                treeData.total = 1;
-                                treeData.docs.unshift(errorNode);
-                            }
-
-                            that.scope.treeData = treeData;
+                            deferNodeData.resolve(treeNode);
                             return errorData;
                         }
                     );
+                } else {
+                    deferNodeData.resolve(null);
                 }
+
+                $q.all([promiseTreeData, deferNodeData.promise]).then(function(data){
+                    var treeData = Util.goodValue(data[0], {docs: [], total: 0});
+                    var treeNode = data[1];
+
+                    var selectNode = Util.goodMapValue(treeData, "docs[0]", null);
+                    if (treeNode) {
+                        var found = that.findByNodeId(treeData.docs, treeNode.nodeId);
+                        if (found) {
+                            selectNode = found;
+                        } else {
+                            var docs = _.clone(treeData.docs);
+                            docs.unshift(treeNode);
+                            treeData = {
+                                docs: docs,
+                                total: treeData.total + 1
+                            };
+                            selectNode = treeNode;
+                        }
+                    }
+
+                    that.scope.treeData = treeData;
+                    if (selectNode) {
+                        that.scope.treeControl.select({
+                            pageStart: start
+                            , nodeType: selectNode.nodeType
+                            , nodeId: selectNode.nodeId
+                            , subKey: that.subKey
+                        });
+                    }
+                });
             }
 
             , onSelect: function (selectedObject) {
@@ -733,15 +678,12 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             }
 
             , findByNodeId: function (docs, nodeId) {
-                //return _.find(docs, {nodeId: nodeId});   //somehow, _.find() does not always work
-                var found = null;
-                for (var i = 0; i < docs.length; i++) {
-                    if (docs[i].nodeId === nodeId) {
-                        found = docs[i];
-                        break;
+                if (nodeId) {
+                    if (_.isNumber(nodeId)) {
+                        nodeId = nodeId.toString();
                     }
                 }
-                return found;
+                return _.find(docs, {nodeId: nodeId});
             }
         };
 
