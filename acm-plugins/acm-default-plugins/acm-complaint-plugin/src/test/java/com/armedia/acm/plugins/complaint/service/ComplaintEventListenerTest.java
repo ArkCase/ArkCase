@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,7 +102,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaint.setPriority(PRIORITY);
         complaint.setDetails(DETAILS);
         complaint.setStatus(STATUS);
-        complaint.setLocation(getAddress());
+        complaint.setAddresses(Arrays.asList(getAddress()));
         complaint.setParticipants(participants);
         complaint.setContainer(container);
         return complaint;
@@ -307,20 +308,21 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
         // set different location's info
-        jsonComplaint.getLocation().setState("USA");
+        jsonComplaint.getAddresses().get(0).setState("USA");
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
         runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint);
     }
 
+
     @Test
-    public void testLocationIsUpdatedWhenPreviouslyNull()
+    public void testLocationIsUpdatedWhenPreviouslyIsEmpty()
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
         Complaint jsonComplaint = getComplaint();
         // set null as primary location value
-        jsonComplaint.setLocation(null);
+        jsonComplaint.setAddresses(new ArrayList<>());
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
         AcmObjectHistory previousHistory = new AcmObjectHistory();
@@ -328,7 +330,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         previousHistory.setObjectString(currentJsonObject);
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
-        jsonComplaint.setLocation(getAddress());
+        jsonComplaint.setAddresses(Arrays.asList(getAddress()));
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
         currentHistory.setObjectString(currentJsonObject);
@@ -429,7 +431,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         assertEquals(IP_ADDRESS, ipAddress);
         assertNotNull(complaintCapture);
         assertEquals(jsonComplaint.getId(), complaintCapture.getId());
-        assertEquals(jsonComplaint.getLocation(), complaintCapture.getLocation());
+        assertEquals(jsonComplaint.getAddresses(), complaintCapture.getAddresses());
         assertEquals(jsonComplaint.getDetails(), complaintCapture.getDetails());
         assertEquals(jsonComplaint.getStatus(), complaintCapture.getStatus());
         assertEquals(jsonComplaint.getPriority(), complaintCapture.getPriority());
