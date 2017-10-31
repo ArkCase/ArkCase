@@ -8,12 +8,12 @@
                         <button tooltip="{{cases.comp.approvalRouting.button.initiate.tooltip}}" tooltip-append-to-body="true"
                                 tooltip-popup-delay="400"
                                 class="btn btn-default btn-xs"
-                                ng-click="initiateTask()" ng-hide="processInitialized">
+                                ng-click="initiateTask()" ng-show="showInitButton == true">
                                 <span translate="" class="ng-scope">Initiate</span></button>
                         <button tooltip="{{cases.comp.approvalRouting.button.withdraw.tooltip}}" tooltip-append-to-body="true"
                                 tooltip-popup-delay="400"
                                 class="btn btn-default btn-xs"
-                                ng-click="withdrawTask()" ng-show="processInitialized">
+                                ng-click="withdrawTask()" ng-show="showWithdrowButton == true">
                                 <span translate="" class="ng-scope">Withdraw</span></button>
                         <button tooltip="{{addNewTooltip}}" tooltip-append-to-body="true" tooltip-popup-delay="400"
                                 class="btn btn-default btn-xs"
