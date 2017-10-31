@@ -1,7 +1,7 @@
 'use strict';
 angular.module('complaints').controller('Complaint.LocationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService',
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, ComplaintInfoService, Authentication
         , HelperUiGridService, HelperObjectBrowserService, PermissionsService ) {
