@@ -63,9 +63,16 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                             });
                         });
                     }
+                    else {
+                        $scope.objectInfo = {'id': currentObjectId};
+                    }
                 });
             }
         };
+
+        $scope.$bus.subscribe('buckslip-process-refresh', function (objectInfo){
+            onObjectInfoRetrieved(objectInfo);
+        });
 
         $scope.$bus.subscribe('buckslip-task-object-updated-subscribe-created', function (created){
             if ($scope.objectInfo && created) {

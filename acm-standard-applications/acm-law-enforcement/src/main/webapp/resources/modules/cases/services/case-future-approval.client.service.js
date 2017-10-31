@@ -14,56 +14,56 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
     var _getBuckslipFutureTasks = function (businessProcessId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/getBuckslipFutureTasks/businessProcessId/' + businessProcessId
+            url: 'api/latest/plugin/task/businessProcess/'+ businessProcessId + '/futureTasks'
         });
     };
 
     var _getBuckslipPastTasks = function (businessProcessId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/getBuckslipPastTasks/businessProcessId/' + businessProcessId
+            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/pastTasks'
         });
     };
 
     var _getBuckslipProcessesForChildren = function (objectType, objectId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/getBuckslipProcessesForChildren/objectType/' + objectType + '/objectId/' + objectId
+            url: 'api/latest/plugin/task/objectType/' + objectType + '/objectId/' + objectId + '/buckslipProcessesForChildren'
         });
     };
 
     var _isWorkflowInitiable = function (businessProcessId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/isWorkflowInitiable/businessProcessId/' + businessProcessId
+            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/initiatable'
         });
     };
 
     var _isWorkflowWithdrawable = function (businessProcessId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/isWorkflowWithdrawable/businessProcessId/' + businessProcessId
+            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/withdrawable'
         });
     };
 
-    var _initiateRoutingWorkflow = function (businessProcessId, receiveTaskId) {
+    var _initiateRoutingWorkflow = function (businessProcessId) {
         return $http({
             method: 'POST',
-            url: 'api/latest/plugin/task/initiateRoutingWorkflow/businessProcessId/' + businessProcessId + '/receiveTaskId/' + receiveTaskId
+            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/initiate'
         });
     };
 
-    var _withdrawRoutingWorkflow = function (taskId, messageName) {
+    var _withdrawRoutingWorkflow = function (taskId) {
         return $http({
             method: 'POST',
-            url: 'api/latest/plugin/task/withdrawRoutingWorkflow/taskId/' + taskId + '/messageName/' + messageName
+            url: 'api/latest/plugin/task/' + taskId + '/withdraw'
         });
     };
 
     var _updateBuckslipProcess = function (buckslipProcess) {
         return $http({
             method: 'POST',
-            url: 'api/latest/plugin/task/updateBuckslipProcess',
+            url: 'api/latest/plugin/task/buckslipProcesses',
             data: buckslipProcess,
             headers: {
                 "Content-Type": "application/json"
