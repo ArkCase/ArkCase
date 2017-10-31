@@ -216,7 +216,8 @@
     "overdue.tooltip": "Task is Overdue",
     "deadline.tooltip": "Deadline is Approaching",
     "groupToggle.label": "Group Task?",
-    "group.placeholder": "Please select a group."
+    "group.placeholder": "Please select a group.",
+    "attachments.label": "Attachments"
   },
   "tasks.userOrGroupSearch": {
     "id": "userSearch",

@@ -39,4 +39,6 @@ public interface AcmTaskService
                      Long parentId);
 
     byte[] getDiagram(Long id) throws AcmTaskException;
+
+    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
 }

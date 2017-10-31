@@ -47,7 +47,8 @@
     "title": "Documents",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
+    "searchInputPlaceholder": "Search",
+    "newTask": "New Task"
   },
   "complaints.comp.people": {
     "title": "People",

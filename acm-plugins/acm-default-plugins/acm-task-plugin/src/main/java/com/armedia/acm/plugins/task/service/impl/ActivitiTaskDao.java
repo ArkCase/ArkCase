@@ -51,6 +51,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -59,12 +60,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
@@ -1293,6 +1289,47 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         }
 
         return diagram;
+    }
+
+    @Override
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws  AcmTaskException {
+        List<String> reviewers = new ArrayList<>();
+        reviewers.add(task.getAssignee());
+        List<AcmTask> createdAcmTasks = new ArrayList<>();
+
+        // Iterate through the list of documentsToReview and start business process for each of them
+        for (EcmFile documentUnderReview : task.getDocumentsToReview())
+        {
+            Map<String, Object> pVars = new HashMap<>();
+
+            pVars.put("reviewers", reviewers);
+            pVars.put("taskName", task.getTitle());
+            pVars.put("documentAuthor", authentication.getName());
+            pVars.put("pdfRenditionId", documentUnderReview.getFileId());
+            pVars.put("formXmlId", null);
+            pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
+
+            pVars.put("OBJECT_TYPE", "FILE");
+            pVars.put("OBJECT_ID", documentUnderReview.getFileId());
+            pVars.put("OBJECT_NAME", documentUnderReview.getFileName());
+            pVars.put("PARENT_OBJECT_TYPE", task.getAttachedToObjectType());
+            pVars.put("PARENT_OBJECT_ID", task.getAttachedToObjectId());
+
+            ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
+            Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
+
+            Integer activitiPriority = activitiPriorityFromAcmPriority(task.getPriority());
+            activitiTask.setPriority(activitiPriority);
+
+            if (task.getPercentComplete() != null) {
+                getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PERCENT_COMPLETE,
+                        task.getPercentComplete());
+            }
+            AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
+            createdAcmTasks.add(createdAcmTask);
+        }
+
+        return createdAcmTasks;
     }
 
     private List<String> findCandidateGroups(String taskId)

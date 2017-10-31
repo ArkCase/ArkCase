@@ -2,7 +2,7 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/processdef">
   <process id="acmDocumentWorkflow" name="ACM Document Approval Process" isExecutable="true">
     <startEvent id="startDocumentApproval" name="Document Author Submits Request to Approve Document"></startEvent>
-    <userTask id="approverReviewsDocument" name="Review ${taskName}" activiti:assignee="${currentReviewer}" activiti:dueDate="P3D" activiti:priority="50">
+    <userTask id="approverReviewsDocument" name="Review ${taskName}" activiti:candidateGroups="${execution.getVariable('candidateGroups') == null ? '' : candidateGroups}" activiti:assignee="${currentReviewer}" activiti:dueDate="P3D" activiti:priority="50">
       <extensionElements>
         <activiti:formProperty id="reviewOutcome" name="Review Outcome" type="enum" required="true">
           <activiti:value id="APPROVE" name="Approve Document"></activiti:value>
@@ -14,7 +14,7 @@
       </multiInstanceLoopCharacteristics>
     </userTask>
     <endEvent id="endDocumentApprovalWorkflow"></endEvent>
-    <userTask id="authorReworksDocument" name="Rework ${taskName}" activiti:assignee="${documentAuthor}" activiti:dueDate="P3D" activiti:priority="75">
+    <userTask id="authorReworksDocument" name="Rework ${taskName}" activiti:candidateGroups="${execution.getVariable('candidateGroups') == null ? '' : candidateGroups}" activiti:assignee="${documentAuthor}" activiti:dueDate="P3D" activiti:priority="75">
       <extensionElements>
         <activiti:formProperty id="reworkOutcome" name="Rework Outcome" type="enum" required="true">
           <activiti:value id="RESUBMIT" name="Resubmit"></activiti:value>

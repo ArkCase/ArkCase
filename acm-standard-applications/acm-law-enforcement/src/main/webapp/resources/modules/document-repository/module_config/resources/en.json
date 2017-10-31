@@ -42,7 +42,8 @@
     "title": "Documents",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
+    "searchInputPlaceholder": "Search",
+    "newTask": "New Task"
   },
   "document-repository.comp.participants": {
     "title": "Participants",

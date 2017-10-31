@@ -3,11 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService'
     , function ($scope, $stateParams, $modal, $q, $timeout, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService) {
 
 
         Authentication.queryUserInfo().then(
@@ -85,6 +85,22 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             var nodes = $scope.treeControl.getSelectedNodes();
             var DocTree = $scope.treeControl.getDocTreeObject();
             DocTreeExtEmail.openModal(DocTree, nodes);
+        };
+
+        $scope.createNewTask = function () {
+            var modalMetadata = {
+                moduleName: 'tasks',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                controllerName: 'Tasks.NewTaskController',
+                params: {
+                    parentType: ObjectService.ObjectTypes.COMPLAINT,
+                    parentObject: $scope.objectInfo.complaintNumber,
+                    parentId: $scope.objectInfo.complaintId,
+                    parentTitle: $scope.objectInfo.title,
+                    selectedDocumentNodes: $scope.treeControl.getSelectedNodes()
+                }
+            };
+            ModalDialogService.showModal(modalMetadata);
         };
 
         $scope.onFilter = function () {

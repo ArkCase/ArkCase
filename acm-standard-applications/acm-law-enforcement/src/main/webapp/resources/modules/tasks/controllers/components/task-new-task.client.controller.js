@@ -24,6 +24,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             //,height: 120
         };
 
+        $scope.selectedDocuments = removeSelectedFolderNodes($scope.modalParams.selectedDocumentNodes);
+        $scope.selectedDocumentsIds = extractDocumentIds($scope.selectedDocuments);
+
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userInfo = userInfo;
@@ -57,13 +60,15 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.config.data.percentComplete = 0;
 
 
-            if (!Util.isEmpty($scope.modalParams.parentObject) && !Util.isEmpty($scope.modalParams.parentType)) {
+            if (!Util.isEmpty($scope.modalParams.parentObject) && !Util.isEmpty($scope.modalParams.parentType) && !Util.isEmpty($scope.modalParams.parentId)) {
                 $scope.config.data.attachedToObjectName = $scope.modalParams.parentObject;
                 $scope.config.data.attachedToObjectType = $scope.modalParams.parentType;
+                $scope.config.data.attachedToObjectId = $scope.modalParams.parentId;
                 if (!Util.isEmpty($scope.modalParams.parentTitle)) {
                     $scope.config.data.parentObjectTitle = $scope.modalParams.parentTitle;
                 }
             }
+
             return moduleConfig;
         });
 
@@ -77,27 +82,83 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-            TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
-                $scope.saved = false;
-                $scope.loading = false;
-                if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ":returnState") {
-                    $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
-                } else {
-                    ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
-                }
-                $scope.onModalClose();
-            }, function (err) {
-                $scope.saved = false;
-                $scope.loading = false;
-                if (!Util.isEmpty(err)) {
-                    var statusCode = Util.goodMapValue(err, "status");
-                    var message = Util.goodMapValue(err, "data.message");
+            if($scope.selectedDocumentsIds.length > 0) {
+                taskData.documentsToReview = processDocumentsUnderReview();
+                TaskNewTaskService.reviewDocuments(taskData, 'acmDocumentWorkflow').then(workflowTaskSuccessCallback, saveNewTaskErrorCallback);
+            } else {
+                TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, saveNewTaskErrorCallback);
+            }
+        };
 
-                    if (statusCode == 400) {
-                        DialogService.alert(message);
-                    }
+        function workflowTaskSuccessCallback(data) {
+            $scope.saved = false;
+            $scope.loading = false;
+            $scope.onModalClose();
+        }
+
+        function saveNewTaskSuccessCallback(data) {
+            $scope.saved = false;
+            $scope.loading = false;
+            if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
+                $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
+            } else {
+                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
+            }
+            $scope.onModalClose();
+        }
+
+        function saveNewTaskErrorCallback(err) {
+            $scope.saved = false;
+            $scope.loading = false;
+            if (!Util.isEmpty(err)) {
+                var statusCode = Util.goodMapValue(err, 'status');
+                var message = Util.goodMapValue(err, 'data.message');
+
+                if (statusCode == 400) {
+                    DialogService.alert(message);
                 }
+            }
+        }
+
+        function removeSelectedFolderNodes(selectedNodes) {
+            var nodes = _.filter(selectedNodes, function (node) {
+                return !node.folder;
             });
+
+            return nodes;
+        }
+
+        function extractDocumentIds(selectedNodes) {
+            var fileIds = [];
+            if (Util.isArray(selectedNodes)) {
+                for (var i = 0; i < selectedNodes.length; i++) {
+                    fileIds.push(Util.goodMapValue(selectedNodes[i], 'data.objectId'));
+                }
+            }
+            return fileIds;
+        }
+
+        function processDocumentsUnderReview() {
+            var processedDocuments = [];
+            angular.forEach($scope.selectedDocumentsIds, function(value) {
+                var doc = _.find($scope.selectedDocuments, function(d) { return d.data.objectId === value; });
+                processedDocuments.push({
+                    fileId: doc.data.objectId,
+                    fileName: doc.data.name
+                });
+            });
+
+            return processedDocuments;
+        }
+
+        $scope.onSelectFile = function (fileId) {
+            var idx = $scope.selectedDocumentsIds.indexOf(fileId);
+
+            if (idx > -1) {
+                $scope.selectedDocumentsIds.splice(idx, 1);
+            } else {
+                $scope.selectedDocumentsIds.push(fileId);
+            }
         };
 
         $scope.updateAssocParentType = function () {
@@ -106,7 +167,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.inputClear = function(){
             $scope.config.data.attachedToObjectName = null;
-        }
+            $scope.config.data.attachedToObjectId = null;
+        };
 
         //groupChange function
         $scope.groupChange = function () {
@@ -214,6 +276,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             modalInstance.result.then(function (chosenObject) {
                 if (chosenObject) {
                     $scope.config.data.attachedToObjectName = chosenObject.name;
+                    $scope.config.data.attachedToObjectId = chosenObject['object_id_s'];
 
                     return;
                 }

@@ -76,6 +76,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 params: {
                     parentType: ObjectService.ObjectTypes.CASE_FILE,
                     parentObject: $scope.objectInfo.caseNumber,
+                    parentId: $scope.objectInfo.id,
                     parentTitle: $scope.objectInfo.title
                 }
             };

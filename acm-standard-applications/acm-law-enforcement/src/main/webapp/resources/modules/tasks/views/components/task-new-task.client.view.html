@@ -106,6 +106,25 @@
                     <summernote config="options" ng-model="config.data.details"></summernote>
                 </div>
             </div>
+            <div class="row" ng-if="selectedDocuments.length > 0">
+                <div class="col-sm-12 form-group">
+                    <label for="attachments">
+                        <span translate>tasks.newTask.attachments.label</span>
+                    </label>
+                    <fieldset id="attachments" class="well-sm">
+                        <label ng-repeat="node in selectedDocuments" class="checkbox-inline">
+                            <input
+                                    type="checkbox"
+                                    value="{{node.data.objectId}}"
+                                    ng-click="onSelectFile(node.data.objectId)"
+                                    ng-checked="selectedDocumentsIds.indexOf(node.data.objectId) > -1">
+                            <span>
+                              {{node.data.name + '' + node.data.ext}}
+                          </span>
+                        </label>
+                    </fieldset>
+                </div>
+            </div>
         </div>
     </div>
     <div class="modal-footer">
