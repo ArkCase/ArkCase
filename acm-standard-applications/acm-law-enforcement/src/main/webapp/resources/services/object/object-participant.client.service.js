@@ -352,14 +352,15 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
             if (_.filter(data, function (pa) {
-                    return Util.compare("owning group", pa.participantType);
+                    return Util.compare("owner", pa.participantType);
                 }).length > 1) {
-                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.ownerUnique"));
                 return false;
             }
             if (_.filter(data, function (pa) {
-                    return Util.compare(" ", pa.participantType);
+                    return Util.compare("owning group", pa.participantType);
                 }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
             return true;

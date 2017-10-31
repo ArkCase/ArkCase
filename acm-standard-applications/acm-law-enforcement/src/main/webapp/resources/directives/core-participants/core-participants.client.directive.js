@@ -116,7 +116,6 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                         }
                     });
 
-
                     modalInstance.result.then(function (data) {
                         if (ObjectParticipantService.validateType(data.participant, data.selectedType)) {
                             scope.participant.id = data.participant.id;
@@ -148,9 +147,9 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                 }
                                 else {
                                     participant.participantType = data.participant.participantType;
-                                    var participantPerson= owner ? owner : assignee;
-                                    if(!Util.isEmpty(participantPerson) && !Util.isEmpty(group)) {
-                                        if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, group)) {
+                                    var participantPerson = owner ? owner : assignee;
+                                    if(!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
+                                        if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, owningGroup)) {
                                             _.remove(scope.objectInfo.participants, _.find(Util.goodMapValue(scope.objectInfo, "participants", []), {participantLdapId: participantPerson}));
                                         }
                                     }
