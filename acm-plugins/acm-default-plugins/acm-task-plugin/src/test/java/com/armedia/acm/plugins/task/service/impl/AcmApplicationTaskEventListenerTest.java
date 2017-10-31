@@ -1,5 +1,10 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.DateFormats;
@@ -16,6 +21,7 @@ import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublis
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantConstants;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -26,10 +32,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 {
@@ -112,7 +114,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testAssigneeIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
 
@@ -122,7 +124,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(TaskConstants.OBJECT_TYPE);
-        //change assignee
+        // change assignee
         jsonTask.getParticipants().get(0).setParticipantLdapId(NEW_ASSIGNEE);
         jsonTask.setAssignee(NEW_ASSIGNEE);
         currentJsonObject = acmMarshaller.marshal(jsonTask);
@@ -160,7 +162,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testPriorityIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
 
@@ -180,7 +182,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testStatusIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
 
@@ -190,7 +192,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
 
         AcmObjectHistory currentHistory = new AcmObjectHistory();
         currentHistory.setObjectType(TaskConstants.OBJECT_TYPE);
-        //set different status
+        // set different status
         jsonTask.setStatus(TaskConstants.STATE_CLOSED);
         currentJsonObject = acmMarshaller.marshal(jsonTask);
         currentHistory.setObjectString(currentJsonObject);
@@ -201,7 +203,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
 
@@ -222,7 +224,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChangedWhenPreviouslyNull()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         // set null as primary details value
         jsonTask.setDetails(null);
@@ -244,7 +246,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testReworkDetailsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         String currentJsonObject = acmMarshaller.marshal(jsonTask);
 
@@ -265,7 +267,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     @Test
     public void testReworkDetailsChangedWhenPreviouslyNull()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         AcmTask jsonTask = getTask();
         // set null as primary details value
         jsonTask.setReworkInstructions(null);
@@ -284,8 +286,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
         runAndTestTaskEvent(currentHistory, previousHistory, "reworkdetails.changed", jsonTask);
     }
 
-    public void runAndTestTaskEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory,
-                                    String statusToCheck, AcmTask task)
+    public void runAndTestTaskEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck, AcmTask task)
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);

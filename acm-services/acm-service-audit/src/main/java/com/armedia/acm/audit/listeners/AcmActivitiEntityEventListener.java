@@ -4,10 +4,10 @@ import com.armedia.acm.activiti.model.SpringActivitiEntityEvent;
 import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
-import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.web.api.AsyncApplicationListener;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.delegate.event.ActivitiEntityEvent;
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.slf4j.Logger;
@@ -37,7 +37,7 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
     private boolean activitiEventsLoggingEntityEventsEnabled;
     private boolean activitiEventsLoggingEntityEventsObjectEnabled;
 
-    private static AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
+    private ObjectConverter objectConverter;
 
     @Override
     public void onApplicationEvent(SpringActivitiEntityEvent springActivitiEntityEvent)
@@ -46,17 +46,17 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
 
         switch (springActivitiEntityEvent.getEventType())
         {
-            case "create":
-                onCreate(event);
-                break;
-            case "update":
-                onUpdate(event);
-                break;
-            case "delete":
-                onDelete(event);
-                break;
-            default:
-                break;
+        case "create":
+            onCreate(event);
+            break;
+        case "update":
+            onUpdate(event);
+            break;
+        case "delete":
+            onDelete(event);
+            break;
+        default:
+            break;
         }
 
     }
@@ -120,8 +120,9 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
         // when entity is changed without web request the MDC.get(AuditConstants.EVENT_MDC_REQUEST_ID_KEY) is null
         auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                 : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
-        auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
+        auditEvent
+                .setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY)
+                        : AuditConstants.USER_ID_ANONYMOUS);
         auditEvent.setFullEventType(EVENT_TYPE + " | " + object.getClass().getName());
         auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
         auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_ACTIVITI_ENTITY);
@@ -153,7 +154,7 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
         if (isActivitiEventsLoggingEntityEventsObjectEnabled())
         {
             // Convert Object to JSON string
-            eventProperties.put("Object", converter.marshal(object));
+            eventProperties.put("Object", getObjectConverter().getJsonMarshaller().marshal(object));
         }
 
         auditEvent.setEventProperties(eventProperties);
@@ -189,5 +190,14 @@ public class AcmActivitiEntityEventListener implements ApplicationListener<Sprin
         this.activitiEventsLoggingEntityEventsObjectEnabled = activitiEventsLoggingEntityEventsObjectEnabled;
     }
 
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
+    }
 
 }

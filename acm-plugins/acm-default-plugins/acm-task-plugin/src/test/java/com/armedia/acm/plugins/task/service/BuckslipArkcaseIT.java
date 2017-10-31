@@ -1,10 +1,16 @@
 package com.armedia.acm.plugins.task.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -30,38 +36,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-activiti-configuration.xml",
-        "/spring/spring-library-authentication-token.xml",
-        "/spring/spring-library-context-holder.xml",
-        "/spring/spring-library-data-access-control.xml",
-        "/spring/spring-library-data-source.xml",
-        "/spring/spring-library-ecm-file.xml",
-        "/spring/spring-library-ecm-tika.xml",
-        "/spring/spring-library-folder-watcher.xml",
-        "/spring/spring-library-ms-outlook-integration.xml",
-        "/spring/spring-library-note.xml",
-        "/spring/spring-library-notification.xml",
-        "/spring/spring-library-object-association-plugin.xml",
-        "/spring/spring-library-object-history.xml",
-        "/spring/spring-library-particpants.xml",
-        "/spring/spring-library-property-file-manager.xml",
-        "/spring/spring-library-search.xml",
-        "/spring/spring-library-service-data.xml",
-        "/spring/spring-library-task.xml",
-        "/spring/spring-library-task-buckslip-test.xml",
-        "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-drools-rule-monitor.xml",
-        "/spring/spring-library-object-lock.xml",
-        "/spring/spring-library-email.xml",
-        "/spring/spring-library-email-smtp.xml",
-        "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml"
-})
+@ContextConfiguration(locations = { "/spring/spring-library-acm-encryption.xml", "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-authentication-token.xml", "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml", "/spring/spring-library-data-source.xml", "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml", "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-ms-outlook-integration.xml", "/spring/spring-library-note.xml", "/spring/spring-library-notification.xml",
+        "/spring/spring-library-object-association-plugin.xml", "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-particpants.xml", "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-search.xml",
+        "/spring/spring-library-service-data.xml", "/spring/spring-library-task.xml", "/spring/spring-library-task-buckslip-test.xml",
+        "/spring/spring-library-user-service.xml", "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-object-lock.xml", "/spring/spring-library-email.xml", "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-calendar-config-service.xml", "/spring/spring-library-calendar-integration-exchange-service.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
 {
@@ -116,9 +102,7 @@ public class BuckslipArkcaseIT
         List<Deployment> deployments = repo.createDeploymentQuery().processDefinitionKey(processName).list();
         if (deployments == null || deployments.isEmpty())
         {
-            repo.createDeployment()
-                    .addClasspathResource("activiti/ArkCase Buckslip Process.bpmn20.xml")
-                    .deploy();
+            repo.createDeployment().addClasspathResource("activiti/ArkCase Buckslip Process.bpmn20.xml").deploy();
         }
     }
 
@@ -198,8 +182,7 @@ public class BuckslipArkcaseIT
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
 
-        ObjectConverter converter = ObjectConverter.createJSONConverter();
-        String jsonTask = converter.getMarshaller().marshal(acmTask);
+        String jsonTask = ObjectConverter.createJSONMarshallerForTests().marshal(acmTask);
         LOG.debug("json task: {}", jsonTask);
 
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "NON_CONCUR");
@@ -317,7 +300,6 @@ public class BuckslipArkcaseIT
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
-
 
         // no more tasks
         acmTask = findAcmTaskForProcess();
