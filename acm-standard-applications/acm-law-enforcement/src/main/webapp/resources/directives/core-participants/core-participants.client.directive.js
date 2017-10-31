@@ -151,9 +151,8 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                     var participantPerson = owner ? owner : assignee;
                                     if (!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
                                         if (!ObjectParticipantService.isParticipantMemberOfGroup(participantPerson, owningGroup)) {
-                                            //_.remove(scope.objectInfo.participants, _.find(Util.goodMapValue(scope.objectInfo, "participants", []), {participantLdapId: participantPerson}));
                                             _.remove(scope.objectInfo.participants, function (p) {
-                                                return p.participantLdapId == participantPerson && p.participantType == "assignee"
+                                                return p.participantLdapId == participantPerson && (p.participantType == "assignee" || p.participantType == "owner")
                                             });
                                         }
                                     }
