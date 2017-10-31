@@ -16,8 +16,8 @@
                     class="required-asterisk">*</span>
                 <select id="country" class="form-control" required="required"
                         ng-model="address.country">
-                    <option ng-repeat="option in countries" value="{{option.code}}">
-                        {{option.name}}
+                    <option ng-repeat="option in countries" value="{{option.key}}">
+                        {{option.value | translate}}
                     </option>
                 </select>
             </div>
@@ -26,18 +26,9 @@
                     class="required-asterisk">*</span>
                 <select id="addressTypes" class="form-control" required="required"
                         ng-model="address.addressType"
-                        ng-options="item.type as item.name for item in addressTypes"></select>
+                        ng-options="item.key as item.value | translate for item in addressTypes"></select>
             </div>
         </div>
-        <select
-                id="location.type"
-                ng-model="location.type"
-                ng-options="item.key as item.value | translate for item in addressTypes"></select>
-
-        <div>
-            <label for="location.streetAddress" translate>complaints.comp.locations.modal.street.label</label>
-        </div>
-        <input id="location.streetAddress" type="text" ng-model="location.streetAddress">
 
         <div class="row">
             <div class="col-sm-6 form-group">
