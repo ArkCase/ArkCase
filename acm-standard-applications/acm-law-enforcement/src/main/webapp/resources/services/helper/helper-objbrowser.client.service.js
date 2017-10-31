@@ -105,7 +105,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     that.scope.componentsConfig = config.components;
 
                     var activeComponent = Service.getComponentByState(that.state);
-                    if ("main" !== activeComponent) {
+                    if ("main" != activeComponent) {
                         var nodeTypes = Util.goodArray(config.tree.nodeTypes);
                         var found = _.find(nodeTypes, function (nodeType) {
                             var comp = Util.goodArray(nodeType.components);
@@ -371,7 +371,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (!Util.goodPositive(id)) {
                         return;
                     }
-                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) !== id) {
+                    if (that.scope.objectInfo && that.getObjectIdFromInfo(that.scope.objectInfo) != id) {
                         that.scope.objectInfo = null;
                     }
 
@@ -531,19 +531,19 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
 
                 that.previousId = null;
                 that.scope.$on('object-updated', function (e, objectInfo, objectId, reload) {
-                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
+                    if (reload || that.loaded != Service.getCurrentObjectId()) {
                         delete that.loaded;
                     } else {
                         return;
                     }
                     that.currentObjectId = Service.getCurrentObjectId();
-                    if (that.currentObjectId === objectId) {
+                    if (that.currentObjectId == objectId) {
                         onObjectInfoUpdated(objectInfo, objectId, e);
                     }
                 });
 
                 that.scope.$on('object-refreshed', function (e, objectInfo, reload) {
-                    if (reload || that.loaded !== Service.getCurrentObjectId()) {
+                    if (reload || that.loaded != Service.getCurrentObjectId()) {
                         delete that.loaded;
                     } else {
                         return;
