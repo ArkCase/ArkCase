@@ -147,7 +147,16 @@ public class ComplaintServiceIT
         location.setType("home");
         location.setCountry("country");
 
-        frevvoComplaint.setLocation(location);
+
+        PostalAddress pa1 = new PostalAddress();
+        pa1.setCity("Amaurot");
+        pa1.setCountry("Utopia");
+        pa1.setType("type");
+
+        PostalAddress pa2 = new PostalAddress();
+        pa2.setCity("Atlanta");
+        pa2.setCountry("Georgia");
+        pa2.setType("type");
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 
