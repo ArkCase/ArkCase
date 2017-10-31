@@ -57,7 +57,8 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 , onSuccess: function (data) {
                     if (Service.validateUserInfo(data)) {
                         userInfo = data;
-                        Store.fixOwner(userInfo.userId);
+                        Store.setOwner(userInfo.userId);
+                        var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
                         cacheUserInfo.set(userInfo);
                         return userInfo;
                     }
@@ -107,7 +108,7 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                 , onSuccess: function (data) {
                     if (Service.validateUpdateUserLang(data)) {
                         var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
-                        var userInfo = cacheUserInfo.get();
+                        var userInfo = cacheUserInfo.get() || {};
                         userInfo.langCode = lang;
                         cacheUserInfo.set(userInfo);
                         return data;
