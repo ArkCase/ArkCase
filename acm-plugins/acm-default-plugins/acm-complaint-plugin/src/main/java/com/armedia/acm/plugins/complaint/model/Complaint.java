@@ -530,7 +530,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         this.frequency = frequency;
     }
 
-    @JsonIgnore
+
     public List<PostalAddress> getAddresses()
     {
         return addresses;
