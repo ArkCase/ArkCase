@@ -437,7 +437,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          *
          * @returns {Object} participant data
          */
-        Service.isParticipantMemberOfGroup = function (participantId,owningGroup) {
+        Service.isParticipantMemberOfGroup = function (participantId, owningGroup) {
             return Util.serviceCall({
                 service: Service.checkGroupForParticipant
                 , param: {
