@@ -1,9 +1,6 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.*;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -386,6 +383,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
         return null;
     }
 
+    @Override
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException {
+        return taskDao.startReviewDocumentsWorkflow(task, businessProcessName, authentication);
+    }
 
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {

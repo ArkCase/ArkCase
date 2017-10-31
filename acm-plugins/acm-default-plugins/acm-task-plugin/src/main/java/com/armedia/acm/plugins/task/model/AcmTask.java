@@ -66,6 +66,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private Long reviewDocumentPdfRenditionId;
     private Long reviewDocumentFormXmlId;
     private EcmFile documentUnderReview;
+    private List<EcmFile> documentsToReview;
     private List<ObjectAssociation> childObjects;
     private String reworkInstructions;
     private String outcomeName;
@@ -414,6 +415,16 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         this.documentUnderReview = documentUnderReview;
     }
 
+    public List<EcmFile> getDocumentsToReview()
+    {
+        return documentsToReview;
+    }
+
+    public void setDocumentsToReview(List<EcmFile> documentsToReview)
+    {
+        this.documentsToReview = documentsToReview;
+    }
+
     public List<ObjectAssociation> getChildObjects()
     {
         return childObjects;
@@ -542,7 +553,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
                 + ", container=" + container + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", parentObjectId=" + parentObjectId
                 + ", parentObjectType='" + parentObjectType + '\'' + ", parentObjectTitle='" + parentObjectTitle + '\''
                 + ", candidateGroups=" + candidateGroups + ", nextAssignee='" + nextAssignee + '\'' + ", legacySystemId='" + legacySystemId
-                + '\'' + '}';
+                + ", documentsToReview=" + documentsToReview + '\'' + '}';
     }
 
     @Override

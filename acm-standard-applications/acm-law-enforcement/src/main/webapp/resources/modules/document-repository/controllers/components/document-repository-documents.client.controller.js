@@ -3,10 +3,10 @@
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
     , '$modal', '$translate', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email'
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email', 'ModalDialogService'
     , function ($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -50,7 +50,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                     for(var i = 0; i < data[1].length; i++){
                         $scope.treeConfig.fileTypes.push({"key":data[1][i].key, "value": $translate.instant(data[1][i].value)});
                     }
-                    $scope.treeConfig.fileLanguages = data[2]; 
+                    $scope.treeConfig.fileLanguages = data[2];
                 });
         };
 
@@ -79,6 +79,18 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             var nodes = $scope.treeControl.getSelectedNodes();
             var DocTree = $scope.treeControl.getDocTreeObject();
             DocTreeExtEmail.openModal(DocTree, nodes);
+        };
+
+        $scope.createNewTask = function() {
+            var modalMetadata = {
+                moduleName: 'tasks',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                controllerName: 'Tasks.NewTaskController',
+                params: {
+                    selectedDocumentNodes: $scope.treeControl.getSelectedNodes()
+                }
+            };
+            ModalDialogService.showModal(modalMetadata);
         };
 
         $scope.onFilter = function () {

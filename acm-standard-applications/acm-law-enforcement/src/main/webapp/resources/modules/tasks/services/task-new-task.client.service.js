@@ -8,31 +8,9 @@
  *
  * Task.NewTaskService provides the functions for creating an Ad Hoc task.
  */
-angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', 'UtilService', 'Task.InfoService',
-    function ($resource, $state, Util, TaskInfoService) {
-        var Service = $resource('api/latest/plugin', {}, {
-
-            /**
-             * @ngdoc method
-             * @name createNewTask
-             * @methodOf tasks.service:Task.NewTaskService
-             *
-             * @description
-             * Save task data
-             *
-             * @param {Object} params Map of input parameter.
-             * @param {Number} params.id  Task ID
-             * @param {Function} onSuccess (Optional)Callback function of success query.
-             * @param {Function} onError (Optional) Callback function when fail.
-             *
-             * @returns {Object} Object returned by $resource
-             */
-            createNewTask: {
-                method: 'POST',
-                url: 'api/latest/plugin/task/adHocTask',
-                cache: false
-            }
-        });
+angular.module('tasks').factory('Task.NewTaskService', ['$http', '$httpParamSerializer',
+    function ($http, $httpParamSerializer) {
+        var Service = this;
 
         /**
          * @ngdoc method
@@ -43,23 +21,44 @@ angular.module('tasks').factory('Task.NewTaskService', ['$resource', '$state', '
          * Save ad hoc task data
          *
          * @param {Object} taskData Data from the ad hod task to be created
-         * @returns {*}
+         *
+         * @returns {Promise}
          */
-        Service.saveAdHocTask = function (taskData) {
-            return Util.serviceCall({
-                service: Service.createNewTask
-                , data: taskData
-                , onSuccess: function (data) {
-                    if (TaskInfoService.validateTaskInfo(data)) {
-                        //we shouldn't redirect here, caller of this method should decide to redirect or not
-                        //$state.go('tasks.main', {type: 'ADHOC', id: data.taskId});
-                        return data;
-                    }
-                }
-                , onError: function (errorData) {
-                    return errorData;
-                }
-            })
+        Service.saveAdHocTask = function(taskData) {
+            return $http({
+                method: 'POST',
+                url: 'api/latest/plugin/task/adHocTask',
+                data: taskData,
+                cache: false
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name createWorkflowTask
+         * @methodOf tasks.service:Task.NewTaskService
+         *
+         * @description
+         * Create task to review selected documents
+         *
+         * @param {Object} taskData Data from the ad hod task to be created
+         * @param {String} businessProcessName The name of the business process that we want to start
+         *
+         * @returns {Promise}
+         */
+        Service.reviewDocuments = function(taskData, businessProcessName) {
+            var params = {
+                businessProcessName: businessProcessName
+            };
+
+            var urlArgs = $httpParamSerializer(params);
+
+            return $http({
+                method: 'POST',
+                url: 'api/latest/plugin/tasks/reviewDocuments' + '?' + urlArgs,
+                data: taskData,
+                cache: false
+            });
         };
 
         return Service;

@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.ecm.service;
 
 
 import com.armedia.acm.plugins.ecm.service.impl.MockChangeObjectStatusService;
-import org.activiti.bpmn.BpmnAutoLayout;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowElement;
@@ -19,6 +18,7 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.junit.After;
 import org.junit.Before;
@@ -35,8 +35,10 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:/spring/spring-library-ecm-activiti-test.xml" } )
@@ -67,6 +69,7 @@ public class DocumentApprovalProcessIT
 
     private List<String> reviewers;
     private ProcessInstance pi;
+    private ProcessInstance piCandidateGroups;
     private String documentAuthor;
 
     @Before
@@ -75,7 +78,7 @@ public class DocumentApprovalProcessIT
 
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/acmDocumentWorkflow_v3.bpmn20.xml")
+                .addClasspathResource("activiti/acmDocumentWorkflow_v4.bpmn20.xml")
                 .deploy();
 
         Map<String, Object> pvars = new HashMap<>();
@@ -94,7 +97,9 @@ public class DocumentApprovalProcessIT
 
         changeObjectStatusService.setTimesCalled(0);
 
+        pvars.put("candidateGroups", "TEST_GROUP");
 
+        piCandidateGroups = createWorkflowProcess(pvars);
 
     }
 
@@ -105,8 +110,7 @@ public class DocumentApprovalProcessIT
     }
 
     @Test
-    public void documentApproval_happyPath() throws Exception
-    {
+    public void documentApproval_happyPath() throws Exception {
         assertNotNull(pi);
 
         List<Task> reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
@@ -115,8 +119,7 @@ public class DocumentApprovalProcessIT
 
         assertEquals(reviewers.size(), reviews.size());
 
-        for ( int a = 0; a < reviews.size(); ++a )
-        {
+        for (int a = 0; a < reviews.size(); ++a) {
             Task task = reviews.get(a);
             ts.setVariable(task.getId(), "reviewOutcome", "APPROVE");
             ts.complete(task.getId());
@@ -126,18 +129,59 @@ public class DocumentApprovalProcessIT
 
             // when all reviewers have approved, the process will be complete and the runtime service query
             // will not find it.
-            if ( shouldBeComplete )
-            {
+            if (shouldBeComplete) {
                 assertNull(current);
-            }
-            else
-            {
+            } else {
                 assertFalse(current.isEnded());
             }
-
         }
 
         assertEquals(1, changeObjectStatusService.getTimesCalled());
+    }
+
+    @Test
+    public void documentApproval_happyPath_with_candidate_groups() throws Exception {
+        assertNotNull(piCandidateGroups);
+
+        List<Task> reviews = ts.createTaskQuery().processInstanceId(piCandidateGroups.getProcessInstanceId()).list();
+
+        log.debug("Found " + reviews.size() + " review tasks.");
+
+        assertEquals(reviewers.size(), reviews.size());
+
+        for (int a = 0; a < reviews.size(); ++a) {
+            Task task = reviews.get(a);
+            assertEquals(Arrays.asList("TEST_GROUP"), findCandidateGroups(task.getId()));
+            ts.setVariable(task.getId(), "reviewOutcome", "APPROVE");
+            ts.complete(task.getId());
+
+            ProcessInstance current = rt.createProcessInstanceQuery().processInstanceId(piCandidateGroups.getProcessInstanceId()).singleResult();
+            boolean shouldBeComplete = a == reviews.size() - 1;
+
+            // when all reviewers have approved, the process will be complete and the runtime service query
+            // will not find it.
+            if (shouldBeComplete) {
+                assertNull(current);
+            } else {
+                assertFalse(current.isEnded());
+            }
+        }
+
+        assertEquals(1, changeObjectStatusService.getTimesCalled());
+    }
+
+    private List<String> findCandidateGroups(String taskId)
+    {
+        List<IdentityLink> candidates = ts.getIdentityLinksForTask(taskId);
+
+        if (candidates != null)
+        {
+            List<String> retval = candidates.stream().filter(il -> "candidate".equals(il.getType()))
+                    .filter(il -> il.getGroupId() != null).map(IdentityLink::getGroupId).collect(Collectors.toList());
+            return retval;
+        }
+
+        return null;
     }
 
     @Test

@@ -134,4 +134,6 @@ public interface TaskDao
                                     String taskEventName);
 
     byte[] getDiagram(Long id) throws AcmTaskException;
+
+    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
 }

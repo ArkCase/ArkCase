@@ -74,6 +74,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 params: {
                     parentType: ObjectService.ObjectTypes.COMPLAINT,
                     parentObject: $scope.objectInfo.complaintNumber,
+                    parentId: $scope.objectInfo.complaintId,
                     parentTitle: $scope.objectInfo.title
                 }
             };
