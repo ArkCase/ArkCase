@@ -628,7 +628,7 @@ angular.module('services').factory('UtilService', ['$q', '$log', '$filter'
              * Converts a date object into an ISO format string
              *
              * @param {Date} Date object
-             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
+             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ssZZ
              */
             , dateToIsoString: function (d) {
 
@@ -637,27 +637,9 @@ angular.module('services').factory('UtilService', ['$q', '$log', '$filter'
                 if (null == d) {
                     return "";
                 }
-                return moment(d).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+                return moment(d).format("YYYY-MM-DDTHH:mm:ssZZ");
             }
 
-            //get day string in "yyyy-mm-dd" format
-            //parameter d is java Date() format; for some reason getDate() is 1 based while getMonth() is zero based
-            , dateToString: function (d) {
-                if (null == d) {
-                    return "";
-                }
-                var month = d.getMonth() + 1;
-                var day = d.getDate();
-                var year = d.getFullYear();
-                return this._padZero(month)
-                    + "/" + this._padZero(day)
-                    + "/" + year;
-            }
-
-            , getCurrentDay: function () {
-                var d = new Date();
-                return this.dateToString(d);
-            }
             //Get date and time from format: "2014-04-30T16:51:33.914+0000"
             , getDateTimeFromDatetime: function (dt, format) {
                 var d = "";

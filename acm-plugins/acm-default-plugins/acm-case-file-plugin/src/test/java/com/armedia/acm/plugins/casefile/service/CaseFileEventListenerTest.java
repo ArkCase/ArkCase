@@ -125,7 +125,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testAssigneeIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -173,7 +173,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testParticipantIsDeleted()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         AcmParticipant participant = new AcmParticipant();
         participant.setObjectType(ParticipantConstants.OBJECT_TYPE);
@@ -222,7 +222,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testParticipantIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         AcmParticipant participant = new AcmParticipant();
         participant.setObjectType(ParticipantConstants.OBJECT_TYPE);
@@ -271,7 +271,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testParticipantIsAdded()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -318,7 +318,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testPriorityIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -338,7 +338,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testStatusIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -363,7 +363,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         caseFileEventListener.setShouldDeleteCalendarFolder(true);
         caseFileEventListener.setCaseFileStatusClosed("CLOSED");
 
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -383,7 +383,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         String currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
 
@@ -404,7 +404,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChangedWhenPreviouslyNull()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
         // set null as primary details value
         jsonCaseFile.setDetails(null);

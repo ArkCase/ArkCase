@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -9,9 +10,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -27,12 +26,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-@RequestMapping({"/api/v1/plugin/ecm", "/api/latest/plugin/ecm"})
+@RequestMapping({ "/api/v1/plugin/ecm", "/api/latest/plugin/ecm" })
 public class FileDownloadAPIController implements ApplicationEventPublisherAware
 {
     private MuleContextManager muleContextManager;
@@ -47,16 +47,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+    private ObjectConverter objectConverter;
 
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,
-                                 @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
-                                 @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
-                                 @RequestParam(value = "version", required = false, defaultValue = "") String version,
-                                 Authentication authentication, HttpSession httpSession, HttpServletResponse response)
-            throws IOException, MuleException, AcmObjectNotFoundException
+            @RequestParam(value = "ecmFileId", required = true, defaultValue = "0") Long fileId,
+            @RequestParam(value = "acm_email_ticket", required = false, defaultValue = "") String acm_email_ticket,
+            @RequestParam(value = "version", required = false, defaultValue = "") String version, Authentication authentication,
+            HttpSession httpSession, HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException
     {
         log.info("Downloading file by ID '{}' for user '{}'", fileId, authentication.getName());
 
@@ -99,8 +98,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     }
 
     // called for normal processing - file was found
-    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile, String version)
-            throws IOException
+    private void handleFilePayload(ContentStream filePayload, HttpServletResponse response, boolean isInline, EcmFile ecmFile,
+            String version) throws IOException
     {
         String mimeType = filePayload.getMimeType();
 
@@ -123,8 +122,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
         }
 
         String fileName = filePayload.getFileName();
-        // endWith will throw a NullPointerException on a null argument.  But a file is not required to have an
-        // extension... so the extension can be null.  So we have to guard against it.
+        // endWith will throw a NullPointerException on a null argument. But a file is not required to have an
+        // extension... so the extension can be null. So we have to guard against it.
         if (ecmFileVersion != null)
         {
             if (ecmFile != null && ecmFileVersion.getVersionFileNameExtension() != null
@@ -150,14 +149,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             if (!isInline)
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-                try
-                {
-                    // add file metadata so it can be displayed in Snowbound
-                    response.setHeader("X-ArkCase-File-Metadata", objectMapper.writeValueAsString(ecmFile));
-                } catch (JsonProcessingException e)
-                {
-                    log.warn("Unable to serialize document metadata for [{}:{}]", ecmFile.getId(), version, e);
-                }
+                // add file metadata so it can be displayed in Snowbound
+                response.setHeader("X-ArkCase-File-Metadata", getObjectConverter().getJsonMarshaller().marshal(ecmFile));
             }
             response.setContentType(mimeType);
             byte[] buffer = new byte[1024];
@@ -169,17 +162,18 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
                 {
                     response.getOutputStream().write(buffer, 0, read);
                 }
-            }
-            while (read > 0);
+            } while (read > 0);
             response.getOutputStream().flush();
-        } finally
+        }
+        finally
         {
             if (fileIs != null)
             {
                 try
                 {
                     fileIs.close();
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not close CMIS content stream: {}", e.getMessage(), e);
                 }
@@ -242,5 +236,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

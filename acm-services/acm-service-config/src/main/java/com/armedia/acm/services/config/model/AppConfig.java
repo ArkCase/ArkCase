@@ -1,12 +1,12 @@
 package com.armedia.acm.services.config.model;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.objectonverter.ObjectConverter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 public class AppConfig implements AcmConfig, Serializable
 {
@@ -16,41 +16,54 @@ public class AppConfig implements AcmConfig, Serializable
     private String configName;
     private AcmApplication acmApplication;
     private String configDescription;
+    private ObjectConverter objectConverter;
 
-
-    public String getConfigAsJson() {
-        String json = "[]";
-        ObjectMapper om = new ObjectMapper();
-        try {
-            json =  om.writeValueAsString(getAcmApplication());
-        } catch (JsonProcessingException e) {
-            log.error(e.getMessage());
-        }
-        return json;
+    @Override
+    public String getConfigAsJson()
+    {
+        String json = getObjectConverter().getJsonMarshaller().marshal(getAcmApplication());
+        return json == null ? "[]" : json;
     }
 
-    public String getConfigName() {
+    @Override
+    public String getConfigName()
+    {
         return configName;
     }
 
-    public void setConfigName(String configName) {
+    public void setConfigName(String configName)
+    {
         this.configName = configName;
     }
 
-    public AcmApplication getAcmApplication() {
+    public AcmApplication getAcmApplication()
+    {
         return acmApplication;
     }
 
-    public void setAcmApplication(AcmApplication acmApplication) {
+    public void setAcmApplication(AcmApplication acmApplication)
+    {
         this.acmApplication = acmApplication;
     }
 
     @Override
-    public String getConfigDescription() {
+    public String getConfigDescription()
+    {
         return configDescription;
     }
 
-    public void setConfigDescription(String configDescription) {
+    public void setConfigDescription(String configDescription)
+    {
         this.configDescription = configDescription;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }
