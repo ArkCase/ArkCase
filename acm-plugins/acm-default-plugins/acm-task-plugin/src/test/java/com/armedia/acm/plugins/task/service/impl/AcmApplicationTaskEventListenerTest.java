@@ -62,6 +62,7 @@ public class AcmApplicationTaskEventListenerTest extends EasyMockSupport
     public void setUp()
     {
         taskEventListener = new AcmApplicationTaskEventListener();
+        taskEventListener.setObjectConverter(ObjectConverter.createObjectConverterForTests());
         mockAcmObjectHistoryService = createMock(AcmObjectHistoryService.class);
         mockAcmObjectHistoryEventPublisher = createMock(AcmObjectHistoryEventPublisher.class);
         mockTaskEventPublisher = createMock(TaskEventPublisher.class);

@@ -78,6 +78,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setCalendarService(mockCalendarService);
         complaintEventListener.setCalendarAdminService(mockedCalendarAdminService);
         complaintEventListener.setComplaintStatusClosed("CLOSED");
+        complaintEventListener.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     public Complaint getComplaint()

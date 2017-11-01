@@ -3,8 +3,6 @@ package com.armedia.acm.services.email.service;
 import static java.util.regex.Pattern.matches;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
@@ -116,13 +114,17 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         {
             List<EmailTemplateConfiguration> readConfigurationList = getObjectConverter().getJsonUnmarshaller()
                     .unmarshallCollection(IOUtils.toString(is, StandardCharsets.UTF_8), List.class, EmailTemplateConfiguration.class);
+            if (readConfigurationList == null)
+            {
+                log.warn("Error while deserializing email templates configuration from {} file.", templateConfigurations.getDescription(),
+                        null);
+                throw new AcmEmailConfigurationJsonException(
+                        String.format("Error while deserializing email templates configuration from %s file.",
+                                templateConfigurations.getDescription()),
+                        null);
+
+            }
             return readConfigurationList;
-        }
-        catch (JsonParseException | JsonMappingException e)
-        {
-            log.warn("Error while deserializing email templates configuration from {} file.", templateConfigurations.getDescription(), e);
-            throw new AcmEmailConfigurationJsonException(String.format(
-                    "Error while deserializing email templates configuration from %s file.", templateConfigurations.getDescription()), e);
         }
         catch (IOException e)
         {
@@ -155,18 +157,21 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         try (OutputStream os = getTemplateResourceOutputStream())
         {
             String configurationsString = getObjectConverter().getJsonMarshaller().marshal(configurations);
+            if (configurationsString == null)
+            {
+                log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(),
+                        null);
+                throw new AcmEmailConfigurationJsonException(
+                        String.format("Error while serializing email templates configuration to %s file.",
+                                templateConfigurations.getDescription()),
+                        null);
+            }
             os.write(configurationsString.getBytes(StandardCharsets.UTF_8));
             if (template != null)
             {
                 File templateFile = new File(templateFolder, templateData.getTemplateName());
                 template.transferTo(templateFile);
             }
-        }
-        catch (JsonParseException | JsonMappingException e)
-        {
-            log.warn("Error while serializing email templates configuration to {} file.", templateConfigurations.getDescription(), e);
-            throw new AcmEmailConfigurationJsonException(String.format("Error while serializing email templates configuration to %s file.",
-                    templateConfigurations.getDescription()), e);
         }
         catch (IOException e)
         {
@@ -324,14 +329,17 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             try (OutputStream os = getTemplateResourceOutputStream())
             {
                 String configurationsString = getObjectConverter().getJsonMarshaller().marshal(configurations);
+                if (configurationsString == null)
+                {
+                    log.warn("Error while deleting email templates configuration from {} file.", templateConfigurations.getDescription(),
+                            null);
+                    throw new AcmEmailConfigurationJsonException(
+                            String.format("Error while deleting email templates configuration from %s file.",
+                                    templateConfigurations.getDescription()),
+                            null);
+                }
                 os.write(configurationsString.getBytes(StandardCharsets.UTF_8));
                 Files.deleteIfExists(templateFile.toPath());
-            }
-            catch (JsonParseException | JsonMappingException e)
-            {
-                log.warn("Error while deleting email templates configuration from {} file.", templateConfigurations.getDescription(), e);
-                throw new AcmEmailConfigurationJsonException(String.format(
-                        "Error while deleting email templates configuration from %s file.", templateConfigurations.getDescription()), e);
             }
             catch (IOException e)
             {
