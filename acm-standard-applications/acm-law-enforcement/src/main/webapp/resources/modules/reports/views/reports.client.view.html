@@ -8,10 +8,66 @@
             </div>
             <div class="well panel">
                 <div class="panel-body">
+                    <div class="form-group" >
+                        <label for="selectionReports" translate>reports.selectReport.label</label>
+                        <select id="selectionReports" ng-model="data.reportSelected" ng-change="reportSelectionChange()"
+                                ng-options="option.id as option.name for option in availableReports" class="form-control input-sm">
+                            <option value="" translate>reports.selectReport.label</option>
+                        </select>
+                    </div>
 
-                    <div ng-include="'modules/reports/views/components/reports-selection.client.view.html'"></div>
-                    <div ng-include="'modules/reports/views/components/reports-state.client.view.html'"></div>
-                    <div ng-include="'modules/reports/views/components/reports-datepickers.client.view.html'"></div>
+                    <div class="form-group">
+                        <label ng-if="config.resetCaseStateValues.indexOf(data.reportSelected) == -1" for="selectStateReports" translate>reports.selectState.label</label>
+                        <select id="selectStateReports" ng-model="data.stateSelected"
+                                ng-if="config.resetCaseStateValues.indexOf(data.reportSelected) == -1"
+                                ng-options="option.key as (option.key | translateData : 'core.lookups.reportStates' : lang) for option in reportStates" class="form-control input-sm">
+                            <option value="" translate>reports.selectState.placeholder</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="dateFromReports" translate>reports.startDate.label</label>
+                        <p class="input-group">
+                            <input id="dateFromReports" type="text"
+                                   class="form-control"
+                                   datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
+                                   ng-model="data.startDate"
+                                   is-open="startDatePickerOpened"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="{{'reports.datepicker.close' | translate}}"
+                                   current-text="{{'reports.datepicker.current' | translate}}"
+                                   clear-text="{{'reports.datepicker.clear' | translate}}"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="startDatePickerOpened = !startDatePickerOpened">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+
+                        <label for="dateToReports" translate>reports.endDate.label</label>
+
+                        <p class="input-group">
+                            <input id="dateToReports" type="text"
+                                   class="form-control"
+                                   datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
+                                   ng-model="data.endDate"
+                                   is-open="endDatePickerOpened"
+                                   close-on-date-selection="true"
+                                   show-button-bar="true"
+                                   on-open-focus="false"
+                                   close-text="{{'reports.datepicker.close' | translate}}"
+                                   current-text="{{'reports.datepicker.current' | translate}}"
+                                   clear-text="{{'reports.datepicker.clear' | translate}}"/>
+                            <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="endDatePickerOpened = !endDatePickerOpened">
+                                    <i class="fa fa-calendar"></i>
+                                </button>
+                            </span>
+                        </p>
+                    </div>
+
 
                     <div class="checkbox">
                         <label>

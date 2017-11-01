@@ -1,30 +1,23 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name reports.controller:ReportsController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/reports/controllers/reports.client.controller.js modules/reports/controllers/reports.client.controller.js}
- *
- * The Reports module main controller
- */
+angular.module('reports').controller('ReportsController', ['$scope', '$q', '$window', 'UtilService', 'Util.DateService'
+    , 'ConfigService', 'LookupService','Reports.BuildUrl', 'Reports.Data', 'Object.LookupService', 'Helper.LocaleService'
+    , function ($scope, $q, $window, Util, UtilDateService
+        , ConfigService, LookupService, BuildUrl, Data, ObjectLookupService, LocaleHelper
+    ) {
+        new LocaleHelper.Locale({scope: $scope});
 
-angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
-    'Reports.BuildUrl', '$q', 'Reports.Data', '$window'
-    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data, $window) {
-
-        $scope.$on('req-component-config', function (e, componentId) {
-            promiseModuleConfig.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-                return config;
-            });
+        ObjectLookupService.getLookupByLookupName("reportStates").then(function (reportStates) {
+            $scope.reportStates = reportStates;
+            return reportStates;
         });
 
         $scope.showXmlReport = false;
-        
+
         $scope.data = Data.getData();
+        $scope.startDatePickerOpened = false;
+        $scope.endDatePickerOpened = false;
+
 
         var promiseModuleConfig = ConfigService.getModuleConfig("reports");
 
@@ -48,7 +41,22 @@ angular.module('reports').controller('ReportsController', ['$scope', 'UtilServic
                 $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
                 $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
                 $scope.data.reportSelected = null;
+
+                updateAvailableReports();
             });
+
+        function updateAvailableReports() {
+            $scope.availableReports = [];
+            _.forEach($scope.data.reports, function (value, key) {
+                $scope.availableReports.push({"name": key.split('_').join(' '), "id": key});
+            });
+        }
+
+        $scope.reportSelectionChange = function() {
+            if($scope.config.resetCaseStateValues.indexOf($scope.data.reportSelected) > -1){
+                $scope.data.caseStateSelected = '';
+            }
+        };
 
         $scope.generateReport = function () {
             if ($scope.showXmlReport) {
