@@ -27,8 +27,16 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
+        $scope.isTask = function(objectInfo) {
+            return !Util.isEmpty(objectInfo) && objectInfo.hasOwnProperty('taskId') && objectInfo.hasOwnProperty('adhocTask');
+        };
+
         var onObjectInfoRetrieved = function (objectInfo) {
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (!$scope.isTask(objectInfo)) {
+                $scope.objectInfo = {'id': currentObjectId};
+                $scope.dateInfo = null;
+            }
             if (Util.goodPositive(currentObjectId, false)) {
                 //we can change this code with making backend service to return the task and make only one call to server
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, 0, 100, '', '').then(function (data) {
@@ -62,9 +70,6 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                                 }
                             });
                         });
-                    }
-                    else {
-                        $scope.objectInfo = {'id': currentObjectId};
                     }
                 });
             }

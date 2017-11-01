@@ -3,18 +3,20 @@
 angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService', 'Case.FutureApprovalService', 'MessageService'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService', 'Case.FutureApprovalService', 'MessageService', 'Acm.StoreService', '$timeout'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService, MessageService) {
+        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService, MessageService, Store, $timeout) {
 
         $scope.userSearchConfig = null;
         $scope.gridOptions = $scope.gridOptions || {};
         $scope.oldData = null;
         $scope.taskInfo = null;
         $scope.showInitButton = false;
-        $scope.showWithdrowButton = false;
+        $scope.showWithdrawButton = false;
+        $scope.initInProgress = false;
+        $scope.withdrawInProgress = false;
 
         var currentUser = '';
 
@@ -67,7 +69,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 });
             CaseFutureApprovalService.isWorkflowWithdrawable(processId)
                 .then(function (response){
-                    $scope.showWithdrowButton = response.data;
+                    $scope.showWithdrawButton = response.data;
                 });
         };
 
@@ -79,17 +81,18 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", objectInfo.id)
                     .then(function (response){
                         $scope.buckslipProcesses = response.data;
+                        showInitWithdrawButtons($scope.buckslipProcesses[0].businessProcessId);
                         futureTasksGridData = $scope.buckslipProcesses[0].futureTasks;
                         applyFutureTasksDataToGrid(futureTasksGridData);
-                        showInitWithdrawButtons($scope.buckslipProcesses[0].businessProcessId);
                     });
             }
             else if(!Util.isEmpty(objectInfo.buckslipFutureTasks)){
                 $scope.taskInfo = objectInfo;
+                showInitWithdrawButtons($scope.taskInfo.businessProcessId);
                 futureTasksGridData = $scope.taskInfo.buckslipFutureTasks;
                 applyFutureTasksDataToGrid(futureTasksGridData);
                 $scope.buckslipFutureTaskId = $scope.taskInfo.taskId;
-                showInitWithdrawButtons($scope.taskInfo.businessProcessId);
+
             }
             else {
                 $scope.gridOptions.data = [];
@@ -140,13 +143,26 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
 
         };
 
+
+        var cleanCachedCaseFile = function(caseId){
+            var cacheChildTaskData = new Store.CacheFifo(ObjectTaskService.CacheNames.CHILD_TASK_DATA);
+            var cacheKey = ObjectService.ObjectTypes.CASE_FILE + "." + caseId + "." + 0 + "." + 100 + "." + '' + "." + '';
+            cacheChildTaskData.remove(cacheKey);
+        };
+
+
         $scope.initiateTask = function () {
             if(!Util.isArrayEmpty($scope.buckslipProcesses)){
+                $scope.initInProgress = true;
                 CaseFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcesses[0].businessProcessId)
                     .then(function (result){
-                        //$scope.$bus.publish('buckslip-process-refresh', $scope.objectInfo);
-                        MessageService.info($translate.instant('cases.comp.approvalRouting.processInitialize.successfull'));
-                        showInitWithdrawButtons($scope.buckslipProcesses[0].businessProcessId);
+                        cleanCachedCaseFile($stateParams.id);
+                        $timeout(function(){
+                            $scope.$emit('report-object-refreshed', $stateParams.id);
+
+                            MessageService.info($translate.instant('cases.comp.approvalRouting.processInitialize.successfull'));
+                            $scope.initInProgress = false;
+                        }, 2000);
                     },function (reason){
                         MessageService.error($translate.instant('cases.comp.approvalRouting.processInitialize.fail'));
                     });
@@ -155,11 +171,17 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
 
         $scope.withdrawTask = function () {
             if(!Util.isEmpty($scope.taskInfo.taskId)){
+                $scope.withdrawInProgress = true;
                 CaseFutureApprovalService.withdrawRoutingWorkflow($scope.taskInfo.taskId)
                     .then(function (result){
-                        //$scope.$bus.publish('buckslip-process-refresh', $scope.taskInfo);
-                        MessageService.info($translate.instant('cases.comp.approvalRouting.processWithdraw.successfull'));
-                        showInitWithdrawButtons($scope.taskInfo.businessProcessId);
+                        cleanCachedCaseFile($stateParams.id);
+                        $timeout(function(){
+                            $scope.$emit('report-object-refreshed', $stateParams.id);
+                            $scope.$bus.publish('buckslip-task-object-updated', {'id': $stateParams.id});
+
+                            MessageService.info($translate.instant('cases.comp.approvalRouting.processWithdraw.successfull'));
+                            $scope.withdrawInProgress = false;
+                        }, 2000);
                     }, function (reason){
                         MessageService.error($translate.instant('cases.comp.approvalRouting.processWithdraw.fail'));
                     });
@@ -219,23 +241,16 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
         };
 
         $scope.saveTask = function () {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (TaskInfoService.validateTaskInfo($scope.taskInfo)) {
-
-                $scope.taskInfo.buckslipFutureApprovers = $scope.gridOptions.data;
-                promiseSaveInfo = TaskInfoService.saveTaskInfo($scope.taskInfo);
-                promiseSaveInfo.then(
-                    function (taskInfo) {
-                        $scope.$bus.publish('buckslip-task-object-updated', taskInfo);
-                        return taskInfo;
-                    }
-                    , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
-                        return error;
-                    }
-                )
-            }
-            return promiseSaveInfo;
+           var buckslipProcess = $scope.buckslipProcesses[0];
+            CaseFutureApprovalService.updateBuckslipProcess(buckslipProcess).then(
+                function (result){
+                    $scope.oldData = angular.copy($scope.gridOptions.data);
+                    MessageService.info($translate.instant('cases.comp.approvalRouting.businessProcessUpdate.successfull'));
+                },
+                function (reason) {
+                    MessageService.error($translate.instant('cases.comp.approvalRouting.businessProcessUpdate.fail'));
+                }
+            );
         };
 
 

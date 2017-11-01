@@ -295,6 +295,8 @@
     "processInitialize.fail": "Process Not Initialized",
     "processWithdraw.successfull": "Process Withdrawn",
     "processWithdraw.fail": "Process Not Withdrawn",
+    "businessProcessUpdate.successfull": "Approval Routing Updated",
+    "businessProcessUpdate.fail": "Approval Routing Not Updated",
     "button": {
       "save.tooltip": "Save Changes",
       "initiate.tooltip": "Initiate Task",
