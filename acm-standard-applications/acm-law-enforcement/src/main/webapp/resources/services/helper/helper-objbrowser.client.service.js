@@ -830,6 +830,35 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             return objectSetting.objectType;
         };
 
+        var disabledNodesComplaints = {};
+        var disabledNodesCases = {};
+        /**
+         *
+         * @param nodeType
+         * @param enabledDisabled
+         * @returns {{}}
+         */
+        Service.setDisabled = function (nodeGroup, nodeType, enabledDisabled){
+            if(nodeGroup.toLowerCase() == 'complaint'){
+                disabledNodesComplaints[nodeType]=enabledDisabled;
+            }else{
+                disabledNodesCases[nodeType]=enabledDisabled;
+            }
+            return true;
+        }
+        /**
+         *
+         * @param nodeType
+         * @returns {boolean}
+         */
+        Service.getDisabled = function (nodeGroup, nodeType){
+            if(nodeGroup.toLowerCase() == 'complaint'){
+                if(disabledNodesComplaints[nodeType]) return true;
+            }else{
+                if(disabledNodesCases[nodeType]) return true;
+            }
+            return false;
+        }
 
         /**
          * @ngdoc method

@@ -2,8 +2,20 @@
 
 angular.module('complaints').controller('ComplaintsController', ['$scope', '$state', '$stateParams'
     , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
+    ,'Admin.CalendarConfigurationService', '$translate'
     , function ($scope, $state, $stateParams
-        , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService) {
+        , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService, CalendarConfigurationService, $translate) {
+
+        $scope.isNodeDisabled = function(node){
+            return HelperObjectBrowserService.getDisabled('Complaint', $translate.instant(node));
+        }
+        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+            if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled){
+                HelperObjectBrowserService.setDisabled('Complaint', 'Calendar', false);
+            }else{
+                HelperObjectBrowserService.setDisabled('Complaint', 'Calendar', true);
+            }
+        });
 
         new HelperObjectBrowserService.Content({
             scope: $scope
