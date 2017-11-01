@@ -22,7 +22,7 @@ public class QuickSearchAPIController
 
     private ExecuteSolrQuery executeSolrQuery;
 
-    @RequestMapping(value = "/quickSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/quickSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String quickSearch(
             @RequestParam(value = "q", required = true) String query,
