@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService',
-    function ($q, $translate, Util, Store) {
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService','Helper.ObjectBrowserService',
+    function ($q, $translate, Util, Store, HelperObjectBrowserService) {
         var Tree = {
             create: function (treeArgs) {
                 Tree.Info.create({name: "ObjectTree"});
@@ -508,6 +508,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         var components = Util.goodArray(nodeType.components);
                         var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
+                            var realLabel = label.substring(0, label.indexOf("."));
+                            if(HelperObjectBrowserService.isNodeDisabled(realLabel, title)) return true;
                             var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
                             if (nodeTypePath.length == lastSep) {
                                 var subPart = type.substring(lastSep);

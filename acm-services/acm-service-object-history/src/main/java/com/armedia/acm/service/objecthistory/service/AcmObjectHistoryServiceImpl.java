@@ -3,12 +3,12 @@
  */
 package com.armedia.acm.service.objecthistory.service;
 
-import java.util.Date;
-
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.service.objecthistory.dao.AcmObjectHistoryDao;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
+
+import java.util.Date;
 
 /**
  * @author riste.tutureski
@@ -19,6 +19,7 @@ public class AcmObjectHistoryServiceImpl implements AcmObjectHistoryService
 
     private AcmObjectHistoryDao acmObjectHistoryDao;
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public AcmObjectHistory save(AcmObjectHistory acmObjectHistory, String ipAddress)
@@ -47,7 +48,7 @@ public class AcmObjectHistoryServiceImpl implements AcmObjectHistoryService
         acmObjectHistory.setObjectType(objectType);
 
         // Convert Object to JSON string
-        AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
         String json = converter.marshal(obj);
 
         // Set JSON representation of the Object
@@ -86,5 +87,15 @@ public class AcmObjectHistoryServiceImpl implements AcmObjectHistoryService
     public void setAcmObjectHistoryEventPublisher(AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher)
     {
         this.acmObjectHistoryEventPublisher = acmObjectHistoryEventPublisher;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

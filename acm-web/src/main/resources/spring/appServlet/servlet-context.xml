@@ -29,26 +29,13 @@
     <!--<context:component-scan base-package="com.armedia.acm.web"/>-->
     <context:component-scan base-package="org.springframework.security.saml.web"/>
 
-    <!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00.000+0000 -->
-    <bean id="sourceObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper">
-    </bean>
-
     <bean id="jacksonDeserializationHandler" class="com.armedia.acm.web.api.handler.JacksonDeserializationHandler"/>
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
         <property name="targetObject" ref="sourceObjectMapper"/>
         <property name="targetMethod" value="addHandler"/>
         <property name="arguments" ref="jacksonDeserializationHandler"/>
     </bean>
-
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="sourceObjectMapper"/>
-        <property name="targetMethod" value="disable"/>
-        <property name="arguments" value="WRITE_DATES_AS_TIMESTAMPS"/>
-    </bean>
-    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="targetObject" ref="sourceObjectMapper"/>
-        <property name="targetMethod" value="findAndRegisterModules"/>
-    </bean>
+	
     <bean id="acmJacksonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper" ref="sourceObjectMapper"/>
     </bean>

@@ -19,10 +19,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -62,7 +63,7 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
 
         String query = "query";
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
-        String q= "catch_all:"+query;
+        String q = "catch_all:" + query;
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
@@ -76,7 +77,7 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
                 get("/api/v1/plugin/search/quickSearch?q=" + query)
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andReturn();
 
         verifyAll();
@@ -95,7 +96,7 @@ public class QuickSearchAPIControllerTest extends EasyMockSupport
     {
 
         String query = "query";
-        String q= "catch_all:"+query;
+        String q = "catch_all:" + query;
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
