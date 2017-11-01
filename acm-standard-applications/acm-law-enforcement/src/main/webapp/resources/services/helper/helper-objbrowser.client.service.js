@@ -830,8 +830,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
             return objectSetting.objectType;
         };
 
-        var disabledNodesComplaints = {};
-        var disabledNodesCases = {};
+        var disabledNodes = {};
         /**
          *
          * @param nodeType
@@ -839,12 +838,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          * @returns {{}}
          */
         Service.setDisabled = function (nodeGroup, nodeType, enabledDisabled){
-            if(nodeGroup.toLowerCase() == 'complaint'){
-                disabledNodesComplaints[nodeType]=enabledDisabled;
-            }else{
-                disabledNodesCases[nodeType]=enabledDisabled;
-            }
-            return true;
+            disabledNodes[nodeGroup + nodeType] = enabledDisabled;
         }
         /**
          *
@@ -852,11 +846,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          * @returns {boolean}
          */
         Service.getDisabled = function (nodeGroup, nodeType){
-            if(nodeGroup.toLowerCase() == 'complaint'){
-                if(disabledNodesComplaints[nodeType]) return true;
-            }else{
-                if(disabledNodesCases[nodeType]) return true;
-            }
+            if(disabledNodes[nodeGroup + nodeType]) return true;
             return false;
         }
 
