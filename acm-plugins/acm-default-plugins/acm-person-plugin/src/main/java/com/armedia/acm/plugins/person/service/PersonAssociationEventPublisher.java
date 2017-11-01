@@ -15,6 +15,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociationModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationPersistenceEvent;
 import com.armedia.acm.plugins.person.model.PersonAssociationUpdatedEvent;
 import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -28,11 +29,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-
 public class PersonAssociationEventPublisher implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -41,60 +42,49 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
     }
 
     @Async
-    public void publishPersonAssociationEvent(
-            PersonAssociation source,
-            String ipAddress,
-            boolean newPersonAssociation,
-            boolean succeeded)
+    public void publishPersonAssociationEvent(PersonAssociation source, String ipAddress, boolean newPersonAssociation, boolean succeeded)
     {
         log.debug("Publishing a person event.");
 
-        PersonAssociationPersistenceEvent personAssociationPersistenceEvent =
-                newPersonAssociation ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId()) :
-                        new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
+        PersonAssociationPersistenceEvent personAssociationPersistenceEvent = newPersonAssociation
+                ? new PersonAssociationAddEvent(source, source.getParentType(), source.getParentId())
+                : new PersonAssociationUpdatedEvent(source, source.getParentType(), source.getParentId());
         personAssociationPersistenceEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(personAssociationPersistenceEvent);
     }
 
     @Async
-    public void publishPersonAssociationEvent(
-            String personAssociationHistory,
-            PersonAssociation source,
-            boolean succeeded)
+    public void publishPersonAssociationEvent(String personAssociationHistory, PersonAssociation source, boolean succeeded)
     {
         log.debug("Publishing a person event.");
         if (personAssociationHistory == null)
         {
             publishPersonAssociationEvent(source, "created", succeeded);
-        } else
+        }
+        else
         {
-            AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
+            AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
             PersonAssociation previousSource = converter.unmarshall(personAssociationHistory, PersonAssociation.class);
             String parentType = previousSource.getParentType();
             Long parentId = previousSource.getParentId();
             Person exPerson = previousSource.getPerson();
             Person upPerson = source.getPerson();
-            checkForPersonAliasRelatedEvents(exPerson, upPerson, succeeded,
-                    previousSource.getParentType(), previousSource.getParentId());
+            checkForPersonAliasRelatedEvents(exPerson, upPerson, succeeded, previousSource.getParentType(), previousSource.getParentId());
             checkForOrganizationRelatedEvents(exPerson, upPerson, succeeded, parentType, parentId);
             checkForContactRelatedEvents(exPerson, upPerson, succeeded, parentType, parentId);
             checkForAddressRelatedEvents(exPerson, upPerson, succeeded, parentType, parentId);
         }
     }
 
-    private void checkForAddressRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
-                                              String parentType, Long parentId)
+    private void checkForAddressRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded, String parentType,
+            Long parentId)
     {
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = existingPerson.getAddresses();
         List<PostalAddress> updatedAddresses = updatedPerson.getAddresses();
-        Set<Long> updatedIds = updatedAddresses.stream()
-                .map(PostalAddress::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingAddresses.stream()
-                .map(PostalAddress::getId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -117,30 +107,24 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     private boolean isPostalAddressEdited(List<PostalAddress> existingAddresses, List<PostalAddress> updatedAddresses)
     {
-        List<PostalAddress> sortedExisting = existingAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedExisting = existingAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
-        List<PostalAddress> sortedUpdated = updatedAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedUpdated = updatedAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
                 .anyMatch(i -> !isPostalAddressChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
-    private void checkForContactRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
-                                              String parentType, Long parentId)
+    private void checkForContactRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded, String parentType,
+            Long parentId)
     {
         boolean isContactAddedOrRemoved = false;
         List<ContactMethod> existingContacts = existingPerson.getContactMethods();
         List<ContactMethod> updatedContacts = updatedPerson.getContactMethods();
-        Set<Long> updatedIds = updatedContacts.stream()
-                .map(ContactMethod::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingContacts.stream()
-                .map(ContactMethod::getId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedContacts.stream().map(ContactMethod::getId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingContacts.stream().map(ContactMethod::getId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -163,30 +147,24 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     private boolean isContactMethodEdited(List<ContactMethod> existingContacts, List<ContactMethod> updatedContacts)
     {
-        List<ContactMethod> sortedExisting = existingContacts.stream()
-                .sorted(Comparator.comparing(ContactMethod::getId))
+        List<ContactMethod> sortedExisting = existingContacts.stream().sorted(Comparator.comparing(ContactMethod::getId))
                 .collect(Collectors.toList());
 
-        List<ContactMethod> sortedUpdated = updatedContacts.stream()
-                .sorted(Comparator.comparing(ContactMethod::getId))
+        List<ContactMethod> sortedUpdated = updatedContacts.stream().sorted(Comparator.comparing(ContactMethod::getId))
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
                 .anyMatch(i -> !isContactMethodChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
-    private void checkForOrganizationRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
-                                                   String parentType, Long parentId)
+    private void checkForOrganizationRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded, String parentType,
+            Long parentId)
     {
         boolean isOrganizationAddedOrRemoved = false;
         List<Organization> existingOrganizations = existingPerson.getOrganizations();
         List<Organization> updatedOrganizations = updatedPerson.getOrganizations();
-        Set<Long> updatedIds = updatedOrganizations.stream()
-                .map(Organization::getOrganizationId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingOrganizations.stream()
-                .map(Organization::getOrganizationId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedOrganizations.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingOrganizations.stream().map(Organization::getOrganizationId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -209,18 +187,14 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     private boolean isOrganizationEdited(List<Organization> existingOrganizations, List<Organization> updatedOrganizations)
     {
-        List<Organization> sortedExisting = existingOrganizations.stream()
-                .sorted(Comparator.comparing(Organization::getOrganizationId))
+        List<Organization> sortedExisting = existingOrganizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId))
                 .collect(Collectors.toList());
 
-        List<Organization> sortedUpdated = updatedOrganizations.stream()
-                .sorted(Comparator.comparing(Organization::getOrganizationId))
+        List<Organization> sortedUpdated = updatedOrganizations.stream().sorted(Comparator.comparing(Organization::getOrganizationId))
                 .collect(Collectors.toList());
 
-        return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !isOrganizationChanged(sortedExisting.get(i), sortedUpdated.get(i)));
+        return IntStream.range(0, sortedExisting.size()).anyMatch(i -> !isOrganizationChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
-
 
     private boolean isObjectAdded(Set<Long> existingIds, Set<Long> updatedIds)
     {
@@ -232,18 +206,14 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
         return existingIds.stream().anyMatch(id -> !updatedIds.contains(id));
     }
 
-    private void checkForPersonAliasRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded,
-                                                  String parentType, Long parentId)
+    private void checkForPersonAliasRelatedEvents(Person existingPerson, Person updatedPerson, boolean succeeded, String parentType,
+            Long parentId)
     {
         boolean isPersonAliasAddedOrRemoved = false;
         List<PersonAlias> existingPersonAliases = existingPerson.getPersonAliases();
         List<PersonAlias> updatedPersonAliases = updatedPerson.getPersonAliases();
-        Set<Long> updatedIds = updatedPersonAliases.stream()
-                .map(PersonAlias::getId)
-                .collect(Collectors.toSet());
-        Set<Long> existingIds = existingPersonAliases.stream()
-                .map(PersonAlias::getId)
-                .collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedPersonAliases.stream().map(PersonAlias::getId).collect(Collectors.toSet());
+        Set<Long> existingIds = existingPersonAliases.stream().map(PersonAlias::getId).collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
@@ -266,16 +236,13 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     private boolean isPersonAliasEdited(List<PersonAlias> existingPersonAliases, List<PersonAlias> updatedPersonAliases)
     {
-        List<PersonAlias> sortedExisting = existingPersonAliases.stream()
-                .sorted(Comparator.comparing(PersonAlias::getId))
+        List<PersonAlias> sortedExisting = existingPersonAliases.stream().sorted(Comparator.comparing(PersonAlias::getId))
                 .collect(Collectors.toList());
 
-        List<PersonAlias> sortedUpdated = updatedPersonAliases.stream()
-                .sorted(Comparator.comparing(PersonAlias::getId))
+        List<PersonAlias> sortedUpdated = updatedPersonAliases.stream().sorted(Comparator.comparing(PersonAlias::getId))
                 .collect(Collectors.toList());
 
-        return IntStream.range(0, sortedExisting.size())
-                .anyMatch(i -> !isPersonAliasChanged(sortedExisting.get(i), sortedUpdated.get(i)));
+        return IntStream.range(0, sortedExisting.size()).anyMatch(i -> !isPersonAliasChanged(sortedExisting.get(i), sortedUpdated.get(i)));
     }
 
     @Async
@@ -313,29 +280,34 @@ public class PersonAssociationEventPublisher implements ApplicationEventPublishe
 
     private boolean isContactMethodChanged(ContactMethod ex, ContactMethod up)
     {
-        return Objects.equals(ex.getType(), up.getType())
-                && Objects.equals(ex.getValue(), up.getValue());
+        return Objects.equals(ex.getType(), up.getType()) && Objects.equals(ex.getValue(), up.getValue());
     }
 
     private boolean isPersonAliasChanged(PersonAlias ex, PersonAlias up)
     {
-        return Objects.equals(ex.getAliasType(), up.getAliasType())
-                && Objects.equals(ex.getAliasValue(), up.getAliasValue());
+        return Objects.equals(ex.getAliasType(), up.getAliasType()) && Objects.equals(ex.getAliasValue(), up.getAliasValue());
     }
 
     private boolean isPostalAddressChanged(PostalAddress ex, PostalAddress up)
     {
-        return Objects.equals(ex.getType(), up.getType())
-                && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
-                && Objects.equals(ex.getCity(), up.getCity())
-                && Objects.equals(ex.getCountry(), up.getCountry())
-                && Objects.equals(ex.getZip(), up.getZip())
-                && Objects.equals(ex.getState(), up.getState());
+        return Objects.equals(ex.getType(), up.getType()) && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
+                && Objects.equals(ex.getCity(), up.getCity()) && Objects.equals(ex.getCountry(), up.getCountry())
+                && Objects.equals(ex.getZip(), up.getZip()) && Objects.equals(ex.getState(), up.getState());
     }
 
     private boolean isOrganizationChanged(Organization ex, Organization up)
     {
         return Objects.equals(ex.getOrganizationType(), up.getOrganizationType())
                 && Objects.equals(ex.getOrganizationValue(), up.getOrganizationValue());
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

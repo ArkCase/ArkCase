@@ -58,7 +58,7 @@
     },
     {
       "id": "tasks",
-      "title": "core.menus.leftnav.complaints.main",
+      "title": "core.menus.leftnav.tasks.main",
       "name": "TASK",
       "allowedWidgets": [
         "details",

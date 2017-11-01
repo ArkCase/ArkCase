@@ -41,6 +41,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private OutlookContainerCalendarService calendarService;
     private boolean shouldDeleteCalendarFolder;
     private List<String> complaintStatusClosed;
+    private ObjectConverter objectConverter;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
 
@@ -59,7 +60,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                 String ipAddress = event.getIpAddress();
 
                 // Converter for JSON string to Object
-                AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
+                AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
 
                 String jsonUpdatedComplaint = acmObjectHistory.getObjectString();
                 Complaint updatedComplaint = converter.unmarshall(jsonUpdatedComplaint, Complaint.class);
@@ -98,7 +99,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                             // if integration is not enabled the user will be null.
                             if (user.isPresent())
                             {
-                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(), DeleteMode.MoveToDeletedItems);
+                                getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(),
+                                        DeleteMode.MoveToDeletedItems);
                             }
                         }
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
@@ -337,5 +339,15 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     public void setCalendarAdminService(OutlookCalendarAdminServiceExtension calendarAdminService)
     {
         this.calendarAdminService = calendarAdminService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

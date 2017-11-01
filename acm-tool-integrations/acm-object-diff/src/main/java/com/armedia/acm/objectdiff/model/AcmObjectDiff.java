@@ -1,6 +1,7 @@
 package com.armedia.acm.objectdiff.model;
 
 import com.armedia.acm.objectdiff.model.interfaces.AcmChangeContainer;
+import com.armedia.acm.objectonverter.ObjectConverter;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,8 +11,9 @@ public class AcmObjectDiff extends AcmDiff
 {
     private AcmObjectChange acmObjectChange;
 
-    public AcmObjectDiff(AcmObjectChange acmObjectChange)
+    public AcmObjectDiff(AcmObjectChange acmObjectChange, ObjectConverter objectConverter)
     {
+        super(objectConverter);
         this.acmObjectChange = acmObjectChange;
     }
 
@@ -27,7 +29,8 @@ public class AcmObjectDiff extends AcmDiff
         if (acmObjectChange instanceof AcmObjectModified)
         {
             return getChangesForChangeContainer((AcmObjectModified) acmObjectChange);
-        } else
+        }
+        else
         {
             ArrayList<AcmChange> acmChanges = new ArrayList<>();
             if (acmObjectChange != null)
@@ -46,7 +49,8 @@ public class AcmObjectDiff extends AcmDiff
             if (change.isLeaf())
             {
                 changes.add(change);
-            } else if (change instanceof AcmChangeContainer)
+            }
+            else if (change instanceof AcmChangeContainer)
             {
                 changes.addAll(getChangesForChangeContainer((AcmChangeContainer) change));
             }
