@@ -15,7 +15,6 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
     ) {
         var Store = {
             _owner: null
-
             /**
              * @ngdoc method
              * @name getOwner
@@ -42,7 +41,51 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
             , setOwner: function(owner) {
                 this._owner = owner;
             }
-
+            /**
+             * @ngdoc method
+             * @name prefixOwner
+             * @methodOf Acm.StoreService
+             *
+             * @param {String} name Name of data store (cache)
+             *
+             * @description
+             * Prefix owner before the data store name, with ":" as separator
+             *
+             * @returns {String} name with owner prefix
+             */
+            , prefixOwner: function(name) {
+                var owner = this.getOwner();
+                var prefixed = (owner)? owner + ":" : "";
+                prefixed += name;
+                return prefixed;
+            }
+            /**
+             * @ngdoc method
+             * @name fixOwner
+             * @methodOf Acm.StoreService
+             *
+             * @param {String} owner Current login ID.
+             *
+             * @description
+             * This function is called after user ID is available. It associates Store with current user as owner.
+             * And it fixed previous cache names in registries which are created before user ID is available or
+             * left over from previous login.
+             *
+             * @returns {String} owner owner user ID
+             */
+            , fixOwner: function (owner) {
+                if (owner != Store.getOwner()) {
+                    Store.setOwner(owner);
+                    UtilTimerService.useTimer("fixStoreOwner"
+                        , 500     //delay 500 milliseconds
+                        , function () {
+                            Store.Registry.removeLocalOrphan(owner);
+                            Store.Registry.removeSessionOrphan(owner);
+                            return false;
+                        }
+                    );
+                }
+            }
 
             /**
              * @ngdoc service
@@ -96,7 +139,91 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                     });
                     return instance;
                 }
+                , _getOwnerFromKey: function(key) {
+                    var ar = key.split(":");
+                    if (2 <= ar.length) {
+                        return ar[0];
+                    }
+                    return null;
+                }
+                /**
+                 * @ngdoc method
+                 * @name removeSessionOrphan
+                 * @methodOf Acm.StoreService.Registry
+                 *
+                 * @param {String} (Optional)loginId Current login ID.
+                 *
+                 * @description
+                 * This function performs two tasks:
+                 * 1. Caches without owner are those created before login user info is available. They have current login user
+                 * as owner after this call.
+                 * 2. If loginId is given, caches with owners other than loginId, - presumably they are
+                 * left over from previous login -, are removed.
+                 */
+                , removeSessionOrphan: function(loginId) {
+                    var registry = this.getSessionInstance();
+                    var data = registry.get();
+                    _.forEach(data, function(item, key) {
+                        var owner = Store.Registry._getOwnerFromKey(key);
+                        if (Util.isEmpty(owner)) {
+                            var orphanCopy = new Store.SessionData({name: key, noOwner: true, noRegistry: true});
+                            var ownerCopy = new Store.SessionData({name: key, noOwner: false, noRegistry: true});
+                            var orphanCopyData = orphanCopy.get();
+                            var ownerCopyData = ownerCopy.get();
+                            if (Util.isEmpty(ownerCopyData)) {
+                                ownerCopy.set(orphanCopyData);
+                            }
+                            orphanCopy.remove();
+                            delete data[key];
+                            data[ownerCopy.getName()] = 1;
 
+                        } else if (owner != loginId) {
+                            var cache = new Store.SessionData({name: key, noOwner: true, noRegistry: true});
+                            cache.remove();
+                            delete data[key];
+                        }
+                    });
+                    registry.set(data);
+                }
+                /**
+                 * @ngdoc method
+                 * @name removeLocalOrphan
+                 * @methodOf Acm.StoreService.Registry
+                 *
+                 * @param {String} (Optional)loginId Current login ID.
+                 *
+                 * @description
+                 * This function performs two tasks:
+                 * 1. Caches without owner are those created before login user info is available. They have current login user
+                 * as owner after this call.
+                 * 2. If loginId is given, caches with owners other than loginId, - presumably they are
+                 * left over from previous login -, are removed.
+                 */
+                , removeLocalOrphan: function(loginId) {
+                    var registry = this.getLocalInstance();
+                    var data = registry.get();
+                    _.forEach(data, function(item, key) {
+                        var owner = Store.Registry._getOwnerFromKey(key);
+                        if (Util.isEmpty(owner)) {
+                            var orphanCopy = new Store.LocalData({name: key, noOwner: true, noRegistry: true});
+                            var ownerCopy = new Store.LocalData({name: key, noOwner: false, noRegistry: true});
+                            var orphanCopyData = orphanCopy.get();
+                            var ownerCopyData = ownerCopy.get();
+                            if (Util.isEmpty(ownerCopyData)) {
+                                ownerCopy.set(orphanCopyData);
+                            }
+                            orphanCopy.remove();
+                            delete data[key];
+                            data[ownerCopy.getName()] = 1;
+
+                        } else if (owner != loginId) {
+                            var cache = new Store.LocalData({name: key, noOwner: true, noRegistry: true});
+                            cache.remove();
+                            delete data[key];
+                        }
+                    });
+                    registry.set(data);
+                }
                 /**
                  * @ngdoc method
                  * @name clearSessionCache
@@ -210,9 +337,9 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                 }
 
                 this.noOwner = Util.goodValue(arg.noOwner, false);
-                this.name = arg.name;
+                this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
                 this.noRegistry = Util.goodValue(arg.noRegistry, false);
-                if (!this.noRegistry && Store.getOwner()) {
+                if (!this.noRegistry) {
                     var registry = Store.Registry.getSessionInstance();
                     var data = Util.goodValue(registry.get(), {});
                     data[this.name] = 1;
@@ -260,15 +387,16 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
                     arg.noRegistry = false;
                 }
                 this.noOwner = Util.goodValue(arg.noOwner, false);
-                this.name = arg.name;
+                this.name = (this.noOwner)? arg.name : Store.prefixOwner(arg.name);
                 this.noRegistry = Util.goodValue(arg.noRegistry, false);
-                if (!this.noRegistry && Store.getOwner()) {
+                if (!this.noRegistry) {
                     var registry = Store.Registry.getLocalInstance();
                     var data = Util.goodValue(registry.get(), {});
-                    data[this.getKey()] = 1;
+                    data[this.name] = 1;
                     registry.set(data);
                 }
             }
+
 
             /**
              * @ngdoc service
@@ -390,12 +518,9 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (Store.getOwner()) {
-                    return null;
-                }
-
                 var data = sessionStorage.getItem(this.name);
                 var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 
@@ -418,33 +543,8 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
-                if (Store.getOwner()) {
-                    var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
-                    var key = this.getKey();
-                    sessionStorage.setItem(key, item);
-                }
-            }
-
-
-            /**
-             * @ngdoc method
-             * @name getKey
-             * @methodOf Acm.StoreService.SessionData
-             *
-             * @description
-             * Get key used for sessionStorage. It is the same as name if 'noOwner' flag is true; otherwise, it is
-             * name prefix with owner by default
-             *
-             * @returns {String} Key
-             */
-            , getKey: function() {
-                var key;
-                if (this.noOwner) {
-                    key = this.name;
-                } else {
-                    key = Store.getOwner() + ":" + this.name;
-                }
-                return key;
+                var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
+                sessionStorage.setItem(this.name, item);
             }
 
             /**
@@ -491,12 +591,9 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , get: function () {
-                if (Store.getOwner()) {
-                    return null;
-                }
-
                 var data = localStorage.getItem(this.name);
                 var item = Util.goodJsonObj(data, null);
+                //var item = ("null" === data) ? null : JSON.parse(data);
                 return item;
             }
 
@@ -519,32 +616,8 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
              * var data = dataCache.get();                              // data contains value '{greeting: "Hello", who: "World"}'
              */
             , set: function (data) {
-                if (Store.getOwner()) {
-                    var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
-                    var key = this.getKey();
-                    localStorage.setItem(key, item);
-                }
-            }
-
-            /**
-             * @ngdoc method
-             * @name getKey
-             * @methodOf Acm.StoreService.LocalData
-             *
-             * @description
-             * Get key used for sessionStorage. It is the same as name if 'noOwner' flag is true; otherwise, it is
-             * name prefix with owner by default
-             *
-             * @returns {String} Key
-             */
-            , getKey: function() {
-                var key;
-                if (this.noOwner) {
-                    key = this.name;
-                } else {
-                    key = Store.getOwner() + ":" + this.name;
-                }
-                return key;
+                var item = (Util.isEmpty(data)) ? null : JSON.stringify(data);
+                localStorage.setItem(this.name, item);
             }
 
             /**
@@ -956,29 +1029,10 @@ angular.module('services').factory('Acm.StoreService', ['$rootScope', '$window',
 
 
         //
-        // Initialization
+        // Initialize empty registries
         //
-
-        // Following cleans up possible leftover in previous builds. Remove following block after longer enough
-        // for all users run this build
-        if (sessionStorage.AcmModuleConfigMap) {
-            sessionStorage.removeItem("AcmUserInfo");
-        }
-        if (sessionStorage.AcmUserInfo) {
-            sessionStorage.removeItem("AcmUserInfo");
-        }
-        //TODO: remove above block
-
-        var owner = sessionStorage.username;
-        if (null != owner && "null" != owner) {
-            sessionStorage.removeItem("username");
-            Store.setOwner(owner);
-        }
-
-        //simple eviction strategy for now
-        if (0.05 >= Math.random()) {  //evict cache one out of 20 chances
-            sessionStorage.clear();
-        }
+        Store.Registry.clearSessionCache();
+        Store.Registry.clearLocalCache();
 
         return Store;
     }
