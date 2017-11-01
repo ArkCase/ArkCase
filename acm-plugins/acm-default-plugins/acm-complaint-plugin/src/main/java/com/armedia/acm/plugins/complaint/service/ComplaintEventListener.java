@@ -21,10 +21,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -157,9 +156,66 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     private boolean isLocationChanged(Complaint complaint, Complaint updatedComplaint)
     {
-        PostalAddress updatedLocation = updatedComplaint.getLocation();
-        PostalAddress location = complaint.getLocation();
-        return !Objects.equals(updatedLocation, location);
+        boolean isAddressAddedOrRemoved = false;
+        List<PostalAddress> existingAddresses = complaint.getAddresses();
+        List<PostalAddress> updatedAddresses = updatedComplaint.getAddresses();
+        Set<Long> updatedIds = updatedAddresses.stream()
+                .map(PostalAddress::getId)
+                .collect(Collectors.toSet());
+        Set<Long> existingIds = existingAddresses.stream()
+                .map(PostalAddress::getId)
+                .collect(Collectors.toSet());
+
+        if (isObjectAdded(existingIds, updatedIds))
+        {
+            isAddressAddedOrRemoved = true;
+        }
+        if (isObjectRemoved(existingIds, updatedIds))
+        {
+            isAddressAddedOrRemoved = true;
+        }
+        if (!isAddressAddedOrRemoved)
+        {
+            if (isPostalAddressEdited(existingAddresses, updatedAddresses))
+            {
+               return true;
+            }
+        }
+        return isAddressAddedOrRemoved;
+    }
+
+    private boolean isPostalAddressEdited(List<PostalAddress> existingAddresses, List<PostalAddress> updatedAddresses)
+    {
+        List<PostalAddress> sortedExisting = existingAddresses.stream()
+                .sorted(Comparator.comparing(PostalAddress::getId))
+                .collect(Collectors.toList());
+
+        List<PostalAddress> sortedUpdated = updatedAddresses.stream()
+                .sorted(Comparator.comparing(PostalAddress::getId))
+                .collect(Collectors.toList());
+
+        return IntStream.range(0, sortedExisting.size())
+                .anyMatch(i -> !isPostalAddressChanged(sortedExisting.get(i), sortedUpdated.get(i)));
+    }
+
+    private boolean isPostalAddressChanged(PostalAddress ex, PostalAddress up)
+    {
+        return Objects.equals(ex.getType(), up.getType())
+                && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
+                && Objects.equals(ex.getCity(), up.getCity())
+                && Objects.equals(ex.getCountry(), up.getCountry())
+                && Objects.equals(ex.getZip(), up.getZip())
+                && Objects.equals(ex.getState(), up.getState());
+    }
+
+    private boolean isObjectAdded(Set<Long> existingIds, Set<Long> updatedIds)
+    {
+        return updatedIds.stream().anyMatch(id -> !existingIds.contains(id));
+    }
+
+    private boolean isObjectRemoved(Set<Long> existingIds, Set<Long> updatedIds)
+    {
+        return existingIds.stream().anyMatch(id -> !updatedIds.contains(id));
     }
 
     private boolean isDetailsChanged(Complaint complaint, Complaint updatedComplaint)

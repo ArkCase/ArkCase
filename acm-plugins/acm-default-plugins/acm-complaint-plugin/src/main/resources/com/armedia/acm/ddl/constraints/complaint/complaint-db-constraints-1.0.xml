@@ -68,7 +68,15 @@
                                  deferrable="${deferrable}"
                                  initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
-    
+
+    <changeSet id="complaint-constraint-10-postal-address-id" author="sharmilee.sivakumaran">
+        <addForeignKeyConstraint baseTableName="acm_complaint"
+                                 baseColumnNames="cm_default_address"
+                                 constraintName="fk_complaint_default_address_id"
+                                 referencedTableName="acm_postal_address"
+                                 referencedColumnNames="cm_address_id"
+                                 deferrable="${deferrable}"
+                                 initiallyDeferred="${initially.deferred}" />
+    </changeSet>
 </databaseChangeLog>
 
