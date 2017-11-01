@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stateParams', 'Case.InfoService', 'Helper.ObjectBrowserService', 'ObjectService'
-    , function ($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService) {
+angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stateParams', 'Case.InfoService'
+    , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService'
+    , function ($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -16,9 +17,18 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
         });
 
         var onObjectInfoRetrieved = function(objectInfo) {
-            $scope.objectInfoRetrieved = true;
-            $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
-            $scope.objectId = objectInfo.id;
+            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+                $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
+                $scope.objectId = objectInfo.id;
+                if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled){
+                    $scope.objectInfoRetrieved = true;
+                }else{
+                    MessageService.info('Calendar Integration Configuration Not Enabled');
+                    $scope.objectInfoRetrieved = false;
+
+                }
+            });
+
         };
     }
 ]);
