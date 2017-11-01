@@ -17,7 +17,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
             $scope.editMode = !!params.targetOrganizationId;
-            $scope.organizationId = params.organizationId;
+            $scope.organizationId = Util.isEmpty(params.targetOrganizationId) ? params.organizationId : params.targetOrganizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isValid = true;
             $scope.isDefault = params.isDefault;
