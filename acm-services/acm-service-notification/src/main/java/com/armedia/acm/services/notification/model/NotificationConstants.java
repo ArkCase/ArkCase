@@ -3,6 +3,8 @@
  */
 package com.armedia.acm.services.notification.model;
 
+import com.armedia.acm.objectonverter.DateFormats;
+
 /**
  * @author riste.tutureski
  */
@@ -33,7 +35,7 @@ public interface NotificationConstants
     /**
      * Date format that is needed for converting string to date
      */
-    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    String DATE_FORMAT = DateFormats.DEFAULT_DATE_FORMAT;
 
     /**
      * Notification message state when the message is successfully sent to the user

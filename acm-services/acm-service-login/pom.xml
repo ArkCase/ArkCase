@@ -40,6 +40,11 @@
             <artifactId>acm-service-authentication-token</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-object-converter</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
 
         <!-- json -->
         <dependency>

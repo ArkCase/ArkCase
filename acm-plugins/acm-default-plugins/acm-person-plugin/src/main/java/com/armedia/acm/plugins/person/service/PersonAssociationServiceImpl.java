@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.person.service;
 
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.objectonverter.AcmMarshaller;
@@ -9,6 +8,7 @@ import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsServiceImpl;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,8 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
 
     private PersonAssociationEventPublisher personAssociationEventPublisher;
 
+    private ObjectConverter objectConverter;
+
     SolrJoinDocumentsServiceImpl solrJoinDocumentsService;
 
     @Override
@@ -37,7 +39,7 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
         if (id != null)
         {
             PersonAssociation exPersonAssociation = getPersonAssociationDao().find(id);
-            AcmMarshaller marshaller = ObjectConverter.createJSONMarshaller();
+            AcmMarshaller marshaller = getObjectConverter().getJsonMarshaller();
             // keep copy from the existing object to compare with the updated one
             // otherwise JPA will update all references and no changes can be detected
             personAssociationHistory = marshaller.marshal(exPersonAssociation);
@@ -45,11 +47,12 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
 
         try
         {
-            PersonAssociation savedPersonAssociation = getPersonAssociationTransaction()
-                    .savePersonAsssociation(personAssociation, authentication);
+            PersonAssociation savedPersonAssociation = getPersonAssociationTransaction().savePersonAsssociation(personAssociation,
+                    authentication);
             getPersonAssociationEventPublisher().publishPersonAssociationEvent(personAssociationHistory, savedPersonAssociation, true);
             return savedPersonAssociation;
-        } catch (MuleException | TransactionException e)
+        }
+        catch (MuleException | TransactionException e)
         {
             getPersonAssociationEventPublisher().publishPersonAssociationEvent(personAssociationHistory, personAssociation, false);
             throw new AcmCreateObjectFailedException("personAssociation", e.getMessage(), e);
@@ -57,16 +60,12 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     }
 
     @Override
-    public String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException
+    public String getPersonAssociations(Long personId, String parentType, int start, int limit, String sort, Authentication auth)
+            throws AcmObjectNotFoundException
     {
-        return solrJoinDocumentsService.getJoinedDocuments(
-                auth, personId, "child_id_s",
-                PersonOrganizationConstants.PERSON_OBJECT_TYPE, "child_type_s",
-                PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE,
-                parentType, "parent_type_s",
-                "parent_object",
-                "parent_ref_s", "id", start, limit, sort
-        );
+        return solrJoinDocumentsService.getJoinedDocuments(auth, personId, "child_id_s", PersonOrganizationConstants.PERSON_OBJECT_TYPE,
+                "child_type_s", PersonOrganizationConstants.PERSON_ASSOCIATION_OBJECT_TYPE, parentType, "parent_type_s", "parent_object",
+                "parent_ref_s", "id", start, limit, sort);
     }
 
     @Override
@@ -78,8 +77,10 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     /**
      * Delete Person association
      *
-     * @param id   person association id
-     * @param auth Authentication
+     * @param id
+     *            person association id
+     * @param auth
+     *            Authentication
      */
     @Override
     public void deletePersonAssociation(Long id, Authentication auth)
@@ -122,5 +123,15 @@ public class PersonAssociationServiceImpl implements PersonAssociationService
     public void setSolrJoinDocumentsService(SolrJoinDocumentsServiceImpl solrJoinDocumentsService)
     {
         this.solrJoinDocumentsService = solrJoinDocumentsService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

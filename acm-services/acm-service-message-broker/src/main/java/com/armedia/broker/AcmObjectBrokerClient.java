@@ -1,5 +1,6 @@
 package com.armedia.broker;
 
+import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -37,7 +38,9 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
 
     private ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 
-    private ObjectConverter converter = ObjectConverter.createJSONConverter();
+    // private ObjectConverter converter = ObjectConverter.createJSONConverter();
+    private AcmMarshaller jsonMarshaller = ObjectConverter.createJSONMarshallerForTests();
+
     private AcmObjectBrokerClientHandler<E> handler;
     private JmsTemplate producerTemplate;
 
@@ -123,7 +126,7 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
      */
     public void sendObject(String destination, Object object) throws JsonProcessingException, JmsException
     {
-        String message = getConverter().getMarshaller().marshal(object);
+        String message = jsonMarshaller.marshal(object);
         producerTemplate.send(destination, new MessageCreator()
         {
             @Override
@@ -164,26 +167,6 @@ public class AcmObjectBrokerClient<E> extends DefaultMessageListenerContainer
     protected AcmObjectBrokerClientHandler<E> getHandler()
     {
         return handler;
-    }
-
-    /**
-     * Get object converter
-     * 
-     * @return
-     */
-    protected ObjectConverter getConverter()
-    {
-        return converter;
-    }
-
-    /**
-     * Set object converter
-     * 
-     * @return
-     */
-    public void setConverter(ObjectConverter converter)
-    {
-        this.converter = converter;
     }
 
     /**

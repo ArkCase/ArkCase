@@ -1,8 +1,8 @@
 package com.armedia.acm.services.config.model;
 
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.armedia.acm.objectonverter.ObjectConverter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,21 +20,16 @@ public class PropertyConfig implements AcmConfig, Serializable, InitializingBean
     private Map<Object, Object> properties = new HashMap<>();
     private String configDescription;
     private AcmEncryptablePropertyUtils encryptablePropertyUtils;
+    private ObjectConverter objectConverter;
 
+    @Override
     public String getConfigAsJson()
     {
-        String json = "{}";
-        ObjectMapper om = new ObjectMapper();
-        try
-        {
-            json = om.writeValueAsString(getProperties());
-        } catch (JsonProcessingException e)
-        {
-            log.error(e.getMessage());
-        }
-        return json;
+        String json = getObjectConverter().getJsonMarshaller().marshal(getProperties());
+        return json == null ? "{}" : json;
     }
 
+    @Override
     public String getConfigName()
     {
         return configName;
@@ -81,5 +76,15 @@ public class PropertyConfig implements AcmConfig, Serializable, InitializingBean
     {
         log.debug("config name: {}", getConfigName());
         getEncryptablePropertyUtils().decryptProperties(properties);
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

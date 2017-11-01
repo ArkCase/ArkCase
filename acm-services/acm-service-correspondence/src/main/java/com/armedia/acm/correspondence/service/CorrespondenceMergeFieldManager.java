@@ -10,10 +10,8 @@ import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldConfiguratio
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersion;
 import com.armedia.acm.correspondence.model.CorrespondenceMergeFieldVersionConfiguration;
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -40,8 +38,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
     private Resource correspondenceMergeFieldsVersionConfiguration;
     private Resource correspondenceMergeFieldsConfiguration;
-
     private SpringContextHolder springContextHolder;
+    private ObjectConverter objectConverter;
 
     private List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
     private List<CorrespondenceMergeFieldVersion> mergeFieldsVersions = new ArrayList<>();
@@ -70,12 +68,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 resource = "[]";
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-
-            List<CorrespondenceMergeFieldVersionConfiguration> mergeFieldsVersionConfigurations = mapper.readValue(resource,
-                    new TypeReference<List<CorrespondenceMergeFieldVersionConfiguration>>()
-                    {
-                    });
+            List<CorrespondenceMergeFieldVersionConfiguration> mergeFieldsVersionConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, CorrespondenceMergeFieldVersionConfiguration.class);
 
             mergeFieldsVersions = new ArrayList<CorrespondenceMergeFieldVersion>(mergeFieldsVersionConfigurations.stream()
                     .map(configuration -> mapMergeFieldVersionFromConfiguration(configuration)).collect(Collectors.toList()));
@@ -96,12 +90,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
                 resource = "[]";
             }
 
-            mapper = new ObjectMapper();
-
-            List<CorrespondenceMergeFieldConfiguration> mergeFieldsConfigurations = mapper.readValue(resource,
-                    new TypeReference<List<CorrespondenceMergeFieldConfiguration>>()
-                    {
-                    });
+            List<CorrespondenceMergeFieldConfiguration> mergeFieldsConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, CorrespondenceMergeFieldConfiguration.class);
 
             mergeFields = new ArrayList<CorrespondenceMergeField>(mergeFieldsConfigurations.stream()
                     .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
@@ -110,7 +100,8 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             {
                 createDefaultMergeFieldRescords();
             }
-        } catch (IOException ioe)
+        }
+        catch (IOException ioe)
         {
             throw new IllegalStateException(ioe);
         }
@@ -242,9 +233,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         List<CorrespondenceMergeFieldConfiguration> configurations = mergeFields.stream()
                 .map(mergeField -> mapConfigurationFromMergeField(mergeField)).collect(Collectors.toList());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String configurationsOutput = mapper.writeValueAsString(configurations);
+        String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 
         File file = correspondenceMergeFieldsConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
@@ -260,9 +249,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
         List<CorrespondenceMergeFieldVersionConfiguration> configurations = mergeFieldsVersions.stream()
                 .map(mergeFieldVersion -> mapConfigurationFromMergeFieldVersion(mergeFieldVersion)).collect(Collectors.toList());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String configurationsOutput = mapper.writeValueAsString(configurations);
+        String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 
         File file = correspondenceMergeFieldsVersionConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
@@ -339,6 +326,16 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     public void setSpringContextHolder(SpringContextHolder springContextHolder)
     {
         this.springContextHolder = springContextHolder;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
 }
