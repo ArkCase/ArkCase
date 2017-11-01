@@ -508,7 +508,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         var components = Util.goodArray(nodeType.components);
                         var leadComponent = nodeType.leadComponent;
                         if (0 == type.indexOf(nodeTypePath)) {
-                            let realLabel = label.substring(0, label.indexOf("."));
+                            var realLabel = label.substring(0, label.indexOf("."));
                             if(HelperObjectBrowserService.getDisabled(realLabel, title)) return true;
                             var lastSep = type.lastIndexOf(Tree.Key.KEY_SEPARATOR);
                             if (nodeTypePath.length == lastSep) {
