@@ -8,10 +8,17 @@ angular.module('goodbye').controller('GoodbyeController', ['$window'
             var logoutUrl = AcmAppService.getAppUrl(Util.goodMapValue(data, "logoutUrl", "/logout"));
 
             AcmLoginService.setLogin(false);
+            sessionStorage.removeItem('redirectURL');
+            sessionStorage.removeItem('redirectState');
+            sessionStorage.removeItem('passwordWarningAccepted');
+            Store.Registry.clearSessionCache();
+            Store.Registry.clearLocalCache();
 
             try {
+                // disconnect websocket
                 WebSocketService.disconnect();
             } catch (exc) {
+
             }
             $window.location.href = logoutUrl;
 

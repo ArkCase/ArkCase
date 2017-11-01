@@ -30,7 +30,7 @@ angular.module('services').factory('Acm.AppService', ['$location', 'Acm.StoreSer
              * If the url is http://localhost:8080/arkcase/home.html#!/dashboard, The app context name is 'arkcase'
              */
             , getAppContext: function () {
-                var cacheAppContext = new Store.SessionData({name: Service.SessionCacheNames.APP_CONTEXT, noOwner: true});
+                var cacheAppContext = new Store.SessionData(Service.SessionCacheNames.APP_CONTEXT);
                 var appContext = cacheAppContext.get();
                 if (Util.isEmpty(appContext)) {
                     var host = $location.host();
