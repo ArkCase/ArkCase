@@ -7,13 +7,13 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
         , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService, CalendarConfigurationService, $translate) {
 
         $scope.isNodeDisabled = function(node){
-            return HelperObjectBrowserService.getDisabled('complaints', $translate.instant(node));
+            return HelperObjectBrowserService.isNodeDisabled('complaints', $translate.instant(node));
         }
         CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
             if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled){
-                HelperObjectBrowserService.setDisabled('complaints', 'Calendar', false);
+                HelperObjectBrowserService.toggleNodeDisabled('complaints', 'Calendar', false);
             }else{
-                HelperObjectBrowserService.setDisabled('complaints', 'Calendar', true);
+                HelperObjectBrowserService.toggleNodeDisabled('complaints', 'Calendar', true);
             }
         });
 

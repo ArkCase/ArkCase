@@ -837,7 +837,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          * @param enabledDisabled
          * @returns {{}}
          */
-        Service.setDisabled = function (nodeGroup, nodeType, enabledDisabled){
+        Service.toggleNodeDisabled  = function (nodeGroup, nodeType, enabledDisabled){
             disabledNodes[nodeGroup + nodeType] = enabledDisabled;
         }
         /**
@@ -845,7 +845,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          * @param nodeType
          * @returns {boolean}
          */
-        Service.getDisabled = function (nodeGroup, nodeType){
+        Service.isNodeDisabled  = function (nodeGroup, nodeType){
             if(disabledNodes[nodeGroup + nodeType]) return true;
             return false;
         }
