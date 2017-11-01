@@ -96,7 +96,8 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                     targetOrganizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
-                    description: rowEntity.description_s
+                    description: rowEntity.description_s,
+                    organizationId: $scope.organizationId
                 });
             } else {
                 angular.extend(params, {
