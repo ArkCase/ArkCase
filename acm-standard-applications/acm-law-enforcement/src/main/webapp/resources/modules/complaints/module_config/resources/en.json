@@ -101,27 +101,47 @@
       }
     }
   },
-  "complaints.comp.locations": {
+  "complaints.comp.addresses": {
     "title": "Locations",
     "table.columns": {
-      "address": "Address",
       "type": "Type",
+      "streetAddress": "Address 1",
+      "streetAddress2": "Address 2",
       "city": "City",
       "state": "State",
       "zip": "Zip",
-      "modified": "Date Last Modified",
-      "modifier": "User Last Modified"
+      "country": "Country",
+      "created": "Date Added",
+      "creator": "Added By",
+      "modified": "Last Modified",
+      "modifier": "Modified By"
+    },
+    "actions": {
+      "addNew": "Add New",
+      "map": "Map"
     },
     "modal": {
-      "addLocation": "Add Location",
-      "editLocation": "Edit Record",
-      "type.label": "Type",
-      "street.label": "Street",
+      "addAddress": "Add Location",
+      "editAddress": "Edit Record",
+      "type.label": "Address Type",
+      "type.placeholder": "Enter Address Type",
+      "streetAddress.label": "Address 1",
+      "streetAddress.placeholder": "Enter Address 1",
+      "streetAddress2.label": "Address 2",
+      "streetAddress2.placeholder": "Enter Address 2",
       "city.label": "City",
-      "state.label": "State",
+      "city.placeholder": "Enter City",
       "zip.label": "Zip",
-      "btnOk.text": "Save",
-      "btnCancel.text": "Cancel"
+      "zip.placeholder": "Enter Zip",
+      "state.label": "State",
+      "state.placeholder": "Enter State",
+      "country.label": "Country",
+      "country.placeholder": "Enter Country",
+      "btnCancel.text": "Cancel",
+      "btnOk.text": "Save Location",
+      "setPrimary": "Set as Primary?",
+      "yes": "Yes",
+      "no": "No"
     }
   },
   "complaints.comp.notes": {
