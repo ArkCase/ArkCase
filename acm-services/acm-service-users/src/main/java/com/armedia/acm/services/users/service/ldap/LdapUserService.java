@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -488,8 +490,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         if (AcmUserState.VALID == existing.getUserState())
         {
-            // FIXME: use some more appropriate exception here
-            throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", userId));
+                     throw new NameAlreadyBoundException(null);
         } else
         {
             // INVALID or DELETED user, remove current group membership

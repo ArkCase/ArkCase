@@ -32,26 +32,27 @@
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                    ng-model="user.mail" required>
         </div>
-        <div class="form-group required" ng-show="cloneUser && addUser">
+        <div class="form-group required" ng-class="{ 'has-error' : errorMessage }" ng-if="cloneUser && addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
             <div class="help-tip">
-                <p>{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.passwordRuleText' | translate}}</p>
+                <p>{{ 'common.passwordRuleText' | translate}}</p>
             </div>
             <input type="password" class="form-control" id="password" name="password"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
                    ng-model="user.password"
-                   password-check username-input="user.userId" new-password="user.password" confirm-new-password="confirmPassword" error-messages="passwordErrorMessages"
-                   new-password-validation="password" confirm-new-password-validation="confirmPassword" required>
-            <p class="help-block" ng-show="userForm.password.$error.invalidPattern || userForm.password.$error.containsUsername">
-                <span class="text-danger" translate>{{passwordErrorMessages.containsUsernameMessage  || passwordErrorMessages.invalidPatternMessage}}</span>
+                   required>
+            <p class="help-block" ng-bind-html="errorMessage">
             </p>
         </div>
-        <div class="form-group required" ng-show="cloneUser && addUser">
+        <div class="form-group required" ng-if="cloneUser && addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.confirmation" |
                 translate}}</label>
             <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
-                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.confirmation' | translate}}" ng-model="confirmPassword" required>
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.confirmation' | translate}}" ng-model="confirmPassword"
+                   password-check new-password="user.password" confirm-new-password="confirmPassword" error-messages="passwordErrorMessages"
+                   new-password-validation="password" confirm-new-password-validation="confirmPassword"
+                   required>
             <p class="help-block" ng-show="userForm.password.$error.notSamePasswords">
                 <span class="text-danger" translate>{{passwordErrorMessages.notSamePasswordsMessage}}</span>
             </p>

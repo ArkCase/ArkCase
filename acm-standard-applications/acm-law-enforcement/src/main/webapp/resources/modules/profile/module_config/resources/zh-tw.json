@@ -59,10 +59,8 @@
   "profile.modal": {
     "title": "信息",
     "emptyPassword": "不接受空密碼",
-    "comfirmation": "請重新輸入你的密碼。",
+    "confirmation": "請重新輸入你的密碼。",
     "differentPasswords": "密碼不匹配。請再試一次。",
-    "passwordContainsUsername": "zh-tw_Password should not contain the username.",
-    "invalidPattern": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "確認",
     "success": "成功更改密碼",
     "changePassword.header": "更改密碼"

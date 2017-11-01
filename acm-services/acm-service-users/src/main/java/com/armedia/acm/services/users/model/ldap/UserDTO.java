@@ -15,6 +15,7 @@ public class UserDTO
     private String lastName;
     private String mail;
     private String password;
+    private String currentPassword;
     private List<String> groupNames;
 
     public AcmUser toAcmUser(String userId, String defaultLang)
@@ -93,5 +94,13 @@ public class UserDTO
     public void setGroupNames(List<String> groupNames)
     {
         this.groupNames = groupNames;
+    }
+
+    public String getCurrentPassword() {
+        return currentPassword;
+    }
+
+    public void setCurrentPassword(String currentPassword) {
+        this.currentPassword = currentPassword;
     }
 }

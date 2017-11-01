@@ -20,7 +20,8 @@
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "MM/dd/yyyy",
     "defaultDateUIFormat": "MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "MM/dd/yyyy HH:mm",
+    "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
   },
   "common.frevvo": {
     "defaultDateFormat": "YYYY-MM-DD"

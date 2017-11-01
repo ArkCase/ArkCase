@@ -59,9 +59,7 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "La contraseña no puede estar vacía",
-    "comfirmation": "Por favor re ingrese su contraseña.",
-    "differentPasswords": "Las contraseñas no coinciden. Inténtalo de nuevo.",
-    "passwordContainsUsername": "es_Password should not contain the username.",
+    "confirmation": "Por favor re ingrese su contraseña.",
     "invalidPattern": "es_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "DE ACUERDO",
     "success": "Contraseña modificada con éxito",

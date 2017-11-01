@@ -59,10 +59,8 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "A senha não pode estar vazia",
-    "comfirmation": "Por favor, digite sua senha novamente.",
+    "confirmation": "Por favor, digite sua senha novamente.",
     "differentPasswords": "As senhas não correspondem. Por favor, tente novamente.",
-    "passwordContainsUsername": "pt_Password should not contain the username.",
-    "invalidPattern": "pt_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "OK",
     "success": "Senha alterada com sucesso",
     "changePassword.header": "Mudar senha"

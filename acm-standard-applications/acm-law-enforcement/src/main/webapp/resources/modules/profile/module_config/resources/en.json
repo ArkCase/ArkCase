@@ -59,10 +59,8 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Password Can not be Empty",
-    "comfirmation": "Please re-enter your password.",
+    "confirmation": "Please re-enter your password.",
     "differentPasswords": "Passwords do not match. Please try again.",
-    "passwordContainsUsername": "Password should not contain the username.",
-    "invalidPattern": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "OK",
     "success": "Successfully Changed Password",
     "changePassword.header": "Change Password"
