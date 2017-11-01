@@ -116,7 +116,6 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
         };
 
         $scope.changePassword = function () {
-            //checkPassword();
 
             var data = {
                 currentPassword: $scope.currentPassword,
