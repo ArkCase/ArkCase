@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
-    , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', 'UtilService'
-    , function ($scope, $stateParams, $translate, $modal
-        , OrganizationInfoService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, Util) {
+angular.module('organizations').controller('Organizations.InfoController', ['$rootScope', '$scope', '$stateParams', '$translate', '$modal'
+    , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', 'Organization.SearchService', 'UtilService'
+    , function ($rootScope, $scope, $stateParams, $translate, $modal
+        , OrganizationInfoService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, OrganizationSearchService, Util) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -134,5 +134,9 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
                 //success
             });
         }
+
+        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        });
     }
 ]);
