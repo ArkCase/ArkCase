@@ -21,7 +21,12 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
         ObjectLookupService.getOrganizationRelationTypes().then(
             function (relationshipTypes) {
                 for (var i = 0; i < relationshipTypes.length; i++) {
-                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    $scope.relationshipTypes.push({
+                        "key": relationshipTypes[i].inverseKey,
+                        "value": relationshipTypes[i].inverseValue,
+                        "inverseKey": relationshipTypes[i].key,
+                        "inverseValue": relationshipTypes[i].value
+                    });
                 }
 
                 return relationshipTypes;
@@ -127,48 +132,6 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             association.description = associationData.description;
             ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
                 //success
-                /*if (!rowEntity) {
-                    //append new entity as last item in the grid
-                    rowEntity = {
-                        target_object: {}
-                    };
-                    $scope.gridOptions.data.push(rowEntity);
-                }
-
-                //update row immediately
-                rowEntity.object_id_s = payload.associationId;
-                rowEntity.association_type_s = payload.associationType;
-                rowEntity.target_object.type_lcs = target.organizationType;
-                if (!Util.isEmpty(target.defaultIdentification)) {
-                    if (!Util.isEmpty(target.defaultIdentification.identificationType)) {
-                        rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber + " " + target.defaultIdentification.identificationType;
-                    } else {
-                        rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber;
-                    }
-                }
-                rowEntity.target_object.title_parseable = target.organizationValue;
-                rowEntity.target_object.value_parseable = target.organizationValue;
-                if (!Util.isEmpty(target.primaryContact)) {
-                    if (!Util.isEmpty(target.primaryContact.person.familyName)) {
-                        rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName + " " + target.primaryContact.person.familyName;
-                    } else {
-                        rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName;
-                    }
-
-                }
-                if (!Util.isEmpty(target.defaultPhone)) {
-                    rowEntity.target_object.default_phone_s = target.defaultPhone.value + " [" + target.defaultPhone.subType + "]";
-                } else {
-                    rowEntity.target_object.default_phone_s = "";
-                }
-
-                if (!Util.isEmpty(target.defaultAddress)) {
-                    if (!Util.isEmpty(target.defaultAddress.state)) {
-                        rowEntity.target_object.default_location_s = target.defaultAddress.city + ", " + target.defaultAddress.state;
-                    } else {
-                        rowEntity.target_object.default_location_s = target.defaultAddress.city;
-                    }
-                }*/
             });
         }
     }
