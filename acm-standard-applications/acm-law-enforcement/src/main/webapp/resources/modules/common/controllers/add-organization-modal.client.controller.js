@@ -30,7 +30,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
-            if (!Util.isEmpty(params.targetOrganizationId)){
+            if (!Util.isEmpty(params.targetOrganizationId)) {
                 $scope.isEditParent = true;
             }
             if ($scope.editMode) {
@@ -51,11 +51,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
             });
-            if (params.infoType) {
-                $scope.type = _.find($scope.types, function (obj) {
-                    return obj.key.toLowerCase() == "parentcompany";
-                });
-            }
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {
