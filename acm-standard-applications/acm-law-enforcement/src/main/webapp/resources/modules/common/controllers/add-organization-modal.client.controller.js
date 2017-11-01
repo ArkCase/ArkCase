@@ -30,6 +30,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+            if (!Util.isEmpty(params.targetOrganizationId)){
+                $scope.isEditParent = true;
+            }
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
