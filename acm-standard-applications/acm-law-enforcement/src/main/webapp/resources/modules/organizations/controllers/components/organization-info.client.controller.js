@@ -69,13 +69,6 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
                         });
                     }
                 } else {
-                    /*$scope.foundAssociation = _.find(response.response.docs, function (association) {
-                        return association.target_id_s == data.organizationId;
-                    });*/
-                    /*OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        $scope.objectInfo.parentOrganization = organization;
-                        $scope.saveOrganization();
-                    });*/
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                         updateOrganization(association, $scope.objectInfo, organization, data, rowEntity);
                     });
