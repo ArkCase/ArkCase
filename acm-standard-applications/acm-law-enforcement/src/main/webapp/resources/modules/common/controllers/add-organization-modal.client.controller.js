@@ -58,12 +58,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             $scope.isNew = params.isNew;
 
-            /*$scope.returnParent = function () {
-                return _.find($scope.types, function (obj) {
-                    return obj.key.toLowerCase() == "parentcompany";
-                });
-            }*/
-
             $scope.onClickCancel = function () {
                 if ($scope.isSelectedParent && !!$scope.organization.parentOrganization && !(!!$scope.organization.parentOrganization.organizationId)) {
                     $scope.organization.parentOrganization = null;
