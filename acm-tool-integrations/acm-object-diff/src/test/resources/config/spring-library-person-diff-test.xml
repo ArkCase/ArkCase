@@ -6,8 +6,11 @@
     <bean id="acmDiffBeanConfiguration" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream" value="classpath:config/acmObjectDiffSettings.json"/>
     </bean>
+    
+    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter" factory-method="createObjectConverterForTests"/>
 
-    <bean id="acmDiffService" class="com.armedia.acm.objectdiff.service.AcmDiffService">
-        <property name="configurationMap" ref="acmDiffBeanConfiguration"/>
+    <bean id="acmDiffService" class="com.armedia.acm.objectdiff.service.AcmDiffService" init-method="initConfigurationMap">
+        <property name="jsonConfiguration" ref="acmDiffBeanConfiguration"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 </beans>

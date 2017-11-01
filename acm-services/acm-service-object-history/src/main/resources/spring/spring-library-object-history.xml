@@ -15,6 +15,7 @@
     <bean id="acmObjectHistoryService" class="com.armedia.acm.service.objecthistory.service.AcmObjectHistoryServiceImpl">
     	<property name="acmObjectHistoryDao" ref="acmObjectHistoryDao" />
     	<property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher" />
+    	<property name="objectConverter" ref="objectConverter"/>
     </bean>
     
     <!-- Assignment DAO -->
