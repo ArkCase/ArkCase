@@ -12,6 +12,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.After;
@@ -81,6 +82,7 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void setUp() throws Exception
     {
         service.setTemplateFolderPath(getTemplatesFolderPath());
+        service.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @After

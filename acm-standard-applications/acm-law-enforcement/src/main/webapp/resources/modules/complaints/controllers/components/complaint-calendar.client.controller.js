@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('complaints').controller('Complaints.CalendarController', ['$scope', '$stateParams', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'ObjectService'
-    , function ($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService) {
+angular.module('complaints').controller('Complaints.CalendarController', ['$scope', '$stateParams', 'Complaint.InfoService'
+    , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService'
+    , function ($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -16,9 +17,18 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
         });
 
         var onObjectInfoRetrieved = function(objectInfo) {
-            $scope.objectInfoRetrieved = true;
-            $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
-            $scope.objectId = objectInfo.complaintId;
+            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+                $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
+                $scope.objectId = objectInfo.complaintId;
+                if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled){
+                    $scope.objectInfoRetrieved = true;
+                }else{
+                    MessageService.info('Calendar Integration Configuration Not Enabled');
+                    $scope.objectInfoRetrieved = false;
+
+                }
+            });
+
         };
     }
 ]);

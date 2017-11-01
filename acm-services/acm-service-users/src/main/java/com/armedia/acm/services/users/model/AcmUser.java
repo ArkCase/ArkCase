@@ -2,7 +2,6 @@ package com.armedia.acm.services.users.model;
 
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.CascadeType;
@@ -19,6 +18,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -56,17 +56,14 @@ public class AcmUser implements Serializable
     @Column(name = "cm_user_principal_name")
     private String userPrincipalName;
 
-    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_created", insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date created;
 
-    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_modified")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @JsonFormat(pattern = AcmUsersConstants.SOLR_DATE_FORMAT)
     @Column(name = "cm_user_deleted_at")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedAt;
@@ -116,21 +113,18 @@ public class AcmUser implements Serializable
     @JsonIgnore
     public Stream<String> getGroupNames()
     {
-        return groups.stream()
-                .map(AcmGroup::getName);
+        return groups.stream().map(AcmGroup::getName);
     }
 
     @JsonIgnore
     public Set<AcmGroup> getLdapGroups()
     {
-        return groups.stream()
-                .filter(AcmGroup::isLdapGroup)
-                .collect(Collectors.toSet());
+        return groups.stream().filter(AcmGroup::isLdapGroup).collect(Collectors.toSet());
     }
 
     /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use getGroups().add(..)
-     * or getGroups().addAll(..)
+     * Because of bidirectional ManyToMany relation, this method should be used for adding groups to the user. Don't use
+     * getGroups().add(..) or getGroups().addAll(..)
      *
      * @param group
      */
@@ -401,8 +395,10 @@ public class AcmUser implements Serializable
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmUser acmUser = (AcmUser) o;
         return Objects.equals(userId, acmUser.userId);
     }

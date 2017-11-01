@@ -19,7 +19,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             var params={};
             $scope.owningGroup=paramsOwn.owningGroup;
 
-            if($scope.participant.participantType == "assignee") {
+            if($scope.participant.participantType == "assignee" || $scope.participant.participantType == "owner") {
                 params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
                 params.filter = 'fq="object_type_s": USER &fq="groups_id_ss": '+$scope.owningGroup;
                 params.config = Util.goodMapValue($scope.config, "dialogUserPicker");

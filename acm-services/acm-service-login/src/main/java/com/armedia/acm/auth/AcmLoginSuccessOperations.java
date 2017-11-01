@@ -2,11 +2,11 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.web.api.MDCConstants;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -15,7 +15,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ public class AcmLoginSuccessOperations
     private UserDao userDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private static final int DAYS_TO_PASSWORD_EXPIRATION = 10;
+    private ObjectConverter objectConverter;
 
     public void onSuccessfulAuthentication(HttpServletRequest request, Authentication authentication)
     {
@@ -108,17 +108,17 @@ public class AcmLoginSuccessOperations
     {
         switch (getAcmApplication().getAlfrescoUserIdLdapAttribute().toLowerCase())
         {
-        case "samaccountname":
-            return acmUser.getsAMAccountName();
-        case "userprincipalname":
-            return acmUser.getUserPrincipalName();
-        case "uid":
-            return acmUser.getUid();
-        case "dn":
-        case "distinguishedname":
-            return acmUser.getDistinguishedName();
-        default:
-            return acmUser.getsAMAccountName();
+            case "samaccountname":
+                return acmUser.getsAMAccountName();
+            case "userprincipalname":
+                return acmUser.getUserPrincipalName();
+            case "uid":
+                return acmUser.getUid();
+            case "dn":
+            case "distinguishedname":
+                return acmUser.getDistinguishedName();
+            default:
+                return acmUser.getsAMAccountName();
         }
     }
 
@@ -173,18 +173,9 @@ public class AcmLoginSuccessOperations
 
         session.setAttribute("acm_application", getAcmApplication());
 
-        String json;
-        ObjectMapper om = new ObjectMapper();
-        try
-        {
-            json = om.writeValueAsString(getAcmApplication().getObjectTypes());
-            json = json == null || "null".equals(json) ? "[]" : json;
-            session.setAttribute("acm_object_types", json);
-        } catch (IOException e)
-        {
-            log.error(e.getMessage());
-            session.setAttribute("acm_object_types", "[]");
-        }
+        String json = getObjectConverter().getJsonMarshaller().marshal(getAcmApplication().getObjectTypes());
+        json = json == null || "null".equals(json) ? "[]" : json;
+        session.setAttribute("acm_object_types", json);
 
         log.debug("Added ACM application named '{}' to user session.", getAcmApplication().getApplicationName());
 
@@ -242,5 +233,15 @@ public class AcmLoginSuccessOperations
     public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
     {
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

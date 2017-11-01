@@ -569,7 +569,8 @@
       "error.owninggroupDelete": "Deleting owning group is not allowed.",
       "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
       "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
-      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+      "error.ownerUnique": "Only one owner is allowed."
     }
   },
   "common.directive.progressIndicator": {

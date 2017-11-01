@@ -7,6 +7,8 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.model.event.LdapUserCreatedEvent;
+import com.armedia.acm.services.users.model.event.LdapUserUpdatedEvent;
 import com.armedia.acm.services.users.model.event.SetPasswordEmailEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -26,8 +28,10 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -54,6 +58,20 @@ public class LdapUserService implements ApplicationEventPublisherAware
         SetPasswordEmailEvent setPasswordEmailEvent = new SetPasswordEmailEvent(user);
         setPasswordEmailEvent.setSucceeded(true);
         eventPublisher.publishEvent(setPasswordEmailEvent);
+    }
+
+    public void publishUserCreatedEvent(HttpSession httpSession, Authentication authentication, AcmUser user, boolean succeeded)
+    {
+        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
+        LdapUserCreatedEvent event = new LdapUserCreatedEvent(user, succeeded, ipAddress, authentication);
+        eventPublisher.publishEvent(event);
+    }
+
+    public void publishUserUpdatedEvent(HttpSession httpSession, Authentication authentication, AcmUser user, boolean succeeded)
+    {
+        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
+        LdapUserUpdatedEvent event = new LdapUserUpdatedEvent(user, succeeded, ipAddress, authentication);
+        eventPublisher.publishEvent(event);
     }
 
     @Transactional(rollbackFor = Exception.class)
