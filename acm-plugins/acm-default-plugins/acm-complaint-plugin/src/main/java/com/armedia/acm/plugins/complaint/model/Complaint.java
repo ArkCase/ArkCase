@@ -17,12 +17,12 @@ import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +50,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -68,7 +69,7 @@ import java.util.Set;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Complaint.class)
 @DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("com.armedia.acm.plugins.complaint.model.Complaint")
-@JsonPropertyOrder(value = {"complaintId", "personAssociations", "originator"})
+@JsonPropertyOrder(value = { "complaintId", "personAssociations", "originator" })
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, AcmContainerEntity, AcmChildObjectEntity,
         AcmLegacySystemEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmTitleEntity
@@ -92,14 +93,13 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String priority;
 
     @Column(name = "cm_complaint_title")
-    @Size(min=1)
+    @Size(min = 1)
     private String complaintTitle;
 
     @Lob
     @Column(name = "cm_complaint_details")
     private String details;
 
-    @JsonFormat(pattern = ComplaintConstants.DATE_FORMAT)
     @Column(name = "cm_complaint_incident_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date incidentDate;
@@ -138,8 +138,9 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     /**
@@ -150,13 +151,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private List<String> approvers;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<PersonAssociation> personAssociations = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id", referencedColumnName = "cm_complaint_id"),
+            @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<OrganizationAssociation> organizationAssociations = new ArrayList<>();
 
@@ -164,7 +166,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     private String objectType = ComplaintConstants.OBJECT_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_due_date")
@@ -291,7 +293,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     {
         this.priority = priority;
     }
-    
+
     @Override
     @JsonIgnore
     public String getTitle()
@@ -383,6 +385,7 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         return status;
     }
 
+    @Override
     public void setStatus(String status)
     {
         this.status = status;
@@ -395,7 +398,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             return null;
         }
 
-        Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+        Optional<PersonAssociation> found = getPersonAssociations().stream()
+                .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
         if (found != null && found.isPresent())
         {
@@ -417,7 +421,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
         if (originator != null)
         {
 
-            Optional<PersonAssociation> found = getPersonAssociations().stream().filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
+            Optional<PersonAssociation> found = getPersonAssociations().stream()
+                    .filter(personAssociation -> "Initiator".equalsIgnoreCase(personAssociation.getPersonType())).findFirst();
 
             if (found == null || !found.isPresent())
             {
@@ -602,11 +607,14 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     @Override
     public String toString()
     {
-        return "Complaint{" + "complaintId=" + complaintId + ", complaintNumber='" + complaintNumber + '\'' + ", complaintType='" + complaintType + '\'' + ", priority='" + priority + '\''
-                + ", complaintTitle='" + complaintTitle + '\'' + ", details='" + details + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\''
-                + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", status='" + status + '\'' + ", originator=" + originator + ", ecmFolderPath='" + ecmFolderPath + '\''
-                + ", container=" + container + ", childObjects=" + childObjects + ", approvers=" + approvers + ", personAssociations=" + personAssociations + ", participants=" + participants
-                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location + ", disposition=" + disposition + ", restricted=" + restricted + ", legacySystemId='" + legacySystemId + "'}";
+        return "Complaint{" + "complaintId=" + complaintId + ", complaintNumber='" + complaintNumber + '\'' + ", complaintType='"
+                + complaintType + '\'' + ", priority='" + priority + '\'' + ", complaintTitle='" + complaintTitle + '\'' + ", details='"
+                + details + '\'' + ", incidentDate=" + incidentDate + ", created=" + created + ", creator='" + creator + '\''
+                + ", modified=" + modified + ", modifier='" + modifier + '\'' + ", status='" + status + '\'' + ", originator=" + originator
+                + ", ecmFolderPath='" + ecmFolderPath + '\'' + ", container=" + container + ", childObjects=" + childObjects
+                + ", approvers=" + approvers + ", personAssociations=" + personAssociations + ", participants=" + participants
+                + ", dueDate=" + dueDate + ", tag='" + tag + '\'' + ", frequency='" + frequency + '\'' + ", location=" + location
+                + ", disposition=" + disposition + ", restricted=" + restricted + ", legacySystemId='" + legacySystemId + "'}";
     }
 
     @Override
@@ -620,7 +628,6 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     {
         this.legacySystemId = legacySystemId;
     }
-
 
     @Override
     @JsonIgnore
@@ -642,8 +649,8 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
     public String getAssigneeGroup()
     {
         String groupName = null;
-        AcmParticipant owningGroup = getParticipants().stream()
-                .filter(p -> ComplaintConstants.OWNING_GROUP.equals(p.getParticipantType())).findFirst().orElse(null);
+        AcmParticipant owningGroup = getParticipants().stream().filter(p -> ComplaintConstants.OWNING_GROUP.equals(p.getParticipantType()))
+                .findFirst().orElse(null);
         AcmParticipant assignee = getParticipants().stream().filter(p -> ComplaintConstants.ASSIGNEE.equals(p.getParticipantType()))
                 .findFirst().orElse(null);
         if (owningGroup != null && assignee != null && assignee.getParticipantLdapId().isEmpty())

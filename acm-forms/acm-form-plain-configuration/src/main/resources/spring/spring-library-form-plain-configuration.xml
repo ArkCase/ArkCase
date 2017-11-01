@@ -9,6 +9,7 @@
     	<property name="frevvoService" ref="frevvoService" />
     	<property name="formProperties" ref="acm-form-properties" />
     	<property name="plainFormProperties" ref="plainFormProperties" />
+    	<property name="objectConverter" ref="objectConverter"/>
     </bean>
     
 </beans>

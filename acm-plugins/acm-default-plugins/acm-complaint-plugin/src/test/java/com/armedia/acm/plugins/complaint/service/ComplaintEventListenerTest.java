@@ -78,6 +78,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setCalendarService(mockCalendarService);
         complaintEventListener.setCalendarAdminService(mockedCalendarAdminService);
         complaintEventListener.setComplaintStatusClosed("CLOSED");
+        complaintEventListener.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     public Complaint getComplaint()
@@ -136,7 +137,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testAssigneeIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -185,7 +186,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testParticipantIsDeleted()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         AcmParticipant participant = new AcmParticipant();
         participant.setObjectType(ParticipantConstants.OBJECT_TYPE);
@@ -231,7 +232,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testParticipantIsAdded()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -276,7 +277,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testPriorityIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -296,7 +297,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testLocationIsUpdated()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -317,7 +318,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testLocationIsUpdatedWhenPreviouslyNull()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         // set null as primary location value
         jsonComplaint.setLocation(null);
@@ -339,7 +340,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testStatusIsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -364,7 +365,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setShouldDeleteCalendarFolder(true);
         complaintEventListener.setComplaintStatusClosed("CLOSED");
 
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -384,7 +385,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChanged()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         String currentJsonObject = acmMarshaller.marshal(jsonComplaint);
 
@@ -405,7 +406,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     @Test
     public void testDetailsChangedWhenPreviouslyNull()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
         // set null as primary details value
         jsonComplaint.setDetails(null);

@@ -11,6 +11,7 @@ import com.armedia.acm.form.time.service.TimeService;
 import com.armedia.acm.forms.roi.service.ROIService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormService;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController;
 
 import org.springframework.security.core.Authentication;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class FrevvoFormServiceFactory
 {
     private Map<String, FrevvoFormService> services;
+    private ObjectConverter objectConverter;
 
     public FrevvoFormService getService(String name, FrevvoFormController frevvoFormController, HttpServletRequest request,
             Authentication authentication)
@@ -51,6 +53,7 @@ public class FrevvoFormServiceFactory
             service.setApplicationEventPublisher(frevvoFormController.getApplicationEventPublisher());
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setAcmFolderService(frevvoFormController.getAcmFolderService());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -77,6 +80,7 @@ public class FrevvoFormServiceFactory
             service.setMuleContextManager(frevvoFormController.getMuleContextManager());
             service.setLookupDao(frevvoFormController.getLookupDao());
             service.setTranslationService(frevvoFormController.getTranslationService());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -100,6 +104,7 @@ public class FrevvoFormServiceFactory
             service.setCaseFileDao(frevvoFormController.getCaseFileDao());
             service.setFolderAndFilesUtils(frevvoFormController.getFolderAndFilesUtils());
             service.setAcmFolderService(frevvoFormController.getAcmFolderService());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -130,6 +135,7 @@ public class FrevvoFormServiceFactory
             service.setTimesheetEventPublisher(frevvoFormController.getTimesheetEventPublisher());
             service.setLookupDao(frevvoFormController.getLookupDao());
             service.setTranslationService(frevvoFormController.getTranslationService());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -158,6 +164,7 @@ public class FrevvoFormServiceFactory
             service.setFunctionalAccessService(frevvoFormController.getFunctionalAccessService());
             service.setActivitiRuntimeService(frevvoFormController.getActivitiRuntimeService());
             service.setFileWorkflowBusinessRule(frevvoFormController.getFileWorkflowBusinessRule());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -181,6 +188,7 @@ public class FrevvoFormServiceFactory
             service.setFrevvoService(frevvoFormController.getFrevvoService());
             service.setPlainConfigurationFormFactory(frevvoFormController.getPlainConfigurationFormFactory());
             service.setPropertyFileManager(frevvoFormController.getPropertyFileManager());
+            service.setObjectConverter(getObjectConverter());
 
             return service;
         }
@@ -198,7 +206,8 @@ public class FrevvoFormServiceFactory
 
         FrevvoFormService service = null;
 
-        // TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService, CostService, PlainFormService are re-written on this
+        // TODO: So far, only CaseFileService, ComplaintService, CloseComplaintService, CostService, PlainFormService
+        // are re-written on this
         // way.
         // TODO: On time, we should do for all other services
         if (getServices() != null && getServices().containsKey(formName))
@@ -232,6 +241,16 @@ public class FrevvoFormServiceFactory
     public void setServices(Map<String, FrevvoFormService> services)
     {
         this.services = services;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
 }

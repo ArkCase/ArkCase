@@ -32,13 +32,13 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @param {Date} Date object
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
-             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
+             * @Returns {String} ISO formatted date string YYYY-MM-DDTHH:mm:ssZZ
              */
             , dateToIso: function (date, replacement) {
                 var replacedWith = (undefined === replacement) ? "" : replacement;
 
                 if (date && date instanceof Date) {
-                    return moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZZ");
+                    return moment(date).format("YYYY-MM-DDTHH:mm:ssZZ");
                 } else {
                     return replacedWith;
                 }
@@ -81,7 +81,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @description
              * Converts a date object into an ISO format string
              *
-             * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ss.SSSZZ
+             * @param {String} isoDateTime ISO formatted date string YYYY-MM-DDTHH:mm:ssZZ
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to null
              *
              * @Returns {Date} Date object
@@ -102,7 +102,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @name goodIsoDate
              * @methodOf services:Util.DateService
              *
-             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ss.SSSZZ
+             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ssZZ
              * @param {String} format (Optional)Date format. If not provided, a default defined in common en.json is used
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
@@ -123,7 +123,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @name getDatePart
              * @methodOf services:Util.DateService
              *
-             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ss.SSSZZ
+             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ssZZ
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
              * @description
@@ -139,7 +139,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @name getTimePart
              * @methodOf services:Util.DateService
              *
-             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ss.SSSZZ
+             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ssZZ
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
              * @description
@@ -155,7 +155,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @name getDateTimePart
              * @methodOf services:Util.DateService
              *
-             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ss.SSSZZ
+             * @param {String} isoDateTime Date time as ISO8601 format, yyyy-MM-dd'T'HH:mm:ssZZ
              * @param {Object} replacement (Optional)Object or value used if 'val' is empty. If not provided, it defaults to ""
              *
              * @description

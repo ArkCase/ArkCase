@@ -9,7 +9,6 @@ import com.armedia.acm.frevvo.config.FrevvoFormAbstractService;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoService;
 import com.armedia.acm.objectonverter.AcmMarshaller;
-import com.armedia.acm.objectonverter.ObjectConverter;
 import com.frevvo.forms.client.ApplicationEntry;
 import com.frevvo.forms.client.FormTypeEntry;
 import com.frevvo.forms.client.SchemaEntry;
@@ -337,7 +336,7 @@ public class PlainConfigurationFormService extends FrevvoFormAbstractService
         properties.put(key + ".mode", form.getMode() == null ? "" : form.getMode());
         properties.put(key + ".description." + form.getTarget(), form.getDescription() == null ? "" : form.getDescription());
 
-        AcmMarshaller marshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller marshaller = getObjectConverter().getJsonMarshaller();
         String jsonParameters = marshaller.marshal(form.getUrlParameters());
 
         properties.put(key + ".parameters." + form.getTarget(), jsonParameters == null ? "" : jsonParameters);
