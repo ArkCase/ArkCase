@@ -53,8 +53,8 @@ angular.module('services').factory('ConfigService', ['$resource', 'Acm.StoreServ
          * @returns {Object} Promise
          */
         Service.getModuleConfig = function (moduleId) {
+            //var cacheModuleConfig = new Store.CacheFifo({name: Service.CacheNames.MODULE_CONFIG, maxSize: 64});
             var cacheModuleConfigMap = new Store.SessionData(Service.SessionCacheNames.MODULE_CONFIG_MAP);
-            //var cacheModuleConfigMap = new Store.SessionData({name: Service.SessionCacheNames.MODULE_CONFIG_MAP, noOwner: true});
             var moduleConfigMap = cacheModuleConfigMap.get();
             var moduleConfig = Util.goodMapValue(moduleConfigMap, moduleId, null);
             return Util.serviceCall({
