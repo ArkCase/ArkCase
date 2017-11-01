@@ -63,6 +63,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     public void setUp()
     {
         caseFileEventListener = new CaseFileEventListener();
+        caseFileEventListener.setObjectConverter(ObjectConverter.createObjectConverterForTests());
         mockAcmObjectHistoryService = createMock(AcmObjectHistoryService.class);
         mockAcmObjectHistoryEventPublisher = createMock(AcmObjectHistoryEventPublisher.class);
         mockCaseFileEventUtility = createMock(CaseFileEventUtility.class);
