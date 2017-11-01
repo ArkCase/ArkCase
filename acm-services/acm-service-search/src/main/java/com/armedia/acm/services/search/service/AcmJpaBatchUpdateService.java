@@ -48,7 +48,7 @@ public class AcmJpaBatchUpdateService
 
     public void jpaBatchUpdate() throws AcmEncryptionException
     {
-        log.debug("JPA batch update enabled: {}", isBatchUpdateBasedOnLastModifiedEnabled());
+        log.debug("JPA batch update enabled: [{}]", isBatchUpdateBasedOnLastModifiedEnabled());
 
         if ( !isBatchUpdateBasedOnLastModifiedEnabled() )
         {
@@ -61,46 +61,46 @@ public class AcmJpaBatchUpdateService
 
         getAuditPropertyEntityAdapter().setUserId("SOLR-BATCH-UPDATE");
 
-        String lastRunDate = getPropertyFileManager().load(getLastBatchUpdatePropertyFileLocation(), SOLR_LAST_RUN_DATE_PROPERTY_KEY,
-                DEFAULT_LAST_RUN_DATE);
         DateFormat solrDateFormat = new SimpleDateFormat(SearchConstants.SOLR_DATE_FORMAT);
 
         try
         {
-            Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
-            storeCurrentDateForNextBatchRun(solrDateFormat);
-
-            log.debug("Checking for objects modified since {}", lastBatchRunDate);
-
-
             Collection<? extends AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
                     .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
 
-            log.debug("{} object transformers found.", transformers.size());
-
+            log.debug("[{}] object transformers found.", transformers.size());
 
             for ( AcmObjectToSolrDocTransformer transformer : transformers )
             {
+                String acmObjectClassName = transformer.getAcmObjectTypeSupported().getCanonicalName();
+                String lastRunDateKey = String.format("%s.%s", SOLR_LAST_RUN_DATE_PROPERTY_KEY, acmObjectClassName);
+                String lastRunDate = getPropertyFileManager().load(getLastBatchUpdatePropertyFileLocation(), lastRunDateKey,
+                        DEFAULT_LAST_RUN_DATE);
+                Date lastBatchRunDate = getLastBatchRunDate(lastRunDate, solrDateFormat);
+                storeCurrentDateForNextBatchRun(lastRunDateKey, solrDateFormat);
+
+                log.debug("Checking for [{}] objects modified since [{}]", acmObjectClassName, lastBatchRunDate);
+
                 try
                 {
                     sendUpdatedObjectsToSolr(lastBatchRunDate, transformer);
                 } catch (Exception exception)
                 {
-                    log.error("Could not send index updates to SOLR for transformer {}", transformer.getClass(), exception);
+                    log.error("Could not send index updates to SOLR for transformer [{}]", transformer.getClass(), exception);
                 }
             }
         } catch (ParseException e)
         {
-            log.error("Could not send index updates to SOLR: {}", e.getMessage(), e);
+            log.error("Could not send index updates to SOLR: [{}]", e.getMessage(), e);
         }
     }
 
-    private void storeCurrentDateForNextBatchRun(DateFormat solrDateFormat)
+    private void storeCurrentDateForNextBatchRun(String lastRunDateKey, DateFormat solrDateFormat)
     {
         // store the current time as the last run date to use the next time this job runs. This allows us to
         // scan only for objects updated since this date.
         String solrNow = solrDateFormat.format(new Date());
-        getPropertyFileManager().store(SOLR_LAST_RUN_DATE_PROPERTY_KEY, solrNow, getLastBatchUpdatePropertyFileLocation());
+        getPropertyFileManager().store(lastRunDateKey, solrNow, getLastBatchUpdatePropertyFileLocation(), false);
     }
 
     private Date getLastBatchRunDate(String lastRunDate, DateFormat solrDateFormat) throws ParseException

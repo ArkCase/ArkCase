@@ -104,7 +104,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
                     $scope.group = {};
-
+                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
                     $scope.ok = function () {
                         $modalInstance.close($scope.group);
                     };
