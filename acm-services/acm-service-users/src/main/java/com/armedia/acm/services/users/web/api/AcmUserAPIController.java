@@ -168,9 +168,10 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser cloneUser(@RequestBody @Valid UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        validateLdapPassword(ldapUserCloneRequest);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
@@ -193,15 +194,16 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> changePassword(@RequestBody Map<String, String> credentials, @PathVariable String directory,
+    public Map<String, String> changePassword(@RequestBody UserDTO credentials, @PathVariable String directory,
                                               @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
     {
+        validateLdapPassword(credentials);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             LdapAuthenticateService ldapAuthenticateService = getAcmContextHolder().getAllBeansOfType(LdapAuthenticateService.class)
                     .get(String.format("%s_ldapAuthenticateService", directory));
-            ldapAuthenticateService.changeUserPassword(userId, credentials.get("currentPassword"), credentials.get("newPassword"));
+            ldapAuthenticateService.changeUserPassword(userId, credentials.getCurrentPassword(), credentials.getPassword());
             log.debug("User [{}] successfully updated password", userId);
             return Collections.singletonMap("message", "Password successfully changed");
         }

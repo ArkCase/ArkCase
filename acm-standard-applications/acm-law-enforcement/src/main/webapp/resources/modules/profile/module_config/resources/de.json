@@ -59,10 +59,8 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Passwort kann nicht leer sein",
-    "comfirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
+    "confirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
     "differentPasswords": "Passwörter stimmen nicht überein. Bitte versuche es erneut.",
-    "passwordContainsUsername": "de_Password should not contain the username.",
-    "invalidPattern": "de_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "OK",
     "success": "Erfolgreich geändertes Passwort",
     "changePassword.header": "Passwort ändern"

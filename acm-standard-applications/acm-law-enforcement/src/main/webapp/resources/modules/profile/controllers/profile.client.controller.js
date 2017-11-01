@@ -112,10 +112,7 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
         $scope.authError = null;
         $scope.loading = false;
         $scope.passwordErrorMessages = {
-            invalidPatternMessage: '',
-            containsUsernameMessage: '',
             notSamePasswordsMessage: ''
-
         };
 
         $scope.changePassword = function () {
@@ -123,8 +120,9 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
 
             var data = {
                 currentPassword: $scope.currentPassword,
-                newPassword: $scope.newPassword,
-                userInfo: $scope.userInfo
+                password: $scope.newPassword,
+                userId: $scope.userInfo.userId,
+                directory: $scope.userInfo.directoryName
             };
             $scope.loading = true;
             ChangePasswordService.changeLdapPassword(data).then(function () {
@@ -137,6 +135,9 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
                 if (message) {
                     $scope.authError = message;
                     $scope.currentPassword = '';
+                }
+                if(errorData.data.message){
+                    $scope.errorMessage = errorData.data.message;
                 }
                 else {
                     $modalInstance.close('done');

@@ -59,10 +59,8 @@
   "profile.modal": {
     "title": "情報",
     "emptyPassword": "空のパスワードを受け入れない",
-    "comfirmation": "パスワードを再入力してください。",
+    "confirmation": "パスワードを再入力してください。",
     "differentPasswords": "パスワードが一致していません。 もう一度お試しください。",
-    "passwordContainsUsername": "ja_Password should not contain the username.",
-    "invalidPattern": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "確認",
     "success": "パスワードが正常に変更されました",
     "changePassword.header": "パスワードを変更する"

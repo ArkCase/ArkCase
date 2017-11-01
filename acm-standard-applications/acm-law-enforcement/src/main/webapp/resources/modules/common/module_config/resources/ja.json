@@ -8,7 +8,8 @@
     "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "ja_MM/dd/yyyy",
     "defaultDateUIFormat": "ja_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm",
+    "passwordRuleText": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
   },
   "common.addOrganization": {
     "title": "ja_Add Parent Organization",

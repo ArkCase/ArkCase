@@ -102,8 +102,9 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             }
         }
 
-        function cloneUser() {
-            var modalInstance = $modal.open({
+        function openCloneUserModal(userForm, error){
+
+            return $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                 controller: ['$scope', '$modalInstance', 'UtilService', function ($scope, $modalInstance, Util) {
@@ -112,40 +113,62 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                     $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
-                    $scope.user = {};
+                    $scope.user = userForm;
+                    $scope.errorMessage = error;
                     $scope.data = {
                         "user": $scope.user,
                         "selectedUser": selectedUser
                     };
+                    $scope.userForm = $scope.data.user;
                     $scope.passwordErrorMessages = {
-                        invalidPatternMessage: '',
-                        containsUsernameMessage: '',
                         notSamePasswordsMessage: ''
                     };
                     $scope.ok = function () {
-                            $modalInstance.close($scope.data);
+                        $modalInstance.close($scope.data);
 
                     };
                 }],
                 size: 'sm'
             });
+        }
 
+        function onCloneUser(data, deferred){
+            LdapUserManagementService.cloneUser(data).then(function (response) {
+                // add the new user to the list
+                var element = {};
+                element.name = response.data.fullName;
+                element.key = response.data.userId;
+                element.directory = response.data.userDirectoryName;
+                $scope.appUsers.push(element);
+                MessageService.succsessAction();
+            }, function (error) {
+                //error adding user
+                if(error.data.message){
+                    var onAdd = function(data){
+                        return onCloneUser(data);
+                    };
+                    openCloneUserModal(error.data.extra.userForm, error.data.message)
+                        .result.then(onAdd, function () {
+                        deferred.reject("cancel");
+                        return {};
+                    });
+                }
+                else {
+                    deferred.reject();
+                }
+            });
+
+        }
+
+        function cloneUser() {
+            var modalInstance = openCloneUserModal({}, "");
+            var deferred = $q.defer();
             modalInstance.result.then(function (data) {
-                LdapUserManagementService.cloneUser(data).then(function (response) {
-                    // add the new user to the list
-                    var element = {};
-                    element.name = response.data.fullName;
-                    element.key = response.data.userId;
-                    element.directory = response.data.userDirectoryName;
-                    $scope.appUsers.push(element);
-                    MessageService.succsessAction();
-                }, function () {
-                    //error adding user
-                    MessageService.errorAction();
-                });
+                onCloneUser(data, deferred);
             }, function () {
                 // Cancel button was clicked
             });
+
         }
 
         $scope.deleteUser = function () {
