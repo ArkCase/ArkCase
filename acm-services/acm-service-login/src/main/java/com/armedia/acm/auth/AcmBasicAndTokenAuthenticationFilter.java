@@ -24,6 +24,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedCredentialsNotFoundException;
+import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor;
+import org.springframework.security.web.authentication.preauth.x509.X509PrincipalExtractor;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.bind.ServletRequestUtils;
 
@@ -34,6 +36,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -184,8 +187,11 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
         boolean emailTokenRequest = emailToken != null;
 
+        X509Certificate clientCert = extractX509ClientCertificate(request);
+        boolean clientCertRequest = clientCert != null;
+
         // No token, no basic authentication
-        if (!tokenRequest && !basicAuthRequest && !emailTokenRequest)
+        if (!tokenRequest && !basicAuthRequest && !emailTokenRequest && !clientCertRequest)
         {
             if (trace)
             {
@@ -252,6 +258,45 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             return;
         }
 
+        // if using client certificate and not already authenticated
+        if (clientCertRequest &&
+                !(SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()))
+        {
+            // extract userId (Common Name attribute) from the certifcate
+            X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
+            String userId = (String) principalExtractor.extractPrincipal(clientCert);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userId, userId);
+            String ldapGroups = null;
+            try
+            {
+                ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
+            } catch (MuleException e)
+            {
+                log.warn("Unable to read LDAP groups for user [{}]", userId);
+            }
+            if (ldapGroups != null)
+            {
+                SearchResults searchResults = new SearchResults();
+                JSONArray docs = searchResults.getDocuments(ldapGroups);
+                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+                if (docs != null)
+                {
+                    for (int i = 0; i < docs.length(); i++)
+                    {
+                        grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
+                    }
+                }
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                log.debug("[{}] has logged in using Client certificate authentication.");
+
+                loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
+
+                InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authentication, getClass());
+                loginSuccessEventListener.onApplicationEvent(event);
+            }
+        }
+
         chain.doFilter(request, response);
 
     }
@@ -260,6 +305,25 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     {
         String header = request.getHeader("Authorization");
         return header != null && header.startsWith("Basic ");
+    }
+
+    /**
+     * Extract client certificate from the request.
+     *
+     * @param request incoming HTTP request
+     * @return the client certificate
+     */
+    private X509Certificate extractX509ClientCertificate(HttpServletRequest request)
+    {
+        X509Certificate x509Certificate = null;
+        X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+
+        if (certs != null && certs.length > 0)
+        {
+            x509Certificate = certs[0];
+            log.debug("X.509 client authentication certificate [{}]", x509Certificate);
+        }
+        return x509Certificate;
     }
 
     public void setLoginSuccessOperations(AcmLoginSuccessOperations loginSuccessOperations)
