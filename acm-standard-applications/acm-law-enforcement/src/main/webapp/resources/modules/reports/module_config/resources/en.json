@@ -18,6 +18,16 @@
     "endDate" : {
       "label": "To"
     },
+    "dropdown": {
+      "__comment__": "__ This 'dropdown' seems not in use, do we still need this? __",
+      "turnaround": "Turnaround Time by Requester",
+      "requester": "Requester Type Summary",
+      "pending": "Pending Orders Report",
+      "associate": "Associate Productivity Report",
+      "origination": "Origination Count",
+      "transfers": "Transfers Report",
+      "exceptions": "Exceptions Report (Non-Compliance)"
+    },
     "datepicker":{
       "close": "Done",
       "clear": "Clear",
@@ -30,14 +40,10 @@
       "xmlReport": "Show as XML"
     }
   },
-  "dropdown": {
-    "__comment__": "__ This 'dropdown' seems not in use, do we still need this? __",
-    "turnaround": "Turnaround Time by Requester",
-    "requester": "Requester Type Summary",
-    "pending": "Pending Orders Report",
-    "associate": "Associate Productivity Report",
-    "origination": "Origination Count",
-    "transfers": "Transfers Report",
-    "exceptions": "Exceptions Report (Non-Compliance)"
+  "reports.comp.datepickers": {
+    "title": "Datepickers"
+  },
+  "reports.comp.reportselection": {
+    "title": "Reports"
   }
 }

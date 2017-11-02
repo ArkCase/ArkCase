@@ -18,6 +18,7 @@
     "endDate" : {
       "label": "zh-cn_To"
     },
+
     "dropdown": {
       "turnaround": "zh-cn_Turnaround Time by Requester",
       "requester": "zh-cn_Requester Type Summary",
@@ -28,7 +29,7 @@
       "exceptions": "zh-cn_Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "zh-cn_Done",
+      "close": "cn_Done",
       "clear": "cn_Clear",
       "current": "cn_Today"
     },
