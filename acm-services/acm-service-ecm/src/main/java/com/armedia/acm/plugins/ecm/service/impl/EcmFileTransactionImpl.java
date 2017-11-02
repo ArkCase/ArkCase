@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -153,7 +154,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     protected Pair<String, String> buildMimeTypeAndExtension(EcmTikaFile detectedFileMetadata, String filename, String mimeType)
     {
         String finalMimeType = detectedFileMetadata == null ? mimeType : detectedFileMetadata.getContentType();
-        String finalExtension = detectedFileMetadata == null ? getFolderAndFilesUtils().getFileNameExtension(filename)
+        String finalExtension = (detectedFileMetadata == null || StringUtils.isEmpty(detectedFileMetadata.getNameExtension()))
+                ? getFolderAndFilesUtils().getFileNameExtension(filename)
                 : detectedFileMetadata.getNameExtension();
 
         // do not change content type in case of freevo

@@ -38,7 +38,7 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+                            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
                             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
                             Authentication auth) throws MuleException
     {

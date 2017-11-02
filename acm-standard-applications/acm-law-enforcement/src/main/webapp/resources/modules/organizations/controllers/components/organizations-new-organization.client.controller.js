@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.NewOrganizationController', ['$scope', '$stateParams', '$translate'
-    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService'
-    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService) {
+    , 'Organization.InfoService', '$state', 'Object.LookupService', 'MessageService', '$timeout', 'UtilService', '$modal', 'ConfigService', 'Person.InfoService', 'ObjectService', 'modalParams'
+    , function ($scope, $stateParams, $translate, OrganizationInfoService, $state, ObjectLookupService, MessageService, $timeout, Util, $modal, ConfigService, PersonInfoService, ObjectService, modalParams) {
 
+        $scope.modalParams = modalParams;
         $scope.loading = false;
 
         //used for showing/hiding buttons in communication accounts
@@ -278,6 +279,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                     });
                     MessageService.info(organizationCreatedMessage);
                     ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
+                    $scope.onModalClose();
                     $scope.loading = false;
                 }
                 , function (error) {
@@ -365,6 +367,10 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
          */
         $scope.capitalizeFirstLetter = function (input) {
             return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
-        }
+        };
+
+        $scope.cancelModal = function() {
+            $scope.onModalDismiss();
+        };
     }
 ]);

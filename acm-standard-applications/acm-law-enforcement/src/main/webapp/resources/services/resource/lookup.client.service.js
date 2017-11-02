@@ -209,7 +209,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateUsersBasic = function (data) {
-            if (!SearchService.validateSolrData(data)) {
+            if (!Util.validateSolrData(data)) {
                 return false;
             }
             return true;

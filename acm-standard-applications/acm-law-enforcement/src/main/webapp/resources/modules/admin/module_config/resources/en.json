@@ -472,7 +472,7 @@
       },
       "labels.config": {
         "title": "Label Configuration",
-        "progressMessage": "Updating labels...",
+        "progressMessage": "Updating labels...Please wait",
         "data": {
           "description": "Description",
           "defaultValue": "Default Value",
@@ -505,6 +505,7 @@
           "inverseValue" : "Inverse value"
         },
         "modal" : {
+          "title" : "Search Label",
           "editEntry" : "Edit lookup entry",
           "addEntry" : "Add lookup entry",
           "key.placeholder" : "Enter entry key",

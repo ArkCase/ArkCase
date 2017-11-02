@@ -49,7 +49,12 @@
   "profile.picture": {
     "title": "Bild ändern",
     "email": "E-Mail-Addresse",
-    "uploadImgError": "Sie haben einen ungültigen Bilddateityp hochgeladen"
+    "uploadImgError": "Sie haben einen ungültigen Bilddateityp hochgeladen",
+    "uploadError": "Das Hochladen eines neuen Profilbilds ist fehlgeschlagen"
+  },
+  "profile.signature": {
+    "title": "Unterschrift ändern",
+    "uploadError": "Hochladen neuer Signatur fehlgeschlagen"
   },
   "profile.modal": {
     "title": "Info",

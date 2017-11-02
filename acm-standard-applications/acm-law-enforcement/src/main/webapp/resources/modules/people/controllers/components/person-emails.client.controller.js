@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.EmailsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -54,6 +54,12 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
             $scope.gridOptions.data = emails;
         };
 
+        ObjectLookupService.getSubContactMethodType('email').then(
+            function (contactMethodTypes) {
+                $scope.emailTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
+
         $scope.addNew = function () {
             var email = {};
             email.created = Util.dateToIsoString(new Date());
@@ -79,11 +85,11 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
                 id: rowEntity.id,
                 type: rowEntity.type,
                 subType: rowEntity.subType,
+                subLookup: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description
             };
             showModal(item, true);
-
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -123,7 +129,7 @@ angular.module('people').controller('People.EmailsController', ['$scope', '$q', 
                     email = _.find($scope.objectInfo.contactMethods, {id: data.email.id});
                 }
                 email.type = 'email';
-                email.subType = data.email.subType;
+                email.subType = data.email.subLookup;
                 email.value = data.email.value;
                 email.description = data.email.description;
 

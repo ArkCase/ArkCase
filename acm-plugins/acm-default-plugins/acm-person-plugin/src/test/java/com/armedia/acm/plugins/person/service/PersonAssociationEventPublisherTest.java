@@ -1,13 +1,16 @@
 package com.armedia.acm.plugins.person.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.model.PersonModifiedEvent;
 import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -16,10 +19,6 @@ import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
 
 public class PersonAssociationEventPublisherTest extends EasyMockSupport
 {
@@ -32,16 +31,17 @@ public class PersonAssociationEventPublisherTest extends EasyMockSupport
         personAssociationEventPublisher = new PersonAssociationEventPublisher();
         mockEventPublisher = createMock(ApplicationEventPublisher.class);
         personAssociationEventPublisher.setApplicationEventPublisher(mockEventPublisher);
+        personAssociationEventPublisher.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test
     public void testAliasAdded()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         PersonAssociation personAssociation = getPersonAssociation(1L, "TestAlias1");
         String currentJsonObject = acmMarshaller.marshal(personAssociation);
 
-        //add alias
+        // add alias
         PersonAlias newPersonAlias = getPersonAlias(2L, "TestAlias2");
         List<PersonAlias> personAliases = personAssociation.getPerson().getPersonAliases();
         personAliases.add(newPersonAlias);
@@ -58,15 +58,14 @@ public class PersonAssociationEventPublisherTest extends EasyMockSupport
         assertEquals(eventCapture.getValue().getEventType(), "com.armedia.acm.person.personAlias.added");
     }
 
-
     @Test
     public void testAliasEdited()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         PersonAssociation personAssociation = getPersonAssociation(1L, "TestAlias");
         String currentJsonObject = acmMarshaller.marshal(personAssociation);
 
-        //edit alias
+        // edit alias
         List<PersonAlias> personAliases = personAssociation.getPerson().getPersonAliases();
         PersonAlias personAlias = personAliases.get(0);
         personAlias.setAliasValue("TestAliasEdited");
@@ -85,11 +84,11 @@ public class PersonAssociationEventPublisherTest extends EasyMockSupport
     @Test
     public void testAliasRemoved()
     {
-        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         PersonAssociation personAssociation = getPersonAssociation(1L, "TestAlias1");
         String currentJsonObject = acmMarshaller.marshal(personAssociation);
 
-        //remove alias
+        // remove alias
         List<PersonAlias> personAliases = personAssociation.getPerson().getPersonAliases();
         personAliases.remove(0);
 

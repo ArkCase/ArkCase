@@ -6,6 +6,7 @@ package com.armedia.acm.objectonverter.xml;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.google.common.base.Charsets;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -19,6 +20,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * @author riste.tutureski
@@ -45,12 +47,19 @@ public class XMLUnmarshaller implements AcmUnmarshaller
             JAXBElement<E> jaxbElement = unmarshaller.unmarshal(element, c);
             obj = jaxbElement.getValue();
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Error while creating Object from XML: " + e.getMessage(), e);
         }
 
         return obj;
+    }
+
+    @Override
+    public <T> T unmarshallCollection(String source, Class<? extends Collection> collectionClass, Class elementClass)
+    {
+        throw new NotImplementedException("Method unmarshalCollection not implemented for XMLUnmarshaller!");
     }
 
 }

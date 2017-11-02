@@ -98,6 +98,9 @@ public class UserOrg implements Serializable
     @Column(name = "cm_ecm_file_id")
     private Long ecmFileId;
 
+    @Column(name = "cm_ecm_signature_file_id")
+    private Long ecmSignatureFileId;
+
     @Column(name = "cm_title")
     private String title;
 
@@ -309,6 +312,16 @@ public class UserOrg implements Serializable
     public void setEcmFileId(Long ecmFileId)
     {
         this.ecmFileId = ecmFileId;
+    }
+
+    public Long getEcmSignatureFileId()
+    {
+        return ecmSignatureFileId;
+    }
+
+    public void setEcmSignatureFileId(Long ecmSignatureFileId)
+    {
+        this.ecmSignatureFileId = ecmSignatureFileId;
     }
 
     public String getTitle()

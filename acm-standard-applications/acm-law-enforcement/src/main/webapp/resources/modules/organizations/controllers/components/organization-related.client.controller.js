@@ -1,11 +1,11 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
+angular.module('organizations').controller('Organizations.RelatedController', ['$rootScope', '$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
-    , function ($scope, $q, $stateParams, $translate, $modal
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.SearchService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , function ($rootScope, $scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService) {
 
 
         Authentication.queryUserInfo().then(
@@ -15,9 +15,13 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         );
 
+        $scope.relationshipTypes = [];
         ObjectLookupService.getOrganizationRelationTypes().then(
             function (relationshipTypes) {
-                $scope.relationshipTypes = relationshipTypes;
+                for (var i = 0; i < relationshipTypes.length; i++) {
+                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                }
+
                 return relationshipTypes;
             });
 
@@ -36,6 +40,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             }
         });
 
+        $scope.organizationId = null;
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
         var promiseUsers = gridHelper.getUsers();
@@ -56,6 +61,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
+            $scope.organizationId = objectInfo.organizationId;
             refreshGridData(objectInfo.organizationId, objectInfo.objectType);
         };
 
@@ -82,14 +88,20 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             var params = {
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
-                showDescription: true
+                showDescription: true,
+                externalSearchService: OrganizationSearchService
             };
             if (rowEntity) {
                 angular.extend(params, {
-                    organizationId: rowEntity.target_object.object_id_s,
+                    targetOrganizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
-                    description: rowEntity.description_s
+                    description: rowEntity.description_s,
+                    organizationId: $scope.organizationId
+                });
+            } else {
+                angular.extend(params, {
+                    organizationId: $scope.organizationId
                 });
             }
 
@@ -156,21 +168,50 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             association.description = associationData.description;
             ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
                 //success
-                if (!rowEntity) {
-                    //append new entity as last item in the grid
-                    rowEntity = {
-                        target_object: {}
-                    };
-                    $scope.gridOptions.data.push(rowEntity);
-                }
+                if (payload.associationType.toLowerCase() !== "parentcompany"){
+                    if (!rowEntity) {
+                        //append new entity as last item in the grid
+                        rowEntity = {
+                            target_object: {}
+                        };
+                        $scope.gridOptions.data.push(rowEntity);
+                    }
 
-                //update row immediately
-                rowEntity.object_id_s = payload.associationId;
-                rowEntity.association_type_s = payload.associationType;
-                rowEntity.target_object.type_lcs = target.organizationType;
-                rowEntity.target_object.object_id_s = target.organizationId;
-                rowEntity.target_object.title_parseable = target.organizationValue;
-                rowEntity.target_object.value_parseable = target.organizationValue;
+                    //update row immediately
+                    rowEntity.object_id_s = payload.associationId;
+                    rowEntity.association_type_s = payload.associationType;
+                    rowEntity.target_object.type_lcs = target.organizationType;
+                    if (!Util.isEmpty(target.defaultIdentification)) {
+                        if (!Util.isEmpty(target.defaultIdentification.identificationType)) {
+                            rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber + " " + target.defaultIdentification.identificationType;
+                        } else {
+                            rowEntity.target_object.default_identification_s = target.defaultIdentification.identificationNumber;
+                        }
+                    }
+                    rowEntity.target_object.title_parseable = target.organizationValue;
+                    rowEntity.target_object.value_parseable = target.organizationValue;
+                    if (!Util.isEmpty(target.primaryContact)) {
+                        if (!Util.isEmpty(target.primaryContact.person.familyName)) {
+                            rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName + " " + target.primaryContact.person.familyName;
+                        } else {
+                            rowEntity.target_object.primary_contact_s = target.primaryContact.person.givenName;
+                        }
+
+                    }
+                    if (!Util.isEmpty(target.defaultPhone)) {
+                        rowEntity.target_object.default_phone_s = target.defaultPhone.value + " [" + target.defaultPhone.subType + "]";
+                    } else {
+                        rowEntity.target_object.default_phone_s = "";
+                    }
+
+                    if (!Util.isEmpty(target.defaultAddress)) {
+                        if (!Util.isEmpty(target.defaultAddress.state)) {
+                            rowEntity.target_object.default_location_s = target.defaultAddress.city + ", " + target.defaultAddress.state;
+                        } else {
+                            rowEntity.target_object.default_location_s = target.defaultAddress.city;
+                        }
+                    }
+                }
                 //wait 2.5 sec and refresh because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {
@@ -187,6 +228,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 _.remove($scope.gridOptions.data, function (row) {
                     return row === rowEntity;
                 });
+                
                 //refresh grid after 2.5 sec because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {
@@ -201,5 +243,9 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             var targetId = Util.goodMapValue(rowEntity, "target_object.object_id_s");
             gridHelper.showObject(targetType, targetId);
         };
+
+        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        });
     }
 ]);

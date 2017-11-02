@@ -22,6 +22,7 @@
           class="com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService">
         <property name="templateConfigurations" value="file:${user.home}/.arkcase/acm/mailTemplatesConfiguration.json"/>
         <property name="templateFolderPath" value="${user.home}/.arkcase/acm/templates"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="configurableEmailSenderService"
@@ -41,7 +42,26 @@
         <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
     </bean>
 
-    <bean id="onPasswordExpired" class="com.armedia.acm.services.email.service.OnPasswordExpired">
+    <bean id="onLoginCheckPasswordExpiration" class="com.armedia.acm.services.email.service.OnLoginCheckPasswordExpiration">
+        <property name="resetPasswordService" ref="resetPasswordService"/>
+    </bean>
+
+    <bean id="onForgotUsername" class="com.armedia.acm.services.email.service.OnForgotUsername">
+        <property name="emailSenderService" ref="configurableEmailSenderService"/>
+        <property name="acmAppConfiguration" ref="acmApplication"/>
+        <property name="forgotUsernameEmailBodyTemplate" value="${upcoming.forgotUsername.notification.body.template}"/>
+        <property name="forgotUsernameEmailSubject" value="${upcoming.forgotUsername.notification.subject}"/>
+    </bean>
+
+    <bean id="onForgotPassword" class="com.armedia.acm.services.email.service.OnForgotPassword">
+        <property name="resetPasswordService" ref="resetPasswordService"/>
+    </bean>
+
+    <bean id="onSendSetPasswordEmailEvent" class="com.armedia.acm.services.email.service.OnSetPasswordEmail">
+        <property name="resetPasswordService" ref="resetPasswordService"/>
+    </bean>
+
+    <bean id="resetPasswordService" class="com.armedia.acm.services.email.service.ResetPasswordService">
         <property name="userDao" ref="userJpaDao"/>
         <property name="emailSenderService" ref="configurableEmailSenderService"/>
         <property name="acmAppConfiguration" ref="acmApplication"/>

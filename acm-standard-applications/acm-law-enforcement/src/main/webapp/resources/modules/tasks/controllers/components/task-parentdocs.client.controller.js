@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal'
+angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
     , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
-    , function ($scope, $stateParams, $q, $modal
+    , function ($scope, $stateParams, $q, $modal, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
         , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
@@ -91,7 +91,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                     $scope.treeConfig.formTypes = data[0];
                     $scope.treeConfig.fileTypes = [];
                     for(var i = 0; i < data[1].length; i++ ){
-                        $scope.treeConfig.fileTypes.push({"type": data[1][i].key, "label": $translate.instant(data[1][i].value)});
+                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
                     }
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];

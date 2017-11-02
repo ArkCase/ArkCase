@@ -1,5 +1,8 @@
 package com.armedia.broker;
 
+import com.armedia.acm.objectonverter.AcmUnmarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +24,8 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
 
     private static final Logger LOG = LogManager.getLogger(AcmObjectBrokerClientListener.class);
 
+    private AcmUnmarshaller jsonUnmarshaller = ObjectConverter.createJSONUnmarshallerForTests();
+
     private final AcmObjectBrokerClient<E> broker;
 
     public AcmObjectBrokerClientListener(AcmObjectBrokerClient<E> broker)
@@ -40,7 +45,7 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
                 throw new IOException("Cannot consume empty message");
             }
 
-            E entity = broker.getConverter().getUnmarshaller().unmarshall(msg.getText(), broker.getEntityClass());
+            E entity = jsonUnmarshaller.unmarshall(msg.getText(), broker.getEntityClass());
 
             if (entity == null)
             {
@@ -51,7 +56,8 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
 
             broker.getExecutor().execute(createEntityHandlerTask(broker, entity, message));
 
-        } catch (JMSException | IOException e)
+        }
+        catch (JMSException | IOException e)
         {
             LOG.error("Failed to consume/deserialize message " + message, e);
         }
@@ -83,7 +89,8 @@ public class AcmObjectBrokerClientListener<E> implements MessageListener
                     {
                         message.acknowledge();
 
-                    } catch (JMSException e)
+                    }
+                    catch (JMSException e)
                     {
                         LOG.error("Failed to aknowledge message " + message, e);
                     }
