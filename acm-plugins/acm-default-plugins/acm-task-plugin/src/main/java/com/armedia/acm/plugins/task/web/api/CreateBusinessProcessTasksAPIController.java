@@ -41,12 +41,12 @@ public class CreateBusinessProcessTasksAPIController {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
             fakeTask.setTaskId(null); // no object id since the task could not be created
-            publishAdHocTaskCreatedEvent(authentication, httpSession, fakeTask, false);
+            publishTaskCreatedEvent(authentication, httpSession, fakeTask, false);
             throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
     }
 
-    protected void publishAdHocTaskCreatedEvent(Authentication authentication, HttpSession httpSession, AcmTask created, boolean succeeded)
+    protected void publishTaskCreatedEvent(Authentication authentication, HttpSession httpSession, AcmTask created, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(created, "create", authentication.getName(), succeeded, ipAddress);

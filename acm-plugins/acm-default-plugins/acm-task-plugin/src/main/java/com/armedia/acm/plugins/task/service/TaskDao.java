@@ -135,5 +135,5 @@ public interface TaskDao
 
     byte[] getDiagram(Long id) throws AcmTaskException;
 
-    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
+    AcmTask startBusinessProcess(AcmTask task, Map<String, Object> pVars, String businessProcessName) throws AcmTaskException;
 }
