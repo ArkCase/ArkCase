@@ -1292,28 +1292,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws  AcmTaskException {
-        List<String> reviewers = new ArrayList<>();
-        reviewers.add(task.getAssignee());
-        List<AcmTask> createdAcmTasks = new ArrayList<>();
-
-        // Iterate through the list of documentsToReview and start business process for each of them
-        for (EcmFile documentUnderReview : task.getDocumentsToReview())
-        {
-            Map<String, Object> pVars = new HashMap<>();
-
-            pVars.put("reviewers", reviewers);
-            pVars.put("taskName", task.getTitle());
-            pVars.put("documentAuthor", authentication.getName());
-            pVars.put("pdfRenditionId", documentUnderReview.getFileId());
-            pVars.put("formXmlId", null);
-            pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
-
-            pVars.put("OBJECT_TYPE", "FILE");
-            pVars.put("OBJECT_ID", documentUnderReview.getFileId());
-            pVars.put("OBJECT_NAME", documentUnderReview.getFileName());
-            pVars.put("PARENT_OBJECT_TYPE", task.getAttachedToObjectType());
-            pVars.put("PARENT_OBJECT_ID", task.getAttachedToObjectId());
+    public AcmTask startBusinessProcess(AcmTask task, Map<String, Object> pVars, String businessProcessName) throws  AcmTaskException
+    {
 
             ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
             Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
@@ -1326,10 +1306,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                         task.getPercentComplete());
             }
             AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
-            createdAcmTasks.add(createdAcmTask);
-        }
 
-        return createdAcmTasks;
+
+            return createdAcmTask;
     }
 
     private List<String> findCandidateGroups(String taskId)

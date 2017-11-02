@@ -110,7 +110,8 @@ public class DocumentApprovalProcessIT
     }
 
     @Test
-    public void documentApproval_happyPath() throws Exception {
+    public void documentApproval_happyPath() throws Exception
+    {
         assertNotNull(pi);
 
         List<Task> reviews = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).list();
@@ -140,7 +141,8 @@ public class DocumentApprovalProcessIT
     }
 
     @Test
-    public void documentApproval_happyPath_with_candidate_groups() throws Exception {
+    public void documentApproval_happyPath_with_candidate_groups() throws Exception
+    {
         assertNotNull(piCandidateGroups);
 
         List<Task> reviews = ts.createTaskQuery().processInstanceId(piCandidateGroups.getProcessInstanceId()).list();
