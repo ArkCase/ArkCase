@@ -120,7 +120,6 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                     }
                     if(!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)){
                         $scope.buckslipProcesses[0].futureTasks.push(futureTask);
-                        $scope.saveTask();
                     }
                 });
         };
