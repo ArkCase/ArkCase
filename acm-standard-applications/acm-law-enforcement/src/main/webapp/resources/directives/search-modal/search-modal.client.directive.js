@@ -60,7 +60,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 onNoDataMessage: '@',
                 draggable: '@',
                 onDblClickRow: '=?',
-                customization: '=?'
+                customization: '=?',
+                hideSearchButton: '@'
             },
 
             link: function (scope, el, attrs) {
@@ -77,6 +78,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
                 scope.findGroups = scope.findGroups === 'true';
+                scope.hideSearchButton =  scope.hideSearchButton === 'true';
                 if (scope.searchQuery) {
                     scope.searchQuery = scope.searchQuery;
                 } else {
@@ -308,6 +310,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             });
                     }
 
+                }
+                if (scope.hideSearchButton) {
+                    scope.queryExistingItems();
                 }
             },
 
