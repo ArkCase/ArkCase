@@ -316,7 +316,16 @@
     "priority.label": "Priority",
     "startDate.label": "Start Date",
     "dueDate.label": "Due Date",
-    "state.label": "State"
+    "state.label": "State",
+    "future.task.modal": {
+      "title": "New Future Task",
+      "assignee": "Assignee",
+      "subject.label": "Subject",
+      "subject.placeholder": "Enter future case subject",
+      "details.label": "Details",
+      "cancel.button": "Cancel",
+      "save.button": "Save"
+    }
   },
   "cases.comp.pastApprovals": {
     "title": "Past Approvers",

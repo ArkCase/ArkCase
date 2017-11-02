@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService', 'Case.FutureApprovalService', 'MessageService', 'Acm.StoreService', '$timeout'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService', 'Case.FutureApprovalService', 'MessageService', 'Acm.StoreService', 'ModalDialogService', '$timeout'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService, MessageService, Store, $timeout) {
+        , PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService, CaseFutureApprovalService, MessageService, Store, ModalDialogService, $timeout) {
 
         $scope.userSearchConfig = null;
         $scope.gridOptions = $scope.gridOptions || {};
@@ -104,43 +104,25 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
         $scope.$bus.publish('buckslip-task-object-updated-subscribe-created', true);
 
         $scope.userSearch = function () {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/cases/views/components/case-user-search.client.view.html',
-                controller: 'Cases.UserSearchController',
-                size: 'lg',
-                resolve: {
-                    $filter: function () {
-                        return $scope.config.userSearch.userFacetFilter;
-                    },
-                    $extraFilter: function () {
-                        return $scope.config.userSearch.userFacetExtraFilter;
-                    },
-                    $config: function () {
-                        return $scope.userSearchConfig;
+            var modalMetadata = {
+                moduleName: "cases",
+                templateUrl: "modules/cases/views/components/case-new-future-task.client.view.html",
+                controllerName: "Cases.NewFutureTaskController"
+            };
+            ModalDialogService.showModal(modalMetadata)
+                .then(function (result){
+                    var futureTask = {
+                        approverId: result.pickedUserId,
+                        groupName: result.pickedUserGroup,
+                        taskName: result.futureTaskTitle,
+                        details: result.futureTaskDetails,
+                        addedBy: currentUser
                     }
-                }
-            });
-
-            modalInstance.result.then(function (chosenUser) {
-                if (chosenUser) {
-                    UserInfoService.getUserInfoById(chosenUser.object_id_s).then(function (user) {
-                        var userConverted = convertProfileToUser(user);
-                        if (!$scope.gridOptions.data) {
-                            $scope.gridOptions.data = [userConverted];
-                        } else {
-                            $scope.gridOptions.data.push(userConverted);
-                        }
-                        $scope.gridOptions.noData = false;
-                    });
-
-                }
-
-            }, function () {
-                // Cancel button was clicked.
-                return [];
-            });
-
+                    if(!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)){
+                        $scope.buckslipProcesses[0].futureTasks.push(futureTask);
+                        $scope.saveTask();
+                    }
+                });
         };
 
 
