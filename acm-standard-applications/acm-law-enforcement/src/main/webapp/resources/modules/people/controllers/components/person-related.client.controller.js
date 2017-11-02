@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService', 'MessageService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService, MessageService) {
 
         $scope.relationshipTypes = [];
         ObjectLookupService.getPersonRelationTypes().then(
@@ -106,7 +106,10 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
             var params = {
                 showSetPrimary: false,
-                types: $scope.relationshipTypes
+                types: $scope.relationshipTypes,
+                skipPeopleIdsInSearch: [
+                    $scope.objectInfo.id//skip parent in the search
+                ]
             };
             if (rowEntity) {
                 angular.extend(params, {
@@ -202,6 +205,8 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 // $timeout(function () {
                 //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
                 // }, 2500);
+            }, function (errorResponse) {
+                MessageService.error(errorResponse.data);
             });
         }
 
