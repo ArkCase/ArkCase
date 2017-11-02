@@ -14,7 +14,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicatePersonRoleError = false;
 
-            $scope.pickerType =  params.pickerType;
+            $scope.pickerType = params.pickerType;
             $scope.pickerTypeDisabled = params.typeDisabled;
 
             $scope.showSetPrimary = params.showSetPrimary;
@@ -26,6 +26,9 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
             $scope.hideNoField = true;
+
+            $scope.skipPeopleIdsInSearch = params.skipPeopleIdsInSearch;
+
             if (params.isFirstPerson) {
                 $scope.isDefault = params.isFirstPerson;
                 $scope.hideNoField = !params.isFirstPerson;
@@ -75,6 +78,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
                 params.filter = '"Object Type": PERSON &fq="status_lcs": ACTIVE';
+                if ($scope.skipPeopleIdsInSearch && Util.isArray($scope.skipPeopleIdsInSearch)) {
+                    params.filter += '  &fq="-object_id_s":(' + $scope.skipPeopleIdsInSearch.join(' ') + ')';
+                }
+
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
                 var modalInstance = $modal.open({

@@ -217,15 +217,6 @@ public class PeopleAPIController
         }
     }
 
-    /*
-     * This method should be with identical query string as the call to faceted search that it forwards to.
-     */
-    @RequestMapping(value = "/search/{personId}", method = RequestMethod.GET)
-    public String searchPeople(@PathVariable("personId") Long personId, Authentication auth) throws UnsupportedEncodingException
-    {
-        return String.format(facetedSearchPath, String.format("fq=\"-object_id_s\":%s", Long.toString(personId)));
-    }
-
     public void setPersonService(PersonService personService)
     {
         this.personService = personService;
