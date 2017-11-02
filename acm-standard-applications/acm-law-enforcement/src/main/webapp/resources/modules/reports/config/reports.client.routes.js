@@ -7,9 +7,13 @@ angular.module('reports').config(['$stateProvider',
             url: '/reports',
             templateUrl: 'modules/reports/views/reports.client.view.html',
             resolve: {
-                translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                translatePartialLoader: ['$translate', '$translatePartialLoader', 'Object.LookupService'
+                    , function ($translate, $translatePartialLoader, ObjectLookupService) {
                     $translatePartialLoader.addPart('common');
                     $translatePartialLoader.addPart('reports');
+                    $translate.resetDataDict()
+                        .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("reportStates"))
+                    ;
                     return $translate.refresh();
                 }]
             }
