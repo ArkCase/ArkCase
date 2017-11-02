@@ -1,23 +1,12 @@
 'use strict';
 
-angular.module('reports').controller('ReportsController', ['$scope', '$q', '$window', 'UtilService', 'Util.DateService'
-    , 'ConfigService', 'LookupService','Reports.BuildUrl', 'Reports.Data', 'Object.LookupService', 'Helper.LocaleService'
-    , function ($scope, $q, $window, Util, UtilDateService
-        , ConfigService, LookupService, BuildUrl, Data, ObjectLookupService, LocaleHelper
-    ) {
-        new LocaleHelper.Locale({scope: $scope});
-
-        ObjectLookupService.getLookupByLookupName("reportStates").then(function (reportStates) {
-            $scope.reportStates = reportStates;
-            return reportStates;
-        });
+angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
+    'Reports.BuildUrl', '$q', 'Reports.Data', '$window'
+    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data, $window) {
 
         $scope.showXmlReport = false;
-
+        
         $scope.data = Data.getData();
-        $scope.startDatePickerOpened = false;
-        $scope.endDatePickerOpened = false;
-
 
         var promiseModuleConfig = ConfigService.getModuleConfig("reports");
 
@@ -41,22 +30,7 @@ angular.module('reports').controller('ReportsController', ['$scope', '$q', '$win
                 $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
                 $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
                 $scope.data.reportSelected = null;
-
-                updateAvailableReports();
             });
-
-        function updateAvailableReports() {
-            $scope.availableReports = [];
-            _.forEach($scope.data.reports, function (value, key) {
-                $scope.availableReports.push({"name": key.split('_').join(' '), "id": key});
-            });
-        }
-
-        $scope.reportSelectionChange = function() {
-            if($scope.config.resetCaseStateValues.indexOf($scope.data.reportSelected) > -1){
-                $scope.data.caseStateSelected = '';
-            }
-        };
 
         $scope.generateReport = function () {
             if ($scope.showXmlReport) {
