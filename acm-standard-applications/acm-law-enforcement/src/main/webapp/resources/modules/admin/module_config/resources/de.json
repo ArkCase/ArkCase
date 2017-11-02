@@ -153,7 +153,7 @@
           "lastName": "Nachnamen eingeben",
           "email": "Email eingeben",
           "password": "Passwort eingeben",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "de_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "Geben Sie ein Passwort ein, das nicht mit dem Benutzernamen übereinstimmt und 7 Zeichen mit der Kombination aus mindestens einem Sonderzeichen, einer Zahl, Groß- und Kleinbuchstaben enthält."
         },
@@ -168,7 +168,8 @@
         "firstName": "Vorname",
         "lastName": "Familienname, Nachname",
         "email": "Email",
-        "password": "Passwort"
+        "password": "Passwort",
+        "confirmation": "de_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "Name",

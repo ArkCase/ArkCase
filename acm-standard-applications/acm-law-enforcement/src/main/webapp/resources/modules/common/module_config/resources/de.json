@@ -8,7 +8,8 @@
     "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "de_MM/dd/yyyy",
     "defaultDateUIFormat": "de_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm",
+    "passwordRuleText": "de_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
   },
   "common.addOrganization": {
     "title": "de_Add Parent Organization",
