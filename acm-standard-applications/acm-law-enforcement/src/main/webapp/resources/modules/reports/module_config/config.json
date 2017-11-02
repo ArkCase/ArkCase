@@ -31,28 +31,6 @@
       "id": "caseStates",
       "resetCaseStateValues": [
         "COMPLAINT_DISPOSITION_COUNT"
-      ],
-      "states": [
-        {
-          "id": "DRAFT",
-          "name": "Draft"
-        },
-        {
-          "id": "IN APPROVAL",
-          "name": "In Approval"
-        },
-        {
-          "id": "ACTIVE",
-          "name": "Active"
-        },
-        {
-          "id": "INACTIVE",
-          "name": "Inactive"
-        },
-        {
-          "id": "CLOSED",
-          "name": "Closed"
-        }
       ]
     }
   ]
