@@ -10,10 +10,17 @@ angular.module('tasks').config(['$stateProvider',
                 url: '/tasks',
                 templateUrl: 'modules/tasks/views/tasks.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService', 'Object.LookupService'
+                        , function ($translate, $translatePartialLoader, LocaleService, ObjectLookupService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('tasks');
+                        $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["tasks"], "en"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("taskOutcomes"))
+                            ;
                         return $translate.refresh();
                     }]
                 }

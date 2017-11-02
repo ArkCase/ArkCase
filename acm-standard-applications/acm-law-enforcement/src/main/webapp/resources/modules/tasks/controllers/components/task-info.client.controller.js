@@ -1,13 +1,14 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$timeout'
-    , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService', 'Object.ModelService'
-    , 'Helper.ObjectBrowserService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService', '$modal'
-    , 'Object.ParticipantService', '$q', 'Case.InfoService', 'Complaint.InfoService', '$filter', 'SearchService', 'Search.QueryBuilderService'
-    , function ($scope, $stateParams, $translate, $timeout
-        , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService, ObjectModelService
-        , HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService, $modal, ObjectParticipantService, $q
-        , CaseInfoService, ComplaintInfoService, $filter, SearchService, SearchQueryBuilder) {
+angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$stateParams', '$translate', '$filter', '$modal'
+    , 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Object.LookupService', 'Task.InfoService'
+    , 'Object.ModelService', 'Helper.ObjectBrowserService', 'Task.AlertsService', 'ObjectService', 'Helper.UiGridService'
+    , 'Object.ParticipantService', 'Case.InfoService', 'Complaint.InfoService', 'SearchService', 'Search.QueryBuilderService'
+    , function ($scope, $stateParams, $translate, $filter, $modal
+        , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService
+        , ObjectModelService, HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService
+        , ObjectParticipantService, CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder
+    ) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -49,14 +50,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 return groups;
             }
         );
-        
-        var getPrioritiesPromise = ObjectLookupService.getPriorities();
-        getPrioritiesPromise.then(
-            function (priorities) {
-                $scope.priorities = priorities;
-                return priorities;
-            }
-        );
+
+        ObjectLookupService.getLookupByLookupName("priorities").then(function (priorities) {
+            $scope.priorities = priorities;
+            return priorities;
+        });
 
         $scope.openAssigneePickerModal = function () {
             var participant = {
@@ -216,14 +214,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.dateInfo = $scope.dateInfo || {};
-            $scope.dateInfo.dueDate = moment($scope.objectInfo.dueDate).format($translate.instant('common.defaultDateFormat'));
-            $scope.dateInfo.taskStartDate = moment($scope.objectInfo.taskStartDate).format($translate.instant('common.defaultDateFormat'));
+            $scope.dateInfo.dueDate = $scope.objectInfo.dueDate;
+            $scope.dateInfo.taskStartDate = $scope.objectInfo.taskStartDate;
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-            getPrioritiesPromise.then(function() {
-                setPriorityValue();
-            });
             
             var owningGroupParticipantType = 'owning group';
             $scope.owningGroup = 'Unknown';
@@ -233,7 +228,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 $scope.owningGroup = ObjectModelService.getGroup(objectInfo);
             }
             // If when creating a new Task a Group Task is created check the candidateGroups array for the Owning Group
-            else if ($scope.objectInfo.candidateGroups.length > 0) {
+            else if (Util.goodMapValue($scope.objectInfo, "candidateGroups[0]", false)) {
                 $scope.owningGroup = $scope.objectInfo.candidateGroups[0];
             }
         };
@@ -250,27 +245,48 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             }
         };
 
+
         $scope.saveTask = function () {
-            saveTask();
+            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+            if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
+                var objectInfo = Util.omitNg($scope.objectInfo);
+                promiseSaveInfo = TaskInfoService.saveTaskInfo(objectInfo);
+                promiseSaveInfo.then(
+                    function (taskInfo) {
+                        $scope.$emit("report-object-updated", taskInfo);
+                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
+                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
+                    }
+                    , function (error) {
+                        $scope.$emit("report-object-update-failed", error);
+                        return error;
+                    }
+                ).then(function (taskInfo) {
+                    //updadateCaseOrComplaintInfo(taskInfo);
+                    onObjectInfoRetrieved(taskInfo);
+                });
+            }
+            return promiseSaveInfo;
         };
         $scope.updateAssignee = function (assignee) {
             //var taskInfo = Util.omitNg($scope.objectInfo);
             //TasksModelsService.setAssignee($scope.objectInfo, $scope.assignee);
             $scope.objectInfo.assignee = assignee;
-            saveTask();
+            $scope.saveTask();
         };
         $scope.updateStartDate = function () {
-            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.dateInfo.taskStartDate)).format($translate.instant('common.defaultDateFormat'));
-            saveTask();
+            var correctedDate = UtilDateService.convertToCurrentTime($scope.dateInfo.taskStartDate);
+            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso(correctedDate)).format();
+            $scope.saveTask();
         };
         $scope.updateDueDate = function () {
             var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
             $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-            saveTask();
+            $scope.saveTask();
         };
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);
-            saveTask();
+            $scope.saveTask();
         };
 
         //user group picker
@@ -324,37 +340,5 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             });
         };
 
-        function saveTask() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            setPriorityValue();
-            if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
-                var objectInfo = Util.omitNg($scope.objectInfo);
-                promiseSaveInfo = TaskInfoService.saveTaskInfo(objectInfo);
-                promiseSaveInfo.then(
-                    function (taskInfo) {
-                        $scope.$emit("report-object-updated", taskInfo);
-                        TaskInfoService.resetTaskCacheById(taskInfo.taskId);
-                        return TaskInfoService.getTaskInfo(taskInfo.taskId);
-                    }
-                    , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
-                        return error;
-                    }
-                ).then(function (taskInfo) {
-                    //updadateCaseOrComplaintInfo(taskInfo);
-                    onObjectInfoRetrieved(taskInfo);
-                });
-            }
-            return promiseSaveInfo;
-        }
-
-        var setPriorityValue = function() {
-            var priority = _.findWhere($scope.priorities, {key : $scope.objectInfo.priority});
-            if (priority) {
-                $scope.priorityValue = priority.value;
-            } else {
-                $scope.priorityValue = 'core.unknown';
-            }
-        }
     }
 ]);

@@ -1,49 +1,96 @@
 <div class="modal-header">
     <h3 ng-hide="isEdit">
-        <span translate>complaints.comp.locations.modal.addLocation</span>
+        <span translate>complaints.comp.addresses.modal.addLocation</span>
     </h3>
 
     <h3 ng-show="isEdit">
-        <span translate>complaints.comp.locations.modal.editLocation</span>
+        <span translate>complaints.comp.addresses.modal.editLocation</span>
     </h3>
 
 </div>
 <div class="modal-body">
     <form name="locationForm">
-        <div>
-            <label for="location.type" translate>complaints.comp.locations.modal.type.label</label>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="country" translate> complaints.comp.addresses.modal.country.label</label><span
+                    class="required-asterisk">*</span>
+                <select id="country" class="form-control" required="required"
+                        ng-model="address.country">
+                    <option ng-repeat="option in countries" value="{{option.key}}">
+                        {{option.value | translate}}
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="addressTypes" translate> complaints.comp.addresses.modal.type.label</label><span
+                    class="required-asterisk">*</span>
+                <select id="addressTypes" class="form-control" required="required"
+                        ng-model="address.addressType"
+                        ng-options="item.key as item.value | translate for item in addressTypes"></select>
+            </div>
         </div>
-        <select
-                id="location.type"
-                ng-model="location.type"
-                ng-options="item.key as item.value | translate for item in addressTypes"></select>
 
-        <div>
-            <label for="location.streetAddress" translate>complaints.comp.locations.modal.street.label</label>
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="streetAddress" translate>
+                    complaints.comp.addresses.modal.streetAddress.label</label><span class="required-asterisk">*</span>
+                <input id="streetAddress" type="text" ng-model="address.streetAddress" required="required"
+                       class="input-md form-control"
+                       placeholder="{{ 'complaints.comp.addresses.modal.streetAddress.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-6 form-group">
+                <label for="streetAddress2" translate>
+                    complaints.comp.addresses.modal.streetAddress2.label</label>
+                <input id="streetAddress2" type="text" ng-model="address.streetAddress2"
+                       class="input-md form-control"
+                       placeholder="{{ 'complaints.comp.addresses.modal.streetAddress2.placeholder' | translate }}">
+            </div>
         </div>
-        <input id="location.streetAddress" type="text" ng-model="location.streetAddress">
+        <div class="row">
+            <div class="col-sm-6 form-group">
+                <label for="city" translate>
+                    complaints.comp.addresses.modal.city.label</label><span class="required-asterisk">*</span>
+                <input id="city" type="text" ng-model="address.city" required="required"
+                       class="input-md form-control"
+                       placeholder="{{ 'complaints.comp.addresses.modal.city.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="state" translate>
+                    complaints.comp.addresses.modal.state.label</label>
+                <input id="state" type="text" ng-model="address.state"
+                       class="input-md form-control"
+                       placeholder="{{ 'complaints.comp.addresses.modal.state.placeholder' | translate }}">
+            </div>
+            <div class="col-sm-3 form-group">
+                <label for="zip" translate>
+                    complaints.comp.addresses.modal.zip.label</label>
+                <input id="zip" type="text" ng-model="address.zip"
+                       class="input-md form-control"
+                       placeholder="{{ 'complaints.comp.addresses.modal.zip.placeholder' | translate }}">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 form-group">
 
-        <div>
-            <label for="location.city" translate>complaints.comp.locations.modal.city.label</label>
+                <label><span translate>complaints.comp.addresses.modal.setPrimary</span></label>
+                <span class="required-asterisk">*</span><br/>
+                <label>
+                    <input type="radio" ng-model="isDefault" ng-value="true">
+                    <translate>complaints.comp.addresses.modal.yes</translate>
+                </label>
+                <label ng-hide="hideNoField">
+                    <input type="radio" ng-model="isDefault" ng-value="false">
+                    <translate>complaints.comp.addresses.modal.no</translate>
+                </label>
+            </div>
         </div>
-        <input id="location.city" type="text" ng-model="location.city">
-
-        <div>
-            <label for="location.state" translate>complaints.comp.locations.modal.state.label</label>
-        </div>
-        <input type="text" id="location.state" ng-model="location.state">
-
-        <div>
-            <label for="location.zip" translate>complaints.comp.locations.modal.zip.label</label>
-        </div>
-        <input id="location.zip" type="text" ng-model="location.zip">
     </form>
 </div>
 <div class="modal-footer">
     <button class="btn btn-secondary" ng-click="onClickCancel()">
-        <span translate>complaints.comp.locations.modal.btnCancel.text</span>
+        <span translate>complaints.comp.addresses.modal.btnCancel.text</span>
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="locationForm.$invalid">
-        <span translate>complaints.comp.locations.modal.btnOk.text</span>
+        <span translate>complaints.comp.addresses.modal.btnOk.text</span>
     </button>
 </div>

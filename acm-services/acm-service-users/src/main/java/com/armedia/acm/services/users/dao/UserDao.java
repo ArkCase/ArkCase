@@ -14,7 +14,6 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cache.Cache;
@@ -29,10 +28,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -262,7 +257,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
     public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
     {
-        log.debug("Saving AcmUserRole [{}] for User [{}]", userRole.getRoleName(), userRole.getUserId());
         AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
         key.setRoleName(userRole.getRoleName());
         key.setUserId(userRole.getUserId());
@@ -270,12 +264,16 @@ public class UserDao extends AcmAbstractDao<AcmUser>
 
         if (existing == null)
         {
+            log.debug("Saving [{}] AcmUserRole [{}] for User [{}]", userRole.getUserRoleState(), userRole.getRoleName(),
+                    userRole.getUserId());
             getEntityManager().persist(userRole);
             return userRole;
         }
 
         if (!Objects.equals(existing.getUserRoleState(), userRole.getUserRoleState()))
         {
+            log.debug("Change AcmUserRole [{}] for User [{}] to [{}]", userRole.getRoleName(), userRole.getUserId(),
+                    userRole.getUserRoleState());
             existing.setUserRoleState(userRole.getUserRoleState());
         }
 
@@ -297,24 +295,24 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     public boolean isUserPasswordExpired(String principal)
     {
         log.debug("Check password expiration for user [{}]", principal);
-        try
-        {
-            AcmUser user = findByUserId(principal);
-            if (user.getUserState() != AcmUserState.VALID)
-            {
-                return false;
-            }
-            LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
-            if (userPasswordExpirationDate != null)
-            {
-                return userPasswordExpirationDate.isBefore(LocalDate.now());
-            }
-            log.info("Password expiration date is not set for user [{}]", principal);
-        }
-        catch (NoResultException | NonUniqueResultException e)
+
+        AcmUser user = findByUserId(principal);
+        if (user == null)
         {
             log.debug("User [{}] not found!", principal);
+            return false;
         }
+
+        if (user.getUserState() != AcmUserState.VALID)
+        {
+            return false;
+        }
+        LocalDate userPasswordExpirationDate = user.getPasswordExpirationDate();
+        if (userPasswordExpirationDate != null)
+        {
+            return userPasswordExpirationDate.isBefore(LocalDate.now());
+        }
+        log.info("Password expiration date is not set for user [{}]", principal);
         return false;
     }
 
@@ -329,9 +327,43 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NoResultException | NonUniqueResultException e)
         {
-            log.error("User with password reset token: [{}] not found!", token, e.getMessage());
+            log.error("User with password reset token: [{}] not found!", token);
             return null;
         }
+    }
+
+    public List<AcmUser> findByEmailAddress(String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE LOWER(user.mail) = :email";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        return query.getResultList();
+    }
+
+    public AcmUser findByUserIdAndEmailAddress(String userId, String email)
+    {
+        String select = "SELECT user FROM AcmUser user WHERE user.userId = :userId AND LOWER(user.mail) = :email";
+        TypedQuery<AcmUser> query = getEm().createQuery(select, AcmUser.class);
+        query.setParameter("email", email.toLowerCase());
+        query.setParameter("userId", userId.toLowerCase());
+        try
+        {
+            return query.getSingleResult();
+        }
+        catch (NoResultException e)
+        {
+            log.warn("There is no user with id [{}] and email [{}]", userId, email);
+        }
+        catch (NonUniqueResultException e)
+        {
+            log.warn("There is no unique user found with userId [{}] and email [{}]. More than one user has this name or address",
+                    userId, email);
+        }
+        catch (Exception e)
+        {
+            log.error("Error while retrieving user by user id [{}] and email [{}]", userId, email, e);
+        }
+        return null;
     }
 
     public List<AcmUser> findByDirectory(String directoryName)

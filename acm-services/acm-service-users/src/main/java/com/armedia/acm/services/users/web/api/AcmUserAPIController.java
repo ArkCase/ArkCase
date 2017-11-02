@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.util.Collections;
@@ -68,13 +70,17 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser createUser(@RequestBody @Valid UserDTO ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser createUser(@RequestBody UserDTO ldapUserCreateRequest, @PathVariable String directory,
+                              HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            ldapUserService.publishUserCreatedEvent(httpSession, authentication, acmUser, true);
+            return acmUser;
         }
         catch (NameAlreadyBoundException e)
         {
@@ -92,13 +98,16 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser editUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser editUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory,
+                            HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.editLdapUser(acmUser, userId, directory);
+            AcmUser editedUser = ldapUserService.editLdapUser(acmUser, userId, directory);
+            ldapUserService.publishUserUpdatedEvent(httpSession, authentication, editedUser, true);
+            return editedUser;
         }
         catch (Exception e)
         {

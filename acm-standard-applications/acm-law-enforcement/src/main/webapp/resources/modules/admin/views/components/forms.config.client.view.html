@@ -6,14 +6,13 @@
 	    <option value="" translate>admin.forms.defaultValue</option>
 	</select>
     <div class="btn-group">
-        <button ng-disabled="!selectedTarget" class="btn btn-sm btn-link"
+        <button ng-disabled="!selectedTarget" class="btn btn-xs btn-link"
                 ng-click=newForm()>
             <i class="glyphicon glyphicon-plus-sign"></i>
             <span translate>admin.forms.addForm</span>
         </button>
     </div>
 </div>
-
 <panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
 
             <div ui-grid="gridOptions"

@@ -83,6 +83,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     private LookupDao lookupDao;
     private TranslationService translationService;
     private Gson gson = new GsonBuilder().setDateFormat(DateFormats.FREVVO_DATE_FORMAT).create();
+    private ObjectConverter objectConverter;
 
     @Override
     public Object init()
@@ -297,7 +298,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
     public Object convertFromXMLToObject(String xml, Class<?> c)
     {
-        AcmUnmarshaller unmarshaller = ObjectConverter.createXMLUnmarshaller();
+        AcmUnmarshaller unmarshaller = getObjectConverter().getXmlUnmarshaller();
         Object obj = unmarshaller.unmarshall(xml, c);
 
         return obj;
@@ -305,7 +306,7 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
     public String convertFromObjectToXML(Object obj)
     {
-        AcmMarshaller marshaller = ObjectConverter.createXMLMarshaller();
+        AcmMarshaller marshaller = getObjectConverter().getXmlMarshaller();
         String xml = marshaller.marshal(obj);
 
         return xml;
@@ -965,6 +966,16 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
     public void setTranslationService(TranslationService translationService)
     {
         this.translationService = translationService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
 }

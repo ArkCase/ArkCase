@@ -92,6 +92,7 @@
           class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
           init-method="postConstruct">
         <property name="configurationFile" ref="rulesConfigurationFile"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
 </beans>

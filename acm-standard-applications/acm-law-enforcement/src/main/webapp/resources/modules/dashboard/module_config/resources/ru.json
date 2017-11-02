@@ -327,5 +327,38 @@
         "noDataMessage": "В настоящее время нет связанных людей для отображения"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Виджет новостей"
+  },
+  "dashboard.comp.weather": {
+    "title": "Виджет погоды"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Виджет для моих дел"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Мой виджет задач"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Мой виджет жалоб"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Отчет о рабочем процессе"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Новые жалобы"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Новые случаи"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Случаи по очереди"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Командная нагрузка"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Случаи по статусу"
   }
 }

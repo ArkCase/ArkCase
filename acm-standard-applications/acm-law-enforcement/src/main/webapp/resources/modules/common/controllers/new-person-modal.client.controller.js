@@ -171,6 +171,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
+                addNewEnabled: false,
                 types: $scope.organizationTypes,
                 isFirstOrganization: Util.isEmpty(associationFound) ? true : false
             };
@@ -201,7 +202,14 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
 
             modalInstance.result.then(function (data) {
                 if (data.organization) {
-                    setOrganizationAssociation(association, data);
+                    if (!data.organization.organizationId) {
+                        OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                            data.organization = organization;
+                            setOrganizationAssociation(association, data);
+                        });
+                    }else {
+                        setOrganizationAssociation(association, data);
+                    }
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
                         data.organization = organization;
@@ -214,7 +222,6 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         function setOrganizationAssociation(association, data) {
             association.person = {id: $scope.person.id};
             association.organization = data.organization;
-            association.organizationValue = data.organizationValue;
             association.personToOrganizationAssociationType = data.type;
             association.organizationToPersonAssociationType = data.inverseType;
 

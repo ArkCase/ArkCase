@@ -26,3 +26,4 @@ ${user.home}
 # jrebel
 rebel.xml
 **/rebel.xml
+.rebel.xml.bak

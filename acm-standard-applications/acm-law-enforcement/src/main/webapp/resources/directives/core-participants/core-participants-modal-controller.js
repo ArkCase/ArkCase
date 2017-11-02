@@ -19,7 +19,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             var params={};
             $scope.owningGroup=paramsOwn.owningGroup;
 
-            if($scope.participant.participantType == "assignee") {
+            if($scope.participant.participantType == "assignee" || $scope.participant.participantType == "owner") {
                 params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
                 params.filter = 'fq="object_type_s": USER &fq="groups_id_ss": '+$scope.owningGroup;
                 params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
@@ -54,7 +54,7 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
             });
             modalInstance.result.then(function (selected) {
                 if (!Util.isEmpty(selected)) {
-                	$scope.participant.participantLdapId = ($scope.participant.participantType === "owning group") ? selected.name : selected.object_id_s;
+                    $scope.participant.participantLdapId = ($scope.participant.participantType === "owning group") ? selected.object_display_name_s : selected.object_id_s;                	
                     $scope.selectedType = selected.object_type_s;
                 }
             });

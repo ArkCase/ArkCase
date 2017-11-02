@@ -7,6 +7,9 @@ import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.model.event.LdapUserCreatedEvent;
+import com.armedia.acm.services.users.model.event.LdapUserUpdatedEvent;
+import com.armedia.acm.services.users.model.event.SetPasswordEmailEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
@@ -20,11 +23,15 @@ import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -32,7 +39,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class LdapUserService
+public class LdapUserService implements ApplicationEventPublisherAware
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,6 +50,29 @@ public class LdapUserService
     private SpringLdapUserDao ldapUserDao;
     private SpringContextHolder acmContextHolder;
     private LdapEntryTransformer userTransformer;
+    private ApplicationEventPublisher eventPublisher;
+
+    public void publishSetPasswordEmailEvent(AcmUser user)
+    {
+        log.debug("Publish send set password email...");
+        SetPasswordEmailEvent setPasswordEmailEvent = new SetPasswordEmailEvent(user);
+        setPasswordEmailEvent.setSucceeded(true);
+        eventPublisher.publishEvent(setPasswordEmailEvent);
+    }
+
+    public void publishUserCreatedEvent(HttpSession httpSession, Authentication authentication, AcmUser user, boolean succeeded)
+    {
+        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
+        LdapUserCreatedEvent event = new LdapUserCreatedEvent(user, succeeded, ipAddress, authentication);
+        eventPublisher.publishEvent(event);
+    }
+
+    public void publishUserUpdatedEvent(HttpSession httpSession, Authentication authentication, AcmUser user, boolean succeeded)
+    {
+        String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
+        LdapUserUpdatedEvent event = new LdapUserUpdatedEvent(user, succeeded, ipAddress, authentication);
+        eventPublisher.publishEvent(event);
+    }
 
     @Transactional(rollbackFor = Exception.class)
     public AcmUser createLdapUser(UserDTO userDto, String directoryName)
@@ -57,8 +87,6 @@ public class LdapUserService
         {
             user = userDto.updateAcmUser(user);
         }
-
-        String password = userDto.getPassword();
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
@@ -102,8 +130,16 @@ public class LdapUserService
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
         {
-            DirContextAdapter context = userTransformer.createContextForNewUserEntry(directoryName, acmUser, password,
+            String password = userDto.getPassword();
+
+            DirContextAdapter context;
+            if (password == null)
+            {
+                password = MapperUtils.generatePassword();
+            }
+            context = userTransformer.createContextForNewUserEntry(directoryName, acmUser, password,
                     ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
+
             log.debug("Ldap User Context [{}]", context.getAttributes());
             log.debug("Save User [{}] with DN [{}] in LDAP", acmUser.getUserId(), acmUser.getDistinguishedName());
             new RetryExecutor().retry(() -> ldapTemplate.bind(context));
@@ -555,5 +591,11 @@ public class LdapUserService
     public void setUserTransformer(LdapEntryTransformer userTransformer)
     {
         this.userTransformer = userTransformer;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        eventPublisher = applicationEventPublisher;
     }
 }

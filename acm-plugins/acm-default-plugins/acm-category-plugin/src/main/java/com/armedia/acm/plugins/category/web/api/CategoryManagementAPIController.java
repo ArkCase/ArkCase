@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.category.web.api;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.category.model.Category;
 import com.armedia.acm.plugins.category.model.CategoryStatus;
 import com.armedia.acm.plugins.category.service.CategoryService;
@@ -66,7 +67,8 @@ public class CategoryManagementAPIController
             SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
                     Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", null, "Could not retreive the root categories.", e);
@@ -95,7 +97,8 @@ public class CategoryManagementAPIController
 
                     });
             return response;
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", categoryId, String.format("Category with id %d not found.", categoryId), e);
@@ -116,7 +119,8 @@ public class CategoryManagementAPIController
             SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
                     Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Category", categoryId,
@@ -165,7 +169,8 @@ public class CategoryManagementAPIController
             {
                 categoryService.activate(categoryId, activateChildren);
                 return categoryService.get(categoryId);
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.warn(String.format("Failed to activate category with id %d.", categoryId), e);
                 return null;
@@ -184,7 +189,8 @@ public class CategoryManagementAPIController
             {
                 categoryService.deactivate(categoryId);
                 return categoryService.get(categoryId);
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.warn(String.format("Failed to deactivate category with id %d.", categoryId), e);
                 return null;
@@ -216,7 +222,7 @@ public class CategoryManagementAPIController
     {
         JsonNode docsJson = jsonSolrResponse.get("response").get("docs");
         List<Category> categories = new ArrayList<>();
-        SimpleDateFormat dateParser = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+        SimpleDateFormat dateParser = new SimpleDateFormat(DateFormats.DEFAULT_DATE_FORMAT);
         docsJson.forEach(doc -> {
             try
             {
@@ -239,7 +245,8 @@ public class CategoryManagementAPIController
                 category.setStatus(CategoryStatus.valueOf(doc.get("status_lcs").asText()));
 
                 categories.add(category);
-            } catch (ParseException e)
+            }
+            catch (ParseException e)
             {
                 log.error("Error while parsing date: {} or {}", doc.get("create_date_tdt").asText(), doc.get("modified_date_tdt").asText(),
                         e);

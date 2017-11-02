@@ -28,7 +28,7 @@
                 </a>
                 <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">
                     <li class="{{getActive(link.id)}}" ng-repeat="link in componentLinks">
-                        <a ng-click="onClickComponentLink(link.id)">
+                        <a ng-if="!isNodeDisabled(link.title)" ng-click="onClickComponentLink(link.id)">
                             <i class="{{link.icon}}"></i>
                             <span translate>{{link.title}}</span>
                         </a>

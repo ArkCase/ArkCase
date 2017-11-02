@@ -36,7 +36,7 @@ angular.module('cases').controller('CasesListController', ['$scope', '$state', '
                     objectId: data.objectId
                 });
                 if (frevvoRequest) {
-                    ObjectService.gotoUrl(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
+                    ObjectService.showObject(ObjectService.ObjectTypes.CASE_FILE, data.objectId);
                     MessageService.info(objectWasCreatedMessage);
                 }
                 else {

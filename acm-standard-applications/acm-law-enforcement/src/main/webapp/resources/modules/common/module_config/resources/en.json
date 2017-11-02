@@ -546,6 +546,7 @@
       "error.accessDenied": "Access denied to calendar service.",
       "error.serviceConfiguration": "Invalid calendar service configuration.",
       "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.calendarIntegration": "Calendar Integration Configuration Problem.",
       "error.internalServerError": "Internal Server Error occurred."
     }
   },
@@ -568,7 +569,8 @@
       "error.owninggroupDelete": "Deleting owning group is not allowed.",
       "error.noAccessCombo": "The combination of No Access and Assignee is not allowed.",
       "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
-      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
+      "error.ownerUnique": "Only one owner is allowed."
     }
   },
   "common.directive.progressIndicator": {
@@ -740,7 +742,8 @@
     "radioName": "Choice primary",
     "radioYes.text": "Yes",
     "radioNo.text": "No",
-    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association",
+    "notifyParentOrgWillBeChanged": "The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addObjectAssociation": {
     "title.add": "Add {{objectLabel}} Association",
@@ -769,6 +772,7 @@
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
     "cancelButton": "Cancel",
+    "details.title": "Details",
     "parentOrganization": "Parent Organization",
     "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {
