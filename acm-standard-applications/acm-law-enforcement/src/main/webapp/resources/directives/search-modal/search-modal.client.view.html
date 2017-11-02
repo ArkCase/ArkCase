@@ -17,6 +17,7 @@
                         <button class="btn btn-md btn-primary"
                                 type="button"
                                 ng-click="queryExistingItems()"
+                                ng-hide="hideSearchButton"
                                 ng-disabled="disableSearchControls || (searchQuery.length < minSearchLength)">
                             {{search}}
                         </button>
