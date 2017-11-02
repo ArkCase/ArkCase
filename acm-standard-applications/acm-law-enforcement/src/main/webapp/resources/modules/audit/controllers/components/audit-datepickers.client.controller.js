@@ -12,14 +12,14 @@
 angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Helper.LocaleService',
     function ($scope, LocaleHelper) {
 
-        // $scope.config = null;
-        // $scope.$on('component-config', applyConfig);
-        // function applyConfig(e, componentId, config) {
-        //     if (componentId == 'datepickers') {
-        //         $scope.config = config;
-        //     }
-        // }
-        // $scope.$emit('req-component-config', 'datepickers');
+        $scope.config = null;
+        $scope.$on('component-config', applyConfig);
+        function applyConfig(e, componentId, config) {
+            if (componentId == 'datepickers') {
+                $scope.config = config;
+            }
+        }
+        $scope.$emit('req-component-config', 'datepickers');
 
 
         new LocaleHelper.Locale({scope: $scope});
