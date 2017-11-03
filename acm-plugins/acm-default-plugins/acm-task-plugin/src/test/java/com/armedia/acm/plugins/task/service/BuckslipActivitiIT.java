@@ -306,6 +306,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         task.put("approverId", approverId);
         task.put("taskName", taskName);
         task.put("groupName", groupName);
+        task.put("details", "Task Details");
+        task.put("addedBy", "user");
         task.put("maxTaskDurationInDays", taskDuration);
         futureTasks.put(task);
     }
