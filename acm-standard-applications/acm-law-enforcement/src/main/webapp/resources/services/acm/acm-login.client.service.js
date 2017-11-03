@@ -244,13 +244,17 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
                 // GET https://localhost:8843/arkcase/api/latest/plugin/admin/labelmanagement/resource?ns=goodbye&lang=en
                 // returns 401 Unauthorized status),
                 // "goodbye" page is not called. Call the benign cleanup here to make sure
-
-                //localStorage.removeItem('redirectURL');
-                sessionStorage.removeItem('redirectURL');
-                sessionStorage.removeItem('redirectState');
-                //sessionStorage.removeItem('warningAccepted');
+                AcmLoginService.setLogin(false);
+                sessionStorage.clear();
                 Store.Registry.clearSessionCache();
                 Store.Registry.clearLocalCache();
+                
+                try {
+                    // disconnect websocket
+                    WebSocketService.disconnect();
+                } catch (exc) {
+
+                }
             }
         };
 
