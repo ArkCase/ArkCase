@@ -8,7 +8,8 @@
     "defaultDateTimeFormat": "zh-tw_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "zh-tw_MM/dd/yyyy",
     "defaultDateUIFormat": "zh-tw_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "zh-tw_MM/dd/yyyy HH:mm",
+    "passwordRuleText": "zh-tw_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
   },
   "common.addOrganization": {
     "title": "zh-tw_Add Parent Organization",

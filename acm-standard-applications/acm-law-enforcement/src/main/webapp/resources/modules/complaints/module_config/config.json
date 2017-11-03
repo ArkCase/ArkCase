@@ -655,7 +655,7 @@
       ]
     },
     {
-      "id": "complaints",
+      "id": "people",
       "title": "complaints.comp.people.title",
       "icon": "fa fa-user",
       "className": "com.armedia.acm.plugins.person.model.Person",

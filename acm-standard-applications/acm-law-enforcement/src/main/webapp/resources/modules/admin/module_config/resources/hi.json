@@ -153,7 +153,7 @@
           "lastName": "अंतिम नाम दर्ज करो",
           "email": "ईमेल दर्ज करें",
           "password": "पास वर्ड दर्ज करें",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "hi_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "एक पासवर्ड दर्ज करें जो यूज़रनेम के समान नहीं है, जिसमें कम से कम एक विशेष वर्ण, संख्या, अपरकेस और लोअरकेस अक्षरों के संयोजन के साथ 7 वर्ण हैं।"
         },
@@ -168,7 +168,8 @@
         "firstName": "पहला नाम",
         "lastName": "अंतिम नाम",
         "email": "ईमेल",
-        "password": "पासवर्ड"
+        "password": "पासवर्ड",
+        "confirmation": "hi_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "नाम",

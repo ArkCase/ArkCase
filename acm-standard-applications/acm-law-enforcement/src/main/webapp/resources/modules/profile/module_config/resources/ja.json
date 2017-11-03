@@ -59,7 +59,7 @@
   "profile.modal": {
     "title": "情報",
     "emptyPassword": "空のパスワードを受け入れない",
-    "comfirmation": "パスワードを再入力してください。",
+    "confirmation": "パスワードを再入力してください。",
     "differentPasswords": "パスワードが一致していません。 もう一度お試しください。",
     "ok": "確認",
     "success": "パスワードが正常に変更されました",
