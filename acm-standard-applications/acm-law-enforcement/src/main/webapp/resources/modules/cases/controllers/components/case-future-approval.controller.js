@@ -17,6 +17,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
         $scope.showWithdrawButton = false;
         $scope.initInProgress = false;
         $scope.withdrawInProgress = false;
+        $scope.nonConcurEndsApprovals = true;
 
         var currentUser = '';
 
@@ -73,27 +74,26 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 });
         };
 
-        $scope.$bus.subscribe('buckslip-task-object-updated', function (objectInfo) {
+        var fetchBuckslipProcess = function(buckslipProcess){
+            $scope.buckslipProcess = buckslipProcess;
+            showInitWithdrawButtons($scope.buckslipProcess.businessProcessId);
+            applyFutureTasksDataToGrid($scope.buckslipProcess.futureTasks);
+        };
 
-            var futureTasksGridData = [];
+        $scope.$bus.subscribe('buckslip-task-object-updated', function (objectInfo) {
             //set future tasks
             if(!Util.isEmpty(objectInfo.id)){
                 CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", objectInfo.id)
                     .then(function (response){
-                        $scope.buckslipProcess = response.data[0];
-                        showInitWithdrawButtons($scope.buckslipProcess.businessProcessId);
-                        futureTasksGridData = $scope.buckslipProcess.futureTasks;
-                        applyFutureTasksDataToGrid(futureTasksGridData);
+                        fetchBuckslipProcess(response.data[0]);
                     });
             }
             else if(!Util.isEmpty(objectInfo.buckslipFutureTasks)){
                 $scope.taskInfo = objectInfo;
                 CaseFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType, objectInfo.parentObjectId)
                     .then(function (response){
-                        $scope.buckslipProcess = response.data[0];
-                        showInitWithdrawButtons($scope.buckslipProcess.businessProcessId);
-                        futureTasksGridData = $scope.buckslipProcess.futureTasks;
-                        applyFutureTasksDataToGrid(futureTasksGridData);
+                        fetchBuckslipProcess(response.data[0]);
+                        $scope.nonConcurEndsApprovals = $scope.buckslipProcess.nonConcurEndsApprovals;
                     });
             }
             else {
@@ -137,18 +137,27 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
         $scope.initiateTask = function () {
             if(!Util.isEmpty($scope.buckslipProcess)){
                 $scope.initInProgress = true;
-                CaseFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId)
-                    .then(function (result){
-                        cleanCachedCaseFile($stateParams.id);
-                        $timeout(function(){
-                            $scope.$emit('report-object-refreshed', $stateParams.id);
+                $scope.buckslipProcess.nonConcurEndsApprovals = $scope.nonConcurEndsApprovals;
 
-                            MessageService.info($translate.instant('cases.comp.approvalRouting.processInitialize.successfull'));
-                            $scope.initInProgress = false;
-                        }, 2000);
-                    },function (reason){
-                        MessageService.error($translate.instant('cases.comp.approvalRouting.processInitialize.fail'));
-                    });
+                CaseFutureApprovalService.updateBuckslipProcess($scope.buckslipProcess).then(
+                    function (result){
+                        CaseFutureApprovalService.initiateRoutingWorkflow($scope.buckslipProcess.businessProcessId)
+                            .then(function (result){
+                                cleanCachedCaseFile($stateParams.id);
+                                $timeout(function(){
+                                    $scope.$emit('report-object-refreshed', $stateParams.id);
+                                    MessageService.info($translate.instant('cases.comp.approvalRouting.processInitialize.successfull'));
+
+                                    $scope.initInProgress = false;
+                                }, 2000);
+                            },function (reason){
+                                MessageService.error($translate.instant('cases.comp.approvalRouting.processInitialize.fail'));
+                            });
+                    },
+                    function (reason) {
+                        MessageService.error($translate.instant('cases.comp.approvalRouting.businessProcessUpdate.fail'));
+                    }
+                );
             }
         };
 
@@ -161,8 +170,9 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                         $timeout(function(){
                             $scope.$emit('report-object-refreshed', $stateParams.id);
                             $scope.$bus.publish('buckslip-task-object-updated', {'id': $stateParams.id});
-
                             MessageService.info($translate.instant('cases.comp.approvalRouting.processWithdraw.successfull'));
+
+                            $scope.nonConcurEndsApprovals = true;
                             $scope.withdrawInProgress = false;
                         }, 2000);
                     }, function (reason){

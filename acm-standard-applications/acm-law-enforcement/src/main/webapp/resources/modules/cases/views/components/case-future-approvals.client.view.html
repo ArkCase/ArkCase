@@ -1,4 +1,10 @@
 <div ng-controller="Cases.FutureApprovalRoutingController">
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" ng-model="nonConcurEndsApprovals" ng-disabled="showInitButton == false">
+            <span translate>cases.comp.approvalRouting.checkbox.nonConcurEndsApprovalCycle</span>
+        </label>
+    </div>
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
