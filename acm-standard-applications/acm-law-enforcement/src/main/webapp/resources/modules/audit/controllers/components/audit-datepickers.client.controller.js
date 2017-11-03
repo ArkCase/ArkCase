@@ -1,10 +1,6 @@
 'use strict';
 
-angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Helper.LocaleService',
-    function ($scope, LocaleHelper) {
-
-        new LocaleHelper.Locale({scope: $scope});
-
+angular.module('audit').controller('Audit.DatepickersController', ['$scope', function ($scope) {
 
         $scope.dateFrom = new Date();
         $scope.dateTo = new Date();
