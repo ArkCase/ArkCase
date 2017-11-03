@@ -72,16 +72,18 @@ angular.module('services').factory('UserActivityService', ['$document', '$timeou
              * Start user activity monitoring
              */
             start: function (newTimeout, newCallback) {
-                this.stop();
-
-                _.forEach(userEvents, function (event) {
-                    $document.bind(event, userAction);
-                });
-
-                timeout = newTimeout;
-                callbacFunc = newCallback;
-
-                updateTimer();
+                if (newTimeout) {
+                    this.stop();
+    
+                    _.forEach(userEvents, function (event) {
+                        $document.bind(event, userAction);
+                    });
+    
+                    timeout = newTimeout;
+                    callbacFunc = newCallback;
+    
+                    updateTimer();
+                }
             },
 
             /**
