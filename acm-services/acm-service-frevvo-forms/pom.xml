@@ -91,6 +91,11 @@
             <artifactId>acm-reload-properties</artifactId>
             <version>${acm.version}</version>
         </dependency>
+        <dependency>
+        	<groupId>com.armedia.acm.acm-tool-integrations</groupId>
+    		<artifactId>acm-object-converter</artifactId>
+    		<version>${acm.version}</version>
+        </dependency>
 
         <!-- spring -->
         <dependency>

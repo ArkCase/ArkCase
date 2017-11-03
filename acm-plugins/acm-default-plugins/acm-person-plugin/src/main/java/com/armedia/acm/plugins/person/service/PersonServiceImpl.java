@@ -8,6 +8,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -23,9 +24,7 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -72,6 +71,7 @@ public class PersonServiceImpl implements PersonService
     private AcmFolderService acmFolderService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private PersonEventPublisher personEventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public Person get(Long id)
@@ -160,7 +160,8 @@ public class PersonServiceImpl implements PersonService
                     String value = identification.getIdentificationNumber();
 
                     person = (Person) FrevvoFormUtils.set(person, key, value);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     log.debug(
                             "Silent catch of exception while setting value of the property in the object Person. The property name maybe not exist, but execution should go forward.");
@@ -262,7 +263,8 @@ public class PersonServiceImpl implements PersonService
             metadata.setFileName(fileName);
             uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId,
                     picturesFolderObj.getCmisFolderId(), uniqueFileName, image.getInputStream(), metadata);
-        } else
+        }
+        else
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
@@ -328,19 +330,8 @@ public class PersonServiceImpl implements PersonService
             Person oldPerson = null;
             if (!isNew)
             {
-                ObjectMapperFactory factory = new ObjectMapperFactory();
-                ObjectMapper om = factory.createObjectMapper();
-                try
-                {
-                    String old = om.writeValueAsString(personDao.find(in.getId()));
-                    oldPerson = om.readValue(old, Person.class);
-                } catch (JsonProcessingException e)
-                {
-                    log.error("JsonProcessingException ", e);
-                } catch (IOException e)
-                {
-                    log.error("IOException ", e);
-                }
+                String old = getObjectConverter().getJsonMarshaller().marshal(personDao.find(in.getId()));
+                oldPerson = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Person.class);
             }
             Person person = personDao.save(in);
             personEventPublisher.publishPersonUpsertEvents(person, oldPerson, isNew, true);
@@ -351,9 +342,12 @@ public class PersonServiceImpl implements PersonService
     /**
      * Validates the {@link PersonOrganizationAssociation}.
      *
-     * @param person the {@link Person} to validate
-     * @throws AcmCreateObjectFailedException         when at least one of the {@link PersonOrganizationAssociation} is not valid.
-     * @throws AcmDuplicatePersonAssociationException when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @param person
+     *            the {@link Person} to validate
+     * @throws AcmCreateObjectFailedException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @throws AcmDuplicatePersonAssociationException
+     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
      */
     private void validateOrganizationAssociations(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
@@ -398,9 +392,12 @@ public class PersonServiceImpl implements PersonService
     /**
      * save person data
      *
-     * @param person         person data
-     * @param pictures       person pictures
-     * @param authentication authentication
+     * @param person
+     *            person data
+     * @param pictures
+     *            person pictures
+     * @param authentication
+     *            authentication
      * @return Person saved person
      * @throws PipelineProcessException
      */
@@ -430,10 +427,12 @@ public class PersonServiceImpl implements PersonService
                     {
                         hasDefaultPicture = true;
                     }
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
-                } catch (AcmObjectNotFoundException e)
+                }
+                catch (AcmObjectNotFoundException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
                 }
@@ -492,7 +491,8 @@ public class PersonServiceImpl implements PersonService
     }
 
     /**
-     * @param personEventPublisher the personEventPublisher to set
+     * @param personEventPublisher
+     *            the personEventPublisher to set
      */
     public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
     {
@@ -507,5 +507,15 @@ public class PersonServiceImpl implements PersonService
     public void setPersonPipelineManager(PipelineManager<Person, PersonPipelineContext> personPipelineManager)
     {
         this.personPipelineManager = personPipelineManager;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

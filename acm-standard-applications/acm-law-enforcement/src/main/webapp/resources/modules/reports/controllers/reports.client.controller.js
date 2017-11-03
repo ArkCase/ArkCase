@@ -1,26 +1,8 @@
 'use strict';
 
-/**
- * @ngdoc controller
- * @name reports.controller:ReportsController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/reports/controllers/reports.client.controller.js modules/reports/controllers/reports.client.controller.js}
- *
- * The Reports module main controller
- */
-
 angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
     'Reports.BuildUrl', '$q', 'Reports.Data', '$window'
     , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data, $window) {
-
-        $scope.$on('req-component-config', function (e, componentId) {
-            promiseModuleConfig.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-                return config;
-            });
-        });
 
         $scope.showXmlReport = false;
         

@@ -9,4 +9,5 @@ public interface OrganizationConstants
 
     String SUB_COMPANY = "SubCompany";
     String PARENT_COMPANY = "ParentCompany";
+    String PARTNER_COMPANY = "Partner";
 }

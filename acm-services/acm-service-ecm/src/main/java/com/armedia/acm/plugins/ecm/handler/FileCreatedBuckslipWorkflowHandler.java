@@ -29,6 +29,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
     private RuntimeService activitiRuntimeService;
 
+    private ObjectConverter objectConverter;
+
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -98,7 +100,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
     private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy, int maxDurationInDays)
     {
-        AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
+        AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
         List<BuckslipFutureTask> futureTasks = new ArrayList<>();
 
         approvers.forEach(approver -> {
@@ -135,5 +137,15 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

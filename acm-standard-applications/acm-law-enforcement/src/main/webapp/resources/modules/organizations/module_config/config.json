@@ -163,7 +163,7 @@
       {
         "type": "p/ORGANIZATION/peo",
         "label": "organizations.tree.nodeTypes.people.label",
-        "icon": "fa fa-users",
+        "icon": "fa fa-user",
         "components": [
           "people"
         ]
@@ -1072,7 +1072,7 @@
     {
       "id": "people",
       "title": "organizations.comp.people.title",
-      "icon": "fa fa-users",
+      "icon": "fa fa-user",
       "enabled": true,
       "configurable": true,
       "type": "grid",

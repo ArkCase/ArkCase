@@ -153,7 +153,7 @@
           "lastName": "Insira o sobrenome",
           "email": "Digite e-mail",
           "password": "Digite a senha",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "pt_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "Digite uma senha que não seja o mesmo nome de usuário, contendo 7 caracteres com a combinação de pelo menos um caractere especial, número, letras maiúsculas e minúsculas."
         },
@@ -168,7 +168,8 @@
         "firstName": "Primeiro nome",
         "lastName": "Último nome",
         "email": "O email",
-        "password": "Senha"
+        "password": "Senha",
+        "confirmation": "pt_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "Nome",

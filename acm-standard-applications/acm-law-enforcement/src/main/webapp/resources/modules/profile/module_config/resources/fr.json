@@ -59,7 +59,7 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Le mot de passe ne peut pas être vide",
-    "comfirmation": "Veuillez retaper votre mot-de-passe.",
+    "confirmation": "Veuillez retaper votre mot-de-passe.",
     "differentPasswords": "Les mots de passe ne correspondent pas. Veuillez réessayer.",
     "ok": "D'accord",
     "success": "Mot de passe modifié avec succès",
