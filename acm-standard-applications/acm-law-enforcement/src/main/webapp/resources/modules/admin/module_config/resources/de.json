@@ -74,6 +74,10 @@
       "syncPageSize": "Paging-Größe eingeben",
       "groupSearchFilter": "Geben Sie den Suchfilter für Gruppen ein (z. B. (objectClass = group))",
       "groupsSortingAttribute": "Geben Sie das Attribut für das Sortieren von Gruppen ein (z. B. 'gidNumber')",
+      "allChangedUsersFilter": "de_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "de_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "de_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "de_Enter filter including sort-attribute for all changed groups",
       "groupSearchPageFilter": "Geben Sie einen Filter einschließlich Sortierattribut ein (z. B. (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Überprüfen Sie, ob die Verwaltung von Benutzern und Gruppen in Ihrem DS zulässig ist."
     },
