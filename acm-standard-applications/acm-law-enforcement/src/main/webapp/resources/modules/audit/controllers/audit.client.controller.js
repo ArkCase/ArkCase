@@ -1,16 +1,5 @@
 'use strict';
 
-//Please do not document controller as ngdoc format
-
-///**
-// * @ngdoc controller
-// * @name audit.controller:AuditController
-// *
-// * @description
-// * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/audit/controllers/audit.client.controller.js modules/audit/controllers/audit.client.controller.js}
-// *
-// * The Audit module main controller
-// */
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
     'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window'
     , function ($scope, $sce, $q, ConfigService, LookupService, BuildUrl, Util, UtilDateService, $window) {
@@ -20,14 +9,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         });
 
         $scope.showXmlReport = false;
-        
-        $scope.$on('req-component-config', function (e, componentId) {
-            promiseModuleConfig.then(function (config) {
-                var componentConfig = _.find(config.components, {id: componentId});
-                $scope.$broadcast('component-config', componentId, componentConfig);
-                return config;
-            });
-        });
 
         $scope.$on('send-type-id', getObjectValues);
         $scope.$on('send-date', getDateValues);
@@ -37,11 +18,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         $scope.dateFrom = null;
         $scope.dateTo = null;
 
-        //$scope.showIframe = showIframe;
-
-
         /**
-         * @ngdoc method
          * @name getObjectValues
          * @methodOf audit.controller:AuditController
          *
@@ -59,7 +36,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         }
 
         /**
-         * @ngdoc method
          * @name getDateValues
          * @methodOf audit.controller:AuditController
          *
@@ -73,12 +49,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {Object} dateTo Object of type date that represents value for date chosen from dateTo input
          */
         function getDateValues(e, dateFrom, dateTo) {
-            $scope.dateFrom = UtilDateService.goodIsoDate(dateFrom);
-            $scope.dateTo = UtilDateService.goodIsoDate(dateTo);
-
-            if (moment($scope.dateFrom).isAfter($scope.dateTo)) {
-                $scope.$broadcast('fix-date-values', $scope.dateFrom, $scope.dateFrom);
-            }
+            $scope.dateFrom = dateFrom;
+            $scope.dateTo = dateTo;
         }
 
         // Retrieves the properties from the acm-reports-server-config.properties file
@@ -100,7 +72,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             });
 
         /**
-         * @ngdoc method
          * @name showIframe
          * @methodOf audit.controller:AuditController
          *
