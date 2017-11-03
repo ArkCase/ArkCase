@@ -40,6 +40,7 @@
             <property name="outlookDao" ref="exchangeWebServicesOutlookDao"/>
             <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
             <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
+            <property name="folderRecreator" ref="outlookFolderRecreator"/>
         </bean>
 
 </beans>

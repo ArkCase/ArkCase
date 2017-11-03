@@ -104,7 +104,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
                     $scope.group = {};
-
+                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
                     $scope.ok = function () {
                         $modalInstance.close($scope.group);
                     };
@@ -783,19 +783,4 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
     }
-])
-    .directive("pwCheck", [function () {        //Check if password contains userId
-            return {
-                require: 'ngModel',
-                link: function (scope, elem, attrs, ctrl) {
-                    var userId = '#' + attrs.pwCheck;
-                    elem.on('keyup', function () {
-                        scope.$apply(function () {
-                            var v = elem.val().indexOf($(userId).val()) >= 0;
-                            ctrl.$setValidity('pwContains', !v);
-                        });
-                    });
-                }
-            }
-        }]
-    );
+]);

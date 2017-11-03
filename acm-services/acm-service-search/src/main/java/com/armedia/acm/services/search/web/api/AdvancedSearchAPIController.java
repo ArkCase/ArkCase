@@ -25,7 +25,7 @@ public class AdvancedSearchAPIController
 
     private ExecuteSolrQuery executeSolrQuery;
 
-    @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String advancedSearch(
             @RequestParam(value = "q", required = true) String query,

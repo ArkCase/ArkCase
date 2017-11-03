@@ -84,6 +84,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             var item = {
                 id: rowEntity.id,
                 type: rowEntity.type,
+                subLookup: rowEntity.subType,
                 subType: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description

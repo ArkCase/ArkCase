@@ -104,9 +104,34 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 method: 'DELETE',
                 url: 'api/v1/service/participant/:participantId/:participantType',
                 cache: false
+            },
+
+            /**
+             * @ngdoc method
+             * @name checkPersonGroup
+             * @methodOf services:Object.ParticipantService
+             *
+             * @description
+             * Check if a participant is a member of a group.
+             *
+             * @param {Object} params Map of input parameter
+             * @param {String} params.objectType  Object type
+             * @param {String} params.objectId  Object ID
+             * @param {String} params.participantId  Participant ID
+             * @param {String} params.groupId  Group ID
+             * @param {Function} onSuccess (Optional)Callback function of success query
+             * @param {Function} onError (Optional) Callback function when fail
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            checkGroupForParticipant: {
+                method: 'GET',
+                url: 'api/v1/plugin/search/advancedSearch?q=object_type_s\\:USER+' +
+                '+AND+object_id_s\\::participantId+AND+groups_id_ss\\::owningGroup',
+                data: ''
             }
 
-        });
+    });
 
         /**
          * @ngdoc method
@@ -327,14 +352,15 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
             if (_.filter(data, function (pa) {
-                    return Util.compare("owning group", pa.participantType);
+                    return Util.compare("owner", pa.participantType);
                 }).length > 1) {
-                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.ownerUnique"));
                 return false;
             }
             if (_.filter(data, function (pa) {
-                    return Util.compare(" ", pa.participantType);
+                    return Util.compare("owning group", pa.participantType);
                 }).length > 1) {
+                MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                 return false;
             }
             return true;
@@ -397,6 +423,33 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
             return true;
+        };
+
+        /**
+         * @ngdoc method
+         * @name isParticipantMemberOfGroup
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Query if participant(owner/assignee) belongs to selected group
+         *
+         * @param {String} participantId  Participant id
+         *
+         * @returns {Object} participant data
+         */
+        Service.isParticipantMemberOfGroup = function (participantId, owningGroup) {
+            return Util.serviceCall({
+                service: Service.checkGroupForParticipant
+                , param: {
+                    participantId: participantId,
+                    owningGroup: owningGroup
+                }
+                , onSuccess: function (data) {
+                    if (data.response) {
+                        return data.response.docs.length>0?true:false;
+                    }
+                }
+            })
         };
 
         return Service;
