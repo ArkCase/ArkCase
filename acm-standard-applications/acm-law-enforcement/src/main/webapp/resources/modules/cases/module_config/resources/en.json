@@ -302,6 +302,9 @@
       "initiate.tooltip": "Initiate Task",
       "withdraw.tooltip": "Withdraw Task"
     },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "Non-concur ends the approval cycle"
+    },
     "table.columns": {
       "assignee": "Assignee",
       "group": "Owning Group",
