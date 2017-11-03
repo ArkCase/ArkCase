@@ -4,5 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+	<changeSet id="01-drop-column-cm_address_id" author="bojan.milenkoski">
+        <preConditions onFail="MARK_RAN">
+            <and>
+                <columnExists tableName="acm_complaint" columnName="cm_address_id"/>
+                <foreignKeyConstraintExists foreignKeyName="fk_complaint_address_id"/>
+            </and>
+        </preConditions>
+        <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_complaint_address_id"/>
+        <dropColumn tableName="acm_complaint" columnName="cm_address_id"/>
+    </changeSet>
 </databaseChangeLog>
 
