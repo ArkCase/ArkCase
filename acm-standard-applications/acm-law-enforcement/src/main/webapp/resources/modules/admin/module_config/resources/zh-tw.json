@@ -74,6 +74,10 @@
       "syncPageSize": "輸入分頁大小",
       "groupSearchFilter": "輸入組搜索過濾器（例如（objectClass = group））",
       "groupsSortingAttribute": "輸入排序組的屬性（例如“gidNumber”）",
+      "allChangedUsersFilter": "zh-tw_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "zh-tw_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "zh-tw_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "zh-tw_Enter filter including sort-attribute for all changed groups",
       "groupSearchPageFilter": "輸入包含sort-attribute（例如（＆（objectClass = group）（gidNumber> =％s））的過濾器））",
       "enableEditingLdapUsers": "檢查是否允許管理您的DS的用戶和組"
     },
