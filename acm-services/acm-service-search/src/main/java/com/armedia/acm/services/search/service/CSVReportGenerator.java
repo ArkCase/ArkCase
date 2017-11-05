@@ -31,26 +31,17 @@ public class CSVReportGenerator extends ReportGenerator
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public byte[] generateReport(String[] requestedFields, String jsonData)
+    public String generateReport(String[] requestedFields, String[] titles, String jsonData)
     {
         JSONObject jsonResult = new JSONObject(jsonData);
         JSONObject jsonResponse = jsonResult.getJSONObject("response");
         JSONArray jsonDocs = jsonResponse.getJSONArray("docs");
 
-        JSONObject headerFields = findHeaderFields();
-
         StringBuilder sb = new StringBuilder();
 
         List<String> headers = new ArrayList<>();
-        for (String field : requestedFields)
-        {
-            if (headerFields.has(field))
-            {
-                headers.add(purifyForCSV(headerFields.getString(field)));
-            } else
-            {
-                log.warn("Field '{}' not found in searchPlugin.properties", field);
-            }
+        for (String title : titles) {
+            headers.add(purifyForCSV(title));
         }
 
         String headersLine = headers.stream().collect(Collectors.joining(SearchConstants.SEPARATOR_COMMA));
@@ -95,13 +86,14 @@ public class CSVReportGenerator extends ReportGenerator
             sb.deleteCharAt(sb.length() - 1);
             sb.append("\n");
         }
-        return sb.toString().getBytes();
+        return sb.toString();
     }
 
     public String getReportContentType()
     {
-        return "text/csv";
+        return "text/csv;charset=UTF-8";
     }
+
 
     @Override
     public String generateReportName(String name)

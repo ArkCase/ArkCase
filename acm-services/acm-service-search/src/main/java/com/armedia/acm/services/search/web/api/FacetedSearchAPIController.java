@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -44,7 +45,7 @@ public class FacetedSearchAPIController
     private FacetedSearchService facetedSearchService;
 
     // For EXPORT, set parameter export =(eg. 'csv') & fields = [fields that should be exported]!
-    @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String mainNotFilteredFacetedSearch(
             @RequestParam(value = "q", required = true) String q,
@@ -57,6 +58,7 @@ public class FacetedSearchAPIController
                     defaultValue = "parent_number_lcs, parent_type_s, modified_date_tdt") String[] exportFields,
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
+            @RequestParam(value = "titles", required = false) String[] exportTitles,
             HttpServletResponse response,
             Authentication authentication
     ) throws MuleException, UnsupportedEncodingException
@@ -115,13 +117,21 @@ public class FacetedSearchAPIController
 
         if (StringUtils.isNotEmpty(export))
         {
+            if (null != exportTitles) {
+                for (int i = 0; i < exportTitles.length; i++) {
+                    exportTitles[i] = new String(exportTitles[i].getBytes("ISO-8859-1"), "UTF-8");
+                }
+            } else {
+                exportTitles = exportFields;
+            }
+
             try
             {
                 // Get the appropriate generator for the requested file type
                 ReportGenerator generator = (ReportGenerator) springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
-                byte[] output = generator.generateReport(exportFields, res);
-                export(generator, output, response, reportName);
+                String content = generator.generateReport(exportFields, exportTitles, res);
+                export(generator, content, response, reportName);
             } catch (NoSuchBeanDefinitionException e)
             {
                 log.error(String.format("Bean of type: %sReportGenerator is not defined", export.toLowerCase()));
@@ -134,15 +144,16 @@ public class FacetedSearchAPIController
         return res;
     }
 
-    public void export(ReportGenerator generator, byte[] bytes, HttpServletResponse response, String reportName)
+    public void export(ReportGenerator generator, String content, HttpServletResponse response, String reportName)
     {
-        try (OutputStream outputStream = response.getOutputStream())
+        try (PrintWriter writer = response.getWriter())
         {
             response.setContentType(generator.getReportContentType());
             response.setHeader("Content-Disposition",
                     String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
-            response.setContentLength(bytes.length);
-            outputStream.write(bytes);
+            response.setContentLength(content.length());
+            writer.write(content);
+            writer.flush();
         } catch (IOException e)
         {
             log.error("Unable to generate report document. Exception msg: '{}'", e.getMessage());
