@@ -1,16 +1,14 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.plugins.person.model.Organization;
-import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
-import com.armedia.acm.plugins.person.service.OrganizationService;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -26,18 +24,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.armedia.acm.auth.AuthenticationUtils;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
+import com.armedia.acm.plugins.person.service.OrganizationService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 @Controller
-@RequestMapping(value = { "/api/v1/plugin/organizations", "/api/latest/plugin/organizations" })
+@RequestMapping(value = {"/api/v1/plugin/organizations", "/api/latest/plugin/organizations"})
 public class OrganizationAPIController
 {
 
@@ -154,7 +154,12 @@ public class OrganizationAPIController
         Organization parent = organization.getParentOrganization();
         while (parent != null)
         {
-            filteredOrganizations.add(Long.toString(parent.getOrganizationId()));
+            String parentId = Long.toString(parent.getOrganizationId());
+            if (filteredOrganizations.contains(parentId))
+            {
+                break;
+            }
+            filteredOrganizations.add(parentId);
             parent = parent.getParentOrganization();
         }
 
