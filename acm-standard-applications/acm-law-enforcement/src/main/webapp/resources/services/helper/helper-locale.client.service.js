@@ -34,7 +34,7 @@ angular.module('services').factory('Helper.LocaleService', ['$locale', 'UtilServ
                 that.scope = arg.scope;
                 that.scope.lang = LocaleService.getLocaleData().code;
                 that.scope.locale = $locale;
-                that.scope.currencySymbol = LocaleService.getCurrencySymbol(data.lang);
+                that.scope.currencySymbol = LocaleService.getCurrencySymbol($locale.id);
                 that.scope.$bus.subscribe('$translateChangeSuccess', function (data) {
                     that.scope.lang = Util.goodMapValue(data, "lang", LocaleService.getLocaleData().code);
                     that.scope.locale = $locale;

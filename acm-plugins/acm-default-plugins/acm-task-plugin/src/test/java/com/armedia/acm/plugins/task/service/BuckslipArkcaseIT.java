@@ -227,8 +227,7 @@ public class BuckslipArkcaseIT
         assertTrue(acmTask.getBuckslipPastApprovers().contains("samuel-acm"));
         assignee = new UsernamePasswordAuthenticationToken("ian-acm", "ian-acm");
 
-        ObjectConverter converter = ObjectConverter.createJSONConverter();
-        String jsonTask = converter.getMarshaller().marshal(acmTask);
+        String jsonTask = ObjectConverter.createJSONMarshallerForTests().marshal(acmTask);
         LOG.debug("json task: {}", jsonTask);
 
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "NON_CONCUR");
@@ -346,7 +345,6 @@ public class BuckslipArkcaseIT
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
-
 
         // no more tasks
         acmTask = findAcmTaskForProcess();

@@ -1,8 +1,9 @@
 package com.armedia.acm.data;
 
-import java.util.Date;
+import java.io.Serializable;
 
-public class BuckslipFutureTask
+
+public class BuckslipFutureTask implements Serializable
 {
     private String approverId;
     private String taskName;

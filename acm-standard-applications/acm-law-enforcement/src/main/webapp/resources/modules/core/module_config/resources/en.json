@@ -491,6 +491,22 @@
         "cancel": "Cancel Document",
         "concur": "Concur",
         "nonConcur": "Non-Concur"
+      },
+      "reportStates": {
+        "draft": "Draft",
+        "inApproval": "In Approval",
+        "active": "Active",
+        "inActive": "Inactive",
+        "closed": "Closed"
+      },
+      "auditReportNames": {
+        "cases": "Case Files",
+        "complaints": "Complaints Approval",
+        "tasks": "Tasks",
+        "files": "Files",
+        "documents": "Documents",
+        "people": "People",
+        "organizations": "Organizations"
       }
     },
     "userInfo": {

@@ -59,7 +59,7 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "A senha não pode estar vazia",
-    "comfirmation": "Por favor, digite sua senha novamente.",
+    "confirmation": "Por favor, digite sua senha novamente.",
     "differentPasswords": "As senhas não correspondem. Por favor, tente novamente.",
     "ok": "OK",
     "success": "Senha alterada com sucesso",

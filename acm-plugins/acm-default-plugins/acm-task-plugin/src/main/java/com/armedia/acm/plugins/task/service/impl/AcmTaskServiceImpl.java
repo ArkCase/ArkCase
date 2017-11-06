@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -33,7 +34,6 @@ import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -84,7 +84,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
-    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+    private ObjectConverter objectConverter;
 
     @Override
     public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException
@@ -126,18 +126,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
             bp.setPastTasks(((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PAST_TASKS)));
 
             String futureTasksJson = ((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS));
-            try
-            {
-                List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ?
-                        new ArrayList<>() :
-                        objectMapper.readValue(futureTasksJson,
-                                objectMapper.getTypeFactory().constructParametricType(List.class, BuckslipFutureTask.class));
-                bp.setFutureTasks(futureTasks);
-            } catch (IOException e)
-            {
-                log.error("could not read future tasks: {}", e.getMessage(), e);
-            }
 
+            List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ?
+                    new ArrayList<>() :
+                    getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
+            bp.setFutureTasks(futureTasks);
             buckslipProcesses.add(bp);
         }
         return buckslipProcesses;
@@ -171,35 +164,28 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException
     {
-        try
+        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+        if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
         {
-            String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
-            if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
-            {
-                return objectMapper.readValue(futureTasksJson,
-                        objectMapper.getTypeFactory().constructParametricType(List.class, BuckslipFutureTask.class));
+            List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
+            if (buckslipFutureTasks == null) {
+                throw new AcmTaskException(String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
             }
-
-            return new ArrayList<>();
-        } catch (IOException e)
-        {
-            throw new AcmTaskException(String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
+            return buckslipFutureTasks;
         }
+        return new ArrayList<>();
     }
 
     @Override
     public void setBuckslipFutureTasks(String businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
     {
-        try
-        {
-            String futureTasksJson = objectMapper.writeValueAsString(buckslipFutureTasks);
-            taskDao.writeProcessVariable(businessProcessId,
-                    TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
-                    futureTasksJson);
-        } catch (JsonProcessingException e)
-        {
-            throw new AcmTaskException(String.format("Could not set future tasks: %s", e.getMessage()), e);
+        String futureTasksJson = getObjectConverter().getJsonMarshaller().marshal(buckslipFutureTasks);
+        if (futureTasksJson == null) {
+            throw new AcmTaskException("Could not set future tasks");
         }
+        taskDao.writeProcessVariable(businessProcessId,
+                TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
+                futureTasksJson);
     }
 
     @Override
@@ -608,5 +594,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao)
     {
         this.acmParticipantDao = acmParticipantDao;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

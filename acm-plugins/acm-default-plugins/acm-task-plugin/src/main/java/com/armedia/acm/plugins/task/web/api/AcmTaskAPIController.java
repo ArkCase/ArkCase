@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.web.api;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,13 @@ public class AcmTaskAPIController
 
     private AcmTaskService acmTaskService;
 
-    @RequestMapping(value = "/getBuckslipFutureTasks/businessProcessId/{businessProcessId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/businessProcess/{id}/futureTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipFutureTasks(@PathVariable("businessProcessId") String businessProcessId)
+    public ResponseEntity<?> getBuckslipFutureTasks(@PathVariable("id") String businessProcessId)
     {
         try
         {
-            log.info("Trying to fetch the Buckslip Future Tasks");
+            log.info("Trying to fetch the Future Tasks from Business Process {}", businessProcessId);
             return new ResponseEntity<List<BuckslipFutureTask>>(getAcmTaskService().getBuckslipFutureTasks(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -37,13 +38,13 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/getBuckslipPastTasks/businessProcessId/{businessProcessId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/businessProcess/{id}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("businessProcessId") String businessProcessId)
+    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId)
     {
         try
         {
-            log.info("Trying to fetch the Buckslip Past Tasks");
+            log.info("Trying to fetch the Past Tasks from Business Process {}", businessProcessId);
             return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -52,9 +53,9 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/getBuckslipProcessesForChildren/objectType/{objectType}/objectId/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/objectType/{type}/objectId/{id}/buckslipProcessesForChildren", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId)
+    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId)
     {
         try
         {
@@ -67,13 +68,13 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/isWorkflowInitiable/businessProcessId/{businessProcessId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/businessProcess/{id}/initiatable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> isWorkflowInitiable(@PathVariable("businessProcessId") String businessProcessId)
+    public ResponseEntity<?> isWorkflowInitiable(@PathVariable("id") String businessProcessId)
     {
         try
         {
-            log.info("Checking is the routing workflow initiable");
+            log.info("Checking is the routing workflow for Business Process {} initiable", businessProcessId);
             return new ResponseEntity<Boolean>(getAcmTaskService().isInitiatable(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -82,13 +83,13 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/isWorkflowWithdrawable/businessProcessId/{businessProcessId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/businessProcess/{id}/withdrawable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> isWorkflowWithdrawable(@PathVariable("businessProcessId") String businessProcessId)
+    public ResponseEntity<?> isWorkflowWithdrawable(@PathVariable("id") String businessProcessId)
     {
         try
         {
-            log.info("Checking is the routing workflow withdrawable");
+            log.info("Checking is the routing workflow for Business Process {] withdrawable", businessProcessId);
             return new ResponseEntity<Boolean>(getAcmTaskService().isWithdrawable(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -97,14 +98,14 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/initiateRoutingWorkflow/businessProcessId/{businessProcessId}/receiveTaskId/{receiveTaskId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/businessProcess/{id}/initiate", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> initiateRoutingWorkflow(@PathVariable("businessProcessId") String businessProcessId, @PathVariable("receiveTaskId") String receiveTaskId)
+    public ResponseEntity<?> initiateRoutingWorkflow(@PathVariable("id") String businessProcessId)
     {
         try
         {
-            log.info("Initiating routing workflow with busines process Id {}", businessProcessId);
-            getAcmTaskService().signalTask(businessProcessId, receiveTaskId);
+            log.info("Initiating routing workflow with Business Process {}", businessProcessId);
+            getAcmTaskService().signalTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -113,14 +114,14 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/withdrawRoutingWorkflow/taskId/{taskId}/messageName/{messageName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{taskId}/withdraw", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> withdrawRoutingWorkflow(@PathVariable("taskId") Long taskId, @PathVariable("messageName") String messageName)
+    public ResponseEntity<?> withdrawRoutingWorkflow(@PathVariable("taskId") Long taskId)
     {
         try
         {
             log.info("Withdrawing routing workflow with task Id {}", taskId);
-            getAcmTaskService().messageTask(taskId, messageName);
+            getAcmTaskService().messageTask(taskId, "Withdraw Message");
             return new ResponseEntity<Void>(HttpStatus.OK);
         }
         catch (AcmTaskException e)
@@ -129,7 +130,7 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/updateBuckslipProcess", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/buckslipProcesses", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public ResponseEntity<?> updateBuckslipProcess(@RequestBody BuckslipProcess buckslipProcess)
     {

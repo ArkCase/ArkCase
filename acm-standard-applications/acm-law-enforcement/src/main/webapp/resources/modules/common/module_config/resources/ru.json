@@ -8,7 +8,8 @@
     "defaultDateTimeFormat": "ru_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "ru_MM/dd/yyyy",
     "defaultDateUIFormat": "ru_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "ru_MM/dd/yyyy HH:mm"
+    "defaultDateTimeUIFormat": "ru_MM/dd/yyyy HH:mm",
+    "passwordRuleText": "ru_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
   },
   "common.addOrganization": {
     "title": "ru_Add Parent Organization",

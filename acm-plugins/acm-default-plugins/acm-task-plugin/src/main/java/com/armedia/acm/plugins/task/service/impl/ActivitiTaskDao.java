@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -25,12 +26,10 @@ import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListe
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
+import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
 import org.activiti.bpmn.model.FormProperty;
@@ -93,7 +92,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private TaskEventPublisher taskEventPublisher;
     private AcmUserService acmUserService;
 
-    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+    private ObjectConverter objectConverter;
 
     @Override
     public List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables)
@@ -286,7 +285,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 getActivitiTaskService().setVariable(
                         activitiTask.getId(),
                         TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
-                        objectMapper.writeValueAsString(in.getBuckslipFutureTasks()));
+                        getObjectConverter().getJsonMarshaller().marshal(in.getBuckslipFutureTasks()));
             }
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -332,7 +331,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             }
 
             return in;
-        } catch (ActivitiException | JsonProcessingException e)
+        } catch (ActivitiException e)
         {
             throw new AcmTaskException(e.getMessage(), e);
         }
@@ -1493,8 +1492,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         String jsonFutureTasks = (String) processVariables.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
         if (jsonFutureTasks != null && !jsonFutureTasks.trim().isEmpty())
         {
-            return objectMapper.readValue(jsonFutureTasks,
-                    objectMapper.getTypeFactory().constructParametricType(List.class, BuckslipFutureTask.class));
+            return getObjectConverter().getJsonUnmarshaller().unmarshallCollection(jsonFutureTasks, List.class, BuckslipFutureTask.class);
         }
 
         return new ArrayList<>();
@@ -1648,6 +1646,16 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
     @Override

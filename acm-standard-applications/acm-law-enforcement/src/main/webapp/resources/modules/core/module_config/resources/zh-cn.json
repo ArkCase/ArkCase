@@ -491,6 +491,22 @@
         "cancel": "取消文件",
         "concur": "同意",
         "nonConcur": "不同意"
+      },
+      "reportStates": {
+        "draft": "cn_Draft",
+        "inApproval": "cn_In Approval",
+        "active": "cn_Active",
+        "inActive": "cn_Inactive",
+        "closed": "cn_Closed"
+      },
+      "auditReportNames": {
+        "cases": "cn_Case Files",
+        "complaints": "cn_Complaints Approval",
+        "tasks": "cn_Tasks",
+        "files": "cn_Files",
+        "documents": "cn_Documents",
+        "people": "cn_People",
+        "organizations": "cn_Organizations"
       }
     },
     "userInfo": {
