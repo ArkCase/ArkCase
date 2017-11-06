@@ -13,11 +13,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by armdev on 4/8/14.
@@ -44,7 +40,7 @@ public class ComplaintFactory
         location.setZip("12345");
         location.setType("home");
 
-        complaint.setLocation(location);
+        complaint.setAddresses(new ArrayList<>(Arrays.asList(location)));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());

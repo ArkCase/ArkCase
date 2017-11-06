@@ -44,6 +44,7 @@
         <property name="personOwnFolder" value="${person.folder.own.spel}"/>
         <property name="picturesFolder" value="${person.folder.pictures}"/>
         <property name="personPipelineManager" ref="personPipelineManager"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
@@ -76,9 +77,13 @@
     </bean>
 
     <bean id="personAssociationEventPublisher"
-          class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher"/>
+          class="com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher">
+    	<property name="objectConverter" ref="objectConverter"/>
+    </bean>
     <bean id="organizationAssociationEventPublisher"
-          class="com.armedia.acm.plugins.person.service.OrganizationAssociationEventPublisher"/>
+          class="com.armedia.acm.plugins.person.service.OrganizationAssociationEventPublisher">
+    	<property name="objectConverter" ref="objectConverter"/>
+    </bean>
 
     <bean id="personToSolrTransformer" class="com.armedia.acm.plugins.person.service.PersonToSolrTransformer">
         <property name="personDao" ref="acmPersonDao"/>
@@ -152,6 +157,7 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
         <property name="solrJoinDocumentsService" ref="solrJoinDocumentsService"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="organizationAssociationService"

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.outlook.web.api;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.objectonverter.DateFormats;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
@@ -34,7 +35,7 @@ import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 public class ListCalendarItemsAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+    private DateTimeFormatter searchDateFormat = DateTimeFormatter.ofPattern(DateFormats.DEFAULT_DATE_FORMAT);
     private OutlookService outlookService;
     private UserOrgService userOrgService;
 

@@ -27,7 +27,7 @@ public class ConfigLookupDao implements LookupDao
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private ConfigService configService;
-    private ObjectConverter converter = ObjectConverter.createJSONConverter();
+    private ObjectConverter objectConverter;
 
     private static final Configuration configuration = Configuration.builder().jsonProvider(new JacksonJsonNodeJsonProvider())
             .mappingProvider(new JacksonMappingProvider()).build();
@@ -39,7 +39,7 @@ public class ConfigLookupDao implements LookupDao
     public synchronized String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
         // validate lookup
-        AcmLookup<?> lookup = converter.getUnmarshaller().unmarshall(
+        AcmLookup<?> lookup = getObjectConverter().getJsonUnmarshaller().unmarshall(
                 "{\"name\" : \"" + lookupDefinition.getName() + "\", \"entries\" : " + lookupDefinition.getLookupEntriesAsJson() + "}",
                 lookupDefinition.getLookupType().getLookupClass());
         if (lookup == null)
@@ -99,7 +99,7 @@ public class ConfigLookupDao implements LookupDao
 
             String entriesAsJson = jsonArray.get(0).toString();
 
-            AcmLookup<?> acmLookup = converter.getUnmarshaller()
+            AcmLookup<?> acmLookup = getObjectConverter().getJsonUnmarshaller()
                     .unmarshall("{\"name\" : \"" + name + "\", \"entries\" : " + entriesAsJson + "}", lookupType.getLookupClass());
 
             if (acmLookup != null)
@@ -119,5 +119,15 @@ public class ConfigLookupDao implements LookupDao
     public void setConfigService(ConfigService configService)
     {
         this.configService = configService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter converter)
+    {
+        this.objectConverter = converter;
     }
 }

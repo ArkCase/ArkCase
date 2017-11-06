@@ -59,7 +59,7 @@
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Passwort kann nicht leer sein",
-    "comfirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
+    "confirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
     "differentPasswords": "Passwörter stimmen nicht überein. Bitte versuche es erneut.",
     "ok": "OK",
     "success": "Erfolgreich geändertes Passwort",
