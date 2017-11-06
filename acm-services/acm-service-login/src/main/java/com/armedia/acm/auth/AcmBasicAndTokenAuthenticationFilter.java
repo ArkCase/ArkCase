@@ -27,6 +27,7 @@ import org.springframework.security.web.authentication.preauth.PreAuthenticatedC
 import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor;
 import org.springframework.security.web.authentication.preauth.x509.X509PrincipalExtractor;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.FilterChain;
@@ -48,7 +49,7 @@ import java.util.List;
  * These two functions must be in the same class since both tasks must be done in the Spring Security basic
  * authentication filter, and Spring Security allows only one filter in the Basic Authentication filter position.
  * <p>
- * If token request handling was done in some other filter position (e.g. as the pre-auth filter), then Spring
+ * If token request handling was done in some other filter position (e.g. as the pre-authenticateUser filter), then Spring
  * Security always causes an HTTP redirect to be sent to the client, so the client has to issue another request
  * (being sure to include the session cookie) that goes through another authentication chain.  But by placing the token
  * handling in the basic authentication position, there is no redirect and the requested URL is activated right away.
@@ -64,35 +65,105 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     private AcmGrantedAuthoritiesMapper acmGrantedAuthoritiesMapper;
     private GroupService groupService;
 
+    private enum AuthRequestType
+    {
+        AUTH_REQUEST_TYPE_TOKEN,
+        AUTH_REQUEST_TYPE_EMAIL_TOKEN,
+        AUTH_REQUEST_TYPE_CLIENT_CERT,
+        AUTH_REQUEST_TYPE_BASIC,
+        AUTH_REQUEST_TYPE_OTHER
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param authenticationManager authentication requests submitted here
+     */
     public AcmBasicAndTokenAuthenticationFilter(AuthenticationManager authenticationManager)
     {
         super(authenticationManager);
     }
 
     @Override
-    public void onSuccessfulAuthentication(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authResult) throws IOException
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
+    {
+        final HttpServletRequest request = (HttpServletRequest) req;
+        final HttpServletResponse response = (HttpServletResponse) res;
+
+        AuthRequestType authRequestType = detectAuthRequestType(request);
+        switch (authRequestType)
+        {
+            case AUTH_REQUEST_TYPE_TOKEN:
+                tokenAuthentication(request, response);
+                break;
+            case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
+                emailTokenAuthentication(request);
+                break;
+            case AUTH_REQUEST_TYPE_CLIENT_CERT:
+                certificateAuthentication(request);
+                break;
+            case AUTH_REQUEST_TYPE_BASIC:
+                basicAuthentication(request, response, chain);
+                return; // need to return here, Spring filter forwards down the chain itself
+            case AUTH_REQUEST_TYPE_OTHER:
+            default:
+                break;
+        }
+        chain.doFilter(request, response);
+    }
+
+    @Override
+    public void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException
     {
         super.onSuccessfulAuthentication(request, response, authResult);
 
-        if (log.isDebugEnabled())
-        {
-            log.debug(authResult.getName() + " has logged in via basic authentication.");
-        }
+        log.debug("[{}] has successfully logged in", authResult.getName());
 
         getLoginSuccessOperations().onSuccessfulAuthentication(request, authResult);
 
         InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authResult, getClass());
         getLoginSuccessEventListener().onApplicationEvent(event);
-
     }
 
-    public void validateEmailTicketAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, MuleException
+    /**
+     * ArkCase token authentication handler.
+     *
+     * @param request  HTTP servlet request
+     * @param response HTTP servlet response
+     * @throws IOException on error
+     */
+    private void tokenAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException
+    {
+        try
+        {
+            String token = ServletRequestUtils.getStringParameter(request, "acm_ticket");
+            log.trace("Starting token authentication using acm_ticket [{}]", token);
+            Authentication auth = getAuthenticationTokenService().getAuthenticationForToken(token);
+            SecurityContextHolder.getContext().setAuthentication(auth);
+            onSuccessfulAuthentication(request, response, auth);
+        } catch (IllegalArgumentException | ServletRequestBindingException e)
+        {
+            SecurityContextHolder.clearContext();
+            log.trace("Authentication request failed", e);
+
+            AuthenticationException authenticationException = new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
+            onUnsuccessfulAuthentication(request, response, authenticationException);
+
+            // by calling setStatus, and then NOT calling doFilter, processing stops and the client will get a 401
+            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+        }
+    }
+
+    /**
+     * ArkCase email token authentication handler, used for file download.
+     *
+     * @param request HTTP servlet request
+     * @throws IOException      on error
+     * @throws ServletException on error
+     */
+    private void emailTokenAuthentication(HttpServletRequest request) throws IOException, ServletException
     {
         String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
-        String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
         if (emailToken != null)
         {
             List<AuthenticationToken> authenticationTokens = getAuthenticationTokenDao().findAuthenticationTokenByKey(emailToken);
@@ -102,9 +173,11 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                 {
                     if ((AuthenticationTokenConstants.ACTIVE).equals(authenticationToken.getStatus()))
                     {
+                        String fileId = ServletRequestUtils.getStringParameter(request, "ecmFileId");
                         if (emailToken.equals(authenticationToken.getKey())
                                 && fileId.equals(authenticationToken.getFileId().toString()))
                         {
+                            log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
                             int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
                             //token expires after 3 days
                             if (days > 3)
@@ -113,56 +186,10 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
                                 getAuthenticationTokenDao().save(authenticationToken);
+                                log.warn("Authentication for email links acm_email_ticket [{}] expired", emailToken);
                                 return;
                             }
-                            try
-                            {
-                                if (logger.isTraceEnabled())
-                                {
-                                    log.trace("starting token auth for email links");
-                                }
-                                try
-                                {
-                                    Authentication authentication;
-                                    UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator());
-                                    String ldapGroups = getGroupService().getLdapGroupsForUser(usernamePasswordAuthenticationToken);
-                                    SearchResults searchResults = new SearchResults();
-                                    JSONArray docs = searchResults.getDocuments(ldapGroups);
-                                    List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                                    if (docs != null)
-                                    {
-                                        for (int i = 0; i < docs.length(); i++)
-                                        {
-                                            grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
-                                        }
-                                    }
-                                    authentication = new UsernamePasswordAuthenticationToken(authenticationToken.getCreator(), authenticationToken.getCreator(), getAcmGrantedAuthoritiesMapper().mapAuthorities(grantedAuthorities));
-                                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                                    onSuccessfulAuthentication(request, response, authentication);
-                                } catch (IllegalArgumentException e)
-                                {
-                                    throw new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
-                                }
-                            } catch (AuthenticationException failed)
-                            {
-                                SecurityContextHolder.clearContext();
-                                if (logger.isTraceEnabled())
-                                {
-                                    logger.trace("Authentication request failed: " + failed);
-                                }
-
-                                onUnsuccessfulAuthentication(request, response, failed);
-
-                                if (isIgnoreFailure())
-                                {
-                                    chain.doFilter(request, response);
-                                } else
-                                {
-                                    getAuthenticationEntryPoint().commence(request, response, failed);
-                                }
-
-                                return;
-                            }
+                            authenticateUser(request, authenticationToken.getCreator());
                         }
                     }
                 }
@@ -170,141 +197,77 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         }
     }
 
-
-    @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException
+    /**
+     * ArkCase client certificate authentication handler.
+     *
+     * @param request HTTP servlet request
+     */
+    private void certificateAuthentication(HttpServletRequest request)
     {
-        final boolean trace = logger.isTraceEnabled();
-        final HttpServletRequest request = (HttpServletRequest) req;
-        final HttpServletResponse response = (HttpServletResponse) res;
-
-        // see whether this request is either a Basic Authentication request or a token request
-        boolean basicAuthRequest = isBasicAuthRequest(request);
-
-        String token = ServletRequestUtils.getStringParameter(request, "acm_ticket");
-        boolean tokenRequest = token != null;
-
-        String emailToken = ServletRequestUtils.getStringParameter(request, "acm_email_ticket");
-        boolean emailTokenRequest = emailToken != null;
-
         X509Certificate clientCert = extractX509ClientCertificate(request);
-        boolean clientCertRequest = clientCert != null;
-
-        // No token, no basic authentication
-        if (!tokenRequest && !basicAuthRequest && !emailTokenRequest && !clientCertRequest)
-        {
-            if (trace)
-            {
-                log.trace("neither token nor basic - skipping.");
-            }
-            chain.doFilter(request, response);
-            return;
-        }
-
-        //Email token requests
-        if (emailTokenRequest)
-        {
-            try
-            {
-                validateEmailTicketAuthentication(request, response, chain);
-            } catch (MuleException e)
-            {
-                log.error("Could not validate email ticket" + e.getMessage(), e);
-            }
-        }
-
-        // Token authentication
-        if (tokenRequest)
-        {
-
-            if (trace)
-            {
-                log.trace("starting token auth");
-            }
-            Authentication auth;
-            try
-            {
-                auth = getAuthenticationTokenService().getAuthenticationForToken(token);
-                SecurityContextHolder.getContext().setAuthentication(auth);
-                onSuccessfulAuthentication(request, response, auth);
-            } catch (IllegalArgumentException e)
-            {
-                SecurityContextHolder.clearContext();
-                if (trace)
-                {
-                    logger.trace("Authentication request failed", e);
-                }
-
-                AuthenticationException authenticationException = new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
-                onUnsuccessfulAuthentication(request, response, authenticationException);
-
-
-                // by calling setStatus, and then NOT calling doFilter, processing stops and the client will get a 401
-                response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                return;
-            }
-        }
-
-
-        // Basic authentication
-        if (basicAuthRequest)
-        {
-            if (trace)
-            {
-                log.trace("switching to basic auth");
-            }
-            // let Spring Security's native basic authentication do the work.
-            super.doFilter(req, res, chain);
-            return;
-        }
-
         // if using client certificate and not already authenticated
-        if (clientCertRequest &&
-                !(SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated()))
+        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
         {
-            // extract userId (Common Name attribute) from the certifcate
-            X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
-            String userId = (String) principalExtractor.extractPrincipal(clientCert);
-            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userId, userId);
-            String ldapGroups = null;
-            try
-            {
-                ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
-            } catch (MuleException e)
-            {
-                log.warn("Unable to read LDAP groups for user [{}]", userId);
-            }
-            if (ldapGroups != null)
-            {
-                SearchResults searchResults = new SearchResults();
-                JSONArray docs = searchResults.getDocuments(ldapGroups);
-                List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-                if (docs != null)
-                {
-                    for (int i = 0; i < docs.length(); i++)
-                    {
-                        grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
-                    }
-                }
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                log.debug("[{}] has logged in using Client certificate authentication.");
-
-                loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
-
-                InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authentication, getClass());
-                loginSuccessEventListener.onApplicationEvent(event);
-            }
+            return;
         }
-
-        chain.doFilter(request, response);
-
+        // extract userId (Common Name attribute) from the certifcate
+        X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
+        String userId = (String) principalExtractor.extractPrincipal(clientCert);
+        authenticateUser(request, userId);
     }
 
-    private boolean isBasicAuthRequest(HttpServletRequest request)
+    /**
+     * ArkCase basic authentication handler.
+     *
+     * @param request  HTTP servlet request
+     * @param response HTTP servlet response
+     * @param chain    Filter chain
+     */
+    private void basicAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        String header = request.getHeader("Authorization");
-        return header != null && header.startsWith("Basic ");
+        log.trace("Starting basic authentication");
+        // let Spring Security's native basic authentication do the work.
+        super.doFilter(request, response, chain);
+    }
+
+    /**
+     * Create user authentication token.
+     *
+     * @param request HTTP servlet request
+     * @param userId  user identifier
+     */
+    private void authenticateUser(HttpServletRequest request, String userId)
+    {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userId, userId);
+        String ldapGroups = null;
+        try
+        {
+            ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
+        } catch (MuleException e)
+        {
+            log.warn("Unable to read LDAP groups for user [{}]", userId);
+        }
+        if (ldapGroups != null)
+        {
+            SearchResults searchResults = new SearchResults();
+            JSONArray docs = searchResults.getDocuments(ldapGroups);
+            List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+            if (docs != null)
+            {
+                for (int i = 0; i < docs.length(); i++)
+                {
+                    grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
+                }
+            }
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.debug("[{}] has logged in using Client certificate authentication.");
+
+            loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
+
+            InteractiveAuthenticationSuccessEvent event = new InteractiveAuthenticationSuccessEvent(authentication, getClass());
+            loginSuccessEventListener.onApplicationEvent(event);
+        }
     }
 
     /**
@@ -324,6 +287,40 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             log.debug("X.509 client authentication certificate [{}]", x509Certificate);
         }
         return x509Certificate;
+    }
+
+    /**
+     * Detect authentication request type.
+     *
+     * @param request HTTP Servlet Request
+     * @return detected authentication request type
+     */
+    private AuthRequestType detectAuthRequestType(HttpServletRequest request)
+    {
+        AuthRequestType authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_OTHER;
+
+        if (request.getParameter("acm_ticket") != null)
+        {
+            log.trace("Token authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
+        } else if (request.getParameter("acm_email_ticket") != null)
+        {
+            log.trace("Email token authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_EMAIL_TOKEN;
+        } else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
+        {
+            log.trace("Client Certificate authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_CLIENT_CERT;
+        } else if (request.getParameter("Authorization") != null && request.getParameter("Authorization").startsWith("Basic "))
+        {
+            log.trace("Basic authentication requested");
+            authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_BASIC;
+        } else
+        {
+            log.trace("Neither token nor certificate authentication requested, skipping");
+        }
+
+        return authRequestType;
     }
 
     public void setLoginSuccessOperations(AcmLoginSuccessOperations loginSuccessOperations)
