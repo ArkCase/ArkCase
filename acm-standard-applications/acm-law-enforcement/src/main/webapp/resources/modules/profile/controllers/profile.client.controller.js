@@ -108,8 +108,12 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
             $scope.userInfo = userInfo;
         });
 
-        $scope.isPasswordError = false;
-        $scope.authError = null;
+        $scope.$bus.subscribe('ldap-change-password-clear-errors', function () {
+            $scope.authError = '';
+            $scope.errorMessage = '';
+        });
+
+        $scope.authError = false;
         $scope.loading = false;
         $scope.passwordErrorMessages = {
             notSamePasswordsMessage: ''
@@ -130,21 +134,20 @@ angular.module('profile').controller('ChangeLdapPasswordModalController', ['$sco
                 MessageService.info($translate.instant("profile.modal.success"));
             }, function (errorData) {
                 $scope.loading = false;
-                var message = errorData.data.authError;
+                var message = errorData.data.authError; //auth error
+                var passwordError = errorData.data.message;
                 if (message) {
                     $scope.authError = message;
                     $scope.currentPassword = '';
                 }
-                if(errorData.data.message){
-                    $scope.errorMessage = errorData.data.message;
+                else if(errorData.data.message){
+                    $scope.authError = false;
+                    $scope.errorMessage = passwordError;
                 }
                 else {
                     $modalInstance.close('done');
-                    if (errorData.data.message) {
-                        MessageService.error(errorData.data.message);
-                    } else {
-                        MessageService.errorAction();
-                    }
+                    MessageService.errorAction();
+
                 }
             });
 
