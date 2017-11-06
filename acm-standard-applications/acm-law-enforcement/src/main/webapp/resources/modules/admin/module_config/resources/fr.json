@@ -74,6 +74,10 @@
       "syncPageSize": "Entrez la taille de la pagination",
       "groupSearchFilter": "Entrez un filtre de recherche pour les groupes (par exemple (objectClass = group))",
       "groupsSortingAttribute": "Entrez un attribut pour les groupes de tri (par exemple, 'gidNumber')",
+      "allChangedUsersFilter": "fr_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "fr_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "fr_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "fr_Enter filter including sort-attribute for all changed groups",
       "groupSearchPageFilter": "Entrez le filtre, y compris l'attribut de tri (par exemple (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Vérifiez si la gestion des utilisateurs et des groupes sur votre DS est autorisée"
     },
@@ -156,7 +160,7 @@
           "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
           "minLengthForPassword": "7",
           "passwordRuleText": "Entrez un mot de passe qui n'est pas le même que le nom d'utilisateur, contenant 7 caractères avec la combinaison d'au moins un caractère spécial, un nombre, une majuscule et une minuscule.",
-          "confirmation": "fr_Enter your password again",
+          "confirmation": "fr_Enter your password again"
         },
         "editLdapMember": {
           "title": "Modifier le membre Ldap",
