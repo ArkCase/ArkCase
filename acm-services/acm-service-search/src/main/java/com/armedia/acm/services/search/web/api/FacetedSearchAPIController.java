@@ -153,7 +153,6 @@ public class FacetedSearchAPIController
                     String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
             response.setContentLength(content.length());
             writer.write(content);
-            writer.flush();
         } catch (IOException e)
         {
             log.error("Unable to generate report document. Exception msg: '{}'", e.getMessage());
