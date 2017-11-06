@@ -2,6 +2,7 @@ package com.armedia.acm.auth.web;
 
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,9 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
     public ResponseEntity<String> publishForgotUsernameEvent(@RequestParam String email)
     {
         List<AcmUser> users = userDao.findByEmailAddress(email);
+        users = users.stream()
+                .filter(user -> user.getUserState() == AcmUserState.VALID)
+                .collect(Collectors.toList());
         if (users.size() == 0)
         {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
@@ -48,7 +52,7 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
     public ResponseEntity<String> publishForgotPasswordEvent(@RequestParam String userId, @RequestParam String email)
     {
         AcmUser user = userDao.findByUserIdAndEmailAddress(userId, email);
-        if (user == null)
+        if (user == null || user.getUserState() != AcmUserState.VALID)
         {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
         } else
