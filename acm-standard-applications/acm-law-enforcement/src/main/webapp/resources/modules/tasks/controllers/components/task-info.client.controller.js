@@ -240,7 +240,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         };
 
         $scope.validatePercentComplete = function (value) {
-            if (value < 0 || value > 100) {
+            if (value < 0 || value == null || value > 100) {
                 return "Invalid value";
             }
         };
