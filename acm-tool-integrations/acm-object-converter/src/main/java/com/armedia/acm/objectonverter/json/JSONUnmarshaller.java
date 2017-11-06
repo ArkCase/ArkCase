@@ -4,14 +4,14 @@
 package com.armedia.acm.objectonverter.json;
 
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Collection;
 
 /**
  * @author riste.tutureski
@@ -21,19 +21,17 @@ public class JSONUnmarshaller implements AcmUnmarshaller
 {
 
     private Logger LOG = LoggerFactory.getLogger(getClass());
-
-    // FIXME not sure why we are instating new ObjectMapper instead we can use it one which is in ApplicationContext
     private ObjectMapper mapper;
 
     @Override
     public <E> E unmarshall(String source, Class<E> c)
     {
-        initMapper();
         E output = null;
         try
         {
             output = mapper.readValue(source, c);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             LOG.error("Error while creating Object from JSON: " + e.getMessage(), e);
         }
@@ -41,15 +39,30 @@ public class JSONUnmarshaller implements AcmUnmarshaller
         return output;
     }
 
-    private void initMapper()
+    @Override
+    public <T> T unmarshallCollection(String source, Class<? extends Collection> collectionClass, Class elementClass)
     {
-        if (mapper != null)
+        T output = null;
+        try
         {
-            return;
+            CollectionType javaType = mapper.getTypeFactory().constructCollectionType(collectionClass, elementClass);
+            output = mapper.readValue(source, javaType);
         }
-        mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        catch (IOException e)
+        {
+            LOG.error("Error while creating Object from JSON: " + e.getMessage(), e);
+        }
+
+        return output;
     }
 
+    public ObjectMapper getMapper()
+    {
+        return mapper;
+    }
+
+    public void setMapper(ObjectMapper mapper)
+    {
+        this.mapper = mapper;
+    }
 }

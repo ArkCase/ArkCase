@@ -69,6 +69,7 @@
                                                    placeholder="{{'admin.security.calendarConfiguration.calendarConfigForm.password.placeholder' | translate}}"
                                                    ng-model="calendarConfigDataModel.configurationsByType[configurableObjectType.id].password"
                                                    class="form-control"
+                                                   ng-click="calendarConfigDataModel.configurationsByType[configurableObjectType.id].password = null"
                                                    ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled"
                                                    ng-required="calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled && passwordRequirementByObjectType[configurableObjectType.id]"/>
                                         </div>

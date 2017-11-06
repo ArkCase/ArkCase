@@ -1,5 +1,7 @@
 package com.armedia.acm.services.search.model;
 
+import com.armedia.acm.objectonverter.DateFormats;
+
 /**
  * Created by armdev on 2/12/15.
  */
@@ -63,7 +65,7 @@ public interface SearchConstants
     /**
      * The date format SOLR expects. Any other date format causes SOLR to throw an exception.
      */
-    String SOLR_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    String SOLR_DATE_FORMAT = DateFormats.DEFAULT_DATE_FORMAT;
 
     /**
      * Date format for date-only fields, where the UI does not send a time component, but only the date.

@@ -35,6 +35,7 @@ import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.Attendee.AttendeeType;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
+import com.armedia.acm.calendar.service.CalendarServiceConfigurationException;
 import com.armedia.acm.calendar.service.CalendarServiceException;
 import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;

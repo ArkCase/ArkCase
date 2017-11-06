@@ -153,7 +153,7 @@
           "lastName": "输入姓氏",
           "email": "输入电子邮件",
           "password": "输入密码",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "zh-cn_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "输入与用户名不同的密码，其中包含至少包含一个特殊字符，数字，大写和小写字母的7个字符。"
         },
@@ -168,7 +168,8 @@
         "firstName": "名字",
         "lastName": "姓",
         "email": "电子邮件",
-        "password": "密码"
+        "password": "密码",
+        "confirmation": "zh-cn_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "名称",

@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.listener;
 
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.json.JSONArray;
@@ -25,7 +26,7 @@ public class BuckslipTaskHelper
         String currentApprover = (String) pi.getProcessVariables().get("currentApprover");
         String currentTaskName = (String) pi.getProcessVariables().get("currentTaskName");
         String currentGroupName = (String) pi.getProcessVariables().get("currentGroup");
-        String currentDetails = (String) pi.getProcessVariables().get("details");
+        String currentDetails = (String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_DETAILS);
         String currentAddedBy = (String) pi.getProcessVariables().get("addedBy");
         String taskDueDateExpression = (String) pi.getProcessVariables().get("taskDueDateExpression");
 

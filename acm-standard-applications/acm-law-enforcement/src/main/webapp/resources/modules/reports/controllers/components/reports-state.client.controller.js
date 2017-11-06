@@ -1,33 +1,25 @@
 'use strict';
-/**
- * @ngdoc controller
- * @name reports.controller:Reports.SelectionController
- *
- * @description
- * {@link https://github.com/Armedia/ACM3/tree/develop/acm-user-interface/ark-web/src/main/webapp/resources/modules/reports/controllers/components/reports-state.client.controller.js modules/reports/controllers/components/reports-state.client.controller.js}
- *
- * The Reports module's report selection controller
- */
-angular.module('reports').controller('Reports.StateController', ['$scope',
-    function ($scope) {
-        $scope.$on('component-config', applyConfig);
-        $scope.$emit('req-component-config', 'caseStates');
-        $scope.config = null;
 
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'caseStates') {
-                $scope.config = config;
+angular.module('reports').controller('Reports.StateController', ['$scope', 'ConfigService', 'Object.LookupService',
+    function ($scope, ConfigService, ObjectLookupService) {
 
-
-                $scope.$watchCollection('data.reportSelected', function (newValue, oldValue) {
-                    if (newValue) {
-                        $scope.data.reportSelected = newValue;
-                        if($scope.config.resetCaseStateValues.indexOf($scope.data.reportSelected) > -1){
-                            $scope.data.caseStateSelected = '';
-                        }
+        ConfigService.getComponentConfig("reports", "caseStates").then(function(config){
+            $scope.config = config;
+            $scope.$watchCollection('data.reportSelected', function (newValue, oldValue) {
+                if (newValue) {
+                    $scope.data.reportSelected = newValue;
+                    if($scope.config.resetCaseStateValues.indexOf($scope.data.reportSelected) > -1){
+                        $scope.data.caseStateSelected = '';
                     }
-                });
-            }
-        }
+                }
+            });
+            return config;
+        });
+
+        ObjectLookupService.getLookupByLookupName("reportStates").then(function (reportStates) {
+            $scope.reportStates = reportStates;
+            return reportStates;
+        });
+
     }
 ]);
