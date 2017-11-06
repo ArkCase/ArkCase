@@ -57,7 +57,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
-        log.debug("Publish send set password email...");
+        log.debug("Publish send set password email for user: [{}]", user.getUserId());
         SetPasswordEmailEvent setPasswordEmailEvent = new SetPasswordEmailEvent(user);
         setPasswordEmailEvent.setSucceeded(true);
         eventPublisher.publishEvent(setPasswordEmailEvent);
