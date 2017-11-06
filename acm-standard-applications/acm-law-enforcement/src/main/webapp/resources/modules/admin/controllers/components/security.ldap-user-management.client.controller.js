@@ -102,7 +102,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             }
         }
 
-        function openCloneUserModal(userForm, error){
+        function openCloneUserModal(userForm, passwordError, usernameError){
 
             return $modal.open({
                 animation: $scope.animationsEnabled,
@@ -114,18 +114,27 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                     $scope.user = userForm;
-                    $scope.errorMessage = error;
+                    $scope.passwordErrorMessage = passwordError;
+                    $scope.error = usernameError;
                     $scope.data = {
                         "user": $scope.user,
                         "selectedUser": selectedUser
                     };
-                    $scope.userForm = $scope.data.user;
+                    $scope.hasPasswordError = function (){
+                        if($scope.passwordErrorMessage){
+                            $scope.passwordErrorMessage ='';
+                        }
+                    };
+                    $scope.hasUsernameError = function (){
+                        if($scope.error){
+                            $scope.error ='';
+                        }
+                    };
                     $scope.passwordErrorMessages = {
                         notSamePasswordsMessage: ''
                     };
                     $scope.ok = function () {
                         $modalInstance.close($scope.data);
-
                     };
                 }],
                 size: 'sm'
@@ -143,19 +152,34 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                 MessageService.succsessAction();
             }, function (error) {
                 //error adding user
-                if(error.data.message){
+                if (error.data.message){
+                    var passwordError;
+                    var usernameError;
                     var onAdd = function(data){
                         return onCloneUser(data);
                     };
-                    openCloneUserModal(error.data.extra.userForm, error.data.message)
-                        .result.then(onAdd, function () {
-                        deferred.reject("cancel");
-                        return {};
-                    });
+                    if (error.data.field == 'username'){
+                        usernameError = error.data.message;
+                        openCloneUserModal(error.data.extra.user, passwordError, usernameError)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return {};
+                        });
+                    } else if (error.data.field == 'password'){
+                        passwordError = error.data.message;
+                        openCloneUserModal(error.data.extra.userForm, passwordError, usernameError)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return {};
+                        });
+                    }
+
                 }
+
                 else {
-                    deferred.reject();
+                    MessageService.errorAction();
                 }
+
             });
 
         }
