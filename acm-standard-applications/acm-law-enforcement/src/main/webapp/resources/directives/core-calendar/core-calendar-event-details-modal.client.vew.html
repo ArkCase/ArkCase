@@ -45,8 +45,11 @@
 			<div class="col-sm-12">
 				<label translate>common.directive.coreCalendar.eventDetailsDialog.attachments.label</label>
 			</div>
-			<div class="col-sm-12 form-group" >
-				<span ng-repeat="file in eventDetails.files" class="well-sm"><i class="fa fa-file" aria-hidden="true"></i> {{file.name}}</span>
+			<div class="col-sm-12 form-group">
+				<span ng-repeat="file in eventDetails.files" class="well-sm">
+				    <i class="fa fa-file" aria-hidden="true"></i>
+				    <a ng-click="downloadAttachment(file)"><strong class="ng-binding">{{file.fileName}}</strong></a>
+			    </span>
 			</div>
 		</div>
 		<div class="row">
