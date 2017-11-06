@@ -1,5 +1,7 @@
 'use strict';
 
+//Comments are welcome. But do not use @ngdoc format in controllers.
+
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
     'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService'
     , function ($scope, $sce, $q, ConfigService, LookupService
@@ -12,8 +14,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             return config;
         });
 
-        new LocaleHelper.Locale({scope: $scope});
-
         $scope.showXmlReport = false;
 
         $scope.$on('send-type-id', getObjectValues);
@@ -24,11 +24,8 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         $scope.dateFrom = null;
         $scope.dateTo = null;
 
+
         /**
-         * @name getObjectValues
-         * @methodOf audit.controller:AuditController
-         *
-         * @description
          * This function is callback function which gets called when "send-type-id" event is emitted.
          * In this function values are being assigned for $scope.objectType and $scope.objectId from selected dropdown and input text
          *
@@ -42,10 +39,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         }
 
         /**
-         * @name getDateValues
-         * @methodOf audit.controller:AuditController
-         *
-         * @description
          * This function is callback function which gets called when "send-date" event is emitted.
          * In this function values are being assigned to $scope.dateFrom and $scope.dateTo from selected datepickers
          * as string. Also if value for dateFrom is bigger than value for dateTo event is emitted.
@@ -77,15 +70,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
                 $scope.pentahoPassword = $scope.acmReportsProperties['PENTAHO_SERVER_PASSWORD'];
             });
 
-        /**
-         * @name showIframe
-         * @methodOf audit.controller:AuditController
-         *
-         * @description
-         * This function is called when Generate Audit Report button is clicked.
-         * In $scope.auditReportUrl is setting builder url from BuildUrl service.
-         *
-         */
         $scope.showIframe = function () {
             var reportUri = $scope.auditReportUri;
             var dateFormat = $scope.locale.DATETIME_FORMATS.shortDate;
