@@ -73,6 +73,10 @@
       "userDomain": "Digite o domínio do usuário",
       "syncPageSize": "Digite o tamanho da paginação",
       "groupSearchFilter": "Digite o filtro de pesquisa para grupos (por exemplo (objectClass = group))",
+      "allChangedUsersFilter": "pt_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "pt_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "pt_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "pt_Enter filter including sort-attribute for all changed groups",
       "groupsSortingAttribute": "Digite o atributo para classificar grupos (por exemplo, 'gidNumber')",
       "groupSearchPageFilter": "Digite o filtro, incluindo o atributo de classificação (por exemplo, (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Verifique se o gerenciamento de usuários e grupos em seu DS é permitido"
@@ -153,7 +157,7 @@
           "lastName": "Insira o sobrenome",
           "email": "Digite e-mail",
           "password": "Digite a senha",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
+          "confirmation": "pt_Enter your password again",
           "minLengthForPassword": "7",
           "passwordRuleText": "Digite uma senha que não seja o mesmo nome de usuário, contendo 7 caracteres com a combinação de pelo menos um caractere especial, número, letras maiúsculas e minúsculas."
         },
@@ -168,7 +172,8 @@
         "firstName": "Primeiro nome",
         "lastName": "Último nome",
         "email": "O email",
-        "password": "Senha"
+        "password": "Senha",
+        "confirmation": "pt_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "Nome",

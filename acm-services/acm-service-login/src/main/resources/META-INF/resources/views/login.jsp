@@ -242,10 +242,6 @@ Time: 12:44
 <script type="text/javascript">
     $(function () {
 
-        $('#login-form').on('submit', function(e) {
-            sessionStorage.setItem('username', $('#j_username').val());
-        });
-
         $('#forgot-username-modal').on('shown.bs.modal', function () {
             $('#forgot-username-success').hide();
             $('#forgot-username-error').hide();

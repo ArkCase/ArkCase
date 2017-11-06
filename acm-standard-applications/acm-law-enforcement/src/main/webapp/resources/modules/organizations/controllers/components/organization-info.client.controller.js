@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.InfoController', ['$scope', '$stateParams', '$translate', '$modal'
-    , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'UtilService'
-    , function ($scope, $stateParams, $translate, $modal
-        , OrganizationInfoService, HelperObjectBrowserService, Util) {
+angular.module('organizations').controller('Organizations.InfoController', ['$rootScope', '$scope', '$stateParams', '$translate', '$modal'
+    , 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', 'Organization.SearchService', 'UtilService'
+    , function ($rootScope, $scope, $stateParams, $translate, $modal
+        , OrganizationInfoService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, OrganizationSearchService, Util) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -17,13 +17,35 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             }
         });
 
+        $scope.relationshipTypes = [];
+        ObjectLookupService.getOrganizationRelationTypes().then(
+            function (relationshipTypes) {
+                for (var i = 0; i < relationshipTypes.length; i++) {
+                    $scope.relationshipTypes.push({
+                        "key": relationshipTypes[i].inverseKey,
+                        "value": relationshipTypes[i].inverseValue,
+                        "inverseKey": relationshipTypes[i].key,
+                        "inverseValue": relationshipTypes[i].value
+                    });
+                }
+
+                return relationshipTypes;
+            });
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
         };
 
-        $scope.addParent = function (isSelectedParent) {
-
-            var params = {};
+        $scope.addParent = function (isSelectedParent, association, rowEntity) {
+            if (Util.isEmpty(association)) {
+                association = {};
+            }
+            var params = {
+                showSetPrimary: false,
+                types: $scope.relationshipTypes,
+                showDescription: true,
+                infoType: true
+            };
             if (!!isSelectedParent) {
                 params.organization = $scope.objectInfo;
                 params.isSelectedParent = isSelectedParent;
@@ -45,16 +67,20 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
 
             modalInstance.result.then(function (data) {
                 if (data.isNew) {
-                    $scope.objectInfo.parentOrganization = data.organization;
-                    $scope.saveOrganization();
+                    if (!data.organization.organizationId) {
+                        OrganizationInfoService.saveOrganizationInfo(data.organization).then(function (response) {
+                            data['organization'] = response;
+                            updateOrganization(association, $scope.objectInfo, data.organization, data, rowEntity);
+                        });
+                    }
                 } else {
                     OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
-                        $scope.objectInfo.parentOrganization = organization;
-                        $scope.saveOrganization();
-                    })
+                        updateOrganization(association, $scope.objectInfo, organization, data, rowEntity);
+                    });
                 }
             });
         };
+
 
         $scope.saveOrganization = function () {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
@@ -74,5 +100,43 @@ angular.module('organizations').controller('Organizations.InfoController', ['$sc
             }
             return promiseSaveInfo;
         }
+
+        function updateOrganization(association, parent, target, associationData, rowEntity) {
+            association.parentId = parent.organizationId;
+            association.parentType = parent.objectType;
+
+            association.targetId = target.organizationId;
+            association.targetType = target.objectType;
+
+            association.associationType = associationData.type;
+
+            if (associationData.inverseType) {
+                var inverseAssociation = association.inverseAssociation;
+                if (!inverseAssociation) {
+                    inverseAssociation = {};
+                    association.inverseAssociation = inverseAssociation;
+                }
+                if (inverseAssociation.inverseAssociation != association) {
+                    inverseAssociation.inverseAssociation = association;
+                }
+                //switch parent and target because of inverse association
+                inverseAssociation.parentId = target.organizationId;
+                inverseAssociation.parentType = target.objectType;
+
+                inverseAssociation.targetId = parent.organizationId;
+                inverseAssociation.targetType = parent.objectType;
+
+                inverseAssociation.associationType = associationData.inverseType;
+                inverseAssociation.description = associationData.description;
+            }
+            association.description = associationData.description;
+            ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
+                //success
+            });
+        }
+
+        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        });
     }
 ]);

@@ -1,6 +1,13 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -9,6 +16,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -37,12 +45,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-ecm-plugin-test.xml", "/spring/spring-web-acm-web.xml" })
@@ -87,6 +89,7 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         unit.setMuleContextManager(mockMuleContextManager);
         unit.setFolderAndFilesUtils(mockFolderAndFilesUtils);
         unit.setCmisConfigUtils(mockCmisConfigUtils);
+        unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -212,8 +215,9 @@ public class FileDownloadAPIControllerTest extends EasyMockSupport
         expect(mockMuleContextManager.send("vm://downloadFileFlow.in", "cmisId", messageProps)).andReturn(mockMuleMessage);
 
         replayAll();
-        MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/ecm/download" + "?ecmFileId={ecmFileId}&version={version}",ecmFileId, version).principal(mockAuthentication).session(mockHttpSession))
+        MvcResult result = mockMvc
+                .perform(get("/api/v1/plugin/ecm/download" + "?ecmFileId={ecmFileId}&version={version}", ecmFileId, version)
+                        .principal(mockAuthentication).session(mockHttpSession))
                 .andReturn();
 
         verifyAll();

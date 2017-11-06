@@ -207,6 +207,7 @@
         <property name="shouldDeleteCalendarFolder" value="${complaint.delete_calendar_folder_after_complaint_closed}"/>
         <property name="complaintStatusClosed" value="${complaint.status.closed}"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="complaintDataAccessUpdateLocator"

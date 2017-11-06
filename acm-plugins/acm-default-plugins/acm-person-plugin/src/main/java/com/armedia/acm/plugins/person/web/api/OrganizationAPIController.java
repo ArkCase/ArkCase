@@ -4,15 +4,14 @@ import com.armedia.acm.auth.AuthenticationUtils;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping(value = {"/api/v1/plugin/organizations", "/api/latest/plugin/organizations"})
+@RequestMapping(value = { "/api/v1/plugin/organizations", "/api/latest/plugin/organizations" })
 public class OrganizationAPIController
 {
 
@@ -48,6 +47,7 @@ public class OrganizationAPIController
     private ExecuteSolrQuery executeSolrQuery;
     private OrganizationEventPublisher organizationEventPublisher;
     private String facetedSearchPath;
+    private ObjectConverter objectConverter;
 
     @PreAuthorize("#in.organizationId == null or hasPermission(#in.organizationId, 'ORGANIZATION', 'editOrganization')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -69,24 +69,14 @@ public class OrganizationAPIController
             Organization oldOrganization = null;
             if (!isNew)
             {
-                ObjectMapperFactory factory = new ObjectMapperFactory();
-                ObjectMapper om = factory.createObjectMapper();
-                try
-                {
-                    String old = om.writeValueAsString(organizationService.getOrganization(in.getId()));
-                    oldOrganization = om.readValue(old, Organization.class);
-                } catch (JsonProcessingException e)
-                {
-                    log.error("JsonProcessingException ", e);
-                } catch (IOException e)
-                {
-                    log.error("IOException ", e);
-                }
+                String old = getObjectConverter().getJsonMarshaller().marshal(organizationService.getOrganization(in.getId()));
+                oldOrganization = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Organization.class);
             }
             saved = organizationService.saveOrganization(in, auth, ipAddress);
             organizationEventPublisher.publishOrganizationUpsertEvent(saved, oldOrganization, isNew, true);
             return saved;
-        } catch (PipelineProcessException | PersistenceException e)
+        }
+        catch (PipelineProcessException | PersistenceException e)
         {
             log.error("Error while saving Organization: [{}]", in, e);
             throw new AcmCreateObjectFailedException("Organization", e.getMessage(), e);
@@ -96,15 +86,16 @@ public class OrganizationAPIController
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getOrganizations(Authentication auth, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                   @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                                   @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:ORGANIZATION AND -parent_id_s:*&sort=title_parseable %s", s);
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
 
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organizations.", e);
@@ -122,7 +113,8 @@ public class OrganizationAPIController
             Organization organization = organizationService.getOrganization(organizationId);
             organizationEventPublisher.publishOrganizationViewedEvent(organization, true);
             return organization;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error while retrieving Organization with id: [{}]", organizationId, e);
             throw new AcmObjectNotFoundException("Organization", null, "Could not retrieve organization.", e);
@@ -130,12 +122,11 @@ public class OrganizationAPIController
 
     }
 
-    @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{organizationId}/associations/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getChildObjects(Authentication auth, @PathVariable("organizationId") Long organizationId,
-                                  @PathVariable("objectType") String objectType, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                  @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
+            @PathVariable("objectType") String objectType, @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n) throws AcmObjectNotFoundException
     {
         String query = String.format(
                 "{!join from=parent_ref_s to=id}object_type_s:ORGANIZATION-ASSOCIATION AND parent_type_s:%s AND child_id_s:%s", objectType,
@@ -143,7 +134,8 @@ public class OrganizationAPIController
         try
         {
             return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", query, e);
             throw new AcmObjectNotFoundException("Organization", null,
@@ -189,11 +181,22 @@ public class OrganizationAPIController
     }
 
     /**
-     * @param facetedSearchPath the facetedSearchPath to set
+     * @param facetedSearchPath
+     *            the facetedSearchPath to set
      */
     public void setFacetedSearchPath(String facetedSearchPath)
     {
         this.facetedSearchPath = facetedSearchPath;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
 }

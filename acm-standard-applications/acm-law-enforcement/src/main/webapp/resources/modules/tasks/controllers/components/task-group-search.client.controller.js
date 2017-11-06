@@ -7,5 +7,6 @@ angular.module('tasks').controller('Tasks.GroupSearchController', ['$scope', '$m
         $scope.findOwningGroups = 'true';
         $scope.modalInstance = $modalInstance;
         $scope.config = $config;
+        $scope.hideSearchButton = 'true';
     }
 ]);
