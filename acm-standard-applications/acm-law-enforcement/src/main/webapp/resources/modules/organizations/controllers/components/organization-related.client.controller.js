@@ -89,19 +89,16 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
                 showDescription: true,
-                externalSearchService: OrganizationSearchService
+                externalSearchService: OrganizationSearchService,
+                parentOrganizationId: $scope.objectInfo.parentOrganization.organizationId,
+                organizationId: $scope.organizationId
             };
             if (rowEntity) {
                 angular.extend(params, {
                     targetOrganizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
-                    description: rowEntity.description_s,
-                    organizationId: $scope.organizationId
-                });
-            } else {
-                angular.extend(params, {
-                    organizationId: $scope.organizationId
+                    description: rowEntity.description_s
                 });
             }
 
