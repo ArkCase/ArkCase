@@ -7,7 +7,7 @@
     <div class="modal-body">
         <div class="form-group required" ng-class="{ 'has-error' : error}" ng-if="addUser">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |translate}}</label>
-            <input class="form-control" id="username" name="username" ng-change="hasUsernameError()"
+            <input class="form-control" id="username" name="username" ng-change="clearUsernameError()"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
                    ng-model="user.userId" required>
             <p class="help-block" ng-show="error">
@@ -35,7 +35,7 @@
         <div class="form-group required" ng-class="{ 'has-error' : passwordErrorMessage}" ng-if="cloneUser && addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
-            <input type="password" class="form-control" id="password" name="password" ng-change="hasPasswordError()"
+            <input type="password" class="form-control" id="password" name="password" ng-change="clearPasswordError()"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
                    ng-model="user.password"
                    required>

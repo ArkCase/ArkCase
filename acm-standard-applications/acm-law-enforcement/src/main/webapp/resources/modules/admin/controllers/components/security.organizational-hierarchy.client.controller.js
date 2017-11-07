@@ -275,7 +275,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     $scope.ok = function () {
                         $modalInstance.close($scope.user);
                     };
-                    $scope.hasUsernameError = function(){
+                    $scope.clearUsernameError = function(){
                         if($scope.error){
                             $scope.error = '';
                         }
