@@ -99,7 +99,7 @@
         <springframework-addons.version>0.1</springframework-addons.version>
         <tomcat-jdbc.version>8.0.14</tomcat-jdbc.version>
         <asm.version>5.0.3</asm.version>
-        <org.apache.poi.version>3.17</org.apache.poi.version>
+        <org.apache.poi.version>3.17-beta1</org.apache.poi.version>
         <frevvo.forms.version>6.3</frevvo.forms.version>
         <java.mail.version>1.5.6</java.mail.version>
         <spring.integration.version>4.2.9.RELEASE</spring.integration.version>

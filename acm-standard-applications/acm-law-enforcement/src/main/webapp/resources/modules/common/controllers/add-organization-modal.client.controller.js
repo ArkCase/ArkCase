@@ -16,12 +16,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-            if (!Util.isEmpty(params.targetOrganizationId)) {
-                $scope.editMode = !!params.organizationId;
-            } else {
-                $scope.editMode = !!params.targetOrganizationId;
-            }
-            $scope.organizationId = params.organizationId;
+            $scope.editMode = !!params.targetOrganizationId;
+            $scope.organizationId = Util.isEmpty(params.targetOrganizationId) ? params.organizationId : params.targetOrganizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isValid = true;
             $scope.isDefault = params.isDefault;
@@ -34,6 +30,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+            if (!Util.isEmpty(params.targetOrganizationId)) {
+                $scope.isEditParent = true;
+            }
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
@@ -52,6 +51,11 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.type = _.find($scope.types, function (type) {
                 return type.key == params.type;
             });
+            if (params.infoType) {
+                $scope.type = _.find($scope.types, function (obj) {
+                    return obj.key.toLowerCase() == "parentcompany";
+                });
+            }
             $scope.isNew = params.isNew;
 
             $scope.onClickCancel = function () {

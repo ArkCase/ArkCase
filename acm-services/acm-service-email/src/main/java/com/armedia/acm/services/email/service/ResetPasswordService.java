@@ -37,7 +37,7 @@ public class ResetPasswordService
     {
         try
         {
-            log.debug("Sending password reset email...");
+            log.debug("Sending password reset email for user: [{}]", user.getUserId());
             user.setPasswordResetToken(new PasswordResetToken());
             userDao.save(user);
             emailSenderService.sendPlainEmail(Stream.of(user), emailBuilder, emailBodyBuilder);

@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.service.ldap;
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
@@ -17,6 +16,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.RetryExecutor;
@@ -53,10 +53,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
     private LdapEntryTransformer userTransformer;
     private ApplicationEventPublisher eventPublisher;
+    private PasswordLengthValidationRule passwordLengthValidationRule;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
-        log.debug("Publish send set password email...");
+        log.debug("Publish send set password email for user: [{}]", user.getUserId());
         SetPasswordEmailEvent setPasswordEmailEvent = new SetPasswordEmailEvent(user);
         setPasswordEmailEvent.setSucceeded(true);
         eventPublisher.publishEvent(setPasswordEmailEvent);
@@ -137,7 +138,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             DirContextAdapter context;
             if (password == null)
             {
-                password = MapperUtils.generatePassword();
+                password = MapperUtils.generatePassword(passwordLengthValidationRule.getMinLength());
             }
             context = userTransformer.createContextForNewUserEntry(directoryName, acmUser, password,
                     ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
@@ -598,5 +599,10 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         eventPublisher = applicationEventPublisher;
+    }
+
+    public void setPasswordLengthValidationRule(PasswordLengthValidationRule passwordLengthValidationRule)
+    {
+        this.passwordLengthValidationRule = passwordLengthValidationRule;
     }
 }

@@ -93,6 +93,7 @@
         <property name="acmObjectHistoryEventPublisher" ref="acmObjectHistoryEventPublisher"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="acmAssignmentDao" ref="acmAssignmentDao"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="taskToSolrTransformer" class="com.armedia.acm.plugins.task.service.impl.TaskToSolrTransformer">
