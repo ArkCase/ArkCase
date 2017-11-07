@@ -12,15 +12,15 @@ angular.module('complaints').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService', 'Object.LookupService'
                         , function ($translate, $translatePartialLoader, LocaleService, ObjectLookupService) {
-                        $translatePartialLoader.addPart('common');
-                        $translatePartialLoader.addPart('dashboard');
-                        $translatePartialLoader.addPart('complaints');
-                        $translate.resetDataDict()
-                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
-                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
-                        ;
-                        return $translate.refresh();
-                    }]
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('dashboard');
+                            $translatePartialLoader.addPart('complaints');
+                            $translate.resetDataDict()
+                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
+                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
+                            ;
+                            return $translate.refresh();
+                        }]
                 }
             })
 
@@ -97,9 +97,9 @@ angular.module('complaints').config(['$stateProvider',
                 templateUrl: 'modules/complaints/views/components/complaint-time.client.view.html'
             })
 
-            .state('complaints.locations', {
-                url: '/:id/locations',
-                templateUrl: 'modules/complaints/views/components/complaint-locations.client.view.html'
+            .state('complaints.addresses', {
+                url: '/:id/addresses',
+                templateUrl: 'modules/complaints/views/components/complaint-addresses.client.view.html'
             })
 
             .state('complaints.tags', {
