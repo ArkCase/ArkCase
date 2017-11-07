@@ -12,14 +12,14 @@ angular.module('complaints').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService', 'Object.LookupService'
                         , function ($translate, $translatePartialLoader, LocaleService, ObjectLookupService) {
-                            $translatePartialLoader.addPart('common');
-                            $translatePartialLoader.addPart('dashboard');
-                            $translatePartialLoader.addPart('complaints');
-                            $translate.resetDataDict()
-                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
-                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
+                        $translatePartialLoader.addPart('common');
+                        $translatePartialLoader.addPart('dashboard');
+                        $translatePartialLoader.addPart('complaints');
+                        $translate.resetDataDict()
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
                             ;
-                            return $translate.refresh();
+                          return $translate.refresh();
                         }]
                 }
             })
