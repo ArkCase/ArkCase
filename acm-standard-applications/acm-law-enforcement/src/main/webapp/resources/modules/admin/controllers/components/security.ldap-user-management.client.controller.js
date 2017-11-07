@@ -120,12 +120,12 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                         "user": $scope.user,
                         "selectedUser": selectedUser
                     };
-                    $scope.hasPasswordError = function (){
+                    $scope.clearPasswordError = function (){
                         if($scope.passwordErrorMessage){
                             $scope.passwordErrorMessage ='';
                         }
                     };
-                    $scope.hasUsernameError = function (){
+                    $scope.clearUsernameError = function (){
                         if($scope.error){
                             $scope.error ='';
                         }
@@ -172,6 +172,8 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                             deferred.reject("cancel");
                             return {};
                         });
+                    } else {
+                        MessageService.error(error.data.message);
                     }
 
                 }
