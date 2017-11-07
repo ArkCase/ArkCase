@@ -87,11 +87,39 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                 templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
                 controllerName: 'Tasks.NewTaskController',
                 params: {
-                    selectedDocumentNodes: $scope.treeControl.getSelectedNodes()
+                    selectedDocumentNodes: $scope.selectedDocuments
                 }
             };
             ModalDialogService.showModal(modalMetadata);
         };
+
+        $scope.selectedDocuments = [];
+
+        $scope.onCheckNode = function(node) {
+            if(!node.folder) {
+                var idx = _.findIndex($scope.selectedDocuments, function(d) { return d.data.objectId == node.data.objectId; });
+
+                if (idx > -1) {
+                    $scope.selectedDocuments.splice(idx, 1);
+                } else {
+                    $scope.selectedDocuments.push(node);
+                }
+            }
+        };
+
+        $scope.onToggleAllNodesChecked = function(nodes) {
+            $scope.selectedDocuments = _.filter(nodes, function (node) {
+                return !node.folder;
+            });
+        };
+
+        $scope.$bus.subscribe('docTreeNodeChecked', function (node) {
+            $scope.onCheckNode(node);
+        });
+
+        $scope.$bus.subscribe('toggleAllNodesChecked', function (nodes) {
+            $scope.onToggleAllNodesChecked(nodes);
+        });
 
         $scope.onFilter = function () {
             $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});
