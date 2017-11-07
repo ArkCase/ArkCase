@@ -214,18 +214,7 @@ public class TikaMetadataIT
                 , "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12"
                 , "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12", "application/vnd.ms-excel.sheet.binary.macroenabled.12");
 
-        for (Resource resource : resources)
-        {
-            try (InputStream is = resource.getInputStream())
-            {
-                EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(IOUtils.toByteArray(is), resource.getFile().getName());
-                assertTrue(expectedMimeTypes.contains(file.getContentType()));
-            } catch (Exception e)
-            {
-                logger.error("could not process " + resource.getFilename(), e);
-                fail("could not process " + resource.getFilename());
-            }
-        }
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
     }
 
     /**
@@ -243,6 +232,31 @@ public class TikaMetadataIT
 
         List<String> expectedMimeTypes = Collections.singletonList("application/msword");
 
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    @Test
+    public void detectSAPDocx() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/sap.docx"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    @Test
+    public void detectHDSDocx() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/hds.docx"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    private void detectExpectedMimeTypes(List<Resource> resources, List<String> expectedMimeTypes)
+    {
         for (Resource resource : resources)
         {
             try (InputStream is = resource.getInputStream())

@@ -159,15 +159,17 @@ angular.module('search').factory('SearchService', ['$resource', 'UtilService', '
          * Returns export url for the current search query
          *
          * @param {String} query Query to send to the server
-         * @param {Array} fields Array of fields to be exported (if empty omitted)
          * @param {String} exportType Type of export (csv)
          * @param {String} reportName The file name of the generated report
+         * @param {Array} fields Array of fields to be exported (if empty omitted)
+         * @param {Array} titles Array of titles to be used (if empty omitted)
          * @returns {String} The export URL
          */
-        Service.exportUrl = function (query, fields, exportType, reportName) {
+        Service.exportUrl = function (query, exportType, reportName, fields, titles) {
             var url = "api/v1/plugin/search/facetedSearch?q=" + query;
             if (fields instanceof Array && fields.length > 0) {
                 url += "&fields=" + fields.join(',');
+                url += "&titles=" + encodeURI(titles.join(','));
             }
             url += "&export=" + exportType;
             url += "&reportName=" + reportName;

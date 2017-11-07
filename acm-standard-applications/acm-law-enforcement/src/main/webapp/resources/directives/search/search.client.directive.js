@@ -30,7 +30,7 @@
  </search>
  </file>
  <file name="app.js">
- angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
+ angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log, ) {
             $scope.config = {
                         "id": "searchModule",
                         "title": "Search Module Search",
@@ -59,10 +59,12 @@
  </file>
  </example>
  */
-angular.module('directives').directive('search', ['SearchService', 'Search.QueryBuilderService', '$q', 'UtilService'
-    , 'Object.LookupService', '$window', 'uiGridExporterConstants', '$translate', 'Tags.TagsService', 'ObjectService', 'Search.AutoSuggestService'
-    , function (SearchService, SearchQueryBuilder, $q, Util
-        , ObjectLookupService, $window, uiGridExporterConstants, $translate, TagsService, ObjectService, AutoSuggestService) {
+angular.module('directives').directive('search', ['SearchService', '$window', '$q', '$location', '$browser', '$translate'
+    , 'UtilService', 'Object.LookupService', 'uiGridExporterConstants', 'Tags.TagsService', 'Search.QueryBuilderService'
+    , 'ObjectService', 'Search.AutoSuggestService'
+    , function (SearchService, $window, $q, $location, $browser, $translate
+        , Util, ObjectLookupService, uiGridExporterConstants, TagsService, SearchQueryBuilder
+        , ObjectService, AutoSuggestService) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -136,8 +138,9 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                             scope.searchQuery = searchObject.searchQuery;
                             var query = SearchQueryBuilder.buildFacetedSearchQuerySorted((scope.multiFilter ? "*" : scope.searchQuery + "*"), scope.filters, scope.join, scope.pageSize, scope.start, scope.sort);
                         }
+
+                        setExportQuery(query);
                         if (query) {
-                            setExportUrl(query);
                             SearchService.queryFilteredSearch({
                                     query: query
                                 },
@@ -215,8 +218,8 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
 
                     var query = SearchQueryBuilder.buildFacetedSearchQuery(typeaheadQuery + '*', scope.filters, 10, 0);
                     var deferred = $q.defer();
+                    setExportQuery(query);
                     if (query) {
-                        setExportUrl(query);
                         SearchService.queryFilteredSearch({
                             query: query
                         }, function (res) {
@@ -231,21 +234,36 @@ angular.module('directives').directive('search', ['SearchService', 'Search.Query
                     return deferred.promise;
                 };
 
-                function setExportUrl(query) {
+                var setExportQuery = function(query) {
+                    scope.query = query;
+                };
+
+                scope.export = function() {
+                    if (Util.isEmpty(scope.query)) {
+                        return;
+                    }
+
                     var fields = [];
+                    var titles = [];
                     var columns = scope.config.columnDefs;
                     _.forEach(columns, function (value) {
                         if ('visible' in value) {
                             if (value.visible) {
                                 fields.push(value.name);
+                                titles.push($translate.instant(value.displayName));
                             }
                         } else {
                             fields.push(value.name);
+                            titles.push($translate.instant(value.displayName));
                         }
                     });
 
-                    scope.exportUrl = SearchService.exportUrl(query, fields, 'csv', scope.config.reportFileName);
-                }
+                    var absUrl = $location.absUrl();
+                    var baseHref = $browser.baseHref();
+                    var appUrl = absUrl.substring(0, absUrl.indexOf(baseHref) + baseHref.length);
+                    $window.location.href = appUrl
+                        + SearchService.exportUrl(scope.query, 'csv', scope.config.reportFileName, fields, titles);
+                };
 
                 function updateFacets(facets) {
                     if (facets) {
