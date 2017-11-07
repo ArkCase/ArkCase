@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.RelatedController', ['$rootScope', '$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.SearchService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'Organization.SearchService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService', 'MessageService'
     , function ($rootScope, $scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, OrganizationSearchService, ObjectAssociationService, $timeout, PermissionsService, MessageService) {
 
 
         Authentication.queryUserInfo().then(
@@ -19,7 +19,12 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
         ObjectLookupService.getOrganizationRelationTypes().then(
             function (relationshipTypes) {
                 for (var i = 0; i < relationshipTypes.length; i++) {
-                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    $scope.relationshipTypes.push({
+                        "key": relationshipTypes[i].inverseKey,
+                        "value": relationshipTypes[i].inverseValue,
+                        "inverseKey": relationshipTypes[i].key,
+                        "inverseValue": relationshipTypes[i].value
+                    });
                 }
 
                 return relationshipTypes;
@@ -168,7 +173,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
             association.description = associationData.description;
             ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
                 //success
-                if (payload.associationType.toLowerCase() !== "parentcompany"){
+                if (payload.associationType.toLowerCase() !== "parentcompany") {
                     if (!rowEntity) {
                         //append new entity as last item in the grid
                         rowEntity = {
@@ -217,6 +222,8 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 // $timeout(function () {
                 //     refreshGridData($scope.objectInfo.organizationId, $scope.objectInfo.objectType);
                 // }, 2500);
+            }, function (errorResponse) {
+                MessageService.error(errorResponse.data);
             });
         }
 
@@ -228,7 +235,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 _.remove($scope.gridOptions.data, function (row) {
                     return row === rowEntity;
                 });
-                
+
                 //refresh grid after 2.5 sec because of solr indexing
                 //below functionality is disabled since we are already updating rows, however if in future we need to be refreshed from solr, than just enable code bellow
                 // $timeout(function () {
