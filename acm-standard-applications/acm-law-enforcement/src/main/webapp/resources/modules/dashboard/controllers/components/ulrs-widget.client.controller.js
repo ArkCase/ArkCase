@@ -76,5 +76,17 @@ angular.module('dashboard.urls', ['adf.provider'])
                         $scope.urlTypes = contactMethodTypes;
                         return contactMethodTypes;
                     });
+
+                $scope.isDefault = function (data) {
+                    var id = 0;
+                    if ($scope.objectInfo.defaultUrl) {
+                        id = $scope.objectInfo.defaultUrl.id
+                    }
+                    var urls = _.filter($scope.objectInfo.contactMethods, {type: 'url'});
+                    if (urls && urls.length == 0) {
+                        return true;
+                    }
+                    return data.id == id;
+                };
         }
     ]);

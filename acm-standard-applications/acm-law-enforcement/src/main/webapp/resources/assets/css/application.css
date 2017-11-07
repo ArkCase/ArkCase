@@ -732,6 +732,9 @@ thead {
 	overflow: hidden;
 	position: relative;
 }
+.ui-grid-cell-anchor {
+    display: inline;
+}
 
 /*.ui-grid .ui-grid-cell div:hover {
 	white-space: normal;
