@@ -23,6 +23,7 @@
 
     <bean id="frevvoFormServiceFactory" class="com.armedia.acm.service.frevvo.forms.factory.FrevvoFormServiceFactory">
         <lookup-method name="getServices" bean="frevvoFormServices"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
 </beans>

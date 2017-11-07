@@ -604,8 +604,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
                     }
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
 
-                    addToTree(newGroup, true);
+                    addToTree(newGroup);
                     deferred.resolve(newGroup);
                     messageService.succsessAction();
                 }, function (error) {

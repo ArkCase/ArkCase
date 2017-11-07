@@ -159,7 +159,6 @@
           "password": "Entrer le mot de passe",
           "confirmation": "fr_Enter your password again",
           "minLengthForPassword": "7"
-
         },
         "editLdapMember": {
           "title": "Modifier le membre Ldap",
