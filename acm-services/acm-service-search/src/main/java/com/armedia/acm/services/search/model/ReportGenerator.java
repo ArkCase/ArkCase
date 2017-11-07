@@ -8,18 +8,11 @@ public abstract class ReportGenerator
 {
     private AcmPlugin propertyMap;
 
-    public abstract byte[] generateReport(String[] requestedFields, String jsonData);
+    public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData );
 
     public abstract String generateReportName(String name);
 
     public abstract String getReportContentType();
-
-    public JSONObject findHeaderFields()
-    {
-        String exportFields = (String) getPropertyMap().getPluginProperties().get(SearchConstants.EXPORT_FIELDS);
-        JSONObject fields = new JSONObject(exportFields);
-        return fields;
-    }
 
     public AcmPlugin getPropertyMap()
     {

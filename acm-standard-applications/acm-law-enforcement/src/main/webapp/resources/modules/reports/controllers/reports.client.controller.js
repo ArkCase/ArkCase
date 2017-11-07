@@ -1,8 +1,12 @@
 'use strict';
 
-angular.module('reports').controller('ReportsController', ['$scope', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService',
-    'Reports.BuildUrl', '$q', 'Reports.Data', '$window'
-    , function ($scope, Util, UtilDateService, ConfigService, LookupService, BuildUrl, $q, Data, $window) {
+angular.module('reports').controller('ReportsController', ['$scope', '$q', '$window', 'UtilService', 'Util.DateService'
+    , 'ConfigService', 'LookupService', 'Reports.BuildUrl', 'Reports.Data', 'Helper.LocaleService'
+    , function ($scope, $q, $window, Util, UtilDateService
+        , ConfigService, LookupService, BuildUrl, Data, LocaleHelper
+    ) {
+
+        new LocaleHelper.Locale({scope: $scope});
 
         $scope.showXmlReport = false;
         

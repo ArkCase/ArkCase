@@ -144,10 +144,10 @@ public class MapperUtils
     public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password ->
             new BasicAttribute("userPassword", password.getBytes());
 
-    public static String generatePassword()
+    public static String generatePassword(int minLength)
     {
         String specialChar = RandomStringUtils.random(1, "[[~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-]]");
-        String lcsPart = RandomStringUtils.random(2, "abcdefghijklmnopqrstuvwxyz");
+        String lcsPart = RandomStringUtils.random(minLength, "abcdefghijklmnopqrstuvwxyz");
         String ucsPart = RandomStringUtils.random(2, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         String digitChar = RandomStringUtils.random(2, "0123456789");
         return String.format("%s%s%s%s", specialChar, lcsPart, ucsPart, digitChar);
