@@ -19,8 +19,10 @@
         "generateAuditReport.btn": "zh-cn_Generate Audit Report"
       }
     },
-    "datepickers":{
-      "close": "zh-cn_Done"
+    "datepicker":{
+      "close": "zh-cn_Done",
+      "clear": "zh-cn_Clear",
+      "current": "zh-cn_Today"
     }
   }
 }

@@ -268,6 +268,7 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
+        subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
         subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
         parent.addGroupMember(subGroup);
