@@ -491,6 +491,9 @@
         "cancel": "Cancel Document",
         "concur": "Concur",
         "nonConcur": "Non-Concur"
+      },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Acm Document Workflow"
       }
     },
     "userInfo": {

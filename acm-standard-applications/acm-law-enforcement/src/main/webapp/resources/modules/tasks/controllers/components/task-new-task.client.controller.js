@@ -24,7 +24,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             //,height: 120
         };
 
-        $scope.selectedDocuments = removeSelectedFolderNodes($scope.modalParams.selectedDocumentNodes);
+        $scope.selectedDocuments = $scope.modalParams.selectedDocumentNodes;
         $scope.selectedDocumentsIds = extractDocumentIds($scope.selectedDocuments);
 
         Authentication.queryUserInfo().then(
@@ -118,14 +118,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     DialogService.alert(message);
                 }
             }
-        }
-
-        function removeSelectedFolderNodes(selectedNodes) {
-            var nodes = _.filter(selectedNodes, function (node) {
-                return !node.folder;
-            });
-
-            return nodes;
         }
 
         function extractDocumentIds(selectedNodes) {
