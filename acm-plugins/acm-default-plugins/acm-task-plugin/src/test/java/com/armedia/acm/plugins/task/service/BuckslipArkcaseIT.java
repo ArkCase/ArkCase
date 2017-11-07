@@ -10,9 +10,10 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,7 +63,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-email.xml",
         "/spring/spring-library-email-smtp.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-calendar-integration-exchange-service.xml"
+        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class BuckslipArkcaseIT
@@ -99,19 +101,7 @@ public class BuckslipArkcaseIT
 
         auditPropertyEntityAdapter.setUserId("TEST");
 
-        deployProcessIfNeeded();
         buckslipProcess = startBuckslipProcess();
-    }
-
-    private void deployProcessIfNeeded()
-    {
-        List<Deployment> deployments = repo.createDeploymentQuery().processDefinitionKey(processName).list();
-        if (deployments == null || deployments.isEmpty())
-        {
-            repo.createDeployment()
-                    .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
-                    .deploy();
-        }
     }
 
     private BuckslipProcess startBuckslipProcess() throws Exception
@@ -131,18 +121,21 @@ public class BuckslipArkcaseIT
         task1.setApproverId("ann-acm");
         task1.setTaskName("ann-acm task");
         task1.setGroupName("ann group");
+        task1.setDetails("ann details");
         futureTasks.add(task1);
 
         BuckslipFutureTask task2 = new BuckslipFutureTask();
         task2.setApproverId("samuel-acm");
         task2.setTaskName("samuel-acm task");
         task2.setGroupName("samuel group");
+        task2.setDetails("samuel details");
         futureTasks.add(task2);
 
         BuckslipFutureTask task3 = new BuckslipFutureTask();
         task3.setApproverId("ian-acm");
         task3.setTaskName("ian-acm task");
         task3.setGroupName("ian group");
+        task3.setDetails("ian details");
         futureTasks.add(task3);
 
         Map<String, Object> processVariables = new HashMap<>();
@@ -202,6 +195,7 @@ public class BuckslipArkcaseIT
         assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(1).getApproverId());
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
         assertEquals("ann group", acmTask.getCandidateGroups().get(0));
+        assertEquals("ann details", acmTask.getDetails());
 //        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(acmTask.getParticipants());
 //        assertNotNull(owningGroup);
 //        assertEquals("ann group", owningGroup);
@@ -215,6 +209,12 @@ public class BuckslipArkcaseIT
         assertEquals(1, acmTask.getBuckslipFutureTasks().size());
         assertEquals("ian-acm", acmTask.getBuckslipFutureTasks().get(0).getApproverId());
         assertTrue(acmTask.getBuckslipPastApprovers().contains("ann-acm"));
+
+        JSONArray pastTasks = new JSONArray(acmTask.getBuckslipPastApprovers());
+        assertEquals(1, pastTasks.length());
+        JSONObject firstPastTask = pastTasks.getJSONObject(0);
+        assertEquals("ann details", firstPastTask.getString("details"));
+
         assignee = new UsernamePasswordAuthenticationToken("samuel-acm", "samuel-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
