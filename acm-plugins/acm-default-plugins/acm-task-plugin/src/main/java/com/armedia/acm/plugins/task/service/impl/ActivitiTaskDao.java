@@ -26,7 +26,6 @@ import com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListe
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
-import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserService;
@@ -1268,6 +1267,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             extractTaskLocalVariables(acmTask, localVariables);
 
             String details = (String) localVariables.get(TaskConstants.VARIABLE_NAME_DETAILS);
+            details = details != null ? details : (String) processVariables.get(TaskConstants.VARIABLE_NAME_DETAILS);
             acmTask.setDetails(details);
 
             // only on rework task, first time rework instructions will be fetched from process variables
