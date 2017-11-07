@@ -88,5 +88,16 @@ angular.module('dashboard.locations', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
+            $scope.isDefault = function (data) {
+                var id = 0;
+                if ($scope.objectInfo.defaultAddress) {
+                    id = $scope.objectInfo.defaultAddress.id
+                }
+                if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
+                    return true;
+                }
+                return data.id == id;
+            };
+
         }
     ]);

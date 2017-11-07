@@ -85,5 +85,11 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+            $scope.isDefault = function (data) {
+                if ($scope.objectInfo) {
+                    return data === $scope.objectInfo.defaultOrganization;
+                }
+                return false;
+            }
         }
     ]);

@@ -76,5 +76,16 @@ angular.module('dashboard.emails', ['adf.provider'])
                         $scope.emailTypes = contactMethodTypes;
                         return contactMethodTypes;
                     });
+                $scope.isDefault = function (data) {
+                    var id = 0;
+                    if ($scope.objectInfo.defaultEmail) {
+                        id = $scope.objectInfo.defaultEmail.id
+                    }
+                    var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
+                    if (emails && emails.length == 0) {
+                        return true;
+                    }
+                    return data.id == id;
+                };
             }
     ]);
