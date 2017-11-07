@@ -49,7 +49,7 @@ import java.util.List;
  * These two functions must be in the same class since both tasks must be done in the Spring Security basic
  * authentication filter, and Spring Security allows only one filter in the Basic Authentication filter position.
  * <p>
- * If token request handling was done in some other filter position (e.g. as the pre-authenticateUser filter), then Spring
+ * If token request handling was done in some other filter position (e.g. as the pre-auth filter), then Spring
  * Security always causes an HTTP redirect to be sent to the client, so the client has to issue another request
  * (being sure to include the session cookie) that goes through another authentication chain.  But by placing the token
  * handling in the basic authentication position, there is no redirect and the requested URL is activated right away.
@@ -141,10 +141,11 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             Authentication auth = getAuthenticationTokenService().getAuthenticationForToken(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
             onSuccessfulAuthentication(request, response, auth);
+            log.trace("User [{}] successfully authenticated using acm_ticket [{}]", auth.getName(), token);
         } catch (IllegalArgumentException | ServletRequestBindingException e)
         {
             SecurityContextHolder.clearContext();
-            log.trace("Authentication request failed", e);
+            log.warn("Authentication request failed", e);
 
             AuthenticationException authenticationException = new PreAuthenticatedCredentialsNotFoundException(e.getMessage(), e);
             onUnsuccessfulAuthentication(request, response, authenticationException);
@@ -186,10 +187,17 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
                                 getAuthenticationTokenDao().save(authenticationToken);
-                                log.warn("Authentication for email links acm_email_ticket [{}] expired", emailToken);
+                                log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken, authenticationToken.getCreator());
                                 return;
                             }
-                            authenticateUser(request, authenticationToken.getCreator());
+                            try
+                            {
+                                authenticateUser(request, authenticationToken.getCreator());
+                                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]", authenticationToken.getCreator(), emailToken);
+                            } catch (MuleException e)
+                            {
+                                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(), emailToken);
+                            }
                         }
                     }
                 }
@@ -204,6 +212,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      */
     private void certificateAuthentication(HttpServletRequest request)
     {
+        log.trace("Starting client certificate authentication");
         X509Certificate clientCert = extractX509ClientCertificate(request);
         // if using client certificate and not already authenticated
         if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
@@ -213,7 +222,14 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         // extract userId (Common Name attribute) from the certifcate
         X509PrincipalExtractor principalExtractor = new SubjectDnX509PrincipalExtractor();
         String userId = (String) principalExtractor.extractPrincipal(clientCert);
-        authenticateUser(request, userId);
+        try
+        {
+            authenticateUser(request, userId);
+            log.trace("User [{}] successfully authenticated using client certificate", userId);
+        } catch (MuleException e)
+        {
+            log.warn("User [{}] failed authenticating using client certificate", userId);
+        }
     }
 
     /**
@@ -235,18 +251,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      *
      * @param request HTTP servlet request
      * @param userId  user identifier
+     * @throws MuleException on error while retrieving LDAP groups
      */
-    private void authenticateUser(HttpServletRequest request, String userId)
+    private void authenticateUser(HttpServletRequest request, String userId) throws MuleException
     {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userId, userId);
-        String ldapGroups = null;
-        try
-        {
-            ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
-        } catch (MuleException e)
-        {
-            log.warn("Unable to read LDAP groups for user [{}]", userId);
-        }
+        String ldapGroups = groupService.getLdapGroupsForUser(usernamePasswordAuthenticationToken);
         if (ldapGroups != null)
         {
             SearchResults searchResults = new SearchResults();
@@ -261,7 +271,6 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             }
             Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.debug("[{}] has logged in using Client certificate authentication.");
 
             loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
 
@@ -317,20 +326,20 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_BASIC;
         } else
         {
-            log.trace("Neither token nor certificate authentication requested, skipping");
+            log.trace("Neither token, basic nor certificate authentication requested, skipping");
         }
 
         return authRequestType;
     }
 
-    public void setLoginSuccessOperations(AcmLoginSuccessOperations loginSuccessOperations)
-    {
-        this.loginSuccessOperations = loginSuccessOperations;
-    }
-
     public AcmLoginSuccessOperations getLoginSuccessOperations()
     {
         return loginSuccessOperations;
+    }
+
+    public void setLoginSuccessOperations(AcmLoginSuccessOperations loginSuccessOperations)
+    {
+        this.loginSuccessOperations = loginSuccessOperations;
     }
 
     public AcmLoginSuccessEventListener getLoginSuccessEventListener()
