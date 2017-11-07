@@ -17,10 +17,10 @@ public class OnLoginCheckPasswordExpiration implements ApplicationListener<Login
     {
         if (!loginEvent.isSucceeded())
         {
-            log.debug("On successful login check password expiration");
             Authentication authentication = loginEvent.getAuthentication();
             if (authentication != null)
             {
+                log.debug("Checking password expiration for user: [{}]");
                 if (resetPasswordService.isUserPasswordExpired(authentication.getName()))
                 {
                     log.debug("Password for user [{}] is expired", authentication.getName());
