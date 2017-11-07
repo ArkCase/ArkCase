@@ -21,6 +21,9 @@ public class PageCountServiceImpl implements PageCountService
             try (PDDocument pdDocument = PDDocument.load(new ByteArrayInputStream(data)))
             {
                 numberOfPages = pdDocument.getNumberOfPages();
+            } catch (Exception e)
+            {
+                log.warn("Failed to find number of pages for PDF document", e);
             }
         } else
         {
