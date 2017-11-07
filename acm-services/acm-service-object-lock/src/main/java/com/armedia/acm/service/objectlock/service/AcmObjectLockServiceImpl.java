@@ -16,6 +16,8 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * Created by nebojsha on 25.08.2015.
  */
@@ -56,8 +58,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             if (existingLock.getCreator().equals(auth.getName()))
             {
                 return existingLock;
-            }
-            else
+            } else
             {
                 log.warn(
                         "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
@@ -79,8 +80,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
-        }
-        else
+        } else
         {
             return ol;
         }
@@ -143,7 +143,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     }
 
     @Override
-    public String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
+    public String getObjectLocks(String parentObjectType, Authentication auth, String parentObjectId, String creator, String createdDate, int firstRow, int maxRows,
                                  String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
@@ -153,14 +153,40 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             query.append(" AND ");
             query.append("parent_type_s").append(":").append(parentObjectType);
         }
-        if (lockHeldByUser != null && !StringUtils.isEmpty(lockHeldByUser))
+
+        if (parentObjectId != null && !StringUtils.isEmpty(parentObjectId))
         {
             query.append(" AND ");
-            query.append("creator_lcs").append(":").append(lockHeldByUser);
+            query.append("parent_id_s").append(":").append(parentObjectId);
         }
-        log.debug("executing query for object locks: {}", query.toString());
-
+        if (creator != null && !StringUtils.isEmpty(creator))
+        {
+            query.append(" AND ");
+            query.append("creator_lcs").append(":").append(creator);
+        }
+        if (createdDate != null && !StringUtils.isEmpty(createdDate))
+        {
+            query.append(" AND ");
+            query.append("create_date_tdt").append(":").append(createdDate);
+        }
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
+    }
+
+
+    @Override
+    public String removeLocksOnMultipleObjects(String objectType, List<Long> objectIds, String lockType, Authentication authentication) throws MuleException
+    {
+        for (Long objectId : objectIds)
+        {
+            try
+            {
+                removeLock(objectId, objectType, lockType, authentication);
+            } catch (Exception e)
+            {
+                e.getMessage();
+            }
+        }
+        return "Successfully removed lock";
     }
 
     private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
