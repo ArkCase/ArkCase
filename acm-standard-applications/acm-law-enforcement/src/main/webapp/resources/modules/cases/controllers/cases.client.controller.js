@@ -9,10 +9,9 @@ angular.module('cases').controller('CasesController', ['$scope', '$stateParams',
         $scope.isNodeDisabled = function(node){
             return HelperObjectBrowserService.isNodeDisabled('cases', $translate.instant(node));
         }
+
         CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
-            if(calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled){
-                HelperObjectBrowserService.toggleNodeDisabled('cases', 'Calendar', false);
-            }else{
+            if (!calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
                 HelperObjectBrowserService.toggleNodeDisabled('cases', 'Calendar', true);
             }
         });
