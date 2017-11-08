@@ -1,10 +1,10 @@
 'use strict';
 angular.module('complaints').controller('Complaint.LocationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Complaint.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, ComplaintInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService ) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectModelService ) {
 
 
         Authentication.queryUserInfo().then(
@@ -173,15 +173,8 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultAddress) {
-                id = $scope.objectInfo.defaultAddress.id
-            }
-            if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+        }
     }
 ]);
 

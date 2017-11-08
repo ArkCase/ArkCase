@@ -13,9 +13,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
     })
     .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
-        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
-        function ($scope, $stateParams, $translate,
-                  ComplaintInfoService, PersonInfoService, OrganizationInfoService, ObjectService, HelperObjectBrowserService, HelperUiGridService, Util) {
+        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.ModelService'
+        ,function ($scope, $stateParams, $translate,
+                   ComplaintInfoService, PersonInfoService, OrganizationInfoService, ObjectService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectModelService) {
 
             var modules = [
                 {
@@ -89,15 +89,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             };
 
             $scope.isDefault = function (data) {
-                var id = 0;
-                if ($scope.objectInfo.defaultAddress) {
-                    id = $scope.objectInfo.defaultAddress.id
-                }
-                if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
-                    return true;
-                }
-                return data.id == id;
-            };
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+            }
+
 
         }
     ]);

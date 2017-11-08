@@ -13,9 +13,9 @@ angular.module('dashboard.phones', ['adf.provider'])
             });
     })
     .controller('Dashboard.PhonesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService',
-            function ($scope, $stateParams, $translate,
-                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService) {
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
 
                 var modules = [
                     {
@@ -77,16 +77,9 @@ angular.module('dashboard.phones', ['adf.provider'])
                         return contactMethodTypes;
                     });
                 $scope.isDefault = function (data) {
-                    var id = 0;
-                    if ($scope.objectInfo.defaultPhone) {
-                        id = $scope.objectInfo.defaultPhone.id
-                    }
-                    var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-                    if (phones && phones.length == 0) {
-                        return true;
-                    }
-                    return data.id == id;
-                };
+                    return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+                }
+
         }
     ]);
 
