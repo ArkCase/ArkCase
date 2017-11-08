@@ -114,7 +114,7 @@ angular.module('complaints').controller('Complaint.LocationsController', ['$scop
 
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/complaints/views/components/complaint-locations-modal.client.view.html',
+                templateUrl: 'modules/complaints/views/components/complaint-addresses-modal.client.view.html',
                 controller: 'Complaint.AddressesModalController',
                 size: 'md',
                 backdrop: 'static',
