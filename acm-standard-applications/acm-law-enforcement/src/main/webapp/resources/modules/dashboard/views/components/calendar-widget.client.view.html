@@ -1,5 +1,5 @@
 <div>
-    <div ng-if="calendar.showChart">
+    <div ng-if="calendar.showChart && calendar.isCalendarIntegrationEnabled">
         <div class="panel-body">
             </br>
             <div class="chart-container">
@@ -11,9 +11,14 @@
             </div>
         </div>
     </div>
-    <div class="alert" ng-if="!calendar.showChart">
+    <div class="alert" ng-if="!calendar.showChart && calendar.isCalendarIntegrationEnabled">
         <p class="text-center">
             <span translate>dashboard.widgets.calendar.noDataMessage</span>
+        </p>
+    </div>
+    <div class="alert" ng-if="!calendar.isCalendarIntegrationEnabled">
+        <p class="text-center">
+            <span translate>dashboard.widgets.calendar.calendarIntegrationDisabledMessage</span>
         </p>
     </div>
 </div>
