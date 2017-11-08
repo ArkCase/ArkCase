@@ -334,7 +334,7 @@ public class ExchangeTypesConverter
      * @param sensitivity
      * @return
      */
-    private static Sensitivity convertSensitivity(com.armedia.acm.calendar.service.AcmCalendarEvent.Sensitivity sensitivity)
+    private static Sensitivity convertSensitivity(AcmCalendarEvent.Sensitivity sensitivity)
     {
         switch (sensitivity)
         {
