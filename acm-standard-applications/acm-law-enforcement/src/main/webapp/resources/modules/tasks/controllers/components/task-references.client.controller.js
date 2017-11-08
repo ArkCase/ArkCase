@@ -2,9 +2,9 @@
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , '$modal', 'Object.ReferenceService', 'ObjectService', 'ObjectAssociation.Service'
+    , '$modal', 'Object.ReferenceService', 'ObjectService', 'ObjectAssociation.Service', 'MessageService'
     , function ($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService
-        , HelperObjectBrowserService, $modal, referenceService, ObjectService, ObjectAssociationService) {
+        , HelperObjectBrowserService, $modal, referenceService, ObjectService, ObjectAssociationService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -143,6 +143,8 @@ angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$st
 
                         $scope.gridOptions.data.push(rowEntity);
 
+                    }, function (errorResponse) {
+                        MessageService.error(errorResponse.data);
                     });
                 }
             }, function () {
