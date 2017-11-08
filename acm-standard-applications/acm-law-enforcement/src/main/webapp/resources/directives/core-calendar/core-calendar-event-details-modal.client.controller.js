@@ -149,7 +149,7 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
             CalendarService.getCalendarEventAttachment($scope.objectType, $scope.objectId, file.eventId, file.attachmentId).then(function(result) {
                 CalendarUtilService.downloadCalendarEventAttachment(result);
             }, function(err) {
-                console.log(err);
+                MessageService.errorAction();
             });
         }
 
