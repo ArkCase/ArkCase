@@ -158,8 +158,7 @@
           "email": "Ingrese correo electrónico",
           "password": "Introducir la contraseña",
           "confirmation": "es_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Ingrese una contraseña que no sea igual a nombre de usuario, que contenga 7 caracteres con la combinación de al menos un carácter especial, número, mayúsculas y minúsculas."
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Editar miembro de Ldap",

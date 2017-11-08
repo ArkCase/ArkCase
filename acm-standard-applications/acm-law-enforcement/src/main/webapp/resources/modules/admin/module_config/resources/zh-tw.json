@@ -158,8 +158,7 @@
           "email": "輸入電子郵件",
           "password": "輸入密碼",
           "confirmation": "zh-tw_Enter password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "輸入與用戶名不同的密碼，其中包含至少包含一個特殊字符，數字，大寫和小寫字母的7個字符。"
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "編輯Ldap成員",
