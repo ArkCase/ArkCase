@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service;
 
 import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import org.activiti.engine.HistoryService;
@@ -9,9 +10,12 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.easymock.EasyMockSupport;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,14 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
@@ -61,7 +63,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
     {
         // deploy
         repo.createDeployment()
-                .addClasspathResource("activiti/ArkCase Buckslip Process.bpmn20.xml")
+                .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
                 .deploy();
         userDaoMock = createMock(UserDao.class);
         buckslipTaskCompletedListener.setUserDao(userDaoMock);
@@ -74,36 +76,73 @@ public class BuckslipActivitiIT extends EasyMockSupport
     }
 
     @Test
-    public void basicPath_noApproverChanges() throws Exception
+    public void basicPath_noApproverChanges_nonConcurContinuesApprovals() throws Exception
+    {
+        basicPath(false, "NON_CONCUR");
+    }
+
+    @Test
+    public void basicPath_noApproverChanges_nonConcurEndsApprovals() throws Exception
+    {
+        basicPath(true, "NON_CONCUR");
+    }
+
+    @Test
+    public void basicPath_noApproverChanges_withdraw() throws Exception
+    {
+        basicPath(true, "WITHDRAW");
+    }
+
+    public void basicPath(boolean nonConcurEndsApprovals, String lastTaskOutcome)
     {
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
-        expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
+        if (!"WITHDRAW".equals(lastTaskOutcome)
+                && !(nonConcurEndsApprovals && "NON_CONCUR".equals(lastTaskOutcome)))
+        {
+            expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
+        }
 
         replayAll();
 
-        final String completedApprovalsKey = "pastApprovers";
+        final String completedTasksKey = "pastTasks";
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil");
+        JSONArray futureTasks = new JSONArray();
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
+
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
+
+        makeTask(futureTasks, "phil", "phil task", "phil lesh and friends", 3);
+
+        String strFutureTasks = futureTasks.toString();
+
+        log.debug("JSON future tasks: {}", strFutureTasks);
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("approvers", futureApprovers);
-        processVariables.put("taskDueDateExpression", "P3D");
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
+
+        // nonconcur is false by default
+        if (nonConcurEndsApprovals)
+        {
+            processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, nonConcurEndsApprovals);
+        }
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
+
+        signalActivity(pi, TaskConstants.INITIATE_TASK_NAME);
 
         List<Task> approvals = getTasks(pi);
 
         assertEquals(1, approvals.size());
         Task task = approvals.get(0);
         assertEquals("jerry", task.getAssignee());
-        String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("jerry task", task.getName());
+        String approvalsSoFar = (String) task.getProcessVariables().get(completedTasksKey);
         assertEquals("[]", approvalsSoFar);
 
         completeTask(task, "CONCUR");
@@ -113,7 +152,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("bob", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("bob task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(completedTasksKey);
 
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
 
@@ -124,19 +164,45 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("phil", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("phil task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(completedTasksKey);
 
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
-        completeTask(task, "CONCUR");
+        if ("WITHDRAW".equals(lastTaskOutcome))
+        {
+            rt.messageEventReceived("Withdraw Message", task.getExecutionId());
+        }
+        else
+        {
+            completeTask(task, lastTaskOutcome);
+        }
+        int expectedCurrentProcessInstances = nonConcurEndsApprovals ? 1 : 0;
 
         List<HistoricProcessInstance> hpiList =
                 hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+
+        List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+
+        assertEquals(expectedCurrentProcessInstances, pis.size());
         assertEquals(1, hpiList.size());
 
-        // should not be a current process any more
-        List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).list();
-        assertEquals(0, pis.size());
+        if (nonConcurEndsApprovals || "WITHDRAW".equals(lastTaskOutcome))
+        {
+            // the historic process instance should still be active
+            assertNull(hpiList.get(0).getEndTime());
+            // the receive task should be active now
+            Execution initiateTask = getReceiveTaskId(pi, TaskConstants.INITIATE_TASK_NAME);
+            assertNotNull(initiateTask);
+
+            // future approvers should be restored to the original value
+            String afterEndApprovalsFutureTasks = (String) pis.get(0).getProcessVariables().get("futureTasks");
+            assertEquals(futureTasks.toString(), afterEndApprovalsFutureTasks);
+        }
+        else
+        {
+            assertNotNull(hpiList.get(0).getEndTime());
+        }
 
         verifyAll();
 
@@ -158,28 +224,39 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
         replayAll();
 
-        final String completedApprovalsKey = "pastApprovers";
+        final String pastTasksKey = "pastTasks";
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        List<String> futureApprovers = Arrays.asList("jerry", "bob", "phil", "bill");
+
+        JSONArray futureTasks = new JSONArray();
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
+
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
+
+        makeTask(futureTasks, "phil", "phil task", "phil lesh and friends", 3);
+
+        makeTask(futureTasks, "bill", "bill task", "the other ones", 4);
+
+        String strFutureTasks = futureTasks.toString();
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("futureApprovers", futureApprovers);
-        processVariables.put("taskDueDateExpression", "P3D");
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
+        signalActivity(pi, TaskConstants.INITIATE_TASK_NAME);
 
         List<Task> approvals = getTasks(pi);
 
         assertEquals(1, approvals.size());
         Task task = approvals.get(0);
         assertEquals("jerry", task.getAssignee());
-        String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("jerry task", task.getName());
+        String approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         assertEquals("[]", approvalsSoFar);
 
         completeTask(task, "CONCUR");
@@ -189,25 +266,26 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("bob", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("bob task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
 
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
 
         completeTask(task, "CONCUR");
-
 
         approvals = getTasks(pi);
 
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("phil", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("phil task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
         // here we will set the future approver list to an empty list, so the process should stop now, intead of going on to bill.
         // we should have one more approver from the original list, but we will remove it, and the proces should end.
-        futureApprovers = new ArrayList<>();
-        ts.setVariable(task.getId(), "futureApprovers", futureApprovers);
+        strFutureTasks = "[]";
+        ts.setVariable(task.getId(), "futureTasks", strFutureTasks);
 
         completeTask(task, "CONCUR");
 
@@ -222,6 +300,18 @@ public class BuckslipActivitiIT extends EasyMockSupport
         verifyAll();
     }
 
+    protected void makeTask(JSONArray futureTasks, String approverId, String taskName, String groupName, int taskDuration)
+    {
+        JSONObject task = new JSONObject();
+        task.put("approverId", approverId);
+        task.put("taskName", taskName);
+        task.put("groupName", groupName);
+        task.put("details", "Task Details");
+        task.put("addedBy", "user");
+        task.put("maxTaskDurationInDays", taskDuration);
+        futureTasks.put(task);
+    }
+
 
     @Test
     public void addAnApprover() throws Exception
@@ -234,28 +324,36 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
         replayAll();
 
-        final String completedApprovalsKey = "pastApprovers";
+        final String pastTasksKey = "pastTasks";
         Long objectId = 500L;
         String objectType = "rockBand";
         String documentType = "Concert Contract";
-        List<String> futureApprovers = Arrays.asList("jerry", "bob");
+
+        JSONArray futureTasks = new JSONArray();
+        makeTask(futureTasks, "jerry", "jerry task", "Grateful Dead", 1);
+
+        makeTask(futureTasks, "bob", "bob task", "Furthur", 2);
+
+        String strFutureTasks = futureTasks.toString();
 
         Map<String, Object> processVariables = new HashMap<>();
-        processVariables.put("OBJECT_ID", objectId);
-        processVariables.put("OBJECT_TYPE", objectType);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId);
+        processVariables.put(TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType);
         processVariables.put("documentType", documentType);
-        // the process should work with either "approvers" or "futureApprovers"
-        processVariables.put("futureApprovers", futureApprovers);
-        processVariables.put("taskDueDateExpression", "P3D");
+        processVariables.put(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, strFutureTasks);
+        processVariables.put(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS, Boolean.FALSE);
 
         ProcessInstance pi = rt.startProcessInstanceByKey("ArkCaseBuckslipProcess", processVariables);
+
+        signalActivity(pi, TaskConstants.INITIATE_TASK_NAME);
 
         List<Task> approvals = getTasks(pi);
 
         assertEquals(1, approvals.size());
         Task task = approvals.get(0);
         assertEquals("jerry", task.getAssignee());
-        String approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("jerry task", task.getName());
+        String approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         assertEquals("[]", approvalsSoFar);
 
         completeTask(task, "CONCUR");
@@ -265,15 +363,18 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("bob", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("bob task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
 
         log.debug("Approvers in bob's task: {}", approvalsSoFar);
-        futureApprovers = (List<String>) task.getProcessVariables().get("futureApprovers");
 
-        // here is where we add approvers that were not there when we started the process.
-        futureApprovers.add("phil");
-        futureApprovers.add("bill");
-        ts.setVariable(task.getId(), "futureApprovers", futureApprovers);
+        JSONArray newFutureTasks = new JSONArray();
+        makeTask(newFutureTasks, "phil", "phil task", "phil lesh and friends", 3);
+
+        makeTask(newFutureTasks, "bill", "bill task", "The Other Ones", 4);
+
+        // here is where we add tasks that were not there when we started the process.
+        ts.setVariable(task.getId(), "futureTasks", newFutureTasks.toString());
 
         completeTask(task, "CONCUR");
 
@@ -282,7 +383,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("phil", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("phil task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
         completeTask(task, "CONCUR");
@@ -292,7 +394,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(1, approvals.size());
         task = approvals.get(0);
         assertEquals("bill", task.getAssignee());
-        approvalsSoFar = (String) task.getProcessVariables().get(completedApprovalsKey);
+        assertEquals("bill task", task.getName());
+        approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         log.debug("Approvers in bill's task: {}", approvalsSoFar);
 
         // before completing the last task, should still be a current process
@@ -310,6 +413,19 @@ public class BuckslipActivitiIT extends EasyMockSupport
         assertEquals(0, pis.size());
 
         verifyAll();
+    }
+
+    private void signalActivity(ProcessInstance pi, String activityId)
+    {
+        Execution receiveTask = getReceiveTaskId(pi, activityId);
+        assertNotNull(receiveTask);
+        rt.signal(receiveTask.getId());
+    }
+
+    private Execution getReceiveTaskId(ProcessInstance pi, String receiveTaskId)
+    {
+        return rt.createExecutionQuery().processInstanceId(pi.getProcessInstanceId()).
+                activityId(receiveTaskId).singleResult();
     }
 
 
