@@ -404,15 +404,9 @@ public class ExchangeTypesConverter
         event.setAttendees(attendees);
 
         List<AcmCalendarEventAttachment> files = new ArrayList<>();
+        String appointmentId = appointment.getId().getUniqueId();
         appointment.getAttachments().forEach(att -> {
-            try
-            {
-                files.add(new AcmCalendarEventAttachment(att.getName(), att.getId(), appointment.getId().getUniqueId()));
-            }
-            catch (ServiceLocalException e)
-            {
-
-            }
+            files.add(new AcmCalendarEventAttachment(att.getName(), att.getId(), appointmentId));
         });
         event.setFiles(files);
     }
