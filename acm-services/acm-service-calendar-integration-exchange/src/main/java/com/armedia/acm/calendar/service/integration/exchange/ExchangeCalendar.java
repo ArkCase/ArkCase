@@ -131,9 +131,9 @@ public class ExchangeCalendar implements AcmCalendar
         {
             PropertySet allProperties = new PropertySet();
             allProperties.addRange(PropertyDefinitionHolder.standardProperties);
-            ExtendedPropertyDefinition responseStatus = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.Appointment, 0x00008218,
-                    MapiPropertyType.Long);
-            ExtendedPropertyDefinition replyTime = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.Appointment, 0x00008220,
+            ExtendedPropertyDefinition responseStatus = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.Appointment, 0x8218,
+                    MapiPropertyType.Integer);
+            ExtendedPropertyDefinition replyTime = new ExtendedPropertyDefinition(DefaultExtendedPropertySet.Appointment, 0x8220,
                     MapiPropertyType.SystemTime);
             allProperties.add(responseStatus);
             allProperties.add(replyTime);
