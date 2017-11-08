@@ -1,5 +1,6 @@
 package com.armedia.acm.services.signature.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.signature.dao.SignatureDao;
 import com.armedia.acm.services.signature.exception.AcmSignatureException;
@@ -38,25 +39,25 @@ public class SignatureAPIController
             @RequestBody Map<String, String> body,
             Authentication authentication,
             HttpSession httpSession
-    ) throws AcmUserActionFailedException
+    ) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         String password = body.get("confirmPassword");
         log.info("Electronically signing object [{}] [{}] ", objectType, objectId);
+
+
+        String userName = authentication.getName();
+        // authenticate user/password against ldap service(s)
+        Boolean isAuthenticated = getLdapAuthenticateManager().authenticate(userName, password);
+        if (!isAuthenticated)
+        {
+            throw new AcmAppErrorJsonMsg("Invalid password", objectType, "password", null);
+        }
 
         try
         {
             if (StringUtils.isBlank(password))
             {
                 throw new AcmSignatureException("Password blank");
-            }
-
-            String userName = authentication.getName();
-
-            // authenticate user/password against ldap service(s)
-            Boolean isAuthenticated = getLdapAuthenticateManager().authenticate(userName, password);
-            if (!isAuthenticated)
-            {
-                throw new AcmSignatureException("Could not authenticate with the password provided");
             }
 
             // persist to db
