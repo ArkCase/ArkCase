@@ -61,16 +61,17 @@ angular.module('dashboard.calendar', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 var chartData = [];
                 var labels = [];
-                var today = new Date();
-                CalendarService.getCalendarEvents(DateService.dateToIso(today), DateService.dateToIso(today + 7), module.objectType, objectInfo[module.objectIdPropertyName])
+                var today = moment();
+                var endDate = moment().add(7, 'days');
+                CalendarService.getCalendarEvents(DateService.dateToIso(today.toDate()), DateService.dateToIso(endDate.toDate()), module.objectType, objectInfo[module.objectIdPropertyName])
                     .then(function (res) {
                         var events = [];
-                        _.forEach(res.data, function(value, key) {
+                        _.forEach(res.data, function(event) {
                             events.push({
-                                id: value.eventId,
-                                title: value.subject,
-                                start: value.start,
-                                end: value.end
+                                id: event.eventId,
+                                title: event.subject,
+                                start: event.start,
+                                end: event.end
                             });
                         });
                           
@@ -79,7 +80,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                              * create initial data
                              */
                             var calendarChartData = [];
-                            var targetDays = getRange(today, today + 7);
+                            var targetDays = getRange(today.toDate(), endDate.toDate());
                             _.forEach(targetDays, function (day) {
                                 calendarChartData.push({day: day, count: 0})
                             });
@@ -133,21 +134,19 @@ angular.module('dashboard.calendar', ['adf.provider'])
             /**
              * credit: http://stackoverflow.com/a/4413991
              */
-            var getRange = function (startDate, endDate, addFn, interval) {
+            var getRange = function (startDate, endDate, daysInterval) {
 
-                addFn = addFn || Date.prototype.addDays;
-                interval = interval || 1;
+                daysInterval = daysInterval || 1;
 
                 var retVal = [];
                 var current = new Date(startDate);
 
                 while (current <= endDate) {
                     retVal.push(new Date(current));
-                    current = addFn.call(current, interval);
+                    current.setTime(current.getTime() + daysInterval * 86400000 );
                 }
 
                 return retVal;
-
             };
             
             CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
