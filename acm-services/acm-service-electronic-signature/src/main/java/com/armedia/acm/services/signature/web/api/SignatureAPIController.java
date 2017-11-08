@@ -53,13 +53,13 @@ public class SignatureAPIController
             throw new AcmAppErrorJsonMsg("Invalid password", objectType, "password", null);
         }
 
+        if (StringUtils.isBlank(password))
+        {
+            throw new AcmAppErrorJsonMsg("Password blank", objectType, "password", null);
+        }
+
         try
         {
-            if (StringUtils.isBlank(password))
-            {
-                throw new AcmSignatureException("Password blank");
-            }
-
             // persist to db
             Signature signature = new Signature();
             signature.setObjectId(objectId);
