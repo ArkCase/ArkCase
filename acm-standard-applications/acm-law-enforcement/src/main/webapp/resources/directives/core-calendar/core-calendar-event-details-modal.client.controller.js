@@ -147,22 +147,7 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 
         $scope.downloadAttachment = function(file) {
             CalendarService.getCalendarEventAttachment($scope.objectType, $scope.objectId, file.eventId, file.attachmentId).then(function(result) {
-                var file = new Blob([result.data], {type: result.headers(["content-type"])});
-                var filename = "Untitled";
-                var disposition = result.headers(["content-disposition"]);
-                if (disposition && disposition.indexOf('inline') !== -1) {
-                    var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-                    var matches = filenameRegex.exec(disposition);
-                    if (matches != null && matches[1]) { 
-                      filename = matches[1].replace(/['"]/g, '');
-                    }
-                }
-                var url = URL.createObjectURL(file);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = filename;
-                a.target = '_blank';
-                a.click();
+                CalendarUtilService.downloadCalendarEventAttachment(result);
             }, function(err) {
                 console.log(err);
             });
