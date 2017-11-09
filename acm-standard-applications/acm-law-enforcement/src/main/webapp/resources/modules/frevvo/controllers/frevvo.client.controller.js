@@ -299,7 +299,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                     $scope.personTypes = $scope.complaintPersonInitiatorTypes;
                 }
                 params.type = '';
-                params.typeDisabled = true;
+                params.typeEnabled = false;
 
                 if (!Util.isArrayEmpty($scope.personTypes)) {
                     params.type = $scope.personTypes[0].key;
@@ -312,7 +312,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 else if(data.formType === "COMPLAINT") {
                     $scope.personTypes = $scope.complaintPersonTypes;
                 }
-                params.typeDisabled = false;
+                params.typeEnabled = true;
             }
 
             params.pickerType = message.pickerType;

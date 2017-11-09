@@ -20,6 +20,11 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
                 $scope.personTypes = personTypes;
                 return personTypes;
             });
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.CASE_FILE, true).then(
+            function (personTypes) {
+                $scope.personTypesInitiator = personTypes;
+                return personTypes;
+            });
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -79,10 +84,16 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
             params.types = $scope.personTypes;
 
             if (association) {
+                if (association.personType == 'Initiator') {
+                    //change the types only for initiator
+                    params.types = $scope.personTypesInitiator;
+                }
                 angular.extend(params, {
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.personType,
+                    selectExistingEnabled: association.personType == 'Initiator' ? true : false,
+                    typeEnabled: association.personType == 'Initiator' ? false : true,
                     description: association.personDescription
                 });
             } else {
@@ -159,10 +170,6 @@ angular.module('cases').controller('Cases.PeopleController', ['$scope', '$q', '$
             }
             return promiseSaveInfo;
         }
-
-        $scope.isEditDisabled = function (rowEntity) {
-            return rowEntity.personType == 'Initiator';
-        };
 
         $scope.isDeleteDisabled = function (rowEntity) {
             return rowEntity.personType == 'Initiator';

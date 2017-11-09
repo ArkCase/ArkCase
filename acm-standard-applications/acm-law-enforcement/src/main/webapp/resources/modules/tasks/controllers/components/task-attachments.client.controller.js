@@ -44,6 +44,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
                         $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)})
                     }
                     $scope.treeConfig.fileLanguages = data[2];
+                    $scope.treeControl.refreshTree();
                 });
         };
 
