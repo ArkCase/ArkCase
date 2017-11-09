@@ -1872,8 +1872,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         var newFolderMenu = _.find(menu, {cmd: "newFolder"});
                         var newFileMenu = _.find(menu, {cmd: "subMenuFileTypes"});
                         if (newFolderMenu && newFileMenu) {
-                            newFolderMenu.disabledExpression = disabled;
-                            newFileMenu.disabledExpression = disabled;
+                            newFolderMenu.disabledExpression = disabled || DocTree.readOnly;
+                            newFileMenu.disabledExpression = disabled || DocTree.readOnly;
                         }
                         //} else {
                         //    var menu0 = [Util.goodMapValue(DocTree.treeConfig, "noop")];

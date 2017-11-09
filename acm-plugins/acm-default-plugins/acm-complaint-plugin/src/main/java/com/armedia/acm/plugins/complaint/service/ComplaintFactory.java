@@ -6,33 +6,17 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormFactory;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
-import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.addressable.model.xml.GeneralPostalAddress;
-import com.armedia.acm.plugins.addressable.model.xml.InitiatorContactMethod;
-import com.armedia.acm.plugins.addressable.model.xml.InitiatorPostalAddress;
-import com.armedia.acm.plugins.addressable.model.xml.PeopleContactMethod;
-import com.armedia.acm.plugins.addressable.model.xml.PeoplePostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
-import com.armedia.acm.plugins.complaint.model.complaint.Contact;
-import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
-import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorContact;
-import com.armedia.acm.plugins.complaint.model.complaint.xml.InitiatorMainInformation;
-import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleContact;
-import com.armedia.acm.plugins.complaint.model.complaint.xml.PeopleMainInformation;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
-import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.model.xml.InitiatorOrganization;
-import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
-import com.armedia.acm.plugins.person.model.xml.PeopleOrganization;
-import com.armedia.acm.plugins.person.model.xml.PeoplePersonAlias;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +27,6 @@ import java.util.List;
 
 public class ComplaintFactory extends FrevvoFormFactory
 {
-    private static final String ANONYMOUS = "Anonymous";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private PersonDao personDao;
     private PersonAssociationDao personAssociationDao;
@@ -65,7 +48,8 @@ public class ComplaintFactory extends FrevvoFormFactory
         retval.setIncidentDate(formComplaint.getDate());
         retval.setPriority(formComplaint.getPriority());
         retval.setComplaintTitle(formComplaint.getComplaintTitle());
-        retval.setParticipants(asAcmParticipants(formComplaint.getParticipants(), formComplaint.getOwningGroup(), FrevvoFormName.COMPLAINT));
+        retval.setParticipants(
+                asAcmParticipants(formComplaint.getParticipants(), formComplaint.getOwningGroup(), FrevvoFormName.COMPLAINT));
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(formComplaint.getDate());
@@ -77,27 +61,20 @@ public class ComplaintFactory extends FrevvoFormFactory
         retval.setTag(formComplaint.getComplaintTag());
         retval.setFrequency(formComplaint.getFrequency());
 
-
-
-        if (formComplaint.getAddresses() != null)
+        if (formComplaint.getLocation() != null)
         {
             List<PostalAddress> addresses = new ArrayList<PostalAddress>();
-            for (PostalAddress postalAddress : formComplaint.getAddresses())
-            {
-                InitiatorPostalAddress a = new InitiatorPostalAddress(postalAddress);
-                addresses.add(a);
-            }
+            addresses.add(formComplaint.getLocation().returnBase());
             retval.setAddresses(addresses);
         }
 
         if (formComplaint.getInitiatorId() != null)
 
-
         {
             PersonAssociation pa = new PersonAssociation();
             Person initiator = getPersonDao().find(formComplaint.getInitiatorId());
 
-            if(initiator != null)
+            if (initiator != null)
             {
                 pa.setPerson(initiator);
                 pa.setPersonType(formComplaint.getInitiatorType());
@@ -108,13 +85,13 @@ public class ComplaintFactory extends FrevvoFormFactory
 
         if (formComplaint.getPeople() != null && formComplaint.getPeople().size() > 0)
         {
-            for(PersonItem personItem : formComplaint.getPeople())
+            for (PersonItem personItem : formComplaint.getPeople())
             {
                 Person person = getPersonDao().find(personItem.getId());
-                PersonAssociation personAssociation = (personItem.getPersonAssociationId() == null) ? new PersonAssociation() : getPersonAssociationDao().find(
-                        personItem.getPersonAssociationId());
+                PersonAssociation personAssociation = (personItem.getPersonAssociationId() == null) ? new PersonAssociation()
+                        : getPersonAssociationDao().find(personItem.getPersonAssociationId());
 
-                if(person == null)
+                if (person == null)
                     continue;
 
                 personAssociation.setPerson(person);
@@ -123,7 +100,7 @@ public class ComplaintFactory extends FrevvoFormFactory
             }
 
         }
-        if(paArray!= null && paArray.size() > 0)
+        if (paArray != null && paArray.size() > 0)
         {
             retval.setPersonAssociations(paArray);
         }
@@ -148,18 +125,10 @@ public class ComplaintFactory extends FrevvoFormFactory
             complaintForm.setDate(complaint.getCreated());
             complaintForm.setComplaintTag(complaint.getTag());
             complaintForm.setFrequency(complaint.getFrequency());
-
-            if (complaint.getAddresses() != null)
+            if (complaint.getDefaultAddress() != null)
             {
-                List<PostalAddress> addresses = new ArrayList<PostalAddress>();
-                for (PostalAddress postalAddress : complaint.getAddresses())
-                {
-                    InitiatorPostalAddress a = new InitiatorPostalAddress(postalAddress);
-                    addresses.add(a);
-                }
-                complaintForm.setAddresses(addresses);
+                complaintForm.setLocation(new GeneralPostalAddress(complaint.getDefaultAddress()));
             }
-
 
             if (complaint.getOriginator() != null && complaint.getOriginator().getPerson() != null)
             {
@@ -194,22 +163,24 @@ public class ComplaintFactory extends FrevvoFormFactory
                 if (complaint.getContainer() != null)
                 {
                     complaintForm.setCmisFolderId(complaint.getContainer().getFolder().getCmisFolderId());
-                } else
+                }
+                else
                 {
                     AcmContainer container = getFileService().getOrCreateContainer(complaint.getObjectType(), complaint.getId());
                     complaintForm.setCmisFolderId(container.getFolder().getCmisFolderId());
                 }
-            } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+            }
+            catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
             {
                 log.error("Unknown CMIS folder for this complaint! " + e.getMessage(), e);
             }
-
 
             // Populate participants
             complaintForm.setParticipants(asFrevvoParticipants(complaint.getParticipants()));
             // Populate owning group
             complaintForm.setOwningGroup(asFrevvoGroupParticipant(complaint.getParticipants()));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Cannot convert Object to Frevvo form.", e);
         }
@@ -226,7 +197,8 @@ public class ComplaintFactory extends FrevvoFormFactory
     }
 
     /**
-     * @param personDao the personDao to set
+     * @param personDao
+     *            the personDao to set
      */
     public void setPersonDao(PersonDao personDao)
     {
