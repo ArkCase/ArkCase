@@ -1,5 +1,8 @@
 package com.armedia.acm.plugins.ecm.handler;
 
+import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.AcmMarshaller;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
@@ -25,6 +28,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private FileWorkflowBusinessRule fileWorkflowBusinessRule;
 
     private RuntimeService activitiRuntimeService;
+
+    private ObjectConverter objectConverter;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -84,11 +89,34 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());
 
+        pvars.put("futureTasks", getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
+
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
 
         LOG.debug("Started business process with id {} for file of type {}, id {}", pi.getId(), event.getSource().getFileType(),
                 event.getEcmFileId());
 
+    }
+
+    private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy, int maxDurationInDays)
+    {
+        AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
+        List<BuckslipFutureTask> futureTasks = new ArrayList<>();
+
+        approvers.forEach(approver -> {
+            BuckslipFutureTask task = new BuckslipFutureTask();
+
+            task.setApproverId(approver);
+            task.setTaskName(taskName);
+            task.setGroupName(groupName);
+            task.setDetails(details);
+            task.setAddedBy(addedBy);
+            task.setMaxTaskDurationInDays(maxDurationInDays);
+
+            futureTasks.add(task);
+        });
+
+        return converter.marshal(futureTasks);
     }
 
     public FileWorkflowBusinessRule getFileWorkflowBusinessRule()
@@ -109,5 +137,15 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

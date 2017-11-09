@@ -158,8 +158,7 @@
           "email": "ईमेल दर्ज करें",
           "password": "पास वर्ड दर्ज करें",
           "confirmation": "hi_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "एक पासवर्ड दर्ज करें जो यूज़रनेम के समान नहीं है, जिसमें कम से कम एक विशेष वर्ण, संख्या, अपरकेस और लोअरकेस अक्षरों के संयोजन के साथ 7 वर्ण हैं।"
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Ldap सदस्य को संपादित करें",
