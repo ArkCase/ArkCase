@@ -8,8 +8,7 @@
     "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "hi_MM/dd/yyyy",
     "defaultDateUIFormat": "hi_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
+    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
   },
   "common.addOrganization": {
     "title": "hi_Add Parent Organization",

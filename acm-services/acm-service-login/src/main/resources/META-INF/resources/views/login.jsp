@@ -148,7 +148,7 @@ Time: 12:44
     </div>
 
     <div id="forgot-username-error" style="display:none" class="alert alert-danger">
-        User with this email does not exist in the system.
+        Valid user with this email does not exist in the system.
     </div>
 
     <div id="forgot-password-success" style="display:none" class="alert alert-success">
@@ -156,7 +156,7 @@ Time: 12:44
     </div>
 
     <div id="forgot-password-error" style="display:none" class="alert alert-danger">
-        User with this username and email address does not exist in the system.
+        Valid user with this username and email address does not exist in the system.
     </div>
 
 
