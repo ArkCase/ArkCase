@@ -117,6 +117,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                         $scope.externalSearchServiceParams = {};
                         $scope.externalSearchServiceParams.organizationId = params.organizationId;
                         $scope.externalSearchServiceName = params.externalSearchService;
+                        $scope.externalSearchServiceMethod = "queryFilteredSearch";
                     }],
                     animation: true,
                     size: 'lg',
