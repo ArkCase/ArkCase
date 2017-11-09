@@ -157,10 +157,8 @@
           "lastName": "Entrez le nom de famille",
           "email": "Entrer un email",
           "password": "Entrer le mot de passe",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Entrez un mot de passe qui n'est pas le même que le nom d'utilisateur, contenant 7 caractères avec la combinaison d'au moins un caractère spécial, un nombre, une majuscule et une minuscule.",
-          "confirmation": "fr_Enter your password again"
+          "confirmation": "fr_Enter your password again",
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Modifier le membre Ldap",

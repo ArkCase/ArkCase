@@ -69,7 +69,7 @@ var CustomEventHandlers = {
             FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
         } else if (isObjectPicker(el)) {
             FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
-        } else if(isCasePersonPicker(el)) {
+        } else if(isCasePersonPicker(el) || isAdvancedCasePersonPicker(el)) {
             FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'CASE_FILE'));
         } else if(isComplaintPersonPicker(el)) {
             FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'COMPLAINT'));
@@ -117,9 +117,18 @@ var CustomEventHandlers = {
                         if(e.data.action == "fill-person-picker-data") {
                             var element = frevvoMessaging.elements[e.data.elementId];
                             if (!isEmpty(element)) {
-                                updateElement(element, 'fullName', e.data.data.fullName);
-                                updateElement(element, 'id', e.data.data.personId);
-                                updateElement(element, 'personType', e.data.data.personType);
+                                if (isCasePersonPicker(element)) {
+                                    updateElement(element, 'fullName', e.data.data.fullName);
+                                    updateElement(element, 'id', e.data.data.personId);
+                                    updateElement(element, 'personType', e.data.data.personType);
+                                } else if (isAdvancedCasePersonPicker(element)) {
+                                    updateElement(element, 'firstName', e.data.data.firstName);
+                                    updateElement(element, 'middleName', e.data.data.middleName);
+                                    updateElement(element, 'lastName', e.data.data.lastName);
+                                    updateElement(element, 'email', e.data.data.email);
+                                    updateElement(element, 'id', e.data.data.personId);
+                                    updateElement(element, 'personType', e.data.data.personType);
+                                }
                             }
                         }
                     }
@@ -138,7 +147,11 @@ var CustomEventHandlers = {
             message.elementId = element.id;
             frevvoMessaging.elements[element.id] = element;
 
-            var owningGroup = getOwningGroup();
+			var participantType = findElement(element, 'participantType');
+            var owningGroup = null;
+			if (!isEmpty(participantType) && participantType.getAttribute('ovalue') === 'assignee') {
+				owningGroup = getOwningGroup();
+			}
             if (!isEmpty(owningGroup)) {
                 message.data = {"owningGroup": owningGroup};
             }
@@ -344,6 +357,11 @@ function isCasePersonPicker(element) {
     return (cssClass && cssClass.indexOf('casePersonPicker') > -1);
 }
 
+function isAdvancedCasePersonPicker(element) {
+    var cssClass = getCssClass(element);
+    return (cssClass && cssClass.indexOf('advancedCasePersonPicker') > -1);
+}
+
 function isComplaintPersonPicker(element) {
     var cssClass = getCssClass(element);
     return (cssClass && cssClass.indexOf('complaintPersonPicker') > -1);
@@ -413,6 +431,16 @@ function updateElement(element, fieldName, value) {
 			dispatchChangeEvent(elementToUpdate);
 		}
 	}
+}
+
+function findElement(element, key) {
+	try{
+		return element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('div[cname=participantType] input')[0];
+	}catch(e) {
+		// Normal behaviour - element is not found
+	}
+	
+	return null;
 }
 
 /**
