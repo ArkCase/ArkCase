@@ -1386,16 +1386,16 @@
       ],
       "attachedToObjectType": [
         {
+          "name": "",
+          "id": ""
+        },
+        {
           "name": "Case File",
           "id": "CASE_FILE"
         },
         {
           "name": "Complaint",
           "id": "COMPLAINT"
-        },
-        {
-          "name": "",
-          "id": ""
         }
       ],
       "data": {
