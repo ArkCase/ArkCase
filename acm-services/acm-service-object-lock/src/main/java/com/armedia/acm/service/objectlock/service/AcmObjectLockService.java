@@ -73,8 +73,7 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getObjectLocks(String parentObjectType, Authentication auth, String parentObjectId, String creator, String createdDate, int firstRow, int maxRows, String sort,
+    String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows, String sort,
                           String fqParams) throws MuleException;
 
-    String removeLocksOnMultipleObjects(String objectType, List<Long> objectIds, String lockType, Authentication authentication) throws MuleException;
 }
