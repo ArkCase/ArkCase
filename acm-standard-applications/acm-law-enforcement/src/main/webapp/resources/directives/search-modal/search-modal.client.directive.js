@@ -129,7 +129,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                             if(!Util.isEmpty(scope.externalSearchServiceName)){
                                 scope.externalSearchServiceName.queryFilteredSearch({
                                         query: query,
-                                        organizationId: scope.externalSearchServiceParams.parentOrganizationId
+                                        organizationId: scope.externalSearchServiceParams.organizationId
                                     },
                                     successSearchResult);
                             } else {
