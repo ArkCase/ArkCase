@@ -158,8 +158,7 @@
           "email": "Enter email",
           "password": "Enter password",
           "confirmation": "en-in_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",

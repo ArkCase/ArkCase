@@ -158,8 +158,7 @@
           "email": "Введите адрес электронной почты",
           "password": "Введите пароль",
           "confirmation": "ru_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Введите пароль, который не совпадает с именем пользователя, содержащим 7 символов с комбинацией по крайней мере одного специального символа, числа, прописных и строчных букв."
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Изменить участника Ldap",
