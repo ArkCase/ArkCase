@@ -309,12 +309,13 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     public Integer getPercentComplete()
     {
-        return percentComplete;
+        return percentComplete != null && percentComplete > 0? percentComplete: 0;
     }
 
     public void setPercentComplete(Integer percentComplete)
     {
-        this.percentComplete = percentComplete;
+
+        this.percentComplete = percentComplete != null && percentComplete > 0? percentComplete: 0;
     }
 
     public String getDetails()
