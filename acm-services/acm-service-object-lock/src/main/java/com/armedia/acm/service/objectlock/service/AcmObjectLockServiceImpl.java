@@ -143,7 +143,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
     }
 
     @Override
-    public String getObjectLocks(String parentObjectType, Authentication auth, String parentObjectId, String creator, String createdDate, int firstRow, int maxRows,
+    public String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows,
                                  String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
@@ -154,39 +154,17 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             query.append("parent_type_s").append(":").append(parentObjectType);
         }
 
-        if (parentObjectId != null && !StringUtils.isEmpty(parentObjectId))
+        if (objectId != null && !StringUtils.isEmpty(objectId))
         {
             query.append(" AND ");
-            query.append("parent_id_s").append(":").append(parentObjectId);
+            query.append("parent_id_s").append(":").append(objectId);
         }
         if (creator != null && !StringUtils.isEmpty(creator))
         {
             query.append(" AND ");
-            query.append("creator_lcs").append(":").append(creator);
-        }
-        if (createdDate != null && !StringUtils.isEmpty(createdDate))
-        {
-            query.append(" AND ");
-            query.append("create_date_tdt").append(":").append(createdDate);
+            query.append("creator_partial").append(":").append(creator);
         }
         return executeQuery(query.toString(), auth, firstRow, maxRows, sort, fqParams);
-    }
-
-
-    @Override
-    public String removeLocksOnMultipleObjects(String objectType, List<Long> objectIds, String lockType, Authentication authentication) throws MuleException
-    {
-        for (Long objectId : objectIds)
-        {
-            try
-            {
-                removeLock(objectId, objectType, lockType, authentication);
-            } catch (Exception e)
-            {
-                e.getMessage();
-            }
-        }
-        return "Successfully removed lock";
     }
 
     private String executeQuery(String query, Authentication auth, int firstRow, int maxRows, String sort, String fqParams)
