@@ -4,6 +4,11 @@ import com.armedia.acm.service.objectlock.exception.AcmObjectLockException;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.service.objectlock.service.AcmObjectLockService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,26 +127,54 @@ public class AcmObjectLockAPIController
     @RequestMapping(value = {"/api/v1/plugin/locks/{objectType}",
             "/api/latest/plugin/locks/{objectType}"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String listLocks(@RequestParam(value = "parentObjectId", required = false) String parentObjectId,
+    public String listLocks(@RequestParam(value = "parentObjectId", required = false) String objectId,
                             @RequestParam(value = "creator", required = false) String creator,
-                            @RequestParam(value = "createdDate", required = false) String createdDate,
                             @PathVariable(value = "objectType") String objectType,
                             @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
                             @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
                             @RequestParam(value = "sort", defaultValue = "", required = false) String sort, Authentication authentication)
             throws MuleException, IOException
     {
-        return objectLockService.getObjectLocks(objectType, authentication, parentObjectId, creator, createdDate, firstRow, maxRows, sort, null);
+        return objectLockService.getObjectLocks(objectType, authentication, objectId, creator, firstRow, maxRows, sort, null);
 
     }
 
+    /**
+     * This method will unlock as many case file locks as possible from selected.
+     *
+     * @param objectType object type
+     * @param objectIds  object ids
+     * @param lockType   lcok type
+     * @param auth       auth
+     * @return list of successful or failed unlock requests
+     * @throws MuleException
+     */
     @PreAuthorize("hasPermission(#objectIds, #objectType, 'unlock')")
     @RequestMapping(value = {"/api/latest/plugin/locks/{objectType}/lock", "/api/v1/plugin/locks/{objectType}/lock"}, method = RequestMethod.DELETE)
-    public String releaseMultipleLock(@PathVariable(value = "objectType") String objectType,
-                                      @RequestParam(value = "requestIds") List<Long> requestIds,
-                                      @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
+    @ResponseBody
+    public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
+                                          @RequestParam(value = "parentObjectIds") List<Long> objectIds,
+                                          @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
     {
-        return objectLockService.removeLocksOnMultipleObjects(objectType, requestIds, lockType, auth);
+        JSONArray resultList = new JSONArray();
+        for (Long objectId : objectIds)
+        {
+            JSONObject result = new JSONObject();
+            result.put("id", objectId);
+            log.debug("Trying to remove the lock on object [{}] of type [{}]", objectId, objectType);
+            try
+            {
+                objectLockService.removeLock(objectId, objectType, lockType, auth);
+                log.debug("Successfully removed the lock on object [{}] of type [{}]", objectId, objectType);
+                result.put("status", "Success");
+            } catch (AcmObjectLockException e)
+            {
+                log.warn("Couldn't remove the lock on object [{}] of type [{}]", objectId, objectType, e);
+                result.put("status", "Failed");
+            }
+            resultList.put(result);
+        }
+        return resultList.toString();
     }
 
     public void setObjectLockService(AcmObjectLockService objectLockService)
