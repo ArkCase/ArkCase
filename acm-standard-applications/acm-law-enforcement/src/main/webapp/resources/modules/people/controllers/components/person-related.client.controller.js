@@ -2,16 +2,21 @@
 
 angular.module('people').controller('People.RelatedController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Object.LookupService', 'ObjectAssociation.Service', '$timeout', 'PermissionsService', 'MessageService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ObjectLookupService, ObjectAssociationService, $timeout, PermissionsService, MessageService) {
 
         $scope.relationshipTypes = [];
         ObjectLookupService.getPersonRelationTypes().then(
             function (relationshipTypes) {
                 for (var i = 0; i < relationshipTypes.length; i++) {
-                    $scope.relationshipTypes.push({"key": relationshipTypes[i].inverseKey, "value" : relationshipTypes[i].inverseValue, "inverseKey": relationshipTypes[i].key, "inverseValue": relationshipTypes[i].value});
+                    $scope.relationshipTypes.push({
+                        "key": relationshipTypes[i].inverseKey,
+                        "value": relationshipTypes[i].inverseValue,
+                        "inverseKey": relationshipTypes[i].key,
+                        "inverseValue": relationshipTypes[i].value
+                    });
                 }
 
                 return relationshipTypes;
@@ -72,6 +77,19 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             });
         }
 
+        $scope.getLocation = function (defaultLocation) {
+            if (!Util.isEmpty(defaultLocation)) {
+                var city = defaultLocation.split(", ")[0];
+                var state = defaultLocation.split(", ")[1];
+                if (!Util.isEmpty()) {
+                    return city + ", " + state;
+                } else {
+                    return city;
+                }
+            }
+            return "";
+        };
+
         $scope.addPersonAssociation = function () {
             personAssociationModal({});
         };
@@ -88,7 +106,10 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
             var params = {
                 showSetPrimary: false,
-                types: $scope.relationshipTypes
+                types: $scope.relationshipTypes,
+                skipPeopleIdsInSearch: [
+                    $scope.objectInfo.id//skip parent in the search
+                ]
             };
             if (rowEntity) {
                 angular.extend(params, {
@@ -184,6 +205,8 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                 // $timeout(function () {
                 //     refreshGridData($scope.objectInfo.id, $scope.objectInfo.objectType);
                 // }, 2500);
+            }, function (errorResponse) {
+                MessageService.error(errorResponse.data);
             });
         }
 

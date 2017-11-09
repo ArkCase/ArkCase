@@ -1,8 +1,24 @@
 'use strict';
 
-angular.module('profile').controller('Profile.SubscriptionController', ['$http', '$scope', 'Object.SubscriptionService', 'Authentication',
-    function ($http, $scope, ObjectSubscriptionService, Authentication) {
-        $scope.$emit('req-component-config', 'subscription');
+angular.module('profile').controller('Profile.SubscriptionController', ['$http', '$scope'
+    , 'Object.SubscriptionService', 'ConfigService'
+    , function ($http, $scope
+        , ObjectSubscriptionService, ConfigService) {
+
+        $scope.config = null;
+        $scope.subscribptionGridOptions = {};
+        ConfigService.getComponentConfig("profile", "subscription").then(function (config) {
+            $scope.config = config;
+            $scope.subscribptionGridOptions = {
+                data: [],
+                columnDefs: config.columnDefs,
+                paginationPageSizes: config.paginationPageSizes,
+                paginationPageSize: config.paginationPageSize,
+                onRegisterApi: function (gridApi) {
+                    $scope.gridApi = gridApi;
+                }
+            };
+        });
 
         $scope.unsubscribe = function (rowEntity) {
             var index = $scope.subscribptionGridOptions.data.indexOf(rowEntity);
@@ -22,25 +38,6 @@ angular.module('profile').controller('Profile.SubscriptionController', ['$http',
                 var type = rowSelected[i].type;
                 ObjectSubscriptionService.unsubscribe(userID, type, parentID);
                 $scope.subscribptionGridOptions.data.splice(index, 1);
-            }
-        };
-
-        $scope.config = null;
-        $scope.subscribptionGridOptions = {};
-        $scope.$on('component-config', applyConfig);
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'subscription') {
-                $scope.config = config;
-                $scope.subscribptionGridOptions = {
-                    data: [],
-                    columnDefs: config.columnDefs,
-                    paginationPageSizes: config.paginationPageSizes,
-                    paginationPageSize: config.paginationPageSize,
-                    onRegisterApi: function (gridApi) {
-                        $scope.gridApi = gridApi;
-                    }
-                };
-
             }
         };
 

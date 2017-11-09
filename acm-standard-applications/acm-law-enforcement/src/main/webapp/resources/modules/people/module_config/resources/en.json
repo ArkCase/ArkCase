@@ -367,7 +367,7 @@
     }
   },
   "people.comp.related": {
-    "title": "Related People",
+    "title": "Rel People",
     "table.columns": {
       "firstName": "First Name",
       "lastName": "Last Name",
@@ -398,6 +398,7 @@
     "middleName": "Middle Name",
     "middleName.placeholder": "Enter Middle Name",
     "saveButton": "Save Person",
+    "cancelButton": "Cancel",
     "informCreated": "{{personType}} {{firstName}} {{lastName}} was created.",
     "informUpdated": "{{firstName}} {{lastName}} Updated",
     "communicationAccounts": {

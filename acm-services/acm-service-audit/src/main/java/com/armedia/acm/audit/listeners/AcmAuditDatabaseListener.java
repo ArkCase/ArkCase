@@ -35,6 +35,7 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     private AuditService auditService;
     private boolean databaseChangesLoggingEnabled;
     private boolean databaseChangesLoggingFieldValuesEnabled;
+    private ObjectConverter objectConverter;
 
     private static final String EVENT_TYPE = "com.armedia.acm.audit.database";
 
@@ -164,7 +165,7 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
             Map<String, String> eventProperties = new HashMap<>();
 
             // Convert Object to JSON string
-            AcmMarshaller converter = ObjectConverter.createJSONMarshaller();
+            AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
             eventProperties.put("Object", converter.marshal(object));
 
             auditEvent.setEventProperties(eventProperties);
@@ -225,5 +226,15 @@ public class AcmAuditDatabaseListener implements ApplicationListener<AcmDatabase
     public void setDatabaseChangesLoggingFieldValuesEnabled(boolean databaseChangesLoggingFieldValuesEnabled)
     {
         this.databaseChangesLoggingFieldValuesEnabled = databaseChangesLoggingFieldValuesEnabled;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

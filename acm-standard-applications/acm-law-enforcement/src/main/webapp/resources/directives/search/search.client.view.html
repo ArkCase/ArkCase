@@ -86,7 +86,7 @@
                     <div class="panel-title">
                         {{(gridOptions.data.length > 0 ? 'common.directive.search.results.text' : 'common.directive.search.noResults.text') | translate}}
                         <div class="pull-right" ng-if="gridOptions.data.length > 0">
-                            <a class="btn btn-xs btn-default" type="button" ng-href="{{exportUrl}}">{{ exportBtn }}</a>
+                            <a class="btn btn-xs btn-default" type="button" ng-click="export()">{{ exportBtn }}</a>
                         </div>
                     </div>
                 </div>

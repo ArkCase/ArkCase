@@ -4,6 +4,8 @@ import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -47,7 +49,9 @@ import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
@@ -89,6 +93,74 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private TaskEventPublisher taskEventPublisher;
     private AcmUserService acmUserService;
     private EcmFileParticipantService fileParticipantService;
+
+    private ObjectConverter objectConverter;
+
+    @Override
+    public List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables)
+    {
+        ProcessInstanceQuery processInstanceQuery = getActivitiRuntimeService().createProcessInstanceQuery().includeProcessVariables()
+                .orderByProcessInstanceId().asc();
+        matchProcessVariables.entrySet().stream().forEach(e -> processInstanceQuery.variableValueEquals(e.getKey(), e.getValue()));
+        List<ProcessInstance> retval = processInstanceQuery.list();
+        return retval;
+    }
+
+    @Override
+    public boolean isProcessActive(String businessProcessId) throws AcmTaskException
+    {
+        ProcessInstance pi = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(businessProcessId).singleResult();
+        return pi != null;
+    }
+
+    @Override
+    public boolean isWaitingOnReceiveTask(String businessProcessId, String receiveTaskId) throws AcmTaskException
+    {
+        Execution execution = getActivitiRuntimeService().createExecutionQuery().processInstanceId(businessProcessId)
+                .activityId(receiveTaskId).singleResult();
+        return execution != null;
+    }
+
+    @Override
+    public <T> T readProcessVariable(String businessProcessId, String processVariableKey) throws AcmTaskException
+    {
+        ProcessInstance pi = getActivitiRuntimeService().createProcessInstanceQuery().processInstanceId(businessProcessId)
+                .includeProcessVariables().singleResult();
+        if (pi == null)
+        {
+            throw new AcmTaskException(String.format("Process with id %s does not exist or is already closed", businessProcessId));
+        }
+        return (T) pi.getProcessVariables().get(processVariableKey);
+    }
+
+    @Override
+    public void writeProcessVariable(String businessProcessId, String processVariableKey, Object processVariableValue)
+            throws AcmTaskException
+    {
+        getActivitiRuntimeService().setVariable(businessProcessId, processVariableKey, processVariableValue);
+    }
+
+    @Override
+    public void signalTask(String processInstanceId, String receiveTaskId) throws AcmTaskException
+    {
+        Execution execution = getActivitiRuntimeService().createExecutionQuery().processInstanceId(processInstanceId)
+                .activityId(receiveTaskId).singleResult();
+        if (execution != null)
+        {
+            getActivitiRuntimeService().signal(execution.getId());
+        }
+    }
+
+    @Override
+    public void messageTask(String taskId, String messageName) throws AcmTaskException
+    {
+        Task task = getActivitiTaskService().createTaskQuery().taskId(taskId).singleResult();
+        if (task != null)
+        {
+            getActivitiRuntimeService().messageEventReceived(messageName, task.getExecutionId());
+        }
+
+    }
 
     @Override
     @Transactional
@@ -207,8 +279,10 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
             if (in.isBuckslipTask())
             {
-                getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS,
-                        acmUserService.extractIdsFromUserList(in.getBuckslipFutureApprovers()));
+                getActivitiTaskService().setVariable(
+                        activitiTask.getId(),
+                        TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
+                        getObjectConverter().getJsonMarshaller().marshal(in.getBuckslipFutureTasks()));
             }
 
             in.setTaskId(Long.valueOf(activitiTask.getId()));
@@ -1203,6 +1277,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             extractTaskLocalVariables(acmTask, localVariables);
 
             String details = (String) localVariables.get(TaskConstants.VARIABLE_NAME_DETAILS);
+            details = details != null ? details : (String) processVariables.get(TaskConstants.VARIABLE_NAME_DETAILS);
             acmTask.setDetails(details);
 
             // only on rework task, first time rework instructions will be fetched from process variables
@@ -1408,15 +1483,32 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
 
                 if (isBuckslipWorkflow != null && isBuckslipWorkflow.booleanValue())
                 {
-                    List<String> futureApprovers = (List<String>) processVariables
-                            .get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_APPROVERS);
-                    acmTask.setBuckslipFutureApprovers(acmUserService.getUserListForGivenIds(futureApprovers));
+                    try
+                    {
+                        List<BuckslipFutureTask> buckslipFutureTasks = findBuckslipFutureTasks(processVariables);
+                        acmTask.setBuckslipFutureTasks(buckslipFutureTasks);
+                    }
+                    catch (IOException e)
+                    {
+                        log.error("Could not set buckslip future tasks: {}", e.getMessage(), e);
+                    }
 
-                    String pastApprovers = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PAST_APPROVERS);
-                    acmTask.setBuckslipPastApprovers(pastApprovers);
+                    String pastTasks = (String) processVariables.get(TaskConstants.VARIABLE_NAME_PAST_TASKS);
+                    acmTask.setBuckslipPastApprovers(pastTasks);
                 }
             }
         }
+    }
+
+    private List<BuckslipFutureTask> findBuckslipFutureTasks(Map<String, Object> processVariables) throws IOException
+    {
+        String jsonFutureTasks = (String) processVariables.get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+        if (jsonFutureTasks != null && !jsonFutureTasks.trim().isEmpty())
+        {
+            return getObjectConverter().getJsonUnmarshaller().unmarshallCollection(jsonFutureTasks, List.class, BuckslipFutureTask.class);
+        }
+
+        return new ArrayList<>();
     }
 
     public RuntimeService getActivitiRuntimeService()
@@ -1567,6 +1659,16 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
     @Override

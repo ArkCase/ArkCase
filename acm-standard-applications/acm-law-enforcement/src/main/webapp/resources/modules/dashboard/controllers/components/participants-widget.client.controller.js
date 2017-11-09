@@ -12,9 +12,9 @@ angular.module('dashboard.participants', ['adf.provider'])
                 commonName: 'participants'
             });
     })
-    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate',
+    .controller('Dashboard.ParticipantsController', ['$scope', '$stateParams', '$translate', 'Object.LookupService',
         'Case.InfoService', 'Complaint.InfoService', 'DocumentRepository.InfoService', 'Person.InfoService', 'Organization.InfoService', 'OrganizationAssociation.Service', 'PersonAssociation.Service', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
+        function ($scope, $stateParams, $translate, ObjectLookupService,
                   CaseInfoService, ComplaintInfoService, DocumentRepositoryInfoService, PersonInfoService, OrganizationInfoService, OrganizationAssociationService, PersonAssociationService, HelperObjectBrowserService, HelperUiGridService) {
 
             var modules = [
@@ -88,6 +88,13 @@ angular.module('dashboard.participants', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
             };
+
+            var promiseTypes = ObjectLookupService.getParticipantTypes(module.name).then(
+                function (participantTypes) {
+                    $scope.participantTypes = participantTypes;
+                    return participantTypes;
+                }
+            );
         }
 
     ]);

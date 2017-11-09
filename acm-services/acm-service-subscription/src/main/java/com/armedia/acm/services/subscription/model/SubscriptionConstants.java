@@ -1,5 +1,6 @@
 package com.armedia.acm.services.subscription.model;
 
+import com.armedia.acm.objectonverter.DateFormats;
 
 public interface SubscriptionConstants
 {
@@ -22,10 +23,10 @@ public interface SubscriptionConstants
      * The property key to use in the properties file that stores the last run date.
      */
     String SUBSCRIPTION_EVENT_LAST_RUN_DATE_PROPERTY_KEY = "subscription.event.last.run.date";
-    String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    String DATE_FORMAT = DateFormats.DEFAULT_DATE_FORMAT;
 
     /**
-     * The property key to get all events that should not be saved  as AcmSubscriptionEvent
+     * The property key to get all events that should not be saved as AcmSubscriptionEvent
      */
     String SUBSCRIPTION_EVENT_TYPES_TO_BE_REMOVED = "subscription.removed.event.types";
 }

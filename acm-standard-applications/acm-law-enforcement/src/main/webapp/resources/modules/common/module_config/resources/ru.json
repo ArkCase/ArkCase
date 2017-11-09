@@ -25,7 +25,8 @@
     "radioName": "ru_Choice primary",
     "radioYes.text": "ru_Yes",
     "radioNo.text": "ru_No",
-    "duplicateOrganizationRoleErrorMessage": "ru_Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "ru_Organization already has the selected association",
+    "notifyParentOrgWillBeChanged": "ru_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "ru_Add person",

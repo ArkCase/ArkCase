@@ -28,13 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static junit.framework.TestCase.*;
+import static org.easymock.EasyMock.*;
 
 public class UserOrgServiceImplTest extends EasyMockSupport
 {
@@ -281,7 +276,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         user.setGroups(groups);
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
-        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         replayAll();
@@ -314,7 +309,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockUserDao.findByUserIdAnyCase(USER_ID)).andReturn(user);
+        expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         MuleMessage mockMuleMessage = createMock(MuleMessage.class);
@@ -366,6 +361,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         assertEquals(userOrg.getMainOfficePhone(), profileDTO.getMainOfficePhone());
         assertEquals(userOrg.getMobilePhoneNumber(), profileDTO.getMobilePhoneNumber());
         assertEquals(userOrg.getEcmFileId(), profileDTO.getEcmFileId());
+        assertEquals(userOrg.getEcmSignatureFileId(), profileDTO.getEcmSignatureFileId());
         assertEquals(userOrg.getTitle(), profileDTO.getTitle());
     }
 

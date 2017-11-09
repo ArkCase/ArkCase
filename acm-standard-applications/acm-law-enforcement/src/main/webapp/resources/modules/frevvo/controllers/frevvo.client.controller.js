@@ -23,12 +23,22 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             }
         });
 
-        ObjectLookupService.getPersonTypes("CASE_FILE")
+        ObjectLookupService.getPersonTypes("CASE_FILE", true)
+            .then(function response(personTypes) {
+                $scope.caseFilePersonInitiatorTypes = personTypes;
+            });
+
+        ObjectLookupService.getPersonTypes("CASE_FILE", false)
             .then(function response(personTypes) {
                 $scope.caseFilePersonTypes = personTypes;
             });
 
-        ObjectLookupService.getPersonTypes("COMPLAINT")
+        ObjectLookupService.getPersonTypes("COMPLAINT", true)
+            .then(function response(personTypes) {
+                $scope.complaintPersonInitiatorTypes = personTypes;
+            });
+
+        ObjectLookupService.getPersonTypes("COMPLAINT", false)
             .then(function response(personTypes) {
                 $scope.complaintPersonTypes = personTypes;
             });
@@ -246,38 +256,16 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             });
         }
 
-        function addInitiatorToPersonTypes() {
-               if($scope.initiatorPersonType !== undefined) {
-                   var initiatorTypeExists = $scope.personTypes.find(function(el) {
-                        return el.key === $scope.initiatorPersonType.key && el.value === $scope.initiatorPersonType.value;
-                   });
-
-                   if(initiatorTypeExists === undefined) {
-                       $scope.personTypes.push($scope.initiatorPersonType);
-                   }
-               }
-        }
-
-        function removeInitiatorFromPersonTypes() {
-            var initiatorIndex = -1;
-            for(var i=0; i<$scope.personTypes.length; i++) {
-                if($scope.personTypes[i].key === "Initiator") {
-                    $scope.initiatorPersonType = $scope.personTypes[i];
-                    initiatorIndex = i;
-                    break;
-                }
-            }
-            if(initiatorIndex != -1) {
-                $scope.personTypes.splice(initiatorIndex, 1);
-            }
-        }
-
         function saveNewPersonAndUpdateFrevvo(data, message) {
             var returnMessage = {};
 
             PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                 returnMessage.personId = response.data.id;
                 returnMessage.fullName = (response.data.givenName + " " + response.data.familyName).trim();
+                returnMessage.firstName = response.data.givenName;
+                returnMessage.middleName = response.data.middleName;
+                returnMessage.lastName = response.data.familyName;
+                returnMessage.email = !Util.isEmpty(response.data.defaultEmail) ? response.data.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
                 message.data = returnMessage;
@@ -291,22 +279,15 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                 returnMessage.personId = person.id;
                 returnMessage.fullName = (person.givenName + " " + person.familyName).trim();
+                returnMessage.firstName = person.givenName;
+                returnMessage.middleName = person.middleName;
+                returnMessage.lastName = person.familyName;
+                returnMessage.email = !Util.isEmpty(person.defaultEmail) ? person.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
                 message.data = returnMessage;
                 $scope.frevvoMessaging.send(message);
             });
-        }
-
-        function populatePersonTypesDropDown(data) {
-            $scope.personTypes = [];
-
-            if(data.formType === "CASE_FILE") {
-                $scope.personTypes = $scope.caseFilePersonTypes;
-            }
-            else if(data.formType === "COMPLAINT") {
-                $scope.personTypes = $scope.complaintPersonTypes;
-            }
         }
 
         function pickPerson(data) {
@@ -318,15 +299,27 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             message.elementId = data.elementId;
             message.pickerType = data.pickerType;
 
-            populatePersonTypesDropDown(data);
-
             if(message.pickerType === "initiator") {
-                addInitiatorToPersonTypes();
-                params.type = "Initiator";
+                if(data.formType === "CASE_FILE") {
+                    $scope.personTypes = $scope.caseFilePersonInitiatorTypes;
+                }
+                else if(data.formType === "COMPLAINT"){
+                    $scope.personTypes = $scope.complaintPersonInitiatorTypes;
+                }
+                params.type = '';
                 params.typeDisabled = true;
+
+                if (!Util.isArrayEmpty($scope.personTypes)) {
+                    params.type = $scope.personTypes[0].key;
+                }
             }
             else if(message.pickerType === "people") {
-                removeInitiatorFromPersonTypes();
+                if(data.formType === "CASE_FILE"){
+                    $scope.personTypes =  $scope.caseFilePersonTypes;
+                }
+                else if(data.formType === "COMPLAINT") {
+                    $scope.personTypes = $scope.complaintPersonTypes;
+                }
                 params.typeDisabled = false;
             }
 

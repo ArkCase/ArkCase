@@ -46,6 +46,9 @@ public class AcmGroup implements Serializable, AcmEntity
     @Id
     @Column(name = "cm_group_name")
     private String name;
+    
+    @Column(name = "cm_group_display_name")
+    private String displayName;
 
     @Column(name = "cm_group_description")
     private String description;
@@ -199,6 +202,16 @@ public class AcmGroup implements Serializable, AcmEntity
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public String getDisplayName()
+    {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName)
+    {
+        this.displayName = displayName;
     }
 
     public String getDescription()

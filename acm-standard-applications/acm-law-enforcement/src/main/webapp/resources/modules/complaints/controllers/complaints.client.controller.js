@@ -2,8 +2,19 @@
 
 angular.module('complaints').controller('ComplaintsController', ['$scope', '$state', '$stateParams'
     , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
+    ,'Admin.CalendarConfigurationService', '$translate'
     , function ($scope, $state, $stateParams
-        , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService) {
+        , Util, ConfigService, ComplaintInfoService, ObjectService, HelperObjectBrowserService, CalendarConfigurationService, $translate) {
+
+        $scope.isNodeDisabled = function(node){
+            return HelperObjectBrowserService.isNodeDisabled('complaints', $translate.instant(node));
+        }
+
+        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+            if (!calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled) {
+                HelperObjectBrowserService.toggleNodeDisabled('complaints', 'Calendar', true);
+            }
+        });
 
         new HelperObjectBrowserService.Content({
             scope: $scope
@@ -19,12 +30,6 @@ angular.module('complaints').controller('ComplaintsController', ['$scope', '$sta
             , getObjectTypeFromInfo: function (objectInfo) {
                 return ObjectService.ObjectTypes.COMPLAINT;
             }
-            //, initComponentLinks: function (config) {
-            //    return HelperObjectBrowserService.createComponentLinks(config, ObjectService.ObjectTypes.COMPLAINT);
-            //}
-            //, selectComponentLinks: function (selectedObject) {
-            //    return $scope.componentLinks;
-            //}
         });
     }
 ]);

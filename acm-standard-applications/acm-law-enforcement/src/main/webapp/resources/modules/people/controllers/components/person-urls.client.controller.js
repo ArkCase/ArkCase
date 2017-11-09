@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -54,6 +54,12 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             $scope.gridOptions.data = urls;
         };
 
+        ObjectLookupService.getSubContactMethodType('url').then(
+            function (contactMethodTypes) {
+                $scope.urlTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
+
         $scope.addNew = function () {
             var url = {};
             url.created = Util.dateToIsoString(new Date());
@@ -78,6 +84,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
             var item = {
                 id: rowEntity.id,
                 type: rowEntity.type,
+                subLookup: rowEntity.subType,
                 subType: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description
@@ -123,7 +130,7 @@ angular.module('people').controller('People.UrlsController', ['$scope', '$q', '$
                     url = _.find($scope.objectInfo.contactMethods, {id: data.url.id});
                 }
                 url.type = 'url';
-                url.subType = data.url.subType;
+                url.subType = data.url.subLookup;
                 url.value = data.url.value;
                 url.description = data.url.description;
 

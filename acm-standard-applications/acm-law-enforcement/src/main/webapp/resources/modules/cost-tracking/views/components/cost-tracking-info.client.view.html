@@ -4,16 +4,16 @@
             <div class="col-xs-12 col-md-4">
                 <a ng-click="onClickTitle()">
                     <div class="h4 font-bold">
-                        {{parentInfo.title || 'Unknown'}}
+                        {{parentInfo.title || 'common.value.unknown' | translate}}
                     </div>
                     <small class="text-muted">
-                        {{objectInfo.parentNumber || 'Unknown'}}
+                        {{objectInfo.parentNumber || 'common.value.unknown' | translate}}
                     </small>
                 </a>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{(parentInfo.incidentDate | date: 'shortDate' ) || 'Unknown'}}
+                    {{(parentInfo.incidentDate | date: 'shortDate' ) || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.incidentDate</span>
@@ -21,7 +21,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{parentInfo.priortiy || 'Unknown'}}
+                    {{parentInfo.priortiy || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.priority</span>
@@ -29,7 +29,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{objectInfo.user.fullName || 'Unknown'}}
+                    {{objectInfo.user.fullName || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.assignedTo</span>
@@ -37,7 +37,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{parentInfo.type || 'Unknown'}}
+                    {{parentInfo.type || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.subjectType</span>
@@ -45,7 +45,7 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    {{parentInfo.status || 'Unknown'}}
+                    {{parentInfo.status || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted">
                     <span translate>costTracking.comp.info.state</span>

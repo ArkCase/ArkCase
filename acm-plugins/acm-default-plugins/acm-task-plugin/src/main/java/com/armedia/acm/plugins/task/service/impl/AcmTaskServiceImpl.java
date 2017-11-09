@@ -5,6 +5,8 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.BuckslipFutureTask;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
@@ -23,6 +25,7 @@ import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServic
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -35,8 +38,10 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
+import com.google.common.collect.ImmutableMap;
 
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,12 +61,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by nebojsha on 22.06.2015.
  */
 public class AcmTaskServiceImpl implements AcmTaskService
 {
+
     private Logger log = LoggerFactory.getLogger(getClass());
     private TaskDao taskDao;
     private NoteDao noteDao;
@@ -77,12 +85,141 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
+    private ObjectConverter objectConverter;
+
+    @Override
+    public List<BuckslipProcess> getBuckslipProcessesForObject(String objectType, Long objectId) throws AcmTaskException
+    {
+        Map<String, Object> matchProcessVariables = ImmutableMap.of(
+                TaskConstants.VARIABLE_NAME_OBJECT_ID, objectId,
+                TaskConstants.VARIABLE_NAME_OBJECT_TYPE, objectType,
+                TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW, Boolean.TRUE);
+        List<ProcessInstance> processInstances = taskDao.findProcessesByProcessVariables(matchProcessVariables);
+        List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
+
+        return buckslipProcesses;
+    }
+
+    @Override
+    public List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException
+    {
+        Map<String, Object> matchProcessVariables = ImmutableMap.of(
+                TaskConstants.VARIABLE_NAME_PARENT_OBJECT_ID, parentObjectId,
+                TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TYPE, parentObjectType,
+                TaskConstants.VARIABLE_NAME_IS_BUCKSLIP_WORKFLOW, Boolean.TRUE);
+        List<ProcessInstance> processInstances = taskDao.findProcessesByProcessVariables(matchProcessVariables);
+        List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
+
+        return buckslipProcesses;
+    }
+
+    protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
+    {
+        List<BuckslipProcess> buckslipProcesses = new ArrayList<>(processInstances.size());
+        for (ProcessInstance pi : processInstances)
+        {
+            BuckslipProcess bp = new BuckslipProcess();
+            bp.setBusinessProcessId(pi.getProcessInstanceId());
+            bp.setBusinessProcessName(pi.getProcessDefinitionId());
+            bp.setObjectType((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_TYPE));
+            bp.setObjectId((Long) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_OBJECT_ID));
+            bp.setNonConcurEndsApprovals((Boolean) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS));
+            bp.setPastTasks(((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_PAST_TASKS)));
+
+            String futureTasksJson = ((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS));
+
+            List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ? new ArrayList<>()
+                    : getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class,
+                            BuckslipFutureTask.class);
+            bp.setFutureTasks(futureTasks);
+            buckslipProcesses.add(bp);
+        }
+        return buckslipProcesses;
+    }
+
+    @Override
+    public BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException
+    {
+        setBuckslipFutureTasks(in.getBusinessProcessId(), in.getFutureTasks());
+        taskDao.writeProcessVariable(in.getBusinessProcessId(), TaskConstants.VARIABLE_NAME_NON_CONCUR_ENDS_APPROVALS,
+                in.getNonConcurEndsApprovals());
+
+        List<BuckslipProcess> processes = getBuckslipProcessesForObject(in.getObjectType(), in.getObjectId());
+        BuckslipProcess updated = processes.stream().filter(bp -> Objects.equals(in.getBusinessProcessId(), bp.getBusinessProcessId()))
+                .findFirst().orElse(null);
+        return updated;
+    }
+
+    @Override
+    public boolean isInitiatable(String businessProcessId) throws AcmTaskException
+    {
+        return taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public boolean isWithdrawable(String businessProcessId) throws AcmTaskException
+    {
+        return taskDao.isProcessActive(businessProcessId)
+                && !taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
+    }
+
+    @Override
+    public List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException
+    {
+        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+        if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
+        {
+            List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson,
+                    List.class, BuckslipFutureTask.class);
+            if (buckslipFutureTasks == null)
+            {
+                throw new AcmTaskException(
+                        String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
+            }
+            return buckslipFutureTasks;
+        }
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void setBuckslipFutureTasks(String businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
+    {
+        String futureTasksJson = getObjectConverter().getJsonMarshaller().marshal(buckslipFutureTasks);
+        if (futureTasksJson == null)
+        {
+            throw new AcmTaskException("Could not set future tasks");
+        }
+        taskDao.writeProcessVariable(businessProcessId,
+                TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS,
+                futureTasksJson);
+    }
+
+    @Override
+    public String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException
+    {
+        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS);
+        return pastTasks;
+    }
+
+    @Override
+    public void signalTask(String businessProcessId, String receiveTaskId) throws AcmTaskException
+    {
+        taskDao.signalTask(businessProcessId, receiveTaskId);
+    }
+
+    @Override
+    public void messageTask(Long taskId, String messageName) throws AcmTaskException
+    {
+        taskDao.messageTask(String.valueOf(taskId), messageName);
+    }
+
     @Override
     public void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType, Long parentId)
             throws AcmCreateObjectFailedException
     {
-        if (taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty() || owningGroup == null
-                || owningGroup.trim().isEmpty() || parentType == null || parentType.trim().isEmpty() || parentId == null)
+        if (taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty()
+                || owningGroup == null || owningGroup.trim().isEmpty() || parentType == null || parentType.trim().isEmpty()
+                || parentId == null)
         {
             log.error("Cannot create tasks - invalid input: assignees [{}], task name [{}], owning group [{}], "
                     + "parent type: [{}], parentId [{}]", taskAssignees, taskName, owningGroup, parentType, parentId);
@@ -496,5 +633,15 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

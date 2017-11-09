@@ -252,6 +252,7 @@
           class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="cmisConfigUtils" class="com.armedia.acm.plugins.ecm.utils.CmisConfigUtils">

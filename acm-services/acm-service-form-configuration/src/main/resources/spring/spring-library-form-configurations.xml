@@ -42,6 +42,7 @@
         <property name="searchResults" ref="searchResults"/>
         <property name="lookupDao" ref="lookupDao"/>
         <property name="translationService" ref="translationService"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
     
 </beans>

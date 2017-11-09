@@ -29,7 +29,9 @@
       "exceptions": "zh-cn_Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "zh-cn_Done"
+      "close": "cn_Done",
+      "clear": "cn_Clear",
+      "current": "cn_Today"
     },
     "btn": {
       "generateReport": "zh-cn_Generate report"

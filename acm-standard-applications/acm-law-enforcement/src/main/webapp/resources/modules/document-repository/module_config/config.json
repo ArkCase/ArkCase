@@ -18,6 +18,11 @@
       "menuItemURL": "new-document-repository",
       "menuItemTitle": "document-repository.menus.topbar.item",
       "moduleId": "document-repository",
+      "modalDialog": {
+        "moduleName": "document-repository",
+        "templateUrl": "modules/document-repository/views/components/document-repository-new-document-repository.client.view.html",
+        "controllerName": "DocumentRepository.NewDocumentRepositoryController"
+      },
       "permissionAction": "createDocumentRepository",
       "iconClass": "fa fa-folder",
       "position": 60
@@ -154,6 +159,10 @@
         "components": [
           "history"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
@@ -205,6 +214,7 @@
               "name": "participantType",
               "displayName": "document-repository.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -365,6 +375,7 @@
           "name": "participantType",
           "displayName": "document-repository.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {

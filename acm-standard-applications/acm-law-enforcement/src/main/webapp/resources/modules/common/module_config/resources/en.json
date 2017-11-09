@@ -550,6 +550,7 @@
       "error.accessDenied": "Access denied to calendar service.",
       "error.serviceConfiguration": "Invalid calendar service configuration.",
       "error.serviceCredentials": "Invalid Credentials. Please contact the system administrator.",
+      "error.calendarIntegration": "Calendar Integration Configuration Problem.",
       "error.internalServerError": "Internal Server Error occurred."
     }
   },
@@ -579,6 +580,7 @@
       "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
       "error.emptyParticipantLdapId": "Participant name cannot be empty",
       "error.emptyParticipantType": "Participant type cannot be empty"
+      "error.ownerUnique": "Only one owner is allowed."
     }
   },
   "common.directive.progressIndicator": {
@@ -750,7 +752,8 @@
     "radioName": "Choice primary",
     "radioYes.text": "Yes",
     "radioNo.text": "No",
-    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association"
+    "duplicateOrganizationRoleErrorMessage": "Organization already has the selected association",
+    "notifyParentOrgWillBeChanged": "The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addObjectAssociation": {
     "title.add": "Add {{objectLabel}} Association",
@@ -779,6 +782,7 @@
     "type.placeholder": "Select Organization Type",
     "saveButton": "Save Organization",
     "cancelButton": "Cancel",
+    "details.title": "Details",
     "parentOrganization": "Parent Organization",
     "searchParentOrganization.placeholder": "Search Parent Organization",
     "communicationAccounts": {

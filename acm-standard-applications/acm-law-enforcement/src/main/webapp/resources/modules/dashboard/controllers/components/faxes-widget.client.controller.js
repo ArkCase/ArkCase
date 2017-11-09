@@ -13,9 +13,9 @@ angular.module('dashboard.faxes', ['adf.provider'])
             });
     })
     .controller('Dashboard.FaxesController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService',
             function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService) {
 
             var modules = [
                 {
@@ -65,5 +65,10 @@ angular.module('dashboard.faxes', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
+            ObjectLookupService.getSubContactMethodType('fax').then(
+                    function (contactMethodTypes) {
+                        $scope.faxTypes = contactMethodTypes;
+                        return contactMethodTypes;
+                    });
         }
     ]);

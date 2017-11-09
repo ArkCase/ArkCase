@@ -8,6 +8,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -24,9 +25,6 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +73,7 @@ public class PersonServiceImpl implements PersonService
     private AcmFolderService acmFolderService;
     private FolderAndFilesUtils folderAndFilesUtils;
     private PersonEventPublisher personEventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public Person get(Long id)
@@ -334,21 +333,8 @@ public class PersonServiceImpl implements PersonService
             Person oldPerson = null;
             if (!isNew)
             {
-                ObjectMapperFactory factory = new ObjectMapperFactory();
-                ObjectMapper om = factory.createObjectMapper();
-                try
-                {
-                    String old = om.writeValueAsString(personDao.find(in.getId()));
-                    oldPerson = om.readValue(old, Person.class);
-                }
-                catch (JsonProcessingException e)
-                {
-                    log.error("JsonProcessingException ", e);
-                }
-                catch (IOException e)
-                {
-                    log.error("IOException ", e);
-                }
+                String old = getObjectConverter().getJsonMarshaller().marshal(personDao.find(in.getId()));
+                oldPerson = getObjectConverter().getJsonUnmarshaller().unmarshall(old, Person.class);
             }
             Person person = personDao.save(in);
             personEventPublisher.publishPersonUpsertEvents(person, oldPerson, isNew, true);
@@ -534,5 +520,15 @@ public class PersonServiceImpl implements PersonService
     public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
     {
         this.fileParticipantService = fileParticipantService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

@@ -1,11 +1,22 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.service.OrganizationEventPublisher;
 import com.armedia.acm.plugins.person.service.OrganizationService;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -21,16 +32,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 /**
  * Created by maksud.sharif on 6/1/2017.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml" })
 public class OrganizationAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -53,11 +59,11 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
         mockOrganizationService = createMock(OrganizationService.class);
 
-
         unit = new OrganizationAPIController();
         unit.setExecuteSolrQuery(mockExecuteSolrQuery);
         unit.setOrganizationEventPublisher(mockOrganizationEventPublisher);
         unit.setOrganizationService(mockOrganizationService);
+        unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).build();
 
@@ -78,20 +84,17 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
         Capture<Organization> orgCaptureOld = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
-        expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress))).andReturn(body);
+        expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress)))
+                .andReturn(body);
         mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), capture(orgCaptureOld), eq(true), eq(true));
         expectLastCall();
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(post("/api/latest/plugin/organizations")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(body))
-                .principal(mockAuthentication)
-                .session(mockHttpSession))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(post("/api/latest/plugin/organizations").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(body)).principal(mockAuthentication).session(mockHttpSession))
+                .andExpect(status().isOk()).andReturn();
 
         verifyAll();
 
@@ -116,20 +119,17 @@ public class OrganizationAPIControllerTest extends EasyMockSupport
         Capture<Organization> orgCaptureOld = EasyMock.newCapture();
         expect(mockOrganizationService.getOrganization(body.getOrganizationId())).andReturn(body);
         expect(mockAuthentication.getName()).andReturn(user).anyTimes();
-        expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress))).andReturn(body);
+        expect(mockOrganizationService.saveOrganization(anyObject(Organization.class), eq(mockAuthentication), eq(ipAddress)))
+                .andReturn(body);
         mockOrganizationEventPublisher.publishOrganizationUpsertEvent(capture(orgCapture), capture(orgCaptureOld), eq(false), eq(true));
         expectLastCall();
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(post("/api/latest/plugin/organizations")
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(body))
-                .principal(mockAuthentication)
-                .session(mockHttpSession))
-                .andExpect(status().isOk())
-                .andReturn();
+        MvcResult result = mockMvc
+                .perform(post("/api/latest/plugin/organizations").accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(body)).principal(mockAuthentication).session(mockHttpSession))
+                .andExpect(status().isOk()).andReturn();
 
         verifyAll();
 

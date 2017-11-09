@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -9,9 +10,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFileDownloadedEvent;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.MuleException;
@@ -50,7 +48,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private ObjectMapper objectMapper = new ObjectMapperFactory().createObjectMapper();
+    private ObjectConverter objectConverter;
 
     @PreAuthorize("hasPermission(#fileId, 'FILE', 'read')")
     @RequestMapping(value = "/download", method = RequestMethod.GET)
@@ -153,15 +151,8 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
             if (!isInline)
             {
                 response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-                try
-                {
-                    // add file metadata so it can be displayed in Snowbound
-                    response.setHeader("X-ArkCase-File-Metadata", objectMapper.writeValueAsString(ecmFile));
-                }
-                catch (JsonProcessingException e)
-                {
-                    log.warn("Unable to serialize document metadata for [{}:{}]", ecmFile.getId(), version, e);
-                }
+                // add file metadata so it can be displayed in Snowbound
+                response.setHeader("X-ArkCase-File-Metadata", getObjectConverter().getJsonMarshaller().marshal(ecmFile));
             }
             response.setContentType(mimeType);
             byte[] buffer = new byte[1024];
@@ -247,5 +238,15 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
     public void setCmisConfigUtils(CmisConfigUtils cmisConfigUtils)
     {
         this.cmisConfigUtils = cmisConfigUtils;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

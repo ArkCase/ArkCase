@@ -13,10 +13,10 @@ angular.module('dashboard.hoursSummary', ['adf.provider'])
                 commonName: 'hoursSummary'
             });
     })
-    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', 'UtilService'
-        , 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'moment',
-        function ($scope, $translate, $stateParams, Util, TimeTrackingInfoService, HelperObjectBrowserService
-            , ConfigService, moment) {
+    .controller('Dashboard.HoursSummaryController', ['$scope', '$translate', '$stateParams', '$filter'
+        , 'UtilService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'ConfigService', 'moment'
+        , function ($scope, $translate, $stateParams, $filter
+            , Util, TimeTrackingInfoService, HelperObjectBrowserService, ConfigService, moment) {
 
             var vm = this;
             ConfigService.getModuleConfig("preference").then(function (preferences) {
@@ -38,9 +38,14 @@ angular.module('dashboard.hoursSummary', ['adf.provider'])
                             }
 
                             _.forEach(times, function (timeIter) {
-                                //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
-                                var date = new moment(timeIter.date);
-                                var formattedDate = date.format(preferences.timeFormat);
+
+                                // //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
+                                // var date = new moment(timeIter.date);
+                                // var formattedDate = date.format(preferences.timeFormat);
+
+                                // Above code is not i18n compliant. `timeFormat` is removed from preferences.
+                                // Temporary quick fix for now:
+                                var formattedDate = $filter('date')(timeIter.date, "shortDate");
 
                                 labels.push(formattedDate);
                                 chartData.push(timeIter.value);

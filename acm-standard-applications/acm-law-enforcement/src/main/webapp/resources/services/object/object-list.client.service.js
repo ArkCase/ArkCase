@@ -82,7 +82,7 @@ angular.module('services').factory('Object.ListService', ['$resource', 'Acm.Stor
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateObjects = function (data) {
-            if (!SearchService.validateSolrData(data)) {
+            if (!Util.validateSolrData(data)) {
                 return false;
             }
             return true;

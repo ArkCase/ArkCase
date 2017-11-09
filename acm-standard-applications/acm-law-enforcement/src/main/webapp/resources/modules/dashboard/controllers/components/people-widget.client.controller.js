@@ -13,9 +13,9 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
             function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
 
                 var modules = [
                         {
@@ -74,5 +74,15 @@ angular.module('dashboard.people', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
+            //People widget in ORGANIZATION doesn't use personTypes
+            if(module.name !== 'ORGANIZATION') {
+                ObjectLookupService.getPersonTypes(module.name).then(
+                    function (personTypes) {
+                        $scope.personTypes = personTypes;
+                        return personTypes;
+                    }
+                );
+            }
         }
     ]);

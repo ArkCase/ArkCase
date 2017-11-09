@@ -52,6 +52,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              */
             , Grid: function (arg) {
                 this.scope = arg.scope;
+                this.scope.utils = this.scope.$root.utils;
                 this.scope.gridOptions = this.scope.gridOptions || {};
 
                 if (!this.scope.isReadOnly) {

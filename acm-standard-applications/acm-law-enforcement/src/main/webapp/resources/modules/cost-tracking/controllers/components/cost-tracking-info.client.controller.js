@@ -45,7 +45,7 @@ angular.module('cost-tracking').controller('CostTracking.InfoController', ['$sco
         };
 
         $scope.onClickTitle = function () {
-            ObjectService.gotoUrl($scope.objectInfo.parentType, $scope.objectInfo.parentId);
+            ObjectService.showObject($scope.objectInfo.parentType, $scope.objectInfo.parentId);
         }
     }
 ]);
