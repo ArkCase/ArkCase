@@ -1,7 +1,3 @@
-
-/**
- *
- */
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.form.config.xml.OwningGroupItem;
@@ -12,13 +8,10 @@ import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
-import com.armedia.acm.plugins.complaint.model.complaint.Contact;
-import com.armedia.acm.plugins.complaint.model.complaint.MainInformation;
 import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
@@ -222,155 +215,6 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
         return json;
     }
 
-
-    private Contact initInitiatorFields()
-    {
-
-        String userId = getAuthentication().getName();
-        AcmUser user = getUserDao().findByUserId(userId);
-
-        Contact initiator = new Contact();
-
-        MainInformation mainInformation = new MainInformation();
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
-
-        mainInformation.setTitles(titles);
-        mainInformation.setAnonymous("");
-        mainInformation.setTypes(types);
-        mainInformation.setType("Initiator");
-
-        List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
-        ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
-
-        communicatoinDevice.setTypes(types);
-        communicatoinDevice.setCreated(new Date());
-        communicatoinDevice.setCreator(user.getFullName());
-        communicationDevices.add(communicatoinDevice);
-
-        List<Organization> organizationInformations = new ArrayList<Organization>();
-        Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
-
-        organizationInformation.setOrganizationTypes(types);
-        organizationInformation.setCreated(new Date());
-        organizationInformation.setCreator(user.getFullName());
-        organizationInformations.add(organizationInformation);
-
-        List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
-        PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
-
-        locationInformation.setTypes(types);
-        locationInformation.setCreated(new Date());
-        locationInformation.setCreator(user.getFullName());
-        locationInformations.add(locationInformation);
-
-
-        PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
-
-        aliasInformation.setAliasTypes(types);
-        aliasInformation.setCreated(new Date());
-        aliasInformation.setCreator(user.getFullName());
-
-
-        initiator.setMainInformation(mainInformation);
-        initiator.setCommunicationDevice(communicationDevices);
-        initiator.setOrganization(organizationInformations);
-        initiator.setLocation(locationInformations);
-        initiator.setAlias(aliasInformation);
-
-        return initiator;
-
-    }
-
-    private Contact initPeopleFields()
-    {
-
-        String userId = getAuthentication().getName();
-        AcmUser user = getUserDao().findByUserId(userId);
-
-        Contact people = new Contact();
-
-        MainInformation mainInformation = new MainInformation();
-        List<String> titles = convertToList((String) getProperties().get(getFormName() + ".titles"), ",");
-        List<String> types = convertToList((String) getProperties().get(getFormName() + ".types"), ",");
-
-        if (types != null && types.size() > 0)
-        {
-            types.remove(0);
-        }
-
-        mainInformation.setTitles(titles);
-        mainInformation.setAnonymous("");
-        mainInformation.setTypes(types);
-
-        List<ContactMethod> communicationDevices = new ArrayList<ContactMethod>();
-        ContactMethod communicatoinDevice = new ContactMethod();
-        types = convertToList((String) getProperties().get(getFormName() + ".deviceTypes"), ",");
-
-        communicatoinDevice.setTypes(types);
-        communicatoinDevice.setCreated(new Date());
-        communicatoinDevice.setCreator(user.getFullName());
-        communicationDevices.add(communicatoinDevice);
-
-        List<Organization> organizationInformations = new ArrayList<Organization>();
-        Organization organizationInformation = new Organization();
-        types = convertToList((String) getProperties().get(getFormName() + ".organizationTypes"), ",");
-
-        organizationInformation.setOrganizationTypes(types);
-        organizationInformation.setCreated(new Date());
-        organizationInformation.setCreator(user.getFullName());
-        organizationInformations.add(organizationInformation);
-
-        List<PostalAddress> locationInformations = new ArrayList<PostalAddress>();
-        PostalAddress locationInformation = new PostalAddress();
-        types = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
-
-        locationInformation.setTypes(types);
-        locationInformation.setCreated(new Date());
-        locationInformation.setCreator(user.getFullName());
-        locationInformations.add(locationInformation);
-
-        PersonAlias aliasInformation = new PersonAlias();
-        types = convertToList((String) getProperties().get(getFormName() + ".aliasTypes"), ",");
-
-        aliasInformation.setAliasTypes(types);
-        aliasInformation.setCreated(new Date());
-        aliasInformation.setCreator(user.getFullName());
-
-
-        people.setMainInformation(mainInformation);
-        people.setCommunicationDevice(communicationDevices);
-        people.setOrganization(organizationInformations);
-        people.setLocation(locationInformations);
-        people.setAlias(aliasInformation);
-
-        return people;
-
-    }
-
-    private List<PostalAddress> initAddresses()
-    {
-        String userId = getAuthentication().getName();
-        AcmUser user = getUserDao().findByUserId(userId);
-        List<PostalAddress> locations = new ArrayList<>();
-        List<String> locationTypes = convertToList((String) getProperties().get(getFormName() + ".locationTypes"), ",");
-
-        PostalAddress location = new PostalAddress();
-
-        location.setTypes(locationTypes);
-        location.setCreated(new Date());
-        location.setCreator(user.getFullName());
-
-        locations.add(location);
-
-        return locations;
-    }
-
-
     private ComplaintForm initIncidentFields()
     {
 
@@ -379,19 +223,25 @@ public class ComplaintService extends FrevvoFormAbstractService implements Frevv
 
         ComplaintForm complaint = new ComplaintForm();
 
+        List<String> categories = getStandardLookupEntries("complaintTypes");
+        List<String> priorities = getStandardLookupEntries("priorities");
+        List<String> frequencies = getStandardLookupEntries("frequencies");
+        List<String> locationTypes = getStandardLookupEntries("locationTypes");
 
-        List<String> categories = convertToList((String) getProperties().get(getFormName() + ".categories"), ",");
-        List<String> priorities = convertToList((String) getProperties().get(getFormName() + ".priorities"), ",");
-        List<String> frequencies = convertToList((String) getProperties().get(getFormName() + ".frequencies"), ",");
-
+        PostalAddress location = new PostalAddress();
+        location.setTypes(locationTypes);
+        location.setCreated(new Date());
+        location.setCreator(user.getFullName());
 
         complaint.setCategories(categories);
         complaint.setPriorities(priorities);
         complaint.setFrequencies(frequencies);
         complaint.setDate(new Date());
         complaint.setPriority("Low");
-        complaint.setAddresses(initAddresses());
+        complaint.setLocation(location);
+
         return complaint;
+
     }
 
     // This search is from database. For now it's not used. We moved to SOLR search.

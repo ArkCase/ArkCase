@@ -73,6 +73,10 @@
       "userDomain": "ユーザードメインを入力してください",
       "syncPageSize": "ページングサイズを入力してください",
       "groupSearchFilter": "グループの検索フィルターを入力してください（例：（objectClass = group））",
+      "allChangedUsersFilter": "ja_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "ja_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "ja_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "ja_Enter filter including sort-attribute for all changed groups",
       "groupsSortingAttribute": "グループをソートするための属性を入力します（例： 'gidNumber'）。",
       "groupSearchPageFilter": "ソート属性を含むフィルタを入力します（例：（＆（objectClass = group）（gidNumber> =％s）））",
       "enableEditingLdapUsers": "DSを管理するユーザーとグループが許可されているかどうかを確認する"
@@ -154,8 +158,7 @@
           "email": "電子メールを入力してください",
           "password": "パスワードを入力してください",
           "confirmation": "ja_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "少なくとも1つの特殊文字、数字、大文字と小文字の組み合わせで7文字を含むユーザー名と同じではないパスワードを入力します。"
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Ldapメンバーを編集",

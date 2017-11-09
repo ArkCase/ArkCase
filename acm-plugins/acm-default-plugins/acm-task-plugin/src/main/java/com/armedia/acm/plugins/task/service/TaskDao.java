@@ -5,12 +5,11 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
-
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.InputStream;
 import java.security.Principal;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +23,19 @@ public interface TaskDao
 
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
+
+    <T> T readProcessVariable(String businessProcessId, String processVariableKey) throws AcmTaskException;
+
+    void writeProcessVariable(String businessProcessId, String processVariableKey, Object processVariableValue)
+            throws AcmTaskException;
+
+    void signalTask(String processInstanceId, String receiveTaskId) throws AcmTaskException;
+
+    void messageTask(String taskId, String messageName) throws AcmTaskException;
+
+    boolean isProcessActive(String businessProcessId) throws AcmTaskException;
+
+    boolean isWaitingOnReceiveTask(String businessProcessId, String receiveTaskId) throws AcmTaskException;
 
     void ensureCorrectAssigneeInParticipants(AcmTask in);
 
@@ -134,4 +146,6 @@ public interface TaskDao
                                     String taskEventName);
 
     byte[] getDiagram(Long id) throws AcmTaskException;
+
+    List<ProcessInstance> findProcessesByProcessVariables(Map<String, Object> matchProcessVariables);
 }

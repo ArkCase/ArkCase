@@ -12,9 +12,9 @@
  */
 
 angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$injector', '$log'
-    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics'
+    , 'Acm.StoreService', 'UtilService', 'ConfigService', 'Analytics', 'WebSocketsListener'
     , function ($q, $state, $injector, $log
-        , Store, Util, ConfigService, Analytics
+        , Store, Util, ConfigService, Analytics, WebSocketService
     ) {
         var Service = {
             LocalCacheNames: {
@@ -236,15 +236,12 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
              * Set off logout. Currently, it route to 'goodbye' page
              */
             , logout: function () {
-                $state.go("goodbye");
-
-
                 // "goodbye" page does the same cleaning, but may not be reliable. If some exception thrown (we saw real
                 // practical example:
                 // GET https://localhost:8843/arkcase/api/latest/plugin/admin/labelmanagement/resource?ns=goodbye&lang=en
                 // returns 401 Unauthorized status),
                 // "goodbye" page is not called. Call the benign cleanup here to make sure
-                AcmLoginService.setLogin(false);
+                Service.setLogin(false);
                 sessionStorage.clear();
                 Store.Registry.clearSessionCache();
                 Store.Registry.clearLocalCache();
@@ -255,6 +252,8 @@ angular.module('services').factory('Acm.LoginService', ['$q', '$state', '$inject
                 } catch (exc) {
 
                 }
+
+                $state.go("goodbye");
             }
         };
 
