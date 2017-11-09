@@ -127,8 +127,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                         if (query) {
                             scope.showNoData = false;
-                            scope.externalSearchService = $injector.get(scope.externalSearchServiceName);
-                            if(!Util.isEmpty(scope.externalSearchService) && !Util.isEmpty(scope.externalSearchServiceParams)){
+                            if(!Util.isEmpty(scope.externalSearchServiceName) && !Util.isEmpty(scope.externalSearchServiceParams)){
+                                scope.externalSearchService = $injector.get(scope.externalSearchServiceName);
                                 angular.extend(scope.externalSearchServiceParams, {
                                     query: query
                                 });
