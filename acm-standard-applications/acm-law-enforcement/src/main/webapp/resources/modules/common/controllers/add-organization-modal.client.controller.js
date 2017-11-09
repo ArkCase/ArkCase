@@ -26,8 +26,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.isEditParent = false;
             $scope.description = params.description;
             $scope.hideNoField = true;
-            if (!Util.isEmpty(params.externalSearchService)) {
-                $scope.externalSearchService = params.externalSearchService;
+            if (!Util.isEmpty(params.externalSearchServiceName)) {
+                $scope.externalSearchServiceName = params.externalSearchServiceName;
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
@@ -105,7 +105,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
                 params.organizationId = $scope.organizationId;
                 params.parentOrganizationId = $scope.parentOrganizationId;
-                params.externalSearchService = $scope.externalSearchService;
+                params.externalSearchServiceName = $scope.externalSearchServiceName;
 
                 var modalInstance = $modal.open({
                     templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -116,7 +116,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                         $scope.config = params.config;
                         $scope.externalSearchServiceParams = {};
                         $scope.externalSearchServiceParams.organizationId = params.organizationId;
-                        $scope.externalSearchServiceName = params.externalSearchService;
+                        $scope.externalSearchServiceName = params.externalSearchServiceName;
                         $scope.externalSearchServiceMethod = "queryFilteredSearch";
                     }],
                     animation: true,

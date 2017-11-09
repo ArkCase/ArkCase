@@ -45,7 +45,7 @@ angular.module('organizations').controller('Organizations.InfoController', ['$ro
                 types: $scope.relationshipTypes,
                 showDescription: true,
                 infoType: true,
-                externalSearchService: OrganizationSearchService,
+                externalSearchServiceName: "Organization.SearchService",
                 parentOrganizationId: $scope.objectInfo.parentOrganization.organizationId
             };
             if (!!isSelectedParent) {

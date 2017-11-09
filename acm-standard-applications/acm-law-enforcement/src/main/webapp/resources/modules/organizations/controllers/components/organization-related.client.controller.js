@@ -94,7 +94,7 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
                 showDescription: true,
-                externalSearchService: OrganizationSearchService,
+                externalSearchServiceName: "Organization.SearchService",
                 parentOrganizationId: $scope.objectInfo.parentOrganization.organizationId,
                 organizationId: $scope.organizationId
             };

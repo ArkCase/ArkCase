@@ -34,8 +34,8 @@
  **/
 
 
-angular.module('directives').directive('searchModal', ['$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService',
-    function ($q, $translate, Util, SearchService, SearchQueryBuilder) {
+angular.module('directives').directive('searchModal', ['$q', '$translate', 'UtilService', 'SearchService', 'Search.QueryBuilderService', '$injector',
+    function ($q, $translate, Util, SearchService, SearchQueryBuilder, $injector) {
         return {
             restrict: 'E',              //match only element name
             scope: {
@@ -52,7 +52,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 defaultFilter: '@',
                 disableSearch: '@',
                 externalSearchServiceParams: '=',
-                externalSearchServiceName: '=',
+                externalSearchServiceName: '@',
                 externalSearchServiceMethod: '@',
                 config: '&',            //& : one way binding (read-only, can return key, value pair via a getter function)
                 modalInstance: '=',     //= : two way binding (read-write both, parent scope and directive's isolated scope have two way binding)
@@ -127,11 +127,13 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                         if (query) {
                             scope.showNoData = false;
-                            if(!Util.isEmpty(scope.externalSearchServiceName)){
-                                scope.externalSearchServiceName[scope.externalSearchServiceMethod]({
-                                        query: query,
-                                        organizationId: scope.externalSearchServiceParams.organizationId
-                                    },
+                            scope.externalSearchService = $injector.get(scope.externalSearchServiceName);
+                            if(!Util.isEmpty(scope.externalSearchService) && !Util.isEmpty(scope.externalSearchServiceParams)){
+                                angular.extend(scope.externalSearchServiceParams, {
+                                    query: query
+                                });
+                                scope.externalSearchService[scope.externalSearchServiceMethod](
+                                    scope.externalSearchServiceParams,
                                     successSearchResult);
                             } else {
                                 SearchService.queryFilteredSearch({
