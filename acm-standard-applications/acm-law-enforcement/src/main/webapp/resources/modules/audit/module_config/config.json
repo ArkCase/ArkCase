@@ -25,31 +25,31 @@
         },
         {
           "id": "CASE",
-          "name": "Case Files"
+          "name": "Case"
         },
         {
           "id": "COMPLAINT",
-          "name": "Complaints"
+          "name": "Complaint"
         },
         {
           "id": "TASK",
-          "name": "Tasks"
+          "name": "Task"
         },
         {
           "id": "FILE",
-          "name": "Files"
+          "name": "File"
         },
         {
           "id": "DOC_REPO",
-          "name": "Documents"
+          "name": "Document"
         },
         {
           "id": "PERSON",
-          "name": "People"
+          "name": "Person"
         },
         {
           "id": "ORGANIZATION",
-          "name": "Organizations"
+          "name": "Organization"
         }
       ]
     },
