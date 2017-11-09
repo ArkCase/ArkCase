@@ -150,8 +150,9 @@ public class AcmObjectLockAPIController
     @RequestMapping(value = {"/api/latest/plugin/locks/{objectType}/lock", "/api/v1/plugin/locks/{objectType}/lock"}, method = RequestMethod.DELETE)
     @ResponseBody
     public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
-                                       @RequestParam(value = "parentObjectIds") List<Long> objectIds,
-                                       @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
+
+                                          @RequestParam(value = "parentObjectIds") List<Long> objectIds,
+                                          @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
     {
         JSONArray resultList = new JSONArray();
         for (Long objectId : objectIds)
