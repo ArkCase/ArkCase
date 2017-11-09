@@ -46,7 +46,7 @@ angular.module('organizations').controller('Organizations.InfoController', ['$ro
                 showDescription: true,
                 infoType: true,
                 externalSearchServiceName: "Organization.SearchService",
-                parentOrganizationId: $scope.objectInfo.parentOrganization.organizationId
+                parentOrganizationId: Util.isEmpty($scope.objectInfo.parentOrganization) ? null : $scope.objectInfo.parentOrganization.organizationId
             };
             if (!!isSelectedParent) {
                 params.organization = $scope.objectInfo;
