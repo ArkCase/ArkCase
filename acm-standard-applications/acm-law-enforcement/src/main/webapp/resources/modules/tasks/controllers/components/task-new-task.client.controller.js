@@ -77,7 +77,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-            if ($scope.config.data.attachedToObjectName === "") {
+            if ($scope.config.data.attachedToObjectType === "") {
                 $scope.config.data.attachedToObjectName = "";
             }
             TaskNewTaskService.saveAdHocTask($scope.config.data).then(function (data) {
