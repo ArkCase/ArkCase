@@ -30,7 +30,7 @@
                     </div>
 
                     <!-- Organization -->
-                    <div class="form-group">
+                    <div class="form-group" ng-hide="(objectType=='TASK')">
                         <label translate>documentDetails.comp.details.label.organization</label>
                         <p class="input-group">
                             <input type="text"
@@ -46,7 +46,7 @@
                     </div>
 
                     <!-- Person -->
-                    <div class="form-group">
+                    <div class="form-group" ng-hide="(objectType=='TASK')">
                         <label translate>documentDetails.comp.details.label.person</label>
                         <p class="input-group">
                             <input type="text"

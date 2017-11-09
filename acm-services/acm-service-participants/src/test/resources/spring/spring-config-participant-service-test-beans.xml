@@ -15,4 +15,7 @@
         </constructor-arg>
     </bean>
 
+    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter"
+          factory-method="createObjectConverterForTests"/>
+
 </beans>

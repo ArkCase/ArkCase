@@ -14,26 +14,26 @@
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.assignee.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{owningGroup || 'Unknown'}}</div>
+                <div class="h4 font-bold no-margin">{{owningGroup || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.owningGroup.label</span>
                 </small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{ objectInfo.priority || 'Unknown'}}</div>
+                <div class="h4 font-bold no-margin">{{ objectInfo.priority || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.priority.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: 'shortDate') || 'Unknown'}}
+                <div class="h4 font-bold no-margin">{{ (dateInfo.taskStartDate | date: 'shortDate') || 'common.value.unknown' | translate}}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.startDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: 'shortDate') || 'Unknown' }}
+                <div class="h4 font-bold no-margin">{{ (dateInfo.dueDate | date: 'shortDate') || 'common.value.unknown' | translate }}
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.dueDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{objectInfo.status || 'Unknown'}}</div>
+                <div class="h4 font-bold no-margin">{{objectInfo.status || 'common.value.unknown' | translate}}</div>
                 <small class="text-muted"><span translate>complaints.comp.approvalRouting.state.label</span></small>
             </div>
         </div>

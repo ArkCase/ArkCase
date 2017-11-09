@@ -17,6 +17,11 @@
       "menuItemURL": "newTask",
       "menuItemTitle": "tasks.menus.topbar.item",
       "moduleId": "task",
+      "modalDialog": {
+        "moduleName": "tasks",
+        "templateUrl": "modules/tasks/views/components/task-new-task.client.view.html",
+        "controllerName": "Tasks.NewTaskController"
+      },
       "iconClass": "fa fa-check-circle",
       "position": 30
     }
@@ -303,6 +308,10 @@
         "components": [
           "tags"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
@@ -926,7 +935,8 @@
           "subjectRegex": "(.*)\\$([^\\s]+)",
           "objectTypeRegexGroup": 1,
           "objectNumberRegexGroup": 2
-        }
+        },
+        "hideMenu": true
       }
     },
     {
@@ -1005,29 +1015,40 @@
       "columnDefs": [
         {
           "name": "targetName",
+          "field": "target_object.name",
           "displayName": "tasks.comp.references.table.columns.targetName",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.targetName}}</a>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity, true)'>{{row.entity.target_object.name}}</a>"
         },
         {
           "name": "targetTitle",
+          "field": "target_object.title_parseable",
           "displayName": "tasks.comp.references.table.columns.targetTitle",
           "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.targetTitle}}</a>"
-        },
-        {
-          "name": "modified",
-          "displayName": "tasks.comp.references.table.columns.modified",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
         },
         {
           "name": "targetType",
+          "field": "target_object.object_type_s",
           "displayName": "tasks.comp.references.table.columns.targetType",
           "headerCellFilter": "translate"
         },
         {
+          "name": "assignee",
+          "field": "target_object.assignee_full_name_lcs",
+          "displayName": "tasks.comp.references.table.columns.assignee",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "modified",
+          "field": "target_object.modified_date_tdt",
+          "displayName": "tasks.comp.references.table.columns.modified",
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+        },
+        {
           "name": "status",
+          "field": "target_object.status_lcs",
           "displayName": "tasks.comp.references.table.columns.status",
           "headerCellFilter": "translate"
         }

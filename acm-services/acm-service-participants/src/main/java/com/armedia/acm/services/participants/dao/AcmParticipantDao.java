@@ -8,9 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by armdev on 1/14/15.
@@ -34,8 +36,9 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         {
             for (AcmParticipant ap : participantList)
             {
-                log.debug("saving AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() + ", obj id: "
-                        + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " + ap.getParticipantLdapId());
+                log.debug("saving AcmParticipant, id = " + ap.getId() + ", obj type: " + ap.getObjectType() +
+                        ", obj id: " + ap.getObjectId() + "; part type: " + ap.getParticipantType() + "; part id: " +
+                        ap.getParticipantLdapId());
                 log.debug("Participant with id '" + ap.getId() + "' is known to the EM? " + getEm().contains(ap));
                 AcmParticipant merged = getEm().merge(ap);
 
@@ -76,22 +79,26 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return count > 0;
     }
 
-    public boolean hasObjectAccessViaGroup(String userId, Long objectId, String objectType, String objectAction, String accessType)
+    public boolean hasObjectAccessViaGroup(Set<String> userGroups, Long objectId, String objectType,
+            String objectAction, String accessType)
     {
-        String jpql = "" + "SELECT count(app.id) AS numFound " + "FROM AcmParticipantPrivilege app JOIN AcmGroup ag JOIN ag.userMembers m "
-                + "WHERE app.participant.objectId = :objectId " + "AND app.participant.objectType = :objectType "
-                + "AND app.objectAction = :action " + "AND app.accessType = :accessType "
-                + "AND app.participant.participantLdapId = ag.name " + "AND m.userId = :userid";
+        TypedQuery<AcmParticipant> findParticipants = getEm().createQuery(
+                "SELECT app.participant FROM AcmParticipantPrivilege app " +
+                        "WHERE app.participant.objectId = :objectId " +
+                        "AND app.participant.objectType = :objectType " +
+                        "AND app.objectAction = :action " +
+                        "AND app.accessType = :accessType",
+                AcmParticipant.class);
 
-        Query find = getEm().createQuery(jpql);
-        find.setParameter("userid", userId);
-        find.setParameter("objectId", objectId);
-        find.setParameter("objectType", objectType);
-        find.setParameter("action", objectAction);
-        find.setParameter("accessType", accessType);
+        findParticipants.setParameter("objectId", objectId);
+        findParticipants.setParameter("objectType", objectType);
+        findParticipants.setParameter("action", objectAction);
+        findParticipants.setParameter("accessType", accessType);
 
-        Long count = (Long) find.getSingleResult();
-        return count > 0;
+        List<AcmParticipant> participants = findParticipants.getResultList();
+
+        return participants.stream()
+                .anyMatch(participant -> userGroups.contains(participant.getParticipantLdapId()));
     }
 
     public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
@@ -99,7 +106,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
         String jpql = "SELECT ap " + "FROM AcmParticipant ap " + "WHERE ap.objectId = :objectId " + "AND ap.objectType = :objectType";
 
-        Query query = getEm().createQuery(jpql);
+        TypedQuery<AcmParticipant> query = getEm().createQuery(jpql, AcmParticipant.class);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
 
@@ -142,9 +149,12 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
             Long objectId)
     {
-
-        Query query = getEm().createQuery("SELECT par FROM AcmParticipant par " + "WHERE par.participantType =:participantType "
-                + "AND par.objectId =:objectId " + "AND par.objectType =:objectType " + "AND par.participantLdapId =:userId");
+        Query query = getEm().createQuery(
+                "SELECT par FROM AcmParticipant par " +
+                        "WHERE par.participantType =:participantType " +
+                        "AND par.objectId =:objectId " +
+                        "AND par.objectType =:objectType " +
+                        "AND par.participantLdapId =:userId");
         query.setParameter("participantType", participantType);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);

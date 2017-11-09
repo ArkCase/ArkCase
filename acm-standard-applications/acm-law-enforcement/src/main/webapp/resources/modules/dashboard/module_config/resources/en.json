@@ -276,7 +276,8 @@
       "calendar": {
         "title": "Calendar",
         "description": "Displays chart of scheduled events per day",
-        "noDataMessage": "Currently there are no events to display"
+        "noDataMessage": "Currently there are no events to display",
+        "calendarIntegrationDisabledMessage": "Calendar integration is disabled by Administrator"
       },
       "reworkDetails": {
         "title": "Rework Details",
@@ -376,5 +377,11 @@
   },
   "dashboard.comp.casesByQueue": {
     "title": "Cases By Queue"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Team Workload"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Cases By Status"
   }
 }

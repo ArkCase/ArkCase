@@ -1,12 +1,12 @@
 'use strict';
 
 angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
-    , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
+    , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
     , 'Task.WorkflowService', 'PermissionsService', 'Profile.UserInfoService', 'Object.TaskService', 'Task.InfoService'
     , 'Object.ModelService', 'MessageService'
     , function ($scope, $stateParams, $q, $translate, $modal
-        , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
+        , Util, UtilDateService, ConfigService, ObjectService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
         , TaskWorkflowService, PermissionsService, UserInfoService, ObjectTaskService, TaskInfoService
         , ObjectModelService, MessageService) {
@@ -27,8 +27,16 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
 
+        $scope.isTask = function(objectInfo) {
+            return !Util.isEmpty(objectInfo) && objectInfo.hasOwnProperty('taskId') && objectInfo.hasOwnProperty('adhocTask');
+        };
+
         var onObjectInfoRetrieved = function (objectInfo) {
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
+            if (!$scope.isTask(objectInfo)) {
+                $scope.objectInfo = {'id': currentObjectId};
+                $scope.dateInfo = null;
+            }
             if (Util.goodPositive(currentObjectId, false)) {
                 //we can change this code with making backend service to return the task and make only one call to server
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, 0, 100, '', '').then(function (data) {
@@ -66,6 +74,10 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                 });
             }
         };
+
+        $scope.$bus.subscribe('buckslip-process-refresh', function (objectInfo){
+            onObjectInfoRetrieved(objectInfo);
+        });
 
         $scope.$bus.subscribe('buckslip-task-object-updated-subscribe-created', function (created){
             if ($scope.objectInfo && created) {

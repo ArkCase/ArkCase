@@ -25,7 +25,8 @@
   "radioName": "pt_Choice primary",
   "radioYes.text": "pt_Yes",
   "radioNo.text": "pt_No",
-  "duplicateOrganizationRoleErrorMessage": "pt_Organization already has the selected association"
+  "duplicateOrganizationRoleErrorMessage": "pt_Organization already has the selected association",
+  "notifyParentOrgWillBeChanged": "pt_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
   },
   "common.addPerson": {
     "title": "pt_Add person",

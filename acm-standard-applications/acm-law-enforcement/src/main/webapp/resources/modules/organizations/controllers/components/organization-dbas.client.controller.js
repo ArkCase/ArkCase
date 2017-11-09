@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('organizations').controller('Organization.DBAsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService'
+    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService'
     , function ($scope, $stateParams, $translate
-        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService) {
+        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService, ObjectLookupService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -57,6 +57,11 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
                 $scope.gridOptions.noData = true;
             }
         };
+
+
+        ObjectLookupService.getDBAsTypes().then(function (response) {
+            $scope.dbasTypes = response;
+        });
 
         //Aliases
         $scope.addNew = function () {

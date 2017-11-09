@@ -51,7 +51,8 @@ public class AcmUserContextMapper implements ContextMapper
         }
 
         user.setDistinguishedName(MapperUtils.appendBaseToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
-        user.setUserId(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName()));
+        String userId = MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName());
+        user.setUserId(userId.toLowerCase());
         user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
         user.setCountry(MapperUtils.getAttribute(adapter, "co"));
         user.setCountryAbbreviation(MapperUtils.getAttribute(adapter, "c"));

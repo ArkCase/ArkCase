@@ -85,7 +85,7 @@ angular.module('dashboard.workflow-report')
             }
 
             vm.onClickCaseComplaintId = function (objectType, objectId) {
-                ObjectService.gotoUrl(objectType, objectId);
+                ObjectService.showObject(objectType, objectId);
             };
         }
     ]);

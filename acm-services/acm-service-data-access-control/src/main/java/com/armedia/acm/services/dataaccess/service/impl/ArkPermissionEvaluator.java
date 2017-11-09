@@ -6,6 +6,10 @@ import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +18,9 @@ import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Determine whether a user is authorized to take an action for a specific object.
@@ -41,6 +48,8 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
     private AcmParticipantDao participantDao;
+    private AcmGroupDao groupDao;
+    private UserDao userDao;
     private AccessControlRuleChecker accessControlRuleChecker;
 
     @Override
@@ -144,11 +153,30 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return hasAccessDirectlyOrViaDefaultUser;
         }
 
-        boolean hasAccessViaGroup = getParticipantDao().hasObjectAccessViaGroup(
-                authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
+        boolean hasAccessViaGroup = hasObjectAccessViaGroup(authentication.getName(), objectId, objectType,
+                permission, DataAccessControlConstants.ACCESS_GRANT);
 
         log.trace("Returning whether they have access via a group - " + hasAccessViaGroup);
         return hasAccessViaGroup;
+    }
+
+    private boolean hasObjectAccessViaGroup(String principal, Long objectId, String objectType,
+                                            String objectAction, String access)
+    {
+        AcmUser user = getUserDao().findByUserId(principal);
+        List<AcmGroup> userGroups = getGroupDao().findByUserMember(user);
+
+        Stream<String> principalDirectAuthorities = userGroups.stream()
+                .map(AcmGroup::getName);
+
+        Stream<String> principalAuthoritiesPerAscendants = userGroups.stream()
+                .flatMap(AcmGroup::getAscendants);
+
+        Set<String> principalAllAuthorities = Stream.concat(principalAuthoritiesPerAscendants, principalDirectAuthorities)
+                .collect(Collectors.toSet());
+
+        return getParticipantDao().hasObjectAccessViaGroup(principalAllAuthorities, objectId, objectType,
+                objectAction, access);
     }
 
     private String getSolrDocument(Authentication authentication, Long objectId, String objectType)
@@ -162,11 +190,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             // if the Solr search returns the object, the user has read access to it... eventually we will extend
             // this evaluator to consider additional access levels, but for now we will grant any access so long as
             // the user can read the object.
-            String result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
+            String result = getExecuteSolrQuery()
+                    .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
             if (result.contains("numFound\":0"))
                 result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc");
             return result;
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Unable to retrieve Solr document for object with id [{}] of type [{}]", objectId, objectType, e);
             return null;
@@ -207,6 +237,26 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     public void setParticipantDao(AcmParticipantDao participantDao)
     {
         this.participantDao = participantDao;
+    }
+
+    public AcmGroupDao getGroupDao()
+    {
+        return groupDao;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public AccessControlRuleChecker getAccessControlRuleChecker()

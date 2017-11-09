@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
 
 
         Authentication.queryUserInfo().then(
@@ -54,6 +54,12 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
             $scope.gridOptions.data = phones;
         };
 
+        ObjectLookupService.getSubContactMethodType('phone').then(
+            function (contactMethodTypes) {
+                $scope.phoneTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
+
         $scope.addNew = function () {
             var phone = {};
             phone.created = Util.dateToIsoString(new Date());
@@ -79,11 +85,11 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
                 id: rowEntity.id,
                 type: rowEntity.type,
                 subType: rowEntity.subType,
+                subLookup: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description
             };
             showModal(item, true);
-
         };
 
         $scope.deleteRow = function (rowEntity) {

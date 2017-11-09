@@ -3,6 +3,16 @@
     "title": "Präferenzen",
     "menus": {
       "usermenu.item": "Präferenzen"
+    },
+    "widgets.list": {
+      "defaultView": "Standardansicht",
+      "expanded": "Erweitert",
+      "collapsed": "Zusammengebrochen",
+      "disabled": "Deaktiviert",
+      "enabled": "Aktiviert"
+    },
+    "modules.list": {
+      "noModules": "Keine Module im System gefunden"
     }
   }
 }

@@ -35,7 +35,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 url: 'api/v1/service/participant/:objectType/:objectId',
                 isArray: true
             },
-            
+
             postEcmObjectParticipants: {
                 method: 'POST',
                 url: 'api/latest/service/ecm/participants/:objectType/:objectId',
@@ -65,7 +65,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                     query: query
                 },
                 function (data) {
-                    if (SearchService.validateSolrData(data)) {
+                    if (Util.validateSolrData(data)) {
                         var participantData = data.response.docs;
                         if (Service.isParticipantValid(participantData)) {
                             return df.resolve(participantData);
@@ -183,7 +183,8 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
                 return false;
             }
-            
+
+                        
             // multiple owning groups
             if (_.filter(participants, function (pa) {
                     return Util.compare("owning group", pa.participantType);
@@ -348,6 +349,33 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 });                
             } 
         }
+
+        /**
+         * @ngdoc method
+         * @name isParticipantMemberOfGroup
+         * @methodOf services:Object.ParticipantService
+         *
+         * @description
+         * Query if participant(owner/assignee) belongs to selected group
+         *
+         * @param {String} participantId  Participant id
+         *
+         * @returns {Object} participant data
+         */
+        Service.isParticipantMemberOfGroup = function (participantId, owningGroup) {
+            return Util.serviceCall({
+                service: Service.checkGroupForParticipant
+                , param: {
+                    participantId: participantId,
+                    owningGroup: owningGroup
+                }
+                , onSuccess: function (data) {
+                    if (data.response) {
+                        return data.response.docs.length>0?true:false;
+                    }
+                }
+            })
+        };
 
         return Service;
     }

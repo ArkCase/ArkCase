@@ -116,7 +116,7 @@ angular.module('dashboard.my-tasks')
             }
 
             vm.onClickCaseComplaintId = function (objectType, objectId) {
-                ObjectService.gotoUrl(objectType, objectId);
+                ObjectService.showObject(objectType, objectId);
             };
         }
     ]);

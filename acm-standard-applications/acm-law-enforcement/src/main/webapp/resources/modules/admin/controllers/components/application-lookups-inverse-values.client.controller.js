@@ -73,6 +73,7 @@ angular.module('admin').controller('Admin.InverseValuesLookupController', ['$sco
             var params = {};
             params.entry = entry || {};
             params.isEdit = isEdit || false;
+            params.config = $scope.config;
 
             var modalInstance = $modal.open({
                 animation: true,

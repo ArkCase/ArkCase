@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.mule.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-        orgDoc.setAdditionalProperty("primary_contact_s", org.getPrimaryContact());
+        orgDoc.setAdditionalProperty("primary_contact_s", getPrimaryContact(org));
         orgDoc.setAdditionalProperty("default_phone_s", getDefaultPhone(org));
         orgDoc.setAdditionalProperty("default_location_s", getDefaultAddress(org));
         orgDoc.setAdditionalProperty("default_identification_s", getDefaultIdentification(org));
@@ -77,14 +78,42 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
-    private Object getDefaultIdentification(Organization org)
+    private String getPrimaryContact(Organization organization)
     {
-        if (org.getDefaultIdentification() == null)
+        if (organization.getPrimaryContact() == null)
         {
             return null;
         }
-        return org.getDefaultIdentification().getIdentificationNumber() + " [" + org.getDefaultIdentification().getIdentificationType()
-                + "]";
+        StringBuilder sb = new StringBuilder();
+        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getGivenName().trim()))
+        {
+            sb.append(organization.getPrimaryContact().getPerson().getGivenName());
+        }
+        if (!StringUtils.isEmpty(organization.getPrimaryContact().getPerson().getFamilyName().trim()))
+        {
+            if (sb.length() > 0)
+            {
+                sb.append(" ");
+            }
+            sb.append(organization.getPrimaryContact().getPerson().getFamilyName());
+        }
+        return sb.toString().trim();
+    }
+
+    private String getDefaultIdentification(Organization organization) {
+        if (organization.getDefaultIdentification() == null) {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationNumber().trim()))
+        {
+            sb.append(organization.getDefaultIdentification().getIdentificationNumber());
+            if (!StringUtils.isEmpty(organization.getDefaultIdentification().getIdentificationType().trim()))
+            {
+                sb.append(" [" + organization.getDefaultIdentification().getIdentificationType() + "]");
+            }
+        }
+        return sb.toString();
     }
 
     private String getDefaultPhone(Organization organization)
@@ -94,10 +123,13 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(organization.getDefaultPhone().getValue());
-        if (organization.getDefaultPhone().getSubType() != null)
+        if (!StringUtils.isEmpty(organization.getDefaultPhone().getValue().trim()))
         {
-            sb.append(" [").append(organization.getDefaultPhone().getSubType()).append("]");
+            sb.append(organization.getDefaultPhone().getValue());
+            if (!StringUtils.isEmpty(organization.getDefaultPhone().getSubType().trim()))
+            {
+                sb.append(" [" + organization.getDefaultPhone().getSubType() + "]");
+            }
         }
         return sb.toString();
     }
@@ -110,17 +142,16 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         }
 
         StringBuilder sb = new StringBuilder();
-        if (organization.getDefaultAddress().getCity() != null)
+        if (!StringUtils.isEmpty(organization.getDefaultAddress().getCity().trim()))
         {
             sb.append(organization.getDefaultAddress().getCity());
-        }
-        if (organization.getDefaultAddress().getState() != null)
-        {
-            if (sb.length() > 0)
+            if (!StringUtils.isEmpty(organization.getDefaultAddress().getState().trim()))
             {
-                sb.append(", ");
+                if (sb.length() > 0)
+                {
+                    sb.append(", " + organization.getDefaultAddress().getState());
+                }
             }
-            sb.append(organization.getDefaultAddress().getState());
         }
         return sb.toString();
     }

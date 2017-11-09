@@ -18,6 +18,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -91,14 +92,13 @@ public class ParticipantDaoIT
     @Transactional
     public void findParticipantInGroupWithPrivilege()
     {
-        AcmParticipant p = makeAcmParticipant("first", "assignee", "grant", "save");
-
+        AcmParticipant p = makeAcmParticipant("ACM_ADMINISTRATOR_DEV", "assignee", "grant", "read");
         dao.save(p);
 
-        boolean hasAccess = dao.hasObjectAccessViaGroup(p.getParticipantLdapId(), objectId, objectType, "read", "grant");
+        boolean hasAccess = dao.hasObjectAccessViaGroup(
+                new HashSet<>(Arrays.asList(p.getParticipantLdapId())), objectId, objectType, "read", "grant");
 
-        // should not find any since our user is not part of a group!
-        assertFalse(hasAccess);
+        assertTrue(hasAccess);
     }
 
 

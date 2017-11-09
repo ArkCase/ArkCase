@@ -102,7 +102,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
     private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
 
-        AcmUser user = getUserDao().findByUserIdAnyCase(providerAuthentication.getName());
+        AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 

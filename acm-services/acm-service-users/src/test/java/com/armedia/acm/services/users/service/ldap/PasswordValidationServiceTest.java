@@ -1,5 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId;
 import org.junit.Before;
@@ -7,6 +9,8 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -14,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class PasswordValidationServiceTest
 {
     private PasswordValidationService unit = new PasswordValidationService();
+    private PasswordLengthValidationRule minLengthRule;
 
     @Before
     public void setUp()
@@ -30,10 +35,11 @@ public class PasswordValidationServiceTest
         PasswordShouldMatchPattern digitRule = new PasswordShouldMatchPattern("^.*?[0-9].*$",
                 "Password must contain at least one digit (0-9)");
 
-        PasswordShouldMatchPattern specialCharRule = new PasswordShouldMatchPattern("^.*?[[~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-]].*$",
-                "Password must contain at least one special character");
+        PasswordShouldMatchPattern specialCharRule =
+                new PasswordShouldMatchPattern("^.*?[\\Q[\\E~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-\\Q]\\E].*$",
+                        "Password must contain at least one special character");
 
-        PasswordShouldMatchPattern minLengthRule = new PasswordShouldMatchPattern("^.{7,}$",
+        minLengthRule = new PasswordLengthValidationRule(7,
                 "Password must be of minimum length of 7.");
 
         unit.setPasswordRules(Arrays.asList(new PasswordShouldNotContainUserId(), lowercaseCharRule, uppercaseCharRule, digitRule,
@@ -43,8 +49,7 @@ public class PasswordValidationServiceTest
     @Test
     public void passwordIsValid()
     {
-        List<String> errorMessages = unit.validate("ann-acm", "AcMd3v$");
-
+        List<String> errorMessages = unit.validate("ann-acm", "AcMd3v[");
         assertTrue(errorMessages.isEmpty());
     }
 
@@ -62,7 +67,21 @@ public class PasswordValidationServiceTest
     {
         List<String> errorMessages = unit.validate("ann-acm", "ann-acm\\$\"'?");
 
-        // password is less then 7 chars, no uppercase letter and contains userId
+        // no digit char, no uppercase letter and contains userId
         assertTrue(errorMessages.size() == 3);
+    }
+
+    @Test
+    public void generatedPasswordsAreValid()
+    {
+        List<String> passwords = Stream.generate(() -> MapperUtils.generatePassword(minLengthRule.getMinLength()))
+                .limit(50)
+                .collect(Collectors.toList());
+
+        List<String> errorMessages = passwords.stream()
+                .flatMap(password -> unit.validate("ann-acm", password).stream())
+                .collect(Collectors.toList());
+        errorMessages.forEach(System.out::println);
+        assertTrue(errorMessages.isEmpty());
     }
 }

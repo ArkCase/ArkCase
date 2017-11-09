@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmMultipartFile;
@@ -9,8 +10,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.search.service.ObjectMapperFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +44,7 @@ public class FileUploadAPIController
 
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
+    private ObjectConverter objectConverter;
 
     private final String uploadFileType = "attachment";
 
@@ -80,8 +80,7 @@ public class FileUploadAPIController
         String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
-        ObjectMapper om = new ObjectMapperFactory().createObjectMapper();
-        String jsonUploadedFiles = om.writeValueAsString(uploaded);
+        String jsonUploadedFiles = getObjectConverter().getJsonMarshaller().marshal(uploaded);
 
         return jsonUploadedFiles;
     }
@@ -204,5 +203,15 @@ public class FileUploadAPIController
     public void setEcmFileService(EcmFileService ecmFileService)
     {
         this.ecmFileService = ecmFileService;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

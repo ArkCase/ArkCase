@@ -1,5 +1,4 @@
 'use strict';
-
 angular.module('document-details').controller('Document.ParticipantsController', ['$scope', '$stateParams', '$q', '$modal'
     , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'ObjectService', 'Object.ParticipantService', 'Authentication', 'MessageService', '$translate',
     'Object.LookupService', 'Object.ModelService', 'EcmService',
@@ -12,6 +11,15 @@ angular.module('document-details').controller('Document.ParticipantsController',
         var promiseUsers = gridHelper.getUsers();
         
         // TODO: Use core-participants directive in document-details
+
+        $scope.$on('document-data', function (event, ecmFile) {
+	        $scope.promiseTypes = ObjectLookupService.getParticipantTypes(ecmFile.container.containerObjectType).then(
+	            function (participantTypes) {
+	                $scope.participantTypes = participantTypes;
+	                return participantTypes;
+	            }
+	        );
+        });
 
         var promiseConfig = ConfigService.getComponentConfig("document-details", "participants").then(function (config) {
             gridHelper.addButton(config, "edit");
@@ -99,7 +107,12 @@ angular.module('document-details').controller('Document.ParticipantsController',
                 templateUrl: "directives/core-participants/core-participants-modal.client.view.html",
                 controller: "Directives.CoreParticipantsModalController",
                 size: 'lg',
-                backdrop: 'static'
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return {};
+                    }
+                }
             });
 
             modalInstance.result.then(function (data) {

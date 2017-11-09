@@ -214,6 +214,48 @@ angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$
             });
         };
 
+        /**
+         * @ngdoc method
+         * @name deleteAssociationInfo
+         * @methodOf services:ObjectAssociation.Service
+         *
+         * @description
+         * Delete object association
+         *
+         * @param {Number} id  Association ID
+         *
+         * @returns {Object} Promise
+         */
+        Service.createAssociationInfo = function (parentId, parentType, parentTitle, parentName, targetId, targetType, targetTitle, targetName, associationType, inverseAssociationType) {
+            var association = {
+                parentId: parentId,
+                parentType: parentType,
+                associationType: associationType,
+                parentTitle: parentTitle,
+                parentName: parentName,
+                targetId: targetId,
+                targetType: targetType,
+                targetTitle: targetTitle,
+                targetName: targetName
+            };
+
+            if (inverseAssociationType) {
+                var inverseAssociation = {
+                    parentId: targetId,
+                    parentType: targetType,
+                    parentTitle: targetTitle,
+                    parentName: targetName,
+                    associationType: inverseAssociationType,
+                    targetId: parentId,
+                    targetType: parentType,
+                    targetTitle: parentTitle,
+                    targetName: parentName,
+                    inverseAssociation: association
+                };
+                association.inverseAssociation = inverseAssociation;
+                return association;
+            }
+        };
 
         return Service;
     }

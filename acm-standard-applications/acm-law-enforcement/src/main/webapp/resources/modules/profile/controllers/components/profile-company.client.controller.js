@@ -2,7 +2,6 @@
 
 angular.module('profile').controller('Profile.CompanyController', ['$scope','Profile.UserInfoService',
     function ($scope, UserInfoService) {
-        $scope.$emit('req-component-config', 'company');
         $scope.update = function () {
             var profileInfo;
             UserInfoService.getUserInfo().then(function(infoData) {

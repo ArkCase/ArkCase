@@ -9,13 +9,17 @@ angular.module('cases').config(['$stateProvider',
                 url: '/cases',
                 templateUrl: 'modules/cases/views/cases.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
-                        , function ($translate, $translatePartialLoader, LocaleService) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService', 'Object.LookupService'
+                        , function ($translate, $translatePartialLoader, LocaleService, ObjectLookupService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('cases');
-                        $translate.buildDataLookups(LocaleService.getLabelResources(["cases"], "en"));
                         $translatePartialLoader.addPart('document-details');
+                        $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["cases"], "en"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
+                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
+                        ;
                         return $translate.refresh();
                     }]
                 }

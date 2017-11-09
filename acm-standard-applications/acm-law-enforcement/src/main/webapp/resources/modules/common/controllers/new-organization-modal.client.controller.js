@@ -50,6 +50,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             params.header = $translate.instant("common.dialogOrganizationPicker.header");
             params.filter = '"Object Type": ORGANIZATION';
             params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
+            params.addNewEnabled = false;
 
             var modalInstance = $modal.open({
                 templateUrl: "modules/common/views/object-picker-modal.client.view.html",
@@ -94,13 +95,14 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
         };
 
         $scope.searchPerson = function (index) {
-            var associationFound = _.find($scope.organization.personAssociations, function(item){
+            var associationFound = _.find($scope.organization.personAssociations, function (item) {
                 return !Util.isEmpty(item) && !Util.isEmpty(item.person);
             });
             var association = index > -1 ? $scope.organization.personAssociations[index] : {};
             var params = {
                 showSetPrimary: true,
                 isDefault: false,
+                addNewEnabled: false,
                 types: $scope.personAssociationTypes,
                 isFirstPerson: Util.isEmpty(associationFound) ? true : false
             };

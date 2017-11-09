@@ -34,6 +34,7 @@ public class AcmGroupContextMapper implements ContextMapper
         group.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getGroupsSortingAttribute()));
         group.setDescription(MapperUtils.getAttribute(adapter, "description"));
         group.setDirectoryName(acmLdapSyncConfig.getDirectoryName());
+        group.setDisplayName(MapperUtils.getAttribute(adapter, "displayName"));
 
         if (adapter.attributeExists("member"))
         {

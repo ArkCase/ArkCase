@@ -13,7 +13,7 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
-import com.armedia.acm.services.participants.utils.ParticipantUtils;
+
 import org.springframework.context.ApplicationListener;
 
 import java.text.SimpleDateFormat;
@@ -24,6 +24,7 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
     private AcmObjectHistoryEventPublisher acmObjectHistoryEventPublisher;
     private TaskEventPublisher taskEventPublisher;
     private AcmAssignmentDao acmAssignmentDao;
+    private ObjectConverter objectConverter;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -37,43 +38,48 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
             if (isTask)
             {
                 // Converter for JSON string to Object
-                AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
+                AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
 
                 String jsonUpdatedTask = acmObjectHistory.getObjectString();
-                AcmTask updatedTask = (AcmTask) converter.unmarshall(jsonUpdatedTask, AcmTask.class);
+                AcmTask updatedTask = converter.unmarshall(jsonUpdatedTask, AcmTask.class);
 
                 AcmAssignment acmAssignment = createAcmAssignment(updatedTask);
 
-                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedTask.getId(), TaskConstants.OBJECT_TYPE);
+                AcmObjectHistory acmObjectHistoryExisting = getAcmObjectHistoryService().getAcmObjectHistory(updatedTask.getId(),
+                        TaskConstants.OBJECT_TYPE);
 
                 if (acmObjectHistoryExisting != null)
                 {
                     String json = acmObjectHistoryExisting.getObjectString();
-                    AcmTask existing = (AcmTask) converter.unmarshall(json, AcmTask.class);
+                    AcmTask existing = converter.unmarshall(json, AcmTask.class);
 
                     acmAssignment.setOldAssignee(existing.getAssignee());
 
                     if (isDetailsChanged(existing, updatedTask))
                     {
-                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "details.changed", event.getUserId(), true, event.getIpAddress());
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "details.changed", event.getUserId(),
+                                true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
 
                     if (isPriorityChanged(existing, updatedTask))
                     {
-                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "priority.changed", event.getUserId(), true, event.getIpAddress());
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "priority.changed", event.getUserId(),
+                                true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
 
                     if (isStatusChanged(existing, updatedTask))
                     {
-                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(), true, event.getIpAddress());
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "status.changed", event.getUserId(),
+                                true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
 
                     if (isReworkDetailsChanged(existing, updatedTask))
                     {
-                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "reworkdetails.changed", event.getUserId(), true, event.getIpAddress());
+                        AcmApplicationTaskEvent taskEvent = new AcmApplicationTaskEvent(updatedTask, "reworkdetails.changed",
+                                event.getUserId(), true, event.getIpAddress());
                         getTaskEventPublisher().publishTaskEvent(taskEvent);
                     }
                 }
@@ -146,7 +152,8 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
         if (updatedDetails != null && details != null)
         {
             return !details.equals(updatedDetails);
-        } else if (updatedDetails != null)
+        }
+        else if (updatedDetails != null)
         {
             return true;
         }
@@ -160,7 +167,8 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
         if (updatedReworkDetails != null && reworkDetails != null)
         {
             return !reworkDetails.equals(updatedReworkDetails);
-        } else if (updatedReworkDetails != null)
+        }
+        else if (updatedReworkDetails != null)
         {
             return true;
         }
@@ -239,5 +247,15 @@ public class AcmApplicationTaskEventListener implements ApplicationListener<AcmO
     public void setAcmAssignmentDao(AcmAssignmentDao acmAssignmentDao)
     {
         this.acmAssignmentDao = acmAssignmentDao;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

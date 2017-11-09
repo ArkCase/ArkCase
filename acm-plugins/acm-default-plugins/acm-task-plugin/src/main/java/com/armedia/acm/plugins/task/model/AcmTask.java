@@ -4,6 +4,7 @@ import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmNotificationReceiver;
 import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.data.AcmLegacySystemEntity;
+import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
@@ -13,8 +14,8 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.validation.constraints.NotNull;
@@ -34,7 +35,7 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private Long taskId;
     private String priority;
-    @Size(min=1)
+    @Size(min = 1)
     private String title;
 
     @NotNull
@@ -103,7 +104,13 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private boolean buckslipTask;
 
+    /**
+     * @deprecated use buckslipFutureTasks
+     */
+    @Deprecated
     private List<AcmUser> buckslipFutureApprovers;
+
+    private List<BuckslipFutureTask> buckslipFutureTasks;
 
     private String buckslipPastApprovers;
 
@@ -302,12 +309,13 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     public Integer getPercentComplete()
     {
-        return percentComplete;
+        return percentComplete != null && percentComplete > 0? percentComplete: 0;
     }
 
     public void setPercentComplete(Integer percentComplete)
     {
-        this.percentComplete = percentComplete;
+
+        this.percentComplete = percentComplete != null && percentComplete > 0? percentComplete: 0;
     }
 
     public String getDetails()
@@ -614,5 +622,15 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
         }
 
         return new ArrayList<>();
+    }
+
+    public List<BuckslipFutureTask> getBuckslipFutureTasks()
+    {
+        return buckslipFutureTasks;
+    }
+
+    public void setBuckslipFutureTasks(List<BuckslipFutureTask> buckslipFutureTasks)
+    {
+        this.buckslipFutureTasks = buckslipFutureTasks;
     }
 }
