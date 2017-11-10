@@ -24,14 +24,12 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
 
-    @Override
-    public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    @Override public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
         return getOrganizationDao().findModifiedSince(lastModified, start, pageSize);
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
+    @Override public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
     {
         SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
 
@@ -100,8 +98,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return sb.toString().trim();
     }
 
-    private String getDefaultIdentification(Organization organization) {
-        if (organization.getDefaultIdentification() == null) {
+    private String getDefaultIdentification(Organization organization)
+    {
+        if (organization.getDefaultIdentification() == null)
+        {
             return null;
         }
         StringBuilder sb = new StringBuilder();
@@ -156,8 +156,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return sb.toString();
     }
 
-    @Override
-    public SolrDocument toSolrQuickSearch(Organization in)
+    @Override public SolrDocument toSolrQuickSearch(Organization in)
     {
         SolrDocument orgDoc = new SolrDocument();
 
@@ -191,19 +190,18 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         {
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
+        orgDoc.setAdditionalProperty("status_s", in.getStatus());
 
         return orgDoc;
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
+    @Override public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
     {
         // No implementation needed
         return null;
     }
 
-    @Override
-    public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    @Override public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Organization.class.equals(acmObjectType);
     }
@@ -228,8 +226,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         this.userDao = userDao;
     }
 
-    @Override
-    public Class<?> getAcmObjectTypeSupported()
+    @Override public Class<?> getAcmObjectTypeSupported()
     {
         return Organization.class;
     }

@@ -287,7 +287,11 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var span = node.span;
                     var $spanIcon = $(span.children[1]);
                     $spanIcon.removeClass("fancytree-icon");
-                    $spanIcon.html("<i class='" + nodeIcon + "'></i>");
+                    if (node.data.status != 'ACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType == "PERSON" || node.data.nodeType == "ORGANIZATION")) {
+                        $spanIcon.html("<i class='" + nodeIcon + "' style='color: red;'></i>");
+                    }else {
+                        $spanIcon.html("<i class='" + nodeIcon + "'></i>");
+                    }
                 }
             }
             , getIconByKey: function (key) {
@@ -448,6 +452,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 _.each(objList, function (obj) {
                     var nodeId = obj.nodeId;
                     var nodeType = obj.nodeType;
+                    var status = obj.nodeStatus;
                     var nodeTitleLabel = obj.nodeTitleLabel;
                     var nodeTitle = nodeTitleLabel? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
                     var nodeToolTipLabel = obj.nodeToolTipLabel;
@@ -470,6 +475,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , leadComponent: leadComponent
                             , nodeType: nodeType
                             , nodeId: nodeId
+                            , status: status
                         });
                     }
                 });
