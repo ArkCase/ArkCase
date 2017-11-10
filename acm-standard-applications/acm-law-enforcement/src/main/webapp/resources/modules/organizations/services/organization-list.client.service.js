@@ -105,6 +105,7 @@ angular.module('services').factory('Organization.ListService', ['$resource', '$t
                                     , nodeType: ObjectService.ObjectTypes.ORGANIZATION
                                     , nodeTitle: Util.goodValue(doc.title_parseable)
                                     , nodeToolTip: Util.goodValue(doc.title_parseable)
+                                    , nodeStatus: Util.goodValue(doc.status_s)
                                 };
                             }
                             treeData.docs.push(node);
