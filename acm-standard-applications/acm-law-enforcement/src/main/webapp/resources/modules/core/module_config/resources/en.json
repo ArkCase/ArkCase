@@ -504,7 +504,7 @@
         "complaint": "COMPLAINT",
         "task": "TASK",
         "file": "FILE",
-        "document": "DOCUMENTS",
+        "document": "DOCUMENT",
         "person": "PERSON",
         "organization": "ORGANIZATION"
       }
