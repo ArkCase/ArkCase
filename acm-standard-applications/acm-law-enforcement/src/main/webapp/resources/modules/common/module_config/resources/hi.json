@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "hi_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "hi_MM/dd/yyyy",
     "defaultDateUIFormat": "hi_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "एक पासवर्ड दर्ज करें जो यूज़रनेम के समान नहीं है, जिसमें कम से कम एक विशेष वर्ण, संख्या, अपरकेस और लोअरकेस अक्षरों के संयोजन के साथ 7 वर्ण हैं।"
+    "defaultDateTimeUIFormat": "hi_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "hi_YYYY-MM-DD"

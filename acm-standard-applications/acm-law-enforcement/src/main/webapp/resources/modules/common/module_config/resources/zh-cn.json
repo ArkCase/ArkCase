@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "zh-cn_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "zh-cn_MM/dd/yyyy",
     "defaultDateUIFormat": "zh-cn_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "输入与用户名不同的密码，包含7个字符，至少包含一个特殊字符，数字，大小写字母组合。"
+    "defaultDateTimeUIFormat": "zh-cn_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "zh-cn_YYYY-MM-DD"

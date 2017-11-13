@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "Es_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "Es_MM/dd/yyyy",
     "defaultDateUIFormat": "Es_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "Es_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "Ingrese una contraseña que no sea igual a nombre de usuario, que contenga 7 caracteres con la combinación de al menos un carácter especial, número, mayúsculas y minúsculas."
+    "defaultDateTimeUIFormat": "Es_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "Es_YYYY-MM-DD"

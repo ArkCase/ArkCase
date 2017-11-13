@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "De_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "De_MM/dd/yyyy",
     "defaultDateUIFormat": "De_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "De_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "Geben Sie ein Passwort ein, das nicht identisch mit dem Benutzernamen ist und 7 Zeichen mit der Kombination aus mindestens einem Sonderzeichen, einer Zahl, Groß- und Kleinbuchstaben enthält."
+    "defaultDateTimeUIFormat": "De_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "JJJJ-MM-TT"

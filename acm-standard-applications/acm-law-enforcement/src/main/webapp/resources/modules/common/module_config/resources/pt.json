@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "Pt_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "Pt_MM/dd/yyyy",
     "defaultDateUIFormat": "Pt_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "Pt_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "Pt_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
+    "defaultDateTimeUIFormat": "Pt_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "Pt_YYYY-MM-DD"

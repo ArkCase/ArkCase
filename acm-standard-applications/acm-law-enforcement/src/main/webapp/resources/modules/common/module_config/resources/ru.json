@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "Ru_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "Ru_MM/dd/yyyy",
     "defaultDateUIFormat": "Ru_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "Ru_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "Введите пароль, который не совпадает с именем пользователя, содержащим 7 символов с комбинацией по крайней мере одного специального символа, числа, прописных и строчных букв."
+    "defaultDateTimeUIFormat": "Ru_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "Ru_YYYY-MM-DD"
