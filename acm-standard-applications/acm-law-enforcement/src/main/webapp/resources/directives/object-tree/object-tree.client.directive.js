@@ -287,10 +287,10 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var span = node.span;
                     var $spanIcon = $(span.children[1]);
                     $spanIcon.removeClass("fancytree-icon");
-                    if (node.data.status === 'INACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType === ObjectService.ObjectTypes.PERSON || node.data.nodeType === ObjectService.ObjectTypes.ORGANIZATION)) {
-                        $spanIcon.html("<i class='" + nodeIcon + " list-group-item-active-icon' title='" + node.data.status + "'></i>");
+                    if (node.data.nodeStatus === 'INACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType === ObjectService.ObjectTypes.PERSON || node.data.nodeType === ObjectService.ObjectTypes.ORGANIZATION)) {
+                        $spanIcon.html("<i class='" + nodeIcon + " list-group-item-active-icon' title='" + node.data.nodeStatus + "'></i>");
                     } else {
-                        $spanIcon.html("<i class='" + nodeIcon + "' title='" + node.data.status + "'></i>");
+                        $spanIcon.html("<i class='" + nodeIcon + "' title='" + node.data.nodeStatus + "'></i>");
                     }
                 }
             }
@@ -452,7 +452,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 _.each(objList, function (obj) {
                     var nodeId = obj.nodeId;
                     var nodeType = obj.nodeType;
-                    var status = obj.nodeStatus;
+                    var nodeStatus = obj.nodeStatus;
                     var nodeTitleLabel = obj.nodeTitleLabel;
                     var nodeTitle = nodeTitleLabel? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
                     var nodeToolTipLabel = obj.nodeToolTipLabel;
@@ -475,7 +475,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , leadComponent: leadComponent
                             , nodeType: nodeType
                             , nodeId: nodeId
-                            , status: status
+                            , nodeStatus: nodeStatus
                         });
                     }
                 });
