@@ -76,7 +76,8 @@
                                         <div class="col-lg-12">
                                             <button class="btn btn-sm btn-primary"
                                                     ng-click="validateEmail(calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail, calendarConfigDataModel.configurationsByType[configurableObjectType.id].password, configurableObjectType)"
-                                                    ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled">
+                                                    ng-disabled="!calendarConfigDataModel.configurationsByType[configurableObjectType.id].integrationEnabled || !calendarConfigDataModel.configurationsByType[configurableObjectType.id].systemEmail ||
+                                                    !calendarConfigDataModel.configurationsByType[configurableObjectType.id].password">
 													<span translate>
 									            		admin.security.calendarConfiguration.calendarConfigForm.validate.button
 									            	</span>
