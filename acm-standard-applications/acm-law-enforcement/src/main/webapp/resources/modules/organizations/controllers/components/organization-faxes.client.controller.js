@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.FaxesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -166,15 +166,19 @@ angular.module('organizations').controller('Organizations.FaxesController', ['$s
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultFax) {
-                id = $scope.objectInfo.defaultFax.id
-            }
-            var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
-            if (faxes && faxes.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultFax");
+        }
+
+        // $scope.isDefault = function (data) {
+        //     var id = 0;
+        //     if ($scope.objectInfo.defaultFax) {
+        //         id = $scope.objectInfo.defaultFax.id
+        //     }
+        //     var faxes = _.filter($scope.objectInfo.contactMethods, {type: 'fax'});
+        //     if (faxes && faxes.length == 0) {
+        //         return true;
+        //     }
+        //     return data.id == id;
+        // };
     }
 ]);

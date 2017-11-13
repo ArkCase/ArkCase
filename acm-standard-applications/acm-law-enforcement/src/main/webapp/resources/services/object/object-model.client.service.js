@@ -213,7 +213,15 @@ angular.module('services').factory('Object.ModelService', ['$q', '$resource', 'U
                 }
 
                 return restricted;
+            },
+
+            isObjectReferenceSame: function (objectInfo, data, propertyName) {
+                if (objectInfo[propertyName]) {
+                    return data === objectInfo[propertyName];
+                }
             }
+
+
         }
     }])
 ;

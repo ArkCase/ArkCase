@@ -2,10 +2,10 @@
 
 angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$translate'
     , 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService'
-    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService'
+    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'MessageService'
     , function ($scope, $state, $stateParams, $modal, $translate
         , Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService
-        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService
+        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService
     ) {
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -111,7 +111,18 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
-                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
+                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass)
+                        .then(function (result) {
+                            MessageService.succsessAction();
+                        }, function (error) {
+                            if(!Util.isEmpty(error.data.message))
+                            {
+                                MessageService.error(error.data.message);
+
+                            } else {
+                                MessageService.errorAction();
+                            }
+                        });
                 }
             });
         };
