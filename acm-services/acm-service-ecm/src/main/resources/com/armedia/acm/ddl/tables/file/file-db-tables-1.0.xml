@@ -659,5 +659,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="59-add-folder-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="60-add-file-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
 

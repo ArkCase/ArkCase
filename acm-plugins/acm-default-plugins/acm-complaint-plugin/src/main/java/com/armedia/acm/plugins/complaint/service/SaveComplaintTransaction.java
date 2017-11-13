@@ -50,12 +50,18 @@ public class SaveComplaintTransaction
             Complaint saved = complaintDao.save(complaint);
             try
             {
-                getFileParticipantService().inheritParticipantsFromAssignedObject(complaint.getParticipants(),
+                if (originalComplaint == null)
+                {
+                    saved.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                }
+                getFileParticipantService().inheritParticipantsFromAssignedObject(
+                        originalComplaint == null ? saved.getParticipants() : complaint.getParticipants(),
                         originalComplaint == null ? new ArrayList<>() : originalComplaint.getParticipants(),
-                        complaint.getContainer().getFolder());
-                getFileParticipantService().inheritParticipantsFromAssignedObject(complaint.getParticipants(),
-                        originalComplaint == null ? new ArrayList<>() : originalComplaint.getParticipants(),
-                        complaint.getContainer().getAttachmentFolder());
+                        saved.getContainer());
+                if (originalComplaint == null || !saved.getRestricted().equals(originalComplaint.getRestricted()))
+                {
+                    getFileParticipantService().setRestrictedFlagRecursively(saved.getRestricted(), saved.getContainer());
+                }
             }
             catch (AcmAccessControlException e)
             {

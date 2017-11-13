@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -162,14 +163,23 @@ public class EcmFileParticipantService
     }
 
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
+            List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer) throws AcmAccessControlException
+    {
+        if (acmContainer.getFolder() != null)
+        {
+            inheritParticipantsFromAssignedObject(assignedObjectParticipants,
+                    originalAssignedObjectParticipants, acmContainer.getFolder());
+        }
+        if (acmContainer.getAttachmentFolder() != null)
+        {
+            inheritParticipantsFromAssignedObject(assignedObjectParticipants,
+                    originalAssignedObjectParticipants, acmContainer.getAttachmentFolder());
+        }
+    }
+
+    private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmFolder rootFolder) throws AcmAccessControlException
     {
-        // sometimes we call this method for attachmentsFolder which could be null
-        if (rootFolder == null)
-        {
-            return;
-        }
-
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
@@ -207,6 +217,37 @@ public class EcmFileParticipantService
         }
     }
 
+    public void setRestrictedFlagRecursively(Boolean restricted, AcmContainer acmContainer)
+    {
+        if (acmContainer.getFolder() != null)
+        {
+            setRestrictedFlagRecursively(restricted, acmContainer.getFolder());
+        }
+        if (acmContainer.getAttachmentFolder() != null)
+        {
+            setRestrictedFlagRecursively(restricted, acmContainer.getAttachmentFolder());
+        }
+    }
+
+    private void setRestrictedFlagRecursively(Boolean restricted, AcmFolder folder)
+    {
+        folder.setRestricted(restricted);
+        getFolderDao().save(folder);
+
+        // set restricted flag to child folders
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId());
+        for (AcmFolder subFolder : subfolders)
+        {
+            setRestrictedFlagRecursively(restricted, subFolder);
+        }
+
+        // set restricted flag to files in the folder
+        getFileDao().findByFolderId(folder.getId()).forEach(file -> {
+            file.setRestricted(restricted);
+            getFileDao().save(file);
+        });
+    }
+
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
     {
         AcmParticipant documentParticipant = new AcmParticipant();
@@ -226,6 +267,11 @@ public class EcmFileParticipantService
      */
     private String getDocumentParticipantTypeFromAssignedObjectParticipantType(String assignedObjectParticipantType)
     {
+        if (assignedObjectParticipantType.equals("*"))
+        {
+            return assignedObjectParticipantType;
+        }
+
         String documentParticipantType = fileParticipantTypes.stream()
                 .filter(fileParticipantType -> Arrays.asList(getEcmFileServiceProperties()
                         .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType).split(","))

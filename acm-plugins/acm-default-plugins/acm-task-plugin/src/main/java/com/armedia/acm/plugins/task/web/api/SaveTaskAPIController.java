@@ -48,10 +48,13 @@ public class SaveTaskAPIController
             AcmTask retval = getTaskDao().save(in);
             try
             {
-                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(), originalTask.getParticipants(),
-                        in.getContainer().getFolder());
-                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(), originalTask.getParticipants(),
-                        in.getContainer().getAttachmentFolder());
+                retval.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                getFileParticipantService().inheritParticipantsFromAssignedObject(retval.getParticipants(), originalTask.getParticipants(),
+                        retval.getContainer());
+                if (originalTask == null || !retval.getRestricted().equals(originalTask.getRestricted()))
+                {
+                    getFileParticipantService().setRestrictedFlagRecursively(retval.getRestricted(), retval.getContainer());
+                }
             }
             catch (AcmAccessControlException e)
             {

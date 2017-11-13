@@ -265,9 +265,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 {
                     task.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
                     getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), new ArrayList<>(),
-                            task.getContainer().getFolder());
-                    getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), new ArrayList<>(),
-                            task.getContainer().getAttachmentFolder());
+                            task.getContainer());
+                    getFileParticipantService().setRestrictedFlagRecursively(task.getRestricted(), task.getContainer());
                 }
                 catch (AcmAccessControlException e)
                 {
@@ -330,7 +329,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             // save again to get container and folder ids, must be after creating folderForTaskEvent in order to create
             // cmisFolderId
-            taskDao.save(task);
+            AcmTask savedTask = taskDao.save(task);
 
             // copy folder structure of the original task to the copy task
             try
@@ -350,9 +349,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             try
             {
-                task.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), new ArrayList<>(),
-                        task.getContainer().getFolder());
+                savedTask.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                getFileParticipantService().inheritParticipantsFromAssignedObject(savedTask.getParticipants(), new ArrayList<>(),
+                        savedTask.getContainer());
+                getFileParticipantService().setRestrictedFlagRecursively(savedTask.getRestricted(), savedTask.getContainer());
             }
             catch (AcmAccessControlException e)
             {
