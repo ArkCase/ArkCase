@@ -289,7 +289,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     $spanIcon.removeClass("fancytree-icon");
                     if (node.data.status != 'ACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType == "PERSON" || node.data.nodeType == "ORGANIZATION")) {
                         $spanIcon.html("<i class='" + nodeIcon + "' style='color: red;'></i>");
-                    }else {
+                    } else {
                         $spanIcon.html("<i class='" + nodeIcon + "'></i>");
                     }
                 }
