@@ -36,7 +36,7 @@
                     <span class="required-asterisk">*</span>
                 </div>
                 <input id="person" class="form-control" type="text" ng-model="personName" readonly
-                       ng-disabled="editMode"
+                       ng-disabled="!selectExistingEnabled"
                        ng-click="pickPerson()" placeholder="{{'common.addPerson.selectExisting.label' | translate}}"
                        required>
             </div>
@@ -46,7 +46,7 @@
                     <span class="required-asterisk">*</span>
                 </div>
                 <select class="input-md form-control" id="types" ng-model="type"
-                        ng-options="o.value | translate for o in types" ng-disabled="pickerTypeDisabled"
+                        ng-options="o.value | translate for o in types" ng-disabled="!pickerTypeEnabled"
                         required></select>
             </div>
         </div>

@@ -88,6 +88,9 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
                     if (Service.validateSignature(data)) {
                         return data;
                     }
+                },
+                onError: function (error) {
+                    return error;
                 }
             });
         };
@@ -145,10 +148,10 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateSignatures = function (data) {
-            if (!Util.isArray(data)) {
-                return false;
+            if (Util.isArray(data)) {
+                return true;
             }
-            return true;
+            return false;
         };
 
         /**
@@ -162,9 +165,9 @@ angular.module('services').factory('Object.SignatureService', ['$resource', 'Acm
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateSignature = function (data) {
-            if (!Util.isEmpty(data))
+            if (Util.isEmpty(data))
                 return false;
-            if (!Util.isEmpty(data.signedBy))
+            if (Util.isEmpty(data.signedBy))
                 return false;
             return true;
         };
