@@ -65,6 +65,7 @@ public interface AcmObjectLockService
      *
      * @param parentObjectType parent document object type. Can be null, than returns every document.
      * @param auth             Authentication
+     * @param objectId         filter locks by object id.
      * @param creator          filter locks by lock held by user. Can be null.
      * @param firstRow         start row
      * @param maxRows          max rows
