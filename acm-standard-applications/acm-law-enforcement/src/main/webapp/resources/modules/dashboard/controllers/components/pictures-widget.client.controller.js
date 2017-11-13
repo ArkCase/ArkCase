@@ -70,6 +70,27 @@ angular.module('dashboard.pictures', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+            $scope.isDefault = function (data) {
+                if (data && data.object_id_s) {
+                    var id = 0;
+                    if ($scope.objectInfo.defaultPicture) {
+                        id = $scope.objectInfo.defaultPicture.fileId;
+                    }
+                    return data.object_id_s == id;
+                }
+                if (data && data.fileId) {
+                    var id = 0;
+                    if ($scope.objectInfo.defaultPicture) {
+                        id = $scope.objectInfo.defaultPicture.fileId;
+                    }
+                    return data.fileId == id;
+                }
+                if ($scope.images && $scope.images.length == 0) {
+                    return true;
+                }
+                return false;
+            };
+
 
         }
     ]);

@@ -13,9 +13,9 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService',
-            function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService) {
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
 
                 var modules = [
                         {
@@ -84,5 +84,8 @@ angular.module('dashboard.people', ['adf.provider'])
                     }
                 );
             }
+                $scope.isDefault = function (data) {
+                    return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "primaryContact");
+                }
         }
     ]);

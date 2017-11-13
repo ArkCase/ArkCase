@@ -2,9 +2,9 @@
 
 angular.module('organizations').controller('Organizations.PeopleController', ['$scope', '$q', '$stateParams'
     , '$translate', '$modal', 'UtilService', 'ObjectService', 'Organization.InfoService', 'MessageService'
-    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService', 'PermissionsService'
+    , 'Authentication', 'Person.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'OrganizationAssociation.Service', 'ConfigService', 'Object.LookupService', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, OrganizationInfoService, MessageService
-        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService, PermissionsService) {
+        , Authentication, PersonInfoService, HelperUiGridService, HelperObjectBrowserService, OrganizationAssociationService, ConfigService, ObjectLookupService, PermissionsService, ObjectModelService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -239,10 +239,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
         }
 
         $scope.isDefault = function (data) {
-            if ($scope.objectInfo) {
-                return data === $scope.objectInfo.primaryContact;
-            }
-            return false;
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "primaryContact");
         }
     }
 ]);
