@@ -145,6 +145,14 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 			$modalInstance.dismiss();
 		};
 
+        $scope.downloadAttachment = function(file) {
+            CalendarService.getCalendarEventAttachment($scope.objectType, $scope.objectId, file.eventId, file.attachmentId).then(function(result) {
+                CalendarUtilService.downloadCalendarEventAttachment(result);
+            }, function(err) {
+                MessageService.errorAction();
+            });
+        }
+
 		processEventDetails();
 	}
 ]);

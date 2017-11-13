@@ -1030,6 +1030,35 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             return patternString + ' ' + startDateString + ' ' + endDateString + ' ' + durationString;
         };
 
+        /**
+         * @ngdoc method
+         * @name downloadCalendarEventAttachment
+         * @methodOf services:Directives.CalendarUtilService
+         *
+         * @description
+         * Builds the html for the event popover template.
+         *
+         * @param {Object} calendarEvent - the calendar event object containing the event details
+         *
+         * @Returns {String} popoverTemplate - the html of the popover template
+         */
+        var downloadCalendarEventAttachment = function(attachmentResponse) {
+            var filename = "Untitled";
+            var disposition = attachmentResponse.headers(["content-disposition"]);
+            if (disposition && disposition.indexOf('attachment') !== -1) {
+                var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+                var matches = filenameRegex.exec(disposition);
+                if (matches != null && matches[1]) { 
+                  filename = matches[1].replace(/['"]/g, '');
+                }
+            }
+            var url = URL.createObjectURL(attachmentResponse.data);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.target = '_blank';
+            a.click();
+        };
 
         return {
             RECURRENCE_OPTIONS: RECURRENCE_OPTIONS,
@@ -1049,7 +1078,8 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             getRelativeMonthlyRecurrenceRange: getRelativeMonthlyRecurrenceRange,
             getAbsoluteYearlyRecurrenceRange: getAbsoluteYearlyRecurrenceRange,
             getRelativeYearlyRecurrenceRange: getRelativeYearlyRecurrenceRange,
-            buildPopoverTemplate: buildPopoverTemplate
+            buildPopoverTemplate: buildPopoverTemplate,
+            downloadCalendarEventAttachment: downloadCalendarEventAttachment
         };
     }
 ]);
