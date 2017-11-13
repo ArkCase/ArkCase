@@ -246,7 +246,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 };
                 
                 scope.onClickReplaceChildrenParticipants = function () {
-                	len = scope.objectInfo.participants.length;
+                	var len = scope.objectInfo.participants.length;
                 	for (i = 0; i < len; i++) {
                 		scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                 	}                	

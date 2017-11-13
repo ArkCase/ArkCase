@@ -95,12 +95,21 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
             DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
             try
             {
-                getFileParticipantService().inheritParticipantsFromAssignedObject(documentRepository.getParticipants(),
+                if (originalDocumentRepository == null)
+                {
+                    savedDocumentRepository.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                }
+                getFileParticipantService().inheritParticipantsFromAssignedObject(
+                        originalDocumentRepository == null ? savedDocumentRepository.getParticipants()
+                                : documentRepository.getParticipants(),
                         originalDocumentRepository == null ? new ArrayList<>() : originalDocumentRepository.getParticipants(),
-                        documentRepository.getContainer().getFolder());
-                getFileParticipantService().inheritParticipantsFromAssignedObject(documentRepository.getParticipants(),
-                        originalDocumentRepository == null ? new ArrayList<>() : originalDocumentRepository.getParticipants(),
-                        documentRepository.getContainer().getAttachmentFolder());
+                        savedDocumentRepository.getContainer());
+                if (originalDocumentRepository == null
+                        || !savedDocumentRepository.getRestricted().equals(originalDocumentRepository.getRestricted()))
+                {
+                    getFileParticipantService().setRestrictedFlagRecursively(savedDocumentRepository.getRestricted(),
+                            savedDocumentRepository.getContainer());
+                }
             }
             catch (AcmAccessControlException e)
             {

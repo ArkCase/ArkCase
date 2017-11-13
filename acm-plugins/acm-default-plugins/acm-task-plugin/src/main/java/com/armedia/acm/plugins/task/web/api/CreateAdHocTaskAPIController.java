@@ -101,9 +101,8 @@ public class CreateAdHocTaskAPIController
             {
                 adHocTask.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
                 getFileParticipantService().inheritParticipantsFromAssignedObject(adHocTask.getParticipants(), new ArrayList<>(),
-                        adHocTask.getContainer().getFolder());
-                getFileParticipantService().inheritParticipantsFromAssignedObject(adHocTask.getParticipants(), new ArrayList<>(),
-                        adHocTask.getContainer().getAttachmentFolder());
+                        adHocTask.getContainer());
+                getFileParticipantService().setRestrictedFlagRecursively(adHocTask.getRestricted(), adHocTask.getContainer());
             }
             catch (AcmAccessControlException e)
             {

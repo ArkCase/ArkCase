@@ -46,11 +46,17 @@ public class SaveCaseServiceImpl implements SaveCaseService
             CaseFile saved = caseFileDao.save(in);
             try
             {
-                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(),
-                        originalCaseFile == null ? new ArrayList<>() : originalCaseFile.getParticipants(), in.getContainer().getFolder());
-                getFileParticipantService().inheritParticipantsFromAssignedObject(in.getParticipants(),
-                        originalCaseFile == null ? new ArrayList<>() : originalCaseFile.getParticipants(),
-                        in.getContainer().getAttachmentFolder());
+                if (originalCaseFile == null)
+                {
+                    saved.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
+                }
+                getFileParticipantService().inheritParticipantsFromAssignedObject(
+                        originalCaseFile == null ? saved.getParticipants() : in.getParticipants(),
+                        originalCaseFile == null ? new ArrayList<>() : originalCaseFile.getParticipants(), saved.getContainer());
+                if (originalCaseFile == null || !saved.getRestricted().equals(originalCaseFile.getRestricted()))
+                {
+                    getFileParticipantService().setRestrictedFlagRecursively(saved.getRestricted(), saved.getContainer());
+                }
             }
             catch (AcmAccessControlException e)
             {

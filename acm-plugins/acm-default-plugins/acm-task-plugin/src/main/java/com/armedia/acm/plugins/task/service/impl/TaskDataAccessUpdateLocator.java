@@ -35,11 +35,13 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
         try
         {
             AcmTask originalTask = getTaskDao().findById(task.getId());
-            getTaskDao().save(task);
+            AcmTask savedTask = getTaskDao().save(task);
             getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), originalTask.getParticipants(),
-                    task.getContainer().getFolder());
-            getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), originalTask.getParticipants(),
-                    task.getContainer().getAttachmentFolder());
+                    savedTask.getContainer());
+            if (originalTask == null || !savedTask.getRestricted().equals(originalTask.getRestricted()))
+            {
+                getFileParticipantService().setRestrictedFlagRecursively(savedTask.getRestricted(), savedTask.getContainer());
+            }
         }
         catch (AcmTaskException e)
         {

@@ -27,11 +27,13 @@ public class CaseFileDataAccessUpdateLocator implements AcmObjectDataAccessBatch
     public void save(CaseFile assignedObject) throws AcmAccessControlException
     {
         CaseFile originalCaseFile = caseFileDao.find(assignedObject.getId());
-        getCaseFileDao().save(assignedObject);
+        CaseFile saved = getCaseFileDao().save(assignedObject);
         getFileParticipantService().inheritParticipantsFromAssignedObject(assignedObject.getParticipants(),
-                originalCaseFile.getParticipants(), assignedObject.getContainer().getFolder());
-        getFileParticipantService().inheritParticipantsFromAssignedObject(assignedObject.getParticipants(),
-                originalCaseFile.getParticipants(), assignedObject.getContainer().getAttachmentFolder());
+                originalCaseFile.getParticipants(), saved.getContainer());
+        if (originalCaseFile == null || !saved.getRestricted().equals(originalCaseFile.getRestricted()))
+        {
+            getFileParticipantService().setRestrictedFlagRecursively(saved.getRestricted(), saved.getContainer());
+        }
     }
 
     public CaseFileDao getCaseFileDao()
