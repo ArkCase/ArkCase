@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "Fr_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "Fr_MM/dd/yyyy",
     "defaultDateUIFormat": "Fr_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "Fr_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "Entrez un mot de passe qui n'est pas le même que le nom d'utilisateur, contenant 7 caractères avec la combinaison d'au moins un caractère spécial, un nombre, une majuscule et une minuscule."
+    "defaultDateTimeUIFormat": "Fr_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "Fr_YYYY-MM-DD"

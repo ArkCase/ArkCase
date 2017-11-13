@@ -7,8 +7,7 @@
     "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "ja_MM/dd/yyyy",
     "defaultDateUIFormat": "ja_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "少なくとも1つの特殊文字、数字、大文字と小文字の組み合わせで7文字を含むユーザー名と同じではないパスワードを入力します。"
+    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
   },
   "common.frevvo": {
     "defaultDateFormat": "ja_YYYY-MM-DD"
