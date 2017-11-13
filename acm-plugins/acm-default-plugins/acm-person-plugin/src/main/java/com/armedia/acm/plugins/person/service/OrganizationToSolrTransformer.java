@@ -24,12 +24,14 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
 
-    @Override public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    @Override
+    public List<Organization> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
         return getOrganizationDao().findModifiedSince(lastModified, start, pageSize);
     }
 
-    @Override public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
+    @Override
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Organization org)
     {
         SolrAdvancedSearchDocument orgDoc = new SolrAdvancedSearchDocument();
 
@@ -156,7 +158,8 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return sb.toString();
     }
 
-    @Override public SolrDocument toSolrQuickSearch(Organization in)
+    @Override
+    public SolrDocument toSolrQuickSearch(Organization in)
     {
         SolrDocument orgDoc = new SolrDocument();
 
@@ -195,13 +198,15 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return orgDoc;
     }
 
-    @Override public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
     {
         // No implementation needed
         return null;
     }
 
-    @Override public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    @Override
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Organization.class.equals(acmObjectType);
     }
@@ -226,7 +231,8 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         this.userDao = userDao;
     }
 
-    @Override public Class<?> getAcmObjectTypeSupported()
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
     {
         return Organization.class;
     }

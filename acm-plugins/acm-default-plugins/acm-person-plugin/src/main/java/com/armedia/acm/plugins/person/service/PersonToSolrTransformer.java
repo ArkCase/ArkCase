@@ -30,12 +30,14 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
 
-    @Override public List<Person> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
+    @Override
+    public List<Person> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
     {
         return getPersonDao().findModifiedSince(lastModified, start, pageSize);
     }
 
-    @Override public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
+    @Override
+    public SolrAdvancedSearchDocument toSolrAdvancedSearch(Person person)
     {
         SolrAdvancedSearchDocument solrDoc = new SolrAdvancedSearchDocument();
 
@@ -131,7 +133,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         return sb.toString();
     }
 
-    @Override public SolrAdvancedSearchDocument toContentFileIndex(Person in)
+    @Override
+    public SolrAdvancedSearchDocument toContentFileIndex(Person in)
     {
         // No implementation needed
         return null;
@@ -190,7 +193,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setPerson_alias_ss(aliasIds);
     }
 
-    @Override public SolrDocument toSolrQuickSearch(Person in)
+    @Override
+    public SolrDocument toSolrQuickSearch(Person in)
     {
         SolrDocument solrDoc = new SolrDocument();
 
@@ -214,7 +218,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         return solrDoc;
     }
 
-    @Override public boolean isAcmObjectTypeSupported(Class acmObjectType)
+    @Override
+    public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Person.class.equals(acmObjectType);
     }
@@ -239,7 +244,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         this.userDao = userDao;
     }
 
-    @Override public Class<?> getAcmObjectTypeSupported()
+    @Override
+    public Class<?> getAcmObjectTypeSupported()
     {
         return Person.class;
     }
