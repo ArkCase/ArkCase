@@ -106,6 +106,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
             var params = {
                 showSetPrimary: false,
+                selectExistingEnabled: false,
                 types: $scope.relationshipTypes,
                 skipPeopleIdsInSearch: [
                     $scope.objectInfo.id//skip parent in the search
