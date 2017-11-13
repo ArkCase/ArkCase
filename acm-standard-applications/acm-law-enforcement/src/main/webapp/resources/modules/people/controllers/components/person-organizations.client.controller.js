@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Organization.InfoService', 'MessageService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'PersonAssociation.Service', 'Object.LookupService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'PersonAssociation.Service', 'Object.LookupService', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication, OrganizationInfoService, MessageService
-        , HelperUiGridService, HelperObjectBrowserService, ConfigService, PersonAssociationService, ObjectLookupService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ConfigService, PersonAssociationService, ObjectLookupService, PermissionsService, ObjectModelService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -241,12 +241,9 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             }
             return promiseSaveInfo;
         }
-
-        $scope.isDefault = function (data) {
-            if ($scope.objectInfo) {
-                return data === $scope.objectInfo.defaultOrganization;
-            }
-            return false;
+        $scope.isDefault = function(data){
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
         }
+
     }
 ]);
