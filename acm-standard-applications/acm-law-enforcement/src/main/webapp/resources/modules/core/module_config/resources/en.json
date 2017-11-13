@@ -500,7 +500,7 @@
         "closed": "Closed"
       },
       "auditReportNames": {
-        "case": "CASE",
+        "case": "CASE_FILE",
         "complaint": "COMPLAINT",
         "task": "TASK",
         "file": "FILE",
