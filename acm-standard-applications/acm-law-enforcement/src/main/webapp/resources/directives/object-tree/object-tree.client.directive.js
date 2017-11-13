@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService','Helper.ObjectBrowserService',
-    function ($q, $translate, Util, Store, HelperObjectBrowserService) {
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService','Helper.ObjectBrowserService', 'ObjectService',
+    function ($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
         var Tree = {
             create: function (treeArgs) {
                 Tree.Info.create({name: "ObjectTree"});
@@ -287,10 +287,10 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var span = node.span;
                     var $spanIcon = $(span.children[1]);
                     $spanIcon.removeClass("fancytree-icon");
-                    if (node.data.status != 'ACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType == "PERSON" || node.data.nodeType == "ORGANIZATION")) {
-                        $spanIcon.html("<i class='" + nodeIcon + "' style='color: red;'></i>");
+                    if (node.data.status === 'INACTIVE' && !Util.isEmpty(node.lazy) && (node.data.nodeType === ObjectService.ObjectTypes.PERSON || node.data.nodeType === ObjectService.ObjectTypes.ORGANIZATION)) {
+                        $spanIcon.html("<i class='" + nodeIcon + " list-group-item-active-icon' title='" + node.data.status + "'></i>");
                     } else {
-                        $spanIcon.html("<i class='" + nodeIcon + "'></i>");
+                        $spanIcon.html("<i class='" + nodeIcon + "' title='" + node.data.status + "'></i>");
                     }
                 }
             }
