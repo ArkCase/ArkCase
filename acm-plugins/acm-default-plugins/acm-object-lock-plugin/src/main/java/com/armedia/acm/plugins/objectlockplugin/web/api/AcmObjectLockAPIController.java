@@ -124,8 +124,8 @@ public class AcmObjectLockAPIController
     @RequestMapping(value = {"/api/v1/plugin/locks/{objectType}",
             "/api/latest/plugin/locks/{objectType}"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String listLocks(@RequestParam(value = "parentObjectId", required = false) String objectId,
-                            @RequestParam(value = "creator", required = false) String creator,
+    public String listLocks(@RequestParam(value = "parentObjectId", required = false, defaultValue = "") String objectId,
+                            @RequestParam(value = "creator", required = false, defaultValue = "") String creator,
                             @PathVariable(value = "objectType") String objectType,
                             @RequestParam(value = "firstRow", defaultValue = "0", required = false) int firstRow,
                             @RequestParam(value = "maxRows", defaultValue = "1000", required = false) int maxRows,
@@ -151,8 +151,8 @@ public class AcmObjectLockAPIController
     @ResponseBody
     public String releaseMultipleLocks(@PathVariable(value = "objectType") String objectType,
 
-                                          @RequestParam(value = "parentObjectIds") List<Long> objectIds,
-                                          @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
+                                       @RequestParam(value = "parentObjectIds") List<Long> objectIds,
+                                       @RequestParam(value = "lockType", required = false, defaultValue = "OBJECT_LOCK") String lockType, Authentication auth) throws MuleException
     {
         JSONArray resultList = new JSONArray();
         for (Long objectId : objectIds)
