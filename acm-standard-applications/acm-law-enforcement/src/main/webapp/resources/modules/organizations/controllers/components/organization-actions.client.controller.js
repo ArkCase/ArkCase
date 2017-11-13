@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.ActionsController', ['$scope', '$state', '$stateParams', '$q'
+angular.module('organizations').controller('Organizations.ActionsController', ['$rootScope', '$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService'
     , 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService', '$translate'
-    , function ($scope, $state, $stateParams, $q
+    , function ($rootScope, $scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService
         , ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
@@ -81,5 +81,9 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             }
             return promiseSaveInfo;
         }
+
+        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
+            $scope.$emit("report-tree-updated");
+        });
     }
 ]);
