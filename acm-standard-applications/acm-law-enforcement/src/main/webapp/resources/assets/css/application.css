@@ -294,8 +294,8 @@ span.fancytree-title {
 
 /* Navigation List (Grouped)  */
 
-.list-group-item-active-icon {
-    color: red;
+.list-group-item-inactive-icon {
+    color: orange;
 }
 
 .list-group-item {
