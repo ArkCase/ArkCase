@@ -247,7 +247,7 @@ public class AcmGroupAPIController
     @ResponseBody
     public AcmGroup deleteGroup(@PathVariable String groupId) throws AcmUserActionFailedException
     {
-        LOG.info("Removing group with id [{}]", groupId);
+        LOG.info("Mark group [{}] as deleted", groupId);
         return getGroupService().markGroupDeleted(groupId);
     }
 

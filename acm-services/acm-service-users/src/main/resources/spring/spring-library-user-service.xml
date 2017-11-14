@@ -14,7 +14,20 @@
 
     <bean id="customPagedLdapDao" class="com.armedia.acm.services.users.dao.ldap.CustomPagedLdapDao"/>
 
-    <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao"/>
+    <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.LdapUserDao">
+        <property name="ldapCrudDao" ref="ldapCrudDao"/>
+        <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
+        <property name="passwordLengthValidationRule" ref="passwordLengthValidationRule"/>
+    </bean>
+
+    <bean id="ldapGroupDao" class="com.armedia.acm.services.users.dao.ldap.LdapGroupDao">
+        <property name="ldapCrudDao" ref="ldapCrudDao"/>
+        <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
+    </bean>
+
+    <bean id="ldapCrudDao" class="com.armedia.acm.services.users.dao.ldap.LdapCrudDao">
+        <property name="ldapDao" ref="customPagedLdapDao"/>
+    </bean>
 
     <bean id="acmUserService" class="com.armedia.acm.services.users.service.AcmUserServiceImpl">
         <property name="userDao" ref="userJpaDao"/>
@@ -123,20 +136,19 @@
     <bean id="ldapUserService" class="com.armedia.acm.services.users.service.ldap.LdapUserService">
         <property name="ldapDao" ref="springLdapPagedDao"/>
         <property name="userDao" ref="userJpaDao"/>
-        <property name="groupDao" ref="groupDao"/>
         <property name="ldapUserDao" ref="springLdapUserDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="userRoleService" ref="userRoleService"/>
-        <property name="userTransformer" ref="ldapEntryTransformer"/>
-        <property name="passwordLengthValidationRule" ref="passwordLengthValidationRule"/>
+        <property name="ldapGroupDao" ref="ldapGroupDao"/>
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="ldapGroupService" class="com.armedia.acm.services.users.service.group.LdapGroupService">
-        <property name="groupDao" ref="groupDao"/>
-        <property name="ldapDao" ref="springLdapPagedDao"/>
+        <property name="groupService" ref="groupService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
+        <property name="ldapGroupDao" ref="ldapGroupDao"/>
     </bean>
 
     <bean id="ldapAddUserPropertiesFile"

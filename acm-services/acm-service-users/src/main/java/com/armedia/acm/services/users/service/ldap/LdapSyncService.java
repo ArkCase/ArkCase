@@ -4,7 +4,7 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
+import com.armedia.acm.services.users.dao.ldap.LdapUserDao;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
@@ -42,7 +42,7 @@ public class LdapSyncService
     private AcmLdapSyncConfig ldapSyncConfig;
     private boolean syncEnabled = true;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-    private SpringLdapUserDao springLdapUserDao;
+    private LdapUserDao springLdapUserDao;
     private PropertyFileManager propertyFileManager;
     private String ldapLastSyncPropertyFileLocation;
     private LdapSyncProcessor ldapSyncProcessor;
@@ -205,12 +205,12 @@ public class LdapSyncService
         this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 
-    public SpringLdapUserDao getSpringLdapUserDao()
+    public LdapUserDao getSpringLdapUserDao()
     {
         return springLdapUserDao;
     }
 
-    public void setSpringLdapUserDao(SpringLdapUserDao springLdapUserDao)
+    public void setSpringLdapUserDao(LdapUserDao springLdapUserDao)
     {
         this.springLdapUserDao = springLdapUserDao;
     }
