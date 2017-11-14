@@ -87,7 +87,8 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                 templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
                 controllerName: 'Tasks.NewTaskController',
                 params: {
-                    selectedDocumentNodes: $scope.selectedDocuments
+                    taskType: 'ACTIVITI_TASK',
+                    documentsToReview: $scope.selectedDocuments
                 }
             };
             ModalDialogService.showModal(modalMetadata);

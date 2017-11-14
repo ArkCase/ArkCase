@@ -97,7 +97,8 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                     parentObject: $scope.objectInfo.complaintNumber,
                     parentId: $scope.objectInfo.complaintId,
                     parentTitle: $scope.objectInfo.title,
-                    selectedDocumentNodes: $scope.selectedDocuments
+                    documentsToReview: $scope.selectedDocuments,
+                    taskType: 'ACTIVITI_TASK'
                 }
             };
             ModalDialogService.showModal(modalMetadata);
