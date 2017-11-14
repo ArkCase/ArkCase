@@ -608,6 +608,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getBusinessProcessTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of Business Process Types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getBusinessProcessTypes = function () {
+            return Service.getLookupByLookupName('businessProcessTypes');
+        };
+
+        /**
+         * @ngdoc method
          * @name getLookupsDefs
          * @methodOf services:Object.LookupService
          *

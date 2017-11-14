@@ -9,6 +9,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         , AdminFunctionalAccessControlService, modalParams) {
 
         $scope.modalParams = modalParams;
+        $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
         $scope.config = null;
         $scope.userSearchConfig = null;
         $scope.objectSearchConfig = null;
@@ -24,8 +25,15 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             //,height: 120
         };
 
-        $scope.selectedDocuments = $scope.modalParams.selectedDocumentNodes;
-        $scope.selectedDocumentsIds = extractDocumentIds($scope.selectedDocuments);
+        if($scope.taskType === 'ACTIVITI_TASK') {
+            $scope.documentsToReview = $scope.modalParams.documentsToReview;
+            $scope.documentsToReviewIds = extractDocumentIds($scope.documentsToReview);
+            $scope.selectedBusinessProcessType = null;
+            ObjectLookupService.getBusinessProcessTypes().then(
+                function (res) {
+                    $scope.businessProcessTypes = res;
+                });
+        }
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -46,6 +54,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 return groups;
             }
         );
+
 
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
@@ -82,15 +91,15 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-            if($scope.selectedDocumentsIds.length > 0) {
+            if($scope.taskType === 'ACTIVITI_TASK' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
-                TaskNewTaskService.reviewDocuments(taskData, 'acmDocumentWorkflow').then(workflowTaskSuccessCallback, saveNewTaskErrorCallback);
+                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
             } else {
-                TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, saveNewTaskErrorCallback);
+                TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
             }
         };
 
-        function workflowTaskSuccessCallback(data) {
+        function activitiTaskSuccessCallback(data) {
             $scope.saved = false;
             $scope.loading = false;
             $scope.onModalClose();
@@ -107,7 +116,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.onModalClose();
         }
 
-        function saveNewTaskErrorCallback(err) {
+        function errorCallback(err) {
             $scope.saved = false;
             $scope.loading = false;
             if (!Util.isEmpty(err)) {
@@ -119,6 +128,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 }
             }
         }
+
+        $scope.updateBusinessProcessType = function(selectedBusinessProcessType) {
+            $scope.selectedBusinessProcessType = selectedBusinessProcessType;
+        };
 
         function extractDocumentIds(selectedNodes) {
             var fileIds = [];
@@ -132,8 +145,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         function processDocumentsUnderReview() {
             var processedDocuments = [];
-            angular.forEach($scope.selectedDocumentsIds, function(value) {
-                var doc = _.find($scope.selectedDocuments, function(d) { return d.data.objectId === value; });
+            angular.forEach($scope.documentsToReviewIds, function(value) {
+                var doc = _.find($scope.documentsToReview, function(d) { return d.data.objectId === value; });
                 processedDocuments.push({
                     fileId: doc.data.objectId,
                     fileName: doc.data.name
@@ -144,12 +157,12 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         }
 
         $scope.onSelectFile = function (fileId) {
-            var idx = $scope.selectedDocumentsIds.indexOf(fileId);
+            var idx = $scope.documentsToReviewIds.indexOf(fileId);
 
             if (idx > -1) {
-                $scope.selectedDocumentsIds.splice(idx, 1);
+                $scope.documentsToReviewIds.splice(idx, 1);
             } else {
-                $scope.selectedDocumentsIds.push(fileId);
+                $scope.documentsToReviewIds.push(fileId);
             }
         };
 
