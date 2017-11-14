@@ -98,6 +98,11 @@ public class AcmUserRoleService
         log.debug("User roles for User [{}] saved", user.getUserId());
     }
 
+    public void saveInvalidUserRolesPerRemovedUserGroups(Map<AcmUser, Set<AcmGroup>> removedGroupsPerUser)
+    {
+        removedGroupsPerUser.forEach(this::saveInvalidUserRolesPerRemovedUserGroups);
+    }
+
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;

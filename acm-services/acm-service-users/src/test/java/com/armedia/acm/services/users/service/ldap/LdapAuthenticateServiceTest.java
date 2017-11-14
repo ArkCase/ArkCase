@@ -2,8 +2,8 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.dao.ldap.LdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
@@ -42,7 +42,7 @@ public class LdapAuthenticateServiceTest extends EasyMockSupport
     private LdapTemplate mockLdapTemplate;
 
     @Mock
-    private SpringLdapUserDao mockLdapUserDao;
+    private LdapUserDao mockLdapUserDao;
 
     @Mock
     private UserDao mockUserDao;

@@ -223,31 +223,24 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
             modalInstance.result.then(function (membersSelected) {
                 //ok button clicked
-                var mappedMembers = [];
-                if (Util.isArray(membersSelected)) {
-                    for (var i = 0; i < membersSelected.length; i++) {
-                        mappedMembers.push(mapMember(membersSelected[i]));
-                    }
-                }
-                else {
-                    mappedMembers.push(mapMember(membersSelected));
+                var selectedUserIds = [];
+                if (Util.isArray((membersSelected))) {
+                    selectedUserIds = _.map(membersSelected, function (member) {
+                        return member.object_id_s;
+                    })
+                } else {
+                    selectedUserIds = [membersSelected.object_id_s];
                 }
 
-
-                organizationalHierarchyService.saveMembers(group, mappedMembers).then(function (payload) {
+                organizationalHierarchyService.saveMembers(group, selectedUserIds).then(function (payload) {
                     //saving success
-                    //map members
-                    var mappedMembersMap = {};
-                    angular.forEach(mappedMembers, function (memb) {
-                        mappedMembersMap[memb.userId] = memb;
-                    });
                     var members = payload.data.members;
-                    var unmappedMembers = [];
-                    for (var i = 0; i < members.length; i++) {
-                        var unmappedMember = unMapMember(members[i]);
-                        if (mappedMembersMap[unmappedMember.object_id_s])
-                            unmappedMembers.push(unmappedMember);
-                    }
+                    var selectedMembers = _.filter(members, function (member) {
+                       return _.includes(selectedUserIds, member.userId);
+                    });
+                    var unmappedMembers = _.map(selectedMembers, function (member) {
+                        return unMapMember(member);
+                    });
                     deferred.resolve(unmappedMembers);
                 }, function (payload) {
                     //saving error

@@ -7,7 +7,6 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -27,8 +26,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +35,7 @@ import java.util.Map;
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
+
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -53,7 +51,8 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory, @PathVariable String groupName)
+    public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory,
+                                         @PathVariable String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);

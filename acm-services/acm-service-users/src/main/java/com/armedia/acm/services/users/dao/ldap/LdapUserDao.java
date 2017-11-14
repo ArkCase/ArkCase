@@ -1,13 +1,16 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.Directory;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.service.RetryExecutor;
+import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,6 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.core.ContextSource;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -24,8 +29,14 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import java.util.List;
 
-public class SpringLdapUserDao
+public class LdapUserDao
 {
+    private LdapCrudDao ldapCrudDao;
+
+    private LdapEntryTransformer ldapEntryTransformer;
+
+    private PasswordLengthValidationRule passwordLengthValidationRule;
+
     private Logger log = LoggerFactory.getLogger(getClass());
 
     public LdapUser findUser(String username, LdapTemplate template, AcmLdapSyncConfig config, String[] attributes)
@@ -108,11 +119,13 @@ public class SpringLdapUserDao
             // Perform the update
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
-        } catch (AuthenticationException e)
+        }
+        catch (AuthenticationException e)
         {
             log.warn("User: [{}] failed to authenticate. ", dn);
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
@@ -133,10 +146,58 @@ public class SpringLdapUserDao
             mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, passwordAttribute);
             // Perform the update
             new RetryExecutor().retryChecked(() -> ldapTemplate.modifyAttributes(strippedBaseDn, mods));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
         }
+    }
+
+    public void createUserEntry(AcmUser acmUser, String password, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
+    {
+        if (password == null)
+        {
+            password = MapperUtils.generatePassword(passwordLengthValidationRule.getMinLength());
+        }
+
+        try
+        {
+            DirContextAdapter context = ldapEntryTransformer.createContextForNewUserEntry(ldapSyncConfig.getDirectoryName(),
+                    acmUser, password, ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
+            ldapCrudDao.create(context, ldapSyncConfig);
+        }
+        catch (Exception e)
+        {
+            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+        }
+    }
+
+    public void updateUserEntry(AcmUser acmUser, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
+    {
+        DirContextOperations context = ldapCrudDao.lookup(acmUser.getDistinguishedName(), ldapSyncConfig);
+        DirContextOperations editContext = ldapEntryTransformer.createContextForEditUserEntry(context, acmUser,
+                ldapSyncConfig.getBaseDC());
+        ldapCrudDao.update(editContext, ldapSyncConfig);
+    }
+
+    public void deleteUserEntry(String dn, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
+    {
+        ldapCrudDao.delete(dn, ldapSyncConfig);
+    }
+
+    public void setLdapCrudDao(LdapCrudDao ldapCrudDao)
+    {
+        this.ldapCrudDao = ldapCrudDao;
+    }
+
+    public void setLdapEntryTransformer(LdapEntryTransformer ldapEntryTransformer)
+    {
+        this.ldapEntryTransformer = ldapEntryTransformer;
+    }
+
+    public void setPasswordLengthValidationRule(PasswordLengthValidationRule passwordLengthValidationRule)
+    {
+        this.passwordLengthValidationRule = passwordLengthValidationRule;
     }
 }

@@ -2,7 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
-import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
+import com.armedia.acm.services.users.dao.ldap.LdapUserDao;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
@@ -22,7 +22,7 @@ public class LdapAuthenticateService
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDao;
-    private SpringLdapUserDao ldapUserDao;
+    private LdapUserDao ldapUserDao;
     private SpringLdapDao ldapDao;
     private AcmLdapAuthenticateConfig ldapAuthenticateConfig;
     private AcmLdapSyncConfig ldapSyncConfig;
@@ -127,12 +127,12 @@ public class LdapAuthenticateService
         this.userDao = userDao;
     }
 
-    public SpringLdapUserDao getLdapUserDao()
+    public LdapUserDao getLdapUserDao()
     {
         return ldapUserDao;
     }
 
-    public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
+    public void setLdapUserDao(LdapUserDao ldapUserDao)
     {
         this.ldapUserDao = ldapUserDao;
     }

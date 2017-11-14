@@ -281,9 +281,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         function removeMembers(group, members) {
             var data = [];
             for (var i = 0; i < members.length; i++) {
-                var obj = {};
-                obj.userId = members[i].object_id_s;
-                data.push(obj);
+                data.push( members[i].object_id_s);
             }
             var url = 'api/latest/users/group/' + group.object_id_s + '/members/remove';
             return $http({

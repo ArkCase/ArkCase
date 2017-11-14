@@ -9,11 +9,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -43,7 +43,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
     private MockMvc mockMvc;
 
     @Mock
-    private AcmGroupDao mockGroupDao;
+    private GroupService mockGroupService;
 
     @Mock
     private AcmGroupEventPublisher mockGroupEventPublisher;
@@ -62,7 +62,6 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
     public void setUp()
     {
         mockMvc = MockMvcBuilders.standaloneSetup(ldapGroupAPIController).build();
-        mockLdapGroupService.setGroupDao(mockGroupDao);
     }
 
     @Test
@@ -86,19 +85,17 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
-        LOG.info("Results: " + result.getResponse().getContentAsString());
+        LOG.info("Results: {}", result.getResponse().getContentAsString());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
 
-        verify(mockLdapGroupService, times(1)).removeLdapGroup(anyString(), anyString());
+        verify(mockLdapGroupService, times(1)).deleteLdapGroup(anyString(), anyString());
         verifyAll();
 
     }
 
     private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmAppErrorJsonMsg, AcmUserActionFailedException
     {
-        when(mockLdapGroupService.getGroupDao()).thenReturn(mockGroupDao);
-        when(mockGroupDao.findByName(anyString())).thenReturn(group);
-        when(mockLdapGroupService.removeLdapGroup(anyString(), anyString())).thenReturn(group);
-        // doNothing().when(ldapGroupAPIController).checkIfLdapManagementIsAllowed(anyString());
+        when(mockGroupService.findByName(anyString())).thenReturn(group);
+        when(mockLdapGroupService.deleteLdapGroup(anyString(), anyString())).thenReturn(group);
     }
 }

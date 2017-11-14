@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.services.users.web.api.SecureLdapController;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
+    private GroupService groupService;
     private AcmGroupEventPublisher acmGroupEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -83,17 +85,16 @@ public class LdapGroupAPIController extends SecureLdapController
     }
 
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeLdapGroup(@PathVariable("directory") String directory, @PathVariable("groupName") String groupName)
+    public ResponseEntity<?> deleteLdapGroup(@PathVariable("directory") String directory,
+                                             @PathVariable("groupName") String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
-
     {
-        AcmGroup source = getLdapGroupService().getGroupDao().findByName(groupName);
+        AcmGroup source = groupService.findByName(groupName);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            ldapGroupService.removeLdapGroup(groupName, directory);
+            ldapGroupService.deleteLdapGroup(groupName, directory);
             getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
-
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (Exception e)
@@ -121,5 +122,10 @@ public class LdapGroupAPIController extends SecureLdapController
     public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
     {
         this.acmGroupEventPublisher = acmGroupEventPublisher;
+    }
+
+    public void setGroupService(GroupService groupService)
+    {
+        this.groupService = groupService;
     }
 }
