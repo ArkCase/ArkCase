@@ -271,24 +271,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
         userRoleService.saveInvalidUserRolesPerRemovedUserGroups(user, new HashSet<>(lookupGroups));
-
-        Set<String> groupDns = lookupGroups.stream()
-                .filter(AcmGroup::isLdapGroup)
-                .map(AcmGroup::getDistinguishedName)
-                .collect(Collectors.toSet());
-
         ldapUserDao.deleteUserEntry(user.getDistinguishedName(), ldapSyncConfig);
-
-        // vidi dali treba voa, najverojatno treba da e trgnat od sekade bidejki e izbrishan userot
-      /*  try
-        {
-            ldapGroupDao.removeMemberFromGroups(existingUser.getDistinguishedName(), groupDns, ldapSyncConfig);
-        }
-        catch (AcmLdapActionFailedException e)
-        {
-            ldapUserDao.createUserEntry();
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
-        }*/
         return user;
     }
 
