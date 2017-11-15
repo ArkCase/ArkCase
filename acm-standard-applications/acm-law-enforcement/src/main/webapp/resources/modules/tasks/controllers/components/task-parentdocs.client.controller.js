@@ -3,11 +3,11 @@
 angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
+    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $q, $modal, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
-        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
+        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -15,6 +15,10 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.emailSendConfiguration = emailData.data;
+        });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
