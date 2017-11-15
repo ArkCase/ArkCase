@@ -16,8 +16,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
-            $scope.editMode = !!params.targetOrganizationId;
-            $scope.organizationId = Util.isEmpty(params.targetOrganizationId) ? params.organizationId : params.targetOrganizationId;
+            $scope.editMode = !!params.organizationId;
+            $scope.organizationId = params.relatedToOrganizationId;
             $scope.parentOrganizationId = params.parentOrganizationId;
             $scope.organizationValue = params.organizationValue;
             $scope.isValid = true;
@@ -31,7 +31,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
-            if (!Util.isEmpty(params.targetOrganizationId)) {
+            if (!Util.isEmpty(params.organizationId)) {
                 $scope.isEditParent = true;
             }
             if ($scope.editMode) {

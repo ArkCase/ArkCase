@@ -96,11 +96,11 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 showDescription: true,
                 externalSearchServiceName: "Organization.SearchService",
                 parentOrganizationId: Util.isEmpty($scope.objectInfo.parentOrganization) ? null : $scope.objectInfo.parentOrganization.organizationId,
-                organizationId: $scope.organizationId
+                relatedToOrganizationId: $scope.organizationId
             };
             if (rowEntity) {
                 angular.extend(params, {
-                    targetOrganizationId: rowEntity.target_object.object_id_s,
+                    organizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
                     description: rowEntity.description_s
