@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $q, $timeout, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail) {
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -15,6 +15,10 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.emailSendConfiguration = emailData.data;
+        });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
