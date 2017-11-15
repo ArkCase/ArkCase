@@ -216,7 +216,7 @@ public class GroupServiceImpl implements GroupService
         AcmGroup acmGroup = findByName(groupName);
         AcmGroup parentGroup = findByName(parentGroupName);
 
-        if (acmGroup != null || parentGroup == null)
+        if (acmGroup == null || parentGroup == null)
         {
             String groupNotFound = acmGroup == null ? groupName : parentGroupName;
             log.warn("Group [{}] not found", groupNotFound);
