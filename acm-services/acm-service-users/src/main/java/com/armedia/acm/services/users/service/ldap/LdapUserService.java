@@ -1,5 +1,6 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.LdapGroupDao;
@@ -163,14 +164,13 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     @Transactional(rollbackFor = Exception.class)
     public AcmUser addUserInGroups(String userId, List<String> groups, String directory)
-            throws AcmLdapActionFailedException, AcmUserActionFailedException
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         Set<String> groupsToUpdate = new HashSet<>();
         AcmUser user = userDao.findByUserId(userId);
         if (user == null)
         {
-            throw new AcmUserActionFailedException("Adding user in group failed", null, null,
-                    "Creating LDAP user failed!", null);
+            throw new AcmObjectNotFoundException("USER", null, "User " + userId + " was not found");
         }
         for (String groupName : groups)
         {
@@ -219,7 +219,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     @Transactional(rollbackFor = Exception.class)
     public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
-            throws AcmLdapActionFailedException, AcmUserActionFailedException
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         List<AcmUser> ldapUsers = new ArrayList<>();
         for (AcmUser user : acmUsers)
@@ -277,7 +277,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     @Transactional(rollbackFor = Exception.class)
     public AcmUser removeUserFromGroups(String userId, List<String> groups, String directory)
-            throws AcmUserActionFailedException, AcmLdapActionFailedException
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         Set<String> groupsToUpdate = new HashSet<>();
 

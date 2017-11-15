@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.web.api.group;
 
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import org.slf4j.Logger;
@@ -28,19 +29,33 @@ public class AdHocGroupMembersAPIController
     @RequestMapping(value = "/group/{groupId}/members/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup saveMembersToAdHocGroup(@RequestBody List<String> members,
-                                            @PathVariable("groupId") String groupId) throws AcmUserActionFailedException
+                                            @PathVariable("groupId") String groupId) throws AcmAppErrorJsonMsg
     {
         LOG.info("Add user members group: [{}]", groupId);
-        return groupService.addUserMembersToGroup(members, groupId);
+        try
+        {
+            return groupService.addUserMembersToGroup(members, groupId);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            throw new AcmAppErrorJsonMsg("Failed to add user members to Ad Hoc Group", "ADHOC_GROUP", e);
+        }
     }
 
     @RequestMapping(value = "/group/{groupId}/members/remove", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup removeMembersFromAdHocGroup(@RequestBody List<String> members,
-                                                @PathVariable("groupId") String groupId) throws AcmUserActionFailedException
+                                                @PathVariable("groupId") String groupId) throws AcmAppErrorJsonMsg
     {
         LOG.info("Remove user members from group: [{}]", groupId);
-        return groupService.removeUserMembersFromGroup(members, groupId);
+        try
+        {
+            return groupService.removeUserMembersFromGroup(members, groupId);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            throw new AcmAppErrorJsonMsg("Failed to remove user members to Ad Hoc Group", "ADHOC_GROUP", e);
+        }
     }
 
     public void setGroupService(GroupService groupService)

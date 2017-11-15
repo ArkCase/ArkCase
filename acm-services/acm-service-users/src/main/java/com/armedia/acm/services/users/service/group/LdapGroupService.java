@@ -1,6 +1,6 @@
 package com.armedia.acm.services.users.service.group;
 
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.LdapGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -60,7 +60,7 @@ public class LdapGroupService
 
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName)
-            throws AcmUserActionFailedException, AcmLdapActionFailedException
+            throws AcmLdapActionFailedException
     {
         AcmGroup existingGroup = groupService.findByName(group.getName().toUpperCase());
         if (existingGroup != null)
@@ -106,23 +106,18 @@ public class LdapGroupService
             log.error("Updating parent-group DN [{}] failed! Rollback saved sub-group DN [{}] ",
                     parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
             ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
-            throw new AcmUserActionFailedException("create new LDAP subgroup", null, null, "Adding new LDAP subgroup failed!", e);
+            throw e;
         }
         return acmGroup;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup deleteLdapGroup(String group, String directoryName) throws AcmLdapActionFailedException, AcmUserActionFailedException
+    public AcmGroup deleteLdapGroup(String group, String directoryName)
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         log.debug("Removing LDAP group [{}] from database", group);
 
         AcmGroup markedGroup = groupService.markGroupDeleted(group);
-        if (markedGroup == null)
-        {
-            log.debug("No such group [{}]", group);
-            throw new AcmUserActionFailedException("Delete LDAP GROUP", "GROUP", null, "No such group", null);
-        }
-
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         ldapGroupDao.deleteGroupEntry(markedGroup.getDistinguishedName(), ldapSyncConfig);
         return markedGroup;

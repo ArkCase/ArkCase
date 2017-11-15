@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
@@ -62,7 +63,7 @@ public interface GroupService
      * @param acmGroup group we want to rename
      * @param newName  group new name
      */
-    void renameGroup(AcmGroup acmGroup, String newName);
+    void renameGroup(AcmGroup acmGroup, String newName) throws AcmObjectNotFoundException;
 
     List<AcmGroup> findByUserMember(AcmUser user);
 
@@ -73,21 +74,23 @@ public interface GroupService
      * @param groupId name of the group
      * @return group with updated status and ancestors
      */
-    AcmGroup markGroupDeleted(String groupId);
+    AcmGroup markGroupDeleted(String groupId) throws AcmObjectNotFoundException;
+
+    AcmGroup removeGroupMemberFromGroup(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
 
     AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
-    AcmGroup addUserMemberToGroup(AcmUser user, String groupId) throws AcmUserActionFailedException;
+    AcmGroup addUserMemberToGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
     AcmGroup removeSupervisor(String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
-    AcmGroup addUserMembersToGroup(List<String> members, String groupId) throws AcmUserActionFailedException;
+    AcmGroup addUserMembersToGroup(List<String> members, String groupId) throws AcmObjectNotFoundException;
 
-    AcmGroup removeUserMembersFromGroup(List<String> members, String groupId) throws AcmUserActionFailedException;
+    AcmGroup removeUserMembersFromGroup(List<String> members, String groupId) throws AcmObjectNotFoundException;
 
-    AcmGroup removeUserMemberFromGroup(String userMember, String groupId) throws AcmUserActionFailedException;
+    AcmGroup removeUserMemberFromGroup(String userMember, String groupId) throws AcmObjectNotFoundException;
 
-    AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmUserActionFailedException;
+    AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
     AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException;
 }

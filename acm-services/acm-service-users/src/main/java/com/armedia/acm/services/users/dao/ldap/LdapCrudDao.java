@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -63,9 +64,14 @@ public class LdapCrudDao
         {
             function.apply(ldapTemplate);
         }
+        catch (NameAlreadyBoundException e)
+        {
+            log.warn("Entry already exists");
+            throw e;
+        }
         catch (Exception e)
         {
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+            throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }
 
@@ -81,7 +87,7 @@ public class LdapCrudDao
         }
         catch (Exception e)
         {
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+            throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }
 
