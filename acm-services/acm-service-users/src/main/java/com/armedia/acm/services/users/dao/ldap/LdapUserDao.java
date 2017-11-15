@@ -128,7 +128,7 @@ public class LdapUserDao
         catch (Exception e)
         {
             log.warn("Changing the password for User: [{}] failed. ", dn, e);
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+            throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }
 
@@ -150,27 +150,29 @@ public class LdapUserDao
         catch (Exception e)
         {
             log.warn("Changing the password for User: [{}] failed. ", dn, e);
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+            throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }
 
-    public void createUserEntry(AcmUser acmUser, String password, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
+    public void createUserEntry(AcmUser acmUser, String password, AcmLdapSyncConfig ldapSyncConfig)
+            throws AcmLdapActionFailedException
     {
         if (password == null)
         {
             password = MapperUtils.generatePassword(passwordLengthValidationRule.getMinLength());
         }
 
+        DirContextAdapter context;
         try
         {
-            DirContextAdapter context = ldapEntryTransformer.createContextForNewUserEntry(ldapSyncConfig.getDirectoryName(),
+            context = ldapEntryTransformer.createContextForNewUserEntry(ldapSyncConfig.getDirectoryName(),
                     acmUser, password, ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
-            ldapCrudDao.create(context, ldapSyncConfig);
         }
         catch (Exception e)
         {
-            throw new AcmLdapActionFailedException("LDAP Action Failed Exception", e);
+            throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
+        ldapCrudDao.create(context, ldapSyncConfig);
     }
 
     public void updateUserEntry(AcmUser acmUser, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
