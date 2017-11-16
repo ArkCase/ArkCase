@@ -89,6 +89,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.saveNewTask = function () {
             $scope.saved = true;
             $scope.loading = true;
+            if ($scope.config.data.attachedToObjectName === "") {
+                $scope.config.data.attachedToObjectName = "";
+            }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'ACTIVITI_TASK' && $scope.documentsToReview) {
@@ -168,6 +171,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.updateAssocParentType = function () {
             $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
+
         };
 
         $scope.inputClear = function(){

@@ -40,6 +40,10 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
 
         solr.setCreate_date_tdt(in.getCreated());
         solr.setCreator_lcs(in.getCreator());
+
+        /** Add partial creator username field **/
+        solr.setAdditionalProperty("creator_partial", in.getCreator());
+
         solr.setModified_date_tdt(in.getModified());
         solr.setModifier_lcs(in.getModifier());
 
@@ -48,6 +52,7 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
         if (creator != null)
         {
             solr.setAdditionalProperty("creator_full_name_lcs", creator.getFirstName() + " " + creator.getLastName());
+            solr.setAdditionalProperty("creator_full_name_partial", creator.getFirstName() + " " + creator.getLastName());
         }
 
         AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());

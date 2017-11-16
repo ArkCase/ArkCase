@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.AddressesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -178,16 +178,10 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             }
             return promiseSaveInfo;
         }
-
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultAddress) {
-                id = $scope.objectInfo.defaultAddress.id
-            }
-            if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+        }
+
+
     }
 ]);

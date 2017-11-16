@@ -149,8 +149,7 @@
             {
               "name": "userId",
               "displayName": "timeTracking.comp.person.table.columns.userId",
-              "headerCellFilter": "translate",
-              "lookup": "userFullNames"
+              "headerCellFilter": "translate"
             }
           ]
         },
@@ -232,8 +231,8 @@
         {
           "name": "userId",
           "displayName": "timeTracking.comp.person.table.columns.userId",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "headerCellFilter": "translate"
+
         }
       ]
     },

@@ -262,6 +262,10 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             PersonInfoService.savePersonInfoWithPictures(data.person, data.personImages).then(function (response) {
                 returnMessage.personId = response.data.id;
                 returnMessage.fullName = (response.data.givenName + " " + response.data.familyName).trim();
+                returnMessage.firstName = response.data.givenName;
+                returnMessage.middleName = response.data.middleName;
+                returnMessage.lastName = response.data.familyName;
+                returnMessage.email = !Util.isEmpty(response.data.defaultEmail) ? response.data.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
                 message.data = returnMessage;
@@ -275,6 +279,10 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             PersonInfoService.getPersonInfo(data.personId).then(function (person) {
                 returnMessage.personId = person.id;
                 returnMessage.fullName = (person.givenName + " " + person.familyName).trim();
+                returnMessage.firstName = person.givenName;
+                returnMessage.middleName = person.middleName;
+                returnMessage.lastName = person.familyName;
+                returnMessage.email = !Util.isEmpty(person.defaultEmail) ? person.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
                 message.data = returnMessage;
@@ -299,7 +307,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                     $scope.personTypes = $scope.complaintPersonInitiatorTypes;
                 }
                 params.type = '';
-                params.typeDisabled = true;
+                params.typeEnabled = false;
 
                 if (!Util.isArrayEmpty($scope.personTypes)) {
                     params.type = $scope.personTypes[0].key;
@@ -312,7 +320,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 else if(data.formType === "COMPLAINT") {
                     $scope.personTypes = $scope.complaintPersonTypes;
                 }
-                params.typeDisabled = false;
+                params.typeEnabled = true;
             }
 
             params.pickerType = message.pickerType;

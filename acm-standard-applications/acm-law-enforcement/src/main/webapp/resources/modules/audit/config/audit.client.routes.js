@@ -7,9 +7,12 @@ angular.module('audit').config(['$stateProvider',
                 url: '/audit',
                 templateUrl: 'modules/audit/views/audit.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Object.LookupService'
+                        , function ($translate, $translatePartialLoader, ObjectLookupService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('audit');
+                        $translatePartialLoader.addPart('core');
+
                         return $translate.refresh();
                     }]
                 }

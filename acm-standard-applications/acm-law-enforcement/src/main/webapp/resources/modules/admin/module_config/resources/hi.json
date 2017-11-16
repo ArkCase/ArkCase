@@ -73,6 +73,10 @@
       "userDomain": "उपयोगकर्ता डोमेन दर्ज करें",
       "syncPageSize": "पेजिंग आकार दर्ज करें",
       "groupSearchFilter": "समूहों के लिए खोज फ़िल्टर दर्ज करें (उदा। (ऑब्जेक्ट क्लास = समूह))",
+      "allChangedUsersFilter": "hi_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "hi_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "hi_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "hi_Enter filter including sort-attribute for all changed groups",
       "groupsSortingAttribute": "वर्गीकरण समूहों के लिए विशेषता दर्ज करें (उदा। 'GidNumber')",
       "groupSearchPageFilter": "सॉर्ट-एट्रिब्यूट सहित फ़िल्टर दर्ज करें (उदा। (और (ऑब्जेक्ट क्लास = समूह) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "जांच करें कि उपयोगकर्ताओं और समूहों को आपके डीएस के प्रबंधन की अनुमति है या नहीं"
@@ -153,9 +157,8 @@
           "lastName": "अंतिम नाम दर्ज करो",
           "email": "ईमेल दर्ज करें",
           "password": "पास वर्ड दर्ज करें",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "एक पासवर्ड दर्ज करें जो यूज़रनेम के समान नहीं है, जिसमें कम से कम एक विशेष वर्ण, संख्या, अपरकेस और लोअरकेस अक्षरों के संयोजन के साथ 7 वर्ण हैं।"
+          "confirmation": "hi_Enter your password again",
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Ldap सदस्य को संपादित करें",
@@ -168,7 +171,8 @@
         "firstName": "पहला नाम",
         "lastName": "अंतिम नाम",
         "email": "ईमेल",
-        "password": "पासवर्ड"
+        "password": "पासवर्ड",
+        "confirmation": "hi_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "नाम",

@@ -7,7 +7,7 @@
     <div class="modal-body">
         <div class="form-group">
             <select id="selectDirectories" class="form-control" name="config" ng-model="selectedConfig.directory"
-                    ng-options="ds.id for ds in directoryServers" ng-if="addLdapGroupModal">
+                    ng-options="ds.id for ds in directoryServers" ng-if="addLdapGroupModal" required>
                 <option value="">{{ 'admin.security.organizationalHierarchy.createGroupDialog.selectDirectory'
                     | translate }}
                 </option>
@@ -18,7 +18,7 @@
             <input type="text" ng-model="group.name" class="form-control"
                    ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'
-                   | translate }}" ng-required="selectedConfig.directory.enabled || !addLdapGroupModal">
+                   | translate }}" required>
             <p class="help-block" ng-show="error">
                 {{ error }}
             </p>
@@ -39,8 +39,7 @@
         <button type="button" class="btn btn-secondary" ng-click="cancel()">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.cancel</span>
         </button>
-        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="(groupForm.$invalid
-        || !selectedConfig.directory.enabled) && addLdapGroupModal">
+        <button type="submit" class="btn btn-primary" ng-click="ok()" ng-disabled="groupForm.$invalid">
             <span translate>admin.security.organizationalHierarchy.createGroupDialog.btn.ok</span>
         </button>
     </div>

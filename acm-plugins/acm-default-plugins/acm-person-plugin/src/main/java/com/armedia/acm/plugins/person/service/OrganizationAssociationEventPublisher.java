@@ -32,6 +32,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ApplicationEventPublisher eventPublisher;
+    private ObjectConverter objectConverter;
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -41,7 +42,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 
     @Async
     public void publishOrganizationAssociationEvent(OrganizationAssociation source, String ipAddress, boolean newOrganizationAssociation,
-                                                    boolean succeeded)
+            boolean succeeded)
     {
         log.debug("Publishing a organization event.");
 
@@ -55,15 +56,16 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
 
     @Async
     public void publishOrganizationAssociationEvent(String organizationAssociationHistory, OrganizationAssociation source,
-                                                    boolean succeeded)
+            boolean succeeded)
     {
         log.debug("Publishing a organization event.");
         if (organizationAssociationHistory == null)
         {
             publishOrganizationAssociationEvent(source, "created", succeeded);
-        } else
+        }
+        else
         {
-            AcmUnmarshaller converter = ObjectConverter.createJSONUnmarshaller();
+            AcmUnmarshaller converter = getObjectConverter().getJsonUnmarshaller();
             OrganizationAssociation previousSource = converter.unmarshall(organizationAssociationHistory, OrganizationAssociation.class);
             String parentType = previousSource.getParentType();
             Long parentId = previousSource.getParentId();
@@ -76,7 +78,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForAddressRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-                                              String parentType, Long parentId)
+            String parentType, Long parentId)
     {
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = existingOrganization.getAddresses();
@@ -116,7 +118,7 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     }
 
     private void checkForContactRelatedEvents(Organization existingOrganization, Organization updatedOrganization, boolean succeeded,
-                                              String parentType, Long parentId)
+            String parentType, Long parentId)
     {
         boolean isContactAddedOrRemoved = false;
         List<ContactMethod> existingContacts = existingOrganization.getContactMethods();
@@ -217,5 +219,15 @@ public class OrganizationAssociationEventPublisher implements ApplicationEventPu
     {
         // TODO there are lot more fields to check if changed
         return Objects.equals(ex.getFamilyName(), up.getFamilyName());
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

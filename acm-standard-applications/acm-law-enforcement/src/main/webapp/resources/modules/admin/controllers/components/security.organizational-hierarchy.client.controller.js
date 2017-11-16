@@ -104,7 +104,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
                     $scope.group = {};
-
+                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
                     $scope.ok = function () {
                         $modalInstance.close($scope.group);
                     };
@@ -274,6 +274,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     $scope.user.groupNames = [group.object_id_s];
                     $scope.ok = function () {
                         $modalInstance.close($scope.user);
+                    };
+                    $scope.clearUsernameError = function(){
+                        if($scope.error){
+                            $scope.error = '';
+                        }
                     };
                 }],
                 size: 'sm'
@@ -599,8 +604,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
                     }
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
 
-                    addToTree(newGroup, true);
+                    addToTree(newGroup);
                     deferred.resolve(newGroup);
                     messageService.succsessAction();
                 }, function (error) {
@@ -783,19 +789,4 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
     }
-])
-    .directive("pwCheck", [function () {        //Check if password contains userId
-            return {
-                require: 'ngModel',
-                link: function (scope, elem, attrs, ctrl) {
-                    var userId = '#' + attrs.pwCheck;
-                    elem.on('keyup', function () {
-                        scope.$apply(function () {
-                            var v = elem.val().indexOf($(userId).val()) >= 0;
-                            ctrl.$setValidity('pwContains', !v);
-                        });
-                    });
-                }
-            }
-        }]
-    );
+]);
