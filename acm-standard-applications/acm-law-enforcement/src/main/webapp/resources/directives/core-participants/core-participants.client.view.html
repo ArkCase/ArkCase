@@ -1,4 +1,4 @@
-<div class="panel panel-success panel-grid">
+<div class="panel panel-success panel-grid" ng-show="participantsInit">
     <div class="panel-heading">
         <div class="panel-title">
             <span>{{participantsInit.participantsTitle}}</span>
@@ -20,12 +20,5 @@
              ui-grid-pagination
              adjust-table-height="gridOptions.data.length"
              class="grid"></div>
-    </div>
-    <div class="pull-right">
-		<button type="button" class="btn btn-default"
-            ng-click="onClickReplaceChildrenParticipants()"
-            ng-show="participantsInit.showReplaceChildrenParticipants">
-            <span translate>common.directive.coreParticipants.replaceFolderChildrenParticipants</span>
-         </button>
     </div>
 </div>

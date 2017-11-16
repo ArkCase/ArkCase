@@ -98,7 +98,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                     objectId: objectId
                 }
                 , onSuccess: function (data) {
-                    if (Service.validateParticipants(data)) {
+                    if (Service.validateParticipants(data, (objectType != "FOLDER" && objectType != "FILE"))) {
                         return data;
                     }
                 }
@@ -153,10 +153,11 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          * Validate participants.
          *
          * @param {Object} participants  Participants array to be validated
+         * @param {Boolean} allowDuplicateLdapIds When true duplicate LdapIds aren't checked (for entities usually true, for files it is false)
          *
          * @returns {Boolean} true if participants are valid, otherwise false
          */
-        Service.validateParticipants = function (participants) {
+        Service.validateParticipants = function (participants, allowDuplicateLdapIds) {
             if (Util.isEmpty(participants)) {
                 return false;
             }
@@ -200,10 +201,18 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                 return false;
             }
 
-            // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
-            if (_.chain(participants).groupBy('participantLdapId').filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+            // check for duplicate roles for LdapId
+            if (_.chain(participants).groupBy(e => e.participantLdapId + '|' + e.participantType).filter(function(v){return v.length > 1}).flatten().value().length > 0) {
                 MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
                 return false;
+            }
+            
+            if (!allowDuplicateLdapIds) {
+                // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
+                if (_.chain(participants).groupBy('participantLdapId').filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                    return false;
+                }
             }
 
             return true;
@@ -284,18 +293,19 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
         
         /**
          * @ngdoc method
-         * @name validateFileParticipants
+         * @name validateObjectParticipants
          * @methodOf services:Object.ParticipantService
          *
          * @description
-         * Validate file participants
+         * Validate object participants
          *
          * @param {Object} data  Object with 'participants' property to be validated
+         * @param {Boolean} allowDuplicateLdapIds When true duplicate LdapIds aren't checked (for entities usually true, for files it is false)
          *
          * @returns {Boolean} Return true if data is valid
          */
-        Service.validateObjectParticipants = function (data) {
-            return Service.validateParticipants(data.participants);
+        Service.validateObjectParticipants = function (data, allowDuplicateLdapIds) {
+            return Service.validateParticipants(data.participants, allowDuplicateLdapIds);
         };
 
         /**
@@ -338,7 +348,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          * @param {String} objectType   The object type to set the participants on
          */
         Service.saveEcmObjectParticipants = function (objectType, data) {
-            if (Service.validateObjectParticipants(data)) {
+            if (Service.validateObjectParticipants(data, false)) {
                 return Util.serviceCall({
                     service: Service.postEcmObjectParticipants
                     , param: { objectType: objectType, objectId: data.objectId}

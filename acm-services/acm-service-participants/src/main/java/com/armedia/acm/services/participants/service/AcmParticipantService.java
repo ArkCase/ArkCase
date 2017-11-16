@@ -1,22 +1,20 @@
 package com.armedia.acm.services.participants.service;
 
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
-import com.armedia.acm.services.participants.model.ParticipantTypes;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 01.04.2015.
@@ -33,8 +31,8 @@ public class AcmParticipantService
     public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
             throws AcmAccessControlException
     {
-        AcmParticipant returnedParticipant = getParticipantByParticipantTypeAndObjectTypeAndId(userId, participantType, objectType,
-                objectId);
+        AcmParticipant returnedParticipant = getParticipantByLdapIdParticipantTypeObjectTypeObjectId(userId, participantType, objectType,
+                objectId, FlushModeType.AUTO);
 
         if (returnedParticipant != null)
         {
@@ -91,10 +89,20 @@ public class AcmParticipantService
         return null;
     }
 
-    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
-            Long objectId)
+    public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String participantLdapId, String participantType,
+            String objectType,
+            Long objectId, FlushModeType flushModeType)
     {
-        return getParticipantDao().getParticipantByParticipantTypeAndObjectTypeAndId(userId, participantType, objectType, objectId);
+        return getParticipantDao().getParticipantByLdapIdParticipantTypeObjectTypeObjectId(participantLdapId, participantType, objectType,
+                objectId,
+                flushModeType);
+    }
+
+    public List<AcmParticipant> getParticipantsByLdapIdObjectTypeObjectId(String participantLdapId, String objectType, Long objectId,
+            FlushModeType flushModeType)
+    {
+        return getParticipantDao().getParticipantsByLdapIdObjectTypeObjectId(participantLdapId, objectType, objectId,
+                flushModeType);
     }
 
     public AcmParticipant changeParticipantRole(AcmParticipant participant, String newRole) throws AcmAccessControlException
@@ -138,82 +146,14 @@ public class AcmParticipantService
 
     public void removeParticipant(String userId, String participantType, String objectType, Long objectId)
     {
-        AcmParticipant participant = getParticipantByParticipantTypeAndObjectTypeAndId(userId, participantType, objectType, objectId);
+        AcmParticipant participant = getParticipantByLdapIdParticipantTypeObjectTypeObjectId(userId, participantType, objectType, objectId,
+                FlushModeType.AUTO);
         removeParticipant(participant);
     }
 
     public AcmParticipant findParticipant(Long id)
     {
         return getParticipantDao().find(id);
-    }
-
-    /**
-     * Validates the {@link AcmParticipant}s for some object.
-     *
-     * @param participants
-     *            the list of {@link AcmParticipant}s to validate
-     * @throws AcmParticipantsException
-     *             when the {@link AcmParticipant}s are not valid.
-     */
-    public void validateParticipants(List<AcmParticipant> participants) throws AcmParticipantsException
-    {
-        // missing participant id
-        List<AcmParticipant> missingParticipantLdapIds = participants.stream().filter(participant -> participant.getReceiverLdapId() == null
-                && !participant.getParticipantType().equals(ParticipantTypes.ASSIGNEE)).collect(Collectors.toList());
-
-        if (missingParticipantLdapIds.size() > 0)
-        {
-            String errorMessage = "Missing participant LDAP id!";
-            List<String> errorList = missingParticipantLdapIds.stream()
-                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantType()).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
-        // missing participantTypes
-        List<AcmParticipant> missingParticipantTypes = participants.stream().filter(participant -> participant.getParticipantType() == null)
-                .collect(Collectors.toList());
-
-        if (missingParticipantTypes.size() > 0)
-        {
-            String errorMessage = "Missing participant type!";
-            List<String> errorList = missingParticipantTypes.stream()
-                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId()).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
-        // multiple assignees
-        List<AcmParticipant> assignees = participants.stream()
-                .filter(participant -> participant.getParticipantType() == ParticipantTypes.ASSIGNEE).collect(Collectors.toList());
-        if (assignees.size() > 1)
-        {
-            String errorMessage = "Multiple assignees found!";
-            List<String> errorList = assignees.stream().map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId())
-                    .collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
-        // multiple owning groups
-        List<AcmParticipant> owningGroups = participants.stream()
-                .filter(participant -> participant.getParticipantType() == ParticipantTypes.OWNING_GROUP).collect(Collectors.toList());
-        if (owningGroups.size() > 1)
-        {
-            String errorMessage = "Multiple owning groups found!";
-            List<String> errorList = owningGroups.stream().map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId())
-                    .collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
-        // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
-        Set<String> allLdapIds = new HashSet<>();
-        Set<String> duplicateParticipantLdapIds = participants.stream().map(participant -> participant.getParticipantLdapId())
-                .filter(participantLdapId -> !allLdapIds.add(participantLdapId)).collect(Collectors.toSet());
-        if (duplicateParticipantLdapIds.size() > 0)
-        {
-            String errorMessage = "Participants in multiple roles found!";
-            List<String> errorList = duplicateParticipantLdapIds.stream()
-                    .map(participantLdapId -> "ParticipantLdapId: " + participantLdapId).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
     }
 
     public List<AcmParticipant> getParticipantsFromParentObject(String objectType, Long objectId)

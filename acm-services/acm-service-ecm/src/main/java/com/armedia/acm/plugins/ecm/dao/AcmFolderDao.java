@@ -2,24 +2,30 @@ package com.armedia.acm.plugins.ecm.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 /**
  * Created by armdev on 3/20/15.
  */
 @Repository
-public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
+public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
+{
     @Override
-    protected Class<AcmFolder> getPersistenceClass() {
+    protected Class<AcmFolder> getPersistenceClass()
+    {
         return AcmFolder.class;
     }
 
-    public AcmFolder findByCmisFolderId(String cmisFolderId) {
+    public AcmFolder findByCmisFolderId(String cmisFolderId)
+    {
         String jpql = "SELECT e FROM AcmFolder e WHERE e.cmisFolderId =:cmisFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
@@ -31,7 +37,8 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
         return folder;
     }
 
-    public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws NoResultException {
+    public AcmFolder findFolderByNameInTheGivenParentFolder(String folderName, Long parentFolderId) throws NoResultException
+    {
 
         String jpql = "SELECT e FROM AcmFolder e WHERE e.name=:folderName AND e.parentFolder.id = :parentFolderId";
 
@@ -46,16 +53,20 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder> {
     }
 
     @Transactional
-    public void deleteFolder(Long id) {
+    public void deleteFolder(Long id)
+    {
         AcmFolder folder = getEm().find(getPersistenceClass(), id);
         getEm().remove(folder);
     }
 
-    public List<AcmFolder> findSubFolders(Long parentFolderId) {
+    public List<AcmFolder> findSubFolders(Long parentFolderId, FlushModeType flushModeType)
+    {
         String jpql = "SELECT e FROM AcmFolder e WHERE e.parentFolder.id = :parentFolderId";
 
         TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
         query.setParameter("parentFolderId", parentFolderId);
+
+        query.setFlushMode(flushModeType);
 
         return query.getResultList();
 

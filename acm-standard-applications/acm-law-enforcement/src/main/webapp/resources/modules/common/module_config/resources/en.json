@@ -579,7 +579,7 @@
       "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
       "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system.",
       "error.emptyParticipantLdapId": "Participant name cannot be empty",
-      "error.emptyParticipantType": "Participant type cannot be empty"
+      "error.emptyParticipantType": "Participant type cannot be empty",
       "error.ownerUnique": "Only one owner is allowed."
     }
   },

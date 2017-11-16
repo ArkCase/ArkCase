@@ -132,7 +132,7 @@
       "className": "com.armedia.acm.services.participants.model.AcmParticipant",
       "enabled": true,
       "type": "grid",
-      "enableFiltering": false,
+      "enableFiltering": true,
       "paginationPageSizes": [
         5,
         10,
@@ -147,6 +147,7 @@
           "displayName": "documentDetails.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
           "enableCellEdit": false,
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {

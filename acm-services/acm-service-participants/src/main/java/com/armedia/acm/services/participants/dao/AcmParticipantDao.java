@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
@@ -146,8 +147,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return deleted;
     }
 
-    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
-            Long objectId)
+    public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String userId, String participantType, String objectType,
+            Long objectId, FlushModeType flushModeType)
     {
         Query query = getEm().createQuery(
                 "SELECT par FROM AcmParticipant par " +
@@ -158,6 +159,9 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         query.setParameter("participantType", participantType);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
+
+        query.setFlushMode(flushModeType);
+
         query.setParameter("userId", userId);
 
         List<AcmParticipant> results = query.getResultList();
@@ -167,6 +171,23 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
             acmParticipant = results.get(0);
         }
         return acmParticipant;
+    }
+
+    public List<AcmParticipant> getParticipantsByLdapIdObjectTypeObjectId(String participantLdapId, String objectType, Long objectId,
+            FlushModeType flushModeType)
+    {
+        Query query = getEm().createQuery(
+                "SELECT par FROM AcmParticipant par " +
+                        "WHERE par.objectId =:objectId " +
+                        "AND par.objectType =:objectType " +
+                        "AND par.participantLdapId =:userId");
+        query.setParameter("objectId", objectId);
+        query.setParameter("objectType", objectType);
+        query.setParameter("userId", participantLdapId);
+
+        query.setFlushMode(flushModeType);
+
+        return query.getResultList();
     }
 
     @Transactional

@@ -54,30 +54,11 @@ public class EcmFileParticipantsAPIController
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The called method cannot be executed on objectType {" + objectType + "}!");
         }
-        getParticipantService().validateParticipants(participants);
+        getFileParticipantService().validateFileParticipants(participants);
 
         List<AcmParticipant> participantsToReturn = new ArrayList<>();
 
         List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId);
-
-        // remove deleted participants
-        for (AcmParticipant existingParticipant : existingParticipants)
-        {
-            if (participants.stream()
-                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
-                            && participant.getParticipantType().equals(existingParticipant.getParticipantType()))
-                    .count() == 0)
-            {
-                getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
-                        existingParticipant.getParticipantType(), existingParticipant.getObjectType(), existingParticipant.getObjectId());
-
-                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
-                {
-                    getFileParticipantService().removeParticipantFromFolderAndChildren(getFolderService().findById(objectId),
-                            existingParticipant.getParticipantLdapId(), existingParticipant.getObjectType());
-                }
-            }
-        }
 
         // change existing participants role
         for (AcmParticipant participant : participants)
@@ -91,13 +72,39 @@ public class EcmFileParticipantsAPIController
                 continue;
             }
 
-            AcmParticipant changedParticipant = getParticipantService().changeParticipantRole(returnedParticipant.get(),
-                    returnedParticipant.get().getParticipantType());
-            participantsToReturn.add(changedParticipant);
-
-            if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
+            if (!returnedParticipant.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                getFileParticipantService().setParticipantToFolderChildren(getFolderService().findById(objectId), participant);
+                AcmParticipant changedParticipant = getParticipantService().changeParticipantRole(participant,
+                        participant.getParticipantType());
+
+                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
+                {
+                    getFileParticipantService().setParticipantToFolderChildren(getFolderService().findById(objectId), participant);
+                }
+
+                participantsToReturn.add(changedParticipant);
+            }
+            else
+            {
+                participantsToReturn.add(participant);
+            }
+        }
+
+        // remove deleted participants
+        for (AcmParticipant existingParticipant : existingParticipants)
+        {
+            if (participants.stream()
+                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
+                    .count() == 0)
+            {
+                getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
+                        existingParticipant.getParticipantType(), existingParticipant.getObjectType(), existingParticipant.getObjectId());
+
+                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
+                {
+                    getFileParticipantService().removeParticipantFromFolderAndChildren(getFolderService().findById(objectId),
+                            existingParticipant.getParticipantLdapId(), existingParticipant.getObjectType());
+                }
             }
         }
 
@@ -110,12 +117,13 @@ public class EcmFileParticipantsAPIController
             {
                 AcmParticipant addedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
                         participant.getParticipantType(), objectId, objectType);
-                participantsToReturn.add(addedParticipant);
 
                 if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
                 {
                     getFileParticipantService().setParticipantToFolderChildren(getFolderService().findById(objectId), participant);
                 }
+
+                participantsToReturn.add(addedParticipant);
             }
         }
 
