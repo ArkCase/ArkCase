@@ -536,7 +536,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     } else {
                         return;
                     }
-                    that.currentObjectId = Service.getCurrentObjectId();
+                    if (Service.getCurrentObjectId()) {
+                        that.currentObjectId = Service.getCurrentObjectId();
+                    }
                     if (that.currentObjectId == objectId) {
                         onObjectInfoUpdated(objectInfo, objectId, e);
                     }
@@ -549,7 +551,9 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                         return;
                     }
                     that.previousId = null;
-                    that.currentObjectId = Service.getCurrentObjectId();
+                    if (Service.getCurrentObjectId()) {
+                        that.currentObjectId = Service.getCurrentObjectId();
+                    }
                     onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                 });
 
@@ -826,7 +830,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
          */
         Service.getCurrentObjectId = function () {
             var objectSetting = this.getCurrentObjectSetting();
-            return objectSetting.objectId;
+            return (objectSetting) ? objectSetting.objectId : null;
         };
 
         /**

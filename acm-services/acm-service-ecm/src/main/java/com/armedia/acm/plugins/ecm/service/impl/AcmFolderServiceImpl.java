@@ -46,6 +46,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
@@ -309,13 +310,13 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
     {
         List<AcmObject> objectList = new ArrayList<>();
 
-        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folderId);
+        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folderId, FlushModeType.AUTO);
         if (subfolders != null && !subfolders.isEmpty())
         {
             objectList.addAll(subfolders);
         }
 
-        List<EcmFile> files = getFileDao().findByFolderId(folderId);
+        List<EcmFile> files = getFileDao().findByFolderId(folderId, FlushModeType.AUTO);
         if (files != null && !files.isEmpty())
         {
             objectList.addAll(files);
@@ -1011,7 +1012,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             return;
         }
 
-        childFiles.addAll(fileDao.findByFolderId(folder.getId()));
+        childFiles.addAll(fileDao.findByFolderId(folder.getId(), FlushModeType.AUTO));
 
         for (AcmFolder childFolder : folder.getChildrenFolders())
         {

@@ -177,7 +177,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                                     scope.objectInfo.participants.push(participant);
                                 }
                             }
-                            if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants)) {
+                            if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
                                 saveObjectInfoAndRefresh();
                             }
                             else {
@@ -247,7 +247,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                 
                 scope.onClickReplaceChildrenParticipants = function () {
                 	var len = scope.objectInfo.participants.length;
-                	for (i = 0; i < len; i++) {
+                	for (var i = 0; i < len; i++) {
                 		scope.objectInfo.participants[i].replaceChildrenParticipant = true;
                 	}                	
                 	saveObjectInfoAndRefresh();
