@@ -11,9 +11,8 @@ angular.module('audit').config(['$stateProvider',
                         , function ($translate, $translatePartialLoader, ObjectLookupService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('audit');
-                        $translate.resetDataDict()
-                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("auditReportNames"))
-                        ;
+                        $translatePartialLoader.addPart('core');
+
                         return $translate.refresh();
                     }]
                 }

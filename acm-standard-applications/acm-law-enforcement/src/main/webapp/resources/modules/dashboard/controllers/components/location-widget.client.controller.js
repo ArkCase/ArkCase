@@ -13,9 +13,9 @@ angular.module('dashboard.locations', ['adf.provider'])
             });
     })
     .controller('Dashboard.LocationsController', ['$scope', '$stateParams', '$translate',
-        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService',
-        function ($scope, $stateParams, $translate,
-                  ComplaintInfoService, PersonInfoService, OrganizationInfoService, ObjectService, HelperObjectBrowserService, HelperUiGridService, Util) {
+        'Complaint.InfoService', 'Person.InfoService', 'Organization.InfoService', 'ObjectService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.ModelService'
+        ,function ($scope, $stateParams, $translate,
+                   ComplaintInfoService, PersonInfoService, OrganizationInfoService, ObjectService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectModelService) {
 
             var modules = [
                 {
@@ -87,6 +87,11 @@ angular.module('dashboard.locations', ['adf.provider'])
                 gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
+            $scope.isDefault = function (data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+            }
+
 
         }
     ]);

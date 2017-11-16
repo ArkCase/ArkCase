@@ -10,7 +10,9 @@
         "description": "Exibe arquivos de casos ativos por fila",
         "xAxis": "Filas",
         "yAxis": "Número de arquivos de casos",
-        "noDataMessage": "Atualmente não há informações de casos"
+        "noDataMessage": "Atualmente não há informações de casos",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "casesByStatus": {
         "title": "Casos por Status",
@@ -22,7 +24,9 @@
           "lastYear": "Ano passado",
           "all": "Todos"
         },
-        "noDataMessage": "Atualmente não há informações de casos"
+        "noDataMessage": "Atualmente não há informações de casos",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "myCases": {
         "title": "Meus casos",
@@ -41,7 +45,9 @@
           },
           "overdue.tooltip": "Caso está atrasado",
           "deadline.tooltip": "Prazo está se aproximando"
-        }
+        },
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "myComplaints": {
         "title": "Minhas queixas",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "A queixa está atrasada",
           "deadline.tooltip": "Prazo está se aproximando",
           "noDataMessage": "Atualmente não há informações sobre reclamações"
-        }
+        },
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "myTasks": {
         "title": "Minhas tarefas",
@@ -79,38 +87,46 @@
           "overdue.tooltip": "Tarefa está atrasada",
           "deadline.tooltip": "Prazo está se aproximando"
         },
-        "noDataMessage": "Atualmente não há informações sobre tarefas"
+        "noDataMessage": "Atualmente não há informações sobre tarefas",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "newComplaints": {
         "title": "Novas reclamações",
         "description": "Exibe novas reclamações",
         "dueDate": {
           "label": "Selecione período de data de vencimento",
-          "pastDue": "passado devido",
+          "pastDue": "Passado devido",
           "dueTomorrow": "Due Tomorrow",
           "dueWeek": "Devido em 7 dias",
           "dueMonth": "Devido no mês",
           "all": "Todos"
         },
-        "noDataMessage": "Atualmente não há informações sobre reclamações"
+        "noDataMessage": "Atualmente não há informações sobre reclamações",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "newCases": {
         "title": "Novos casos",
         "description": "Exibe novos casos",
-        "noDataMessage": "Atualmente não há informações de casos"
+        "noDataMessage": "Atualmente não há informações de casos",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "teamWorkload": {
         "title": "Carga de trabalho da equipe",
         "description": "Exibe a carga de trabalho da equipe",
         "dueDate": {
           "label": "Selecione período de data de vencimento",
-          "pastDue": "passado devido",
+          "pastDue": "Passado devido",
           "dueTomorrow": "Devido Amanhã",
           "dueWeek": "Devido em 7 dias",
           "dueMonth": "Devido no mês",
           "all": "Todos"
         },
-        "noDataMessage": "Atualmente não há informações sobre tarefas em equipe"
+        "noDataMessage": "Atualmente não há informações sobre tarefas em equipe",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "workflowReport": {
         "title": "Relatório de fluxo de trabalho",
@@ -126,7 +142,9 @@
             "taskName": "Nome da Tarefa"
           }
         },
-        "noDataMessage": "Atualmente não há informações de relatório de fluxo de trabalho"
+        "noDataMessage": "Atualmente não há informações de relatório de fluxo de trabalho",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "weather": {
         "description": "Exibe o tempo",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "Insira um local na configuração do widget"
         },
         "title": "Tempo",
-        "noDataMessage": "Atualmente não há informações meteorológicas"
+        "noDataMessage": "Atualmente não há informações meteorológicas",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "news": {
         "description": "Exibe notícias",
@@ -149,7 +169,9 @@
           "insertUrl": "Insira uma URL de feed na configuração do widget"
         },
         "title": "Notícias",
-        "noDataMessage": "Atualmente não há RSS / info"
+        "noDataMessage": "Atualmente não há RSS / info",
+        "configDescription": "Descrição",
+        "configDescriptionPlaceholder": "Insira a descrição do widget"
       },
       "details": {
         "title": "Detalhes",
@@ -277,7 +299,7 @@
         "noDataMessage": "Atualmente não há fluxos de trabalho para exibir"
       },
       "signature": {
-        "title": "e-Assinatura",
+        "title": "E-Assinatura",
         "description": "Ferramenta e-Assinatura",
         "noDataMessage": "Atualmente, não há assinaturas eletrônicas para exibir"
       },

@@ -29,6 +29,7 @@ import static org.easymock.EasyMock.capture;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -130,7 +131,7 @@ public class SignatureAPIControllerTest extends EasyMockSupport
         assertTrue(event.isSucceeded());
     }
 
-    @Test
+    @Test(expected = Exception.class)
     public void signObject_Task_notauthenticated() throws Exception
     {
         Long objectId = 500L;
@@ -142,33 +143,25 @@ public class SignatureAPIControllerTest extends EasyMockSupport
         Signature foundSignature = new Signature();
         foundSignature.setObjectId(objectId);
 
-        Capture<ApplicationSignatureEvent> capturedEvent = new Capture<>();
-
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockLdapAuthenticateManager.authenticate(userName, password)).andReturn(false);
-        mockSignatureEventPublisher.publishSignatureEvent(capture(capturedEvent));
+
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
         replayAll();
 
         // To see details on the HTTP calls, change .andReturn() to .andDo(print())
-        MvcResult result = mockMvc
+         mockMvc
                 .perform(
                         post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
                                 .content("{\"confirmPassword\":\"password\"}")
                                 .contentType(
                                         MediaType.APPLICATION_JSON_VALUE)
                                 .session(mockHttpSession)
-                                .principal(mockAuthentication)).andReturn();
-
-        verifyAll();
-
-        ApplicationSignatureEvent event = capturedEvent.getValue();
-        assertEquals(objectId, event.getParentObjectId());
-        assertEquals(objectType, event.getParentObjectType());
-        assertFalse(event.isSucceeded());
+                                .principal(mockAuthentication))
+                .andReturn();
     }
 
     @Test

@@ -422,11 +422,11 @@ public class ExchangeCalendarService
     private void processAttachmentsForRemoval(AcmCalendarEvent calendarEvent, Appointment appointment)
             throws ServiceLocalException, Exception
     {
-        List<String> attachmentsFileNames = calendarEvent.getFileNames();
-        if (attachmentsFileNames != null && !attachmentsFileNames.isEmpty())
+        List<String> attachmentsIds = calendarEvent.getFiles().stream().map(att -> att.getAttachmentId()).collect(Collectors.toList());
+        if (attachmentsIds != null && !attachmentsIds.isEmpty())
         {
             List<Attachment> attachmentsToRemove = appointment.getAttachments().getItems().stream()
-                    .filter(attachment -> attachmentsFileNames.contains(attachment.getName())).collect(Collectors.toList());
+                    .filter(attachment -> attachmentsIds.contains(attachment.getId())).collect(Collectors.toList());
             for (Attachment attachment : attachmentsToRemove)
             {
                 appointment.getAttachments().remove(attachment);
