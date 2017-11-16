@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId;
 import org.junit.Before;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertTrue;
 public class PasswordValidationServiceTest
 {
     private PasswordValidationService unit = new PasswordValidationService();
+    private PasswordLengthValidationRule minLengthRule;
 
     @Before
     public void setUp()
@@ -37,7 +39,7 @@ public class PasswordValidationServiceTest
                 new PasswordShouldMatchPattern("^.*?[\\Q[\\E~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-\\Q]\\E].*$",
                         "Password must contain at least one special character");
 
-        PasswordShouldMatchPattern minLengthRule = new PasswordShouldMatchPattern("^.{7,}$",
+        minLengthRule = new PasswordLengthValidationRule(7,
                 "Password must be of minimum length of 7.");
 
         unit.setPasswordRules(Arrays.asList(new PasswordShouldNotContainUserId(), lowercaseCharRule, uppercaseCharRule, digitRule,
@@ -72,7 +74,7 @@ public class PasswordValidationServiceTest
     @Test
     public void generatedPasswordsAreValid()
     {
-        List<String> passwords = Stream.generate(MapperUtils::generatePassword)
+        List<String> passwords = Stream.generate(() -> MapperUtils.generatePassword(minLengthRule.getMinLength()))
                 .limit(50)
                 .collect(Collectors.toList());
 

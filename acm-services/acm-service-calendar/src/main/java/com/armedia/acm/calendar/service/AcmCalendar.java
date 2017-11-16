@@ -44,4 +44,12 @@ public interface AcmCalendar
      */
     AcmCalendarEvent getEvent(String eventId, boolean retrieveMaster) throws CalendarServiceException;
 
+    /**
+     * @param eventId
+     * @param attachmentId
+     * @return
+     * @throws CalendarServiceException
+     */
+    AcmEventAttachmentDTO getEventAttachment(String eventId, String attachmentId) throws CalendarServiceException;
+
 }

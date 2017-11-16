@@ -16,6 +16,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.RetryExecutor;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -51,10 +53,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
     private LdapEntryTransformer userTransformer;
     private ApplicationEventPublisher eventPublisher;
+    private PasswordLengthValidationRule passwordLengthValidationRule;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
-        log.debug("Publish send set password email...");
+        log.debug("Publish send set password email for user: [{}]", user.getUserId());
         SetPasswordEmailEvent setPasswordEmailEvent = new SetPasswordEmailEvent(user);
         setPasswordEmailEvent.setSucceeded(true);
         eventPublisher.publishEvent(setPasswordEmailEvent);
@@ -135,7 +138,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             DirContextAdapter context;
             if (password == null)
             {
-                password = MapperUtils.generatePassword();
+                password = MapperUtils.generatePassword(passwordLengthValidationRule.getMinLength());
             }
             context = userTransformer.createContextForNewUserEntry(directoryName, acmUser, password,
                     ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
@@ -506,8 +509,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         if (AcmUserState.VALID == existing.getUserState())
         {
-            // FIXME: use some more appropriate exception here
-            throw new AcmLdapActionFailedException(String.format("User [%s] already exists and is active user", userId));
+                     throw new NameAlreadyBoundException(null);
         } else
         {
             // INVALID or DELETED user, remove current group membership
@@ -597,5 +599,10 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         eventPublisher = applicationEventPublisher;
+    }
+
+    public void setPasswordLengthValidationRule(PasswordLengthValidationRule passwordLengthValidationRule)
+    {
+        this.passwordLengthValidationRule = passwordLengthValidationRule;
     }
 }

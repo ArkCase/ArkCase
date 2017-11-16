@@ -74,6 +74,10 @@
       "syncPageSize": "输入分页大小",
       "groupSearchFilter": "输入组搜索过滤器（例如（objectClass = group））",
       "groupsSortingAttribute": "输入排序组的属性（例如“gidNumber”）",
+      "allChangedUsersFilter": "zh-cn_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "zh-cn_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "zh-cn_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "zh-cn_Enter filter including sort-attribute for all changed groups",
       "groupSearchPageFilter": "输入包含sort-attribute（例如（＆（objectClass = group）（gidNumber> =％s））的过滤器））",
       "enableEditingLdapUsers": "检查是否允许管理您的DS的用户和组"
     },
@@ -153,9 +157,8 @@
           "lastName": "输入姓氏",
           "email": "输入电子邮件",
           "password": "输入密码",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "输入与用户名不同的密码，其中包含至少包含一个特殊字符，数字，大写和小写字母的7个字符。"
+          "confirmation": "zh-cn_Enter your password again",
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "编辑Ldap成员",
@@ -168,7 +171,8 @@
         "firstName": "名字",
         "lastName": "姓",
         "email": "电子邮件",
-        "password": "密码"
+        "password": "密码",
+        "confirmation": "zh-cn_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "名称",

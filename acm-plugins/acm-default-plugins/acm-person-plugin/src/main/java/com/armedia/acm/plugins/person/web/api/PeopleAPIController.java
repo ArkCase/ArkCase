@@ -1,15 +1,10 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.UploadImageRequest;
-import com.armedia.acm.plugins.person.service.PersonService;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import javax.persistence.PersistenceException;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -29,21 +24,26 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.PersistenceException;
-
-import java.io.IOException;
-import java.util.List;
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.UploadImageRequest;
+import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 
 @Controller
-@RequestMapping(value = {
-        "/api/v1/plugin/people",
-        "/api/latest/plugin/people" })
+@RequestMapping(value = {"/api/v1/plugin/people", "/api/latest/plugin/people"})
 public class PeopleAPIController
 {
 
     private Logger log = LoggerFactory.getLogger(getClass());
     private PersonService personService;
     private ExecuteSolrQuery executeSolrQuery;
+    private String facetedSearchPath;
 
     @PreAuthorize("#in.id == null or hasPermission(#in.id, 'PERSON', 'editPerson')")
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -226,4 +226,14 @@ public class PeopleAPIController
     {
         this.executeSolrQuery = executeSolrQuery;
     }
+
+    /**
+     * @param facetedSearchPath
+     *            the facetedSearchPath to set
+     */
+    public void setFacetedSearchPath(String facetedSearchPath)
+    {
+        this.facetedSearchPath = facetedSearchPath;
+    }
+
 }

@@ -1,9 +1,7 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import org.junit.Test;
-import org.springframework.ldap.core.DistinguishedName;
 
-import javax.naming.Name;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;

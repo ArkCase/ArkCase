@@ -74,6 +74,10 @@
       "syncPageSize": "Enter paging size",
       "groupSearchFilter": "Enter search filter for groups (e.g. (objectClass=group))",
       "groupsSortingAttribute": "Enter attribute for sorting groups (e.g. 'gidNumber')",
+      "allChangedUsersFilter": "en-in_Enter the filter for all changed users",
+      "allChangedUsersPageFilter": "en-in_Enter the filter including sort-attribute for all changed users",
+      "changedGroupSearchFilter": "en-in_Enter search filter for all changed groups",
+      "changedGroupSearchPageFilter": "en-in_Enter filter including sort-attribute for all changed groups",
       "groupSearchPageFilter": "Enter filter including sort-attribute (e.g. (&(objectClass=group)(gidNumber>=%s)))",
       "enableEditingLdapUsers": "Check if managing users and groups to your DS is allowed"
     },
@@ -153,9 +157,8 @@
           "lastName": "Enter last name",
           "email": "Enter email",
           "password": "Enter password",
-          "rulePattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#%^+=]).*$",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "confirmation": "en-in_Enter your password again",
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -168,7 +171,8 @@
         "firstName": "FirstName",
         "lastName": "LastName",
         "email": "Email",
-        "password": "Password"
+        "password": "Password",
+        "confirmation": "en-in_Confirm Password"
       },
       "addMembersGridColumns": {
         "name": "Name",
@@ -499,21 +503,21 @@
         "title": "Lookups Configuration",
         "choose": "Choose Lookup",
         "data": {
-          "key" : "Key",
-          "value" : "Value",
-          "inverseKey" : "Inverse key",
-          "inverseValue" : "Inverse value"
+          "key": "Key",
+          "value": "Value",
+          "inverseKey": "Inverse key",
+          "inverseValue": "Inverse value"
         },
-        "modal" : {
-          "title" : "Search Label",
-          "editEntry" : "Edit lookup entry",
-          "addEntry" : "Add lookup entry",
-          "key.placeholder" : "Enter entry key",
-          "value.placeholder" : "Enter entry value as label key",
-          "inversekey.placeholder" : "Enter entry inverse key",
-          "inversevalue.placeholder" : "Enter entry inverse value as label key",
-          "btnCancel.text" : "Cancel",
-          "btnOk.text" : "Save entry"
+        "modal": {
+          "title": "Search Label",
+          "editEntry": "Edit lookup entry",
+          "addEntry": "Add lookup entry",
+          "key.placeholder": "Enter entry key",
+          "value.placeholder": "Enter entry value as label key",
+          "inversekey.placeholder": "Enter entry inverse key",
+          "inversevalue.placeholder": "Enter entry inverse value as label key",
+          "btnCancel.text": "Cancel",
+          "btnOk.text": "Save entry"
         }
       },
       "module.config": {

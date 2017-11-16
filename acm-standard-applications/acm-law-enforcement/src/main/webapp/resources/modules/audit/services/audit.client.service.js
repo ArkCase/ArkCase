@@ -47,8 +47,8 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                 }
 
                 var reportUrl = pentahoHost + amendedPentahoPort + auditReportUri
-                    + "?startDate=" + startDate
-                    + "&endDate=" + endDate
+                    + "?startDate=" + UtilDateService.goodIsoDate(startDate)
+                    + "&endDate=" + UtilDateService.goodIsoDate(endDate)
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
                     + "&dateFormat=" + encodeURIComponent(dateFormat)

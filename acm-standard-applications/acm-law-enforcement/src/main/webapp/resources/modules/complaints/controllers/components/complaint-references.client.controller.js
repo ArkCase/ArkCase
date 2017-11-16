@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service'
+    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService) {
+        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope
@@ -41,11 +41,11 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
         $scope.onClickObjLink = function (event, rowEntity, targetNameColumnClicked) {
             event.preventDefault();
 
-            var targetType = Util.goodMapValue(rowEntity, "targetType");
-            var targetId = Util.goodMapValue(rowEntity, "targetId");
-            var parentId = Util.goodMapValue(rowEntity, "parentId");
-            var parentType = Util.goodMapValue(rowEntity, "parentType");
-            var fileName = Util.goodMapValue(rowEntity, "targetName");
+            var targetType = Util.goodMapValue(rowEntity, "target_type_s");
+            var targetId = Util.goodMapValue(rowEntity, "target_id_s");
+            var parentId = Util.goodMapValue(rowEntity, "parent_id_s");
+            var parentType = Util.goodMapValue(rowEntity, "parent_type_s");
+            var fileName = Util.goodMapValue(rowEntity, "target_object.title_parseable");
 
             if (targetType == ObjectService.ObjectTypes.FILE && targetNameColumnClicked) {
                 gridHelper.openObject(targetId, parentId, parentType, fileName);
@@ -128,6 +128,8 @@ angular.module('complaints').controller('Complaints.ReferencesController', ['$sc
 
                         $scope.gridOptions.data.push(rowEntity);
 
+                    }, function (errorResponse) {
+                        MessageService.error(errorResponse.data);
                     });
                 }
 

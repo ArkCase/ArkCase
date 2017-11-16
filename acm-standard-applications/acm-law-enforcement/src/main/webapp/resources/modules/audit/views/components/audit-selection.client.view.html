@@ -5,7 +5,7 @@
         <label for="reportNameAudit" translate>audit.navigation.label.reportName</label>
 
         <select class="form-control" id="reportNameAudit" ng-model="auditDropdown"
-                ng-options="option.id as option.name for option in config.auditDropdown">
+                ng-options="item.key as item.value | translate for item in auditDropdown" class="form-control input-sm">
         </select>
 
         <label for="selectIDAudit" translate>audit.navigation.label.inputID</label>
