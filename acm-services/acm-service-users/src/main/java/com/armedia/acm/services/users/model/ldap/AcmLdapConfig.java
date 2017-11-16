@@ -2,7 +2,7 @@ package com.armedia.acm.services.users.model.ldap;
 
 public class AcmLdapConfig
 {
-    private String ldapUrl;
+    private String[] ldapUrl;
     private String baseDC;
     private String authUserDn;
     private String authUserPassword;
@@ -23,12 +23,12 @@ public class AcmLdapConfig
         this.authUserPassword = authUserPassword;
     }
 
-    public String getLdapUrl()
+    public String[] getLdapUrl()
     {
         return ldapUrl;
     }
 
-    public void setLdapUrl(String ldapUrl)
+    public void setLdapUrl(String[] ldapUrl)
     {
         this.ldapUrl = ldapUrl;
     }
