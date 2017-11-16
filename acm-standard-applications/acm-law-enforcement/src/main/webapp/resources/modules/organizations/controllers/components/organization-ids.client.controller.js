@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.IDsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -161,15 +161,8 @@ angular.module('organizations').controller('Organizations.IDsController', ['$sco
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultIdentification) {
-                id = $scope.objectInfo.defaultIdentification.identificationID;
-            }
-            if ($scope.objectInfo.identifications && $scope.objectInfo.identifications.length == 0) {
-                return true;
-            }
-            return data.identificationID == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultIdentification");
+        }
     }
 
 ]);

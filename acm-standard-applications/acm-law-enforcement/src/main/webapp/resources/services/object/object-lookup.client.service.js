@@ -61,6 +61,21 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getAuditReportNames
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns a list of audit reports
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getAuditReportNames = function () {
+            return Service.getLookupByLookupName("auditReportNames");
+        };
+
+
+        /**
+         * @ngdoc method
          * @name getPriorities
          * @methodOf services:Object.LookupService
          *

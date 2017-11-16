@@ -282,6 +282,13 @@
           "type": "component",
           "columnDefs": [
             {
+              "name": "type",
+              "displayName": "people.comp.addresses.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+              "width": "*"
+            },
+            {
               "name": "streetAddress",
               "displayName": "people.comp.addresses.table.columns.streetAddress",
               "headerCellFilter": "translate"
@@ -373,13 +380,14 @@
               "name": "subType",
               "displayName": "people.comp.urls.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'>{{ grid.appScope.utils.getLookupValue(grid.appScope.urlTypes, row.entity.subType) | translate }}</div>"
             },
             {
               "name": "value",
               "displayName": "people.comp.urls.table.columns.value",
               "headerCellFilter": "translate",
-              "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+              "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+
             },
             {
               "name": "modifier",
@@ -438,7 +446,7 @@
               "name": "organization.organizationValue",
               "displayName": "people.comp.organizations.table.columns.value",
               "headerCellFilter": "translate",
-              "cellTemplate": "<a data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}}<\/a>"
+              "cellTemplate": "<a class='primary' data-ui-sref=\"organizations.main({id: row.entity.organization.organizationId})\">{{COL_FIELD}} <\/a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span>"
             },
             {
               "name": "organization.defaultIdentification.identificationNumber",
@@ -921,7 +929,8 @@
           "name": "value",
           "displayName": "people.comp.urls.table.columns.value",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+          "cellTemplate": "<div class='ui-grid-cell-contents ui-grid-cell-anchor'><a target=\"_blank\" ng-href=\"{{row.entity.value|urlHyperLink}}\">{{row.entity.value}}</a><span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>"
+
         },
         {
           "name": "description",
