@@ -60,7 +60,7 @@ public class DefaultOutlookFolderRecreator implements OutlookFolderRecreator
         handler.recreateFolder(outlookUser, objectId, objectType, callback);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.MANDATORY)
     public void createFolder(AcmOutlookUser outlookUser, Long objectId, String objectType, String folderName, AcmContainer container,
             List<AcmParticipant> participants) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException
     {

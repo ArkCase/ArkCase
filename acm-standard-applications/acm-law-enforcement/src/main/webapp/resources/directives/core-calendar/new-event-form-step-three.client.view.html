@@ -29,7 +29,7 @@
             </ul>
         </div>
     </div>
-    <div class="row" ng-if="eventDataModel.fileNames.length > 0">
+    <div class="row" ng-if="attachmentModel.attachedFiles.length > 0">
         <div class="col-sm-12">
             <label>
 				<span translate>
@@ -41,7 +41,7 @@
             <ul class="list-unstyled well-sm">
                 <li ng-repeat="file in attachmentModel.attachedFiles">
                     <i class="fa fa-file" aria-hidden="true"></i>
-                    <strong>{{file}}</strong>
+                    <strong>{{file.fileName}}</strong>
                     <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="removeAttachedFile($index, file)"></i>
                 </li>
             </ul>
