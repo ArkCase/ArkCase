@@ -110,12 +110,28 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                         MessageService.errorAction();
                     });
                 } else if (data.file) {
-                    PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
-                        MessageService.succsessAction();
-                        $scope.refresh();
-                    }, function () {
-                        MessageService.errorAction();
-                    });
+                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get the picture name
+                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.') + 0);   //get the extension
+                    $scope.fileNames = [];
+                    $scope.extensions = [];
+                    if(!Util.isEmpty($scope.images)){
+                        angular.forEach( $scope.images, function(value, key) {
+                            $scope.fileNames.push(value.title_parseable);
+                            $scope.extensions.push(value.ext_s);
+                            // statements
+                        });
+                    }
+                    if($scope.fileNames.indexOf(name) > -1 && $scope.extensions.indexOf(ext) > -1){
+                        MessageService.error("Picture is already uploaded!");
+                    }
+                    else {
+                        PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
+                            MessageService.succsessAction();
+                            $scope.refresh();
+                        }, function () {
+                            MessageService.errorAction();
+                        });
+                    }
                 }
             });
         }
