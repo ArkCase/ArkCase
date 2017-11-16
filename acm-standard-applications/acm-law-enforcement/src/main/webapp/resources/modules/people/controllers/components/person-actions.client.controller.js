@@ -19,9 +19,16 @@ angular.module('people').controller('People.ActionsController', ['$rootScope', '
             }
         });
 
+        $scope.active = "fa fa-play-circle";
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
+
+            $rootScope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
+                $scope.$emit("report-tree-updated");
+                $scope.active = "fa fa-stop";
+            });
         };
 
         $scope.onClickRestrict = function ($event) {
@@ -47,11 +54,13 @@ angular.module('people').controller('People.ActionsController', ['$rootScope', '
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -75,15 +84,12 @@ angular.module('people').controller('People.ActionsController', ['$rootScope', '
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
+                        $scope.active = "fa fa-stop";
                         return error;
                     }
                 );
             }
             return promiseSaveInfo;
         }
-
-        $rootScope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
-            $scope.$emit("report-tree-updated");
-        });
     }
 ]);

@@ -19,9 +19,16 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             }
         });
 
+        $scope.active = "fa fa-play-circle";
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
+
+            $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
+                $scope.$emit("report-tree-updated");
+                $scope.active = "fa fa-stop";
+            });
         };
 
         $scope.onClickRestrict = function ($event) {
@@ -47,11 +54,13 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -63,7 +72,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             $scope.$emit('report-object-refreshed', $stateParams.id);
         };
 
-        function saveObjectInfoAndRefresh() {
+        function saveObjectInfoAndRefresh(state) {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
             if (OrganizationInfoService.validateOrganizationInfo($scope.objectInfo)) {
                 var objectInfo = Util.omitNg($scope.objectInfo);
@@ -75,15 +84,12 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
+                        $scope.active = "fa fa-stop";
                         return error;
                     }
                 );
             }
             return promiseSaveInfo;
         }
-
-        $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $stateParams.id, function () {
-            $scope.$emit("report-tree-updated");
-        });
     }
 ]);
