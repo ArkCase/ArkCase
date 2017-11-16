@@ -5,20 +5,22 @@ import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getN
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getParticipants;
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getTitle;
 
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.services.participants.model.AcmParticipant;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 22, 2017
@@ -52,6 +54,7 @@ public class CalendarFolderHandler
      * @param object
      * @throws CalendarServiceException
      */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String recreateFolder(AcmOutlookUser user, Long objectId, String objectType, CalendarFolderHandlerCallback callback)
             throws CalendarServiceException
     {
@@ -69,7 +72,8 @@ public class CalendarFolderHandler
 
             return folderName;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Error creating query [{}] for object with id [{}] of [{}] type.",
                     String.format("SELECT obj FROM obj %s WHERE obj.%s = :id", entityTypeForQuery, entityIdForQuery), objectId, objectType,

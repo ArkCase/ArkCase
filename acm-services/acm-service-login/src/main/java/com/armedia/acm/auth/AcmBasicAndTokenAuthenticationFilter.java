@@ -320,7 +320,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             log.trace("Client Certificate authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_CLIENT_CERT;
-        } else if (request.getParameter("Authorization") != null && request.getParameter("Authorization").startsWith("Basic "))
+        } else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Basic "))
         {
             log.trace("Basic authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_BASIC;

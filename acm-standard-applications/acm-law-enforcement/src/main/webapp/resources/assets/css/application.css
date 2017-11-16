@@ -1,3 +1,6 @@
+/* @override 
+	http://localhost:8080/arkcase/assets/css/application.css */
+
 /* Typography */
 
 h1 {
@@ -731,6 +734,9 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
+}
+.ui-grid-cell-anchor {
+    display: inline;
 }
 
 /*.ui-grid .ui-grid-cell div:hover {
