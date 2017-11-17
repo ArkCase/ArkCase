@@ -10,7 +10,9 @@
         "description": "Anzeige aktiver Falldateien nach Warteschlange",
         "xAxis": "Warteschlangen",
         "yAxis": "Anzahl der Falldateien",
-        "noDataMessage": "Derzeit gibt es keine Fälle Info"
+        "noDataMessage": "Derzeit gibt es keine Fälle Info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "casesByStatus": {
         "title": "Fälle nach Status",
@@ -22,7 +24,9 @@
           "lastYear": "Letztes Jahr",
           "all": "Alles"
         },
-        "noDataMessage": "Derzeit gibt es keine Fälle Info"
+        "noDataMessage": "Derzeit gibt es keine Fälle Info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "myCases": {
         "title": "Meine Fälle",
@@ -41,14 +45,16 @@
           },
           "overdue.tooltip": "Fall ist überfällig",
           "deadline.tooltip": "Deadline nähert sich"
-        }
+        },
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "myComplaints": {
         "title": "Meine Beschwerden",
         "description": "Zeigt meine Beschwerden",
         "table": {
           "header": {
-            "nummer": "ID",
+            "number": "ID",
             "title": "Titel",
             "priority": "Priorität",
             "created": "Erstellt",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "Beschwerde ist überfällig",
           "deadline.tooltip": "Deadline ist Annäherung",
           "noDataMessage": "Derzeit gibt es keine Beschwerden info"
-        }
+        },
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "myTasks": {
         "title": "Meine Aufgaben",
@@ -79,7 +87,9 @@
           "overdue.tooltip": "Aufgabe ist überfällig",
           "deadline.tooltip": "Deadline nähert sich"
         },
-        "noDataMessage": "Derzeit gibt es keine Aufgaben info"
+        "noDataMessage": "Derzeit gibt es keine Aufgaben info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "newComplaints": {
         "title": "Neue Beschwerden",
@@ -92,12 +102,16 @@
           "DueMonth": "Fällig im Monat",
           "all": "Alles"
         },
-        "noDataMessage": "Derzeit gibt es keine Beschwerden info"
+        "noDataMessage": "Derzeit gibt es keine Beschwerden info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "newCases": {
         "title": "Neue Fälle",
         "description": "Zeigt neue Fälle",
-        "noDataMessage": "Derzeit gibt es keine Fälle Info"
+        "noDataMessage": "Derzeit gibt es keine Fälle Info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "teamWorkload": {
         "title": "Team Workload",
@@ -110,7 +124,9 @@
           "dueMonth": "Fällig im Monat",
           "all": "Alles"
         },
-        "noDataMessage": "Derzeit gibt es keine Teamaufgaben info"
+        "noDataMessage": "Derzeit gibt es keine Teamaufgaben info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "workflowReport": {
         "title": "Arbeitsablauf-Bericht",
@@ -126,7 +142,9 @@
             "taskName": "Aufgabennname"
           }
         },
-        "noDataMessage": "Derzeit gibt es keinen Workflow-Report-Info"
+        "noDataMessage": "Derzeit gibt es keinen Workflow-Report-Info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "weather": {
         "description": "Zeigt Wetter",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen"
         },
         "title": "Wetter",
-        "noDataMessage": "Derzeit gibt es keine Wetterinfo"
+        "noDataMessage": "Derzeit gibt es keine Wetterinfo",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "news": {
         "description": "Zeigt Nachrichten",
@@ -146,10 +166,12 @@
           "enterFeedUrl": "Feed-URL eingeben",
           "description": "Zeigt einen RSS / Atom-Feed",
           "feedUrl": "Feed Url",
-          "InsertUrl": "Bitte fügst du eine Feed-URL in die Widget-Konfiguration ein"
+          "insertUrl": "Bitte fügen Sie eine Feed-URL in die Widget-Konfiguration ein"
         },
         "title": "Nachrichten",
-        "noDataMessage": "Derzeit gibt es kein RSS / info"
+        "noDataMessage": "Derzeit gibt es kein RSS / info",
+        "configDescription": "Beschreibung",
+        "configDescriptionPlaceholder": "Widget-Beschreibung eingeben"
       },
       "details": {
         "title": "Details",
@@ -277,7 +299,7 @@
         "noDataMessage": "Momentan gibt es keine Workflows zum Anzeigen"
       },
       "signature": {
-        "title": "e-Unterschrift",
+        "title": "E-Unterschrift",
         "description": "Widget für elektronische Signatur",
         "noDataMessage": "Derzeit sind keine eSignatures anzuzeigen"
       },
@@ -296,10 +318,10 @@
         "description": "Zeigt eine Cost-to-User-Grafik",
         "noDataMessage": "Momentan keine Kostendaten zur Anzeige"
       },
-      "organisationen": {
+      "organizations": {
         "title": "Organisationen",
-        "description": "Zeigt Organisation",
-        "noDataMessage": "Derzeit gibt es keine Organisationen zum Anzeigen"
+        "description": "Zeigt die Organisation an",
+        "noDataMessage": "Derzeit gibt es keine Organisationen, die angezeigt werden sollen"
       },
       "tags": {
         "title": "Etiketten",
@@ -327,5 +349,38 @@
         "noDataMessage": "Derzeit keine verwandten Personen zum Anzeigen"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "News Widget"
+  },
+  "dashboard.comp.weather": {
+    "title": "Wetter Widget"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mein Fall-Widget"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Mein Aufgaben-Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Mein Beschwerden-Widget"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Workflow-Bericht"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Neue Beschwerden"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Neue Fälle"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Fälle nach Warteschlange"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Teamarbeit"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Fälle nach Status"
   }
 }

@@ -6,7 +6,7 @@
                 <span>{{ selectedParentLookupValue.key ? "Sub lookup for key: " + selectedParentLookupValue.key : "&ltSelect key from the parent lookup&gt"}}</span>
                 <div class="pull-right">
                     <div class="pull-right">
-                        <button class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                        <button ng-hide="!selectedParentLookupValue.key" class="btn btn-default btn-xs" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
                     </div>
                 </div>
             </div>

@@ -104,7 +104,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 controller: function ($scope, $modalInstance) {
                     $scope.inputValid = true;
                     $scope.group = {};
-
+                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
                     $scope.ok = function () {
                         $modalInstance.close($scope.group);
                     };
@@ -165,6 +165,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.removeGroup(group).then(function (payload) {
+                    delete groupsMap[group.object_id_s];
+                    var index = $scope.data.findIndex(function (el) {
+                        return el.object_id_s === group.object_id_s;
+                    });
+                    $scope.data.splice(index, 1);
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
@@ -211,7 +216,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID";
                     }
                 }
             });
@@ -259,6 +264,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                 controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
+                    $scope.cloneUser = false;
                     $scope.addUser = true;
                     $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
@@ -268,6 +274,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     $scope.user.groupNames = [group.object_id_s];
                     $scope.ok = function () {
                         $modalInstance.close($scope.user);
+                    };
+                    $scope.clearUsernameError = function(){
+                        if($scope.error){
+                            $scope.error = '';
+                        }
                     };
                 }],
                 size: 'sm'
@@ -324,7 +335,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s;
+                        return "\"Object Type\": USER%26directory_name_s:" + group.directory_name_s + "%26status_lcs:VALID";
                     }
                 }
             });
@@ -372,6 +383,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                 controller: ['$scope', '$modalInstance', function ($scope, $modalInstance) {
                     $scope.addUser = false;
+                    $scope.cloneUser = false;
                     $scope.header = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.title";
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.ok";
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.editLdapMember.btn.cancel";
@@ -452,7 +464,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                 //find child users
                 if (group && group.member_id_ss) {
-                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_')).then(function (payload) {
+                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_'), 'VALID').then(function (payload) {
                         //successfully users received, insert with groups in same array
                         var data = _.get(payload, 'data.response.docs');
                         if (data) {
@@ -520,7 +532,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 controller: function ($scope, $modalInstance) {
                     $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
                     $scope.group = {};
-
+                    $scope.addLdapGroupModal = false;
                     $scope.ok = function () {
                         $modalInstance.close($scope.group);
                     };
@@ -592,8 +604,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         groupsMap[newGroup.parent_id_s].child_id_ss = [];
                     }
                     groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
 
-                    addToTree(newGroup, true);
+                    addToTree(newGroup);
                     deferred.resolve(newGroup);
                     messageService.succsessAction();
                 }, function (error) {
@@ -627,6 +640,11 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
                 organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
+                    delete groupsMap[group.object_id_s];
+                    var index = $scope.data.findIndex(function (el) {
+                        return el.object_id_s === group.object_id_s;
+                    });
+                    $scope.data.splice(index, 1);
                     deferred.resolve(payload);
                 }, function (payload) {
                     deferred.reject(payload);
@@ -641,7 +659,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         var groupController = function (seeDirectorySelect, group, errorMessage, parentGroup, onOK, directoryServers) {
             return function ($scope, $modalInstance) {
                 $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
-                $scope.addGroupModal = seeDirectorySelect;
+                $scope.addLdapGroupModal = seeDirectorySelect;
                 $scope.group = group;
                 $scope.error = errorMessage;
                 $scope.directoryServers = directoryServers;
@@ -751,7 +769,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                         return $scope.cfg;
                     },
                     $filter: function () {
-                        return "\"Object Type\": USER";
+                        return "\"Object Type\": USER %26status_lcs:VALID";
                     }
                 }
             });
@@ -771,19 +789,4 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
     }
-])
-.directive("pwCheck", [function () {        //Check if password contains userId
-        return {
-            require: 'ngModel',
-            link: function (scope, elem, attrs, ctrl) {
-                var userId = '#' + attrs.pwCheck;
-                elem.on('keyup', function () {
-                    scope.$apply(function () {
-                        var v = elem.val().indexOf($(userId).val()) >= 0;
-                        ctrl.$setValidity('pwContains', !v);
-                    });
-                });
-            }
-        }
-    }]
-);
+]);

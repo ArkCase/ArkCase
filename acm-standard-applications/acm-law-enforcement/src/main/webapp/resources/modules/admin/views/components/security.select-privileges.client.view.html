@@ -12,9 +12,11 @@
 	    </div>
 	</div>
 	<panel-view header="{{'admin.security.selectPrivileges' | translate}}" collapsible="false">
-	    <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
-	                                role-display-name="name"
-	                                on-auth-role-change="onAuthRoleSelected"
-	                                object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"/>
+        <div class="row">
+            <object-authorization-roles data="appRoles" object-display-name="name" on-object-selected="onObjSelect"
+                                        role-display-name="name"
+                                        on-auth-role-change="onAuthRoleSelected"
+                                        object-title="{{'admin.security.selectPrivileges.applicationRole' | translate}}"/>
+        </div>
 	</panel-view>
 </div>

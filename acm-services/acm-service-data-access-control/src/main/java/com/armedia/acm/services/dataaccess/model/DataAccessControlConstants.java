@@ -1,5 +1,7 @@
 package com.armedia.acm.services.dataaccess.model;
 
+import com.armedia.acm.objectonverter.DateFormats;
+
 /**
  * Created by armdev on 2/16/15.
  */
@@ -13,7 +15,7 @@ public interface DataAccessControlConstants
     String DEFAULT_ACCESSOR = "*";
     String ACCESS_LEVEL_READ = "read";
 
-    String LAST_RUN_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    String LAST_RUN_DATE_FORMAT = DateFormats.DEFAULT_DATE_FORMAT;
 
     String SPACE_REPLACE = "_0020_";
     String COMMA_REPLACE = "_002C_";

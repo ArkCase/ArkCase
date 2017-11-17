@@ -1,6 +1,7 @@
 package com.armedia.acm.auth;
 
 import com.armedia.acm.core.AcmApplication;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -17,7 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
 
 public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 {
@@ -42,6 +43,7 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         unit.setAcmPluginManager(mockPluginManager);
         unit.setUserDao(mockUserDao);
+        unit.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test

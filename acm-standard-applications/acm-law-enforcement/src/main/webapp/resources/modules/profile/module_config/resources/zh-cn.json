@@ -49,12 +49,17 @@
   "profile.picture": {
     "title": "更换图片",
     "email": "电邮地址",
-    "uploadImgError": "您上传图片的文件类型不正确"
+    "uploadImgError": "您上传图片的文件类型不正确",
+    "uploadError": "上传新的个人资料图片失败"
+  },
+  "profile.signature": {
+    "title": "更改签名",
+    "uploadError": "上传新签名失败"
   },
   "profile.modal": {
     "title": "信息",
     "emptyPassword": "不接受空密码",
-    "comfirmation": "请重新输入你的密码。",
+    "confirmation": "请重新输入你的密码。",
     "differentPasswords": "密码不匹配。 请再试一次。",
     "ok": "确认",
     "success": "成功更改密码",

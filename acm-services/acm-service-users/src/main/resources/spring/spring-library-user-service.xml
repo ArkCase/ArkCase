@@ -40,7 +40,7 @@
     </bean>
 
     <bean id="userJpaDao" class="com.armedia.acm.services.users.dao.UserDao" init-method="init">
-        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>        
+        <property name="quietUserLookupCache" ref="quietUserLookupCache"/>
         <property name="configList" ref="configList"/>
     </bean>
     <!-- End UserDao caching functionality -->
@@ -128,6 +128,7 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="userRoleService" ref="userRoleService"/>
         <property name="userTransformer" ref="ldapEntryTransformer"/>
+        <property name="passwordLengthValidationRule" ref="passwordLengthValidationRule"/>
     </bean>
 
     <bean id="ldapGroupService" class="com.armedia.acm.services.users.service.group.LdapGroupService">
@@ -224,7 +225,7 @@
         <ref bean="passwordShouldMatchUpperCasePattern"/>
         <ref bean="passwordShouldMatchDigitPattern"/>
         <ref bean="passwordShouldMatchSpecialCharPattern"/>
-        <ref bean="passwordShouldBeOfMinimumLength"/>
+        <ref bean="passwordLengthValidationRule"/>
     </util:list>
 
     <bean id="passwordShouldNotContainUserId"
@@ -261,9 +262,9 @@
                          value="Password must contain at least one special character"/>
     </bean>
 
-    <bean id="passwordShouldBeOfMinimumLength"
-          class="com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern">
-        <constructor-arg type="java.lang.String" name="pattern" value="^.{7,}$"/>
+    <bean id="passwordLengthValidationRule"
+          class="com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule">
+        <constructor-arg type="int" name="minLength" value="7"/>
         <constructor-arg type="java.lang.String" name="message"
                          value="Password must be of minimum length of 7."/>
     </bean>

@@ -50,6 +50,7 @@ public class LdapGroupService
         }
 
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -89,17 +90,22 @@ public class LdapGroupService
             log.debug("Group with name [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
+
+        AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
+        log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
+
         group.setName(group.getName().toUpperCase());
+        group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
         group.setDirectoryName(directoryName);
+        group.setAscendantsList(parentGroup.getAscendantsList());
+        group.addAscendant(parentGroupName);
 
         AcmGroup acmGroup = getGroupDao().save(group);
         getGroupDao().getEm().flush();
 
-        AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
-        log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
         parentGroup.addGroupMember(acmGroup);
         log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), group.getName());
         getGroupDao().save(parentGroup);

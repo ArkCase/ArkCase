@@ -61,6 +61,12 @@
         <http
                 security="none"
                 pattern="/reset-password" />
+        <http
+                security="none"
+                pattern="/forgot-username" />
+        <http
+                security="none"
+                pattern="/forgot-password" />
     </beans:beans>
 
 

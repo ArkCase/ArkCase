@@ -111,7 +111,6 @@ angular.module('services').factory('OrganizationAssociation.Service', ['$resourc
                 cache: false,
                 isArray: false
             }
-
         });
 
         /**

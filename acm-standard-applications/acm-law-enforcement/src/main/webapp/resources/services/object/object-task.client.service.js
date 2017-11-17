@@ -167,7 +167,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateChildTaskData = function (data) {
-            if (!SearchService.validateSolrData(data)) {
+            if (!Util.validateSolrData(data)) {
                 return false;
             }
             return true;

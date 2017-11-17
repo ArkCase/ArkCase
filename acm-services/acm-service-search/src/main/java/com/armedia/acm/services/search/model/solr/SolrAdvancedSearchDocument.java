@@ -18,6 +18,7 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     ///////////////////// fields for all documents ///////////////////////////
     private String id;
     private String object_id_s;
+    private String object_display_name_s;
     private String object_type_s;
     private String object_sub_type_s;
     private String name;
@@ -177,6 +178,16 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     public void setObject_id_s(String object_id_s)
     {
         this.object_id_s = object_id_s;
+    }
+
+    public String getObject_display_name_s()
+    {
+        return object_display_name_s;
+    }
+
+    public void setObject_display_name_s(String object_display_name_s)
+    {
+        this.object_display_name_s = object_display_name_s;
     }
 
     public String getObject_type_s()

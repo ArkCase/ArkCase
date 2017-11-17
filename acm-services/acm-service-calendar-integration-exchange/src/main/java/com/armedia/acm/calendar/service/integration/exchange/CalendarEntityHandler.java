@@ -2,26 +2,6 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import static com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService.PROCESS_USER;
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
-import com.armedia.acm.calendar.service.AcmCalendarEvent;
-import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
-import com.armedia.acm.calendar.service.AcmCalendarInfo;
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.service.outlook.dao.OutlookDao;
-import com.armedia.acm.services.users.model.AcmUser;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -34,9 +14,29 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
+import com.armedia.acm.calendar.service.AcmCalendarInfo;
+import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.service.outlook.dao.OutlookDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 import microsoft.exchange.webservices.data.core.exception.service.local.ServiceLocalException;
 import microsoft.exchange.webservices.data.core.service.folder.CalendarFolder;
@@ -45,8 +45,6 @@ import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.core.service.schema.AppointmentSchema;
 import microsoft.exchange.webservices.data.core.service.schema.ItemSchema;
 import microsoft.exchange.webservices.data.property.complex.FolderId;
-import microsoft.exchange.webservices.data.property.complex.FolderPermission;
-import microsoft.exchange.webservices.data.property.complex.FolderPermissionCollection;
 import microsoft.exchange.webservices.data.property.complex.ItemId;
 import microsoft.exchange.webservices.data.property.definition.PropertyDefinition;
 import microsoft.exchange.webservices.data.search.CalendarView;
@@ -91,6 +89,14 @@ public class CalendarEntityHandler
 
     private String entityIdForQuery;
 
+    private PermissionEvaluator permissionEvaluator;
+
+    private Object readPermission;
+
+    private Object writePermission;
+
+    private Object deletePermission;
+
     public CalendarEntityHandler()
     {
         sortFields = new HashMap<>();
@@ -104,78 +110,23 @@ public class CalendarEntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    public boolean isRestricted(String objectId)
+    public boolean checkPermission(Authentication auth, String objectType, String objectId, PermissionType permissionType) throws CalendarServiceException
     {
-        // return getEntity(objectId, true) != null;
-        // Always return false temporarily until there is a clarification of what `restricted` object means in context
-        // of the calendar enhancements.
-        return false;
+        return permissionEvaluator.hasPermission(auth, Long.parseLong(objectId), objectType, convertToPermission(permissionType));
     }
 
-    public boolean checkPermission(ExchangeService service, AcmUser user, Authentication auth, String objectId,
-            PermissionType permissionType) throws CalendarServiceException
-    {
-        AcmContainerEntity entity = getEntity(objectId, true);
-        if (entity == null)
-        {
-            return true;
-        }
-        String calendarId = entity.getContainer().getCalendarFolderId();
-        try
-        {
-            CalendarFolder folder = CalendarFolder.bind(service, new FolderId(calendarId));
-            FolderPermissionCollection permissions = folder.getPermissions();
-            for (FolderPermission permission : permissions.getItems())
-            {
-                if (permission.getUserId().getPrimarySmtpAddress().equals(user.getMail()))
-                {
-                    if (hasPermission(permission.getPermissionLevel(), permissionType))
-                    {
-                        return true;
-                    }
-                }
-            }
-        } catch (ServiceLocalException e)
-        {
-            log.warn("Error while evaluationg permission of user [{}] to object with [{}] id of type [{}].", user.getFullName(), objectId,
-                    entityType, e);
-            throw new CalendarServiceException(e);
-        } catch (Exception e)
-        {
-            log.warn("Error binding to remote service while evaluationg permission of user [{}] to object with [{}] id of type [{}].",
-                    user.getFullName(), objectId, entityType, e);
-            throw new CalendarServiceBindToRemoteException(e);
-        }
-        return false;
-    }
-
-    /**
-     * @param permissionLevel
-     * @param permissionType
-     * @return
-     */
-    private boolean hasPermission(FolderPermissionLevel permissionLevel, PermissionType permissionType)
+    private Object convertToPermission(PermissionType permissionType)
     {
         switch (permissionType)
         {
         case READ:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingEditor)
-                    || permissionLevel.equals(FolderPermissionLevel.Editor)
-                    || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author)
-                    || permissionLevel.equals(FolderPermissionLevel.NoneditingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Reviewer) || permissionLevel.equals(FolderPermissionLevel.Contributor);
+            return readPermission;
         case WRITE:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingEditor)
-                    || permissionLevel.equals(FolderPermissionLevel.Editor)
-                    || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author) || permissionLevel.equals(FolderPermissionLevel.Contributor);
-
+            return writePermission;
         case DELETE:
-            return permissionLevel.equals(FolderPermissionLevel.Owner) || permissionLevel.equals(FolderPermissionLevel.PublishingAuthor)
-                    || permissionLevel.equals(FolderPermissionLevel.Author);
+            return deletePermission;
         default:
-            return false;
+            throw new IllegalArgumentException();
         }
     }
 
@@ -220,11 +171,13 @@ public class CalendarEntityHandler
                 events.add(event);
             }
             return events;
-        } catch (CalendarServiceBindToRemoteException e)
+        }
+        catch (CalendarServiceBindToRemoteException e)
         {
             // Just re-throw here. The extra catch block is needed to prevent it being wrapped in the more general type.
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Error while trying to retrieve appointment items info for Object with {} id, of {} type.", objectId, entityType, e);
             throw new CalendarServiceException(e);
@@ -252,11 +205,13 @@ public class CalendarEntityHandler
                 events.add(event);
             }
             return events;
-        } catch (CalendarServiceBindToRemoteException e)
+        }
+        catch (CalendarServiceBindToRemoteException e)
         {
             // Just re-throw here. The extra catch block is needed to prevent it being wrapped in the more general type.
             throw e;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Error while trying to retrieve appointment items details for object with {} id, of {} type.", objectId, entityType,
                     e);
@@ -277,7 +232,8 @@ public class CalendarEntityHandler
             query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId AND ot.restricted = :restricted",
                     entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
             query.setParameter("restricted", true);
-        } else
+        }
+        else
         {
             query = em.createQuery(String.format("SELECT ot FROM %s ot WHERE ot.%s = :objectId", entityTypeForQuery, entityIdForQuery),
                     AcmContainerEntity.class);
@@ -287,7 +243,8 @@ public class CalendarEntityHandler
         if (!resultList.isEmpty())
         {
             return resultList.get(0);
-        } else
+        }
+        else
         {
             return null;
         }
@@ -322,7 +279,8 @@ public class CalendarEntityHandler
         try
         {
             calendar = CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn("Error while trying to bind to calendar folder for object with id: [{}] of [{}] type.", objectId, entityType, e);
             throw new CalendarServiceBindToRemoteException(e);
@@ -373,7 +331,8 @@ public class CalendarEntityHandler
                     String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL",
                             entityTypeForQuery),
                     AcmContainerEntity.class);
-        } else
+        }
+        else
         {
             query = em.createQuery(String.format(
                     "SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.container.calendarFolderId IS NOT NULL AND obj.modified <= :modified",
@@ -431,7 +390,8 @@ public class CalendarEntityHandler
                     {
                         appointment = Appointment.bindToRecurringMaster(service, new ItemId(calendarEventId));
                         outlookDao.deleteAppointmentItem(service, appointment.getId().getUniqueId(), true, DeleteMode.MoveToDeletedItems);
-                    } else
+                    }
+                    else
                     {
                         outlookDao.deleteAppointmentItem(service, calendarEventId, false, DeleteMode.MoveToDeletedItems);
                     }
@@ -441,7 +401,8 @@ public class CalendarEntityHandler
                 container.setCalendarFolderId(null);
                 containerEntityDao.save(container);
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.warn("Error while trying to purge calendar events for calendar folder with id: {}", container.getCalendarFolderId(), e);
             }
@@ -509,6 +470,26 @@ public class CalendarEntityHandler
     public void setEntityIdForQuery(String entityIdForQuery)
     {
         this.entityIdForQuery = entityIdForQuery;
+    }
+
+    public void setPermissionEvaluator(PermissionEvaluator permissionEvaluator)
+    {
+        this.permissionEvaluator = permissionEvaluator;
+    }
+
+    public void setReadPermission(Object readPermission)
+    {
+        this.readPermission = readPermission;
+    }
+
+    public void setWritePermission(Object writePermission)
+    {
+        this.writePermission = writePermission;
+    }
+
+    public void setDeletePermission(Object deletePermission)
+    {
+        this.deletePermission = deletePermission;
     }
 
 }

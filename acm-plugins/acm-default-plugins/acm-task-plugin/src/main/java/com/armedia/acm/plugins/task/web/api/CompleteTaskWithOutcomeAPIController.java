@@ -47,7 +47,7 @@ public class CompleteTaskWithOutcomeAPIController
             AcmTask completed = getTaskDao().completeTask(authentication, in.getTaskId(), in.getOutcomeName(),
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 
-            publishTaskCompletedEvent(authentication, httpSession, completed, true);
+            publishTaskCompletedEvent(authentication, httpSession, completed, true, in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 
             return completed;
         } catch (AcmTaskException e)
@@ -110,8 +110,14 @@ public class CompleteTaskWithOutcomeAPIController
 
     protected void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed, boolean succeeded)
     {
+        publishTaskCompletedEvent(authentication, httpSession, completed, succeeded, null);
+    }
+
+    private void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed, boolean succeeded, String eventDescription)
+    {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "complete", authentication.getName(), succeeded, ipAddress);
+        event.setEventDescription(eventDescription);
         getTaskEventPublisher().publishTaskEvent(event);
     }
 

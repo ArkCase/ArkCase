@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.AddressesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -52,6 +52,16 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             $scope.objectInfo = objectInfo;
             $scope.gridOptions.data = $scope.objectInfo.addresses;
         };
+
+        ObjectLookupService.getAddressTypes().then(
+            function (addressTypes) {
+                $scope.addressTypes = addressTypes;
+                return addressTypes;
+            });
+
+        ObjectLookupService.getCountries().then(function (countries) {
+            $scope.countries = countries;
+        });
 
         //Addresses
         $scope.addNew = function () {
@@ -168,16 +178,10 @@ angular.module('people').controller('People.AddressesController', ['$scope', '$q
             }
             return promiseSaveInfo;
         }
-
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultAddress) {
-                id = $scope.objectInfo.defaultAddress.id
-            }
-            if ($scope.objectInfo.addresses && $scope.objectInfo.addresses.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAddress");
+        }
+
+
     }
 ]);

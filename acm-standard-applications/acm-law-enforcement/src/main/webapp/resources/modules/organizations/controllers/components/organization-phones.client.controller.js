@@ -2,10 +2,10 @@
 
 angular.module('organizations').controller('Organizations.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Organization.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, OrganizationInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -54,6 +54,12 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
             $scope.gridOptions.data = phones;
         };
 
+        ObjectLookupService.getSubContactMethodType('phone').then(
+            function (contactMethodTypes) {
+                $scope.phoneTypes = contactMethodTypes;
+                return contactMethodTypes;
+            });
+
         $scope.addNew = function () {
             var phone = {};
             phone.created = Util.dateToIsoString(new Date());
@@ -79,6 +85,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
                 id: rowEntity.id,
                 type: rowEntity.type,
                 subType: rowEntity.subType,
+                subLookup: rowEntity.subType,
                 value: rowEntity.value,
                 description: rowEntity.description
             };
@@ -159,15 +166,7 @@ angular.module('organizations').controller('Organizations.PhonesController', ['$
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultPhone) {
-                id = $scope.objectInfo.defaultPhone.id
-            }
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            if (phones && phones.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+        }
     }
 ]);

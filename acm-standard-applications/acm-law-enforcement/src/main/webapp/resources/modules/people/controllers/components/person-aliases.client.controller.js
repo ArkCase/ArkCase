@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('people').controller('Person.AliasesController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', '$modal', 'PermissionsService', 'ObjectService'
+    , 'UtilService', 'ConfigService', 'Person.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', 'Person.PicturesService', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $stateParams, $translate
-        , Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService, ObjectService) {
+        , Util, ConfigService, PersonInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, PersonPicturesService, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -57,6 +57,10 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
                 $scope.gridOptions.noData = true;
             }
         };
+
+        ObjectLookupService.getAliasTypes().then(function (aliasTypes) {
+            $scope.aliasTypes = aliasTypes;
+        });
 
         //Aliases
         $scope.addNew = function () {
@@ -156,14 +160,7 @@ angular.module('people').controller('Person.AliasesController', ['$scope', '$sta
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultAlias) {
-                id = $scope.objectInfo.defaultAlias.id
-            }
-            if ($scope.objectInfo.personAliases && $scope.objectInfo.personAliases.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAlias");
+        }
     }
 ]);

@@ -1,21 +1,17 @@
 'use-strict';
 
-angular.module('audit').controller('Audit.SelectionController', ['$scope',
-    function ($scope) {
-        $scope.$on('component-config', applyConfig);
-        $scope.$emit('req-component-config', 'auditselection');
-        $scope.config = null;
+angular.module('audit').controller('Audit.SelectionController', ['$scope', 'Object.LookupService',
+    function ($scope, ObjectLookupService) {
 
-        $scope.$watchGroup(['selectId','auditDropdown'], function(){
-            $scope.$emit('send-type-id', $scope.auditDropdown, $scope.selectId);
+        ObjectLookupService.getLookupByLookupName("auditReportNames").then(function (auditReportNames) {
+            $scope.auditReportNames = auditReportNames;
+            return auditReportNames;
         });
 
-        $scope.auditDropdown = "";
+        $scope.auditReportName = "";
+        $scope.$watchGroup(['selectId','auditReportNames'], function(){
+            $scope.$emit('send-type-id', $scope.auditReportName, $scope.selectId);
+        });
 
-        function applyConfig(e, componentId, config) {
-            if (componentId == 'auditselection') {
-                $scope.config = config;
-            }
-        }
     }
 ]);

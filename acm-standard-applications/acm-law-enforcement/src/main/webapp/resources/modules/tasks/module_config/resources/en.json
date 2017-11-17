@@ -115,8 +115,9 @@
     "table.columns": {
       "targetName": "Number",
       "targetTitle": "Title",
+      "targetType": "Type",
+      "assignee": "Assignee",
       "modified": "Modified",
-      "targetType": "Reference Type",
       "status": "Status"
     }
   },
@@ -211,6 +212,7 @@
     "percentComplete.label": "% Complete",
     "notes.label": "Notes",
     "saveButton": "Save Task",
+    "cancelButton": "Cancel",
     "overdue.tooltip": "Task is Overdue",
     "deadline.tooltip": "Deadline is Approaching",
     "groupToggle.label": "Group Task?",

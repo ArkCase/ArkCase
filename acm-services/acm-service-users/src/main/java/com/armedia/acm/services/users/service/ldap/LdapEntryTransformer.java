@@ -23,6 +23,7 @@ public class LdapEntryTransformer
     private Properties ldapAddUserPropertiesFile;
     private Properties ldapEditUserPropertiesFile;
     private Properties ldapAddGroupPropertiesFile;
+
     private SpringContextHolder acmContextHolder;
 
     private Logger log = LoggerFactory.getLogger(getClass());

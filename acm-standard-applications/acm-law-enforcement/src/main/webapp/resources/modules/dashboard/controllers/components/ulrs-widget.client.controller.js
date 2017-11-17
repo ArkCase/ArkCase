@@ -13,9 +13,9 @@ angular.module('dashboard.urls', ['adf.provider'])
             });
     })
     .controller('Dashboard.UrlsController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                  PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                  PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
 
                 var modules = [
                     {
@@ -70,5 +70,16 @@ angular.module('dashboard.urls', ['adf.provider'])
                     });
                     gridHelper.setColumnDefs(widgetInfo);
                 };
+
+                ObjectLookupService.getSubContactMethodType('url').then(
+                    function (contactMethodTypes) {
+                        $scope.urlTypes = contactMethodTypes;
+                        return contactMethodTypes;
+                    });
+
+                $scope.isDefault = function (data) {
+                    return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultUrl");
+
+                }
         }
     ]);

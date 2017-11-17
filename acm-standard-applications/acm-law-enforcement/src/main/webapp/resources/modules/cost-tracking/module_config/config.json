@@ -96,6 +96,10 @@
         "components": [
           "tags"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
@@ -145,8 +149,7 @@
             {
               "name": "userId",
               "displayName": "costTracking.comp.person.table.columns.userId",
-              "headerCellFilter": "translate",
-              "lookup": "userFullNames"
+              "headerCellFilter": "translate"
             }
           ]
         },
@@ -227,8 +230,7 @@
         {
           "name": "userId",
           "displayName": "costTracking.comp.person.table.columns.userId",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+          "headerCellFilter": "translate"
         }
       ]
     },

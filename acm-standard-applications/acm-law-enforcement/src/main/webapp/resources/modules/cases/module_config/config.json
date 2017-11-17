@@ -230,6 +230,10 @@
         "components": [
           "approvalRouting"
         ]
+      },
+      {
+        "type": "p/ERROR",
+        "icon": "fa fa-question"
       }
     ]
   },
@@ -277,6 +281,7 @@
               "name": "personType",
               "displayName": "cases.comp.people.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
               "lookup": "personTypes"
             },
             {
@@ -326,6 +331,7 @@
               "name": "participantType",
               "displayName": "cases.comp.participants.table.columns.type",
               "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
               "lookup": "participantTypes"
             },
             {
@@ -559,6 +565,7 @@
           "name": "personType",
           "displayName": "cases.comp.people.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.personTypes, row.entity.personType) | translate }}</div>",
           "lookup": "personTypes"
         },
         {
@@ -615,7 +622,8 @@
         {
           "name": "associationType",
           "displayName": "cases.comp.organizations.table.columns.associationType",
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.associationType) | translate }}</div>"
         },
         {
           "name": "organization.organizationValue",
@@ -678,6 +686,7 @@
           "name": "participantType",
           "displayName": "cases.comp.participants.table.columns.type",
           "headerCellFilter": "translate",
+          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
           "lookup": "participantTypes"
         },
         {
@@ -883,24 +892,23 @@
           "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.target_object.title_parseable}}</a>"
         },
         {
-          "name": "parentName",
-          "field": "target_object.parent_name",
-          "displayName": "cases.comp.references.table.columns.parentName",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' title={{row.entity.parentName}}>{{row.entity.target_object.parent_name}}</a>"
+          "name": "targetType",
+          "field": "target_object.object_type_s",
+          "displayName": "cases.comp.references.table.columns.targetType",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "assignee",
+          "field": "target_object.assignee_full_name_lcs",
+          "displayName": "cases.comp.references.table.columns.assignee",
+          "headerCellFilter": "translate"
         },
         {
           "name": "modified",
           "field": "target_object.modified_date_tdt",
           "displayName": "cases.comp.references.table.columns.modified",
           "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
-        },
-        {
-          "name": "targetType",
-          "field": "target_object.object_type_s",
-          "displayName": "cases.comp.references.table.columns.targetType",
-          "headerCellFilter": "translate"
+          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
         },
         {
           "name": "status",
@@ -1206,6 +1214,20 @@
       "reportFileName": "search"
     },
     {
+      "id": "newFutureTask",
+      "userOrGroupSearch": {
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetExtraFilter": "&fq=\"name\": "
+      },
+      "groupSearch": {
+        "groupFacetFilter": "fq=\"object_type_s\":GROUP&fq=\"member_id_ss\":",
+        "groupFacetExtraFilter": "&fq=\"status_lcs\":ACTIVE"
+      },
+      "objectSearch": {
+        "objectFacetFilter": "\"Object Type\": "
+      }
+    },
+    {
       "id": "approvalRouting",
       "title": "cases.comp.approvalRouting.title",
       "icon": "fa fa-sort-amount-desc",
@@ -1233,8 +1255,38 @@
           "cellTemplate": ""
         },
         {
-          "name": "fullName",
-          "displayName": "cases.comp.approvalRouting.table.columns.fullName",
+          "name": "approverId",
+          "displayName": "cases.comp.approvalRouting.table.columns.assignee",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "groupName",
+          "displayName": "cases.comp.approvalRouting.table.columns.group",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "taskName",
+          "displayName": "cases.comp.approvalRouting.table.columns.subject",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "details",
+          "displayName": "cases.comp.approvalRouting.table.columns.details",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "dueDate",
+          "displayName": "cases.comp.approvalRouting.table.columns.dueDate",
+          "cellEditableCondition": false,
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "addedBy",
+          "displayName": "cases.comp.approvalRouting.table.columns.addedBy",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },

@@ -10,7 +10,9 @@
         "description": "按隊列顯示活躍案件",
         "xAxis": "隊列",
         "yAxis": "案件數",
-        "noDataMessage": "目前沒有案件信息"
+        "noDataMessage": "目前沒有案件信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "casesByStatus": {
         "title": "案件狀態",
@@ -22,7 +24,9 @@
           "lastYear": "去年",
           "all": "全部"
         },
-        "noDataMessage": "目前沒有案件信息"
+        "noDataMessage": "目前沒有案件信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "myCases": {
         "title": "我的案件",
@@ -41,7 +45,9 @@
           },
           "overdue.tooltip": "案件逾期",
           "deadline.tooltip": "截止日期正在接近"
-        }
+        },
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "myComplaints": {
         "title": "我的投訴",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "投訴已逾期",
           "deadline.tooltip": "截止日期正在接近",
           "noDataMessage": "目前沒有投訴信息"
-        }
+        },
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "myTasks": {
         "title": "我的任務",
@@ -79,7 +87,9 @@
           "overdue.tooltip": "任務已逾期",
           "deadline.tooltip": "截止日期正在接近"
         },
-        "noDataMessage": "目前沒有任務信息"
+        "noDataMessage": "目前沒有任務信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "newComplaints": {
         "title": "新投訴",
@@ -92,12 +102,16 @@
           "dueMonth": "月度到期",
           "all": "全部"
         },
-        "noDataMessage": "目前沒有投訴信息"
+        "noDataMessage": "目前沒有投訴信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "newCases": {
         "title": "新案件",
         "description": "顯示新案件",
-        "noDataMessage": "目前沒有案件信息"
+        "noDataMessage": "目前沒有案件信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "teamWorkload": {
         "title": "團隊工作量",
@@ -110,7 +124,9 @@
           "dueMonth": "月度到期",
           "all": "全部"
         },
-        "noDataMessage": "目前沒有團隊任務信息"
+        "noDataMessage": "目前沒有團隊任務信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "workflowReport": {
         "title": "工作流程報告",
@@ -126,7 +142,9 @@
             "taskName": "任務名稱"
           }
         },
-        "noDataMessage": "目前沒有工作流報告信息"
+        "noDataMessage": "目前沒有工作流報告信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "weather": {
         "description": "顯示天氣",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "請在窗口小部件配置中插入位置"
         },
         "title": "天氣",
-        "noDataMessage": "目前沒有天氣信息"
+        "noDataMessage": "目前沒有天氣信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "news": {
         "description": "顯示新聞",
@@ -149,7 +169,9 @@
           "insertUrl": "請在widget配置中插入一個feed url"
         },
         "title": "新聞",
-        "noDataMessage": "目前沒有RSS /信息"
+        "noDataMessage": "目前沒有RSS /信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "details": {
         "title": "詳細信息",
@@ -327,5 +349,38 @@
         "noDataMessage": "目前沒有相關人員信息可以顯示"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "新聞小組"
+  },
+  "dashboard.comp.weather": {
+    "title": "天氣小部件"
+  },
+  "dashboard.comp.myCases": {
+    "title": "我的案例小部件"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "我的任務小部件"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "我的投訴小組"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "工作流程報告"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "新投訴"
+  },
+  "dashboard.comp.newCases": {
+    "title": "新案例"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "案例由隊列"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "團隊工作量"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "個案按狀況"
   }
 }

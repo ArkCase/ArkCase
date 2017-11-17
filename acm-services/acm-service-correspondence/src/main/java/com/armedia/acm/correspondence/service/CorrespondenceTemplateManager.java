@@ -6,10 +6,8 @@ import static com.armedia.acm.correspondence.service.CorrespondenceMapper.mapTem
 import com.armedia.acm.correspondence.model.CorrespondenceQuery;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.model.CorrespondenceTemplateConfiguration;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.spring.SpringContextHolder;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 import org.apache.commons.io.FileUtils;
 import org.springframework.context.ApplicationListener;
@@ -44,6 +42,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
     private Map<String, Map<String, CorrespondenceTemplate>> templates = new ConcurrentHashMap<>();
 
     private Pattern camelCase = Pattern.compile("[A-Za-z].*?(?=([A-Z]|\\.))");
+
+    private ObjectConverter objectConverter;
 
     /**
      * @param springContextHolder
@@ -84,24 +84,22 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 resource = "[]";
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-
-            List<CorrespondenceTemplateConfiguration> templateConfigurations = mapper.readValue(resource,
-                    new TypeReference<List<CorrespondenceTemplateConfiguration>>()
-                    {
-                    });
+            List<CorrespondenceTemplateConfiguration> templateConfigurations = getObjectConverter().getJsonUnmarshaller()
+                    .unmarshallCollection(resource, List.class, CorrespondenceTemplateConfiguration.class);
 
             templateConfigurations.stream().forEach(configuration -> {
                 CorrespondenceTemplate template = mapTemplateFromConfiguration(configuration);
                 if (templates.containsKey(template.getTemplateId()))
                 {
                     templates.get(template.getTemplateId()).put(template.getTemplateVersion(), template);
-                } else
+                }
+                else
                 {
                     templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
                 }
             });
-        } catch (IOException ioe)
+        }
+        catch (IOException ioe)
         {
             throw new IllegalStateException(ioe);
         }
@@ -196,7 +194,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
                 existing.setTemplateVersionActive(false);
                 existing.setActivated(false);
             }
-        } else
+        }
+        else
         {
             templates.put(template.getTemplateId(), getVersionToTemplateMap(template));
         }
@@ -274,7 +273,8 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
             template.setNumberFormatString(existingTemplate.getNumberFormatString());
             template.setDocumentType(existingTemplate.getDocumentType());
             template.setObjectType(existingTemplate.getObjectType());
-        } else
+        }
+        else
         {
             template.setTemplateId(Integer
                     .toString(templates.keySet().stream().mapToInt(id -> Integer.parseInt(id)).reduce(0, (a, b) -> Integer.max(a, b)) + 1));
@@ -367,9 +367,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         List<CorrespondenceTemplateConfiguration> configurations = templates.stream()
                 .map(template -> mapConfigurationFromTemplate(template)).collect(Collectors.toList());
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String configurationsOutput = mapper.writeValueAsString(configurations);
+        String configurationsOutput = getObjectConverter().getIndentedJsonMarshaller().marshal(configurations);
 
         File file = correspondenceTemplatesConfiguration.getFile();
         FileUtils.writeStringToFile(file, configurationsOutput);
@@ -381,6 +379,16 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
         Map<String, CorrespondenceTemplate> versionToTempateMap = new HashMap<String, CorrespondenceTemplate>();
         versionToTempateMap.put(correspondenceTemplate.getTemplateVersion(), correspondenceTemplate);
         return versionToTempateMap;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 
 }

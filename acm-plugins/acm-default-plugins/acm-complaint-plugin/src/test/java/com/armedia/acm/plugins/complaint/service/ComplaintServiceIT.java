@@ -75,7 +75,8 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-service-data.xml",
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-user-login.xml",
-                "/spring/spring-library-user-service.xml"
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-object-converter.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
@@ -147,7 +148,16 @@ public class ComplaintServiceIT
         location.setType("home");
         location.setCountry("country");
 
-        frevvoComplaint.setLocation(location);
+
+        PostalAddress pa1 = new PostalAddress();
+        pa1.setCity("Amaurot");
+        pa1.setCountry("Utopia");
+        pa1.setType("type");
+
+        PostalAddress pa2 = new PostalAddress();
+        pa2.setCity("Atlanta");
+        pa2.setCountry("Georgia");
+        pa2.setType("type");
 
         ComplaintForm savedFrevvoComplaint = service.saveComplaint(frevvoComplaint);
 

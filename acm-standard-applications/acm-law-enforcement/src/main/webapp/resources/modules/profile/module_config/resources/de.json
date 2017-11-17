@@ -49,12 +49,17 @@
   "profile.picture": {
     "title": "Bild ändern",
     "email": "E-Mail-Addresse",
-    "uploadImgError": "Sie haben einen ungültigen Bilddateityp hochgeladen"
+    "uploadImgError": "Sie haben einen ungültigen Bilddateityp hochgeladen",
+    "uploadError": "Das Hochladen eines neuen Profilbilds ist fehlgeschlagen"
+  },
+  "profile.signature": {
+    "title": "Unterschrift ändern",
+    "uploadError": "Hochladen neuer Signatur fehlgeschlagen"
   },
   "profile.modal": {
     "title": "Info",
     "emptyPassword": "Passwort kann nicht leer sein",
-    "comfirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
+    "confirmation": "Bitte geben Sie Ihr Passwort erneut ein.",
     "differentPasswords": "Passwörter stimmen nicht überein. Bitte versuche es erneut.",
     "ok": "OK",
     "success": "Erfolgreich geändertes Passwort",

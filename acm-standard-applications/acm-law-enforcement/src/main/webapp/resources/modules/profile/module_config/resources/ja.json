@@ -49,12 +49,17 @@
   "profile.picture": {
     "title": "画像を変更する",
     "email": "電子メールアドレス",
-    "uploadImgError": "あなたは無効な画像ファイルタイプをアップロードしました"
+    "uploadImgError": "あなたは無効な画像ファイルタイプをアップロードしました",
+    "uploadError": "新しいプロフィール写真をアップロードできませんでした"
+  },
+  "profile.signature": {
+    "title": "署名の変更",
+    "uploadError": "新しい署名のアップロードに失敗しました"
   },
   "profile.modal": {
     "title": "情報",
     "emptyPassword": "空のパスワードを受け入れない",
-    "comfirmation": "パスワードを再入力してください。",
+    "confirmation": "パスワードを再入力してください。",
     "differentPasswords": "パスワードが一致していません。 もう一度お試しください。",
     "ok": "確認",
     "success": "パスワードが正常に変更されました",

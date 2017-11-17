@@ -18,8 +18,8 @@
     "endDate" : {
       "label": "To"
     },
-
     "dropdown": {
+      "__comment__": "__ This 'dropdown' seems not in use, do we still need this? __",
       "turnaround": "Turnaround Time by Requester",
       "requester": "Requester Type Summary",
       "pending": "Pending Orders Report",
@@ -29,7 +29,9 @@
       "exceptions": "Exceptions Report (Non-Compliance)"
     },
     "datepicker":{
-      "close": "Done"
+      "close": "Done",
+      "clear": "Clear",
+      "current": "Today"
     },
     "btn": {
       "generateReport": "Generate report"

@@ -1,8 +1,18 @@
 {
   "preference": {
-    "title": "Настройки",
+    "title": "Предпочтения",
     "menus": {
-      "usermenu.item": "Настройки"
+      "usermenu.item": "Предпочтения"
+    },
+    "widgets.list": {
+      "defaultView": "Вид по умолчанию",
+      "expanded": "Расширенный",
+      "collapsed": "Рухнул",
+      "disabled": "Отключено",
+      "enabled": "Включено"
+    },
+    "modules.list": {
+      "noModules": "В системе нет модулей"
     }
   }
 }

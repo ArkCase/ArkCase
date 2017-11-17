@@ -13,9 +13,9 @@ angular.module('dashboard.people', ['adf.provider'])
             });
     })
     .controller('Dashboard.PeopleController', ['$scope', '$stateParams', '$translate',
-        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Case.InfoService', 'Complaint.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                      CaseInfoService, ComplaintInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
 
                 var modules = [
                         {
@@ -74,5 +74,18 @@ angular.module('dashboard.people', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
+            //People widget in ORGANIZATION doesn't use personTypes
+            if(module.name !== 'ORGANIZATION') {
+                ObjectLookupService.getPersonTypes(module.name).then(
+                    function (personTypes) {
+                        $scope.personTypes = personTypes;
+                        return personTypes;
+                    }
+                );
+            }
+                $scope.isDefault = function (data) {
+                    return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "primaryContact");
+                }
         }
     ]);

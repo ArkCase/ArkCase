@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.armedia.acm.core.exceptions.InvalidLookupException;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.model.LookupType;
@@ -43,6 +44,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         configLookupDao = new ConfigLookupDao();
         mockConfigService = createMock(ConfigService.class);
         configLookupDao.setConfigService(mockConfigService);
+        configLookupDao.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
     @Test
