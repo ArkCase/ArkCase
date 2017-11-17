@@ -36,7 +36,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-activiti-configuration.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
-        "/spring/spring-library-object-lock.xml"
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 public class FindFolderServiceIT
 {
