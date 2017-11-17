@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -172,8 +173,7 @@ public class TikaMetadataIT
                 assertEquals(year, multimediaCreated.get(Calendar.YEAR));
                 assertEquals(month, multimediaCreated.get(Calendar.MONTH));
                 assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
-            }
-            else
+            } else
             {
                 assertNull(multimedia.getCreated());
             }
@@ -214,6 +214,49 @@ public class TikaMetadataIT
                 , "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12"
                 , "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12", "application/vnd.ms-excel.sheet.binary.macroenabled.12");
 
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    /**
+     * This test should detect the document "Testdoc.doc" as "application/msword"
+     * Testdoc.doc was created by:
+     * 1. Create new word document
+     * 2. 'Save As' and change the type to '.doc'
+     *
+     * @throws Exception
+     */
+    @Test
+    public void detectDocFile() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/Testdoc.doc"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/msword");
+
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    @Test
+    public void detectSAPDocx() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/sap.docx"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    @Test
+    public void detectHDSDocx() throws Exception
+    {
+        List<Resource> resources = Collections.singletonList(new ClassPathResource("office/hds.docx"));
+
+        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+        detectExpectedMimeTypes(resources, expectedMimeTypes);
+    }
+
+    private void detectExpectedMimeTypes(List<Resource> resources, List<String> expectedMimeTypes)
+    {
         for (Resource resource : resources)
         {
             try (InputStream is = resource.getInputStream())

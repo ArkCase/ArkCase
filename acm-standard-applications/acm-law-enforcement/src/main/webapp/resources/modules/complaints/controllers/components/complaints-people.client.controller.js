@@ -7,7 +7,7 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         , Util, ObjectService, ComplaintInfoService, Authentication, ObjectLookupService
         , HelperUiGridService, HelperObjectBrowserService, PersonInfoService) {
 
-
+        var initiatorType = 'Initiator';
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.userId = userInfo.userId;
@@ -18,6 +18,11 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
         ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT).then(
             function (personTypes) {
                 $scope.personTypes = personTypes;
+                return personTypes;
+            });
+        ObjectLookupService.getPersonTypes(ObjectService.ObjectTypes.COMPLAINT, true).then(
+            function (personTypes) {
+                $scope.personTypesInitiator = personTypes;
                 return personTypes;
             });
 
@@ -79,10 +84,16 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             params.types = $scope.personTypes;
 
             if (association) {
+                if (association.personType == initiatorType) {
+                    //change the types only for initiator
+                    params.types = $scope.personTypesInitiator;
+                }
                 angular.extend(params, {
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.personType,
+                    selectExistingEnabled: association.personType == initiatorType ? true : false,
+                    typeEnabled: association.personType == initiatorType ? false : true,
                     description: association.personDescription
                 });
             } else {
@@ -160,12 +171,8 @@ angular.module('complaints').controller('Complaints.PeopleController', ['$scope'
             return promiseSaveInfo;
         }
 
-        $scope.isEditDisabled = function (rowEntity) {
-            return rowEntity.personType == 'Initiator';
-        };
-
         $scope.isDeleteDisabled = function (rowEntity) {
-            return rowEntity.personType == 'Initiator';
+            return rowEntity.personType == initiatorType;
         };
     }
 ]);

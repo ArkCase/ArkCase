@@ -10,7 +10,9 @@
         "description": "按队列显示活跃案件",
         "xAxis": "队列",
         "yAxis": "案件数",
-        "noDataMessage": "目前没有案件信息"
+        "noDataMessage": "目前没有案件信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "casesByStatus": {
         "title": "案件状态",
@@ -22,7 +24,9 @@
           "lastYear": "去年",
           "all": "全部"
         },
-        "noDataMessage": "目前没有案件信息"
+        "noDataMessage": "目前没有案件信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "myCases": {
         "title": "我的案件",
@@ -41,7 +45,9 @@
           },
           "overdue.tooltip": "案件逾期",
           "deadline.tooltip": "截止日期正在接近"
-        }
+        },
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "myComplaints": {
         "title": "我的投诉",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "投诉已逾期",
           "deadline.tooltip": "截止日期正在接近",
           "noDataMessage": "目前没有投诉信息"
-        }
+        },
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "myTasks": {
         "title": "我的任务",
@@ -79,7 +87,9 @@
           "overdue.tooltip": "任务已逾期",
           "deadline.tooltip": "截止日期正在接近"
         },
-        "noDataMessage": "目前没有任务信息"
+        "noDataMessage": "目前没有任务信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "newComplaints": {
         "title": "新投诉",
@@ -92,12 +102,16 @@
           "dueMonth": "月度到期",
           "all": "全部"
         },
-        "noDataMessage": "目前没有投诉信息"
+        "noDataMessage": "目前没有投诉信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "newCases": {
         "title": "新案件",
         "description": "显示新案件",
-        "noDataMessage": "目前没有案件信息"
+        "noDataMessage": "目前没有案件信息",
+        "configDescription": "",
+        "configDescriptionPlaceholder": ""
       },
       "teamWorkload": {
         "title": "团队工作量",
@@ -110,7 +124,9 @@
           "dueMonth": "月度到期",
           "all": "全部"
         },
-        "noDataMessage": "目前没有团队任务信息"
+        "noDataMessage": "目前没有团队任务信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "workflowReport": {
         "title": "工作流程报告",
@@ -126,7 +142,9 @@
             "taskName": "任务名称"
           }
         },
-        "noDataMessage": "目前没有工作流报告信息"
+        "noDataMessage": "目前没有工作流报告信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "weather": {
         "description": "显示天气",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "请在窗口小部件配置中插入位置"
         },
         "title": "天气",
-        "noDataMessage": "目前没有天气信息"
+        "noDataMessage": "目前没有天气信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "news": {
         "description": "显示新闻",
@@ -149,7 +169,9 @@
           "insertUrl": "请在widget配置中插入一个feed url"
         },
         "title": "新闻",
-        "noDataMessage": "目前没有RSS /信息"
+        "noDataMessage": "目前没有RSS /信息",
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "输入小部件描述"
       },
       "details": {
         "title": "详细信息",
@@ -327,5 +349,38 @@
         "noDataMessage": "目前没有相关人员信息可以显示"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "新闻小组"
+  },
+  "dashboard.comp.weather": {
+    "title": "天气小部件"
+  },
+  "dashboard.comp.myCases": {
+    "title": "我的案例小部件"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "我的任务小部件"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "我的投诉小组"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "工作流程报告"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "新投诉"
+  },
+  "dashboard.comp.newCases": {
+    "title": "新案例"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "案例由队列"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "团队工作量"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "个案按状况"
   }
 }

@@ -13,9 +13,9 @@ angular.module('dashboard.ids', ['adf.provider'])
             });
     })
     .controller('Dashboard.IdsController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService', 'Object.ModelService'
+        ,function ($scope, $stateParams, $translate,
+                  PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
 
             var modules = [
                 {
@@ -69,5 +69,20 @@ angular.module('dashboard.ids', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
+            ObjectLookupService.getOrganizationIdTypes().then(
+                function (organizationIdTypes) {
+                    $scope.organizationIdTypes = organizationIdTypes;
+                    return organizationIdTypes;
+                });
+
+            ObjectLookupService.getIdentificationTypes().then(
+                function (identificationTypes) {
+                    $scope.identificationTypes = identificationTypes;
+                    return identificationTypes;
+                });
+
+            $scope.isDefault = function (data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultIdentification");
+            }
         }
     ]);

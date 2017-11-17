@@ -1,9 +1,9 @@
 'use strict';
 
 angular.module('organizations').controller('Organization.DBAsController', ['$scope', '$stateParams', '$translate'
-    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService'
+    , 'UtilService', 'ConfigService', 'Organization.InfoService', 'MessageService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Authentication', '$modal', 'PermissionsService', 'ObjectService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $stateParams, $translate
-        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService) {
+        , Util, ConfigService, OrganizationInfoService, MessageService, HelperObjectBrowserService, HelperUiGridService, Authentication, $modal, PermissionsService, ObjectService, ObjectLookupService, ObjectModelService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -57,6 +57,11 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
                 $scope.gridOptions.noData = true;
             }
         };
+
+
+        ObjectLookupService.getDBAsTypes().then(function (response) {
+            $scope.dbasTypes = response;
+        });
 
         //Aliases
         $scope.addNew = function () {
@@ -160,17 +165,8 @@ angular.module('organizations').controller('Organization.DBAsController', ['$sco
         }
 
         $scope.isDefault = function (data) {
-            return data === $scope.objectInfo.defaultDBA;
-        };
-        $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultDBA) {
-                id = $scope.objectInfo.defaultDBA.id
-            }
-            if ($scope.objectInfo.organizationDBAs && $scope.objectInfo.organizationDBAs.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultDBA");
+        }
+
     }
 ]);

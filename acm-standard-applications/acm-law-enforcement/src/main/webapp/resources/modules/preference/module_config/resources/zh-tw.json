@@ -3,6 +3,16 @@
     "title": "用戶設置",
     "menus": {
       "usermenu.item": "用戶設置"
+    },
+    "widgets.list": {
+      "defaultView": "默認視圖",
+      "expanded": "擴展",
+      "collapsed": "收縮",
+      "disabled": "禁用",
+      "enabled": "啟用"
+    },
+    "modules.list": {
+      "noModules": "沒有在系統中找到模塊"
     }
   }
 }

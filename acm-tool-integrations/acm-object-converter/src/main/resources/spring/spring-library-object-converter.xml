@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+	<!-- set JSON date format to ISO-8601 e.g. 1970-01-01T00:00:00Z -->
+    <bean id="sourceObjectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
+    
+    <!-- NOTE: When configuring 'sourceObjectMapper' make sure the static methods in ObjectConverter class are also updated -->
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="disable"/>
+        <property name="arguments" value="WRITE_DATES_AS_TIMESTAMPS"/>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="disable"/>
+        <property name="arguments" value="FAIL_ON_UNKNOWN_PROPERTIES"/>
+    </bean>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="findAndRegisterModules"/>
+    </bean>
+    <bean id="dateFormat" class="com.fasterxml.jackson.databind.util.ISO8601DateFormat"/>
+    <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+        <property name="targetObject" ref="sourceObjectMapper"/>
+        <property name="targetMethod" value="setDateFormat"/>
+        <property name="arguments" ref="dateFormat"/>
+    </bean>    
+    
+	<bean id="jsonMarshaller" class="com.armedia.acm.objectonverter.json.JSONMarshaller">
+		<property name="mapper" ref="sourceObjectMapper"/>
+	</bean>
+	
+	<bean id="jsonUnmarshaller" class="com.armedia.acm.objectonverter.json.JSONUnmarshaller">
+		<property name="mapper" ref="sourceObjectMapper"/>
+	</bean>
+
+	<bean id="xmlMarshaller" class="com.armedia.acm.objectonverter.xml.XMLMarshaller"/>
+	
+	<bean id="xmlUnmarshaller" class="com.armedia.acm.objectonverter.xml.XMLUnmarshaller"/>
+	
+    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter">
+    	<property name="jsonMarshaller" ref="jsonMarshaller"/>
+    	<property name="jsonUnmarshaller" ref="jsonUnmarshaller"/>
+    	<property name="xmlMarshaller" ref="xmlMarshaller"/>
+    	<property name="xmlUnmarshaller" ref="xmlUnmarshaller"/>
+    </bean>
+
+</beans>

@@ -49,13 +49,18 @@
   "profile.picture": {
     "title": "चित्र बदलो",
     "email": "ईमेल पता",
-    "uploadImgError": "आपने एक अमान्य छवि फ़ाइल प्रकार को अपलोड किया है"
+    "uploadImgError": "आपने एक अमान्य छवि फ़ाइल प्रकार को अपलोड किया है",
+    "uploadError": "नया प्रोफ़ाइल चित्र अपलोड करना विफल हुआ"
+  },
+  "profile.signature": {
+    "title": "हस्ताक्षर बदलें",
+    "uploadError": "नया हस्ताक्षर अपलोड करना विफल हुआ"
   },
   "profile.modal": {
     "title": "जानकारी",
     "emptyPassword": "पासवर्ड रिक्त नहीं हो सकता",
-    "comfirmation": "अपना पासवर्ड दोबारा दर्ज करें।",
-    "differentPasswords": "पासवर्ड मेल नहीं खाते। कृपया पुन: प्रयास करें।",
+    "confirmation": "अपना पासवर्ड दोबारा दर्ज करें।",
+    "invalidPattern": "hi_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters.",
     "ok": "ठीक",
     "success": "पासवर्ड सफलतापूर्वक बदल गया",
     "changePassword.header": "पासवर्ड बदलें"

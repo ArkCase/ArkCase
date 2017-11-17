@@ -10,7 +10,9 @@
         "description": "Отображает файлы активных файлов по очереди",
         "xAxis": "Очереди",
         "yAxis": "Количество файлов дел",
-        "noDataMessage": "В настоящее время нет информации о случаях"
+        "noDataMessage": "В настоящее время нет информации о случаях",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "casesByStatus": {
         "title": "Случаи по статусу",
@@ -22,7 +24,9 @@
           "lastYear": "В прошлом году",
           "all": "Все"
         },
-        "noDataMessage": "В настоящее время нет информации о случаях"
+        "noDataMessage": "В настоящее время нет информации о случаях",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "myCases": {
         "title": "Мои дела",
@@ -30,7 +34,7 @@
         "noDataMessage": "В настоящее время нет информации о случаях",
         "table": {
           "header": {
-            "caseId": "ИД",
+            "caseId": "ID",
             "title": "Название",
             "priority": "Приоритет",
             "created": "Создано",
@@ -41,14 +45,16 @@
           },
           "overdue.tooltip": "Дело просрочено",
           "deadline.tooltip": "Крайний срок приближается"
-        }
+        },
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "myComplaints": {
         "title": "Мои жалобы",
         "description": "Отображает мои жалобы",
         "table": {
           "header": {
-            "number": "ИД",
+            "number": "ID",
             "title": "Название",
             "priority": "Приоритет",
             "created": "Создано",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "Жалоба просрочена",
           "deadline.tooltip": "Крайний срок приближается",
           "noDataMessage": "В настоящее время нет информации о жалобах"
-        }
+        },
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "myTasks": {
         "title": "Мои задачи",
@@ -69,7 +77,7 @@
         "rowNumbers.placeholder": "Введите номера строк по умолчанию",
         "table": {
           "header": {
-            "taskId": "ИД",
+            "taskId": "ID",
             "title": "Название",
             "priority": "Приоритет",
             "dueDate": "Due",
@@ -79,7 +87,9 @@
           "overdue.tooltip": "Задание просрочено",
           "deadline.tooltip": "Крайний срок приближается"
         },
-        "noDataMessage": "В настоящее время нет информации о задачах"
+        "noDataMessage": "В настоящее время нет информации о задачах",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "newComplaints": {
         "title": "Новые жалобы",
@@ -92,12 +102,16 @@
           "dueMonth": "Долг в месяц",
           "all": "Все"
         },
-        "noDataMessage": "В настоящее время нет информации о жалобах"
+        "noDataMessage": "В настоящее время нет информации о жалобах",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "newCases": {
         "title": "Новые случаи",
         "description": "Отображает новые случаи",
-        "noDataMessage": "В настоящее время нет информации о случаях"
+        "noDataMessage": "В настоящее время нет информации о случаях",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "teamWorkload": {
         "title": "Рабочая нагрузка команды",
@@ -110,7 +124,9 @@
           "dueMonth": "Долг в месяц",
           "all": "Все"
         },
-        "noDataMessage": "В настоящее время нет информации о командных задачах"
+        "noDataMessage": "В настоящее время нет информации о командных задачах",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "workflowReport": {
         "title": "Отчет о рабочих процессах",
@@ -126,7 +142,9 @@
             "taskName": "Имя задачи"
           }
         },
-        "noDataMessage": "В настоящее время нет информации о рабочем потоке"
+        "noDataMessage": "В настоящее время нет информации о рабочем потоке",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "weather": {
         "description": "Отображает погоду",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "Пожалуйста, вставьте местоположение в конфигурацию виджета"
         },
         "title": "Погода",
-        "noDataMessage": "В настоящее время нет информации о погоде"
+        "noDataMessage": "В настоящее время нет информации о погоде",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "news": {
         "description": "Отображает новости",
@@ -149,7 +169,9 @@
           "insertUrl": "Пожалуйста, вставьте URL-адрес канала в конфигурацию виджета"
         },
         "title": "Новости",
-        "noDataMessage": "В настоящее время RSS / информация отсутствует"
+        "noDataMessage": "В настоящее время RSS / информация отсутствует",
+        "configDescription": "Описание",
+        "configDescriptionPlaceholder": "Введите описание виджета"
       },
       "details": {
         "title": "Детали",
@@ -327,5 +349,38 @@
         "noDataMessage": "В настоящее время нет связанных людей для отображения"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Виджет новостей"
+  },
+  "dashboard.comp.weather": {
+    "title": "Виджет погоды"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Виджет для моих дел"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Мой виджет задач"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Мой виджет жалоб"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Отчет о рабочем процессе"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Новые жалобы"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Новые случаи"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Случаи по очереди"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Командная нагрузка"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Случаи по статусу"
   }
 }

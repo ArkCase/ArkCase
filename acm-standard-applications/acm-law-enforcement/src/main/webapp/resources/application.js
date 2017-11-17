@@ -187,13 +187,27 @@ angular
                     AnalyticsProvider.setPageEvent('$stateChangeSuccess');
                 }
             }
-        ]).run(['$translate', '$translatePartialLoader',
-    function ($translate, $translatePartialLoader) {
+        ]).run(['$translate', '$translatePartialLoader', '$rootScope',
+    function ($translate, $translatePartialLoader, $rootScope) {
         $translatePartialLoader.addPart('core');
         $translatePartialLoader.addPart('welcome');
         $translate.refresh();
+        $rootScope.utils = utils;
     }
 ]);
+
+var utils = {};
+utils.getLookupValue = function (objArray, key) {
+    if (objArray && objArray instanceof Array) {
+        for (var i = 0; i < objArray.length; i++) {
+            if (objArray[i].key === key) {
+                return objArray[i].value;
+            }
+        }
+    }
+    // this should happen if the key is not found in the array. then return the key itself
+    return key;
+};
 
 
 angular

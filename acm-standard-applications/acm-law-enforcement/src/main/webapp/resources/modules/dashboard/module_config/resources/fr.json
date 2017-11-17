@@ -10,7 +10,9 @@
         "description": "Affiche les fichiers de cas actifs par la file d'attente",
         "xAxis": "Queues",
         "yAxis": "Nombre de fichiers de cas",
-        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "casesByStatus": {
         "title": "Cas par statut",
@@ -22,7 +24,9 @@
           "lastYear": "L'année dernière",
           "all": "Tous"
         },
-        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "myCases": {
         "title": "Mes cas",
@@ -41,7 +45,9 @@
           },
           "overdue.tooltip": "L'affaire est en retard",
           "deadline.tooltip": "La date limite est l'approche"
-        }
+        },
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "myComplaints": {
         "title": "Mes plaintes",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "La plainte est en retard",
           "deadline.tooltip": "La date limite est l'approche",
           "noDataMessage": "Actuellement, il n'y a pas d'information sur les plaintes"
-        }
+        },
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "myTasks": {
         "title": "Mes tâches",
@@ -79,38 +87,46 @@
           "overdue.tooltip": "La tâche est en retard",
           "deadline.tooltip": "La date limite est l'approche"
         },
-        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "newComplaints": {
         "title": "Nouvelles plaintes",
         "description": "Affiche de nouvelles plaintes",
         "dueDate": {
           "label": "Sélectionnez la période de la date d'échéance",
-          "pastDue": "passé dû",
+          "pastDue": "Passé dû",
           "dueTomorrow": "Due Tomorrow",
           "dueWeek": "Due in 7 Days",
           "dueMonth": "Due in Month",
           "all": "Tous"
         },
-        "noDataMessage": "Actuellement, il n'y a pas d'information sur les plaintes"
+        "noDataMessage": "Actuellement, il n'y a pas d'information sur les plaintes",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "newCases": {
         "title": "Nouveaux cas",
         "description": "Affiche de nouveaux cas",
-        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les cas",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "teamWorkload": {
         "title": "Charge de travail de l'équipe",
         "description": "Affiche la charge de travail de l'équipe",
         "dueDate": {
           "label": "Sélectionnez la période de la date d'échéance",
-          "pastDue": "passé dû",
+          "pastDue": "Passé dû",
           "dueTomorrow": "Attendus Demain",
           "dueWeek": "Attendus en 7 Jours",
           "dueMonth": "Attendus en Mois",
           "all": "Tous"
         },
-        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches de l'équipe"
+        "noDataMessage": "Actuellement, il n'y a pas d'informations sur les tâches de l'équipe",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "workflowReport": {
         "title": "Rapport de flux de travail",
@@ -126,10 +142,12 @@
             "taskName": "Nom de la tâche"
           }
         },
-        "noDataMessage": "Actuellement, il n'y a pas de rapport sur le flux de travail"
+        "noDataMessage": "Actuellement, il n'y a pas de rapport sur le flux de travail",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "weather": {
-        "description": "affiche la météo",
+        "description": "Affiche la météo",
         "label": {
           "current": "Courant:",
           "enterLocation": "Entrez l'emplacement",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "Veuillez insérer un emplacement dans la configuration du widget"
         },
         "title": "Météo",
-        "noDataMessage": "Actuellement, il n'y a pas de météo"
+        "noDataMessage": "Actuellement, il n'y a pas de météo",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "news": {
         "description": "Afficher les nouvelles",
@@ -149,7 +169,9 @@
           "insertUrl": "Veuillez insérer une URL d'alimentation dans la configuration du widget"
         },
         "title": "Nouvelles",
-        "noDataMessage": "Actuellement, il n'y a pas de RSS / info"
+        "noDataMessage": "Actuellement, il n'y a pas de RSS / info",
+        "configDescription": "La description",
+        "configDescriptionPlaceholder": "Entrez la description du widget"
       },
       "details": {
         "title": "Détails",
@@ -197,7 +219,7 @@
         "noDataMessage": "Actuellement, il n'y a pas de fax à afficher"
       },
       "emails": {
-        "title": "adresse e-mail",
+        "title": "Adresse e-mail",
         "description": "Affiche les détails du courrier électronique",
         "noDataMessage": "Actuellement, aucune adresse de messagerie ne s'affiche"
       },
@@ -263,12 +285,12 @@
       },
       "docReview": {
         "title": "Documents sous revue",
-        "description": "montre les documents à l'étude",
+        "description": "Montre les documents à l'étude",
         "noDataMessage": "Actuellement, aucun document n'a été examiné pour afficher"
       },
       "parentDocs": {
         "title": "Documents parentaux",
-        "description": "montre les documents parents",
+        "description": "Montre les documents parents",
         "noDataMessage": "Actuellement, aucun document parent ne s'affiche"
       },
       "workflow": {
@@ -277,8 +299,8 @@
         "noDataMessage": "Actuellement, il n'y a pas de flux de travail à afficher"
       },
       "signature": {
-        "title": "eSignature",
-        "description": "widget eSignature",
+        "title": "ESignature",
+        "description": "Widget eSignature",
         "noDataMessage": "Actuellement, il n'y a pas de signature électronique à afficher"
       },
       "person": {
@@ -322,10 +344,43 @@
         "noDataMessage": "Actuellement aucun alias à afficher"
       },
       "related": {
-        "title": "personnes apparentées",
+        "title": "Personnes apparentées",
         "description": "Affichage des personnes liées",
         "noDataMessage": "Actuellement, aucune personne liée à afficher"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Widget Actualités"
+  },
+  "dashboard.comp.weather": {
+    "title": "Widget météo"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mon Widget Cas"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "Mes tâches Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Widget Mes plaintes"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Rapport de flux de travail"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Nouvelles plaintes"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Nouveaux cas"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Cases par file d'attente"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Travail d'équipe"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Cas par statut"
   }
 }

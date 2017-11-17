@@ -13,9 +13,9 @@ angular.module('dashboard.dbas', ['adf.provider'])
             });
     })
     .controller('Dashboard.DbasController', ['$scope', '$stateParams', '$translate',
-        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                      OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectLookupService, ObjectModelService) {
 
             var modules = [
                 {
@@ -65,5 +65,19 @@ angular.module('dashboard.dbas', ['adf.provider'])
                 gridHelper.setColumnDefs(widgetInfo);
             };
 
+            ObjectLookupService.getOrganizationIdTypes().then(
+                    function (identificationTypes) {
+                        $scope.identificationTypes = identificationTypes;
+                        return identificationTypes;
+                    });
+
+            ObjectLookupService.getDBAsTypes().then(
+                    function (response) {
+                        $scope.dbasTypes = response;
+                        return response;
+                    });
+            $scope.isDefault = function (data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultDBA");
+                }
         }
     ]);

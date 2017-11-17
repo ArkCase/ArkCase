@@ -1,12 +1,13 @@
 package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,17 +23,16 @@ import java.util.Map;
 public class SendDocumentsToSolr
 {
     private MuleContextManager muleContextManager;
+    private ObjectConverter objectConverter;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    private final ObjectMapper mapper = new ObjectMapperFactory().createObjectMapper();
 
     // this method is used from Mule, do not delete it!
     public String asJsonArray(SolrBaseDocument document) throws JsonProcessingException
     {
         log.trace("Converting a document to a JSON array");
         List<SolrBaseDocument> docs = Collections.singletonList(document);
-        String json = mapper.writeValueAsString(docs);
+        String json = objectConverter.getJsonMarshaller().marshal(docs);
         return json;
     }
 
@@ -103,7 +103,7 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String json = mapper.writeValueAsString(solrDocument);
+            String json = objectConverter.getJsonMarshaller().marshal(solrDocument);
 
             log.debug("Sending JSON to SOLR with hash {}", json.hashCode());
 
@@ -112,7 +112,8 @@ public class SendDocumentsToSolr
 
             log.trace("Returning JSON: {}", json);
 
-        } catch (JsonProcessingException | MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -130,7 +131,8 @@ public class SendDocumentsToSolr
             log.debug("Sending a doc to Solr with hash {}", solrDocument.hashCode());
             getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);
             log.debug("Sent a doc to Solr with hash {}", solrDocument.hashCode());
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -140,7 +142,7 @@ public class SendDocumentsToSolr
     {
         try
         {
-            String json = mapper.writeValueAsString(solrDocuments);
+            String json = objectConverter.getJsonMarshaller().marshal(solrDocuments);
 
             log.debug("Sending json to Solr via JMS with hash {}", json.hashCode());
             getMuleContextManager().dispatch(queueName, json);
@@ -148,7 +150,8 @@ public class SendDocumentsToSolr
 
             log.trace("Returning JSON: {}", json);
 
-        } catch (JsonProcessingException | MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Could not send document to SOLR: " + e.getMessage(), e);
         }
@@ -162,5 +165,15 @@ public class SendDocumentsToSolr
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
         this.muleContextManager = muleContextManager;
+    }
+
+    public ObjectConverter getObjectConverter()
+    {
+        return objectConverter;
+    }
+
+    public void setObjectConverter(ObjectConverter objectConverter)
+    {
+        this.objectConverter = objectConverter;
     }
 }

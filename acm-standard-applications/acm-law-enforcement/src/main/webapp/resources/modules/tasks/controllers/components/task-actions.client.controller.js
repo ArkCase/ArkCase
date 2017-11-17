@@ -1,14 +1,12 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal'
-    , 'UtilService', 'ConfigService', 'Authentication'
-    , 'Task.InfoService', 'Task.WorkflowService', 'Object.SubscriptionService', 'Object.SignatureService', 'ObjectService'
-    , 'Helper.ObjectBrowserService', '$translate'
-    , function ($scope, $state, $stateParams, $modal
-        , Util, ConfigService, Authentication
-        , TaskInfoService, TaskWorkflowService, ObjectSubscriptionService, ObjectSignatureService, ObjectService
-        , HelperObjectBrowserService, $translate) {
-
+angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state', '$stateParams', '$modal', '$translate'
+    , 'UtilService', 'ConfigService', 'Authentication', 'Object.SignatureService', 'ObjectService', 'Task.InfoService'
+    , 'Task.WorkflowService', 'Object.SubscriptionService', 'Helper.ObjectBrowserService', 'MessageService'
+    , function ($scope, $state, $stateParams, $modal, $translate
+        , Util, ConfigService, Authentication, ObjectSignatureService, ObjectService, TaskInfoService
+        , TaskWorkflowService, ObjectSubscriptionService, HelperObjectBrowserService, MessageService
+    ) {
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -21,7 +19,9 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             }
         });
 
+
         var promiseQueryUser = Authentication.queryUserInfo();
+
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
@@ -79,10 +79,6 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
         };
 
 
-        //$scope.availableOutcomes0 = [{name: "APPROVE", description: "Approve Document", fields: ["value", "message"]}
-        //    , {name: "SEND_FOR_REWORK", description: "Send for Rework", fields: ["reworkInstructions"]}
-        //];
-
         $scope.diagram = function () {
             var modalInstance = $modal.open({
                 templateUrl: "modules/tasks/views/components/task-diagram-modal.client.view.html",
@@ -115,7 +111,18 @@ angular.module('tasks').controller('Tasks.ActionsController', ['$scope', '$state
             modalInstance.result.then(function (result) {
                 if (result) {
                     console.log("sign task here");
-                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass);
+                    ObjectSignatureService.confirmSignature(ObjectService.ObjectTypes.TASK, $scope.objectInfo.taskId, result.pass)
+                        .then(function (result) {
+                            MessageService.succsessAction();
+                        }, function (error) {
+                            if(!Util.isEmpty(error.data.message))
+                            {
+                                MessageService.error(error.data.message);
+
+                            } else {
+                                MessageService.errorAction();
+                            }
+                        });
                 }
             });
         };

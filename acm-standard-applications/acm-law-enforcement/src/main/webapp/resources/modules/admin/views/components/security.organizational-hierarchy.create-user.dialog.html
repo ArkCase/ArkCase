@@ -5,9 +5,9 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div class="form-group required" ng-class="{ 'has-error' : error }" ng-if="addUser">
+        <div class="form-group required" ng-class="{ 'has-error' : error}" ng-if="addUser">
             <label for="username">{{"admin.security.organizationalHierarchy.createUserDialog.username" |translate}}</label>
-            <input class="form-control" id="username"
+            <input class="form-control" id="username" name="username" ng-change="clearUsernameError()"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.username' | translate}}"
                    ng-model="user.userId" required>
             <p class="help-block" ng-show="error">
@@ -15,7 +15,7 @@
             </p>
         </div>
         <div class="form-group required">
-            <label for="firstName">{{"admin.security.organizationalHierarchy.createUserDialog.firstName" |translate}}</label>
+            <label for="firstName">{{"admin.security.organizationalHierarchy.createUserDialog.firstName" | translate}}</label>
             <input class="form-control" id="firstName"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.firstName' | translate}}"
                    ng-model="user.firstName" required>
@@ -32,20 +32,27 @@
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.email' | translate}}"
                    ng-model="user.mail" required>
         </div>
-        <div class="form-group required" ng-if="addUser">
+        <div class="form-group required" ng-class="{ 'has-error' : passwordErrorMessage}" ng-if="cloneUser && addUser">
             <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.password" |
                 translate}}</label>
-            <div class="help-tip">
-                <p>{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.passwordRuleText' | translate}}</p>
-            </div>
-            <input type="password" class="form-control" id="password" name="password"
+            <input type="password" class="form-control" id="password" name="password" ng-change="clearPasswordError()"
                    placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.password' | translate}}"
-                   ng-model="user.password" minlength="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.minLengthForPassword' | translate}}"
-                   ng-pattern="{{'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.rulePattern' | translate}}"
-                   pw-check="username"
+                   ng-model="user.password"
                    required>
-            <span ng-show='userForm.password.$error.pattern'>Please follow password rules.</span>
-            <span ng-show='userForm.password.$error.pwContains'>Password cannot contain username.</span>
+            <p class="help-block" ng-bind-html="passwordErrorMessage" ng-show="passwordErrorMessage && userForm.$invalid" >
+            </p>
+        </div>
+        <div class="form-group required" ng-if="cloneUser && addUser">
+            <label for="password">{{"admin.security.organizationalHierarchy.createUserDialog.confirmation" |
+                translate}}</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                   placeholder="{{ 'admin.security.organizationalHierarchy.createUserDialog.addLdapMember.confirmation' | translate}}" ng-model="confirmPassword"
+                   password-check new-password="user.password" confirm-new-password="confirmPassword" error-messages="passwordErrorMessages"
+                   new-password-validation="password" confirm-new-password-validation="confirmPassword"
+                   required>
+            <p class="help-block" ng-show="userForm.password.$error.notSamePasswords">
+                <span class="text-danger" translate>{{passwordErrorMessages.notSamePasswordsMessage}}</span>
+            </p>
         </div>
     </div>
     <div class=" modal-footer">

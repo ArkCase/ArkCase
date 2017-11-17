@@ -101,50 +101,56 @@ angular.module('profile').controller('ChangePasswordModalController', ['$scope',
 ]);
 
 angular.module('profile').controller('ChangeLdapPasswordModalController', ['$scope', '$modalInstance'
-    , '$modal', '$translate', 'Profile.ChangePasswordService', 'Authentication', 'MessageService'
-    , function ($scope, $modalInstance, $modal, $translate, ChangePasswordService, Authentication, MessageService) {
+    , '$modal', '$translate', 'UtilService', 'Profile.ChangePasswordService', 'Authentication', 'MessageService'
+    , function ($scope, $modalInstance, $modal, $translate, Util, ChangePasswordService, Authentication, MessageService) {
 
         Authentication.queryUserInfo().then(function (userInfo) {
             $scope.userInfo = userInfo;
         });
 
-        $scope.isPasswordError = false;
-        $scope.authError = null;
+        $scope.$bus.subscribe('ldap-change-password-clear-errors', function () {
+            $scope.authError = '';
+            $scope.errorMessage = '';
+        });
+
+        $scope.authError = false;
         $scope.loading = false;
+        $scope.passwordErrorMessages = {
+            notSamePasswordsMessage: ''
+        };
 
         $scope.changePassword = function () {
-            if ($scope.newPassword !== $scope.confirmNewPassword) {
-                $scope.confirmNewPassword = '';
-                $scope.isPasswordError = true;
-            }
-            else {
-                var data = {
-                    currentPassword: $scope.currentPassword,
-                    newPassword: $scope.newPassword,
-                    userInfo: $scope.userInfo
-                };
-                $scope.loading = true;
-                ChangePasswordService.changeLdapPassword(data).then(function () {
+
+            var data = {
+                currentPassword: $scope.currentPassword,
+                password: $scope.newPassword,
+                userId: $scope.userInfo.userId,
+                directory: $scope.userInfo.directoryName
+            };
+            $scope.loading = true;
+            ChangePasswordService.changeLdapPassword(data).then(function () {
+                $modalInstance.close('done');
+                $scope.loading = false;
+                MessageService.info($translate.instant("profile.modal.success"));
+            }, function (errorData) {
+                $scope.loading = false;
+                var message = errorData.data.authError; //auth error
+                var passwordError = errorData.data.message;
+                if (message) {
+                    $scope.authError = message;
+                    $scope.currentPassword = '';
+                }
+                else if(errorData.data.message){
+                    $scope.authError = false;
+                    $scope.errorMessage = passwordError;
+                }
+                else {
                     $modalInstance.close('done');
-                    $scope.loading = false;
-                    MessageService.info($translate.instant("profile.modal.success"));
-                }, function (errorData) {
-                    $scope.loading = false;
-                    var message = errorData.data.authError;
-                    if (message) {
-                        $scope.authError = message;
-                        $scope.currentPassword = '';
-                    }
-                    else {
-                        $modalInstance.close('done');
-                        if (errorData.data.message) {
-                            MessageService.error(errorData.data.message);
-                        } else {
-                            MessageService.errorAction();
-                        }
-                    }
-                });
-            }
+                    MessageService.errorAction();
+
+                }
+            });
+
         };
     }
 ]);

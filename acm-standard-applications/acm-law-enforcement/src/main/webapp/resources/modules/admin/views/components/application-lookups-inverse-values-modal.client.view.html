@@ -17,7 +17,7 @@
 	        <label for="Value" translate>admin.application.lookups.config.data.value</label><span class="required-asterisk">*</span>
 	        <!-- TODO: select from existing labels modal form -->
 	        <input id="value" type="text" ng-model="entry.value" class="input-md form-control" required="required"
-	               placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}">
+	               placeholder="{{ 'admin.application.lookups.config.modal.value.placeholder' | translate }}" ng-click="pickLabel()">
 	    </div>
 	</div>
 	<div class="row">
@@ -30,7 +30,7 @@
 	        <label for="InverseValue" translate>admin.application.lookups.config.data.inverseValue</label><span class="required-asterisk">*</span>
 	        <!-- TODO: select from existing labels modal form -->
 	        <input id="inverseValue" type="text" ng-model="entry.inverseValue" class="input-md form-control" required="required"
-	               placeholder="{{ 'admin.application.lookups.config.modal.inversevalue.placeholder' | translate }}">
+	               placeholder="{{ 'admin.application.lookups.config.modal.inversevalue.placeholder' | translate }}" ng-click="pickInverseLabel()">
 	    </div>
 	</div>
 </div>

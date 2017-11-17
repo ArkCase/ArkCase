@@ -25,6 +25,7 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     private String title_t;
     private String name;
     private String object_id_s;
+    private String object_display_name_s;
     private String owner_s;
     private String object_type_s;
     private String assignee_s;
@@ -170,6 +171,16 @@ public class SolrDocument extends SolrAbstractDocument implements Serializable
     public void setObject_id_s(String object_id_s)
     {
         this.object_id_s = object_id_s;
+    }
+
+    public String getObject_display_name_s()
+    {
+        return object_display_name_s;
+    }
+
+    public void setObject_display_name_s(String object_display_name_s)
+    {
+        this.object_display_name_s = object_display_name_s;
     }
 
     public String getOwner_s()

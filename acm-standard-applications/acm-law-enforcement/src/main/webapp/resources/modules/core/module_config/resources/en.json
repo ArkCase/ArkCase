@@ -483,6 +483,30 @@
           "full": "Full",
           "partial": "Partial"
         }
+      },
+      "taskOutcomes": {
+        "approve": "Approve Document",
+        "rework": "Send for Rework",
+        "resubmit": "Resubmit",
+        "cancel": "Cancel Document",
+        "concur": "Concur",
+        "nonConcur": "Non-Concur"
+      },
+      "reportStates": {
+        "draft": "Draft",
+        "inApproval": "In Approval",
+        "active": "Active",
+        "inActive": "Inactive",
+        "closed": "Closed"
+      },
+      "auditReportNames": {
+        "case": "CASE_FILE",
+        "complaint": "COMPLAINT",
+        "task": "TASK",
+        "file": "FILE",
+        "document": "DOCUMENT",
+        "person": "PERSON",
+        "organization": "ORGANIZATION"
       }
     },
     "userInfo": {

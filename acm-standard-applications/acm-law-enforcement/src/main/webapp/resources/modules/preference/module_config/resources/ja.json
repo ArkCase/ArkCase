@@ -1,8 +1,18 @@
 {
   "preference": {
-    "title": "顧客設定",
+    "title": "ユーザー設定",
     "menus": {
-      "usermenu.item": "顧客設定"
+      "usermenu.item": "ユーザー設定"
+    },
+    "widgets.list": {
+      "defaultView": "デフォルトビュー",
+      "expanded": "拡張",
+      "collapsed": "縮小する",
+      "disabled": "無効",
+      "enabled": "有効"
+    },
+    "modules.list": {
+      "noModules": "システム内にモジュールが見つかりません"
     }
   }
 }

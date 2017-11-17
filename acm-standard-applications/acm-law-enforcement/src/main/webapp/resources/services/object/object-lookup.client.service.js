@@ -61,6 +61,21 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getAuditReportNames
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns a list of audit reports
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getAuditReportNames = function () {
+            return Service.getLookupByLookupName("auditReportNames");
+        };
+
+
+        /**
+         * @ngdoc method
          * @name getPriorities
          * @methodOf services:Object.LookupService
          *
@@ -131,7 +146,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Boolean} Return true if data is valid
          */
         Service.validateGroups = function (data) {
-            if (!SearchService.validateSolrData(data)) {
+            if (!Util.validateSolrData(data)) {
                 return false;
             }
 
@@ -165,8 +180,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                         formTypes = [];
                         _.each(plainForms, function (plainForm) {
                             var formType = {};
-                            formType.type = plainForm.key;
-                            formType.label = Util.goodValue(plainForm.name);
+                            formType.key = plainForm.key;
+                            formType.value = Util.goodValue(plainForm.name);
                             formType.url = Util.goodValue(plainForm.url);
                             formType.urlParameters = Util.goodArray(plainForm.urlParameters);
                             formType.form = true;
@@ -245,17 +260,26 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-         Service.getPersonTypes = function(objectType){
-             switch(objectType){
-                 case "COMPLAINT":
-                     return Service.getLookupByLookupName("complaintPersonTypes");
-                     break;
-                 case "CASE_FILE":
-                     return Service.getLookupByLookupName("caseFilePersonTypes");
-                 case "DOC_REPO":
-                     return Service.getLookupByLookupName("documentPersonTypes");
-             }
-           };
+        Service.getPersonTypes = function(objectType, initiator){
+            switch(objectType){
+                case "COMPLAINT":
+                    if(initiator){
+                        return Service.getLookupByLookupName("complaintPersonInitiatorTypes");
+                    }
+                    else {
+                        return Service.getLookupByLookupName("complaintPersonTypes");
+                    }
+                case "CASE_FILE":
+                    if(initiator){
+                        return Service.getLookupByLookupName("caseFilePersonInitiatorTypes");
+                    }
+                    else {
+                        return Service.getLookupByLookupName("caseFilePersonTypes");
+                    }
+                case "DOC_REPO":
+                    return Service.getLookupByLookupName("documentPersonTypes");
+            }
+        };
 
         /**
          * @ngdoc method
@@ -308,6 +332,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     break;
                 case "COMPLAINT":
                 case "CASE_FILE":
+                case "DOC_REPO":
                     return Service.getLookupByLookupName("entitiesParticipantTypes");
             }
         };
@@ -338,6 +363,15 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          */
         Service.getContactMethodTypes = function () {
             return Service.getLookupByLookupName("contactMethodTypes");
+        };
+
+        Service.getSubContactMethodType = function(type){
+            return Service.getLookupByLookupName("contactMethodTypes").then(function (contactMethodTypes) {
+                var found = _.find(contactMethodTypes, {key: type});
+                if(!Util.isArray(found)){
+                    return found.subLookup;
+                }
+            });
         };
 
         /**
@@ -423,7 +457,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         Service.getCaseFileTypes = function () {
             return Service.getLookupByLookupName("caseFileTypes");
         };
-        
+
         /**
          * @ngdoc method
          * @name getComplaintTypes
@@ -437,7 +471,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         Service.getComplaintTypes = function () {
             return Service.getLookupByLookupName("complaintTypes");
         };
-        
+
         /**
          * @ngdoc method
          * @name getObjectTypes

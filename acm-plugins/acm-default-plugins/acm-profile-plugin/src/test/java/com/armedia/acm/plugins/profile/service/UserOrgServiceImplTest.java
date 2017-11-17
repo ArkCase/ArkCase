@@ -28,13 +28,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
-import static junit.framework.TestCase.assertNull;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static junit.framework.TestCase.*;
+import static org.easymock.EasyMock.*;
 
 public class UserOrgServiceImplTest extends EasyMockSupport
 {
@@ -366,6 +361,7 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         assertEquals(userOrg.getMainOfficePhone(), profileDTO.getMainOfficePhone());
         assertEquals(userOrg.getMobilePhoneNumber(), profileDTO.getMobilePhoneNumber());
         assertEquals(userOrg.getEcmFileId(), profileDTO.getEcmFileId());
+        assertEquals(userOrg.getEcmSignatureFileId(), profileDTO.getEcmSignatureFileId());
         assertEquals(userOrg.getTitle(), profileDTO.getTitle());
     }
 

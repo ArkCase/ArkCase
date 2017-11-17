@@ -110,7 +110,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     {
         Query markInvalid = getEm().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state "
                 + "WHERE aur.roleName = :groupName");
-        markInvalid.setParameter("state", AcmUserRoleState.INVALID.name());
+        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("groupName", groupName);
         markInvalid.executeUpdate();
     }
@@ -154,7 +154,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                         "WHERE user.userDirectoryName != :directoryName " +
                         "AND user.userState = :userState))");
         query.setParameter("groupType", groupType);
-        query.setParameter("groupStatus", AcmGroupStatus.DELETE.name());
+        query.setParameter("groupStatus", AcmGroupStatus.DELETE);
         query.setParameter("userRoleState", AcmUserRoleState.VALID);
         query.setParameter("directoryName", directoryName);
         query.setParameter("userState", AcmUserState.VALID);
@@ -191,7 +191,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                 "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
 
         query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
-        query.setParameter("status", AcmGroupStatus.DELETE.name());
+        query.setParameter("status", AcmGroupStatus.DELETE);
         List<AcmGroup> result = query.getResultList();
 
         return result.isEmpty() ? null : result.get(0);

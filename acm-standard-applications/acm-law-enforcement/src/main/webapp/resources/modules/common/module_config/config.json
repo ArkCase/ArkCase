@@ -109,44 +109,7 @@
           {
             "title": "New Document",
             "cmd": "subMenuFileTypes",
-            "___children": [
-              {
-                "title": "Electronic Communication",
-                "cmd": "form/electronicCommunicationFormUrl"
-              },
-              {
-                "title": "Report of Investigation",
-                "cmd": "form/roiFormUrl"
-              },
-              {
-                "title": "Medical Release",
-                "cmd": "file/mr"
-              },
-              {
-                "title": "General Release",
-                "cmd": "file/gr"
-              },
-              {
-                "title": "eDelivery",
-                "cmd": "file/ev"
-              },
-              {
-                "title": "SF86 Signature",
-                "cmd": "file/sig"
-              },
-              {
-                "title": "Notice of Investigation",
-                "cmd": "file/noi"
-              },
-              {
-                "title": "Witness Interview Request",
-                "cmd": "file/wir"
-              },
-              {
-                "title": "Other",
-                "cmd": "file/other"
-              }
-            ]
+            "___children": "fileTypes"
           },
           {
             "title": "New Correspondence",
@@ -652,6 +615,7 @@
     "ACCESS_DENIED": "common.directive.coreCalendar.message.error.accessDenied",
     "SERVICE_CONFIGURATION": "common.directive.coreCalendar.message.error.serviceConfiguration",
     "INVALID_BIND_TO_SERVICE_CREDENTIALS": "common.directive.coreCalendar.message.error.serviceCredentials",
+    "CALENDAR_INTEGRATION": "common.directive.coreCalendar.message.error.calendarIntegration",
     "INTERNAL_SERVER_ERROR": "common.directive.coreCalendar.message.error.internalServerError"
   },
   "dialogPersonPicker": {

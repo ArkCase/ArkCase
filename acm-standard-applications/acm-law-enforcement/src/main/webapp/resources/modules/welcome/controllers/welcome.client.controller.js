@@ -6,12 +6,17 @@ angular.module('welcome').controller(
         , function ($state, $window, $translate
             , Util, AcmLoginService, AcmAppService, LocaleService) {
 
+
+            var redirectState = sessionStorage.redirectState;
+            var redirectURL = sessionStorage.redirectURL;
+            sessionStorage.clear();
+
             AcmLoginService.setLogin(true);
             AcmLoginService.setLastIdle();
 
             LocaleService.getLatestSettings();
 
-            if (sessionStorage.redirectState) {
+            if (redirectState) {
                 // redirect to the last remembered state
                 var redirectState = angular.fromJson(sessionStorage.redirectState);
 
@@ -25,10 +30,10 @@ angular.module('welcome').controller(
                     sessionStorage.removeItem("redirectState");
                     $state.go(redirectState.hash.split('/')[1]);
                 }
-            } else if (sessionStorage.redirectURL) {
+            } else if (redirectURL) {
                 // redirect to hash passed in the URL of the login page
                 sessionStorage.removeItem("redirectUrl");
-                $window.location.href = AcmAppService.getAppUrl('home.html' + sessionStorage.redirectURL);
+                $window.location.href = AcmAppService.getAppUrl('home.html' + redirectURL);
             } else {
                 $state.go("dashboard");
             }

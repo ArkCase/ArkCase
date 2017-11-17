@@ -192,13 +192,20 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          * Performs retrieving users for provided group
          *
          * param {string} group id
+         * param {string} user status
          *
          * @returns {HttpPromise} Future info about array of users
          */
-        function getUsersForGroup(group) {
+        function getUsersForGroup(group, status) {
+            var params = {};
+
+            if (status) {
+                params.status = status;
+            }
             return $http({
                 method: 'GET',
-                url: 'api/latest/users/by-group/' + group
+                url: 'api/latest/users/by-group/' + group,
+                params: params
             });
         }
 

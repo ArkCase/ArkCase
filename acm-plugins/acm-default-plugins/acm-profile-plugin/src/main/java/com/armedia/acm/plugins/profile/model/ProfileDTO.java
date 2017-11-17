@@ -28,6 +28,7 @@ public class ProfileDTO
     private String fullName;
     private String email;
     private Long ecmFileId;
+    private Long ecmSignatureFileId;
     private String title;
     private List<String> groups;
     private Long userOrgId;
@@ -231,6 +232,16 @@ public class ProfileDTO
     public void setEcmFileId(Long ecmFileId)
     {
         this.ecmFileId = ecmFileId;
+    }
+
+    public Long getEcmSignatureFileId()
+    {
+        return ecmSignatureFileId;
+    }
+
+    public void setEcmSignatureFileId(Long ecmSignatureFileId)
+    {
+        this.ecmSignatureFileId = ecmSignatureFileId;
     }
 
     public List<String> getGroups()

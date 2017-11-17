@@ -14,10 +14,15 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicatePersonRoleError = false;
 
-            $scope.pickerType =  params.pickerType;
-            $scope.pickerTypeDisabled = params.typeDisabled;
+            $scope.pickerType = params.pickerType;
 
             $scope.showSetPrimary = params.showSetPrimary;
+            //if not set, than use 'true' as default
+            $scope.pickerTypeEnabled = ('typeEnabled' in params) && params.typeEnabled != null ? params.typeEnabled : true;
+            //if not set, than use 'true' as default
+            $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+            //if not set, than use 'true' as default
+            $scope.selectExistingEnabled = ('selectExistingEnabled' in params) && params.selectExistingEnabled != null ? params.selectExistingEnabled : true;
 
             $scope.personId = params.personId;
             $scope.editMode = !!params.personId;
@@ -26,6 +31,11 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.isDefault = params.isDefault;
             $scope.description = params.description;
             $scope.hideNoField = true;
+            $scope.skipPeopleIdsInSearch = params.skipPeopleIdsInSearch;
+            if ($scope.editMode) {
+                $scope.addNewEnabled = false;
+            }
+
             if (params.isFirstPerson) {
                 $scope.isDefault = params.isFirstPerson;
                 $scope.hideNoField = !params.isFirstPerson;
@@ -75,6 +85,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
                 params.filter = '"Object Type": PERSON &fq="status_lcs": ACTIVE';
+                if ($scope.skipPeopleIdsInSearch && Util.isArray($scope.skipPeopleIdsInSearch)) {
+                    params.filter += '  &fq="-object_id_s":(' + $scope.skipPeopleIdsInSearch.join(' ') + ')';
+                }
+
                 params.config = Util.goodMapValue($scope.config, "dialogPersonPicker");
 
                 var modalInstance = $modal.open({

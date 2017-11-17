@@ -10,7 +10,9 @@
         "description": "Muestra los archivos de casos activos por cola",
         "xAxis": "Colas",
         "yAxis": "Número de archivos de caso",
-        "noDataMessage": "Actualmente no hay casos info"
+        "noDataMessage": "Actualmente no hay casos info",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "casesByStatus": {
         "title": "Casos por estado",
@@ -22,7 +24,9 @@
           "lastYear": "El año pasado",
           "all": "Todos"
         },
-        "noDataMessage": "Actualmente no hay casos info"
+        "noDataMessage": "Actualmente no hay casos info",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "myCases": {
         "title": "Mis casos",
@@ -41,7 +45,9 @@
           },
           "overdue.tooltip": "El caso está atrasado",
           "deadline.tooltip": "La fecha límite se aproxima"
-        }
+        },
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "myComplaints": {
         "title": "Mis quejas",
@@ -60,7 +66,9 @@
           "overdue.tooltip": "La queja está atrasada",
           "deadline.tooltip": "La fecha límite se aproxima",
           "noDataMessage": "Actualmente no hay información de quejas"
-        }
+        },
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "myTasks": {
         "title": "Mis tareas",
@@ -79,7 +87,9 @@
           "overdue.tooltip": "La tarea está atrasada",
           "deadline.tooltip": "La fecha límite se aproxima"
         },
-        "noDataMessage": "Actualmente no hay información de tareas"
+        "noDataMessage": "Actualmente no hay información de tareas",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "newComplaints": {
         "title": "Nuevas Reclamaciones",
@@ -92,12 +102,16 @@
           "dueMonth": "Debido en mes",
           "all": "Todos"
         },
-        "noDataMessage": "Actualmente no hay información de quejas"
+        "noDataMessage": "Actualmente no hay información de quejas",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "newCases": {
         "title": "Casos nuevos",
         "description": "Muestra nuevos casos",
-        "noDataMessage": "Actualmente no hay casos info"
+        "noDataMessage": "Actualmente no hay casos info",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "teamWorkload": {
         "title": "Carga de trabajo del equipo",
@@ -110,7 +124,9 @@
           "dueMonth": "Debido en mes",
           "all": "Todos"
         },
-        "noDataMessage": "Actualmente no hay tareas de equipo info"
+        "noDataMessage": "Actualmente no hay tareas de equipo info",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "workflowReport": {
         "title": "Informe de flujo de trabajo",
@@ -126,7 +142,9 @@
             "taskName": "Nombre de tarea"
           }
         },
-        "noDataMessage": "Actualmente no hay información de informe de flujo de trabajo"
+        "noDataMessage": "Actualmente no hay información de informe de flujo de trabajo",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "weather": {
         "description": "Muestra el tiempo",
@@ -138,7 +156,9 @@
           "insertLocationInConfiguration": "Por favor, inserte una ubicación en la configuración del widget"
         },
         "title": "Tiempo",
-        "noDataMessage": "Actualmente no hay información del tiempo"
+        "noDataMessage": "Actualmente no hay información del tiempo",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "news": {
         "description": "Muestra noticias",
@@ -149,7 +169,9 @@
           "insertUrl": "Por favor, inserte una url de feed en la configuración del widget"
         },
         "title": "Noticias",
-        "noDataMessage": "Actualmente no hay RSS / info"
+        "noDataMessage": "Actualmente no hay RSS / info",
+        "configDescription": "Descripción",
+        "configDescriptionPlaceholder": "Ingrese la descripción del widget"
       },
       "details": {
         "title": "Detalles",
@@ -277,8 +299,8 @@
         "noDataMessage": "Actualmente no hay flujos de trabajo para mostrar"
       },
       "signature": {
-        "title": "eSignature",
-        "description": "widget eSignature",
+        "title": "ESignature",
+        "description": "Widget eSignature",
         "noDataMessage": "Actualmente no hay eSignatures para mostrar"
       },
       "person": {
@@ -327,5 +349,38 @@
         "noDataMessage": "Actualmente no hay personas relacionadas para mostrar"
       }
     }
+  },
+  "dashboard.comp.news": {
+    "title": "Widget de noticias"
+  },
+  "dashboard.comp.weather": {
+    "title": "Widget de tiempo"
+  },
+  "dashboard.comp.myCases": {
+    "title": "Mi widget de casos"
+  },
+  "dashboard.comp.myTasks": {
+    "title": "My Tasks Widget"
+  },
+  "dashboard.comp.myComplaints": {
+    "title": "Mi widget de reclamaciones"
+  },
+  "dashboard.comp.workflowReport": {
+    "title": "Informe de flujo de trabajo"
+  },
+  "dashboard.comp.newComplaints": {
+    "title": "Nuevas quejas"
+  },
+  "dashboard.comp.newCases": {
+    "title": "Nuevos casos"
+  },
+  "dashboard.comp.casesByQueue": {
+    "title": "Casos por cola"
+  },
+  "dashboard.comp.teamWorkload": {
+    "title": "Carga de trabajo del equipo"
+  },
+  "dashboard.comp.casesByStatus": {
+    "title": "Casos por estado"
   }
 }

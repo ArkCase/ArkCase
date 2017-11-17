@@ -62,12 +62,6 @@
     <property name="classNameType" value="VARCHAR(400)" dbms="oracle,mysql,postgresql"/>
     <property name="classNameType" value="TEXT" dbms="mysql"/>
 
-    <!-- drop constraints need to be first of all, in case we make any structure changes involving
-         foreign-key constraint related tables.
-    -->
-    <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
-    <includeAll path="classpath*:/ddl/drops" relativeToChangelogFile="false"/>
-
     <!-- sequences are core objects with no dependencies, so they should be next. -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/sequences" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/sequences" relativeToChangelogFile="false"/>
@@ -102,6 +96,10 @@
     <!-- data maintenance SQL scripts -->
     <includeAll path="classpath*:/com/armedia/acm/ddl/sql" relativeToChangelogFile="false"/>
     <includeAll path="classpath*:/ddl/sql" relativeToChangelogFile="false"/>
+
+    <!-- drop constraints, triggers, columns should be executed after SQL scripts used for data migration -->
+    <includeAll path="classpath*:/com/armedia/acm/ddl/drops" relativeToChangelogFile="false"/>
+    <includeAll path="classpath*:/ddl/drops" relativeToChangelogFile="false"/>
 
     <!-- drop tables... needs to be last... in case any existing tables are dropped, when changelogs in constraint
          or trigger folders referred to them.  -->

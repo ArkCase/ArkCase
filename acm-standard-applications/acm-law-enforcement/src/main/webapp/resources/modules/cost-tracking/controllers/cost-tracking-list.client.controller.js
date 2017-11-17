@@ -26,7 +26,7 @@ angular.module('cost-tracking').controller('CostTrackingListController', ['$scop
             if (data.objectType === ObjectService.ObjectTypes.COSTSHEET) {
                 var frevvoRequest = ServCommService.popRequest("frevvo", "new-costsheet");
                 if (frevvoRequest) {
-                    ObjectService.gotoUrl(ObjectService.ObjectTypes.COSTSHEET, data.objectId);
+                    ObjectService.showObject(ObjectService.ObjectTypes.COSTSHEET, data.objectId);
                 }
                 else {
                     MessageService.info(data.objectType + " with ID " + data.objectId + " was created.");

@@ -17,9 +17,9 @@ angular.module('dashboard.calendar', ['adf.provider'])
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService'
-        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService',
+        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Admin.CalendarConfigurationService', 'Util.DateService',
         function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, CalendarService, ObjectService) {
+            , HelperObjectBrowserService, CalendarService, ObjectService, CalendarConfigurationService, DateService) {
 
             var vm = this;
 
@@ -29,6 +29,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
                     objectType: ObjectService.ObjectTypes.CASE_FILE,
+                    objectIdPropertyName: "id",
                     validateInfo: CaseInfoService.validateCaseInfo
                 }
                 , {
@@ -36,6 +37,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     objectType: ObjectService.ObjectTypes.COMPLAINT,
+                    objectIdPropertyName: "complaintId",
                     validateInfo: ComplaintInfoService.validateComplaintInfo
                 }
             ];
@@ -59,26 +61,26 @@ angular.module('dashboard.calendar', ['adf.provider'])
             var onObjectInfoRetrieved = function (objectInfo) {
                 var chartData = [];
                 var labels = [];
-                var calendarFolderId = objectInfo.container.calendarFolderId;
-                CalendarService.queryCalendarEvents(calendarFolderId)
-                    .then(function (calendarEvents) {
+                var today = moment();
+                var endDate = moment().add(7, 'days');
+                CalendarService.getCalendarEvents(DateService.dateToIso(today.toDate()), DateService.dateToIso(endDate.toDate()), module.objectType, objectInfo[module.objectIdPropertyName])
+                    .then(function (res) {
                         var events = [];
-                        if (calendarEvents.items) {
-                            for (var i = 0; i < calendarEvents.items.length; i++) {
-                                var calendarEvent = {};
-                                calendarEvent.id = calendarEvents.items[i].id;
-                                calendarEvent.title = calendarEvents.items[i].subject;
-                                calendarEvent.start = calendarEvents.items[i].startDate;
-                                calendarEvent.end = calendarEvents.items[i].endDate;
-                                events.push(calendarEvent);
-                            }
-
+                        _.forEach(res.data, function(event) {
+                            events.push({
+                                id: event.eventId,
+                                title: event.subject,
+                                start: event.start,
+                                end: event.end
+                            });
+                        });
+                          
+                        if (events) {
                             /**
                              * create initial data
                              */
                             var calendarChartData = [];
-                            var today = new Date();
-                            var targetDays = getRange(today, today + 7);
+                            var targetDays = getRange(today.toDate(), endDate.toDate());
                             _.forEach(targetDays, function (day) {
                                 calendarChartData.push({day: day, count: 0})
                             });
@@ -132,21 +134,23 @@ angular.module('dashboard.calendar', ['adf.provider'])
             /**
              * credit: http://stackoverflow.com/a/4413991
              */
-            var getRange = function (startDate, endDate, addFn, interval) {
+            var getRange = function (startDate, endDate, daysInterval) {
 
-                addFn = addFn || Date.prototype.addDays;
-                interval = interval || 1;
+                daysInterval = daysInterval || 1;
 
                 var retVal = [];
                 var current = new Date(startDate);
 
                 while (current <= endDate) {
                     retVal.push(new Date(current));
-                    current = addFn.call(current, interval);
+                    current.setTime(current.getTime() + daysInterval * 86400000 );
                 }
 
                 return retVal;
-
             };
+            
+            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+                vm.isCalendarIntegrationEnabled = calendarAdminConfigRes.data.configurationsByType[module.name].integrationEnabled;
+            });
         }
     ]);

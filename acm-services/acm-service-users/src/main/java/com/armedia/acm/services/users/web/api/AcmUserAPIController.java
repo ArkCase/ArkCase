@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ldap.AuthenticationException;
 import org.springframework.ldap.InvalidAttributeValueException;
 import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import java.util.Collections;
@@ -68,13 +70,17 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser createUser(@RequestBody @Valid UserDTO ldapUserCreateRequest, @PathVariable String directory)
+    public AcmUser createUser(@RequestBody UserDTO ldapUserCreateRequest, @PathVariable String directory,
+                              HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            ldapUserService.publishUserCreatedEvent(httpSession, authentication, acmUser, true);
+            return acmUser;
         }
         catch (NameAlreadyBoundException e)
         {
@@ -92,13 +98,16 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser editUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser editUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory,
+                            HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.editLdapUser(acmUser, userId, directory);
+            AcmUser editedUser = ldapUserService.editLdapUser(acmUser, userId, directory);
+            ldapUserService.publishUserUpdatedEvent(httpSession, authentication, editedUser, true);
+            return editedUser;
         }
         catch (Exception e)
         {
@@ -166,9 +175,10 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmUser cloneUser(@RequestBody @Valid UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
+    public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
+        validateLdapPassword(ldapUserCloneRequest);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
@@ -191,15 +201,16 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public Map<String, String> changePassword(@RequestBody Map<String, String> credentials, @PathVariable String directory,
+    public Map<String, String> changePassword(@RequestBody UserDTO credentials, @PathVariable String directory,
                                               @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
     {
+        validateLdapPassword(credentials);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
             LdapAuthenticateService ldapAuthenticateService = getAcmContextHolder().getAllBeansOfType(LdapAuthenticateService.class)
                     .get(String.format("%s_ldapAuthenticateService", directory));
-            ldapAuthenticateService.changeUserPassword(userId, credentials.get("currentPassword"), credentials.get("newPassword"));
+            ldapAuthenticateService.changeUserPassword(userId, credentials.getCurrentPassword(), credentials.getPassword());
             log.debug("User [{}] successfully updated password", userId);
             return Collections.singletonMap("message", "Password successfully changed");
         }

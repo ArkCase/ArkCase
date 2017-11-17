@@ -124,6 +124,7 @@ public class UserOrgServiceImpl implements UserOrgService
         profileDTO.setWebsite(userOrgInfo.getWebsite());
         profileDTO.setZip(userOrgInfo.getZip());
         profileDTO.setEcmFileId(userOrgInfo.getEcmFileId());
+        profileDTO.setEcmSignatureFileId(userOrgInfo.getEcmSignatureFileId());
         profileDTO.setTitle(userOrgInfo.getTitle());
         profileDTO.setLangCode(user.getLang());
 
@@ -207,6 +208,7 @@ public class UserOrgServiceImpl implements UserOrgService
         userOrg.setOfficePhoneNumber(profile.getOfficePhoneNumber());
         userOrg.setMobilePhoneNumber(profile.getMobilePhoneNumber());
         userOrg.setEcmFileId(profile.getEcmFileId());
+        userOrg.setEcmSignatureFileId(profile.getEcmSignatureFileId());
         userOrg.setTitle(profile.getTitle());
 
         userOrg = updateUserOrgOrganization(profile.getCompanyName(), userOrg);

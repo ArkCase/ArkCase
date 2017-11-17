@@ -13,9 +13,9 @@ angular.module('dashboard.phones', ['adf.provider'])
             });
     })
     .controller('Dashboard.PhonesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-            function ($scope, $stateParams, $translate,
-                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Person.InfoService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'UtilService', 'Object.LookupService', 'Object.ModelService'
+            ,function ($scope, $stateParams, $translate,
+                      PersonInfoService, OrganizationInfoService, HelperObjectBrowserService, HelperUiGridService, Util, ObjectLookupService, ObjectModelService) {
 
                 var modules = [
                     {
@@ -70,6 +70,15 @@ angular.module('dashboard.phones', ['adf.provider'])
                     });
                     gridHelper.setColumnDefs(widgetInfo);
                 };
+
+                ObjectLookupService.getSubContactMethodType('phone').then(
+                    function (contactMethodTypes) {
+                        $scope.phoneTypes = contactMethodTypes;
+                        return contactMethodTypes;
+                    });
+                $scope.isDefault = function (data) {
+                    return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+                }
 
         }
     ]);
