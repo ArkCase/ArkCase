@@ -73,7 +73,8 @@ import static org.junit.Assert.assertNotNull;
                 "/spring/spring-library-service-data.xml",
                 "/spring/spring-library-task.xml",
                 "/spring/spring-library-user-login.xml",
-                "/spring/spring-library-user-service.xml"
+                "/spring/spring-library-user-service.xml",
+                "/spring/spring-library-object-converter.xml"
         }
 )
 @TransactionConfiguration(defaultRollback = false, transactionManager = "transactionManager")
