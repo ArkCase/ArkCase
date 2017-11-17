@@ -63,6 +63,7 @@ angular.module('directives').directive('coreParticipants', ['$stateParams', '$q'
                     showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
                     retrieveObjectInfo: scope.participantsInit.retrieveObjectInfo,
                     validateObjectInfo: scope.participantsInit.validateObjectInfo,
+                    resetComponentData: scope.participantsInit.resetComponentData,
                     onConfigRetrieved: function (componentConfig) {
                         return onConfigRetrieved(componentConfig);
                     },

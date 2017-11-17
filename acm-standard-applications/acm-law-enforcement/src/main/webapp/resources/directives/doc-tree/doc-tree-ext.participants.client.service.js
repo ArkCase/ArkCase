@@ -90,6 +90,7 @@ angular.module('directives').controller('directives.DocTreeParticipantsDialogCon
                 retrieveObjectInfo: params.isFolder ? ObjectParticipantService.getFolderParticipantsAsObjectInfo : ObjectParticipantService.getFileParticipantsAsObjectInfo,
                 validateObjectInfo: ObjectParticipantService.validateObjectParticipants,
                 saveObjectInfo: params.isFolder ? ObjectParticipantService.saveFolderParticipants : ObjectParticipantService.saveFileParticipants,
+                resetComponentData: true,
                 objectType: params.isFolder ? ObjectService.ObjectTypes.FOLDER : ObjectService.ObjectTypes.FILE,
                 objectName: params.objectName,
                 participantsTitle: $translate.instant("common.directive.docTree.participantsDialog.title")
