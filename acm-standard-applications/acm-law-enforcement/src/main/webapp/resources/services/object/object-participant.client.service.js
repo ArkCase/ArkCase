@@ -98,9 +98,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
                     objectId: objectId
                 }
                 , onSuccess: function (data) {
-                    if (Service.validateParticipants(data, (objectType != "FOLDER" && objectType != "FILE"))) {
-                        return data;
-                    }
+                    return data;
                 }
             })
         };

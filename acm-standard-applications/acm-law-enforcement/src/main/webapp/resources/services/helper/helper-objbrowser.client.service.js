@@ -487,6 +487,10 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 that.componentId = arg.componentId;
                 that.retrieveObjectInfo = arg.retrieveObjectInfo;
                 that.currentObjectId = (arg.objectId ? that.scope.currentObjectId = arg.objectId : that.scope.currentObjectId = Service.getCurrentObjectId());
+                
+                if (arg.resetComponentData) {
+                    SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [that.currentObjectId]);
+                }
 
                 that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function (data) {
                     return (!Util.isEmpty(data));
