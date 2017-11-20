@@ -15,7 +15,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         );
 
         EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
-            $scope.emailSendConfiguration = emailData.data;
+            $scope.sendEmailEnabled = emailData.data.allowDocuments;
         });
 
         var componentHelper = new HelperObjectBrowserService.Component({
