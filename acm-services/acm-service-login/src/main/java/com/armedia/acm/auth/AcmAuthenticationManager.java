@@ -99,7 +99,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw providerNotFoundException;
     }
 
-    private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
 
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
@@ -120,7 +120,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 providerAuthentication.isAuthenticated(), user.getUserId());
     }
 
-    private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
+    protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
     {
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
