@@ -92,6 +92,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            throw (MuleException) e.getCause();
         }
 
         log.debug("Returning from addFileTransaction method");
