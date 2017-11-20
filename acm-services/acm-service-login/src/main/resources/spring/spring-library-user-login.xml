@@ -107,7 +107,7 @@
     </bean>
 
 
-    <beans profile="ldap,kerberos,externalAuth">
+    <beans profile="ldap,kerberos,externalAuth,mfa-okta">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>
