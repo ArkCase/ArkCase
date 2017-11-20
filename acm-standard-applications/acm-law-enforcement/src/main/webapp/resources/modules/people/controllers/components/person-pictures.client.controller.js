@@ -110,8 +110,8 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                         MessageService.errorAction();
                     });
                 } else if (data.file) {
-                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get the picture name
-                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.') + 0);   //get the extension
+                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get the picture name example pic.test.png -> pic.test
+                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.'));   //get the extension -> .png
                     $scope.fileNames = [];
                     $scope.extensions = [];
                     if(!Util.isEmpty($scope.images)){
@@ -122,7 +122,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                         });
                     }
                     if($scope.fileNames.indexOf(name) > -1 && $scope.extensions.indexOf(ext) > -1){
-                        MessageService.error("Picture is already uploaded!");
+                        MessageService.error($translate.instant("people.comp.pictures.message.error.uploadSamePicture"));
                     }
                     else {
                         PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
