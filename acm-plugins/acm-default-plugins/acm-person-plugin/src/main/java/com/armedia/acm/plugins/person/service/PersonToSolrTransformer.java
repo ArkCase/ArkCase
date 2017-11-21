@@ -91,6 +91,7 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(person.getParticipants());
         solrDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        solrDoc.setAdditionalProperty("status_s", person.getStatus());
 
         return solrDoc;
     }

@@ -74,6 +74,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(org.getParticipants());
         orgDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+        orgDoc.setAdditionalProperty("status_s", org.getStatus());
 
         return orgDoc;
     }
