@@ -1,0 +1,22 @@
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-data-update-service-tables" author="ncuculova">
+        <createTable tableName="acm_data_update_executor">
+            <column name="cm_executor_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_executed_on" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addPrimaryKey
+                tableName="acm_data_update_executor"
+                columnNames="cm_executor_id"
+                constraintName="pk_acm_executor_id"/>
+    </changeSet>
+
+</databaseChangeLog>
