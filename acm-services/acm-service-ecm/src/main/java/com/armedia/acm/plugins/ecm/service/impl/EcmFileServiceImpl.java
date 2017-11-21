@@ -262,8 +262,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 event.setSucceeded(false);
                 applicationEventPublisher.publishEvent(event);
             }
-            log.error("Could not upload file: " + e.getCause().getMessage(), e);
-            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getCause().getMessage(), e);
+            log.error("Could not upload file: " + e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getCause() == null ? e.getMessage() : e.getCause().getMessage(), e);
         }
     }
 
