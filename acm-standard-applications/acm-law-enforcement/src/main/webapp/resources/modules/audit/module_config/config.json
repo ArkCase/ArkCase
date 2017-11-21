@@ -17,41 +17,7 @@
       "id": "auditselection",
       "title": "audit.comp.auditselection.title",
       "enabled": true,
-      "configurable": true,
-      "auditDropdown": [
-        {
-          "id": "",
-          "name": "ALL"
-        },
-        {
-          "id": "CASE",
-          "name": "Case Files"
-        },
-        {
-          "id": "COMPLAINT",
-          "name": "Complaints"
-        },
-        {
-          "id": "TASK",
-          "name": "Tasks"
-        },
-        {
-          "id": "FILE",
-          "name": "Files"
-        },
-        {
-          "id": "DOC_REPO",
-          "name": "Documents"
-        },
-        {
-          "id": "PERSON",
-          "name": "People"
-        },
-        {
-          "id": "ORGANIZATION",
-          "name": "Organizations"
-        }
-      ]
+      "configurable": true
     },
     {
       "id": "datepickers",

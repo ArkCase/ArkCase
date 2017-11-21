@@ -25,7 +25,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-particpants.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-search.xml",
-        "/spring/test-case-file-context.xml"
+        "/spring/test-case-file-context.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true)
 public class AcmQueueDaoIT
