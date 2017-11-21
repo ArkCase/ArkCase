@@ -25,7 +25,8 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-object-lock.xml",
         "/spring/spring-library-search.xml",
         "/spring/spring-library-object-lock-mule-test.xml",
-        "/spring/spring-library-user-service.xml"
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class AcmObjectLockDaoIT
