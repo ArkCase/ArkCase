@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import java.util.Objects;
 
 @Entity
 @Table(name = "acm_user_role")
@@ -60,5 +61,21 @@ public class AcmUserRole
     public void setUserRoleState(AcmUserRoleState userRoleState)
     {
         this.userRoleState = userRoleState;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AcmUserRole that = (AcmUserRole) o;
+        return Objects.equals(roleName, that.roleName) &&
+                Objects.equals(userId, that.userId);
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash(roleName, userId);
     }
 }
