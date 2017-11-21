@@ -93,7 +93,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
-            if (MuleException.class.isAssignableFrom(e.getCause().getClass())) {
+            if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass())) {
                 throw (MuleException) e.getCause();
             }
         }
