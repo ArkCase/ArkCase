@@ -280,6 +280,13 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return userRole;
     }
 
+    public List<AcmUserRole> findAllUserRoles()
+    {
+        TypedQuery<AcmUserRole> userRolesQuery = getEm().createQuery(
+                "SELECT aur FROM AcmUserRole aur", AcmUserRole.class);
+        return userRolesQuery.getResultList();
+    }
+
     @Transactional
     public AcmUser markUserInvalid(String id)
     {

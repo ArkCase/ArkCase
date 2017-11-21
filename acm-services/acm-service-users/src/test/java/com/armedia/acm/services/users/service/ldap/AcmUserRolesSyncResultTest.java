@@ -2,179 +2,95 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.AcmUserRoleState;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.core.Every.everyItem;
 
 public class AcmUserRolesSyncResultTest
 {
     private AcmUserRolesSyncResult unit;
 
-    private Map<String, Set<String>> userAddedGroups;
-
-    private Map<String, Set<String>> userRemovedGroups;
-
-    private Map<String, Set<String>> userGroupsMap;
+    private Map<String, Set<AcmGroup>> userGroupsMap;
 
     private Map<String, List<String>> groupToRoleMap;
+
+    private List<AcmUserRole> userRolesPerUser;
 
     @Before
     public void setup()
     {
-        userAddedGroups = new HashMap<>();
-        userAddedGroups.put("ann-acm", new HashSet<>(Arrays.asList("A", "B")));
-        userRemovedGroups = new HashMap<>();
-        userRemovedGroups.put("ann-acm", new HashSet<>(Arrays.asList("X")));
         groupToRoleMap = new HashMap<>();
         groupToRoleMap.put("A", Arrays.asList("ADMIN"));
         groupToRoleMap.put("B", Arrays.asList("ADMIN"));
         groupToRoleMap.put("X", Arrays.asList("READER"));
+        userRolesPerUser = new ArrayList<>();
     }
 
     // Expected Roles per added/removed groups
     // @formatter:off
         /**
-         * A -> ADMIN  -> VALID
-         * B -> ADMIN  -> VALID
-         * A -> A      -> VALID
-         * B -> B      -> VALID
-         * X -> READER -> INVALID
-         * X -> X      -> INVALID
+         * user       group  ascendants
+         *
+         * ann-acm -> Q      "A,B"
+         *            W
+         *            X
          */
         // @formatter:on
         @Test
-        public void rolesPerAddedAndRemovedGroupsTest()
+        public void collectRolesPerGroupsTest()
         {
-            userGroupsMap = new HashMap<>();
-            userGroupsMap.put("ann-acm", new HashSet<>(Arrays.asList("Q", "W", "X")));
+            AcmUserRole userRole1 = new AcmUserRole();
+            userRole1.setUserId("ann-acm");
+            userRole1.setRoleName("SUPERVISOR");
+            userRole1.setUserRoleState(AcmUserRoleState.VALID);
+            userRolesPerUser.add(userRole1);
+            AcmUserRole userRole2 = new AcmUserRole();
+            userRole2.setUserId("ann-acm");
+            userRole2.setRoleName("READER");
+            userRole2.setUserRoleState(AcmUserRoleState.INVALID);
+            userRolesPerUser.add(userRole2);
 
-            unit = new AcmUserRolesSyncResult(userAddedGroups, userRemovedGroups, groupToRoleMap, userGroupsMap);
+            userGroupsMap = new HashMap<>();
+            userGroupsMap.put("ann-acm", new HashSet<>(Arrays.asList(acmGroup("Q", "A,B"),
+                    acmGroup("W", null), acmGroup("X", null))));
+
+            unit = new AcmUserRolesSyncResult(groupToRoleMap, userGroupsMap, userRolesPerUser);
 
             List<AcmUserRole> userRoles = unit.getAcmUserRoles();
 
-            long numberInvalidRoles = userRoles.stream()
+            List<String> actualRoles = userRoles.stream()
+                    .map(AcmUserRole::getRoleName)
+                    .collect(Collectors.toList());
+
+            Set<AcmUserRole> invalidUserRoles = userRoles.stream()
                     .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.INVALID)
-                    .count();
+                    .collect(Collectors.toSet());
 
-            long numberValidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.VALID)
-                    .count();
-
-            assertThat("Should have 2 removed (INVALID) role(s)", numberInvalidRoles, is(2L));
-            assertThat("Should have 3 added (VALID) role(s)", numberValidRoles, is(3L));
+            assertThat(userRoles.size(), is(8));
+            assertThat("Invalid user roles should be:", invalidUserRoles,
+                    everyItem(isIn(new HashSet<>(Arrays.asList(userRole1)))));
+            assertThat(actualRoles, everyItem(isIn(Arrays.asList("Q", "W", "X", "A", "B", "ADMIN", "READER", "SUPERVISOR"))));
         }
 
-    // Expected Roles per added/removed groups
-    // @formatter:off
-        /**     roleName  roleState
-         * A -> ADMIN  -> VALID
-         * B -> ADMIN  -> VALID
-         * A -> A      -> VALID
-         * B -> B      -> VALID
-         * Y -> Y      -> VALID
-         * X -> READER -> INVALID
-         * X -> X      -> INVALID
-         */
-        // @formatter:on
-        @Test
-        public void rolesPerAddedGroupNotMappedWithRolesTest()
-        {
-            userAddedGroups.get("ann-acm").add("Y");
-            userGroupsMap = new HashMap<>();
-            userGroupsMap.put("ann-acm", new HashSet<>(Arrays.asList("Q", "W", "X")));
-
-            unit = new AcmUserRolesSyncResult(userAddedGroups, userRemovedGroups, groupToRoleMap, userGroupsMap);
-
-            List<AcmUserRole> userRoles = unit.getAcmUserRoles();
-
-            long numberInvalidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.INVALID)
-                    .count();
-
-            long numberValidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.VALID)
-                    .count();
-
-            assertThat("Should have 2 removed (INVALID) role(s)", numberInvalidRoles, is(2L));
-            assertThat("Should have 4 added (VALID) role(s)", numberValidRoles, is(4L));
-        }
-
-    // Expected Roles per added/removed groups
-    // @formatter:off
-        /**     roleName  roleState
-         * A -> ADMIN  -> VALID
-         * B -> ADMIN  -> VALID
-         * A -> A      -> VALID
-         * B -> B      -> VALID
-         * Y -> Y      -> INVALID
-         * X -> READER -> INVALID
-         * X -> X      -> INVALID
-         */
-        // @formatter:on
-        @Test
-        public void rolesPerRemovedGroupNotMappedWithRolesTest()
-        {
-            userRemovedGroups.get("ann-acm").add("Y");
-            userGroupsMap = new HashMap<>();
-            userGroupsMap.put("ann-acm", new HashSet<>(Arrays.asList("Q", "W", "X", "Y")));
-
-            unit = new AcmUserRolesSyncResult(userAddedGroups, userRemovedGroups, groupToRoleMap, userGroupsMap);
-
-            List<AcmUserRole> userRoles = unit.getAcmUserRoles();
-
-            long numberInvalidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.INVALID)
-                    .count();
-
-            long numberValidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.VALID)
-                    .count();
-
-            assertThat("Should have 3 removed (INVALID) role(s)", numberInvalidRoles, is(3L));
-            assertThat("Should have 3 added (VALID) role(s)", numberValidRoles, is(3L));
-        }
-
-    // Expected Roles per added/removed groups
-    // @formatter:off
-        /**     roleName  roleState   userId
-         * A -> ADMIN  -> VALID    -> ann-acm
-         * B -> ADMIN  -> VALID    -> ann-acm
-         * A -> A      -> VALID    -> ann-acm
-         * B -> B      -> VALID    -> ann-acm
-         * X -> READER -> INVALID  -> ann-acm
-         * X -> X      -> INVALID  -> ann-acm
-         * Q -> Q      -> INVALID  -> sally-acm
-         */
-        // @formatter:on
-        @Test
-        public void rolesPerRemovedGroupsGroupsToRemainNotFoundTest()
-        {
-            userRemovedGroups.put("sally-acm", new HashSet<>(Arrays.asList("Q")));
-            userGroupsMap = new HashMap<>();
-
-            unit = new AcmUserRolesSyncResult(userAddedGroups, userRemovedGroups, groupToRoleMap, userGroupsMap);
-
-            List<AcmUserRole> userRoles = unit.getAcmUserRoles();
-
-            long numberInvalidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.INVALID)
-                    .count();
-
-            long numberValidRoles = userRoles.stream()
-                    .filter(userRole -> userRole.getUserRoleState() == AcmUserRoleState.VALID)
-                    .count();
-
-            assertThat("Should have 3 removed (INVALID) role(s)", numberInvalidRoles, is(3L));
-            assertThat("Should have 3 added (VALID) role(s)", numberValidRoles, is(3L));
-
-        }
+    private AcmGroup acmGroup(String name, String ascendants)
+    {
+        AcmGroup acmGroup = new AcmGroup();
+        acmGroup.setName(name);
+        acmGroup.setAscendantsList(ascendants);
+        return acmGroup;
+    }
 }

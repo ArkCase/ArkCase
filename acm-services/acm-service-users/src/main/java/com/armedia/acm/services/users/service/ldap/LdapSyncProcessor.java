@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
@@ -25,21 +26,21 @@ public class LdapSyncProcessor
     private LdapDatabaseSyncService ldapDatabaseSyncService;
 
     @Transactional
-    public void sync(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups, AcmLdapSyncConfig ldapSyncConfig)
+    public void sync(List<LdapUser> ldapUsers, List<LdapGroup> ldapGroups, AcmLdapSyncConfig ldapSyncConfig, boolean fullSync)
     {
-        List<AcmUser> currentUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
-        AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult();
-        Map<String, AcmUser> allUsersByIdMap = acmUsersSyncResult.sync(ldapUsers, currentUsers);
+        List<AcmUser> acmUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
+        AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult(fullSync);
+        Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers);
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
-        Map<String, Set<String>> userGroupsMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, allUsersByIdMap);
+        Map<String, Set<AcmGroup>> userGroupsMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, acmSyncedUsers);
 
         Map<String, Set<String>> roleToGroup = roleToGroupConfig.getRoleToGroupsMap();
         Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
 
-        AcmUserRolesSyncResult acmUserRolesSyncResult = new AcmUserRolesSyncResult(acmGroupsSyncResult.getUserNewGroups(),
-                acmGroupsSyncResult.getUserRemovedGroups(), groupToRoleMap, userGroupsMap);
+        List<AcmUserRole> acmUserRoles = userDao.findAllUserRoles();
+        AcmUserRolesSyncResult acmUserRolesSyncResult = new AcmUserRolesSyncResult(groupToRoleMap, userGroupsMap, acmUserRoles);
 
         ldapDatabaseSyncService.saveUsers(acmUsersSyncResult);
 
