@@ -79,6 +79,9 @@
       "yes": "hi_Yes",
       "change": "hi_Change Picture",
       "save": "hi_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "hi_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
