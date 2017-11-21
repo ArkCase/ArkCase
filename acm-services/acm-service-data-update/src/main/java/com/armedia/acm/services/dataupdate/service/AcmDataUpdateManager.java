@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshedEvent>
@@ -36,9 +37,10 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
                     .map(AcmDataUpdateExecutorLog::getExecutorId)
                     .collect(Collectors.toSet());
 
+            Predicate<AcmDataUpdateExecutor> updatesNotExecuted = service -> !executedDataUpdates.contains(service.getUpdateId());
             log.info("Starting [{}] core data update executors...", dataUpdateExecutors.size());
             dataUpdateExecutors.stream()
-                    .filter(service -> !executedDataUpdates.contains(service.getUpdateId()))
+                    .filter(updatesNotExecuted)
                     .forEach(service -> {
                         log.debug("Execute updates from: [{}]", service.getUpdateId());
                         service.execute();
@@ -49,11 +51,14 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
             {
                 log.info("Starting [{}] extensions data update executors...",
                         extensionDataUpdateExecutors.getExecutors().size());
-                extensionDataUpdateExecutors.getExecutors().forEach(service -> {
-                    log.debug("Execute updates from: [{}]", service.getUpdateId());
-                    service.execute();
-                    dataUpdateService.save(service.getUpdateId());
-                });
+
+                extensionDataUpdateExecutors.getExecutors().stream()
+                        .filter(updatesNotExecuted)
+                        .forEach(service -> {
+                            log.debug("Execute updates from: [{}]", service.getUpdateId());
+                            service.execute();
+                            dataUpdateService.save(service.getUpdateId());
+                        });
             }
         }
     }
