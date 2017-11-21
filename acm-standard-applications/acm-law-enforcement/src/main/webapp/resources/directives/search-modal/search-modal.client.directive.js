@@ -80,7 +80,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
                 scope.disableSearchControls = (scope.disableSearch === 'true') ? true : false;
                 scope.findGroups = scope.findGroups === 'true';
-                scope.secoundGrid = scope.secondGrid === 'true';
+                scope.secondGrid = scope.secondGrid === 'true';
                 if (scope.searchQuery) {
                     scope.searchQuery = scope.searchQuery;
                 } else {
@@ -281,10 +281,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 }
 
                                 if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
-                                    console.log("user");
                                     scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
                                 } else if (scope.selectedItem.object_type_s === 'GROUP') {
-                                    console.log("grupa");
                                     scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
                                 }
 
