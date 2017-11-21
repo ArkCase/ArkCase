@@ -95,6 +95,7 @@ angular.module('organizations').controller('Organizations.PeopleController', ['$
             };
 
             var params = {
+                selectExistingEnabled: false,
                 showSetPrimary: true,
                 types: $scope.personAssociationTypes,
                 personId: rowEntity.person.id,
