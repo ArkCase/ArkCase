@@ -17,16 +17,13 @@ import java.util.Map;
 @Controller
 public class LoginController
 {
-    LoginWarningMessageService loginWarningMessageService;
-    ApplicationMetaInfoService applicationMetaInfoService;
+    private LoginWarningMessageService loginWarningMessageService;
 
-    @RequestMapping(value = {"/login", "/login.html"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login", "/login.html"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public String getLogin(Model model)
     {
 
-        model.addAttribute("warningEnabled", loginWarningMessageService.isEnabled());
-        model.addAttribute("warningMessage", loginWarningMessageService.getMessage());
-        model.addAttribute("version", applicationMetaInfoService.getVersion());
+        loginWarningMessageService.buildModel(model);
 
         return "login";
     }
@@ -36,7 +33,7 @@ public class LoginController
      *
      * @return login warning configuration
      */
-    @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/warning", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public Map<String, Object> getWarning()
     {
@@ -46,10 +43,5 @@ public class LoginController
     public void setLoginWarningMessageService(LoginWarningMessageService loginWarningMessageService)
     {
         this.loginWarningMessageService = loginWarningMessageService;
-    }
-
-    public void setApplicationMetaInfoService(ApplicationMetaInfoService applicationMetaInfoService)
-    {
-        this.applicationMetaInfoService = applicationMetaInfoService;
     }
 }
