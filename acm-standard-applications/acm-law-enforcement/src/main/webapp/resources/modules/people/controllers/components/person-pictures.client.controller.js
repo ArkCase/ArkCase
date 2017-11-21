@@ -91,6 +91,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                 templateUrl: "modules/people/views/components/person-pictures-upload.dialog.view.html",
                 controller: 'Person.PictureUploadDialogController',
                 size: 'md',
+                scope: $scope,
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -110,18 +111,15 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                         MessageService.errorAction();
                     });
                 } else if (data.file) {
-                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get the picture name example pic.test.png -> pic.test
-                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.'));   //get the extension -> .png
-                    $scope.fileNames = [];
-                    $scope.extensions = [];
+                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get file name example.png -> example
+                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.'));   //get file extension example.png -> .png
                     if(!Util.isEmpty($scope.images)){
-                        angular.forEach( $scope.images, function(value, key) {
-                            $scope.fileNames.push(value.title_parseable);
-                            $scope.extensions.push(value.ext_s);
-                            // statements
+                        var found = _.find($scope.images, function(image){
+                            return image.title_parseable == name && image.ext_s == ext;
                         });
                     }
-                    if($scope.fileNames.indexOf(name) > -1 && $scope.extensions.indexOf(ext) > -1){
+                    if(found)
+                    {
                         MessageService.error($translate.instant("people.comp.pictures.message.error.uploadSamePicture"));
                     }
                     else {
