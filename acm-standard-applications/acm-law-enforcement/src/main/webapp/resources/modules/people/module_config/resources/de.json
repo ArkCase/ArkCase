@@ -79,6 +79,9 @@
       "yes": "de_Yes",
       "change": "de_Change Picture",
       "save": "de_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "de_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {

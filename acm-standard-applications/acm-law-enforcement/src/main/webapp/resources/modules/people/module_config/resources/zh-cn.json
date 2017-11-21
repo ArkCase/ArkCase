@@ -79,6 +79,9 @@
       "yes": "zh-cn_Yes",
       "change": "zh-cn_Change Picture",
       "save": "zh-cn_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "zh-cn_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
