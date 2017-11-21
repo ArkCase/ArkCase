@@ -28,8 +28,8 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
-
-        if (((ApplicationContext) event.getSource()).getParent() == null)
+        boolean rootAppContext = ((ApplicationContext) event.getSource()).getParent() == null;
+        if (rootAppContext)
         {
             Set<String> executedDataUpdates = dataUpdateService.findAll()
                     .stream()

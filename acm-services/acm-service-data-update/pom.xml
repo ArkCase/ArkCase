@@ -12,7 +12,7 @@
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-data-update</artifactId>
     <name>ACM Service: Update Existing Data</name>
-    <description>This service will update existing data where userId and groupName is found with user domain.</description>
+    <description>Enables custom data update when application context gets initialized.</description>
 
     <dependencies>
         <dependency>
