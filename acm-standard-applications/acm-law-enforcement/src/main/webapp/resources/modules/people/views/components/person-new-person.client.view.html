@@ -264,7 +264,7 @@
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="addNewOrganization();">
+                                            ng-click="addNewOrganization();" ng-disabled="!organizationAssociation.organization.organizationValue" ng-show="$last">
                                         <i class="fa fa-plus text-success"></i><span
                                             translate>people.comp.editPerson.addAnother</span>
                                     </button>
