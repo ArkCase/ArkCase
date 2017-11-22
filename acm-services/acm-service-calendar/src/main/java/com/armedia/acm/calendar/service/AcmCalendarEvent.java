@@ -1,5 +1,8 @@
 package com.armedia.acm.calendar.service;
 
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -9,9 +12,6 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-
-import java.time.ZonedDateTime;
-import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -72,7 +72,7 @@ public class AcmCalendarEvent
 
     private List<Attendee> attendees;
 
-    private List<String> fileNames;
+    private List<AcmCalendarEventAttachment> files;
 
     /**
      * @return the eventId
@@ -347,20 +347,20 @@ public class AcmCalendarEvent
     }
 
     /**
-     * @return the fileNames
+     * @return the files
      */
-    public List<String> getFileNames()
+    public List<AcmCalendarEventAttachment> getFiles()
     {
-        return fileNames;
+        return files;
     }
 
     /**
-     * @param fileNames
-     *            the fileNames to set
+     * @param files
+     *            the files to set
      */
-    public void setFileNames(List<String> fileNames)
+    public void setFiles(List<AcmCalendarEventAttachment> files)
     {
-        this.fileNames = fileNames;
+        this.files = files;
     }
 
 }

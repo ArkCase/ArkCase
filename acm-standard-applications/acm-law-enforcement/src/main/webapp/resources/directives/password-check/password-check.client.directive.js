@@ -35,10 +35,12 @@ angular.module('directives').directive('passwordCheck', ['$translate' ,function(
         link: function(scope, elem, attrs, formCtrl){
             scope.$watch('newPassword', function(){
                 scope.differentPasswords();
+                scope.$bus.publish('ldap-change-password-clear-errors');
             });
 
             scope.$watch('confirmNewPassword', function(){
                 scope.differentPasswords();
+                scope.$bus.publish('ldap-change-password-clear-errors');
             });
 
             scope.differentPasswords = function(){

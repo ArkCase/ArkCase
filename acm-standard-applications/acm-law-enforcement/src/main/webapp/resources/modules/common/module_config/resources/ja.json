@@ -2,49 +2,15 @@
   "common": {
     "select.option.none": "（選択する）",
     "value.unknown": "不明",
-
     "defaultDateFormat": "ja_MM/DD/YYYY",
     "defaultTimeFormat": "ja_hh:mm:ss",
     "defaultDateTimeFormat": "ja_MM/DD/YYYY hh:mm",
     "defaultDatePickerFormat": "ja_MM/dd/yyyy",
     "defaultDateUIFormat": "ja_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "ja_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
+    "defaultDateTimeUIFormat": "ja_MM/dd/yyyy HH:mm"
   },
-  "common.addOrganization": {
-    "title": "ja_Add Parent Organization",
-    "addNew.label": "ja_Add new Organization",
-    "selectExisting.label": "ja_Select existing organization",
-    "organization.label": "ja_Organization",
-    "description": "ja_Description",
-    "type.label": "ja_Organization Association Type",
-    "type.label.default.text": "ja_No parent Organization",
-    "type.label.text": "ja_Parent Organization",
-    "btnCancel.text": "ja_Cancel",
-    "btnOk.text": "ja_Save Organization",
-    "setPrimary.label": "ja_Set As Primary?",
-    "radioName": "ja_Choice primary",
-    "radioYes.text": "ja_Yes",
-    "radioNo.text": "ja_No",
-    "duplicateOrganizationRoleErrorMessage": "ja_Organization already has the selected association",
-    "notifyParentOrgWillBeChanged": "ja_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
-  },
-  "common.addPerson": {
-    "title": "ja_Add person",
-    "addNew.label": "ja_Add new Person",
-    "selectExisting.label": "ja_Select existing person",
-    "person.label": "ja_Person",
-    "type.label": "ja_Person Association Type",
-    "btnCancel.text": "ja_Cancel",
-    "btnOk.text": "ja_Save Person",
-    "setPrimary.label": "ja_Set As Primary?",
-    "radioName": "ja_Choice primary",
-    "radioYes.text": "ja_Yes",
-    "radioNo.text": "ja_No",
-    "duplicatePersonRoleErrorMessage": "ja_Person already has the selected association"
-  },
-  "common.editOrganization": {
-    "title": "ja_Edit Parent Organization"
+  "common.frevvo": {
+    "defaultDateFormat": "ja_YYYY-MM-DD"
   },
   "common.service": {
     "error.invalidData": "無効なデータ"
@@ -54,122 +20,140 @@
     "progressLoading": "データの読み込み中 ",
     "progressError": "データの読み込みに失敗しました "
   },
-  "common.frevvo": {
-    "defaultDateFormat": "ja_YYYY-MM-DD"
-  },
   "common.service.messageService": {
-    "authorizationError": "ja_You are not authorized to take this action",
+    "authorizationError": "あなたはこの行動をとる権限がありません",
     "actionMessages": {
-      "success": "ja_Action was successful",
-      "error": "ja_Action error"
+      "success": "アクションは成功しました",
+      "error": "アクションエラー"
     }
   },
   "common.directive.docTree": {
-    "btnRefresh": "ja_Refresh",
-    "waitUploading": "ja_Uploading...",
-    "confirmVersion": "ja_Are you sure to set back to older version?",
-    "declareSuccessful": "ja_Declare successful. Refreshing Document Tree...",
-    "prevItems": "ja_ items above...",
-    "prevItemsTooltip": "ja_Review previous items",
-    "moreItems": "ja_ more items...",
-    "moreItemsTooltip": "ja_Load more items",
-    "moreItemsBegin": "ja_More items...",
+    "btnRefresh": "リフレッシュ",
+    "waitUploading": "アップロード中...",
+    "confirmVersion": "古いバージョンに戻すのは本当ですか？",
+    "declareSuccessful": "成功を宣言する。ドキュメントツリーの更新中...",
+    "prevItems": " 上記の項目...",
+    "prevItemsTooltip": "前の項目を確認する",
+    "moreItems": " その他のアイテム...",
+    "moreItemsTooltip": "他のアイテムを読み込む",
+    "moreItemsBegin": "その他のアイテム...",
     "email": {
-      "defaultTitle": "ja_ArkCase Documents",
-      "headerForLinks": "ja_Please follow the links below to view the document(s). Links expire in 3 days.",
-      "footerForLinks": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "subjectForAttachment": "ja_Documents from ArkCase",
-      "bodyForAttachment": "ja_Please find attached the documents sent to you from ArkCase.",
-      "headerForAttachment": "ja_Hello,",
-      "footerForAttachment": "ja_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultBodyLinks": "これらの文書を見るには、以下のリンクをクリックしてください。リンクは3日間で有効期限が切れます。",
+      "defaultBodyAttachments": "ArkCaseから送付された書類を添付してください。",
+      "defaultFooter": "ArkCase、エンタープライズケースマネジメントプラットフォーム、http://www.arkcase.com",
+      "successMessage": "電子メールが正常に送信されました"
     },
     "menu": {
-      "noop": "ja_(Select Item)",
-      "editWithWebDAV": "ja_Edit"
+      "noop": "（選択項目）",
+      "editWithWebDAV": "編集"
     },
     "table.columns": {
-      "title": "ja_Title",
-      "type": "ja_Type",
-      "created": "ja_Created",
-      "modified": "ja_Modified",
-      "modifier": "ja_Modified By",
-      "version": "ja_Version",
-      "status": "ja_Status"
+      "title": "タイトル",
+      "type": "タイプ",
+      "created": "作成した",
+      "modified": "変更された",
+      "modifier": "変更者",
+      "version": "バージョン",
+      "status": "状態"
     },
     "dndDialog": {
-      "title": "ja_Drag and Drop",
-      "radReplace.text": "ja_Replace document (If more then one files are dropped, only first one is used)",
-      "radUploadToParent.text": "ja_Create document(s) in parent folder",
-      "selFileTypes.label": "ja_File Type:",
-      "optFileType.prompt": "ja_[choose file type]",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_OK"
+      "title": "ドラッグアンドドロップ",
+      "radReplace.text": "ドキュメントを置き換える（1つ以上のファイルがドロップされた場合、最初のファイルのみが使用されます）",
+      "radUploadToParent.text": "親フォルダにドキュメントを作成する",
+      "selFileTypes.label": "ファイルの種類：",
+      "optFileType.prompt": "[ファイルタイプを選択]",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "確認"
     },
     "emailDialog": {
-      "title": "ja_Email",
-      "recipients": "ja_Recipients:",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Send Email",
+      "title": "Eメール",
+      "recipients.label": "受信者：",
+      "recipients.placeholder": "受信者を選択",
+      "subject.label": "件名：",
+      "subject.placeholder": "件名を入力",
+      "attachments.label": "添付ファイル：",
+      "deliveryMethod.label": "配送方法：",
+      "sendWithAttachments.checkbox": "添付ファイル付きのメールを送信する",
+      "sendWithHyperlink.checkbox": "ハイパーリンクで電子メールを送信する",
+      "sendWithAttachmentsAndHyperlink.checkbox": "添付ファイルとハイパーリンクとして送信",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "メールを送る"
+    },
+    "recipientsDialog": {
+      "title": "受信者を選択",
+      "search.placeholder": "検索受取人",
+      "recipients.label": "受信者：",
+      "externalRecipients.placeholder": "外部のメールアドレスを入力",
+      "cancel.button": "キャンセル",
+      "addRecipients.button": "受信者を追加する",
       "gridColumns": {
-        "name": "ja_Name",
-        "email": "ja_Email"
+        "name": "名前",
+        "email": "Eメール"
       }
     },
+    "mediaDialog": {
+      "title": "ArkCaseメディアプレーヤー",
+      "btnCancel.text": "キャンセル"
+    },
     "comment": {
-      "title": "ja_Checkin New Document",
-      "addComent": "ja_Detailed Note",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Checkin",
-      "chooseFiles": "ja_Choose Files",
-      "noFiles": "ja_No Files Selected"
+      "title": "新しい文書のチェックイン",
+      "addComent": "詳細な注釈",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "チェックイン",
+      "chooseFiles": "ファイルを選択",
+      "noFiles": "選択したファイルがありません"
     },
     "error": {
-      "nodeTitle": "ja_(Error)"
+      "nodeTitle": "（エラー）",
+      "folderNodeTitle": "（エラー）フォルダが作成されていません。",
+      "fileNodeTitle": "（エラー）ファイルがアップロードされませんでした。"
     },
-    "lockedTitle": "ja_This document is locked by ",
+    "lockedTitle": "この文書は",
     "delete.confirmation.dialog": {
-      "header": "ja_Are you sure you want to delete this folder?",
-      "body.message": "ja_The folder contains:",
-      "body.content.files": "ja_files",
-      "body.content.folders": "ja_folders",
-      "btn.delete.folder": "ja_Yes",
-      "btn.cancel.delete.folder": "ja_No"
+      "header": "このフォルダを削除してもよろしいですか？",
+      "body.message": "フォルダには以下が含まれます：",
+      "body.content.files": "ファイル",
+      "body.content.folders": "フォルダ",
+      "btn.delete.folder": "はい",
+      "btn.cancel.delete.folder": "いいえ"
     },
     "fileTypesDialog": {
-      "header": "ja_Please select type of the Document",
-      "btnOK": "ja_OK",
-      "btnCancel": "ja_Cancel"
+      "header": "ドキュメントの種類を選択してください",
+      "type": "ドキュメントタイプ",
+      "language": "ドキュメント言語",
+      "btnOK": "確認",
+      "btnCancel": "キャンセル"
     }
   },
   "common.directive.objectTree": {
-    "btnPrev.title": "記録上の...",
-    "btnPrev.toolTip": "レコードの上を参照",
-    "btnNext.titleUnknownSize": "複数のレコード...",
-    "btnNext.title": "複数のレコード...",
-    "btnNext.toolTip": "複数のレコードのロード",
+    "btnPrev.title": "上記の記録...",
+    "btnPrev.toolTip": "上記の記録を見る",
+    "btnNext.titleUnknownSize": "その他の記録...",
+    "btnNext.title": "その他の記録...",
+    "btnNext.toolTip": "より多くのレコードを読み込む",
     "edtQuery.placeHolder": "検索",
     "btnQuery.text": "開始!",
-    "errorNode.title": "(エラー)",
-    "errorNode.toolTip": "(エラー)",
+    "errorNode.title": "（間違った）",
+    "errorNode.toolTip": "（間違った）",
     "noAccessNode.title": "(アクセス権なし)",
     "noAccessNode.toolTip": "(アクセス権なし)"
   },
   "common.directive.simplePager": {
-    "rowCountLabel": "ja_items per page",
-    "pagerCountMiddleLabel": "ja_ of ",
-    "pagerCountLabel": "ja_ items"
+    "rowCountLabel": "ページあたりのアイテム数",
+    "pagerCountMiddleLabel": " の",
+    "pagerCountLabel": " アイテム"
   },
   "common.directive.objectAuthorizationRoles": {
-    "choose": "ja_Choose",
-    "not_authorized": "ja_Not Authorized",
-    "tooltip.move_right": "ja_Move Right",
-    "tooltip.move_left": "ja_Move Left",
-    "authorized": "ja_Authorized"
+    "choose": "選択する",
+    "not_authorized": "許可されていません",
+    "tooltip.move_right": "右に動く",
+    "tooltip.move_left": "左に移動",
+    "authorized": "認可された"
   },
   "common.directive.searchModal": {
     "header": "検索",
     "btnSearch.text": "検索",
-    "btnOk.text": "OK",
+    "btnOk.text": "[OK]",
     "btnCancel.text": "キャンセル",
     "edtPlaceholder": "検索するには入力",
     "noData.text": "結果なし"
@@ -221,13 +205,13 @@
       "fields.incidentType.drugTrafficking%": "麻薬密売",
       "fields.incidentType.educationWaiver%": "教育免除要求",
       "fields.incidentType.eeoHarassment%": "EEO / 嫌がらせ",
-      "fields.incidentType.embezzle%": "横領",
+      "fields.incidentType.embezzlement%": "横領",
       "fields.incidentType.extortion%": "強要",
       "fields.incidentType.fraud%": "詐欺",
       "fields.incidentType.government%": "政府",
       "fields.incidentType.investorComplaint%": "投資人の苦情",
       "fields.incidentType.laborRacketeering%": "労働脅迫",
-      "fields.incidentType.local%": "ローカル",
+      "fields.incidentType.local%": "地元",
       "fields.incidentType.murder%": "殺人",
       "fields.incidentType.newDrugFraud%": "新薬申請詐欺",
       "fields.incidentType.payoff%": "賄賂",
@@ -305,151 +289,546 @@
     }
   },
   "common.directive.coreNotes": {
-    "title": "ja_Notes",
-    "modal.addNote": "ja_Add Note",
-    "modal.editNote": "ja_Edit Record",
-    "modal.notes.label": "ja_Note",
-    "modal.btnOk.text": "ja_Save",
-    "modal.btnCancel.text": "ja_Cancel"
+    "title": "ノート",
+    "modal.addNote": "メモを追加",
+    "modal.editNote": "レコードの編集",
+    "modal.notes.label": "コメント",
+    "modal.btnOk.text": "セーブ",
+    "modal.btnCancel.text": "キャンセル"
   },
-  "common.directive.corePeople": {
-    "title": "ja_People",
-    "contactMethods": {
-      "title": "ja_Contact Methods",
-      "modal": {
-        "addContactMethod": "ja_Add Contact Method",
-        "editContactMethod": "ja_Edit Record",
-        "contactMethodTypes.label": "ja_Contact Method Types",
-        "value.label": "ja_Value",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save"
-      }
-    },
-    "organizations": {
-      "title": "ja_Organizations",
-      "modal": {
-        "addOrganization": "ja_Add Organization",
-        "editOrganization": "ja_Edit Record",
-        "organizationTypes.label": "ja_Organization Types",
-        "selectExisting.label": "ja_Select Existing",
-        "addNew.label": "ja_Add New",
-        "value.label": "ja_Value",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save",
-        "dialogOrganizationPicker": {
-          "header": "ja_Choose Organization",
-          "table.columns": {
-            "type": "ja_Organization Type",
-            "name": "ja_Value"
-          }
+  "common.directive.coreCalendar": {
+    "title": "カレンダー",
+    "start.label": "開始：",
+    "end.label": "終わり：",
+    "newEvent.button": "新しいイベント",
+    "addNewEventDialog": {
+      "title": "新しいイベント",
+      "cancel.button": "キャンセル",
+      "add.button": "新しいイベントを追加",
+      "edit.button": "イベントの更新",
+      "next.button": "次へ",
+      "previous.button": "前に",
+      "stepOneTitle": "ステップ1 - イベントの詳細を入力",
+      "stepTwoTitle": "ステップ2 - コメントを入力",
+      "stepThreeTitle": "ステップ3 - 文書を添付する",
+      "form": {
+        "requiredAttendees.label": "必要な出席者",
+        "requiredAttendees.placeholder": "必要な出席者を選択",
+        "optionalAttendees.label": "任意の出席者",
+        "optionalAttendees.placeholder": "オプション出席者を選択",
+        "subject.label": "件名",
+        "subject.placeholder": "件名を入力",
+        "location.label": "場所",
+        "location.placeholder": "場所を入力",
+        "startDate.label": "開始日",
+        "startDate.placeholder": "開始日を選択",
+        "startTime.label": "始まる時間",
+        "startTime.placeholder": "開始時刻を選択",
+        "priority.label": "優先",
+        "priority.placeholder": "優先度を選択",
+        "priorityOptions": {
+          "normalImportance": "通常の重要度",
+          "highImportance": "高い重要性",
+          "lowImportance": "重要性が低い"
+        },
+        "endDate.label": "終了日",
+        "endDate.placeholder": "終了日を選択",
+        "endTime.label": "終了時間",
+        "endTime.placeholder": "終了時間を選択",
+        "reminder.label": "リマインダ",
+        "reminder.placeholder": "リマインダーウィンドウを選択",
+        "datePickerClose.button": "閉じる",
+        "otherOptions.label": "その他のオプション",
+        "allDayEvent.checkbox": "終日イベント",
+        "privateEvent.checkbox": "プライベートイベント",
+        "recurrence.label": "再発",
+        "setRecurrence.button": "イベントの繰り返しを設定する",
+        "editRecurrence.button": "イベントの繰り返しを編集する",
+        "browseFiles.button": "ファイルを参照",
+        "selectedFiles.label": "添付する選択されたファイル：",
+        "noFiles.label": "選択されたファイルがありません。",
+        "attachedFiles.label": "添付ファイル：",
+        "reminderOptions": {
+          "none": "なし",
+          "0Minutes": "0分",
+          "5Minutes": "5分",
+          "10Minutes": "10分",
+          "15Minutes": "15分",
+          "30Minutes": "30分",
+          "1Hours": "1時間",
+          "2Hours": "2時間",
+          "3Hours": "3時間",
+          "4Hours": "4時間",
+          "5Hours": "5時間",
+          "6Hours": "6時間",
+          "7Hours": "7時間",
+          "8Hours": "8時間",
+          "9Hours": "9時間",
+          "10Hours": "10時間",
+          "11Hours": "11時間",
+          "halfDay": "0.5日",
+          "18Hours": "18時間",
+          "1Days": "1日",
+          "2Days": "2日",
+          "3Days": "3日",
+          "4Days": "4日",
+          "1Week": "1週間",
+          "2Weeks": "2週間"
         }
       }
     },
-    "addresses": {
-      "title": "ja_Addresses",
-      "modal": {
-        "addAddress": "ja_Add Address",
-        "editAddress": "ja_Edit Record",
-        "addressTypes.label": "ja_Address Types",
-        "street.label": "ja_Street",
-        "city.label": "ja_City",
-        "zip.label": "ja_Zip",
-        "state.label": "ja_State",
-        "country.label": "ja_Country",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save"
+    "chooseEventAttendeesDialog": {
+      "table.columns.name": "名",
+      "table.columns.email": "電子メールアドレス",
+      "title": "出席者を選択",
+      "attendees.label": "出席者",
+      "attendees.placeholder": "追加の出席者を入力",
+      "searchAttendees.placeholder": "出席者の検索",
+      "cancel.button": "キャンセル",
+      "addAttendees.button": "出席者を追加"
+    },
+    "recurrencePatternDialog": {
+      "title": "イベントの繰り返し",
+      "durationError.text": "イベントの持続時間は、発生頻度よりも短くなければなりません。",
+      "recurrencePattern.label": "繰り返しパターン",
+      "recurrencePattern.placeholder": "反復パターンを選択",
+      "cancel.button": "キャンセル",
+      "removeRecurrence.button": "現在のイベントの繰り返しを削除する",
+      "setRecurrence.button": "重複イベントを設定する",
+      "repeatsOptions": {
+        "daily": "毎日",
+        "weekly": "毎週",
+        "monthly": "毎月",
+        "yearly": "毎年"
+      },
+      "sunday.checkbox": "日曜日",
+      "monday.checkbox": "月曜",
+      "tuesday.checkbox": "火曜日",
+      "wednesday.checkbox": "水曜日",
+      "thursday.checkbox": "木曜日",
+      "friday.checkbox": "金曜日",
+      "saturday.checkbox": "土曜日",
+      "monthOptions": {
+        "january": "1月",
+        "february": "2月",
+        "march": "3月",
+        "april": "4月",
+        "may": "5月",
+        "june": "六月",
+        "july": "7月",
+        "august": "8月",
+        "september": "9月",
+        "october": "10月",
+        "november": "11月",
+        "december": "12月"
+      },
+      "dayOptions": {
+        "sunday": "日曜日",
+        "monday": "月曜",
+        "tuesday": "火曜日",
+        "wednesday": "水曜日",
+        "thursday": "木曜日",
+        "friday": "金曜日",
+        "saturday": "土曜日",
+        "day": "日",
+        "weekDay": "平日",
+        "weekendDay": "週末"
+      },
+      "dayOccurrenceOptions": {
+        "first": "最初",
+        "second": "二番",
+        "third": "三番",
+        "fourth": "四番目",
+        "last": "最終"
+      },
+      "every.label": "毎日",
+      "day.label": "日数",
+      "week.label": "週間",
+      "month.label": "月",
+      "on.label": "に",
+      "day.placeholder": "日",
+      "year.placeholder": "年",
+      "dailyRecurrence": {
+        "every.text": "毎日",
+        "days.text": "日々）",
+        "everyWeekday.text": "毎週"
+      },
+      "weeklyRecurrence": {
+        "recurEvery.text": "毎回繰り返す",
+        "weeksOn.text": "週："
+      },
+      "monthlyRecurrence": {
+        "day.text": "日数",
+        "ofEvery.text": "すべての",
+        "months.text": "月",
+        "the.text": "ザ"
+      },
+      "yearlyRecurrence": {
+        "recurEvery.text": "毎回繰り返す",
+        "years.text": "年",
+        "on.text": "に：",
+        "onThe.text": "オン：",
+        "of.text": "の"
+      },
+      "recurrenceRange": {
+        "label": "再帰範囲",
+        "noEndDate.text": "終了日なし",
+        "endAfter.text": "終了後：",
+        "occurrences.text": "発生",
+        "endBy.text": "最後に："
+      },
+      "descriptionString": {
+        "effective": "効果的な",
+        "until": "〜まで",
+        "from": "から",
+        "to": "に",
+        "occurs": "発生する",
+        "every": "すべて",
+        "on": "に",
+        "of": "の",
+        "the": "その",
+        "and": "そして",
+        "years": "年",
+        "day": "日",
+        "days": "日々",
+        "weekday": "平日",
+        "weeks": "週",
+        "months": "月"
       }
     },
-    "aliases": {
-      "title": "ja_Aliases",
-      "modal": {
-        "addAlias": "ja_Add Alias",
-        "editAlias": "ja_Edit Record",
-        "aliasTypes.label": "ja_Alias Types",
-        "value.label": "ja_Value",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save"
-      }
+    "eventDetailsDialog": {
+      "title": "イベントの詳細",
+      "private.label": "プライベート",
+      "start.label": "開始：",
+      "end.label": "終わり：",
+      "priority.label": "優先度：",
+      "occurs.label": "発生する：",
+      "reminders.label": "リマインダー：",
+      "attachments.label": "添付ファイル",
+      "invited.label": "招待された人：",
+      "accepted.label": "受け入れられる：",
+      "maybe.label": "多分：",
+      "declined.label": "辞退：",
+      "cancel.button": "キャンセル",
+      "delete.button": "削除",
+      "edit.button": "イベントの編集"
     },
-    "people": {
-      "title": "ja_People",
-      "modal": {
-        "addPeople": "ja_Add Person",
-        "editPeople": "ja_Edit Record",
-        "personTypes.label": "ja_Person Types",
-        "givenName.label": "ja_First Name",
-        "familyName.label": "ja_Last Name",
-        "btnCancel.text": "ja_Cancel",
-        "btnOk.text": "ja_Save"
-      }
-    }
-  },
-  "common.directive.coreCalendar": {
-    "title": "ja_Calendar",
-    "start.label": "ja_Start: ",
-    "end.label": "ja_End: ",
+    "updateEventDialog": {
+      "title": "イベントの更新",
+      "cancel.button": "キャンセル",
+      "updateEvent.button": "更新",
+      "thisOne.radio": "ちょうどこの1つ",
+      "entireSeries.radio": "シリーズ全体",
+      "updateWarning.text": "これは一連のイベントです。何を更新したいですか？"
+    },
+    "deleteEventDialog": {
+      "title": "イベントの削除",
+      "cancel.button": "キャンセル",
+      "deleteEvent.button": "削除",
+      "thisOne.radio": "ちょうどこの1つ",
+      "entireSeries.radio": "シリーズ全体",
+      "deleteWarning.text": "このイベントを削除してもよろしいですか？"
+    },
     "message": {
-      "error.accessDenied": "ja_Access denied to calendar service.",
-      "error.serviceConfiguration": "ja_Invalid calendar service configuration.",
-      "error.serviceCredentials": "ja_Invalid Credentials. Please contact the system administrator.",
-      "error.internalServerError": "ja_Internal Server Error occurred."
+      "error.accessDenied": "カレンダーサービスへのアクセスが拒否されました。",
+      "error.serviceConfiguration": "カレンダーサービスの設定が無効です。",
+      "error.serviceCredentials": "無効な資格情報。システム管理者に連絡してください。",
+      "error.calendarIntegration": "カレンダー統合の設定上の問題",
+      "error.internalServerError": "内部サーバーエラーが発生しました。"
     }
   },
   "common.directive.coreParticipants": {
-    "title": "ja_Participants",
-    "modal.addParticipant.label": "ja_Add Participant",
-    "modal.editParticipant.label": "ja_Edit Record",
-    "modal.participantType.label": "ja_Participant Type ",
-    "modal.participantName.label": "ja_Participant Name",
-    "modal.btnOk.text": "ja_Save",
-    "modal.btnCancel.text": "ja_Cancel",
-    "modal.dialogUserPicker.header": "ja_Search User",
-    "modal.dialogGroupPicker.header": "ja_Search 群",
+    "title": "参加者",
+    "modal.addParticipant.label": "参加者を追加",
+    "modal.editParticipant.label": "レコードの編集",
+    "modal.participantType.label": "参加者タイプ",
+    "modal.participantName.label": "参加者名",
+    "modal.btnOk.text": "セーブ",
+    "modal.btnCancel.text": "キャンセル",
+    "modal.dialogUserPicker.header": "ユーザーを検索",
+    "modal.dialogGroupPicker.header": "検索グループ",
     "message": {
-      "error.groupType": "ja_The owning group cannot be a person.",
-      "error.userType": "ja_ User type cannot be a group.",
-      "error.assigneeUnique": "ja_Only one assignee is allowed.",
-      "error.owninggroupUnique": "ja_Only one owning group is allowed.",
-      "error.noAccessCombo": "ja_The combination of No Access and Assignee is not allowed.",
-      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
-      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+      "error.groupType": "所有グループは人になることはできません。",
+      "error.userType": " ユーザータイプはグループにすることはできません。",
+      "error.assigneeUnique": "譲受人は1人しか許可されません。",
+      "error.assigneeDelete": "譲受人を削除することはできません。",
+      "error.owninggroupUnique": "1つの所有グループのみが許可されます。",
+      "error.owninggroupDelete": "所有グループの削除は許可されません。",
+      "error.noAccessCombo": "無アクセスと譲受人の組み合わせは許可されていません。",
+      "error.duplicateUserOrGroup": "参加者が無効です。参加者の重複したエントリが見つかりました。",
+      "error.userOrGroupNotFound": "参加者が無効です。参加者のエントリがシステムにありません。",
+      "error.ownerUnique": "所有者は1人だけです。"
     }
   },
   "common.directive.progressIndicator": {
-    "progressCompletion": "ja_% Complete"
+    "progressCompletion": "％完了"
   },
   "common.directive.folderActions": {
-    "button.addFile": "ja_Add File",
-    "button.addFolder": "ja_Add Folder"
+    "button.addFile": "ファイルを追加",
+    "button.addFolder": "フォルダーを追加"
   },
   "common.directive.downloadAllAsZip": {
-    "button": "Download All As Zip",
+    "button": "All As Zipをダウンロード",
     "message": {
-      "start": "Zip file is downloading",
-      "finish": "Zip file downloaded",
-      "containerError": "Unable to find container",
-      "downloadError": "Zip file download Failed"
+      "start": "Zipファイルをダウンロードしています",
+      "finish": "ダウンロードしたZipファイル",
+      "containerError": "コンテナを見つけることができません",
+      "downloadError": "Zipファイルのダウンロードに失敗しました"
     }
   },
   "common.comp.acmLogin": {
-    "confirmLogout": "ja_For your protection, application is about to logout. Click Cancel to stay logged in."
+    "confirmLogout": "保護のため、アプリケーションはログアウトしようとしています。ログインを維持するには、[キャンセル]をクリックしてください。"
   },
   "common.objectTypes": {
-    "CASE_FILE": "ja_Case File",
-    "COMPLAINT": "ja_Complaint",
-    "TASK": "ja_Task",
-    "TIMESHEET": "ja_Timesheet",
-    "COSTSHEET": "ja_Costsheet",
-    "FILE": "ja_File"
+    "CASE_FILE": "案件文書",
+    "COMPLAINT": "訴状",
+    "TASK": "任務",
+    "TIMESHEET": "トラック時間",
+    "COSTSHEET": "トラック費用",
+    "FILE": "ファイル",
+    "DOC_REPO": "ドキュメントリポジトリ",
+    "ORGANIZATION": "組織",
+    "PERSON": "人員"
   },
   "frevvo.dialogUserPicker": {
-    "header": "ja_Choose User",
+    "header": "ユーザーを選択",
     "table.columns": {
-      "name": "ja_Name",
-      "type": "ja_Type",
-      "title": "ja_Title",
-      "id": "ja_Username"
+      "name": "名前",
+      "type": "タイプ",
+      "title": "タイトル",
+      "id": "ユーザー名"
     }
   },
-  "common.objects.objectWasCreatedMessage": "ja_{{objectTypeString}} with id {{objectId}} was created."
+  "common.objects.objectWasCreatedMessage": "id {{objectId}}の{{objectTypeString}}が作成されました。",
+  "common.newPerson": {
+    "title": "人",
+    "addAnother": "追加する",
+    "remove": "削除する",
+    "familyName": "苗字",
+    "familyName.placeholder": "姓を入力",
+    "givenName": "ファーストネーム",
+    "givenName.placeholder": "名字を入力",
+    "middleName": "ミドルネーム",
+    "middleName.placeholder": "ミドルネームを入力",
+    "saveButton": "人を救う",
+    "cancelButton": "キャンセル",
+    "communicationAccounts": {
+      "title": "通信アカウント",
+      "phone": "電話",
+      "phone.placeholder": "電話をかける",
+      "phoneType": "電話の種類",
+      "email": "Eメール",
+      "email.placeholder": "メールアドレスを入力して",
+      "emailType": "メールの種類",
+      "url": "URL",
+      "url.placeholder": "URLを入力",
+      "removeContactMethod": "削除する",
+      "urlType": "URLの種類"
+    },
+    "organizations": {
+      "title": "組織",
+      "searchExisting.placeholder": "既存の組織を検索する",
+      "organizationType": "関係タイプ"
+    },
+    "picture": {
+      "title": "画像",
+      "browse": "ブラウズ"
+    },
+    "locations": {
+      "title": "場所",
+      "country": "国",
+      "country.placeholder": "国を選択",
+      "state": "状態",
+      "state.placeholder": "州に入る",
+      "zip": "ジップ",
+      "zip.placeholder": "郵便番号を入力",
+      "city": "シティ",
+      "city.placeholder": "都市を入力",
+      "type": "住所タイプ",
+      "type.placeholder": "アドレスタイプを選択",
+      "streetAddress": "住所",
+      "streetAddress.placeholder": "住所を入力してください",
+      "streetAddress2": "住所2",
+      "streetAddress2.placeholder": "住所2を入力してください"
+    },
+    "identification": {
+      "title": "識別",
+      "identificationID": "識別ID",
+      "identificationID.placeholder": "ID番号を入力",
+      "identificationType": "識別タイプ",
+      "identificationType.placeholder": "識別タイプの選択",
+      "identificationNumber": "識別番号",
+      "identificationNumber.placeholder": "識別番号を入力",
+      "identificationIssuer": "身分証明書発行者",
+      "identificationIssuer.placeholder": "身分証明書発行者を入力",
+      "identificationYearIssued": "身分証明書発行",
+      "identificationYearIssued.placeholder": "選択されたIDを選択",
+      "identificationYearIssued.close.button": "閉じる"
+    }
+  },
+  "common.addPerson": {
+    "title": "人を追加する",
+    "addNew.label": "新しい人を追加",
+    "selectExisting.label": "既存の人を選択",
+    "person.label": "人員",
+    "type.label": "人物の種類",
+    "btnCancel.text": "キャンセル",
+    "btnOk.text": "人を救う",
+    "setPrimary.label": "プライマリとして設定する？",
+    "radioName": "選択肢プライマリ",
+    "radioYes.text": "はい",
+    "radioNo.text": "いいえ",
+    "duplicatePersonRoleErrorMessage": "人はすでに選択した関連付けを持っています"
+  },
+  "common.editPerson": {
+    "title": "人を編集する"
+  },
+  "common.dialogPersonPicker": {
+    "header": "人々を検索する",
+    "table.columns": {
+      "givenName": "ファーストネーム",
+      "familyName": "苗字",
+      "id": "ID番号",
+      "organization": "組織",
+      "phone": "電話",
+      "location": "場所"
+    }
+  },
+  "common.dialogOrganizationPicker": {
+    "header": "組織を選択",
+    "table.columns": {
+      "type": "組織の種類",
+      "name": "組織",
+      "identification": "ID番号",
+      "contact": "一次連絡先",
+      "phone": "電話",
+      "location": "場所"
+    }
+  },
+  "common.dialogObjectPicker": {
+    "header": "検索{{オブジェクトラベル}}",
+    "table.columns": {
+      "name": "名前",
+      "id": "ID",
+      "title": "タイトル"
+    }
+  },
+  "common.addOrganization": {
+    "title": "組織を追加する",
+    "parentTitle": "親組織を追加する",
+    "addNew.label": "新しい組織を追加する",
+    "selectExisting.label": "既存の組織を選択する",
+    "organization.label": "組織",
+    "description": "説明",
+    "type.label": "組織の種類",
+    "type.label.default.text": "親組織なし",
+    "type.label.text": "親組織",
+    "btnCancel.text": "キャンセル",
+    "btnOk.text": "組織を保存する",
+    "setPrimary.label": "プライマリとして設定する？",
+    "radioName": "選択肢プライマリ",
+    "radioYes.text": "はい",
+    "radioNo.text": "いいえ",
+    "duplicateOrganizationRoleErrorMessage": "組織には既に選択された関連があります",
+    "notifyParentOrgWillBeChanged": "選ばれた組織はすでに親組織を持っています。続けると、親組織が変更されます。"
+  },
+  "common.addObjectAssociation": {
+    "title.add": "{{objectLabel}}関連付けを追加する",
+    "title.edit": "{{objectLabel}}の関連付けを編集",
+    "object.label": "{{objectLabel}}を選択してください",
+    "selectExisting.label": "既存の{{objectLabel}}を選択",
+    "description": "説明",
+    "type.label": "関連タイプ",
+    "btnCancel.text": "キャンセル",
+    "btnOk.text": "セーブ",
+    "setPrimary.label": "プライマリとして設定する？",
+    "radioYes.text": "はい",
+    "radioNo.text": "いいえ"
+  },
+  "common.editOrganization": {
+    "title": "組織の編集",
+    "parentTitle": "親組織の編集"
+  },
+  "common.newOrganization": {
+    "title": "組織",
+    "addAnother": "追加する",
+    "remove": "削除する",
+    "name": "組織名",
+    "name.placeholder": "組織名を入力",
+    "type": "組織の種類",
+    "type.placeholder": "組織タイプを選択",
+    "saveButton": "組織を保存する",
+    "cancelButton": "キャンセル",
+    "details.title": "詳細",
+    "parentOrganization": "親組織",
+    "searchParentOrganization.placeholder": "検索親組織",
+    "communicationAccounts": {
+      "title": "通信アカウント",
+      "phone": "電話",
+      "phone.placeholder": "電話をかける",
+      "phoneType": "電話の種類",
+      "email": "Eメール",
+      "email.placeholder": "メールアドレスを入力して",
+      "emailType": "メールの種類",
+      "fax": "ファックス",
+      "fax.placeholder": "ファックスを入力",
+      "faxType": "ファックスの種類",
+      "url": "URL",
+      "url.placeholder": "URLを入力",
+      "removeContactMethod": "削除する",
+      "urlType": "URLの種類"
+    },
+    "people": {
+      "title": "人員",
+      "searchExisting.placeholder": "既存の人を検索する",
+      "personType": "人員の種類"
+    },
+    "locations": {
+      "title": "場所",
+      "country": "国",
+      "country.placeholder": "国を選択",
+      "state": "州",
+      "state.placeholder": "州に入る",
+      "zip": "ジップ",
+      "zip.placeholder": "郵便番号を入力",
+      "city": "シティ",
+      "city.placeholder": "都市を入力",
+      "type": "住所タイプ",
+      "type.placeholder": "アドレスタイプを選択",
+      "streetAddress": "住所",
+      "streetAddress.placeholder": "住所を入力してください",
+      "streetAddress2": "住所2",
+      "streetAddress2.placeholder": "住所2を入力してください"
+    },
+    "identification": {
+      "title": "識別",
+      "identificationID": "識別ID",
+      "identificationID.placeholder": "ID番号を入力",
+      "identificationType": "識別タイプ",
+      "identificationType.placeholder": "識別タイプの選択",
+      "identificationNumber": "識別番号",
+      "identificationNumber.placeholder": "識別番号を入力",
+      "identificationIssuer": "身分証明書発行者",
+      "identificationIssuer.placeholder": "身分証明書発行者を入力",
+      "identificationYearIssued": "身分証明書発行",
+      "identificationYearIssued.placeholder": "選択されたIDを選択",
+      "identificationYearIssued.close.button": "閉じる"
+    }
+  },
+  "common.labels": {
+    "primary": "[メイン]"
+  },
+  "common.objectHistory": {
+    "modal": {
+      "title": "履歴の詳細",
+      "btn": {
+        "close": "閉じる"
+      },
+      "table.columns": {
+        "action": "アクション",
+        "newValue": "新しい価値",
+        "oldValue": "古い価値"
+      }
+    }
+  }
 }

@@ -2,143 +2,127 @@
   "common": {
     "select.option.none": "(Wähle Eins)",
     "value.unknown": "Unbekannt",
-
-    "defaultDateFormat": "de_MM/DD/YYYY",
-    "defaultTimeFormat": "de_hh:mm:ss",
-    "defaultDateTimeFormat": "de_MM/DD/YYYY hh:mm",
-    "defaultDatePickerFormat": "de_MM/dd/yyyy",
-    "defaultDateUIFormat": "de_MM/dd/yyyy",
-    "defaultDateTimeUIFormat": "de_MM/dd/yyyy HH:mm",
-    "passwordRuleText": "de_Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character, number, uppercase and lowercase letters."
+    "defaultDateFormat": "De_MM/DD/YYYY",
+    "defaultTimeFormat": "De_hh:mm:ss",
+    "defaultDateTimeFormat": "De_MM/DD/YYYY hh:mm",
+    "defaultDatePickerFormat": "De_MM/dd/yyyy",
+    "defaultDateUIFormat": "De_MM/dd/yyyy",
+    "defaultDateTimeUIFormat": "De_MM/dd/yyyy HH:mm"
   },
-  "common.addOrganization": {
-    "title": "de_Add Parent Organization",
-    "addNew.label": "de_Add new Organization",
-    "selectExisting.label": "de_Select existing organization",
-    "organization.label": "de_Organization",
-    "description": "de_Description",
-    "type.label": "de_Organization Association Type",
-    "type.label.default.text": "de_No parent Organization",
-    "type.label.text": "de_Parent Organization",
-    "btnCancel.text": "de_Cancel",
-    "btnOk.text": "de_Save Organization",
-    "setPrimary.label": "de_Set As Primary?",
-    "radioName": "de_Choice primary",
-    "radioYes.text": "de_Yes",
-    "radioNo.text": "de_No",
-    "duplicateOrganizationRoleErrorMessage": "de_Organization already has the selected association",
-    "notifyParentOrgWillBeChanged": "de_The chosen organization has already a parent organization. If you continue the parent organization will be changed."
-  },
-  "common.addPerson": {
-    "title": "de_Add person",
-    "addNew.label": "de_Add new Person",
-    "selectExisting.label": "de_Select existing person",
-    "person.label": "de_Person",
-    "type.label": "de_Person Association Type",
-    "btnCancel.text": "de_Cancel",
-    "btnOk.text": "de_Save Person",
-    "setPrimary.label": "de_Set As Primary?",
-    "radioName": "de_Choice primary",
-    "radioYes.text": "de_Yes",
-    "radioNo.text": "de_No",
-    "duplicatePersonRoleErrorMessage": "de_Person already has the selected association"
-  },
-  "common.editOrganization": {
-    "title": "de_Edit Parent Organization"
+  "common.frevvo": {
+    "defaultDateFormat": "JJJJ-MM-TT"
   },
   "common.service": {
     "error.invalidData": "Ungültige Daten"
   },
   "common.objects": {
     "progressNoData": "[ Keine Daten ]",
-    "progressLoading": "Daten laden ",
-    "progressError": "Daten konnten nicht geladen werden "
-  },
-  "common.frevvo": {
-    "defaultDateFormat": "de_YYYY-MM-DD"
+    "progressLoading": "Daten werden geladen",
+    "progressError": "Fehler beim Laden der Daten"
   },
   "common.service.messageService": {
-    "authorizationError": "de_You are not authorized to take this action",
+    "authorizationError": "Sie sind nicht berechtigt, diese Aktion auszuführen",
     "actionMessages": {
-      "success": "de_Action was successful",
-      "error": "de_Action error"
+      "success": "Aktion war erfolgreich",
+      "error": "Aktionsfehler"
     }
   },
   "common.directive.docTree": {
-    "btnRefresh": "de_Refresh",
-    "waitUploading": "de_Uploading...",
-    "confirmVersion": "de_Are you sure to set back to older version?",
-    "declareSuccessful": "de_Declare successful. Refreshing Document Tree...",
-    "prevItems": "de_ items above...",
-    "prevItemsTooltip": "de_Review previous items",
-    "moreItems": "de_ more items...",
-    "moreItemsTooltip": "de_Load more items",
-    "moreItemsBegin": "de_More items...",
+    "btnRefresh": "Aktualisieren",
+    "waitUploading": "Hochladen ...",
+    "confirmVersion": "Sind Sie sicher, dass Sie auf eine ältere Version zurückgreifen möchten?",
+    "declareSuccessful": "Erklären Sie erfolgreich. Dokumentstruktur aktualisieren ...",
+    "prevItems": " Artikel oben ...",
+    "prevItemsTooltip": "Vorherige Artikel ansehen",
+    "moreItems": " weitere Artikel...",
+    "moreItemsTooltip": "Laden Sie weitere Artikel",
+    "moreItemsBegin": "Weitere Artikel...",
     "email": {
-      "defaultTitle": "de_ArkCase Documents",
-      "headerForLinks": "de_Please follow the links below to view the document(s). Links expire in 3 days.",
-      "footerForLinks": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com",
-      "subjectForAttachment": "de_Documents from ArkCase",
-      "bodyForAttachment": "de_Please find attached the documents sent to you from ArkCase.",
-      "headerForAttachment": "de_Hello,",
-      "footerForAttachment": "de_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
+      "defaultBodyLinks": "Bitte folgen Sie den untenstehenden Links, um das / die Dokument (e) anzuzeigen. Links verfallen in 3 Tagen.",
+      "defaultBodyAttachments": "Anbei finden Sie die Dokumente, die Sie von ArkCase erhalten haben.",
+      "defaultFooter": "Unterstützt von ArkCase, Enterprise Case Management-Plattform, http://www.arkcase.com",
+      "successMessage": "Die E-Mail wurde erfolgreich gesendet"
     },
     "menu": {
-      "noop": "de_(Select Item)",
-      "editWithWebDAV": "de_Edit"
+      "noop": "(Menüpunkt wählen)",
+      "editWithWebDAV": "Bearbeiten"
     },
     "table.columns": {
-      "title": "de_Title",
-      "type": "de_Type",
-      "created": "de_Created",
-      "modified": "de_Modified",
-      "modifier": "de_Modified By",
-      "version": "de_Version",
-      "status": "de_Status"
+      "title": "Titel",
+      "type": "Art",
+      "created": "Erstellt",
+      "modified": "Geändert",
+      "modifier": "Angepasst von",
+      "version": "Version",
+      "status": "Status"
     },
     "dndDialog": {
-      "title": "de_Drag and Drop",
-      "radReplace.text": "de_Replace document (If more then one files are dropped, only first one is used)",
-      "radUploadToParent.text": "de_Create document(s) in parent folder",
-      "selFileTypes.label": "de_File Type:",
-      "optFileType.prompt": "de_[choose file type]",
-      "btnCancel.text": "de_Cancel",
-      "btnOk.text": "de_OK"
+      "title": "Drag & Drop",
+      "radReplace.text": "Dokument ersetzen (Wenn mehr als eine Datei gelöscht wird, wird nur die erste verwendet)",
+      "radUploadToParent.text": "Dokument (e) im übergeordneten Ordner erstellen",
+      "selFileTypes.label": "Dateityp:",
+      "optFileType.prompt": "[Dateityp wählen]",
+      "btnCancel.text": "Stornieren",
+      "btnOk.text": "OK"
     },
     "emailDialog": {
-      "title": "de_Email",
-      "recipients": "de_Recipients:",
-      "btnCancel.text": "de_Cancel",
-      "btnOk.text": "de_Send Email",
+      "title": "Email",
+      "recipients.label": "Empfänger:",
+      "recipients.placeholder": "Empfänger auswählen",
+      "subject.label": "Fach:",
+      "subject.placeholder": "Betreff eingeben",
+      "attachments.label": "Anhänge:",
+      "deliveryMethod.label": "Zustellungsmethode:",
+      "sendWithAttachments.checkbox": "E-Mail mit Anhang senden",
+      "sendWithHyperlink.checkbox": "E-Mail mit Hyperlink senden",
+      "sendWithAttachmentsAndHyperlink.checkbox": "Als Anhang und Hyperlink senden",
+      "btnCancel.text": "Stornieren",
+      "btnOk.text": "E-Mail senden"
+    },
+    "recipientsDialog": {
+      "title": "Empfänger auswählen",
+      "search.placeholder": "Empfänger suchen",
+      "recipients.label": "Empfänger:",
+      "externalRecipients.placeholder": "Externe E-Mail-Adressen eingeben",
+      "cancel.button": "Stornieren",
+      "addRecipients.button": "Empfänger hinzufügen",
       "gridColumns": {
-        "name": "de_Name",
-        "email": "de_Email"
+        "name": "Name",
+        "email": "Email"
       }
     },
+    "mediaDialog": {
+      "title": "ArkCase-Mediaplayer",
+      "btnCancel.text": "Stornieren"
+    },
     "comment": {
-      "title": "de_Checkin New Document",
-      "addComent": "de_Detailed Note",
-      "btnCancel.text": "de_Cancel",
-      "btnOk.text": "de_Checkin",
-      "chooseFiles": "de_Choose Files",
-      "noFiles": "de_No Files Selected"
+      "title": "Neues Dokument einchecken",
+      "addComent": "Ausführliche Anmerkung",
+      "btnCancel.text": "Stornieren",
+      "btnOk.text": "Check-In",
+      "chooseFiles": "Wähle Dateien",
+      "noFiles": "Keine Dateien ausgewählt"
     },
     "error": {
-      "nodeTitle": "de_(Error)"
+      "nodeTitle": "(Fehler)",
+      "folderNodeTitle": "(Fehler) Ordner wurde nicht erstellt.",
+      "fileNodeTitle": "(Fehler) Datei wurde nicht hochgeladen."
     },
-    "lockedTitle": "de_This document is locked by ",
+    "lockedTitle": "Dieses Dokument ist gesperrt von",
     "delete.confirmation.dialog": {
-      "header": "de_Are you sure you want to delete this folder?",
-      "body.message": "de_The folder contains:",
-      "body.content.files": "de_files",
-      "body.content.folders": "de_folders",
-      "btn.delete.folder": "de_Yes",
-      "btn.cancel.delete.folder": "de_No"
+      "header": "Möchten Sie diesen Ordner wirklich löschen?",
+      "body.message": "Der Ordner enthält:",
+      "body.content.files": "Dateien",
+      "body.content.folders": "Ordner",
+      "btn.delete.folder": "Ja",
+      "btn.cancel.delete.folder": "Nein"
     },
     "fileTypesDialog": {
-      "header": "de_Please select type of the Document",
-      "btnOK": "de_OK",
-      "btnCancel": "de_Cancel"
+      "header": "Bitte wählen Sie den Typ des Dokuments",
+      "type": "Art des Dokuments",
+      "language": "Dokumentsprache",
+      "btnOK": "Bestätigen",
+      "btnCancel": "Stornieren"
     }
   },
   "common.directive.objectTree": {
@@ -155,21 +139,21 @@
     "noAccessNode.toolTip": "(Kein Zugriff)"
   },
   "common.directive.simplePager": {
-    "rowCountLabel": "de_items per page",
-    "pagerCountMiddleLabel": "de_ of ",
-    "pagerCountLabel": "de_ items"
+    "rowCountLabel": "Objekte pro Seite",
+    "pagerCountMiddleLabel": " von",
+    "pagerCountLabel": " Artikel"
   },
   "common.directive.objectAuthorizationRoles": {
-    "choose": "de_Choose",
-    "not_authorized": "de_Not Authorized",
-    "tooltip.move_right": "de_Move Right",
-    "tooltip.move_left": "de_Move Left",
-    "authorized": "de_Authorized"
+    "choose": "Wählen",
+    "not_authorized": "Nicht berechtigt",
+    "tooltip.move_right": "Nach rechts bewegen",
+    "tooltip.move_left": "Geh nach links",
+    "authorized": "Autorisiert"
   },
   "common.directive.searchModal": {
     "header": "Suche",
     "btnSearch.text": "Suche",
-    "btnOk.text": "OK",
+    "btnOk.text": "Bestätigen",
     "btnCancel.text": "Abbrechen",
     "edtPlaceholder": "In die Suche eingeben",
     "noData.text": "Keine Ergebnisse"
@@ -188,11 +172,11 @@
       "names.taskPriority%": "Aufgabenpriorität",
       "fields.taskPriority.medium%": "Mittel",
       "fields.taskPriority.low%": "Niedrig",
-      "fields.taskPriority.high%": "hoch",
+      "fields.taskPriority.high%": "Hoch",
       "fields.taskPriority.expedite%": "Expedite",
-      "name.group%": "Gruppe",
+      "names.group%": "Gruppe",
       "names.tagToken%": "Token des Etiketts",
-      "name.assignee%": "Bevollmächtigter vollständiger Name",
+      "names.assignee%": "Vollständiger Name des Zuweisers",
       "names.documentRepository%": "Dokument Repository Name",
       "names.taskStatus%": "Taskstatus",
       "fields.taskStatus.active%": "Aktiv",
@@ -259,7 +243,7 @@
       "fields.objectType.user%": "Benutzer",
       "fields.objectType.objectLock%": "Objektsperre",
       "names.state%": "Staat",
-      "names.parentType%": "übergeordneter Typ",
+      "names.parentType%": "Übergeordneter Typ",
       "fields.parentType.container%": "Container",
       "fields.parentType.caseFile%": "Falldatei",
       "fields.parentType.complaint%": "Beschwerde",
@@ -271,7 +255,7 @@
       "fields.parentType.docRepo%": "Dokument Reposit",
       "fields.parentType.costsheet%": "Kostenblatt",
       "fields.parentType.timesheet%": "Arbeitsblatt",
-      "name.owner%": "Besitzer",
+      "names.owner%": "Eigentümer",
       "names.parentObjectType%": "Übergeordneter Objekttyp",
       "fields.parentObjectType.container%": "Container",
       "fields.parentObjectType.caseFile%": "Falldatei",
@@ -284,7 +268,7 @@
       "fields.parentObjectType.docRepo%": "Dokument Reposit",
       "fields.parentObjectType.costsheet%": "Kostenblatt",
       "fields.parentObjectType.timesheet%": "Arbeitsblatt",
-      "names.personOrganisation%": "Person, Organisationstyp",
+      "names.personOrganization%": "Person, Organisationstyp",
       "names.city%": "Stadt",
       "names.createDate%": "Erstellungsdatum",
       "fields.createDate.previousWeek%": "Vorherige Woche",
@@ -305,151 +289,546 @@
     }
   },
   "common.directive.coreNotes": {
-    "title": "de_Notes",
-    "modal.addNote": "de_Add Note",
-    "modal.editNote": "de_Edit Record",
-    "modal.notes.label": "de_Note",
-    "modal.btnOk.text": "de_Save",
-    "modal.btnCancel.text": "de_Cancel"
+    "title": "Notizen",
+    "modal.addNote": "Notiz hinzufügen",
+    "modal.editNote": "Datensatz bearbeiten",
+    "modal.notes.label": "Hinweis",
+    "modal.btnOk.text": "Sparen",
+    "modal.btnCancel.text": "Stornieren"
   },
-  "common.directive.corePeople": {
-    "title": "de_People",
-    "contactMethods": {
-      "title": "de_Contact Methods",
-      "modal": {
-        "addContactMethod": "de_Add Contact Method",
-        "editContactMethod": "de_Edit Record",
-        "contactMethodTypes.label": "de_Contact Method Types",
-        "value.label": "de_Value",
-        "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save"
-      }
-    },
-    "organizations": {
-      "title": "de_Organizations",
-      "modal": {
-        "addOrganization": "de_Add Organization",
-        "editOrganization": "de_Edit Record",
-        "organizationTypes.label": "de_Organization Types",
-        "selectExisting.label": "de_Select Existing",
-        "addNew.label": "de_Add New",
-        "value.label": "de_Value",
-        "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save",
-        "dialogOrganizationPicker": {
-          "header": "de_Choose Organization",
-          "table.columns": {
-            "type": "de_Organization Type",
-            "name": "de_Value"
-          }
+  "common.directive.coreCalendar": {
+    "title": "Kalender",
+    "start.label": "Anfang:",
+    "end.label": "Ende:",
+    "newEvent.button": "Neues Event",
+    "addNewEventDialog": {
+      "title": "Neues Event",
+      "cancel.button": "Stornieren",
+      "add.button": "Neues Ereignis hinzufügen",
+      "edit.button": "Ereignis aktualisieren",
+      "next.button": "Nächster",
+      "previous.button": "Bisherige",
+      "stepOneTitle": "Schritt 1 - Geben Sie die Ereignisdetails ein",
+      "stepTwoTitle": "Schritt 2 - Geben Sie Kommentare ein",
+      "stepThreeTitle": "Schritt 3 - Dokumente anhängen",
+      "form": {
+        "requiredAttendees.label": "Erforderliche Teilnehmer",
+        "requiredAttendees.placeholder": "Wählen Sie erforderliche Teilnehmer aus",
+        "optionalAttendees.label": "Optionale Teilnehmer",
+        "optionalAttendees.placeholder": "Wählen Sie optionale Teilnehmer",
+        "subject.label": "Fach",
+        "subject.placeholder": "Betreff eingeben",
+        "location.label": "Ort",
+        "location.placeholder": "Ort eingeben",
+        "startDate.label": "Anfangsdatum",
+        "startDate.placeholder": "Wählen Sie Startdatum",
+        "startTime.label": "Startzeit",
+        "startTime.placeholder": "Wählen Sie Startzeit",
+        "priority.label": "Priorität",
+        "priority.placeholder": "Priorität auswählen",
+        "priorityOptions": {
+          "normalImportance": "Normale Bedeutung",
+          "highImportance": "Größte Wichtigkeit",
+          "lowImportance": "Geringe Bedeutung"
+        },
+        "endDate.label": "Enddatum",
+        "endDate.placeholder": "Enddatum wählen",
+        "endTime.label": "Endzeit",
+        "endTime.placeholder": "Wählen Sie Endzeit",
+        "reminder.label": "Mahnung",
+        "reminder.placeholder": "Wählen Sie Erinnerungsfenster",
+        "datePickerClose.button": "Schließen",
+        "otherOptions.label": "Andere Optionen",
+        "allDayEvent.checkbox": "Ganztag-Veranstaltung",
+        "privateEvent.checkbox": "Privates Ereignis",
+        "recurrence.label": "Wiederholung",
+        "setRecurrence.button": "Ereignisrekurrenz festlegen",
+        "editRecurrence.button": "Ereignisrezidiv bearbeiten",
+        "browseFiles.button": "Dateien durchsuchen",
+        "selectedFiles.label": "Ausgewählte Dateien zum Anhängen:",
+        "noFiles.label": "Keine Dateien ausgewählt",
+        "attachedFiles.label": "Angehängte Dokumente:",
+        "reminderOptions": {
+          "none": "Keiner",
+          "0Minutes": "0 Minuten",
+          "5Minutes": "5 Minuten",
+          "10Minutes": "10 Minuten",
+          "15Minutes": "15 Minuten",
+          "30Minutes": "30 Minuten",
+          "1Hours": "1 Stunde",
+          "2Hours": "2 Stunden",
+          "3Hours": "3 Stunden",
+          "4Hours": "4 Stunden",
+          "5Hours": "5 Stunden",
+          "6Hours": "6 Stunden",
+          "7Hours": "7 Stunden",
+          "8Hours": "8 Stunden",
+          "9Hours": "9 Stunden",
+          "10Hours": "10 Stunden",
+          "11Hours": "11 Stunden",
+          "halfDay": "0,5 Tage",
+          "18Hours": "18 Stunden",
+          "1Days": "1 Tag",
+          "2Days": "2 Tage",
+          "3Days": "3 Tage",
+          "4Days": "4 Tage",
+          "1Week": "1 Woche",
+          "2Weeks": "2 Wochen"
         }
       }
     },
-    "addresses": {
-      "title": "de_Addresses",
-      "modal": {
-        "addAddress": "de_Add Address",
-        "editAddress": "de_Edit Record",
-        "addressTypes.label": "de_Address Types",
-        "street.label": "de_Street",
-        "city.label": "de_City",
-        "zip.label": "de_Zip",
-        "state.label": "de_State",
-        "country.label": "de_Country",
-        "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save"
+    "chooseEventAttendeesDialog": {
+      "table.columns.name": "Name",
+      "table.columns.email": "E-Mail-Addresse",
+      "title": "Teilnehmer auswählen",
+      "attendees.label": "Teilnehmer",
+      "attendees.placeholder": "Geben Sie zusätzliche Teilnehmer ein",
+      "searchAttendees.placeholder": "Teilnehmer suchen",
+      "cancel.button": "Stornieren",
+      "addAttendees.button": "Teilnehmer hinzufügen"
+    },
+    "recurrencePatternDialog": {
+      "title": "Ereigniswiederholung",
+      "durationError.text": "Die Dauer des Ereignisses muss kürzer sein als die Häufigkeit, mit der es auftritt.",
+      "recurrencePattern.label": "Wiederholungsmuster",
+      "recurrencePattern.placeholder": "Wiederholungsmuster auswählen",
+      "cancel.button": "Stornieren",
+      "removeRecurrence.button": "Entfernen des aktuellen Ereignisrezidivs",
+      "setRecurrence.button": "Ereignisrekurrenz festlegen",
+      "repeatsOptions": {
+        "daily": "Täglich",
+        "weekly": "Wöchentlich",
+        "monthly": "Monatlich",
+        "yearly": "Jährlich"
+      },
+      "sunday.checkbox": "Sonntag",
+      "monday.checkbox": "Montag",
+      "tuesday.checkbox": "Dienstag",
+      "wednesday.checkbox": "Mittwoch",
+      "thursday.checkbox": "Donnerstag",
+      "friday.checkbox": "Freitag",
+      "saturday.checkbox": "Samstag",
+      "monthOptions": {
+        "january": "Januar",
+        "february": "Februar",
+        "march": "März",
+        "april": "April",
+        "may": "Mai",
+        "june": "Juni",
+        "july": "Juli",
+        "august": "August",
+        "september": "September",
+        "october": "Oktober",
+        "november": "November",
+        "december": "Dezember"
+      },
+      "dayOptions": {
+        "sunday": "Sonntag",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "day": "Tag",
+        "weekDay": "Wochentag",
+        "weekendDay": "Wochenend Tag"
+      },
+      "dayOccurrenceOptions": {
+        "first": "Zuerst",
+        "second": "Zweite",
+        "third": "Dritte",
+        "fourth": "Vierte",
+        "last": "Letzte"
+      },
+      "every.label": "Jeden",
+      "day.label": "Tag",
+      "week.label": "Woche",
+      "month.label": "Monat",
+      "on.label": "Auf",
+      "day.placeholder": "Tag",
+      "year.placeholder": "Jahr",
+      "dailyRecurrence": {
+        "every.text": "Jeden",
+        "days.text": "Tage)",
+        "everyWeekday.text": "Jeden Wochentag"
+      },
+      "weeklyRecurrence": {
+        "recurEvery.text": "Wiederhole jeden",
+        "weeksOn.text": "Woche (n) am:"
+      },
+      "monthlyRecurrence": {
+        "day.text": "Tag",
+        "ofEvery.text": "Von jedem",
+        "months.text": "Monat (e)",
+        "the.text": "Das"
+      },
+      "yearlyRecurrence": {
+        "recurEvery.text": "Wiederhole jeden",
+        "years.text": "Jahre",
+        "on.text": "Auf:",
+        "onThe.text": "Auf der:",
+        "of.text": "Von"
+      },
+      "recurrenceRange": {
+        "label": "Wiederholungsbereich",
+        "noEndDate.text": "Kein Enddatum",
+        "endAfter.text": "Ende nach:",
+        "occurrences.text": "Vorkommen",
+        "endBy.text": "Ende um:"
+      },
+      "descriptionString": {
+        "effective": "Wirksam",
+        "until": "Bis",
+        "from": "Von",
+        "to": "Nach",
+        "occurs": "Tritt ein",
+        "every": "Jeden",
+        "on": "Auf",
+        "of": "Von",
+        "the": "Das",
+        "and": "Und",
+        "years": "Jahre",
+        "day": "Tag",
+        "days": "Tage",
+        "weekday": "Wochentag",
+        "weeks": "Wochen",
+        "months": "Monat (e)"
       }
     },
-    "aliases": {
-      "title": "de_Aliases",
-      "modal": {
-        "addAlias": "de_Add Alias",
-        "editAlias": "de_Edit Record",
-        "aliasTypes.label": "de_Alias Types",
-        "value.label": "de_Value",
-        "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save"
-      }
+    "eventDetailsDialog": {
+      "title": "Veranstaltungsdetails",
+      "private.label": "Privatgelände",
+      "start.label": "Anfang:",
+      "end.label": "Ende:",
+      "priority.label": "Priorität:",
+      "occurs.label": "Tritt ein:",
+      "reminders.label": "Erinnerungen:",
+      "attachments.label": "Anhänge",
+      "invited.label": "Eingeladen:",
+      "accepted.label": "Akzeptiert:",
+      "maybe.label": "Könnte sein:",
+      "declined.label": "Abgelehnt:",
+      "cancel.button": "Stornieren",
+      "delete.button": "Löschen",
+      "edit.button": "Ereignis bearbeiten"
     },
-    "people": {
-      "title": "de_People",
-      "modal": {
-        "addPeople": "de_Add Person",
-        "editPeople": "de_Edit Record",
-        "personTypes.label": "de_Person Types",
-        "givenName.label": "de_First Name",
-        "familyName.label": "de_Last Name",
-        "btnCancel.text": "de_Cancel",
-        "btnOk.text": "de_Save"
-      }
-    }
-  },
-  "common.directive.coreCalendar": {
-    "title": "de_Calendar",
-    "start.label": "de_Start: ",
-    "end.label": "de_End: ",
+    "updateEventDialog": {
+      "title": "Ereignis aktualisieren",
+      "cancel.button": "Stornieren",
+      "updateEvent.button": "Aktualisieren",
+      "thisOne.radio": "Nur diese eine",
+      "entireSeries.radio": "Die ganze Serie",
+      "updateWarning.text": "Dies ist ein Ereignis in einer Reihe. Was möchtest du aktualisieren?"
+    },
+    "deleteEventDialog": {
+      "title": "Ereignis löschen",
+      "cancel.button": "Stornieren",
+      "deleteEvent.button": "Löschen",
+      "thisOne.radio": "Nur diese eine",
+      "entireSeries.radio": "Die ganze Serie",
+      "deleteWarning.text": "Möchten Sie dieses Ereignis wirklich löschen?"
+    },
     "message": {
-      "error.accessDenied": "de_Access denied to calendar service.",
-      "error.serviceConfiguration": "de_Invalid calendar service configuration.",
-      "error.serviceCredentials": "de_Invalid Credentials. Please contact the system administrator.",
-      "error.internalServerError": "de_Internal Server Error occurred."
+      "error.accessDenied": "Der Zugriff auf den Kalenderdienst wurde verweigert.",
+      "error.serviceConfiguration": "Ungültige Konfiguration des Kalenderdiensts",
+      "error.serviceCredentials": "Ungültige Anmeldeinformationen Bitte wenden Sie sich an den Systemadministrator.",
+      "error.calendarIntegration": "Konfigurationsproblem bei der Kalenderintegration.",
+      "error.internalServerError": "Interner Serverfehler ist aufgetreten."
     }
   },
   "common.directive.coreParticipants": {
-    "title": "de_Participants",
-    "modal.addParticipant.label": "de_Add Participant",
-    "modal.editParticipant.label": "de_Edit Record",
-    "modal.participantType.label": "de_Participant Type ",
-    "modal.participantName.label": "de_Participant Name",
-    "modal.btnOk.text": "de_Save",
-    "modal.btnCancel.text": "de_Cancel",
-    "modal.dialogUserPicker.header": "de_Search User",
-    "modal.dialogGroupPicker.header": "de_Search Group",
+    "title": "Teilnehmer",
+    "modal.addParticipant.label": "Teilnehmer hinzufügen",
+    "modal.editParticipant.label": "Datensatz bearbeiten",
+    "modal.participantType.label": "Teilnehmertyp",
+    "modal.participantName.label": "Teilnehmer name",
+    "modal.btnOk.text": "Sparen",
+    "modal.btnCancel.text": "Stornieren",
+    "modal.dialogUserPicker.header": "Benutzer suchen",
+    "modal.dialogGroupPicker.header": "Suchgruppe",
     "message": {
-      "error.groupType": "de_The owning group cannot be a person.",
-      "error.userType": "de_ User type cannot be a group.",
-      "error.assigneeUnique": "de_Only one assignee is allowed.",
-      "error.owninggroupUnique": "de_Only one owning group is allowed.",
-      "error.noAccessCombo": "de_The combination of No Access and Assignee is not allowed.",
-      "error.duplicateUserOrGroup": "Invalid participant. Duplicate entries found for the participant.",
-      "error.userOrGroupNotFound": "Invalid participant. Participant entry missing in the system."
+      "error.groupType": "Die besitzende Gruppe kann keine Person sein.",
+      "error.userType": " Benutzertyp kann keine Gruppe sein.",
+      "error.assigneeUnique": "Nur ein Zessionar ist erlaubt.",
+      "error.assigneeDelete": "Empfänger löschen ist nicht erlaubt.",
+      "error.owninggroupUnique": "Nur eine besitzende Gruppe ist erlaubt.",
+      "error.owninggroupDelete": "Das Löschen einer eigenen Gruppe ist nicht zulässig.",
+      "error.noAccessCombo": "Die Kombination von No Access und Assignee ist nicht zulässig.",
+      "error.duplicateUserOrGroup": "Ungültiger Teilnehmer Doppelte Einträge für den Teilnehmer gefunden",
+      "error.userOrGroupNotFound": "Ungültiger Teilnehmer Teilnehmer fehlt im System.",
+      "error.ownerUnique": "Nur ein Besitzer ist erlaubt."
     }
   },
   "common.directive.progressIndicator": {
-    "progressCompletion": "de_% Complete"
+    "progressCompletion": "% Abgeschlossen"
   },
   "common.directive.folderActions": {
-    "button.addFile": "de_Add File",
-    "button.addFolder": "de_Add Folder"
+    "button.addFile": "Datei hinzufügen",
+    "button.addFolder": "Ordner hinzufügen"
   },
   "common.directive.downloadAllAsZip": {
-    "button": "Download All As Zip",
+    "button": "Alles als Zip herunterladen",
     "message": {
-      "start": "Zip file is downloading",
-      "finish": "Zip file downloaded",
-      "containerError": "Unable to find container",
-      "downloadError": "Zip file download Failed"
+      "start": "Zip-Datei wird heruntergeladen",
+      "finish": "ZIP-Datei heruntergeladen",
+      "containerError": "Container konnte nicht gefunden werden",
+      "downloadError": "Download der Zip-Datei fehlgeschlagen"
     }
   },
   "common.comp.acmLogin": {
-    "confirmLogout": "de_For your protection, application is about to logout. Click Cancel to stay logged in."
+    "confirmLogout": "Zu Ihrem Schutz ist die Anwendung im Begriff, sich abzumelden. Klicken Sie auf Abbrechen, um angemeldet zu bleiben."
   },
   "common.objectTypes": {
-    "CASE_FILE": "de_Case File",
-    "COMPLAINT": "de_Complaint",
-    "TASK": "de_Task",
-    "TIMESHEET": "de_Timesheet",
-    "COSTSHEET": "de_Costsheet",
-    "FILE": "de_File"
+    "CASE_FILE": "Akte",
+    "COMPLAINT": "Beschwerde",
+    "TASK": "Aufgabe",
+    "TIMESHEET": "Arbeitszeittabelle",
+    "COSTSHEET": "Kostentabelle",
+    "FILE": "Datei",
+    "DOC_REPO": "Dokumenten-Repository",
+    "ORGANIZATION": "Organisation",
+    "PERSON": "Person"
   },
   "frevvo.dialogUserPicker": {
-    "header": "de_Choose User",
+    "header": "Wähle Benutzer",
     "table.columns": {
-      "name": "de_Name",
-      "type": "de_Type",
-      "title": "de_Title",
-      "id": "de_Username"
+      "name": "Name",
+      "type": "Art",
+      "title": "Titel",
+      "id": "Benutzername"
     }
   },
-  "common.objects.objectWasCreatedMessage": "de_{{objectTypeString}} with id {{objectId}} was created."
+  "common.objects.objectWasCreatedMessage": "{{objectTypeString}} mit der ID {{objectId}} wurde erstellt.",
+  "common.newPerson": {
+    "title": "Person",
+    "addAnother": "Neue hinzufügen",
+    "remove": "Entfernen",
+    "familyName": "Familienname, Nachname",
+    "familyName.placeholder": "Nachnamen eingeben",
+    "givenName": "Vorname",
+    "givenName.placeholder": "Bitte Vornamen eingeben",
+    "middleName": "Zweiter Vorname",
+    "middleName.placeholder": "Namen eingeben",
+    "saveButton": "Person speichern",
+    "cancelButton": "Stornieren",
+    "communicationAccounts": {
+      "title": "Kommunikationskonten",
+      "phone": "Telefon",
+      "phone.placeholder": "Telefon eingeben",
+      "phoneType": "Telefon-Typ",
+      "email": "Email",
+      "email.placeholder": "Email eingeben",
+      "emailType": "Email-Typ",
+      "url": "URL",
+      "url.placeholder": "URL eingeben",
+      "removeContactMethod": "Entfernen",
+      "urlType": "URL-Typ"
+    },
+    "organizations": {
+      "title": "Organisationen",
+      "searchExisting.placeholder": "Suche nach vorhandenen Organisationen",
+      "organizationType": "Relationstyp"
+    },
+    "picture": {
+      "title": "Bild",
+      "browse": "Durchsuchen"
+    },
+    "locations": {
+      "title": "Standorte",
+      "country": "Land",
+      "country.placeholder": "Land auswählen",
+      "state": "Bundesland",
+      "state.placeholder": "Status eingeben",
+      "zip": "Postleitzahl",
+      "zip.placeholder": "Postleitzahl eingeben",
+      "city": "Stadt",
+      "city.placeholder": "Stadt betreten",
+      "type": "Adresstyp",
+      "type.placeholder": "Adresstyp auswählen",
+      "streetAddress": "Adresse",
+      "streetAddress.placeholder": "Adresse eingeben",
+      "streetAddress2": "Straßenadresse2",
+      "streetAddress2.placeholder": "Geben Sie die Adresse 2 ein"
+    },
+    "identification": {
+      "title": "Identifikationen",
+      "identificationID": "Identifikations-ID",
+      "identificationID.placeholder": "Identifikations-ID eingeben",
+      "identificationType": "Identifikationstyp",
+      "identificationType.placeholder": "Wählen Sie den Identifikationstyp",
+      "identificationNumber": "Identifikationsnummer",
+      "identificationNumber.placeholder": "Identifikationsnummer eingeben",
+      "identificationIssuer": "Identifikationsaussteller",
+      "identificationIssuer.placeholder": "Identifikationsaussteller eingeben",
+      "identificationYearIssued": "Identifikation ausgestellt",
+      "identificationYearIssued.placeholder": "Ausgewählte Identifikation auswählen",
+      "identificationYearIssued.close.button": "Schließen"
+    }
+  },
+  "common.addPerson": {
+    "title": "Person hinzufügen",
+    "addNew.label": "Neue Person hinzufügen",
+    "selectExisting.label": "Bestehende Person auswählen",
+    "person.label": "Person",
+    "type.label": "Personenassoziationstyp",
+    "btnCancel.text": "Stornieren",
+    "btnOk.text": "Person speichern",
+    "setPrimary.label": "Als Primär festlegen?",
+    "radioName": "Wahl primär",
+    "radioYes.text": "Ja",
+    "radioNo.text": "Nein",
+    "duplicatePersonRoleErrorMessage": "Person hat bereits den ausgewählten Verband"
+  },
+  "common.editPerson": {
+    "title": "Person bearbeiten"
+  },
+  "common.dialogPersonPicker": {
+    "header": "Suche nach Personen",
+    "table.columns": {
+      "givenName": "Vorname",
+      "familyName": "Familienname, Nachname",
+      "id": "ICH WÜRDE",
+      "organization": "Organisation",
+      "phone": "Telefon",
+      "location": "Ort"
+    }
+  },
+  "common.dialogOrganizationPicker": {
+    "header": "Wählen Sie Organisation",
+    "table.columns": {
+      "type": "Organisationstyp",
+      "name": "Organisation",
+      "identification": "ICH WÜRDE",
+      "contact": "Hauptansprechpartner",
+      "phone": "Telefon",
+      "location": "Ort"
+    }
+  },
+  "common.dialogObjectPicker": {
+    "header": "Suche {{objectLabel}}",
+    "table.columns": {
+      "name": "Name",
+      "id": "ICH WÜRDE",
+      "title": "Titel"
+    }
+  },
+  "common.addOrganization": {
+    "title": "Organisation hinzufügen",
+    "parentTitle": "Elternorganisation hinzufügen",
+    "addNew.label": "Neue Organisation hinzufügen",
+    "selectExisting.label": "Bestehende Organisation auswählen",
+    "organization.label": "Organisation",
+    "description": "Beschreibung",
+    "type.label": "Organisationsassoziationsart",
+    "type.label.default.text": "Keine übergeordnete Organisation",
+    "type.label.text": "Mutterorganisation",
+    "btnCancel.text": "Stornieren",
+    "btnOk.text": "Organisation speichern",
+    "setPrimary.label": "Als Primär festlegen?",
+    "radioName": "Wahl primär",
+    "radioYes.text": "Ja",
+    "radioNo.text": "Nein",
+    "duplicateOrganizationRoleErrorMessage": "Die Organisation hat bereits die ausgewählte Assoziation",
+    "notifyParentOrgWillBeChanged": "Die ausgewählte Organisation hat bereits eine übergeordnete Organisation. Wenn Sie fortfahren, wird die übergeordnete Organisation geändert."
+  },
+  "common.addObjectAssociation": {
+    "title.add": "Hinzufügen der {{objectLabel}} Verknüpfung",
+    "title.edit": "Bearbeiten Sie die {{objectLabel}} Verknüpfung",
+    "object.label": "Wählen Sie {{Objektlabel}}",
+    "selectExisting.label": "Bestehende {{objectLabel}} auswählen",
+    "description": "Beschreibung",
+    "type.label": "Assoziationsart",
+    "btnCancel.text": "Stornieren",
+    "btnOk.text": "Sparen",
+    "setPrimary.label": "Als Primär festlegen?",
+    "radioYes.text": "Ja",
+    "radioNo.text": "Nein"
+  },
+  "common.editOrganization": {
+    "title": "Organisation bearbeiten",
+    "parentTitle": "Übergeordnete Organisation bearbeiten"
+  },
+  "common.newOrganization": {
+    "title": "Organisation",
+    "addAnother": "Neue hinzufügen",
+    "remove": "Entfernen",
+    "name": "Name der Organisation",
+    "name.placeholder": "Namen der Organisation eingeben",
+    "type": "Organisationstyp",
+    "type.placeholder": "Organisationsart auswählen",
+    "saveButton": "Organisation speichern",
+    "cancelButton": "Stornieren",
+    "details.title": "Details",
+    "parentOrganization": "Mutterorganisation",
+    "searchParentOrganization.placeholder": "Suche Elternorganisation",
+    "communicationAccounts": {
+      "title": "Kommunikationskonten",
+      "phone": "Telefon",
+      "phone.placeholder": "Telefon eingeben",
+      "phoneType": "Telefon-Typ",
+      "email": "Email",
+      "email.placeholder": "Email eingeben",
+      "emailType": "Email-Typ",
+      "fax": "Fax",
+      "fax.placeholder": "Fax eingeben",
+      "faxType": "Faxtyp",
+      "url": "URL",
+      "url.placeholder": "URL eingeben",
+      "removeContactMethod": "Entfernen",
+      "urlType": "URL-Typ"
+    },
+    "people": {
+      "title": "Menschen",
+      "searchExisting.placeholder": "Existierende Person suchen",
+      "personType": "Personentyp"
+    },
+    "locations": {
+      "title": "Standorte",
+      "country": "Land",
+      "country.placeholder": "Land auswählen",
+      "state": "Bundesland",
+      "state.placeholder": "Status eingeben",
+      "zip": "Postleitzahl",
+      "zip.placeholder": "Postleitzahl eingeben",
+      "city": "Stadt",
+      "city.placeholder": "Stadt betreten",
+      "type": "Adresstyp",
+      "type.placeholder": "Adresstyp auswählen",
+      "streetAddress": "Adresse",
+      "streetAddress.placeholder": "Adresse eingeben",
+      "streetAddress2": "Straßenadresse2",
+      "streetAddress2.placeholder": "Geben Sie die Adresse 2 ein"
+    },
+    "identification": {
+      "title": "Identifikationen",
+      "identificationID": "Identifikations-ID",
+      "identificationID.placeholder": "Identifikations-ID eingeben",
+      "identificationType": "Identifikationstyp",
+      "identificationType.placeholder": "Wählen Sie den Identifikationstyp",
+      "identificationNumber": "Identifikationsnummer",
+      "identificationNumber.placeholder": "Identifikationsnummer eingeben",
+      "identificationIssuer": "Identifikationsaussteller",
+      "identificationIssuer.placeholder": "Identifikationsaussteller eingeben",
+      "identificationYearIssued": "Identifikation ausgestellt",
+      "identificationYearIssued.placeholder": "Ausgewählte Identifikation auswählen",
+      "identificationYearIssued.close.button": "Schließen"
+    }
+  },
+  "common.labels": {
+    "primary": " [Primär]"
+  },
+  "common.objectHistory": {
+    "modal": {
+      "title": "Historie Details",
+      "btn": {
+        "close": "Schließen"
+      },
+      "table.columns": {
+        "action": "Aktion",
+        "newValue": "Neuer Wert",
+        "oldValue": "Alter Wert"
+      }
+    }
+  }
 }

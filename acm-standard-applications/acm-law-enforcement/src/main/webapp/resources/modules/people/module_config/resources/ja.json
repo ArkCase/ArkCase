@@ -79,6 +79,9 @@
       "yes": "ja_Yes",
       "change": "ja_Change Picture",
       "save": "ja_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "ja_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {

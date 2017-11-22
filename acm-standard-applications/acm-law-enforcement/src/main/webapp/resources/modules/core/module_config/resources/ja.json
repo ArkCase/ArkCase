@@ -493,6 +493,15 @@
         "cancel": "文書を取り消す",
         "concur": "同意する",
         "nonConcur": "同意しない"
+      },
+      "auditReportNames": {
+        "case": "CASE_FILE",
+        "complaint": "COMPLAINT",
+        "task": "TASK",
+        "file": "FILE",
+        "document": "DOCUMENT",
+        "person": "PERSON",
+        "organization": "ORGANIZATION"
       }
     },
     "userInfo": {

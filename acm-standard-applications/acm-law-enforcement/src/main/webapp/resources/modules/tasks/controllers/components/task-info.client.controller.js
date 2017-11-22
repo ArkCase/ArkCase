@@ -240,12 +240,11 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         };
 
         $scope.validatePercentComplete = function (value) {
-            if (value < 0 || value > 100) {
+            var pctCompleteValue = Util.goodValue(value, -1);  // -1 instead of 0
+            if ( pctCompleteValue < 0 || pctCompleteValue > 100 ) {
                 return "Invalid value";
             }
         };
-
-
         $scope.saveTask = function () {
             var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
             if (TaskInfoService.validateTaskInfo($scope.objectInfo)) {
