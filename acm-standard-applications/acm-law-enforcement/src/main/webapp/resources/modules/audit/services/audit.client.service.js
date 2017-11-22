@@ -36,9 +36,10 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
              * @returns {String} Builded url for audit report url that will be shown in iframe
              */
             getUrl: function (pentahoHost, pentahoPort, auditReportUri, startDate, endDate, objectType, objectId,
-                              dateFormat, useBaseUrl, pentahoUser, pentahoPassword, showXmlReport) {
+                              useBaseUrl, pentahoUser, pentahoPassword, showXmlReport) {
                 var useUrl = useBaseUrl || false;
                 var amendedPentahoPort = "";
+
                 if (pentahoPort && pentahoPort.length > 0) {
                     amendedPentahoPort = pentahoPort;
                     if (pentahoPort.charAt(0) != ':' && pentahoHost.charAt(pentahoHost.length - 1) != ':') {
@@ -51,7 +52,7 @@ angular.module('audit').factory('AuditController.BuildUrl', ['$sce', '$location'
                     + "&endDate=" + UtilDateService.goodIsoDate(endDate)
                     + "&objectType=" + objectType
                     + "&objectId=" + objectId
-                    + "&dateFormat=" + encodeURIComponent(dateFormat)
+                    + "&dateFormat=" + encodeURIComponent(UtilDateService.defaultDateFormat)
                     + "&timeZone=" + encodeURIComponent(UtilDateService.getTimeZoneOffset());
                 if (useUrl) {
                     var absUrl = $location.absUrl();
