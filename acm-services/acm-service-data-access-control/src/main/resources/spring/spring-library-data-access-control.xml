@@ -43,6 +43,8 @@
           class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
         <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
         <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
+        <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>
