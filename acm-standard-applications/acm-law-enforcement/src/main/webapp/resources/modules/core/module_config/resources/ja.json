@@ -46,7 +46,9 @@
         "mr": "医療リリース",
         "noi": "調査の通知",
         "sig": "SF86署名",
-        "wir": "目撃者のインタビューリクエスト"
+        "wir": "目撃者のインタビューリクエスト",
+        "draw": "Engineer Drawing",
+        "other": "Other"
       },
       "identificationTypes": {
         "ssn": "SSN",

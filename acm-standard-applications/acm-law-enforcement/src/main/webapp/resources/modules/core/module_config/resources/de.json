@@ -46,7 +46,9 @@
         "mr": "Medizinische Freigabe",
         "noi": "Beachtenuntersuchung",
         "sig": "SF86 Unterschrift",
-        "wir": "Witness Interview Anfrage"
+        "wir": "Witness Interview Anfrage",
+        "draw": "Ingenieur-Zeichnung",
+        "other": "Andere"
       },
       "identificationTypes": {
         "ssn": "SSN",

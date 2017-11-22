@@ -89,7 +89,25 @@
     "title": "Documents",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "searchInputPlaceholder": "fr_Search",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Rapport d'enquête",
+        "ecomm%": "Communication électronique"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitation par correspondance",
+        "approvalLetter%": "Lettre d'approbation",
+        "medicalRelease%": "Libération médicale",
+        "generalRelease%": "Publication générale",
+        "clearanceGranted%": "Autorisation accordée",
+        "clearanceDenied%": "Autorisation refusée",
+        "noticeInvestigation%": "Avis d'enquête",
+        "witnessInterview%": "Demander une entrevue",
+        "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
+      }
+    }
   },
   "cases.comp.people": {
     "title": "Personnes",

@@ -89,7 +89,25 @@
     "title": "Documents",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
+    "searchInputPlaceholder": "Search",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Report of Investigation",
+        "ecomm%": "Electronic Communication"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Correspondence Invitation",
+        "approvalLetter%": "Approval Letter",
+        "medicalRelease%": "Medical Release",
+        "generalRelease%": "General Release",
+        "clearanceGranted%": "Clearance Granted",
+        "clearanceDenied%": "Clearance Denied",
+        "noticeInvestigation%": "Notice of Investigation",
+        "witnessInterview%": "Witness Interview Request",
+        "witnessInterview2%": "Witness Interview Request-2.0"
+      }
+    }
 
   },
   "cases.comp.people": {

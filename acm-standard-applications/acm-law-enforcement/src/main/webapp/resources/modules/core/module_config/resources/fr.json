@@ -46,7 +46,9 @@
         "mr": "Libération médicale",
         "noi": "Avis d'enquête",
         "sig": "Signature SF86",
-        "wir": "Demande d'entrevue de témoin"
+        "wir": "Demande d'entrevue de témoin",
+        "draw": "Ingénieur Dessin",
+        "other": "Autre"
       },
       "identificationTypes": {
         "ssn": "SSN",

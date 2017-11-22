@@ -89,7 +89,25 @@
     "title": "文件",
     "sendEmail": "zh-cn_Send Email",
     "filterInputPlaceholder": "zh-cn_Filter",
-    "searchInputPlaceholder": "zh-cn_Search"
+    "searchInputPlaceholder": "zh-cn_Search",
+    "menu": {
+      "forms": {
+        "info%": "信息",
+        "rptInvestigation%": "调查报告",
+        "ecomm%": "电子通讯"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "函授邀请",
+        "approvalLetter%": "批准书",
+        "medicalRelease%": "医疗发布",
+        "generalRelease%": "标准发布",
+        "clearanceGranted%": "已授予清关",
+        "clearanceDenied%": "已否认清关",
+        "noticeInvestigation%": "调查通知",
+        "witnessInterview%": "证人面试请求",
+        "witnessInterview2%": "证人面试请求2.0"
+      }
+    }
   },
   "cases.comp.people": {
     "title": "成员",

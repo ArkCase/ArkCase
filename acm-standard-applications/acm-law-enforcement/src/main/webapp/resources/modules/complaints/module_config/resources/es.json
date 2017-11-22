@@ -47,7 +47,22 @@
     "title": "Documentos",
     "sendEmail": "es_Send Email",
     "filterInputPlaceholder": "es_Filter",
-    "searchInputPlaceholder": "es_Search"
+    "searchInputPlaceholder": "es_Search",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Informe de investigación"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitación por correspondencia",
+        "approvalLetter%": "Carta de Aprobación de Quejas",
+        "generalRelease%": "Liberación General",
+        "medicalRelease%": "Lanzamiento medico",
+        "clearanceGranted%": "Autorización otorgada",
+        "clearanceDenied%": "Autorización denegada",
+        "witnessInterview%": "Solicitud de entrevista de testigos",
+        "witnessInterview2%": "Solicitud de entrevista de testigo-2.0"
+      }
+    }
   },
   "complaints.comp.people": {
     "title": "Personas",

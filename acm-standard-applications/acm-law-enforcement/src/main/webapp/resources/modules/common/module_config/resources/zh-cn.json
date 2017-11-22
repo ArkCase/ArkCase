@@ -84,8 +84,24 @@
       "footerForAttachment": "zh-cn_Powered by ArkCase, Enterprise Case Management platform, http://www.arkcase.com"
     },
     "menu": {
-      "noop": "zh-cn_(Select Item)",
-      "editWithWebDAV": "zh-cn_Edit"
+      "noop": "(cn_Select Item)",
+      "editWithWebDAV": "cn_Edit",
+      "cancelEditing": "cn_Cancel Editing",
+      "newFolder": "cn_New Folder",
+      "newDocument": "cn_New Document",
+      "newCorrespondence": "cn_New Correspondence",
+      "open": "cn_Open",
+      "email": "cn_Email",
+      "download": "cn_Download",
+      "copy": "cn_Copy",
+      "cut": "cn_Cut",
+      "paste": "cn_Paste",
+      "rename": "cn_Rename",
+      "delete": "cn_Delete",
+      "replace": "cn_Replace",
+      "checkout": "cn_Check Out",
+      "checkin": "cn_Check In",
+      "declareRecord": "cn_Declare As Record(s)"
     },
     "table.columns": {
       "title": "zh-cn_Title",

@@ -89,7 +89,25 @@
     "title": "दस्तावेज़",
     "sendEmail": "hi_Send Email",
     "filterInputPlaceholder": "hi_Filter",
-    "searchInputPlaceholder": "hi_Search"
+    "searchInputPlaceholder": "hi_Search",
+    "menu": {
+      "forms": {
+        "info%": "जानकारी",
+        "rptInvestigation%": "जांच की रिपोर्ट",
+        "ecomm%": "इलेक्ट्रॉनिक संचार"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "पत्राचार निमंत्रण",
+        "approvalLetter%": "अनुमोदन पत्र",
+        "medicalRelease%": "मेडिकल रिलीज",
+        "generalRelease%": "सामान्य रिलीज़",
+        "clearanceGranted%": "मंजूरी दी",
+        "clearanceDenied%": "मंजूरी अस्वीकृत",
+        "noticeInvestigation%": "जांच की सूचना",
+        "witnessInterview%": "गवाह साक्षात्कार अनुरोध",
+        "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
+      }
+    }
   },
   "cases.comp.people": {
     "title": "लोग",
