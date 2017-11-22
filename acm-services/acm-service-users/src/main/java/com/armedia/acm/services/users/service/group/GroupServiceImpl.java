@@ -454,6 +454,7 @@ public class GroupServiceImpl implements GroupService
         subGroup.addAscendant(parentId);
         subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
         parent.addGroupMember(subGroup);
+
         return subGroup;
     }
 
