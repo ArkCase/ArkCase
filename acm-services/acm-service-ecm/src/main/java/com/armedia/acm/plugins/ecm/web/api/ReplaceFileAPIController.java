@@ -44,7 +44,7 @@ public class ReplaceFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#fileToBeReplacedId, 'FILE', 'write')")
+    @PreAuthorize("hasPermission(#fileToBeReplacedId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/replace/{fileToBeReplacedId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile replaceFile(@PathVariable("fileToBeReplacedId") Long fileToBeReplacedId, MultipartHttpServletRequest request,

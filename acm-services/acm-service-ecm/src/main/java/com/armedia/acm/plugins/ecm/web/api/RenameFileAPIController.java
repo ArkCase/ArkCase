@@ -35,7 +35,7 @@ public class RenameFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write')")
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{objectId}/{newName}/{extension}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile renameFile(@PathVariable("objectId") Long objectId, @PathVariable("newName") String name,

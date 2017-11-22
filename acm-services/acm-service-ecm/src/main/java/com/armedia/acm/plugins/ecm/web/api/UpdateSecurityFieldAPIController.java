@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//'api/v1/service/:objectType/:objectId/security-field/:securityFieldValue/'
+// 'api/v1/service/:objectType/:objectId/security-field/:securityFieldValue/'
 @Controller
 @RequestMapping({ "/api/v1/service/file", "/api/latest/service/file" })
 
@@ -24,7 +24,7 @@ public class UpdateSecurityFieldAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{fileId}/security-field/{securityFieldValue}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile updateSecurityField(@PathVariable("fileId") Long fileId, @PathVariable("securityFieldValue") String securityFieldValue)

@@ -35,7 +35,7 @@ public class SetActiveFileVersionAPIController
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile setFileActiveVersion(@PathVariable("fileId") Long fileId,

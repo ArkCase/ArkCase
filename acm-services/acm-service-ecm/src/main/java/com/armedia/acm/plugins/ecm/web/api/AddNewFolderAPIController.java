@@ -27,7 +27,7 @@ public class AddNewFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
-    @PreAuthorize("hasPermission(#parentFolderId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#parentFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/{parentFolderId}/{newFolderName}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder addNewFolder(@PathVariable("parentFolderId") Long parentFolderId, @PathVariable("newFolderName") String newFolderName)

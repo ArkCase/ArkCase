@@ -36,7 +36,7 @@ public class CopyFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#in.id, 'FILE', 'read') and hasPermission(#in.folderId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#in.id, 'FILE', 'read|group-read|write|group-write') and hasPermission(#in.folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/copyToAnotherContainer/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public FileDTO copyFile(@RequestBody MoveCopyFileDto in, @PathVariable("targetObjectType") String targetObjectType,

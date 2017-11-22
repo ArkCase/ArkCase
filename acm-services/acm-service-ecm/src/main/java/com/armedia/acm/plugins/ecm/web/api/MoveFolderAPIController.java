@@ -34,7 +34,7 @@ public class MoveFolderAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#folderToMoveId, 'FOLDER', 'read') and hasPermission(#dstFolderId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#folderToMoveId, 'FOLDER', 'read|group-read|write|group-write') and hasPermission(#dstFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/move/{folderToMoveId}/{dstFolderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder moveFolder(@PathVariable("folderToMoveId") Long folderToMoveId, @PathVariable("dstFolderId") Long dstFolderId,

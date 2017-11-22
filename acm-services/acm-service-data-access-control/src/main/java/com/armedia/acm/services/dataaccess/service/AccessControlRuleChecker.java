@@ -1,7 +1,10 @@
 package com.armedia.acm.services.dataaccess.service;
 
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
+
 import org.springframework.security.core.Authentication;
+
+import java.util.List;
 
 /**
  * Check if particular user is granted access to a given object.
@@ -12,15 +15,19 @@ public interface AccessControlRuleChecker
     /**
      * Check if particular user is granted access to a given object.
      *
-     * @param authentication authentication token
-     * @param targetId       the identifier for the object instance
-     * @param targetType     target type
-     * @param permission     required permission
-     * @param solrDocument   Solr data stored for this object
+     * @param authentication
+     *            authentication token
+     * @param targetId
+     *            the identifier for the object instance
+     * @param targetType
+     *            target type
+     * @param permission
+     *            required permission
+     * @param solrDocument
+     *            Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
-    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument);
-
+    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions, String solrDocument);
 
     /**
      * Getter method.
@@ -32,7 +39,8 @@ public interface AccessControlRuleChecker
     /**
      * Setter method.
      *
-     * @param accessControlRules AC rules
+     * @param accessControlRules
+     *            AC rules
      */
     void setAccessControlRules(AccessControlRules accessControlRules);
 }

@@ -31,7 +31,7 @@ public class DeleteFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
-    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/{folderId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmDeletedFolderDto deleteFolder(@PathVariable("folderId") Long folderId, Authentication authentication, HttpSession session)
