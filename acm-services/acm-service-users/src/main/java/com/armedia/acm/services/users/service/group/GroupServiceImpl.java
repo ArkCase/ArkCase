@@ -444,29 +444,13 @@ public class GroupServiceImpl implements GroupService
             throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found", null);
         }
 
-        // check if subgroup already exists
-        String subGroupId = subGroup.getName();
-        if (subGroupId != null && !subGroupId.isEmpty())
-        {
-            subGroup = groupDao.findByName(subGroupId);
-            if (subGroup == null)
-            {
-                throw new AcmCreateObjectFailedException("GROUP", "Subgroup with id [" + subGroupId + "] not found", null);
-            }
-        }
-        else
-        {
-            subGroup.setAscendantsList(parent.getAscendantsList());
-            subGroup.setName(subGroupId + "-UUID-" + UUID.getUUID());
-        }
-
         // If supervisor for the subgroup is empty, get from the parent group
         if (subGroup.getSupervisor() == null)
         {
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
-        subGroup.setAscendantsList(parent.getAscendantsList());
+        subGroup.addAscendants(parent.getAscendants());
         subGroup.addAscendant(parentId);
         subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
         parent.addGroupMember(subGroup);

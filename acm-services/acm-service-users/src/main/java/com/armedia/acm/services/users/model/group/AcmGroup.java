@@ -205,6 +205,7 @@ public class AcmGroup implements Serializable, AcmEntity
         memberOfGroups.remove(group);
     }
 
+    @JsonIgnore
     public boolean isMemeberOfGroups()
     {
         return memberOfGroups.isEmpty();
@@ -406,6 +407,13 @@ public class AcmGroup implements Serializable, AcmEntity
             return Stream.empty();
         }
         return Arrays.stream(ascendantsList.split(",")).sorted();
+    }
+
+    public void addAscendants(Stream<String> newAscendants)
+    {
+        Set<String> ascendants = getAscendants().collect(Collectors.toSet());
+        newAscendants.forEach(asc -> ascendants.add(asc));
+        ascendantsList = ascendants.stream().collect(Collectors.joining(","));
     }
 
     public void addAscendant(String ascendantGroup)
