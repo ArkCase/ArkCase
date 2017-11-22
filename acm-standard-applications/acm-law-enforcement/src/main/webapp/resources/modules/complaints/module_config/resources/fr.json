@@ -47,7 +47,22 @@
     "title": "Documents",
     "sendEmail": "fr_Send Email",
     "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "searchInputPlaceholder": "fr_Search",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Rapport d'enquête"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitation par correspondance",
+        "approvalLetter%": "Lettre d'approbation de plainte",
+        "generalRelease%": "Publication générale",
+        "medicalRelease%": "Libération médicale",
+        "clearanceGranted%": "Autorisation accordée",
+        "clearanceDenied%": "Autorisation refusée",
+        "witnessInterview%": "Demander une entrevue",
+        "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
+      }
+    }
   },
   "complaints.comp.people": {
     "title": "Personnes",

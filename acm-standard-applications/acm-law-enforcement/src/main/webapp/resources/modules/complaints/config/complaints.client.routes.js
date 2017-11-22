@@ -16,6 +16,7 @@ angular.module('complaints').config(['$stateProvider',
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('complaints');
                         $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["complaints", "common"], "en"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
                         ;

@@ -89,7 +89,25 @@
     "title": "文件",
     "sendEmail": "zh-tw_Send Email",
     "filterInputPlaceholder": "zh-tw_Filter",
-    "searchInputPlaceholder": "zh-tw_Search"
+    "searchInputPlaceholder": "zh-tw_Search",
+    "menu": {
+      "forms": {
+        "info%": "信息",
+        "rptInvestigation%": "調查報告",
+        "ecomm%": "電子通訊"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "函授邀請",
+        "approvalLetter%": "批准書",
+        "medicalRelease%": "醫療發布",
+        "generalRelease%": "標準發布",
+        "clearanceGranted%": "已授予清關",
+        "clearanceDenied%": "已否認清關",
+        "noticeInvestigation%": "調查通知",
+        "witnessInterview%": "證人面試請求",
+        "witnessInterview2%": "證人面試請求2.0"
+      }
+    }
   },
   "cases.comp.people": {
     "title": "成員",

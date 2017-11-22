@@ -89,7 +89,25 @@
     "title": "Dokumente",
     "sendEmail": "de_Send Email",
     "filterInputPlaceholder": "de_Filter",
-    "searchInputPlaceholder": "de_Search"
+    "searchInputPlaceholder": "de_Search",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Untersuchungsbericht",
+        "ecomm%": "Elektronische Kommunikation"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Korrespondenz-Einladung",
+        "approvalLetter%": "Genehmigungsschreiben",
+        "medicalRelease%": "Medizinische Freigabe",
+        "generalRelease%": "Allgemeine Freigabe",
+        "clearanceGranted%": "Freigabe erteilt",
+        "clearanceDenied%": "Freigabe verweigert",
+        "noticeInvestigation%": "Ermittlungsbescheid",
+        "witnessInterview%": "Zeugen-Interview-Anfrage",
+        "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
+      }
+    }
   },
   "cases.comp.people": {
     "title": "Menschen",

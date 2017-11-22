@@ -37,7 +37,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
         });
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.DOC_REPO);
-        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
         var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
@@ -46,10 +46,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes=[];
-                    for(var i = 0; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key":data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.fileLanguages = data[2]; 
                 });
         };

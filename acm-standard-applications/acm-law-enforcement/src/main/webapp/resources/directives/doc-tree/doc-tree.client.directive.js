@@ -85,10 +85,11 @@
  */
 angular.module('directives').directive('docTree', ['$q', '$translate', '$modal', '$filter', '$log', '$injector'
     , 'Acm.StoreService', 'UtilService', 'Util.DateService', 'ConfigService', 'Profile.UserInfoService'
-    , 'EcmService', 'Admin.EmailSenderConfigurationService'
+    , 'EcmService', 'Admin.EmailSenderConfigurationService', 'Helper.LocaleService', '$timeout'
     , function ($q, $translate, $modal, $filter, $log, $injector
         , Store, Util, UtilDateService, ConfigService, UserInfoService
-        , Ecm, EmailSenderConfigurationService) {
+        , Ecm, EmailSenderConfigurationService, LocaleHelper, $timeout
+    ) {
         var cacheTree = new Store.CacheFifo();
         var cacheFolderList = new Store.CacheFifo();
 
@@ -1893,6 +1894,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     }
 
                     _.each(menu, function (item) {
+                        item.title = $translate.instant(Util.goodValue(item.titleKey, item.title));
+
                         var allow = true;
                         if (undefined !== allowGlobal) {
                             allow = allowGlobal;
@@ -1908,15 +1911,16 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         }
 
                         /*email document should not be available when it's not configured*/
-                        if (!DocTree.treeConfig.emailSendConfiguration.allowDocuments && item.cmd === 'email') {
+                        var allowEmail = Util.goodMapValue(DocTree.treeConfig, "emailSendConfiguration.allowDocuments", false);
+                        if (!allowEmail && item.cmd === 'email') {
                             item.invisible = true;
                         }
 
                         promiseArray.push(allow);
                         $q.when(allow).then(function (allowResult) {
-                            if ("invisible" == allowResult) {
+                            if ("invisible" === allowResult) {
                                 item.invisible = true;
-                            } else if ("disable" == allowResult) {
+                            } else if ("disable" === allowResult) {
                                 item.disabled = true;
                             } else {
                                 if (item.disabledExpression) {
@@ -1965,28 +1969,32 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //            ,{title: "Other", cmd: "file/other"}
                 //        ];
                 , makeSubMenu: function (subTypes) {
+                    var formsCategory = Util.goodMapValue(DocTree.treeConfig, "menu.subMenuForms", null);
+                    var correspondenceCategory = Util.goodMapValue(DocTree.treeConfig, "menu.subMenuCorrespondences", null);
                     var menu = [], item;
                     if (subTypes) {
                         if (Util.isArray(subTypes)) {
                             for (var i = 0; i < subTypes.length; i++) {
-                                item = {};
-                                if (!Util.isEmpty(subTypes[i].label)) {
-                                    item.title = subTypes[i].label;
-                                }
+                                item = {data: {}};
                                 if (!Util.isEmpty(subTypes[i].templateFilename)) {
+                                    if (Util.isEmpty(correspondenceCategory)) {
+                                        item.title = subTypes[i].label;
+                                    } else {
+                                        item.title = $translate.data(subTypes[i].label, correspondenceCategory);
+                                    }
                                     item.cmd = "template/" + subTypes[i].templateFilename;
-                                    item.data = {};
-                                    item.data.label = subTypes[i].label;
+                                    //item.data.label = subTypes[i].label;
                                 } else if(!Util.isEmpty(subTypes[i].form)){
-                                    item.title = $translate.instant(subTypes[i].value);
+                                    if (Util.isEmpty(formsCategory)) {
+                                        item.title = subTypes[i].value;
+                                    } else {
+                                        item.title = $translate.data(subTypes[i].value, formsCategory);
+                                    }
                                     item.cmd = "form/" + subTypes[i].key;
-                                    item.data = {};
                                 } else {
                                     item.title = $translate.instant(subTypes[i].value);
                                     item.cmd = "file/" + subTypes[i].key;
-                                    item.data = {};
                                     item.data.uploadFile = true;
-
                                 }
                                 menu.push(item);
                             }
@@ -3239,6 +3247,17 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 });
 
                 return jqTable;
+            }
+            , renderHeader: function (element, columnDefs) {
+                var jqThs = $(element).find("table th");
+                for (var i = 0; i < columnDefs.length; i++) {
+                    var columnDef = columnDefs[i];
+                    if (columnDef.displayName) {
+                        var jqTh = jqThs.eq(i);
+                        var displayName = $translate.instant(columnDef.displayName);
+                        jqTh.text(displayName);
+                    }
+                }
             }
             , makeUploadDocForm: function (jqTree) {
                 this.jqFormUploadDoc = $("<form/>")
@@ -4631,8 +4650,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     for (var i = 0; i < extensions.length; i++) {
                         if ($injector.has(extensions[i])) {
                             var extService = $injector.get(extensions[i]);
-                            var extHandlers = extService.getCommandHandlers(DocTree);
-                            var extRenderers = extService.getColumnRenderers(DocTree);
+                            var extHandlers = (extService.getCommandHandlers)? extService.getCommandHandlers(DocTree) : [];
+                            var extRenderers = (extService.getColumnRenderers)? extService.getColumnRenderers(DocTree) : [];
                             DocTree.Command.addHandlers(extHandlers);
                             DocTree.Column.addRenderers(extRenderers);
                         }
@@ -4658,12 +4677,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                             DocTree.makeDownloadDocForm(DocTree.jqTree);
                             DocTree.makeUploadDocForm(DocTree.jqTree);
 
-                            var fileTypes = Util.goodMapValue(DocTree.treeConfig, "fileTypes", []).concat(Util.goodMapValue(DocTree.treeConfig, "formTypes", []));
-                            DocTree.fileTypes = fileTypes;
+                            DocTree.fileLanguages = Util.goodMapValue(DocTree.treeConfig, "fileLanguages.locales", []);
+                            DocTree.fileTypes = Util.goodMapValue(DocTree.treeConfig, "fileTypes", [])
+                                .concat(Util.goodMapValue(DocTree.treeConfig, "formTypes", []));
                             var jqTreeBody = DocTree.jqTree.find("tbody");
                             DocTree.Menu.useContextMenu(jqTreeBody);
-                            var fileLanguages = Util.goodMapValue(DocTree.treeConfig.fileLanguages, "locales", []);
-                            DocTree.fileLanguages = fileLanguages;
 
                             var extensions = Util.goodMapValue(DocTree.treeConfig, "extensions", []);
                             for (var i = 0; i < extensions.length; i++) {
@@ -4693,6 +4711,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
                 DocTree.scope.$bus.subscribe('onSearchDocTree', function (data) {
                     DocTree.onSearch(data.searchFilter);
+                });
+
+
+                new LocaleHelper.Locale({scope: scope
+                    , onTranslateChangeSuccess: function(data) {
+                        $timeout(function () {
+                            if (DocTree.tree) {
+                                DocTree.renderHeader(element, DocTree.treeConfig.columnDefs);
+                                DocTree.tree.render(true, true);
+                            }
+                        }, 0);
+                    }
                 });
             }
         };
