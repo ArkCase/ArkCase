@@ -31,7 +31,7 @@ public class GetEcmFileByIdAPIController
 
     private EcmFileService fileService;
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile getEcmFile(@PathVariable("fileId") Long fileId, Authentication authentication, HttpSession session)

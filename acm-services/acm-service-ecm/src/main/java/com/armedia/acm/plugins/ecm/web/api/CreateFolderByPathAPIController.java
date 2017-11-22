@@ -77,7 +77,7 @@ public class CreateFolderByPathAPIController
             List<Long> docLongIds = Arrays.asList(docIds.split(";")).stream().map(Long::parseLong).collect(Collectors.toList());
             for (Long docId : docLongIds)
             {
-                if (!getArkPermissionEvaluator().hasPermission(authentication, docId, "FILE", "read"))
+                if (!getArkPermissionEvaluator().hasPermission(authentication, docId, "FILE", "read|group-read|write|group-write"))
                 {
                     throw new AcmAccessControlException(Arrays.asList(""),
                             "The user {" + authentication.getName() + "} is not allowed to read from file with id=" + docId);
@@ -89,7 +89,7 @@ public class CreateFolderByPathAPIController
             {
                 throw new AcmObjectNotFoundException(targetObjectType, targetObjectId, "Container object not found", null);
             }
-            if (!getArkPermissionEvaluator().hasPermission(authentication, container.getFolder().getId(), "FOLDER", "write"))
+            if (!getArkPermissionEvaluator().hasPermission(authentication, container.getFolder().getId(), "FOLDER", "write|group-write"))
             {
                 throw new AcmAccessControlException(Arrays.asList(""), "The user {" + authentication.getName()
                         + "} is not allowed to write to target folder with id=" + container.getFolder().getId());

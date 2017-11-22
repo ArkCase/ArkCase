@@ -27,7 +27,7 @@ public class RenameFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
-    @PreAuthorize("hasPermission(#objectId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#objectId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/{objectId}/{newName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmFolder renameFolder(@PathVariable("objectId") Long objectId, @PathVariable("newName") String newName)

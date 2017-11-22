@@ -33,7 +33,7 @@ public class StreamAPIController
 
     private StreamService streamService;
 
-    @PreAuthorize("hasPermission(#id, 'FILE', 'read')")
+    @PreAuthorize("hasPermission(#id, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/stream/{id}", method = RequestMethod.GET)
     @ResponseBody
     public void stream(@PathVariable(value = "id") Long id,

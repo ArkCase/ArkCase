@@ -54,7 +54,7 @@ public class ListFileFolderByCategoryAPIController
             throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
         }
 
-        if (!getArkPermissionEvaluator().hasPermission(auth, container.getFolder().getId(), "FOLDER", "read"))
+        if (!getArkPermissionEvaluator().hasPermission(auth, container.getFolder().getId(), "FOLDER", "read|group-read|write|group-write"))
         {
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The user {" + auth.getName() + "} is not allowed to read from folder with id=" + container.getFolder().getId());

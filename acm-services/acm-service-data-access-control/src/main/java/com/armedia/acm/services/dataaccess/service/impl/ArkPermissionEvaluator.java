@@ -10,6 +10,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,21 +27,21 @@ import java.util.stream.Stream;
 /**
  * Determine whether a user is authorized to take an action for a specific object.
  * <p/>
- * For a user to take an action against an object, two conditions have to be met.  They need read access to the
- * object (which proves they are not on the "No Access" list), and they have to be able to take the specific action.  If
+ * For a user to take an action against an object, two conditions have to be met. They need read access to the
+ * object (which proves they are not on the "No Access" list), and they have to be able to take the specific action. If
  * we only checked the participant privilege table to see if they have the access, they could also be in the
  * No Access list, hence the check to ensure they can read the object.
  * <p/>
  * For read access all we have to do is check Solr.
  * <p/>
- * For other access types, we run queries against the acm_participant_privilege table.  A user has access if:
+ * For other access types, we run queries against the acm_participant_privilege table. A user has access if:
  * <ul>
  * <li>The user is specifically in the table and has access</li>
  * <li>The default user has access</li>
  * <li>The user is in a group that has access</li>
  * </ul>
  * <p/>
- * The first two conditions are checked in a single query.  The group access is checked in a separate query.
+ * The first two conditions are checked in a single query. The group access is checked in a separate query.
  */
 public class ArkPermissionEvaluator implements PermissionEvaluator
 {
@@ -95,10 +97,14 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     /**
      * Check user access for object with particular id.
      *
-     * @param authentication authentication token
-     * @param id             object identifier
-     * @param targetType     object type
-     * @param permission     requested permission (actionName)
+     * @param authentication
+     *            authentication token
+     * @param id
+     *            object identifier
+     * @param targetType
+     *            object type
+     * @param permission
+     *            requested permission (actionName)
      * @return true if granted, false otherwise
      */
     private boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
@@ -118,13 +124,15 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return false;
         }
 
+        List<String> permissions = Arrays.asList(((String) permission).split("\\|"));
+
         // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, permissions, solrDocument))
         {
             return true;
         }
 
-        return evaluateAccess(authentication, id, targetType, (String) permission);
+        return evaluateAccess(authentication, id, targetType, permissions);
     }
 
     @Override
@@ -134,34 +142,44 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         throw new UnsupportedOperationException("Checking permissions on an object reference is not supported");
     }
 
-    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, String permission)
+    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, List<String> permissions)
     {
-        if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(permission))
+        if (permissions.contains(DataAccessControlConstants.ACCESS_LEVEL_READ))
         {
             // they want read, and we already know whether they can read, so we're done
             log.trace("Read access requested - returning read access level");
             return true;
         }
 
-        boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
-                authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
-
-        if (hasAccessDirectlyOrViaDefaultUser)
+        for (String permission : permissions)
         {
-            // we know they can read it, we're all set.
-            log.trace("Has access directly or via default user");
-            return hasAccessDirectlyOrViaDefaultUser;
+            boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
+                    authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
+
+            if (hasAccessDirectlyOrViaDefaultUser)
+            {
+                // we know they can read it, we're all set.
+                log.trace("Has access directly or via default user");
+                return hasAccessDirectlyOrViaDefaultUser;
+            }
+
+            boolean hasAccessViaGroup = hasObjectAccessViaGroup(authentication.getName(), objectId, objectType,
+                    permission, DataAccessControlConstants.ACCESS_GRANT);
+
+            if (hasAccessViaGroup)
+            {
+                log.trace("Has access via a group");
+                return hasAccessViaGroup;
+            }
+
         }
 
-        boolean hasAccessViaGroup = hasObjectAccessViaGroup(authentication.getName(), objectId, objectType,
-                permission, DataAccessControlConstants.ACCESS_GRANT);
-
-        log.trace("Returning whether they have access via a group - " + hasAccessViaGroup);
-        return hasAccessViaGroup;
+        log.trace("User has no access to object");
+        return false;
     }
 
     private boolean hasObjectAccessViaGroup(String principal, Long objectId, String objectType,
-                                            String objectAction, String access)
+            String objectAction, String access)
     {
         AcmUser user = getUserDao().findByUserId(principal);
         List<AcmGroup> userGroups = getGroupDao().findByUserMember(user);

@@ -50,7 +50,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ObjectConverter objectConverter;
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,

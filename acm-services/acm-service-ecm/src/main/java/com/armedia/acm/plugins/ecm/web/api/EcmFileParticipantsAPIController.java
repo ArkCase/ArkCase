@@ -40,7 +40,7 @@ public class EcmFileParticipantsAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'write')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'write|group-write')")
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmParticipant> saveParticipants(@PathVariable(value = "objectType") String objectType,

@@ -36,7 +36,7 @@ public class CopyFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
-    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read') and hasPermission(#dstFolderId, 'FOLDER', 'write')")
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write') and hasPermission(#dstFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public FolderDTO copyFolder(@PathVariable("folderId") Long folderId, @PathVariable("dstFolderId") Long dstFolderId,

@@ -34,7 +34,7 @@ public class UpdateFileTypeAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write')")
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}/type/{fileType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile updateFileType(@PathVariable("fileId") Long fileId, @PathVariable("fileType") String fileType,

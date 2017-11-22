@@ -59,7 +59,7 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
                 {
                 case "FILE":
                     Long fileId = fileFolderDeclareDTO.getId();
-                    if (!getArkPermissionEvaluator().hasPermission(authentication, fileId, "FILE", "read"))
+                    if (!getArkPermissionEvaluator().hasPermission(authentication, fileId, "FILE", "read|group-read|write|group-write"))
                     {
                         throw new AcmAccessControlException(Arrays.asList(""),
                                 "The user {" + authentication.getName() + "} is not allowed to read from file with id=" + fileId);
@@ -68,7 +68,7 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
                     break;
                 case "FOLDER":
                     Long folderId = fileFolderDeclareDTO.getId();
-                    if (!getArkPermissionEvaluator().hasPermission(authentication, folderId, "FOLDER", "read"))
+                    if (!getArkPermissionEvaluator().hasPermission(authentication, folderId, "FOLDER", "read|group-read|write|group-write"))
                     {
                         throw new AcmAccessControlException(Arrays.asList(""),
                                 "The user {" + authentication.getName() + "} is not allowed to read from folder with id=" + folderId);

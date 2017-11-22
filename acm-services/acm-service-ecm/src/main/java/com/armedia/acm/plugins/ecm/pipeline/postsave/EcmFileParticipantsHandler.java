@@ -18,7 +18,7 @@ public class EcmFileParticipantsHandler implements PipelineHandler<EcmFile, EcmF
     {
         if (entity.getParticipants().size() == 0)
         {
-            getFileParticipantService().setFileParticipantsFromParentFolder(entity);
+            getFileParticipantService().setFileParticipantsFromParentFolder(pipelineContext.getEcmFile());
         }
     }
 
