@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('people').controller('People.ActionsController', ['$rootScope', '$scope', '$state', '$stateParams', '$q'
+angular.module('people').controller('People.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Person.LookupService'
     , 'Object.SubscriptionService', 'Person.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService', '$translate'
-    , function ($rootScope, $scope, $state, $stateParams, $q
+    , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, PersonLookupService
         , ObjectSubscriptionService, PersonInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
@@ -19,13 +19,14 @@ angular.module('people').controller('People.ActionsController', ['$rootScope', '
             }
         });
 
-        $scope.active = "fa fa-play-circle";
-
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
+            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
+                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+            }
 
-            $rootScope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
+            $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
                 $scope.$emit("report-tree-updated");
                 $scope.active = "fa fa-stop";
             });
