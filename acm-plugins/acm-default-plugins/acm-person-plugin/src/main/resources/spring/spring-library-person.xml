@@ -19,7 +19,6 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="organizationSetCreatorHandler"/>
-                <ref bean="organizationParticipantRulesHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">
@@ -52,7 +51,6 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="personSetCreatorHandler"/>
-                <ref bean="personParticipantRulesHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">

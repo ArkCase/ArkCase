@@ -115,10 +115,7 @@
           class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintContainerHandler">
           <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
-    <bean id="complaintParticipantRulesHandler"
-          class="com.armedia.acm.plugins.complaint.pipeline.presave.ComplaintParticipantRulesHandler">
-        <property name="participantsRule" ref="participantsBusinessRule"/>
-    </bean>
+
     <!-- post-save handlers -->
     <bean id="complaintRulesHandler" class="com.armedia.acm.plugins.complaint.pipeline.postsave.ComplaintRulesHandler">
         <property name="saveRule" ref="saveComplaintBusinessRule"/>
@@ -138,7 +135,6 @@
         <property name="preSaveHandlers">
             <list value-type="com.armedia.acm.services.pipeline.handler.PipelineHandler">
                 <ref bean="complaintContainerHandler"/>
-                <ref bean="complaintParticipantRulesHandler"/>
             </list>
         </property>
         <property name="postSaveHandlers">

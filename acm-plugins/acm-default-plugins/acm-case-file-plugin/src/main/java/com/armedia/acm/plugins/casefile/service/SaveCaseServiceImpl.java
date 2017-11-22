@@ -46,7 +46,7 @@ public class SaveCaseServiceImpl implements SaveCaseService
             CaseFile saved = caseFileDao.save(in);
             try
             {
-                if (originalCaseFile == null)
+                if (originalCaseFile != null)
                 {
                     saved.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
                 }
