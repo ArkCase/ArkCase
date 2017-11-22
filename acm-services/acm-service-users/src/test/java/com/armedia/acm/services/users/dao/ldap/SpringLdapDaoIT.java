@@ -22,14 +22,15 @@ import java.util.Optional;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(
-        locations = { "/spring/spring-library-user-service.xml",
+        locations = {"/spring/spring-library-user-service.xml",
                 "/spring/spring-library-acm-encryption.xml",
                 "/spring/spring-library-data-source.xml",
                 "/spring/spring-library-property-file-manager.xml",
                 "/spring/spring-config-user-service-test-dummy-beans.xml",
                 "/spring/spring-library-context-holder.xml",
                 "/spring/spring-library-user-service-test-user-home-files.xml",
-                "/spring/spring-library-search.xml" }
+                "/spring/spring-library-search.xml",
+                "/spring/spring-library-object-converter.xml"}
 )
 
 public class SpringLdapDaoIT
@@ -96,7 +97,7 @@ public class SpringLdapDaoIT
     @Test
     public void findUsersWithSpecificAttributes()
     {
-        String[] attributes = new String[] {
+        String[] attributes = new String[]{
                 "cn", "sn", "givenName", "dn", "distinguishedname", "sAMAccountName", "mail"
         };
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);

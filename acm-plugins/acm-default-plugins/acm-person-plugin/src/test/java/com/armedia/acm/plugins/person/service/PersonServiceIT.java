@@ -33,7 +33,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-person-rules.xml",
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-organization-rules.xml",
-        "/spring/spring-library-object-association-plugin.xml"})
+        "/spring/spring-library-object-association-plugin.xml",
+        "/spring/spring-library-object-converter.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class PersonServiceIT
 {
