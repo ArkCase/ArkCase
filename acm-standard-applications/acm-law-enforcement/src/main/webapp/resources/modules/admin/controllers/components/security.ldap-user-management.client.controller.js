@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.LdapUserManagementController', ['$scope', '$q', '$modal', '$timeout'
-    , 'Admin.LdapUserManagementService', 'LookupService', 'MessageService'
-    , function ($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService) {
+    , 'Admin.LdapUserManagementService', 'LookupService', 'MessageService', 'Acm.StoreService'
+    , function ($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store) {
 
         $scope.cloneUser = cloneUser;
         $scope.onObjSelect = onObjSelect;
@@ -149,6 +149,13 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                 element.key = response.data.userId;
                 element.directory = response.data.userDirectoryName;
                 $scope.appUsers.push(element);
+
+                //add the new user to cache store
+                var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                var users = cacheUsers.get();
+                users.push(element);
+                cacheUsers.set(users);
+
                 MessageService.succsessAction();
             }, function (error) {
                 //error adding user
@@ -199,9 +206,16 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
 
         $scope.deleteUser = function () {
             LdapUserManagementService.deleteUser(selectedUser).then(function () {
+
+                var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                var users = cacheUsers.get();
+                var cacheKeyUser = _.find(users, {'object_id_s': selectedUser.key});
+                cacheUsers.remove(cacheKeyUser);
+
                 $scope.appUsers = _.reject($scope.appUsers, function (element) {
                     return element.key === selectedUser.key;
                 });
+
                 MessageService.succsessAction();
             }, function () {
                 MessageService.errorAction();

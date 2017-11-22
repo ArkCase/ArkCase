@@ -70,9 +70,9 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
 
             CalendarConfigurationService.validateCalendarConfigurationSystemEmail(emailCredentials).then(function (res) {
                 $scope.isLoading = false;
-                MessageService.succsessAction();
                 if (res.data && res.data == "true") {
                     $scope.validEmailsByObjectType[configurableObjectType.id] = 'VALID';
+                    MessageService.succsessAction();
                 } else {
                     $scope.validEmailsByObjectType[configurableObjectType.id] = 'NOT_VALID';
                 }
