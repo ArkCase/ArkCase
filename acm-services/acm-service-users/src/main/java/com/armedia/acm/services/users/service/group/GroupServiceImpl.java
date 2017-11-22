@@ -1,22 +1,5 @@
 package com.armedia.acm.services.users.service.group;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
-import org.mule.api.MuleException;
-import org.mule.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -36,12 +19,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -134,7 +119,6 @@ public class GroupServiceImpl implements GroupService
         return groupName;
     }
 
-
     @Override
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
@@ -225,8 +209,7 @@ public class GroupServiceImpl implements GroupService
         {
             log.debug("Group [{}] has no other parent groups, will be deleted", groupName);
             return markGroupDeleted(groupName);
-        }
-        else
+        } else
         {
             log.debug("Build ancestors string for group: [{}]", groupName);
             acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
@@ -289,8 +272,7 @@ public class GroupServiceImpl implements GroupService
             if (user != null)
             {
                 group = addUserMemberToGroup(user, groupId);
-            }
-            else
+            } else
             {
                 log.warn("User with id [{}] not found", userId);
             }
@@ -409,22 +391,6 @@ public class GroupServiceImpl implements GroupService
         if (parent == null)
         {
             throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found", null);
-        }
-
-        // check if subgroup already exists
-        String subGroupId = subGroup.getName();
-        if (subGroupId != null && !subGroupId.isEmpty())
-        {
-            subGroup = groupDao.findByName(subGroupId);
-            if (subGroup == null)
-            {
-                throw new AcmCreateObjectFailedException("GROUP", "Subgroup with id [" + subGroupId + "] not found", null);
-            }
-        }
-        else
-        {
-            subGroup.setAscendantsList(parent.getAscendantsList());
-            subGroup.setName(subGroupId + "-UUID-" + UUID.getUUID());
         }
 
         // If supervisor for the subgroup is empty, get from the parent group

@@ -1,13 +1,13 @@
 package com.armedia.acm.services.users.model.group;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,16 +24,14 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.base.MoreObjects;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author riste.tutureski
@@ -88,16 +86,16 @@ public class AcmGroup implements Serializable, AcmEntity
     private AcmUser supervisor;
 
     @JsonProperty("members")
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(name = "acm_user_membership", joinColumns = {
-            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name")}, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id")})
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
     private Set<AcmUser> userMembers = new HashSet<>();
 
     @JoinTable(name = "acm_group_membership", joinColumns = {
-            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)}, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)})
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false) }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false) })
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<AcmGroup> memberGroups = new HashSet<>();
 
     @ManyToMany(mappedBy = "memberGroups")
@@ -205,6 +203,7 @@ public class AcmGroup implements Serializable, AcmEntity
         memberOfGroups.remove(group);
     }
 
+    @JsonIgnore
     public boolean isMemeberOfGroups()
     {
         return memberOfGroups.isEmpty();
