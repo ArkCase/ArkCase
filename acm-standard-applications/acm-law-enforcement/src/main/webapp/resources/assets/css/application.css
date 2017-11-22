@@ -1,3 +1,6 @@
+/* @override 
+	http://localhost:8080/arkcase/assets/css/application.css */
+
 /* Typography */
 
 h1 {
@@ -293,6 +296,10 @@ span.fancytree-title {
 
 
 /* Navigation List (Grouped)  */
+
+.list-group-item-inactive-icon {
+    color: orange;
+}
 
 .list-group-item {
     cursor: pointer;
@@ -731,6 +738,9 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
+}
+.ui-grid-cell-anchor {
+    display: inline;
 }
 
 /*.ui-grid .ui-grid-cell div:hover {

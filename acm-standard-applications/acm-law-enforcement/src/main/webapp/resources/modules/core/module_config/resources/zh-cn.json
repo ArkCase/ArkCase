@@ -502,13 +502,13 @@
         "closed": "cn_Closed"
       },
       "auditReportNames": {
-        "cases": "cn_Case Files",
-        "complaints": "cn_Complaints Approval",
-        "tasks": "cn_Tasks",
-        "files": "cn_Files",
-        "documents": "cn_Documents",
-        "people": "cn_People",
-        "organizations": "cn_Organizations"
+        "case": "CASE_FILE",
+        "complaint": "COMPLAINT",
+        "task": "TASK",
+        "file": "FILE",
+        "document": "DOCUMENT",
+        "person": "PERSON",
+        "organization": "ORGANIZATION"
       }
     },
     "userInfo": {

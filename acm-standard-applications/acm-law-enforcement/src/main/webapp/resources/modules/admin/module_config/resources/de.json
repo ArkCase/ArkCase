@@ -158,9 +158,8 @@
           "email": "Email eingeben",
           "password": "Passwort eingeben",
           "confirmation": "de_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Geben Sie ein Passwort ein, das nicht mit dem Benutzernamen übereinstimmt und 7 Zeichen mit der Kombination aus mindestens einem Sonderzeichen, einer Zahl, Groß- und Kleinbuchstaben enthält."
-        },
+          "minLengthForPassword": "7"
+         },
         "editLdapMember": {
           "title": "Ldap-Mitglied bearbeiten",
           "btn": {

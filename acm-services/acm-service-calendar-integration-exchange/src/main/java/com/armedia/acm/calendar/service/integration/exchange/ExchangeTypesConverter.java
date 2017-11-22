@@ -2,19 +2,6 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import static com.armedia.acm.calendar.DateTimeAdjuster.guessTimeZone;
 
-import com.armedia.acm.calendar.service.AcmCalendarEvent;
-import com.armedia.acm.calendar.service.AcmCalendarEvent.Priority;
-import com.armedia.acm.calendar.service.Attendee;
-import com.armedia.acm.calendar.service.Attendee.AttendeeType;
-import com.armedia.acm.calendar.service.RecurrenceDetails;
-import com.armedia.acm.calendar.service.RecurrenceDetails.Daily;
-import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
-import com.armedia.acm.calendar.service.RecurrenceDetails.WeekOfMonth;
-import com.armedia.acm.calendar.service.RecurrenceDetails.Weekly;
-import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import java.time.DayOfWeek;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -24,8 +11,24 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.calendar.service.AcmCalendarEvent.Priority;
+import com.armedia.acm.calendar.service.AcmCalendarEventAttachment;
+import com.armedia.acm.calendar.service.Attendee;
+import com.armedia.acm.calendar.service.Attendee.AttendeeType;
+import com.armedia.acm.calendar.service.Attendee.ResponseStatus;
+import com.armedia.acm.calendar.service.RecurrenceDetails;
+import com.armedia.acm.calendar.service.RecurrenceDetails.Daily;
+import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
+import com.armedia.acm.calendar.service.RecurrenceDetails.WeekOfMonth;
+import com.armedia.acm.calendar.service.RecurrenceDetails.Weekly;
+import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
+
 import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.enumeration.property.Importance;
+import microsoft.exchange.webservices.data.core.enumeration.property.MeetingResponseType;
 import microsoft.exchange.webservices.data.core.enumeration.property.Sensitivity;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeek;
 import microsoft.exchange.webservices.data.core.enumeration.property.time.DayOfTheWeekIndex;
@@ -97,7 +100,8 @@ public class ExchangeTypesConverter
             appointment.setIsReminderSet(true);
             appointment.setReminderMinutesBeforeStart(calendarEvent.getRemindIn());
             // appointment.setReminderDueBy(Date.from(calendarEvent.getEnd().minusMinutes(calendarEvent.getRemindIn()).toInstant()));
-        } else
+        }
+        else
         {
             appointment.setIsReminderSet(false);
         }
@@ -161,7 +165,8 @@ public class ExchangeTypesConverter
                 if (daily.getEveryWeekDay() != null && daily.getEveryWeekDay())
                 {
                     recurrence = new DailyPattern(recurrenceStartAt, 1);
-                } else
+                }
+                else
                 {
                     recurrence = new DailyPattern(recurrenceStartAt, daily.getInterval());
                 }
@@ -175,7 +180,8 @@ public class ExchangeTypesConverter
                 if (monthly.getDay() != null)
                 {
                     recurrence = new MonthlyPattern(recurrenceStartAt, monthly.getInterval(), monthly.getDay());
-                } else
+                }
+                else
                 {
                     recurrence = new RelativeMonthlyPattern(recurrenceStartAt, monthly.getInterval(),
                             convertDayOfWeek(monthly.getDayOfWeek()), convertWeekOfMonth(monthly.getWeekOfMonth()));
@@ -186,7 +192,8 @@ public class ExchangeTypesConverter
                 if (yearly.getDayOfMonth() != null)
                 {
                     recurrence = new YearlyPattern(recurrenceStartAt, convertMonth(yearly.getMonth()), yearly.getDayOfMonth());
-                } else
+                }
+                else
                 {
                     recurrence = new RelativeYearlyPattern(recurrenceStartAt, convertMonth(yearly.getMonth()),
                             convertDayOfWeek(yearly.getDayOfWeek()), convertWeekOfMonth(yearly.getWeekOfMonth()));
@@ -327,7 +334,7 @@ public class ExchangeTypesConverter
      * @param sensitivity
      * @return
      */
-    private static Sensitivity convertSensitivity(com.armedia.acm.calendar.service.AcmCalendarEvent.Sensitivity sensitivity)
+    private static Sensitivity convertSensitivity(AcmCalendarEvent.Sensitivity sensitivity)
     {
         switch (sensitivity)
         {
@@ -383,28 +390,34 @@ public class ExchangeTypesConverter
 
         List<Attendee> attendees = new ArrayList<>();
         appointment.getRequiredAttendees().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.REQUIRED);
+            Attendee attendee = processAttendee(a, AttendeeType.REQUIRED);
             attendees.add(attendee);
         });
         appointment.getOptionalAttendees().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.OPTIONAL);
+            Attendee attendee = processAttendee(a, AttendeeType.OPTIONAL);
             attendees.add(attendee);
         });
         appointment.getResources().forEach(a -> {
-            Attendee attendee = new Attendee();
-            attendee.setEmail(a.getAddress());
-            attendee.setType(AttendeeType.RESOURCE);
+            Attendee attendee = processAttendee(a, AttendeeType.RESOURCE);
             attendees.add(attendee);
         });
         event.setAttendees(attendees);
 
-        List<String> fileNames = new ArrayList<>();
-        appointment.getAttachments().forEach(att -> fileNames.add(att.getName()));
-        event.setFileNames(fileNames);
+        List<AcmCalendarEventAttachment> files = new ArrayList<>();
+        String appointmentId = appointment.getId().getUniqueId();
+        appointment.getAttachments().forEach(att -> {
+            files.add(new AcmCalendarEventAttachment(att.getName(), att.getId(), appointmentId));
+        });
+        event.setFiles(files);
+    }
+
+    private static Attendee processAttendee(microsoft.exchange.webservices.data.property.complex.Attendee a, AttendeeType attendeeType)
+    {
+        Attendee attendee = new Attendee();
+        attendee.setEmail(a.getAddress());
+        attendee.setType(attendeeType);
+        attendee.setStatus(convertResponseType(a.getResponseType()));
+        return attendee;
     }
 
     /**
@@ -621,6 +634,31 @@ public class ExchangeTypesConverter
             return Priority.HIGH;
         default:
             throw new IllegalArgumentException();
+        }
+    }
+
+    /**
+     *
+     * @param responseType
+     * @return
+     */
+    private static ResponseStatus convertResponseType(MeetingResponseType responseType)
+    {
+        switch (responseType)
+        {
+        case Unknown:
+        case NoResponseReceived:
+            return ResponseStatus.NONE;
+        case Tentative:
+            return ResponseStatus.TENTATIVE;
+        case Accept:
+            return ResponseStatus.ACCEPTED;
+        case Decline:
+            return ResponseStatus.DECLINED;
+        case Organizer:
+            return ResponseStatus.ORGANIZER;
+        default:
+            throw new IllegalArgumentException(String.format("Non valid event responsetype [%s].", responseType.name()));
         }
     }
 

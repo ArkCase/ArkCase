@@ -15,11 +15,14 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.duplicatePersonRoleError = false;
 
             $scope.pickerType = params.pickerType;
-            $scope.pickerTypeDisabled = params.typeDisabled;
 
             $scope.showSetPrimary = params.showSetPrimary;
             //if not set, than use 'true' as default
+            $scope.pickerTypeEnabled = ('typeEnabled' in params) && params.typeEnabled != null ? params.typeEnabled : true;
+            //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+            //if not set, than use 'true' as default
+            $scope.selectExistingEnabled = ('selectExistingEnabled' in params) && params.selectExistingEnabled != null ? params.selectExistingEnabled : true;
 
             $scope.personId = params.personId;
             $scope.editMode = !!params.personId;

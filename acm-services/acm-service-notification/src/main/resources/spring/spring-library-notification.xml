@@ -52,6 +52,10 @@
         <property name="acmDataService" ref="acmDataService"/>
     </bean>
 
+    <bean id="assigneeNotified" class="com.armedia.acm.services.notification.service.AssigneeNotified">
+        <property name="userDao" ref="userJpaDao"/>
+    </bean>
+
     <bean id="notificationEventPublisher"
           class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
 

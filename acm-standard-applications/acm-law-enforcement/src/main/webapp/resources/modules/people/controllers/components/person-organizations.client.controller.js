@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.OrganizationsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication', 'Organization.InfoService', 'MessageService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'PersonAssociation.Service', 'Object.LookupService', 'PermissionsService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'ConfigService', 'PersonAssociation.Service', 'Object.LookupService', 'PermissionsService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication, OrganizationInfoService, MessageService
-        , HelperUiGridService, HelperObjectBrowserService, ConfigService, PersonAssociationService, ObjectLookupService, PermissionsService) {
+        , HelperUiGridService, HelperObjectBrowserService, ConfigService, PersonAssociationService, ObjectLookupService, PermissionsService, ObjectModelService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -35,14 +35,14 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             }
         });
 
-        var validateOrganizationAssociation = function(data, rowEntity) {
-            var validationResult = { valid : true };
+        var validateOrganizationAssociation = function (data, rowEntity) {
+            var validationResult = {valid: true};
 
             $scope.objectInfo.organizationAssociations
-                .filter(function(association) {
+                .filter(function (association) {
                     return (typeof rowEntity === 'undefined') || (!!rowEntity && (association.id !== rowEntity.id));
                 })
-                .forEach(function(association) {
+                .forEach(function (association) {
                     if (association.organization.organizationId == data.organizationId) {
                         if (data.type === association.personToOrganizationAssociationType) {
                             validationResult.valid = false;
@@ -57,8 +57,13 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         ObjectLookupService.getPersonOrganizationRelationTypes().then(
             function (organizationTypes) {
                 $scope.organizationTypes = [];
-                for(var i=0;i<organizationTypes.length;i++){
-                    $scope.organizationTypes.push({"key": organizationTypes[i].inverseKey, "value": organizationTypes[i].inverseValue, "inverseKey": organizationTypes[i].key, "inverseValue": organizationTypes[i].value});
+                for (var i = 0; i < organizationTypes.length; i++) {
+                    $scope.organizationTypes.push({
+                        "key": organizationTypes[i].inverseKey,
+                        "value": organizationTypes[i].inverseValue,
+                        "inverseKey": organizationTypes[i].key,
+                        "inverseValue": organizationTypes[i].value
+                    });
                 }
                 return organizationTypes;
             });
@@ -84,7 +89,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
         $scope.hasSelected = false;
 
         $scope.editRow = function (rowEntity) {
-            var validateEditRow = function(data) {
+            var validateEditRow = function (data) {
                 return validateOrganizationAssociation(data, rowEntity);
             };
 
@@ -93,9 +98,9 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
                 types: $scope.organizationTypes,
                 organizationId: rowEntity.organization.organizationId,
                 organizationValue: rowEntity.organization.organizationValue,
-                type: rowEntity.personToOrganizationAssociationType,
+                type: rowEntity.organizationToPersonAssociationType,
                 isDefault: rowEntity === $scope.objectInfo.defaultOrganization,
-                returnValueValidationFunction : validateEditRow
+                returnValueValidationFunction: validateEditRow
             };
 
             var modalInstance = $modal.open({
@@ -129,8 +134,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             $scope.gridOptions.data = objectInfo.organizationAssociations;
         };
 
-        $scope.getPrimaryContact = function(organizationAssiciation)
-        {
+        $scope.getPrimaryContact = function (organizationAssiciation) {
             var primaryContact = organizationAssiciation.organization.primaryContact;
             if (!!primaryContact) {
                 var getPrimaryConactGivenName = Util.goodValue(primaryContact.person.givenName);
@@ -147,7 +151,7 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
                 showSetPrimary: true,
                 isDefault: false,
                 types: $scope.organizationTypes,
-                returnValueValidationFunction : validateOrganizationAssociation,
+                returnValueValidationFunction: validateOrganizationAssociation,
                 isFirstOrganization: $scope.isFirstOrganization
             };
 
@@ -237,12 +241,9 @@ angular.module('people').controller('People.OrganizationsController', ['$scope',
             }
             return promiseSaveInfo;
         }
-
-        $scope.isDefault = function (data) {
-            if ($scope.objectInfo) {
-                return data === $scope.objectInfo.defaultOrganization;
-            }
-            return false;
+        $scope.isDefault = function(data){
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
         }
+
     }
 ]);

@@ -493,6 +493,15 @@
         "cancel": "Dokument abbrechen",
         "concur": "Samenvallen",
         "nonConcur": "Niet in overeenstemming"
+      },
+      "auditReportNames": {
+        "case": "CASE_FILE",
+        "complaint": "COMPLAINT",
+        "task": "TASK",
+        "file": "FILE",
+        "document": "DOCUMENT",
+        "person": "PERSON",
+        "organization": "ORGANIZATION"
       }
     },
     "userInfo": {

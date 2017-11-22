@@ -113,7 +113,7 @@
         "icon": "fa fa-exclamation-triangle",
         "components": [
           "details",
-          "locations",
+          "addresses",
           "people",
           "organizations",
           "documents",
@@ -142,7 +142,7 @@
         "label": "complaints.tree.nodeTypes.locations.label",
         "icon": "fa fa-location-arrow",
         "components": [
-          "locations"
+          "addresses"
         ]
       },
       {
@@ -295,6 +295,14 @@
           "id": "addresses",
           "type": "component",
           "columnDefs": [
+
+            {
+              "name": "type",
+              "displayName": "complaints.comp.addresses.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+              "width": "*"
+            },
             {
               "name": "streetAddress",
               "displayName": "complaints.comp.addresses.table.columns.streetAddress",

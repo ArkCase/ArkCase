@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.LdapUserManagementController', ['$scope', '$q', '$modal', '$timeout'
-    , 'Admin.LdapUserManagementService', 'LookupService', 'MessageService'
-    , function ($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService) {
+    , 'Admin.LdapUserManagementService', 'LookupService', 'MessageService', 'Acm.StoreService'
+    , function ($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store) {
 
         $scope.cloneUser = cloneUser;
         $scope.onObjSelect = onObjSelect;
@@ -102,7 +102,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             }
         }
 
-        function openCloneUserModal(userForm, error){
+        function openCloneUserModal(userForm, passwordError, usernameError){
 
             return $modal.open({
                 animation: $scope.animationsEnabled,
@@ -114,18 +114,27 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                     $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                     $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                     $scope.user = userForm;
-                    $scope.errorMessage = error;
+                    $scope.passwordErrorMessage = passwordError;
+                    $scope.error = usernameError;
                     $scope.data = {
                         "user": $scope.user,
                         "selectedUser": selectedUser
                     };
-                    $scope.userForm = $scope.data.user;
+                    $scope.clearPasswordError = function (){
+                        if($scope.passwordErrorMessage){
+                            $scope.passwordErrorMessage ='';
+                        }
+                    };
+                    $scope.clearUsernameError = function (){
+                        if($scope.error){
+                            $scope.error ='';
+                        }
+                    };
                     $scope.passwordErrorMessages = {
                         notSamePasswordsMessage: ''
                     };
                     $scope.ok = function () {
                         $modalInstance.close($scope.data);
-
                     };
                 }],
                 size: 'sm'
@@ -140,22 +149,46 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
                 element.key = response.data.userId;
                 element.directory = response.data.userDirectoryName;
                 $scope.appUsers.push(element);
+
+                //add the new user to cache store
+                var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                var users = cacheUsers.get();
+                users.push(element);
+                cacheUsers.set(users);
+
                 MessageService.succsessAction();
             }, function (error) {
                 //error adding user
-                if(error.data.message){
+                if (error.data.message){
+                    var passwordError;
+                    var usernameError;
                     var onAdd = function(data){
                         return onCloneUser(data);
                     };
-                    openCloneUserModal(error.data.extra.userForm, error.data.message)
-                        .result.then(onAdd, function () {
-                        deferred.reject("cancel");
-                        return {};
-                    });
+                    if (error.data.field == 'username'){
+                        usernameError = error.data.message;
+                        openCloneUserModal(error.data.extra.user, passwordError, usernameError)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return {};
+                        });
+                    } else if (error.data.field == 'password'){
+                        passwordError = error.data.message;
+                        openCloneUserModal(error.data.extra.userForm, passwordError, usernameError)
+                            .result.then(onAdd, function () {
+                            deferred.reject("cancel");
+                            return {};
+                        });
+                    } else {
+                        MessageService.error(error.data.message);
+                    }
+
                 }
+
                 else {
-                    deferred.reject();
+                    MessageService.errorAction();
                 }
+
             });
 
         }
@@ -173,9 +206,16 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
 
         $scope.deleteUser = function () {
             LdapUserManagementService.deleteUser(selectedUser).then(function () {
+
+                var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                var users = cacheUsers.get();
+                var cacheKeyUser = _.find(users, {'object_id_s': selectedUser.key});
+                cacheUsers.remove(cacheKeyUser);
+
                 $scope.appUsers = _.reject($scope.appUsers, function (element) {
                     return element.key === selectedUser.key;
                 });
+
                 MessageService.succsessAction();
             }, function () {
                 MessageService.errorAction();

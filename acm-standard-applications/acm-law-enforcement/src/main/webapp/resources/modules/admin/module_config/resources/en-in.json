@@ -158,8 +158,7 @@
           "email": "Enter email",
           "password": "Enter password",
           "confirmation": "en-in_Enter your password again",
-          "minLengthForPassword": "7",
-          "passwordRuleText": "Enter a password that is not same as username, containing 7 characters with the combination of atleast one special character,number,uppercase and lowercase letters."
+          "minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -259,8 +258,8 @@
         "email.label": "System Email Address",
         "password.label": "System Password",
         "purgeDays.label": "Days",
-        "emailValid": "System Email Address is valid",
-        "emailNotValid": "System Email Address is not valid",
+        "emailValid": "System Email Address and Password are valid",
+        "emailNotValid": "System Email Address and Password are not valid",
         "enableCalendarIntegration.checkbox": "Enable Calendar Integration",
         "purgeOptions": {
           "retainIndefinitely": "Retain Indefinitely",
