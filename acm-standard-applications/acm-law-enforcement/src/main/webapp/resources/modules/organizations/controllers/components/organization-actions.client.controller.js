@@ -1,9 +1,9 @@
 'use strict';
 
-angular.module('organizations').controller('Organizations.ActionsController', ['$rootScope', '$scope', '$state', '$stateParams', '$q'
+angular.module('organizations').controller('Organizations.ActionsController', ['$scope', '$state', '$stateParams', '$q'
     , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService'
     , 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService', '$translate'
-    , function ($rootScope, $scope, $state, $stateParams, $q
+    , function ($scope, $state, $stateParams, $q
         , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService
         , ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
@@ -19,16 +19,18 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             }
         });
 
-        $scope.active = "fa fa-play-circle";
-
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
+            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
+                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+            }
 
-            $rootScope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
+            $scope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
                 $scope.$emit("report-tree-updated");
                 $scope.active = "fa fa-stop";
             });
+
         };
 
         $scope.onClickRestrict = function ($event) {
