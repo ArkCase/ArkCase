@@ -458,7 +458,7 @@
               "name": "organization.organizationToPersonAssociationType",
               "displayName": "people.comp.related.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<span ng-bind=\"grid.appScope.bla(row.entity.organizationToPersonAssociationType)\"></span>"
+              "cellTemplate": "<span ng-bind=\"grid.appScope.bla(row.entity.organizationToPersonAssociationType) | translate\"></span>"
             },
             {
               "name": "organizationType",
