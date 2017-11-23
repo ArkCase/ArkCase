@@ -1,11 +1,9 @@
 package com.armedia.acm.services.users.service.group;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -16,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -184,24 +183,19 @@ public class GroupServiceImpl implements GroupService
             throw new AcmObjectNotFoundException("GROUP", null, "Group with name " + groupName + " not found");
         }
 
-        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
-
         acmGroup.removeAsMemberOf();
-        // acmGroup.setMemberOfGroups(new HashSet<>());
-        // acmGroup.getMemberOfGroups().forEach(memberOfgroup -> memberOfgroup.removeGroupMember(acmGroup));
-        // Assert.isTrue(acmGroup.isMemeberOfGroups());
+        Assert.isTrue(acmGroup.isMemeberOfGroups());
 
-        acmGroup.getUserMembers().stream().collect(Collectors.toMap(Function.identity(), acmUser -> Collections.singleton(acmGroup)));
+        // acmGroup.getUserMembers().stream().collect(Collectors.toMap(Function.identity(), acmUser ->
+        // Collections.singleton(acmGroup)));
+        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+        Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
+        users.addAll(acmGroup.getUserMembers());
 
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
 
         acmGroup.removeMembers();
-        // acmGroup.setMemberGroups(new HashSet<>());
-        // acmGroup.getMemberGroups().forEach(memberGroup -> memberGroup.getMemberOfGroups().remove(acmGroup));
-        // acmGroup.getMemberGroups().forEach(memberGroup -> memberGroup.removeFromGroup(acmGroup));
-
-        // Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
 
         acmGroup.setUserMembers(new HashSet<>());
 
@@ -257,12 +251,11 @@ public class GroupServiceImpl implements GroupService
             acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
             save(acmGroup);
 
-            acmGroup.getUserMembers().stream()
-                    .collect(Collectors.toMap(Function.identity(), acmUser -> Collections.singleton(parentGroup)));
+            Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+            Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
+            users.addAll(acmGroup.getUserMembers());
 
             log.debug("Remove roles for user members from the parent group [{}]", parentGroupName);
-
-            Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
 
             descendantGroups.forEach(group -> {
                 log.debug("Build ancestors string for descendants group: [{}]", groupName);
