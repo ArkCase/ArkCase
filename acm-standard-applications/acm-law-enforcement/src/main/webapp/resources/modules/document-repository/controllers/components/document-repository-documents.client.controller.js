@@ -3,10 +3,10 @@
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
     , '$modal', '$translate', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email', 'ModalDialogService'
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email', 'ModalDialogService', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -14,6 +14,10 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.sendEmailEnabled = emailData.data.allowDocuments;
+        });
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);

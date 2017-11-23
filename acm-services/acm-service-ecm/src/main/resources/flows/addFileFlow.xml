@@ -42,5 +42,10 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
+        <catch-exception-strategy>
+            <logger level="ERROR" category="com.armedia.acm.plugins.ecm" message="Exception while adding new file: #[exception.message]"/>
+            <set-property propertyName="saveException" value="#[exception]"/>
+        </catch-exception-strategy>
+
     </flow>
 </mule>

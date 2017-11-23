@@ -11,14 +11,12 @@ import com.armedia.acm.plugins.casefile.exceptions.AcmCaseFileNotFound;
 import com.armedia.acm.plugins.casefile.exceptions.MergeCaseFilesException;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
@@ -39,13 +37,11 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
     private SaveCaseService saveCaseService;
     private CaseFileDao caseFileDao;
-    private AcmFolderDao acmFolderDao;
-    private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
-    private AcmContainerDao acmContainerDao;
     private EcmFileDao ecmFileDao;
     private List<String> excludeDocumentTypesList;
     private AcmParticipantService acmParticipantService;
+    private AcmParticipantDao acmParticipantDao;
 
     @Override
     @Transactional
@@ -131,16 +127,19 @@ public class MergeCaseServiceImpl implements MergeCaseService
                 if (foundAssignee.getParticipantLdapId().equals(auth.getName()))
                     return;
                 foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
+                getAcmParticipantDao().save(foundAssignee);
                 AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
                         target.getId(), target.getObjectType());
                 target.getParticipants().add(addedAssignee);
-            } else
+            }
+            else
             {
                 AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
                         target.getId(), target.getObjectType());
                 target.getParticipants().add(addedAssignee);
             }
-        } else
+        }
+        else
         {
             // there are no participants in target case file, just add current user as assignee
             AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE, target.getId(),
@@ -190,24 +189,10 @@ public class MergeCaseServiceImpl implements MergeCaseService
         this.caseFileDao = caseFileDao;
     }
 
-    public void setAcmFolderDao(AcmFolderDao acmFolderDao)
-    {
-        this.acmFolderDao = acmFolderDao;
-    }
-
-    public void setEcmFileService(EcmFileService ecmFileService)
-    {
-        this.ecmFileService = ecmFileService;
-    }
 
     public void setAcmFolderService(AcmFolderService acmFolderService)
     {
         this.acmFolderService = acmFolderService;
-    }
-
-    public void setAcmContainerDao(AcmContainerDao acmContainerDao)
-    {
-        this.acmContainerDao = acmContainerDao;
     }
 
     public void setEcmFileDao(EcmFileDao ecmFileDao)
@@ -224,6 +209,16 @@ public class MergeCaseServiceImpl implements MergeCaseService
     {
         this.excludeDocumentTypesList = !StringUtils.isEmpty(excludeDocumentTypes)
                 ? Arrays.asList(excludeDocumentTypes.trim().replaceAll(",[\\s]*", ",").split(",")) : new ArrayList<>();
+    }
+
+    public AcmParticipantDao getAcmParticipantDao()
+    {
+        return acmParticipantDao;
+    }
+
+    public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao)
+    {
+        this.acmParticipantDao = acmParticipantDao;
     }
 }
 

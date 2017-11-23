@@ -3,12 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $q, $timeout, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService) {
-
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -16,6 +15,10 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.sendEmailEnabled = emailData.data.allowDocuments;
+        });
 
         $scope.uploadForm = function (type, folderId, onCloseForm) {
             var fileTypes = Util.goodArray($scope.treeConfig.fileTypes);
@@ -42,6 +45,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
         var promiseFileLanguages = LocaleService.getSettings();
+
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;
             $scope.allowParentOwnerToCancel = config.docTree.allowParentOwnerToCancel;

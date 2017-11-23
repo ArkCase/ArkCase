@@ -40,6 +40,7 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setCreator_lcs(in.getCreator());
         solrDoc.setModified_date_tdt(in.getModified());
         solrDoc.setModifier_lcs(in.getModifier());
+        solrDoc.setStatus_lcs(in.getStatus()); //Reference status used by Bactes
 
         setAdditionalProperties(solrDoc.getAdditionalProperties(), in);
 
