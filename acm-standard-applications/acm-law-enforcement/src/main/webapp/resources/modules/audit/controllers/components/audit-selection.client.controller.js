@@ -9,7 +9,7 @@ angular.module('audit').controller('Audit.SelectionController', ['$scope', 'Obje
         });
 
         $scope.auditReportName = "";
-        $scope.$watchGroup(['selectId','auditReportNames'], function(){
+        $scope.$watchGroup(['selectId','auditReportName'], function(){
             $scope.$emit('send-type-id', $scope.auditReportName, $scope.selectId);
         });
 
