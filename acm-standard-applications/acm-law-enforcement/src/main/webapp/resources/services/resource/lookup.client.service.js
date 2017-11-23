@@ -107,6 +107,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             });
         };
 
+
         /**
          * @ngdoc method
          * @name getUserFullNames
@@ -140,6 +141,39 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                         return userFullNames;
                     }
                 }
+            });
+        };
+
+
+
+        /**
+         * @ngdoc method
+         * @name getApprovers
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query list of approvers full names and user id
+         *
+         * @returns {Object} approvers
+         */
+
+
+        Service.getApprovers = function (objectInfo) {
+            return Service.getUserFullNames().then(function (users) {
+                var approvers = [];
+
+                for (var i = 0; i < objectInfo.participants.length; i++) {
+                    for (var j = 0; j < users.length; j++) {
+                        if (objectInfo.participants[i].participantLdapId === users[j].id && objectInfo.participants[i].participantType === 'approver') {
+                            approvers.push({
+                                fullName: users[j].name,
+                                userId: users[j].id
+                            });
+                            break;
+                        }
+                    }
+                }
+                return approvers;
             });
         };
 
@@ -305,7 +339,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 }
             });
         };
-        
+
         /**
          * @ngdoc method
          * @name getLookups
@@ -349,7 +383,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          *             ]
          *         }
          *     ]
-         * } 
+         * }
          *
          * @returns {Object} Promise
          */
@@ -363,7 +397,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , result: lookups
                 , onSuccess: function (data) {
                     lookups = Util.omitNg(data);
-                    if (Service.validateLookups(lookups)) {                        
+                    if (Service.validateLookups(lookups)) {
                         configMap = configMap || {};
                         configMap['lookups'] = lookups;
                         cacheConfigMap.set(configMap);
@@ -392,7 +426,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             }
             return true;
         };
-        
+
         /**
          * @ngdoc method
          * @name validateLookups
@@ -412,7 +446,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                     return false;
                 }
             }
-            
+
             // check if the lookups are array objects
             if (data.standardLookup) {
                 for (var i = 0; i < data.standardLookup.length; i++) {
@@ -448,7 +482,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
          *
          * @param {Object} lookupDef    the lookup definition to be saved with structure:
          *                              { 'lookupType' : 'standardLookup', 'name' : 'addressTypes' }
-         * @parma {Array}  lookup       the lookup entries as an array. 
+         * @parma {Array}  lookup       the lookup entries as an array.
          *                              For standarLookup the structure looks like:
          *                              [{'key':'1', 'value':'1'}, {'key':'2', 'value':'2'}, {...}]
          *                              For nestedLookup the structure looks like:
@@ -466,7 +500,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , onSuccess: handleSaveLookupSuccess
             });
         };
-        
+
         function handleSaveLookupSuccess(responseLookups) {
             var lookups = Util.omitNg(responseLookups);
             if (Service.validateLookups(lookups)) {
@@ -481,7 +515,7 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 return MessageService.error('Lookups returned from server are invalid!');
             }
         };
-        
+
         return Service;
     }
 ]);
