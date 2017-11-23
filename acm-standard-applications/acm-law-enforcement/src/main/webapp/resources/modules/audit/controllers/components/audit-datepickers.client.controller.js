@@ -11,5 +11,7 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', fun
         $scope.opened = {};
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
+
+        $scope.minDate = new Date();
     }
 ]);
