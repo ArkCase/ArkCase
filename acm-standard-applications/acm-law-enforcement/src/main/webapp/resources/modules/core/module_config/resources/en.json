@@ -492,6 +492,9 @@
         "concur": "Concur",
         "nonConcur": "Non-Concur"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Acm Document Workflow"
+      },
       "reportStates": {
         "draft": "Draft",
         "inApproval": "In Approval",

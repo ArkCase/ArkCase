@@ -76,7 +76,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 params: {
                     parentType: ObjectService.ObjectTypes.CASE_FILE,
                     parentObject: $scope.objectInfo.caseNumber,
-                    parentTitle: $scope.objectInfo.title
+                    parentId: $scope.objectInfo.id,
+                    parentTitle: $scope.objectInfo.title,
+                    taskType: 'ACM_TASK'
                 }
             };
             ModalDialogService.showModal(modalMetadata);
