@@ -178,14 +178,12 @@ public class AcmGroup implements Serializable, AcmEntity
     public void addGroupMember(AcmGroup group)
     {
         memberGroups.add(group);
-        // group.getMemberOfGroups().add(this);
         group.addToGroup(this);
     }
 
     public void removeGroupMember(AcmGroup group)
     {
         memberGroups.remove(group);
-        // group.getMemberOfGroups().remove(this);
         group.removeFromGroup(this);
     }
 
