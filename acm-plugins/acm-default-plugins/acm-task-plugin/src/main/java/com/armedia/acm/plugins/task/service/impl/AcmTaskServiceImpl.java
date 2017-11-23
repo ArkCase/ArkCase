@@ -537,7 +537,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         Long parentObjectId = task.getAttachedToObjectId();
         String parentObjectType = (task.getAttachedToObjectType().equals("")) ? null : task.getAttachedToObjectType();
 
-        if(task.getDocumentsToReview().isEmpty()) {
+        if(task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty()) {
             throw new AcmTaskException("You must select at least one document to be reviewed.");
         } else {
             // Iterate through the list of documentsToReview and start business process for each of them
@@ -558,7 +558,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
                 pVars.put("PARENT_OBJECT_ID", parentObjectId);
 
-                AcmTask createdAcmTask = taskDao.startBusinessProcess(task, pVars, businessProcessName);
+                AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
 
                 createdAcmTasks.add(createdAcmTask);
             }

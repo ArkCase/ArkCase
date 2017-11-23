@@ -119,7 +119,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
                     parentTitle: $scope.objectInfo.title,
                     parentId: $scope.objectInfo.id,
                     documentsToReview: $scope.selectedDocuments,
-                    taskType: 'ACTIVITI_TASK'
+                    taskType: 'REVIEW_DOCUMENT'
                 }
             };
             ModalDialogService.showModal(modalMetadata);

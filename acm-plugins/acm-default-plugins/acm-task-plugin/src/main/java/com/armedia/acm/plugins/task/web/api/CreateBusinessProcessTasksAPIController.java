@@ -33,14 +33,15 @@ public class CreateBusinessProcessTasksAPIController {
     @RequestMapping(value = "/reviewDocuments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTask> reviewDocuments(@RequestBody AcmTask in, @RequestParam(value = "businessProcessName", defaultValue = "acmDocumentWorkflow") String businessProcessName, Authentication authentication, HttpSession httpSession)
-            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException {
+            throws  AcmCreateObjectFailedException {
 
         try {
-            return getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);
+            List<AcmTask> acmTasks = getTaskService().startReviewDocumentsWorkflow(in, businessProcessName, authentication);
+            return acmTasks;
         } catch (AcmTaskException e) {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
-            fakeTask.setTaskId(null); // no object id since the task could not be created
+            fakeTask.setTaskId(-1L); // no object id since the task could not be created
             publishTaskCreatedEvent(authentication, httpSession, fakeTask, false);
             throw new AcmCreateObjectFailedException("task", e.getMessage(), e);
         }
