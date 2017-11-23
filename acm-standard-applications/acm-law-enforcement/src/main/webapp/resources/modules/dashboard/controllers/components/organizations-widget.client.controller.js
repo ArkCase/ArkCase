@@ -14,9 +14,9 @@ angular.module('dashboard.organizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams', '$translate',
-        'UtilService', 'Person.InfoService', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.ModelService'
+        'UtilService', 'Person.InfoService', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.ModelService', 'Object.LookupService'
         ,function ($scope, $stateParams, $translate,
-                   Util, PersonInfoService, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectModelService) {
+                   Util, PersonInfoService, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectModelService, ObjectLookupService) {
             var modules = [
                 {
                     name: "PERSON",
@@ -37,6 +37,20 @@ angular.module('dashboard.organizations', ['adf.provider'])
                     validateInfo: ComplaintInfoService.validateComplaintInfo
                 }
             ];
+
+            ObjectLookupService.getPersonOrganizationRelationTypes().then(
+                function (organizationTypes) {
+                    $scope.organizationTypes = [];
+                    for (var i = 0; i < organizationTypes.length; i++) {
+                        $scope.organizationTypes.push({
+                            "key": organizationTypes[i].inverseKey,
+                            "value": organizationTypes[i].inverseValue,
+                            "inverseKey": organizationTypes[i].key,
+                            "inverseValue": organizationTypes[i].value
+                        });
+                    }
+                    return organizationTypes;
+                });
 
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
@@ -89,5 +103,11 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
             }
 
+            $scope.bla = function (org) {
+                $scope.type = _.find($scope.organizationTypes, function (obj) {
+                    return obj.key === org;
+                });
+                return $scope.type.inverseKey;
+            }
         }
     ]);
