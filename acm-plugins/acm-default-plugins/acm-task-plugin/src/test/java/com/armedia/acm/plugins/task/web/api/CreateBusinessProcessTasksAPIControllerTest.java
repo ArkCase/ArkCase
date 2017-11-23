@@ -117,7 +117,7 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result = mockMvc
-                .perform(post("/api/v1/plugin/tasks/reviewDocuments?businessProcessName=acmDocumentWorkflow")
+                .perform(post("/api/v1/plugin/tasks/documents/review?businessProcessName=acmDocumentWorkflow")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication)
@@ -170,7 +170,7 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
 
         Exception exception;
 
-        MvcResult res = mockMvc.perform(post("/api/v1/plugin/tasks/reviewDocuments?businessProcessName=acmDocumentWorkflow")
+        MvcResult res = mockMvc.perform(post("/api/v1/plugin/tasks/documents/review?businessProcessName=acmDocumentWorkflow")
                 .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                 .session(mockHttpSession)
                 .principal(mockAuthentication)

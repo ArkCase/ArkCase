@@ -30,7 +30,7 @@ public class CreateBusinessProcessTasksAPIController {
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/reviewDocuments", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/documents/review", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTask> reviewDocuments(@RequestBody AcmTask in, @RequestParam(value = "businessProcessName", defaultValue = "acmDocumentWorkflow") String businessProcessName, Authentication authentication, HttpSession httpSession)
             throws  AcmCreateObjectFailedException {
