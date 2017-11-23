@@ -25,7 +25,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             //,height: 120
         };
 
-        if($scope.taskType === 'ACTIVITI_TASK') {
+        if($scope.taskType === 'REVIEW_DOCUMENT') {
             $scope.documentsToReview = $scope.modalParams.documentsToReview;
             $scope.documentsToReviewIds = extractDocumentIds($scope.documentsToReview);
             $scope.selectedBusinessProcessType = null;
@@ -94,7 +94,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-            if($scope.taskType === 'ACTIVITI_TASK' && $scope.documentsToReview) {
+            if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
                 TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
             } else {

@@ -1379,21 +1379,11 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public AcmTask startBusinessProcess(AcmTask task, Map<String, Object> pVars, String businessProcessName) throws  AcmTaskException
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws  AcmTaskException
     {
-
             ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
             Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
-
-            Integer activitiPriority = activitiPriorityFromAcmPriority(task.getPriority());
-            activitiTask.setPriority(activitiPriority);
-
-            if (task.getPercentComplete() != null) {
-                getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_PERCENT_COMPLETE,
-                        task.getPercentComplete());
-            }
             AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
-
 
             return createdAcmTask;
     }

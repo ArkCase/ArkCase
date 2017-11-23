@@ -87,7 +87,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
                 templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
                 controllerName: 'Tasks.NewTaskController',
                 params: {
-                    taskType: 'ACTIVITI_TASK',
+                    taskType: 'REVIEW_DOCUMENT',
                     documentsToReview: $scope.selectedDocuments
                 }
             };

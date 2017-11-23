@@ -93,7 +93,7 @@
                             class="form-control input-md">
                     </select>
                 </div>
-                <div class="form-group col-sm-4" ng-if="taskType === 'ACTIVITI_TASK'">
+                <div class="form-group col-sm-4" ng-if="taskType === 'REVIEW_DOCUMENT'">
                     <label class="control-label">{{ 'tasks.newTask.businessProcessTypes.label' | translate }}
 
                     </label>
@@ -121,12 +121,12 @@
                     <summernote config="options" ng-model="config.data.details"></summernote>
                 </div>
             </div>
-            <div class="row" ng-if="taskType === 'ACTIVITI_TASK' && documentsToReview">
+            <div class="row" ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">
                 <div class="col-sm-12 form-group">
-                    <label for="attachments">
-                        <span translate>tasks.newTask.attachments.label</span>
+                    <label for="docsToReview">
+                        <span translate>tasks.newTask.documentsToReview.label</span>
                     </label>
-                    <fieldset id="attachments" class="well-sm">
+                    <fieldset id="docsToReview" class="well-sm">
                         <label ng-repeat="node in documentsToReview" class="checkbox-inline">
                             <input
                                     type="checkbox"
@@ -151,7 +151,7 @@
                 ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="task.$invalid || saved || (taskType === 'ACTIVITI_TASK' && documentsToReview && documentsToReviewIds.length === 0)"
+        <button type="submit" ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
