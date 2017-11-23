@@ -222,6 +222,8 @@
       "btn": "pt_Search",
       "placeholder": "pt_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "pt_Pick Associated User",
+    "pickGroupLabel": "pt_Pick Associated Group",
     "cancelButton": "pt_Cancel",
     "confirmButton": "pt_Confirm",
     "enabled": true,

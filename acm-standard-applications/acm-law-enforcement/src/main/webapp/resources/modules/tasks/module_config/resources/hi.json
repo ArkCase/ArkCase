@@ -222,6 +222,8 @@
       "btn": "hi_Search",
       "placeholder": "hi_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "hi_Pick Associated User",
+    "pickGroupLabel": "hi_Pick Associated Group",
     "cancelButton": "hi_Cancel",
     "confirmButton": "hi_Confirm",
     "enabled": true,

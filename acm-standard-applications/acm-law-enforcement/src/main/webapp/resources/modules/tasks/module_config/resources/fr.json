@@ -222,6 +222,8 @@
       "btn": "fr_Search",
       "placeholder": "fr_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "fr_Pick Associated User",
+    "pickGroupLabel": "fr_Pick Associated Group",
     "cancelButton": "fr_Cancel",
     "confirmButton": "fr_Confirm",
     "enabled": true,

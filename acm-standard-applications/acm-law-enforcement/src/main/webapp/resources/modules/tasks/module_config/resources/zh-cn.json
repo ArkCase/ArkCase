@@ -222,6 +222,8 @@
       "btn": "zh-cn_Search",
       "placeholder": "zh-cn_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "zh-cn_Pick Associated User",
+    "pickGroupLabel": "zh-cn_Pick Associated Group",
     "cancelButton": "zh-cn_Cancel",
     "confirmButton": "zh-cn_Confirm",
     "enabled": true,
