@@ -225,7 +225,7 @@
                                 <div class="pull-left">
                                     <label for="" class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="addNewPerson();">
+                                            ng-click="addNewPerson();" ng-disabled="!personAssociation.personFullName" ng-show="$last">
                                         <i class="fa fa-plus text-success"></i><span
                                             translate>organizations.comp.newOrganization.addAnother</span>
                                     </button>
@@ -299,14 +299,14 @@
                                    class="input-md form-control"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-1 form-group">
+                        <div class="col-sm-3 form-group">
                             <label for="zip" translate>
                                 organizations.comp.newOrganization.locations.zip</label>
                             <input id="zip" type="text" ng-model="organization.defaultAddress.zip"
                                    class="input-md form-control"
                                    placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-2 form-group">
                             <div class="pull-left">
                                 <label for="" class="control-label">&nbsp;</label>
                                 <button type="button" class="btn btn-link form-control"
@@ -372,14 +372,14 @@
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.state.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-1 form-group">
+                            <div class="col-sm-3 form-group">
                                 <label for="zip" translate>
                                     organizations.comp.newOrganization.locations.zip</label>
                                 <input id="zip" type="text" ng-model="address.zip"
                                        class="input-md form-control"
                                        placeholder="{{ 'organizations.comp.newOrganization.locations.zip.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-2 form-group">
                                 <div class="pull-left">
                                     <label for="" class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"

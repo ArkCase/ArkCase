@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.casefile.service;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
-import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -30,10 +29,10 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-merge-case-test.xml"})
-public class MergeCaseServiceImplTest extends EasyMockSupport {
+public class MergeCaseServiceImplTest extends EasyMockSupport
+{
 
     private SaveCaseService saveCaseService;
-    private AcmFolderDao acmFolderDao;
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private EcmFileDao ecmFileDao;
@@ -48,12 +47,12 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
     private AcmParticipantService acmParticipantService;
 
     @Before
-    public void setUp() {
+    public void setUp()
+    {
         auth = createMock(Authentication.class);
         ipAddress = "127.0.0.1";
         saveCaseService = createMock(SaveCaseService.class);
         caseFileDao = createMock(CaseFileDao.class);
-        acmFolderDao = createMock(AcmFolderDao.class);
         ecmFileService = createMock(EcmFileService.class);
         acmFolderService = createMock(AcmFolderService.class);
         ecmFileDao = createMock(EcmFileDao.class);
@@ -62,8 +61,6 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
 
         mergeCaseService.setSaveCaseService(saveCaseService);
         mergeCaseService.setCaseFileDao(caseFileDao);
-        mergeCaseService.setEcmFileService(ecmFileService);
-        mergeCaseService.setAcmFolderDao(acmFolderDao);
         mergeCaseService.setAcmFolderService(acmFolderService);
         mergeCaseService.setEcmFileDao(ecmFileDao);
         mergeCaseService.setAcmParticipantService(acmParticipantService);
@@ -76,7 +73,8 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
     }
 
     @Test
-    public void testMergeCases() throws Exception {
+    public void testMergeCases() throws Exception
+    {
         assertNotNull(mergeCaseService);
 
         CaseFile sourceCaseFile = new CaseFile();
@@ -124,7 +122,8 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         //assertEquals("Target Details" + String.format(MergeCaseService.MERGE_TEXT_SEPPARATOR, "Source", "55435345435_2133") + "Source Details", targetCaseFile.getDetails());
     }
 
-    private void fillTargetDammyData(CaseFile caseFile) {
+    private void fillTargetDammyData(CaseFile caseFile)
+    {
         caseFile.setId(targetId);
         caseFile.setCaseNumber("123123123213_123213");
 
@@ -140,7 +139,8 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
 
     }
 
-    private void fillSourceDammyData(CaseFile caseFile) {
+    private void fillSourceDammyData(CaseFile caseFile)
+    {
         caseFile.setId(sourceId);
         caseFile.setCaseNumber("55435345435_2133");
         AcmContainer targetContainer = new AcmContainer();
@@ -155,7 +155,8 @@ public class MergeCaseServiceImplTest extends EasyMockSupport {
         caseFile.setDetails("Source Details");
     }
 
-    public void setMergeCaseService(MergeCaseServiceImpl mergeCaseService) {
+    public void setMergeCaseService(MergeCaseServiceImpl mergeCaseService)
+    {
         this.mergeCaseService = mergeCaseService;
     }
 }

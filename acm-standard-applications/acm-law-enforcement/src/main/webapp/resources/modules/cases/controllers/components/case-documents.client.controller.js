@@ -3,18 +3,21 @@
 angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'DocTreeService'
     , 'Helper.ObjectBrowserService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $q, $timeout, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, DocTreeService
         , HelperObjectBrowserService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService) {
-
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
         Authentication.queryUserInfo().then(
             function (userInfo) {
                 $scope.user = userInfo.userId;
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.sendEmailEnabled = emailData.data.allowDocuments;
+        });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope

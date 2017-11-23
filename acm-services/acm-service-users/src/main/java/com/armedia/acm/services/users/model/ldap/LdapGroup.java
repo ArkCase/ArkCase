@@ -37,7 +37,7 @@ public class LdapGroup
     public AcmGroup setAcmGroupEditableFields(AcmGroup acmGroup)
     {
         acmGroup.setDescription(description);
-        acmGroup.setStatus(AcmGroupStatus.ACTIVE); // TODO: fix status
+        acmGroup.setStatus(AcmGroupStatus.ACTIVE);
         acmGroup.setAscendantsList(getAscendantsAsString());
         acmGroup.setDisplayName(displayName);
         return acmGroup;

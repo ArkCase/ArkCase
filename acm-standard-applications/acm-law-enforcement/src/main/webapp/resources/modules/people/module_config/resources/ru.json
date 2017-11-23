@@ -79,6 +79,9 @@
       "yes": "ru_Yes",
       "change": "ru_Change Picture",
       "save": "ru_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "ru_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
