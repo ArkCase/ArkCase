@@ -493,14 +493,14 @@
         "nonConcur": "Отклонять"
       },
       "auditReportNames": {
-        "all": "All",
-        "case_file": "Case",
-        "complaint": "Complaint",
-        "task": "Task",
-        "file": "File",
-        "document": "Document",
-        "person": "Person",
-        "organization": "Organization"
+        "ALL": "All",
+        "CASE_FILE": "Case",
+        "COMPLAINT": "Complaint",
+        "TASK": "Task",
+        "FILE": "File",
+        "DOCUMENT": "Document",
+        "PERSON": "Person",
+        "ORGANIZATION": "Organization"
       }
     },
     "userInfo": {
