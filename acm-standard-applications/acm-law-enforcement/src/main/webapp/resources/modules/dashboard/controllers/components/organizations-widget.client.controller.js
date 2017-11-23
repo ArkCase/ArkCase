@@ -107,7 +107,7 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 $scope.type = _.find($scope.organizationTypes, function (obj) {
                     return obj.key === org;
                 });
-                return $scope.type.inverseKey;
+                return $scope.type.inverseValue;
             }
         }
     ]);
