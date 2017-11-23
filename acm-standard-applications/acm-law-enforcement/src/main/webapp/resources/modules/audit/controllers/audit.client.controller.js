@@ -23,9 +23,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         $scope.objectId = null;
         $scope.dateFrom = null;
         $scope.dateTo = null;
+        $scope.isDateValid = false;
+        $scope.startDate = null;
+        $scope.dueDate = null;
 
 
-        /**
+            /**
          * This function is callback function which gets called when "send-type-id" event is emitted.
          * In this function values are being assigned for $scope.objectType and $scope.objectId from selected dropdown and input text
          *
@@ -50,7 +53,38 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         function getDateValues(e, dateFrom, dateTo) {
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
+
+
+            //OGRANICIIIIIIIII TEKSTTTTTTTTTT, vidi oti vo task ti go ogranicva tekstot......
+
+            if (!Util.isEmpty($scope.dateFrom)) {
+                $scope.startDate = new Date($scope.dateFrom.getMonth() + "/" + $scope.dateFrom.getDate() + "/" + $scope.dateFrom.getFullYear());
+            }
+            if (!Util.isEmpty($scope.dateTo)) {
+                $scope.dueDate = new Date($scope.dateTo.getMonth() + "/" + $scope.dateTo.getDate() + "/" + $scope.dateTo.getFullYear());
+            }
+            if ($scope.isValidDate()) {
+                $scope.isDateValid = true;
+            } else {
+                $scope.isDateValid = false;
+            }
+
+            $scope.todayDate = new Date();
+            $scope.getFixedDate = new Date($scope.todayDate.getMonth() + "/" + $scope.todayDate.getDate() + "/" + $scope.todayDate.getFullYear());
+
+
         }
+
+        $scope.isValidDate = function () {
+            if (Util.isEmpty($scope.startDate) || Util.isEmpty($scope.dueDate)){
+                return false;
+            }
+            if ($scope.startDate.getTime() > $scope.dueDate.getTime()) {
+                return false;
+            }
+
+            return true;
+        };
 
         // Retrieves the properties from the acm-reports-server-config.properties file
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");

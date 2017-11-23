@@ -71,8 +71,40 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
         $scope.saved = false;
-
+        $scope.isDateValid = false;
         $scope.minDate = new Date();
+
+        $scope.isValidDate = function () {
+            if (Util.isEmpty($scope.startDate) || Util.isEmpty($scope.dueDate)){
+                return false;
+            }
+            if ($scope.getFixedDate.getTime() > $scope.startDate.getTime() || $scope.getFixedDate.getTime() > $scope.dueDate.getTime()) {
+                return false;
+            }
+            if ($scope.startDate.getTime() > $scope.dueDate.getTime()) {
+                return false;
+            }
+
+            return true;
+        };
+
+        $scope.$watchGroup(['config.data.dueDate', 'config.data.taskStartDate'], function () {
+            var todayDate = new Date();
+
+            $scope.getFixedDate = new Date(todayDate.getMonth() + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
+
+            if (!Util.isEmpty($scope.config.data.taskStartDate)) {
+                $scope.startDate = new Date($scope.config.data.taskStartDate.getMonth() + "/" + $scope.config.data.taskStartDate.getDate() + "/" + $scope.config.data.taskStartDate.getFullYear());
+            }
+            if (!Util.isEmpty($scope.config.data.dueDate)) {
+                $scope.dueDate = new Date($scope.config.data.dueDate.getMonth() + "/" + $scope.config.data.dueDate.getDate() + "/" + $scope.config.data.dueDate.getFullYear());
+            }
+            if ($scope.isValidDate()) {
+                $scope.isDateValid = true;
+            } else {
+                $scope.isDateValid = false;
+            }
+        });
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
@@ -86,7 +118,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 $scope.saved = false;
                 $scope.loading = false;
                 if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ":returnState") {
-                    $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
+                    $state.go($scope.modalParams.returnState, {
+                        type: $scope.modalParams.parentType,
+                        id: $scope.modalParams.parentId
+                    });
                 } else {
                     ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
                 }
@@ -110,7 +145,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         };
 
-        $scope.inputClear = function(){
+        $scope.inputClear = function () {
             $scope.config.data.attachedToObjectName = null;
         }
 
@@ -178,7 +213,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 size: 'lg',
                 resolve: {
                     $filter: function () {
-                        return $scope.config.groupSearch.groupFacetFilter + assigneeLdapId +$scope.config.groupSearch.groupFacetExtraFilter;
+                        return $scope.config.groupSearch.groupFacetFilter + assigneeLdapId + $scope.config.groupSearch.groupFacetExtraFilter;
                     },
                     $searchValue: function () {
                         return asigneeName;
@@ -231,7 +266,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         };
 
-        $scope.cancelModal = function() {
+        $scope.cancelModal = function () {
             $scope.onModalDismiss();
         };
     }
