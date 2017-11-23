@@ -223,6 +223,8 @@
       "btn": "ja_Search",
       "placeholder": "ja_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "ja_Pick Associated User",
+    "pickGroupLabel": "ja_Pick Associated Group",
     "cancelButton": "ja_Cancel",
     "confirmButton": "ja_Confirm",
     "enabled": true,

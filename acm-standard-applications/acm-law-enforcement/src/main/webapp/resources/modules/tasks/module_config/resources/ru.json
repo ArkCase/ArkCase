@@ -222,6 +222,8 @@
       "btn": "ru_Search",
       "placeholder": "ru_Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "ru_Pick Associated User",
+    "pickGroupLabel": "ru_Pick Associated Group",
     "cancelButton": "ru_Cancel",
     "confirmButton": "ru_Confirm",
     "enabled": true,

@@ -141,9 +141,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     $config: function () {
                         return $scope.userSearchConfig;
                     },
-                    $dynamicQuery: function () {
-                        return $scope.config.groupSearch.groupFacetFilter;
-                    }
                 }
             });
 

@@ -242,6 +242,8 @@
       "btn": "Search",
       "placeholder": "Search for the group(s) this user is a member of."
     },
+    "pickUserLabel": "Pick Associated User",
+    "pickGroupLabel": "Pick Associated Group",
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
     "enabled": true,
