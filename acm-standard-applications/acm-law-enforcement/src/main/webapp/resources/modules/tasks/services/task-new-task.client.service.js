@@ -55,7 +55,7 @@ angular.module('tasks').factory('Task.NewTaskService', ['$http', '$httpParamSeri
 
             return $http({
                 method: 'POST',
-                url: 'api/latest/plugin/tasks/reviewDocuments' + '?' + urlArgs,
+                url: 'api/latest/plugin/tasks/documents/review' + '?' + urlArgs,
                 data: taskData,
                 cache: false
             });

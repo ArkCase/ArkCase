@@ -80,7 +80,7 @@
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
-                    <property name="url" value="/api/{version}/plugin/tasks/reviewDocuments"/>
+                    <property name="url" value="/api/{version}/plugin/tasks/documents/review"/>
                     <property name="requiredPrivilege" ref="acmTaskCreatePrivilege"/>
                 </bean>
                 <bean class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
