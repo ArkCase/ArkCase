@@ -72,6 +72,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedEnd = false;
         $scope.saved = false;
 
+        $scope.minDate = new Date();
+
         $scope.saveNewTask = function () {
             $scope.saved = true;
             $scope.loading = true;
