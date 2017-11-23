@@ -36,23 +36,6 @@ public interface GroupService
     String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
-     * Checks if group with same name exists in the DB on the same tree level
-     *
-     * @param group
-     * @return The new saved group or null if group with given name already exists in the same tree level
-     */
-    AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
-
-    /**
-     * Checks if given string matches the regex
-     * .*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}
-     *
-     * @param str
-     * @return true or false
-     */
-    boolean isUUIDPresentInTheGroupName(String str);
-
-    /**
      * @param groupName
      *            list users for this specific group
      * @param userStatus
