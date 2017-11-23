@@ -56,6 +56,7 @@
                                    is-open="opened.openedStart" close-on-date-selection="true"
                                    show-button-bar="true"
                                    on-open-focus="false"
+                                   min-date="minDate"
                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
                             <span class="input-group-btn">
       <button type="button" class="btn btn-default"
@@ -115,7 +116,7 @@
                 ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="task.$invalid || saved"
+        <button type="submit" ng-disabled="task.$invalid || saved || !isDateValid"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
