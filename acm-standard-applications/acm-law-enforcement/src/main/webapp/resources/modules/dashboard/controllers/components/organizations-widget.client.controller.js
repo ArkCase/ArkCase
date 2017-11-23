@@ -103,11 +103,11 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
             }
 
-            $scope.bla = function (org) {
-                $scope.type = _.find($scope.organizationTypes, function (obj) {
+            $scope.getRelationship = function (org) {
+                $scope.relationshipType = _.find($scope.organizationTypes, function (obj) {
                     return obj.key === org;
                 });
-                return $scope.type.inverseValue;
-            }
+                return $scope.relationshipType.inverseValue;
+            };
         }
     ]);
