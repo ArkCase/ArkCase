@@ -62,8 +62,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 draggable: '@',
                 onDblClickRow: '=?',
                 customization: '=?',
-                secondGrid: '@',
-                dynamicQuery: '&'
+                secondGrid: '@'
+
             },
 
             link: function (scope, el, attrs) {
@@ -99,8 +99,6 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.multiSelect = Util.goodValue(scope.config().multiSelect, false);
                 scope.searchControl = {
                     getSelectedItems: function () {
-                        //return scope.selectedItems;
-
                         if (scope.multiSelect) {
                             return scope.selectedItems;
                         } else {
@@ -158,7 +156,7 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                 scope.querySubItems = function (filters) {
                     if (!Util.isEmpty(filters)) {
-                        var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', filters, scope.pageSize, scope.start, scope.sort);
+                        var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', filters, scope.pageSizeSecond, scope.startSecond, scope.sortSecond);
 
                         if (query) {
                             scope.showNoData = false;
@@ -253,16 +251,13 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     scope.start = scope.config().start;
                     scope.sort = Util.goodValue(scope.config().sort, "");
 
-
-
-
                     scope.gridOptionsMaster = {
                         enableColumnResizing: true,
                         enableRowSelection: true,
                         enableRowHeaderSelection: false,
                         enableFiltering: scope.config().enableFiltering,
                         //multiSelect: scope.multiSelect === 'true' ? true : false,
-                        multiSelect: false,
+                        multiSelect: scope.multiSelect,
                         noUnselect: false,
                         useExternalPagination: true,
                         paginationPageSizes: scope.config().paginationPageSizes,
@@ -273,25 +268,23 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                             gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                                 scope.selectedItems = gridApi.selection.getSelectedRows();
-                                //scope.selectedItem = row.isSelected ? row.entity : null;
                                 scope.selectedItem = row.entity;
                                 if (scope.onItemsSelected) {
-                                    //scope.onItemsSelected(scope.selectedItems);
                                     scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
                                 }
-
-                                if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
-                                    scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
-                                } else if (scope.selectedItem.object_type_s === 'GROUP') {
-                                    scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
-                                }
+                                    if(scope.secondGrid) {
+                                        if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
+                                            scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
+                                        } else if (scope.selectedItem.object_type_s === 'GROUP') {
+                                            scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
+                                        }
+                                    }
 
                             });
 
                             gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
                                 scope.selectedItems = gridApi.selection.getSelectedRows();
                                 if (scope.onItemsSelected) {
-                                    //scope.onItemsSelected(scope.selectedItems);
                                     scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
                                 }
                             });
@@ -321,12 +314,15 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
 
                     if(scope.secondGrid) {
+                        scope.pageSizeSecond = scope.config().paginationPageSize;
+                        scope.startSecond = scope.config().start;
+                        scope.sortSecond = Util.goodValue(scope.config().sort, "");
                         scope.gridOptionsDetail = {
                             enableColumnResizing: true,
                             enableRowSelection: true,
                             enableRowHeaderSelection: false,
                             enableFiltering: scope.config().enableFiltering,
-                            multiSelect: false,
+                            multiSelect: scope.multiSelect,
                             noUnselect: false,
                             useExternalPagination: true,
                             paginationPageSizes: scope.config().paginationPageSizes,
@@ -337,7 +333,6 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
 
                                 gridApi.selection.on.rowSelectionChanged(scope, function (row) {
                                     scope.selectedDetailItem = gridApi.selection.getSelectedRows();
-                                    //scope.selectedItem = row.isSelected ? row.entity : null;
                                     scope.selectedDetailItem = row.entity;
 
                                 });
@@ -354,17 +349,17 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                         _.each(sortColumns, function (col) {
                                             sortColArr.push((col.colDef.sortField || col.colDef.name) + " " + col.sort.direction);
                                         });
-                                        scope.sort = sortColArr.join(',');
+                                        scope.sortSecond = sortColArr.join(',');
                                     }
                                     else {
-                                        scope.sort = "";
+                                        scope.sortSecond = "";
                                     }
                                     scope.querySubItems();
                                 });
 
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
-                                    scope.start = (newPage - 1) * pageSize;   //newPage is 1-based index
-                                    scope.pageSize = pageSize;
+                                    scope.startSecond = (newPage - 1) * pageSize;   //newPage is 1-based index
+                                    scope.pageSizeSecond = pageSize;
                                     scope.querySubItems();
                                 });
                             }
