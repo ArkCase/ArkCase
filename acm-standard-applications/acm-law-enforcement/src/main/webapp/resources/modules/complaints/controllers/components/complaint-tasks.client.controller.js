@@ -74,7 +74,9 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 params: {
                     parentType: ObjectService.ObjectTypes.COMPLAINT,
                     parentObject: $scope.objectInfo.complaintNumber,
-                    parentTitle: $scope.objectInfo.title
+                    parentId: $scope.objectInfo.complaintId,
+                    parentTitle: $scope.objectInfo.title,
+                    taskType: 'ACM_TASK'
                 }
             };
             ModalDialogService.showModal(modalMetadata);
