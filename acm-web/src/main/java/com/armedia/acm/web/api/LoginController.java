@@ -19,7 +19,7 @@ public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
 
-    @RequestMapping(value = {"/login", "/login.html"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = {"/login", "/login.html"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getLogin(Model model)
     {
 
