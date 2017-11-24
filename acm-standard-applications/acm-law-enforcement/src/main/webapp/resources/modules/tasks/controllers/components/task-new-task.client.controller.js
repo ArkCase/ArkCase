@@ -53,6 +53,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userName = $scope.userFullName;
             $scope.config.data.assignee = $scope.userId;
             $scope.config.data.taskStartDate = new Date();
+            $scope.config.data.taskStartDate.setHours(0);
+            $scope.config.data.taskStartDate.setMinutes(0);
+            $scope.config.data.taskStartDate.setSeconds(0);
+            $scope.config.data.taskStartDate.setMilliseconds(0);
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
 
@@ -75,13 +79,13 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.minDate = new Date();
 
         $scope.isValidDate = function () {
-            if (Util.isEmpty($scope.startDate) || Util.isEmpty($scope.dueDate)){
+            if (Util.isEmpty($scope.config.data.taskStartDate) || Util.isEmpty($scope.config.data.dueDate)) {
                 return false;
             }
-            if ($scope.getFixedDate.getTime() > $scope.startDate.getTime() || $scope.getFixedDate.getTime() > $scope.dueDate.getTime()) {
+            if ($scope.getFixedDate.getTime() > $scope.config.data.taskStartDate.getTime() || $scope.getFixedDate.getTime() > $scope.config.data.dueDate.getTime()) {
                 return false;
             }
-            if ($scope.startDate.getTime() > $scope.dueDate.getTime()) {
+            if ($scope.config.data.taskStartDate.getTime() > $scope.config.data.dueDate.getTime()) {
                 return false;
             }
 
@@ -93,12 +97,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
             $scope.getFixedDate = new Date(todayDate.getMonth() + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
 
-            if (!Util.isEmpty($scope.config.data.taskStartDate)) {
-                $scope.startDate = new Date($scope.config.data.taskStartDate.getMonth() + "/" + $scope.config.data.taskStartDate.getDate() + "/" + $scope.config.data.taskStartDate.getFullYear());
-            }
-            if (!Util.isEmpty($scope.config.data.dueDate)) {
-                $scope.dueDate = new Date($scope.config.data.dueDate.getMonth() + "/" + $scope.config.data.dueDate.getDate() + "/" + $scope.config.data.dueDate.getFullYear());
-            }
             if ($scope.isValidDate()) {
                 $scope.isDateValid = true;
             } else {

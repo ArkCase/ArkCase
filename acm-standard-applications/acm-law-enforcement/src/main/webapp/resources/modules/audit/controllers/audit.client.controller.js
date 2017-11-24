@@ -59,9 +59,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             } else {
                 $scope.isDateValid = false;
             }
-
-            $scope.todayDate = new Date();
-            $scope.getFixedDate = new Date($scope.todayDate.getMonth() + "/" + $scope.todayDate.getDate() + "/" + $scope.todayDate.getFullYear());
         }
 
         $scope.isValidDate = function () {
