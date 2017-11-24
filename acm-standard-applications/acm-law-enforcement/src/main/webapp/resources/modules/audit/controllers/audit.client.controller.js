@@ -54,15 +54,6 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
 
-
-            //OGRANICIIIIIIIII TEKSTTTTTTTTTT, vidi oti vo task ti go ogranicva tekstot......
-
-            if (!Util.isEmpty($scope.dateFrom)) {
-                $scope.startDate = new Date($scope.dateFrom.getMonth() + "/" + $scope.dateFrom.getDate() + "/" + $scope.dateFrom.getFullYear());
-            }
-            if (!Util.isEmpty($scope.dateTo)) {
-                $scope.dueDate = new Date($scope.dateTo.getMonth() + "/" + $scope.dateTo.getDate() + "/" + $scope.dateTo.getFullYear());
-            }
             if ($scope.isValidDate()) {
                 $scope.isDateValid = true;
             } else {
@@ -71,15 +62,13 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
 
             $scope.todayDate = new Date();
             $scope.getFixedDate = new Date($scope.todayDate.getMonth() + "/" + $scope.todayDate.getDate() + "/" + $scope.todayDate.getFullYear());
-
-
         }
 
         $scope.isValidDate = function () {
-            if (Util.isEmpty($scope.startDate) || Util.isEmpty($scope.dueDate)){
+            if (Util.isEmpty($scope.dateFrom) || Util.isEmpty($scope.dateTo)){
                 return false;
             }
-            if ($scope.startDate.getTime() > $scope.dueDate.getTime()) {
+            if ($scope.dateFrom.getTime() > $scope.dateTo.getTime()) {
                 return false;
             }
 

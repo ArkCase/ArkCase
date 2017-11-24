@@ -1,11 +1,13 @@
 <div ng-controller="Audit.DatepickersController">
 
     <label for="dateFromAudit" translate>audit.navigation.label.dateFrom</label>
+    <span class="required-asterisk">*</span>
     <div>
 
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   ng-required="true"
                    id="dateFromAudit"
                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                    ng-model="dateFrom"
@@ -27,10 +29,12 @@
 
 
     <label for="dateToAudit" translate>audit.navigation.label.dateTo</label>
+    <span class="required-asterisk">*</span>
     <div>
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   ng-required="true"
                    id="dateToAudit"
                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                    ng-model="dateTo"
