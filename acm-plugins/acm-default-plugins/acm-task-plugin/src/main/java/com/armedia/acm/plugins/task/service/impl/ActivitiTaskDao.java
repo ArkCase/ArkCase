@@ -275,6 +275,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                         in.getTaskOutcome().getName());
             }
 
+            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE, in.getWorkflowRequestType());
+
             if (in.isBuckslipTask())
             {
                 getActivitiTaskService().setVariable(
