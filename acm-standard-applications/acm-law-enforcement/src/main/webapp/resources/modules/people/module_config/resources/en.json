@@ -81,6 +81,9 @@
       "yes": "Yes",
       "change": "Change Picture",
       "save": "Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
