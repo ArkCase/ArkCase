@@ -54,6 +54,7 @@
         <module>acm-service-calendar</module>
         <module>acm-service-calendar-integration-exchange</module>
         <module>acm-service-labels</module>
+        <module>acm-service-data-update</module>
   </modules>
 
 
