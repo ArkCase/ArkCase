@@ -217,7 +217,10 @@
     "overdue.tooltip": "Task is Overdue",
     "deadline.tooltip": "Deadline is Approaching",
     "groupToggle.label": "Group Task?",
-    "group.placeholder": "Please select a group."
+    "group.placeholder": "Please select a group.",
+    "documentsToReview.label": "Documents to review",
+    "businessProcessTypes.label": "Business Process Type",
+    "noSelectedDocsErrorMsg": "Please select at least one document to be reviewed."
   },
   "tasks.userOrGroupSearch": {
     "id": "userSearch",

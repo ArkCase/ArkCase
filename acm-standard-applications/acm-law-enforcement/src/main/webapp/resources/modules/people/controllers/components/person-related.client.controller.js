@@ -106,7 +106,6 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             }
             var params = {
                 showSetPrimary: false,
-                selectExistingEnabled: false,
                 types: $scope.relationshipTypes,
                 skipPeopleIdsInSearch: [
                     $scope.objectInfo.id//skip parent in the search
@@ -114,6 +113,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
             };
             if (rowEntity) {
                 angular.extend(params, {
+                    selectExistingEnabled: false,
                     personId: rowEntity.target_object.object_id_s,
                     personName: rowEntity.target_object.full_name_lcs,
                     type: rowEntity.association_type_s,
