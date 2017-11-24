@@ -65,7 +65,6 @@
   "cases.comp.actions": {
     "title": "Actions",
     "restrict": "Restrict?",
-    "public": "Public?",
     "new.button": "New",
     "edit.button": "Edit",
     "status.button": "Change Case Status",
