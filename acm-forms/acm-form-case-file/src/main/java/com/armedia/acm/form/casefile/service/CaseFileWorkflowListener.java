@@ -26,6 +26,12 @@ public class CaseFileWorkflowListener
                                   FrevvoFormAbstractService formService)
     {
         EcmFile pdfRendition = files.getPdfRendition();
+
+        if (pdfRendition == null)
+        {
+            return;
+        }
+
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         configuration.setEcmFile(pdfRendition);
 
