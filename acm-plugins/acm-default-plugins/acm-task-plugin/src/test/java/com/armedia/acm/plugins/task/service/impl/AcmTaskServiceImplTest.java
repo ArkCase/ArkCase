@@ -85,6 +85,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         pVars.put("OBJECT_NAME", "Test File");
         pVars.put("PARENT_OBJECT_TYPE", "COMPLAINT");
         pVars.put("PARENT_OBJECT_ID", 500l);
+        pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
 
         expect(mockAuthentication.getName()).andReturn("assignee").atLeastOnce();
         expect(mockTaskDao.startBusinessProcess(pVars, businessProcessName)).andReturn(reviewTask);
