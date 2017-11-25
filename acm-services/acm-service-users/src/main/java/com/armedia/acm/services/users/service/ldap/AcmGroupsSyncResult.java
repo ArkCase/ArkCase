@@ -35,7 +35,8 @@ public class AcmGroupsSyncResult
         this.deletedGroups = new ArrayList<>();
     }
 
-    public Map<String, Set<AcmGroup>> sync(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups, Map<String, AcmUser> syncedUsers)
+    public Map<String, Set<AcmGroup>> sync(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups,
+                                           Map<String, AcmUser> syncedUsers)
     {
         setUserAndGroupsFromGroupMembers(ldapGroups, syncedUsers);
         setAscendants(ldapGroups);
@@ -326,13 +327,7 @@ public class AcmGroupsSyncResult
                                                     Map<String, LdapGroup> ldapGroupMap)
     {
         deletedGroups.forEach(group -> {
-            Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(group);
-            descendants.forEach(it -> {
-                AcmGroup descendantGroup = getAcmGroupToUpdate(modifiedGroupsByName, acmGroupsByName, it.getName());
-                LdapGroup ldapDescendantGroup = ldapGroupMap.get(descendantGroup.getName());
-                descendantGroup.setAscendantsList(ldapDescendantGroup.getAscendantsAsString());
-                modifiedGroupsByName.put(descendantGroup.getName(), descendantGroup);
-            });
+            setGroupAscendants(group, modifiedGroupsByName, acmGroupsByName, ldapGroupMap);
             group.setMemberGroups(new HashSet<>());
             group.setMemberOfGroups(new HashSet<>());
             group.setAscendantsList(null);
