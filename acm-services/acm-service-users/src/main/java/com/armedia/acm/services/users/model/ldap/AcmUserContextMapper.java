@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.DirContextAdapter;
 
-
 public class AcmUserContextMapper implements ContextMapper
 {
-    public static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
+    private static final int ACTIVE_DIRECTORY_DISABLED_BIT = 2;
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmLdapSyncConfig acmLdapSyncConfig;
 
@@ -52,7 +51,7 @@ public class AcmUserContextMapper implements ContextMapper
 
         user.setDistinguishedName(MapperUtils.appendBaseToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         String userId = MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getUserIdAttributeName());
-        user.setUserId(userId.toLowerCase());
+        user.setUserId(String.format("%s@%s", userId.toLowerCase(), acmLdapSyncConfig.getUserDomain()));
         user.setMail(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getMailAttributeName()));
         user.setCountry(MapperUtils.getAttribute(adapter, "co"));
         user.setCountryAbbreviation(MapperUtils.getAttribute(adapter, "c"));
@@ -73,7 +72,8 @@ public class AcmUserContextMapper implements ContextMapper
         {
             long userAccountControl = Long.valueOf(uac);
             return (userAccountControl & ACTIVE_DIRECTORY_DISABLED_BIT) == ACTIVE_DIRECTORY_DISABLED_BIT;
-        } catch (NumberFormatException nfe)
+        }
+        catch (NumberFormatException nfe)
         {
             log.warn("user account control value [{}] is not a number!", uac);
             return false;

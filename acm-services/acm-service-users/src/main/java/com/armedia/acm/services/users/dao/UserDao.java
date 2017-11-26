@@ -161,9 +161,7 @@ public class UserDao extends AcmAbstractDao<AcmUser>
     {
         Query roleQuery = getEntityManager().createQuery("SELECT role FROM AcmRole role");
 
-        List<AcmRole> retval = roleQuery.getResultList();
-
-        return retval;
+        return (List<AcmRole>) roleQuery.getResultList();
     }
 
     public List<AcmRole> findAllRolesByRoleType(AcmRoleType acmRoleType)
@@ -380,6 +378,15 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                         + "WHERE acmUser.userDirectoryName = :directoryName", AcmUser.class);
         allUsersInDirectory.setParameter("directoryName", directoryName);
         return allUsersInDirectory.getResultList();
+    }
+
+    public List<AcmUser> findByState(AcmUserState state)
+    {
+        TypedQuery<AcmUser> allUsersByState = getEm()
+                .createQuery("SELECT acmUser FROM AcmUser acmUser WHERE acmUser.userState = :state",
+                        AcmUser.class);
+        allUsersByState.setParameter("state", state);
+        return allUsersByState.getResultList();
     }
 
     @Transactional

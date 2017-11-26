@@ -20,6 +20,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -130,50 +131,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return group;
     }
 
-    /**
-     * Mark user groups that are associated exclusively to a single directory inactive.
-     *
-     * @param directoryName LDAP directory name
-     * @param groupType     user group type
-     */
-    @Transactional
-    public void markAllGroupsInactive(String directoryName, String groupType)
-    {
-        // the following query should read:
-        // "select groups that are associated exclusively to a single directory"
-        Query query = getEm().createQuery(
-                "SELECT group FROM AcmGroup group " +
-                        "WHERE group.type = :groupType " +
-                        "AND group.status != :groupStatus " +
-                        "AND group.name NOT IN " +
-                        "(SELECT DISTINCT userRole.roleName FROM AcmUserRole userRole " +
-                        "WHERE userRole.userRoleState = :userRoleState " +
-                        "AND userRole.userId IN " +
-                        // valid users retrieved from other directories
-                        "(SELECT user.userId FROM AcmUser user " +
-                        "WHERE user.userDirectoryName != :directoryName " +
-                        "AND user.userState = :userState))");
-        query.setParameter("groupType", groupType);
-        query.setParameter("groupStatus", AcmGroupStatus.DELETE);
-        query.setParameter("userRoleState", AcmUserRoleState.VALID);
-        query.setParameter("directoryName", directoryName);
-        query.setParameter("userState", AcmUserState.VALID);
-
-        List<AcmGroup> groups = query.getResultList();
-
-        for (AcmGroup group : groups)
-        {
-            group.setStatus(AcmGroupStatus.INACTIVE);
-            save(group);
-        }
-    }
-
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
         Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user");
         query.setParameter("user", user);
-
         return (List<AcmGroup>) query.getResultList();
     }
 
@@ -245,6 +207,30 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
+    }
+
+    public List<AcmGroup> findByDirectoryAndStatusAndType(String directoryName, AcmGroupStatus status, AcmGroupType type)
+    {
+        TypedQuery<AcmGroup> allValidLdapGroupsInDirectory = getEm().
+                createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
+                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName"
+                        + " AND acmGroup.status = :status", AcmGroup.class);
+        allValidLdapGroupsInDirectory.setParameter("groupType", type);
+        allValidLdapGroupsInDirectory.setParameter("directoryName", directoryName);
+        allValidLdapGroupsInDirectory.setParameter("status", status);
+        return allValidLdapGroupsInDirectory.getResultList();
+    }
+
+    public void updateStateByDirectoryAndStatusAndType(String directoryName, AcmGroupStatus status, AcmGroupType type)
+    {
+        Query markLdapGroupsDeleted = getEm()
+                .createQuery("UPDATE AcmGroup ag set ag.status = :status, ag.modified = :now "
+                        + "WHERE ag.directoryName = :directoryName AND ag.type = :type");
+        markLdapGroupsDeleted.setParameter("status", status);
+        markLdapGroupsDeleted.setParameter("now", new Date());
+        markLdapGroupsDeleted.setParameter("directoryName", directoryName);
+        markLdapGroupsDeleted.setParameter("type", type);
+        markLdapGroupsDeleted.executeUpdate();
     }
 
     @Override
