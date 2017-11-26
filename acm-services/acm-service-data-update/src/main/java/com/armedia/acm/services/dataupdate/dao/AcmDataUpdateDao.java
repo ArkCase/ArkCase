@@ -4,7 +4,9 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,8 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
+import javax.persistence.TypedQuery;
 import javax.persistence.metamodel.EntityType;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -268,5 +273,44 @@ public class AcmDataUpdateDao extends AcmAbstractDao<AcmDataUpdateExecutorLog>
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.setParameter("now", new Date());
         markInvalid.executeUpdate();
+    }
+
+    public int markInactiveActiveAdHocGroupsWithUUID()
+    {
+        Query update = em.createQuery("UPDATE AcmGroup ag "
+                + "SET ag.status = :newStatus "
+                + "WHERE ag.status = :status "
+                + "AND ag.name LIKE '%-UUID-%'"
+                + "AND LENGTH(ag.name) > 42 "
+                + "AND ag.type = :groupType");
+        update.setParameter("newStatus", AcmGroupStatus.INACTIVE);
+        update.setParameter("groupType", AcmGroupType.ADHOC_GROUP);
+        update.setParameter("status", AcmGroupStatus.ACTIVE);
+        return update.executeUpdate();
+    }
+
+    public List<AcmGroup> findAllActiveAdHocGroupsWithUUID()
+    {
+        TypedQuery<AcmGroup> findQuery = em.createQuery("SELECT ag "
+                + "FROM AcmGroup ag "
+                + "WHERE ag.type = :groupType "
+                + "AND ag.status = :status "
+                + "AND ag.name LIKE '%-UUID-%' "
+                + "AND LENGTH(ag.name) > 42", AcmGroup.class);
+        findQuery.setParameter("groupType", AcmGroupType.ADHOC_GROUP);
+        findQuery.setParameter("status", AcmGroupStatus.ACTIVE);
+        return findQuery.getResultList();
+    }
+
+    public void updateUserMembershipForAdHocGroups()
+    {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("UpdateUserMembershipForAdHocGroups");
+        query.execute();
+    }
+
+    public void updateGroupMembershipForAdHocGroups()
+    {
+        StoredProcedureQuery query = em.createStoredProcedureQuery("UpdateGroupMembershipForAdHocGroups");
+        query.execute();
     }
 }

@@ -19,6 +19,7 @@
         <property name="dataUpdateExecutors">
             <list>
                 <ref bean="userIdGroupNameDomainUpdateExecutor"/>
+                <ref bean="groupUUIDRemoveExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
@@ -30,4 +31,10 @@
         <property name="dataUpdateDao" ref="dataUpdateDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
+
+    <bean id="groupUUIDRemoveExecutor" class="com.armedia.acm.services.dataupdate.service.GroupUUIDRemoveExecutor">
+        <property name="dataUpdateDao" ref="dataUpdateDao"/>
+        <property name="groupDao" ref="groupDao"/>
+    </bean>
+
 </beans>
