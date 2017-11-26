@@ -59,6 +59,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -293,7 +294,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             try
             {
                 BeanUtils.copyProperties(task, taskFromOriginal);
-            } catch (InvocationTargetException | IllegalAccessException e)
+            }
+            catch (InvocationTargetException | IllegalAccessException e)
             {
                 log.error("couldn't copy bean.", e);
                 continue;
@@ -324,7 +326,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer originalTaskContainer = acmContainerDao.findFolderByObjectTypeAndId(taskFromOriginal.getObjectType(), taskFromOriginal.getId());
                 if (originalTaskContainer != null && originalTaskContainer.getFolder() != null)
                     acmFolderService.copyFolderStructure(originalTaskContainer.getFolder().getId(), task.getContainer(), task.getContainer().getFolder());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("Error copying attachments for task id = {} into task id = {}", taskFromOriginal.getId(), task.getId());
             }
@@ -353,7 +356,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 newNote.setAuthor(note.getCreator());
                 noteDao.save(newNote);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error copying notes!", e);
         }
@@ -388,7 +392,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
             log.debug("Acm Task ids was retrieved. count({}).", tasksIds.size());
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }
@@ -427,7 +432,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 }
             }
 
-        } catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
+        }
+        catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
         {
             log.error("Could not copy folder for task id = {}", task.getId(), e);
         }
@@ -470,7 +476,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             objectAssociation = objectAssociationService.saveObjectAssociation(objectAssociation);
             objectAssociationEventPublisher.publishAddReferenceEvent(reference, authentication, true);
             return objectAssociation;
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             log.error("Task with id=[{}] not found!", parentId, e);
             objectAssociationEventPublisher.publishAddReferenceEvent(reference, authentication, false);
@@ -490,7 +497,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             Long parentId = parentObject.getBusinessProcessId() == null ? parentObject.getTaskId() :
                     parentObject.getBusinessProcessId();
             return objectAssociationService.findByParentTypeAndId(parentType, parentId);
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             log.error("Task with id=[{}] not found!", taskId, e);
         }
@@ -512,13 +520,52 @@ public class AcmTaskServiceImpl implements AcmTaskService
             List<ObjectAssociation> childObjects = findChildObjects(id);
             retval.setChildObjects(childObjects);
             return retval;
-        } catch (AcmTaskException | ActivitiException e)
+        }
+        catch (AcmTaskException | ActivitiException e)
         {
             log.error("Task with id=[{}] not found!", id, e);
         }
         return null;
     }
 
+    @Override
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException
+    {
+        List<String> reviewers = new ArrayList<>();
+        reviewers.add(task.getAssignee());
+        List<AcmTask> createdAcmTasks = new ArrayList<>();
+        Long parentObjectId = task.getAttachedToObjectId();
+        String parentObjectType = (task.getAttachedToObjectType().equals("")) ? null : task.getAttachedToObjectType();
+
+        if(task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty()) {
+            throw new AcmTaskException("You must select at least one document to be reviewed.");
+        } else {
+            // Iterate through the list of documentsToReview and start business process for each of them
+            for (EcmFile documentToReview : task.getDocumentsToReview())
+            {
+                Map<String, Object> pVars = new HashMap<>();
+
+                pVars.put("reviewers", reviewers);
+                pVars.put("taskName", task.getTitle());
+                pVars.put("documentAuthor", authentication.getName());
+                pVars.put("pdfRenditionId", documentToReview.getFileId());
+                pVars.put("formXmlId", null);
+                pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
+
+                pVars.put("OBJECT_TYPE", "FILE");
+                pVars.put("OBJECT_ID", documentToReview.getFileId());
+                pVars.put("OBJECT_NAME", documentToReview.getFileName());
+                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+
+                AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
+
+                createdAcmTasks.add(createdAcmTask);
+            }
+
+            return createdAcmTasks;
+        }
+    }
 
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {

@@ -854,6 +854,13 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 //return false;
             }
             , onClick: function (event, data) {
+
+                // publish event that a node in the DocTree has been checked
+                if(data.targetType === 'checkbox') {
+                    DocTree.scope.$bus.publish('docTreeNodeChecked', data.node);
+                }
+
+
                 var setting = DocTree.Config.getSetting();
                 if (data.targetType === "expander" && setting.search.enabled) {
                     if (DocTree.isFolderNode(data.node)) {
@@ -3690,9 +3697,18 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
 
             , onClickBtnChkAllDocument: function (event, ctrl) {
                 var checked = $(ctrl).is(":checked");
+                var selectedNodes = [];
+
                 DocTree.tree.visit(function (node) {
                     node.setSelected(checked);
+                    if(checked) {
+                        selectedNodes.push(node);
+                    }
                 });
+                $q.all(selectedNodes)
+                    .then(function(selectedNodesPromises) {
+                        DocTree.scope.$bus.publish('toggleAllNodesChecked', selectedNodesPromises);
+                    });
             }
 
             , onClickBtnSort: function (event, ctrl) {
@@ -4611,7 +4627,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.objectInfo = null;
                 DocTree.topNodeExpanded = scope.topNodeExpanded ? scope.topNodeExpanded : false;
                 DocTree.doUploadForm = ("undefined" != typeof attrs.uploadForm) ? scope.uploadForm() : (function () {
-                }); //if not defined, do nothing
+                    }); //if not defined, do nothing
                 DocTree.readOnly = ("true" === attrs.readOnly);
 
                 scope.treeControl = {

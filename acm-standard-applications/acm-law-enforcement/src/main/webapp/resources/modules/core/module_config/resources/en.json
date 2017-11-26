@@ -494,6 +494,9 @@
         "concur": "Concur",
         "nonConcur": "Non-Concur"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Acm Document Workflow"
+      },
       "reportStates": {
         "draft": "Draft",
         "inApproval": "In Approval",
@@ -502,13 +505,14 @@
         "closed": "Closed"
       },
       "auditReportNames": {
-        "case": "CASE_FILE",
-        "complaint": "COMPLAINT",
-        "task": "TASK",
-        "file": "FILE",
-        "document": "DOCUMENT",
-        "person": "PERSON",
-        "organization": "ORGANIZATION"
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

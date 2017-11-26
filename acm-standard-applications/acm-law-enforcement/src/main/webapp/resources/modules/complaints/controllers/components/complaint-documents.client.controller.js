@@ -3,12 +3,11 @@
 angular.module('complaints').controller('Complaints.DocumentsController', ['$scope', '$stateParams', '$modal', '$q', '$timeout', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Complaint.InfoService'
     , 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication', 'PermissionsService', 'Object.ModelService'
-    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'Admin.EmailSenderConfigurationService'
+    , 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'ModalDialogService', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $q, $timeout, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, ComplaintInfoService
         , HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService, ObjectModelService
-        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, EmailSenderConfigurationService) {
-
+        , DocTreeExtWebDAV, DocTreeExtCheckin, CorrespondenceService, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -87,6 +86,51 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             var DocTree = $scope.treeControl.getDocTreeObject();
             DocTreeExtEmail.openModal(DocTree, nodes);
         };
+
+        $scope.createNewTask = function () {
+            var modalMetadata = {
+                moduleName: 'tasks',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                controllerName: 'Tasks.NewTaskController',
+                params: {
+                    parentType: ObjectService.ObjectTypes.COMPLAINT,
+                    parentObject: $scope.objectInfo.complaintNumber,
+                    parentId: $scope.objectInfo.complaintId,
+                    parentTitle: $scope.objectInfo.title,
+                    documentsToReview: $scope.selectedDocuments,
+                    taskType: 'REVIEW_DOCUMENT'
+                }
+            };
+            ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.selectedDocuments = [];
+
+        $scope.onCheckNode = function(node) {
+            if(!node.folder) {
+                var idx = _.findIndex($scope.selectedDocuments, function(d) { return d.data.objectId == node.data.objectId; });
+
+                if (idx > -1) {
+                    $scope.selectedDocuments.splice(idx, 1);
+                } else {
+                    $scope.selectedDocuments.push(node);
+                }
+            }
+        };
+
+        $scope.onToggleAllNodesChecked = function(nodes) {
+            $scope.selectedDocuments = _.filter(nodes, function (node) {
+                return !node.folder;
+            });
+        };
+
+        $scope.$bus.subscribe('docTreeNodeChecked', function (node) {
+            $scope.onCheckNode(node);
+        });
+
+        $scope.$bus.subscribe('toggleAllNodesChecked', function (nodes) {
+            $scope.onToggleAllNodesChecked(nodes);
+        });
 
         $scope.onFilter = function () {
             $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});

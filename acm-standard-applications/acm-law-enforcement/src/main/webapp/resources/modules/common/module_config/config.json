@@ -14,7 +14,8 @@
       "DocTreeExt.Email",
       "DocTreeExt.WebDAV",
       "DocTreeExt.Record",
-      "DocTreeExt.Template"
+      "DocTreeExt.Template",
+      "DocTreeExt.ReviewDoc"
     ],
     "columnDefs": [
       {
@@ -210,6 +211,14 @@
             }
           },
           {
+            "title": "New Task",
+            "cmd": "reviewDocument",
+            "uiIcon": "ui-icon-circle-check",
+            "data": {
+              "readOnly": true
+            }
+          },
+          {
             "title": "----"
           },
           {
@@ -377,6 +386,14 @@
             }
           },
           {
+            "title": "New Task",
+            "cmd": "reviewDocument",
+            "uiIcon": "ui-icon-circle-check",
+            "data": {
+              "readOnly": true
+            }
+          },
+          {
             "title": "----"
           },
           {
@@ -404,6 +421,14 @@
             "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
+            "data": {
+              "readOnly": true
+            }
+          },
+          {
+            "title": "New Task",
+            "cmd": "reviewDocument",
+            "uiIcon": "ui-icon-circle-check",
             "data": {
               "readOnly": true
             }
