@@ -1,5 +1,7 @@
 package com.armedia.acm.auth;
 
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -21,12 +24,14 @@ import static org.junit.Assert.*;
 public class AcmGrantedAuthoritiesMapperTest
 {
     private AcmGrantedAuthoritiesMapper unit;
+    private AcmRoleToGroupMapping roleToGroupMapping;
     
     @Before
     public void setUp()
     {
         unit = new AcmGrantedAuthoritiesMapper();
-        
+        roleToGroupMapping = new AcmRoleToGroupMapping(new HashMap<>());
+        unit.setRoleToGroupMapping(roleToGroupMapping);
     }
     
     /**
@@ -38,7 +43,7 @@ public class AcmGrantedAuthoritiesMapperTest
     {
         unit.initBean();
         
-        assertEquals(0, unit.getActiveMapping().size());   
+        assertEquals(0, unit.getActiveMapping().size());
     }
     
     /**
@@ -92,9 +97,8 @@ public class AcmGrantedAuthoritiesMapperTest
         List<String> foundGroup2Roles = unit.getActiveMapping().get("GROUP2");
         assertEquals(1, foundGroup2Roles.size());
         assertTrue(foundGroup2Roles.contains("ROLE_ROLE2"));
-        
     }
-    
+
     /**
      * mapAuthorities should include each role associated to each group 
      * the user has.
@@ -102,8 +106,9 @@ public class AcmGrantedAuthoritiesMapperTest
     @Test
     public void mapAuthorities()
     {
-        Map<String, List<String>> groupsToRoles = new HashMap<String, List<String>>();
-        List<String> roles1 = new ArrayList<String>();
+        Map<String, List<String>> groupsToRoles = new HashMap<>();
+
+        List<String> roles1 = new ArrayList<>();
         roles1.add("ROLE_INVESTIGATOR");
         roles1.add("ROLE_INVESTIGATOR_SUPERVISOR");
         
@@ -111,6 +116,7 @@ public class AcmGrantedAuthoritiesMapperTest
         
         List<String> roles2 = new ArrayList<>();
         roles2.add("ROLE_ANALYST");
+
         groupsToRoles.put("GROUP2", roles2);
         
         unit.setActiveMapping(groupsToRoles);
@@ -129,8 +135,6 @@ public class AcmGrantedAuthoritiesMapperTest
         assertTrue(found.contains(new AcmGrantedAuthority("ROLE_INVESTIGATOR")));
         assertTrue(found.contains(new AcmGrantedAuthority("ROLE_INVESTIGATOR_SUPERVISOR")));
         assertTrue(found.contains(new AcmGrantedAuthority("ROLE_ANALYST")));
-        
-        
     }
 
     /**
@@ -157,7 +161,7 @@ public class AcmGrantedAuthoritiesMapperTest
         ldapGroups.add("GROUP1");
         ldapGroups.add("GROUP2");
 
-        List<String> appGroups = unit.applicationGroupsFromLdapGroups(ldapGroups);
+        List<String> appGroups = applicationGroupsFromLdapGroups(ldapGroups);
 
         assertEquals(3, appGroups.size());
         assertTrue(appGroups.contains("investigator"));
@@ -165,5 +169,17 @@ public class AcmGrantedAuthoritiesMapperTest
         assertTrue(appGroups.contains("analyst"));
 
 
+    }
+
+    private List<String> applicationGroupsFromLdapGroups(List<String> ldapGroups)
+    {
+
+        return ldapGroups.stream()
+                .filter(StringUtils::isNotBlank)
+                .map(group -> group.trim().toUpperCase())
+                .flatMap(group -> unit.getActiveMapping().get(group).stream())
+                .map(role -> role.replaceFirst("ROLE_", "").toLowerCase())
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

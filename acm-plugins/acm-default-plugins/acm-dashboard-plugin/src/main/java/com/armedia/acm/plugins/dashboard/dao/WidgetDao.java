@@ -15,8 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by marjan.stefanoski on 9/19/2014.
@@ -41,7 +43,8 @@ public class WidgetDao extends AcmAbstractDao<Widget>
             try
             {
                 existing = getWidgetByWidgetName(in.getWidgetName());
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 existing = null;
             }
@@ -158,18 +161,13 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         }
     }
 
-    public List<Widget> getAllWidgetsByRoles(List<AcmRole> roles) throws AcmObjectNotFoundException
+    public List<Widget> getAllWidgetsByRoles(Set<String> roles) throws AcmObjectNotFoundException
     {
-        List<String> roleNames = new ArrayList<String>();
-        for (AcmRole role : roles)
-        {
-            roleNames.add(role.getRoleName());
-        }
-        Query widgetsByRoles = getEntityManager().createQuery(
+        TypedQuery widgetsByRoles = getEntityManager().createQuery(
                 "SELECT widget FROM Widget widget, WidgetRole widgetRole " +
                         "WHERE widget.widgetId = widgetRole.widgetId " +
-                        "AND widgetRole.roleName IN :roleNames ");
-        widgetsByRoles.setParameter("roleNames", roleNames);
+                        "AND widgetRole.roleName IN :roleNames ", Widget.class);
+        widgetsByRoles.setParameter("roleNames", roles);
         List<Widget> retval = widgetsByRoles.getResultList();
         if (retval.isEmpty())
         {
@@ -185,7 +183,6 @@ public class WidgetDao extends AcmAbstractDao<Widget>
         widgetRole.setWidgetId(widget.getWidgetId());
         return saveWidgetRole(widgetRole);
     }
-
 
     public void deleteWidgetRole(WidgetRole widgetRole)
     {
