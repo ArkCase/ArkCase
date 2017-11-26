@@ -174,29 +174,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmRole> findAllRolesByUser(String userId)
-    {
-        Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " + "WHERE acmRole.roleName IN "
-                + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
-                + "AND userRole.userRoleState = :userRoleState)");
-        roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
-        List<AcmRole> retval = roleQuery.getResultList();
-        return retval;
-    }
-
-    public List<AcmRole> findAllRolesByUserAndRoleType(String userId, AcmRoleType acmRoleType)
-    {
-        Query roleQuery = getEntityManager().createQuery("SELECT acmRole FROM AcmRole acmRole " + "WHERE acmRole.roleName IN "
-                + "(SELECT userRole.roleName FROM AcmUserRole userRole " + "WHERE userRole.userId= :userId "
-                + "AND userRole.userRoleState = :userRoleState) " + "AND acmRole.roleType = :roleType");
-        roleQuery.setParameter("userId", userId);
-        roleQuery.setParameter("roleType", acmRoleType.getRoleName());
-        roleQuery.setParameter("userRoleState", AcmUserRoleState.VALID);
-        List<AcmRole> retval = roleQuery.getResultList();
-        return retval;
-    }
-
     public List<AcmUser> findUsersWithRoles(List<String> roles)
     {
         Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
@@ -204,20 +181,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
                 + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
         usersWithRole.setParameter("userState", AcmUserState.VALID);
         usersWithRole.setParameter("roleNames", roles);
-        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
-
-        List<AcmUser> retval = usersWithRole.getResultList();
-
-        return retval;
-    }
-
-    public List<AcmUser> findUserWithRole(String role)
-    {
-        Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
-                + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
-                + "AND role.roleName = :roleName " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", AcmUserState.VALID);
-        usersWithRole.setParameter("roleName", role);
         usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
 
         List<AcmUser> retval = usersWithRole.getResultList();
