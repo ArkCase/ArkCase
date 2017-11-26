@@ -27,7 +27,7 @@ public class AcmGroupContextMapper implements ContextMapper
         // Throughout the application we use the group names in upper case only, so converting here at mapping level
         if (groupName != null)
         {
-            group.setName(groupName.toUpperCase());
+            group.setName(String.format("%s@%s", groupName.toUpperCase(), acmLdapSyncConfig.getUserDomain()));
         }
 
         group.setDistinguishedName(MapperUtils.appendBaseToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));

@@ -20,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -37,6 +38,9 @@ public class AcmAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
+        String principal = authentication.getName();
+        Optional<String> userDomainOptional = Optional.empty();
+
         Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
         Exception lastException = null;
@@ -44,12 +48,28 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             try
             {
-                providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
+                {
+                    AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
+                    String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                    if (principal.endsWith(userDomain))
+                    {
+                        userDomainOptional = Optional.of(userDomain);
+                    }
+
+                    providerAuthentication = provider.authenticate(authentication);
+
+                } else
+                {
+                    providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                }
+
                 if (providerAuthentication != null)
                 {
                     break;
                 }
-            } catch (Exception ae)
+            }
+            catch (Exception ae)
             {
                 lastException = ae;
             }
@@ -59,7 +79,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
-            return getAcmAuthentication(providerAuthentication);
+            return getAcmAuthentication(providerAuthentication, userDomainOptional);
         }
         if (lastException != null)
         {
@@ -99,10 +119,13 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw providerNotFoundException;
     }
 
-    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication, Optional<String> userDomain)
     {
 
-        AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
+        String userId = userDomain.map(it -> String.format("%s@%s", providerAuthentication.getName(), it))
+                .orElse(providerAuthentication.getName());
+
+        AcmUser user = getUserDao().findByUserId(userId);
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
