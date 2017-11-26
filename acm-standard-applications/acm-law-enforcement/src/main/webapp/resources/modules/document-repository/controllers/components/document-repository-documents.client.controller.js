@@ -3,10 +3,10 @@
 angular.module('document-repository').controller('DocumentRepository.DocumentsController', ['$scope', '$stateParams'
     , '$modal', '$translate', '$q', '$timeout', 'UtilService', 'Config.LocaleService', 'ObjectService', 'Object.LookupService'
     , 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService', 'DocTreeService', 'Authentication'
-    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email', 'Admin.EmailSenderConfigurationService'
+    , 'PermissionsService', 'Object.ModelService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin', 'DocTreeExt.Email', 'ModalDialogService', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $modal, $translate, $q, $timeout, Util, LocaleService, ObjectService, ObjectLookupService
         , DocumentRepositoryInfoService, HelperObjectBrowserService, DocTreeService, Authentication, PermissionsService
-        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, EmailSenderConfigurationService) {
+        , ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin, DocTreeExtEmail, ModalDialogService, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -50,8 +50,16 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
+<<<<<<< HEAD
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.fileLanguages = data[2]; 
+=======
+                    $scope.treeConfig.fileTypes=[];
+                    for(var i = 0; i < data[1].length; i++){
+                        $scope.treeConfig.fileTypes.push({"key":data[1][i].key, "value": $translate.instant(data[1][i].value)});
+                    }
+                    $scope.treeConfig.fileLanguages = data[2];
+>>>>>>> 97f74dea0c4c9b1c2a76be4d508d77b023925e21
                 });
         };
 
@@ -81,6 +89,47 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             var DocTree = $scope.treeControl.getDocTreeObject();
             DocTreeExtEmail.openModal(DocTree, nodes);
         };
+
+        $scope.createNewTask = function() {
+            var modalMetadata = {
+                moduleName: 'tasks',
+                templateUrl: 'modules/tasks/views/components/task-new-task.client.view.html',
+                controllerName: 'Tasks.NewTaskController',
+                params: {
+                    taskType: 'REVIEW_DOCUMENT',
+                    documentsToReview: $scope.selectedDocuments
+                }
+            };
+            ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.selectedDocuments = [];
+
+        $scope.onCheckNode = function(node) {
+            if(!node.folder) {
+                var idx = _.findIndex($scope.selectedDocuments, function(d) { return d.data.objectId == node.data.objectId; });
+
+                if (idx > -1) {
+                    $scope.selectedDocuments.splice(idx, 1);
+                } else {
+                    $scope.selectedDocuments.push(node);
+                }
+            }
+        };
+
+        $scope.onToggleAllNodesChecked = function(nodes) {
+            $scope.selectedDocuments = _.filter(nodes, function (node) {
+                return !node.folder;
+            });
+        };
+
+        $scope.$bus.subscribe('docTreeNodeChecked', function (node) {
+            $scope.onCheckNode(node);
+        });
+
+        $scope.$bus.subscribe('toggleAllNodesChecked', function (nodes) {
+            $scope.onToggleAllNodesChecked(nodes);
+        });
 
         $scope.onFilter = function () {
             $scope.$bus.publish('onFilterDocTree', {filter: $scope.filter});

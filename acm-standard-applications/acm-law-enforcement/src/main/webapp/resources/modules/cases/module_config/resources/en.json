@@ -90,6 +90,7 @@
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
     "searchInputPlaceholder": "Search",
+<<<<<<< HEAD
     "menu": {
       "forms": {
         "info%": "Information",
@@ -108,6 +109,10 @@
         "witnessInterview2%": "Witness Interview Request-2.0"
       }
     }
+=======
+    "newTask": "New Task"
+
+>>>>>>> 97f74dea0c4c9b1c2a76be4d508d77b023925e21
   },
   "cases.comp.people": {
     "title": "People",
