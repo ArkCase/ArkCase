@@ -9,10 +9,8 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.mule.api.MuleException;
-import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class GroupServiceImpl implements GroupService
@@ -36,8 +33,6 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private AcmUserRoleService userRoleService;
     private ExecuteSolrQuery executeSolrQuery;
-
-    private Pattern pattern = Pattern.compile(AcmGroupConstants.UUID_REGEX_STRING);
 
     @Override
     public AcmGroup findByName(String name)
@@ -88,20 +83,6 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
-    {
-        group.setDisplayName(group.getName());
-        group.setName(group.getName() + "-UUID-" + UUID.getUUID());
-        return groupDao.save(group);
-    }
-
-    @Override
-    public boolean isUUIDPresentInTheGroupName(String str)
-    {
-        return pattern.matcher(str).matches();
-    }
-
-    @Override
     public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException
     {
         String statusQuery = userStatus.map(it -> {
@@ -137,33 +118,6 @@ public class GroupServiceImpl implements GroupService
         groupName = groupName.replace("&", "%26"); // instead of URL encoding
         groupName = groupName.replace("?", "%3F"); // instead of URL encoding
         return groupName;
-    }
-
-    /**
-     * Creates or updates ad-hoc group based on the client info coming in from CRM
-     *
-     * @param //acmGroup group we want to rename
-     * @param //         newName  group new name
-     */
-    @Override
-    @Transactional
-    public void renameGroup(AcmGroup acmGroup, String newName)
-    {
-        AcmGroup newGroup = new AcmGroup();
-        newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
-        newGroup.setDisplayName(newName);
-        // copy the properties from the original found group.
-        newGroup.setSupervisor(acmGroup.getSupervisor());
-        newGroup.setType(acmGroup.getType());
-        newGroup.setStatus(acmGroup.getStatus());
-        newGroup.setDescription(acmGroup.getDescription());
-        newGroup.setMemberGroups(acmGroup.getMemberGroups());
-        newGroup.setMemberOfGroups(acmGroup.getMemberOfGroups());
-        newGroup.setCreator(acmGroup.getCreator());
-        newGroup.setUserMembers(acmGroup.getUserMembers());
-        groupDao.save(newGroup);
-
-        groupDao.markGroupDeleted(acmGroup.getName());
     }
 
     @Override
@@ -270,7 +224,6 @@ public class GroupServiceImpl implements GroupService
 
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
         parent.addGroupMember(subGroup);
         return subGroup;
     }

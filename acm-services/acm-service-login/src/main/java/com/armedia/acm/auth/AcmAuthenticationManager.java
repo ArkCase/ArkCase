@@ -149,9 +149,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
         return groups.stream()
-                .map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ?
-                        group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) :
-                        group.getName()))
+                .map(group -> new AcmGrantedAuthority(group.getName()))
                 .collect(Collectors.toSet());
     }
 

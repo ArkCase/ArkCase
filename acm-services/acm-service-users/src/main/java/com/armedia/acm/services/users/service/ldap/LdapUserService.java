@@ -190,10 +190,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         groups.forEach(groupName ->
         {
             AcmGroup group = groupDao.findByName(groupName);
-            if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-            {
-                group = groupDao.findByMatchingName(groupName);
-            }
             if (group != null)
             {
                 log.debug("Set User [{}] as member of Group [{}]", existingUser.getUserId(), group);
@@ -227,11 +223,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         groups.forEach(groupName ->
         {
             AcmGroup group = groupDao.findByName(groupName);
-            if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-            {
-                group = groupDao.findByMatchingName(groupName);
-            }
-
             if (group != null)
             {
                 acmUser.removeGroup(group);
@@ -509,7 +500,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         if (AcmUserState.VALID == existing.getUserState())
         {
-                     throw new NameAlreadyBoundException(null);
+            throw new NameAlreadyBoundException(null);
         } else
         {
             // INVALID or DELETED user, remove current group membership
