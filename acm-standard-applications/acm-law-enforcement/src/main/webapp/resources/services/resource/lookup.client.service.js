@@ -161,15 +161,16 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
         Service.getApprovers = function (objectInfo) {
             return Service.getUserFullNames().then(function (users) {
                 var approvers = [];
-
-                for (var i = 0; i < objectInfo.participants.length; i++) {
-                    for (var j = 0; j < users.length; j++) {
-                        if (objectInfo.participants[i].participantLdapId === users[j].id && objectInfo.participants[i].participantType === 'approver') {
-                            approvers.push({
-                                fullName: users[j].name,
-                                userId: users[j].id
-                            });
-                            break;
+                if (!Util.isArrayEmpty(objectInfo.participants) && !Util.isArrayEmpty(users)) {
+                    for (var i = 0; i < objectInfo.participants.length; i++) {
+                        for (var j = 0; j < users.length; j++) {
+                            if (objectInfo.participants[i].participantLdapId === users[j].id && objectInfo.participants[i].participantType === 'approver') {
+                                approvers.push({
+                                    fullName: users[j].name,
+                                    userId: users[j].id
+                                });
+                                break;
+                            }
                         }
                     }
                 }
