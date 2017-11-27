@@ -204,7 +204,7 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     @JsonIgnore
-    public boolean isMemeberOfGroups()
+    public boolean isNotMemeberOfGroups()
     {
         return memberOfGroups.isEmpty();
     }
