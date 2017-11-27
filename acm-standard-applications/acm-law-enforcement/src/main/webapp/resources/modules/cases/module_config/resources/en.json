@@ -236,7 +236,9 @@
     "merge.btn": "Merge",
     "search.placeholder": "Search for case file.",
     "search.btn": "Search",
-    "enabled": true,
+    "_1_": "'enabled' appears not in use. _TO_BE_REMOVED_",
+    "_2_": "If do need it, please move them to config file. Resource file is only for string values of labels",
+    "_enabled": "true",
     "table.columns": {
       "incident": "Type",
       "name": "Name",
@@ -350,8 +352,10 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "_1_": "'enabled' and 'userOrGroupFacetFilter' appear not in use. _TO_BE_REMOVED_",
+    "_2_": "If do need them, please move them to config file. Resource file is only for string values of labels",
+    "_enabled": "true",
+    "_userOrGroupFacetFilter": "zh-cn_\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
