@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'UtilService', function ($scope, Util) {
+angular.module('audit').controller('Audit.DatepickersController', ['$scope', function ($scope) {
         $scope.dateFrom = new Date();
         $scope.dateTo = new Date();
         $scope.$watchGroup(['dateFrom','dateTo'], function(){
@@ -10,6 +10,5 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Ut
         $scope.opened = {};
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
-
     }
 ]);

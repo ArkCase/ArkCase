@@ -3,10 +3,10 @@
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$sce', '$q', '$modal'
     , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
     , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService', 'Admin.FunctionalAccessControlService'
-    , 'modalParams'
+    , 'modalParams', 'moment'
     , function ($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
         , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService
-        , AdminFunctionalAccessControlService, modalParams) {
+        , AdminFunctionalAccessControlService, modalParams, moment) {
 
         $scope.modalParams = modalParams;
         $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
@@ -95,10 +95,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             if (Util.isEmpty($scope.config.data.taskStartDate) || Util.isEmpty($scope.config.data.dueDate)) {
                 return false;
             }
-            if ($scope.getFixedDate.getTime() > $scope.config.data.taskStartDate.getTime() || $scope.getFixedDate.getTime() > $scope.config.data.dueDate.getTime()) {
+            if (moment($scope.getFixedDate).isAfter($scope.config.data.taskStartDate) || moment($scope.getFixedDate).isAfter($scope.config.data.dueDate)) {
                 return false;
             }
-            if ($scope.config.data.taskStartDate.getTime() > $scope.config.data.dueDate.getTime()) {
+            if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
                 return false;
             }
 
