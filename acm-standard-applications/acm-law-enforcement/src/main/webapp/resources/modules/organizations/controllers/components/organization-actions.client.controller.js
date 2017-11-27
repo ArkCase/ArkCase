@@ -27,11 +27,11 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             $scope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
                 if ($scope.isInActivationMode) {
                     $scope.$emit("report-tree-updated");
-                    $scope.activation = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                    $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 }
             });
-            if ($scope.activation != "fa fa-circle-o-notch fa-spin") {
-                $scope.activation = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+            if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin") {
+                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 $scope.isInActivationMode = false;
             }
         };
@@ -59,13 +59,13 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
-            $scope.activation = "fa fa-circle-o-notch fa-spin";
+            $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
-            $scope.activation = "fa fa-circle-o-notch fa-spin";
+            $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -90,7 +90,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
-                        $scope.activation = "fa fa-stop";
+                        $scope.activationIcon = "fa fa-stop";
                         return error;
                     }
                 );
