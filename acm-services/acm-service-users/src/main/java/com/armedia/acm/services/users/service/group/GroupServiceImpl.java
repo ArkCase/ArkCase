@@ -143,7 +143,7 @@ public class GroupServiceImpl implements GroupService
         }
 
         acmGroup.removeAsMemberOf();
-        Assert.isTrue(acmGroup.isMemeberOfGroups());
+        Assert.isTrue(acmGroup.isNotMemeberOfGroups());
 
         // acmGroup.getUserMembers().stream().collect(Collectors.toMap(Function.identity(), acmUser ->
         // Collections.singleton(acmGroup)));
@@ -199,7 +199,7 @@ public class GroupServiceImpl implements GroupService
         log.debug("Remove group member [{}] from group [{}]", groupName, parentGroupName);
         parentGroup.removeGroupMember(acmGroup);
 
-        if (acmGroup.isMemeberOfGroups())
+        if (acmGroup.isNotMemeberOfGroups())
         {
             log.debug("Group [{}] has no other parent groups, will be deleted", groupName);
             return markGroupDeleted(groupName);
