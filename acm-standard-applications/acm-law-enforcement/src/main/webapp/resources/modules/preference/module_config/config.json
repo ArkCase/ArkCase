@@ -152,7 +152,8 @@
         "details",
         "person",
         "expenses",
-        "tags"
+        "tags",
+        "approvers"
       ]
     },
     {
@@ -163,7 +164,8 @@
         "details",
         "person",
         "hoursSummary",
-        "tags"
+        "tags",
+        "approvers"
       ]
     }
   ]
