@@ -28,12 +28,11 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
             $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
                 if ($scope.inActivationMode) {
                     $scope.$emit("report-tree-updated");
-                    $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                    $scope.activation = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 }
             });
-            
-            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
-                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+            if ($scope.activation != "fa fa-circle-o-notch fa-spin"){
+                $scope.activation = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 $scope.inActivationMode = false;
             }
         };
@@ -61,13 +60,13 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
-            $scope.active = "fa fa-circle-o-notch fa-spin";
+            $scope.activation = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
-            $scope.active = "fa fa-circle-o-notch fa-spin";
+            $scope.activation = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -92,7 +91,7 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
-                        $scope.active = "fa fa-stop";
+                        $scope.activation = "fa fa-stop";
                         return error;
                     }
                 );
