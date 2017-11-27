@@ -19,18 +19,21 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             }
         });
 
+        $scope.inActivationMode = false;
+        
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
-            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
-                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
-            }
-
             $scope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
-                $scope.$emit("report-tree-updated");
-                $scope.active = "fa fa-stop";
+                if ($scope.inActivationMode) {
+                    $scope.$emit("report-tree-updated");
+                    $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                }
             });
-
+            if ($scope.active != "fa fa-circle-o-notch fa-spin") {
+                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                $scope.inActivationMode = false;
+            }
         };
 
         $scope.onClickRestrict = function ($event) {
@@ -45,7 +48,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                 });
             }
         };
-        
+
         $scope.export = function () {
             console.log('button export clicked');
         };
@@ -82,6 +85,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
+                        $scope.inActivationMode = true;
                         return objectInfo;
                     }
                     , function (error) {
