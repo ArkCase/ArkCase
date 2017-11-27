@@ -49,5 +49,6 @@ ApplicationConfiguration.registerModule('dashboard', [
     'dashboard.calendar',
     'dashboard.approvalRouting',
     'dashboard.new-cases',
-    'dashboard.workflow-report'
+    'dashboard.workflow-report',
+    'dashboard.approvers'
 ]);
