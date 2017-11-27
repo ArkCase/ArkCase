@@ -23,32 +23,34 @@ angular.module('dashboard.references', ['adf.provider'])
                         configName: "cases",
                         getInfo: CaseInfoService.getCaseInfo,
                         validateInfo: CaseInfoService.validateCaseInfo
-                    }
-                    ,
+                    },
                     {
                         name: "COMPLAINT",
                         configName: "complaints",
                         getInfo: ComplaintInfoService.getComplaintInfo,
                         validateInfo: ComplaintInfoService.validateComplaintInfo
-                    }
-                    ,
+                    },
                     {
                         name: "TASK",
                         configName: "tasks",
                         getInfo: TaskInfoService.getTaskInfo,
                         validateInfo: TaskInfoService.validateTaskInfo
-                    }
-                    ,
+                    },
                     {
                         name: "ADHOC",
                         configName: "tasks",
                         getInfo: TaskInfoService.getTaskInfo,
                         validateInfo: TaskInfoService.validateTaskInfo
-                    }
-                    ,
+                    },
                     {
                         name: "DOC_REPO",
                         configName: "document-repository",
+                        getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                        validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                    },
+                    {
+                        name: "MY_DOC_REPO",
+                        configName: "my-documents",
                         getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                         validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                     }
