@@ -40,14 +40,16 @@ angular.module('dashboard.organizations', ['adf.provider'])
 
             ObjectLookupService.getPersonOrganizationRelationTypes().then(
                 function (organizationTypes) {
-                    $scope.organizationTypes = [];
-                    for (var i = 0; i < organizationTypes.length; i++) {
-                        $scope.organizationTypes.push({
-                            "key": organizationTypes[i].inverseKey,
-                            "value": organizationTypes[i].inverseValue,
-                            "inverseKey": organizationTypes[i].key,
-                            "inverseValue": organizationTypes[i].value
-                        });
+                    if (!Util.isEmpty(organizationTypes)) {
+                        $scope.organizationTypes = [];
+                        for (var i = 0; i < organizationTypes.length; i++) {
+                            $scope.organizationTypes.push({
+                                "key": organizationTypes[i].inverseKey,
+                                "value": organizationTypes[i].inverseValue,
+                                "inverseKey": organizationTypes[i].key,
+                                "inverseValue": organizationTypes[i].value
+                            });
+                        }
                     }
                     return organizationTypes;
                 });
@@ -99,15 +101,9 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
             $scope.isDefault = function(data){
                 return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
-            }
-
-            $scope.getRelationship = function (org) {
-                $scope.relationshipType = _.find($scope.organizationTypes, function (obj) {
-                    return obj.key === org;
-                });
-                return $scope.relationshipType.inverseValue;
             };
         }
     ]);
