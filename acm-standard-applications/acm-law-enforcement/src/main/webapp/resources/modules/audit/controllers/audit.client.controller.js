@@ -65,7 +65,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             if (Util.isEmpty($scope.dateFrom) || Util.isEmpty($scope.dateTo)){
                 return false;
             }
-            if ($scope.dateFrom.getTime() > $scope.dateTo.getTime()) {
+            if (moment($scope.dateFrom).isAfter($scope.dateTo)) {
                 return false;
             }
 
