@@ -30,7 +30,7 @@ public class AcmGrantedAuthoritiesMapperTest
     public void setUp()
     {
         unit = new AcmGrantedAuthoritiesMapper();
-        roleToGroupMapping = new AcmRoleToGroupMapping(new HashMap<>());
+        roleToGroupMapping = new AcmRoleToGroupMapping();
         unit.setRoleToGroupMapping(roleToGroupMapping);
     }
     
