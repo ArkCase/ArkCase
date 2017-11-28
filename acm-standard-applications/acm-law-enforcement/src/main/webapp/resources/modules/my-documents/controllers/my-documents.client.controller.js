@@ -14,7 +14,7 @@ angular.module('my-documents').controller('MyDocumentsController', ['$scope', '$
             , getObjectInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo
             , updateObjectInfo: DocumentRepositoryInfoService.updateDocumentRepositoryInfo
             , getObjectTypeFromInfo: function () {
-                return ObjectService.ObjectTypes.MY_DOC_REPO;
+                return ObjectService.ObjectTypes.DOC_REPO;
             }
         });
     }
