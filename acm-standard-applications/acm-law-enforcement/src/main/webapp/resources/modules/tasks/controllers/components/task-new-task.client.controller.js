@@ -88,7 +88,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
         $scope.saved = false;
-        $scope.isDateValid = false;
         $scope.minDate = new Date();
 
         $scope.isValidDate = function () {
@@ -105,11 +104,12 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             return true;
         };
 
+
         $scope.$watchGroup(['config.data.dueDate', 'config.data.taskStartDate'], function () {
             var todayDate = new Date();
+            $scope.isDateValid = $scope.isValidDate();
 
             $scope.fixedDate = new Date(todayDate.getMonth() + 1 + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
-
             $scope.validDate = $scope.isValidDate();
         });
 
