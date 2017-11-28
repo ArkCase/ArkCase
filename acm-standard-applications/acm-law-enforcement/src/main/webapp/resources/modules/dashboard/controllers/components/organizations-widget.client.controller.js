@@ -38,22 +38,6 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 }
             ];
 
-            ObjectLookupService.getPersonOrganizationRelationTypes().then(
-                function (organizationTypes) {
-                    if (!Util.isEmpty(organizationTypes)) {
-                        $scope.organizationTypes = [];
-                        for (var i = 0; i < organizationTypes.length; i++) {
-                            $scope.organizationTypes.push({
-                                "key": organizationTypes[i].inverseKey,
-                                "value": organizationTypes[i].inverseValue,
-                                "inverseKey": organizationTypes[i].key,
-                                "inverseValue": organizationTypes[i].value
-                            });
-                        }
-                    }
-                    return organizationTypes;
-                });
-
             var module = _.find(modules, function (module) {
                 return module.name == $stateParams.type;
             });
@@ -101,9 +85,8 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
-
             $scope.isDefault = function(data){
                 return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
-            };
+            }
         }
     ]);
