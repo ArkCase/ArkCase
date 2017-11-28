@@ -1745,8 +1745,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 useContextMenu: function ($s) {
                     $s.contextmenu({
                         menu: []
-                        //,delegate: "span.fancytree-node"
                         , delegate: "tr"
+                        , addClass: "docTreeMenu"
                         , beforeOpen: function (event, ui) {
                             var dfd = new $.Deferred();
                             var node = $.ui.fancytree.getNode(ui.target);
