@@ -71,12 +71,20 @@
       }
     }
   },
+  "timeTracking.comp.approvers": {
+    "title": "Approvers",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Details",
       "person.label": "Person",
       "summary.label": "Hours Summary",
-      "tags.label": "Tags"
+      "tags.label": "Tags",
+      "approvers.label": "Approvers"
     },
     "sorters": {
       "dateAsc": "Sort Date Ascending",
