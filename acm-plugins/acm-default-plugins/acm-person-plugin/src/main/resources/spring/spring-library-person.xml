@@ -45,6 +45,7 @@
         <property name="picturesFolder" value="${person.folder.pictures}"/>
         <property name="personPipelineManager" ref="personPipelineManager"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="ecmTikaFileService" ref="ecmTikaFileService"/>
     </bean>
 
     <bean id="personPipelineManager" class="com.armedia.acm.services.pipeline.PipelineManager">
