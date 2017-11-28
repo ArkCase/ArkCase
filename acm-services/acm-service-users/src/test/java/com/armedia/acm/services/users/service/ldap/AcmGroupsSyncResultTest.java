@@ -69,26 +69,13 @@ public class AcmGroupsSyncResultTest
             Map<String, AcmUser> acmUsers = userStream(u1, u2, u3)
                     .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
 
-            Map<String, Set<AcmGroup>> groupsByUserIdMap = unit.sync(Arrays.asList(a, b, c), new ArrayList<>(), acmUsers);
-
-            assertThat("Key set should be:", groupsByUserIdMap.keySet(), everyItem(isIn(acmUsers.keySet())));
-            assertThat("User 1 has groups:", groupsByUserIdMap.get("1"),
-                    everyItem(isIn(groupSet(acmGroup("A"), acmGroup("B"), acmGroup("C")))));
-            assertThat("User 2 has groups:", groupsByUserIdMap.get("2"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 3 has groups:", groupsByUserIdMap.get("3"),
-                    everyItem(isIn(groupSet(acmGroup("B")))));
+            unit.sync(Arrays.asList(a, b, c), new ArrayList<>(), acmUsers);
 
             assertThat(unit.getModifiedGroups(), is(empty()));
             assertThat(unit.getNewGroups().size(), is(3));
-            assertThat("New groups should be:",
-                    unit.getNewGroups()
-                            .stream()
-                            .map(AcmGroup::getName)
-                            .collect(Collectors.toList()), everyItem(isIn(fromArray("A", "B", "C"))));
 
             Map<String, AcmGroup> syncedNewGroups = getGroupByName(unit.getNewGroups());
-
+            assertThat("New groups should be:", syncedNewGroups.keySet(), everyItem(isIn(fromArray("A", "B", "C"))));
             assertThat("Group A should have B and C as member group", syncedNewGroups.get("A").getGroupMemberNames()
                     .collect(Collectors.toSet()), everyItem(isIn(fromArray("B", "C"))));
             assertThat("Ascendants string for group A should be", syncedNewGroups.get("A").getAscendantsList(), is("B,C"));
@@ -98,16 +85,6 @@ public class AcmGroupsSyncResultTest
             assertThat("Group C should have 1 group member", syncedNewGroups.get("C").getGroupMemberNames()
                     .collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
             assertThat("Ascendants string for group C should be", syncedNewGroups.get("C").getAscendantsList(), is("A,B"));
-
-            Map<String, AcmGroup> groupForRoles = getSyncedGroups(groupsByUserIdMap);
-
-            assertThat("Group A should have B and C as member groups", groupForRoles.get("A").getGroupMemberNames()
-                    .collect(Collectors.toSet()), everyItem(isIn(fromArray("B", "C"))));
-            assertThat("Ascendants string for group A should be", groupForRoles.get("A").getAscendantsList(), is("B,C"));
-            assertThat("Group B should have A and C as member groups", groupForRoles.get("B").getGroupMemberNames()
-                    .collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "C"))));
-            assertThat("Ascendants string for group B should be", groupForRoles.get("B").getAscendantsList(), is("A,C"));
-            assertThat("Group C not found since it has no users", groupForRoles.containsKey("C"), is(false));
         }
 
     // @formatter:off
@@ -151,38 +128,20 @@ public class AcmGroupsSyncResultTest
 
             List<AcmGroup> currentGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
 
-            Map<String, Set<AcmGroup>> groupsByUserIdMap = unit.sync(Arrays.asList(a, b, c), currentGroups, acmUsers);
-
-            assertThat("Key set should be:", groupsByUserIdMap.keySet(), everyItem(isIn(acmUsers.keySet())));
-            assertThat("User 1 has groups:", groupsByUserIdMap.get("1"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 2 has groups:", groupsByUserIdMap.get("2"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 3 has groups:", groupsByUserIdMap.get("3"),
-                    everyItem(isIn(groupSet(acmGroup("B")))));
+           unit.sync(Arrays.asList(a, b, c), currentGroups, acmUsers);
 
             assertThat(unit.getNewGroups(), is(empty()));
             assertThat(unit.getDeletedGroups(), is(empty()));
             assertThat(unit.getModifiedGroups().size(), is(1));
-            assertThat("Changed groups should be:",
-                    unit.getModifiedGroups()
-                            .stream()
-                            .map(AcmGroup::getName)
-                            .collect(Collectors.toList()), everyItem(isIn(fromArray("A"))));
+
             AcmGroup actualGroupA = unit.getModifiedGroups().get(0);
+            assertThat("Changed group should be:", actualGroupA.getName(), is("A"));
             assertThat("Changed group A should have description updated", actualGroupA.getDescription(),
                     equalTo(a.getDescription()));
+            assertThat("Group A should have user members: ", actualGroupA.getUserMemberIds().collect(Collectors.toSet()),
+                    everyItem(isIn(Arrays.asList("1", "2"))));
             assertThat("Group A should have 0 member groups", actualGroupA.getMemberGroups().size(), is(0));
             assertThat("Ascendants string for group A should be", actualGroupA.getAscendantsList(), nullValue());
-
-            Map<String, AcmGroup> groupForRoles = getSyncedGroups(groupsByUserIdMap);
-
-            assertThat("Group A should have 0 member groups", groupForRoles.get("A").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group A should be", groupForRoles.get("A").getAscendantsList(), nullValue());
-            assertThat("Group B should have C as member group", groupForRoles.get("B").getGroupMemberNames()
-                    .collect(Collectors.toSet()), everyItem(isIn(fromArray("C"))));
-            assertThat("Ascendants string for group B should be", groupForRoles.get("B").getAscendantsList(), nullValue());
-            assertThat("Group C not found since it has no users", groupForRoles.containsKey("C"), is(false));
         }
 
     // @formatter:off
@@ -225,41 +184,14 @@ public class AcmGroupsSyncResultTest
 
             List<AcmGroup> currentGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
 
-            Map<String, Set<AcmGroup>> groupsByUserIdMap = unit.sync(Arrays.asList(a, b, c), currentGroups, currentUsers);
+            unit.sync(Arrays.asList(a, b, c), currentGroups, currentUsers);
 
-            assertThat("Key set should be:", groupsByUserIdMap.keySet(), everyItem(isIn(currentUsers.keySet())));
-            assertThat("User 1 has groups:", groupsByUserIdMap.get("1"), everyItem(isIn(groupSet(acmGroupA))));
-            assertThat("User 2 has groups:", groupsByUserIdMap.containsKey("2"), is(false));
-            assertThat("User 3 has groups:", groupsByUserIdMap.get("3"), everyItem(isIn(groupSet(acmGroupB))));
-            assertThat("User 4 has groups:", groupsByUserIdMap.get("4"), everyItem(isIn(groupSet(acmGroupA, acmGroupC))));
-
-            assertThat(unit.getNewGroups(), is(empty()));
+            AcmGroup actualGroupA = unit.getModifiedGroups().get(0);
             assertThat(unit.getModifiedGroups().size(), is(1));
-            assertThat("Changed groups should be:",
-                    unit.getModifiedGroups()
-                            .stream()
-                            .map(AcmGroup::getName)
-                            .collect(Collectors.toList()), everyItem(isIn(fromArray("A"))));
-            assertThat("Changed group A should have user members", unit.getModifiedGroups().get(0).getUserMembers(),
+            assertThat("Changed group should be:", actualGroupA.getName(), is("A"));
+            assertThat("Changed group A should have user members", actualGroupA.getUserMembers(),
                     everyItem(isIn(userSet(u4, u1))));
-            assertThat("Ascendants string for C should be null", unit.getModifiedGroups().get(0).getAscendantsList(), nullValue());
-
-            Map<String, AcmGroup> syncedGroups = getSyncedGroups(groupsByUserIdMap);
-
-            assertThat("Group A should have member groups", syncedGroups.get("A").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group A should be", syncedGroups.get("A").getAscendantsList(), nullValue());
-            assertThat("Group A should have user members", syncedGroups.get("A").getUserMembers(),
-                    everyItem(isIn(userSet(u4, u1))));
-
-            assertThat("Group B should have member group", syncedGroups.get("B").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group B should be", syncedGroups.get("B").getAscendantsList(), nullValue());
-            assertThat("Group B should have user members", syncedGroups.get("B").getUserMembers(),
-                    everyItem(isIn(userSet(u3))));
-
-            assertThat("Group C should have member group", syncedGroups.get("C").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group C should be", syncedGroups.get("C").getAscendantsList(), nullValue());
-            assertThat("Group C should have user members", syncedGroups.get("C").getUserMembers(),
-                    everyItem(isIn(userSet(u4))));
+            assertThat("Ascendants string for C should be null", actualGroupA.getAscendantsList(), nullValue());
         }
 
     // @formatter:off
@@ -311,15 +243,7 @@ public class AcmGroupsSyncResultTest
 
             List<AcmGroup> acmGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC, acmGroupD);
 
-            Map<String, Set<AcmGroup>> groupsByUserIdMap = unit.sync(Arrays.asList(a, b, c, d), acmGroups, acmUsers);
-
-            assertThat("Key set should be:", groupsByUserIdMap.keySet(), everyItem(isIn(acmUsers.keySet())));
-            assertThat("User 1 has groups:", groupsByUserIdMap.get("1"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 2 has groups:", groupsByUserIdMap.get("2"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 3 has groups:", groupsByUserIdMap.get("3"),
-                    everyItem(isIn(groupSet(acmGroup("B")))));
+            unit.sync(Arrays.asList(a, b, c, d), acmGroups, acmUsers);
 
             assertThat(unit.getNewGroups(), is(empty()));
             assertThat(unit.getDeletedGroups(), is(empty()));
@@ -332,22 +256,26 @@ public class AcmGroupsSyncResultTest
 
             assertThat("Ascendants string for group A should be", modifiedGroupsByName.get("A").getAscendantsList(),
                     is("C,D"));
+            assertThat("Group A should have 0 member groups", modifiedGroupsByName.get("A").getMemberGroups().size(), is(0));
+            assertThat("Group A should have user members", modifiedGroupsByName.get("A")
+                    .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("1", "2"))));
+
+            assertThat("Ascendants string for group B should be", modifiedGroupsByName.get("B").getAscendantsList(),
+                    nullValue());
+            assertThat("Group B should have member groups", modifiedGroupsByName.get("B")
+                    .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("C"))));
+            assertThat("Group B should have user members", modifiedGroupsByName.get("B")
+                    .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("3"))));
 
             assertThat("Group C should have member groups", modifiedGroupsByName.get("C")
                     .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "D"))));
+            assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers().size(), is(0));
             assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), nullValue());
 
-            assertThat("Ascendants string for group D should be", modifiedGroupsByName.get("D").getAscendantsList(),
-                    is("C"));
-
-            Map<String, AcmGroup> groupForRoles = getSyncedGroups(groupsByUserIdMap);
-
-            assertThat("Group A should have 0 member groups", groupForRoles.get("A").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group A should be", groupForRoles.get("A").getAscendantsList(), is("C,D"));
-            assertThat("Group B should have 0 member group", groupForRoles.get("B").getMemberGroups().size(), is(0));
-            assertThat("Ascendants string for group B should be", groupForRoles.get("B").getAscendantsList(), nullValue());
-            assertThat("Group C not found since it has no users", groupForRoles.containsKey("C"), is(false));
-            assertThat("Group D not found since it has no users", groupForRoles.containsKey("D"), is(false));
+            assertThat("Ascendants string for group D should be", modifiedGroupsByName.get("D").getAscendantsList(), is("C"));
+            assertThat("Group D should have 0 user members", modifiedGroupsByName.get("D").getUserMembers().size(), is(0));
+            assertThat("Group D should have member groups", modifiedGroupsByName.get("D")
+                    .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
         }
 
     // @formatter:off
@@ -395,14 +323,7 @@ public class AcmGroupsSyncResultTest
 
             List<AcmGroup> currentGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
 
-            Map<String, Set<AcmGroup>> groupsByUserIdMap = unit.sync(Arrays.asList(a, c, d), currentGroups, acmUsers);
-
-            assertThat("Key set should be:", groupsByUserIdMap.keySet(), everyItem(isIn(acmUsers.keySet())));
-            assertThat("User 1 should have groups:", groupsByUserIdMap.get("1"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 2 should have groups:", groupsByUserIdMap.get("2"),
-                    everyItem(isIn(groupSet(acmGroup("A")))));
-            assertThat("User 3 not member in any group:", groupsByUserIdMap.containsKey("3"), is(false));
+            unit.sync(Arrays.asList(a, c, d), currentGroups, acmUsers);
 
             assertThat(unit.getNewGroups().get(0), is(acmGroup("D")));
 
@@ -428,18 +349,6 @@ public class AcmGroupsSyncResultTest
 
             assertThat("Group C should have 0 member groups", modifiedGroupsByName.get("C").getMemberGroups().size(), is(0));
             assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A,D"));
-
-            Map<String, AcmGroup> groupsForUserRoles = getSyncedGroups(groupsByUserIdMap);
-
-            assertThat("Synced groups should be:", groupsForUserRoles.keySet(),
-                    everyItem(isIn(fromArray("A"))));
-
-            assertThat("Group A should have description updated", groupsForUserRoles.get("A").getDescription(),
-                    equalTo(a.getDescription()));
-            assertThat("Group A should have 0 member groups", groupsForUserRoles.get("A").getMemberGroups().size(), is(1));
-            assertThat("Group A should have user members", groupsForUserRoles.get("A").getUserMemberIds()
-                    .collect(Collectors.toSet()), everyItem(isIn(fromArray("1", "2"))));
-            assertThat("Ascendants string for group A should be", groupsForUserRoles.get("A").getAscendantsList(), is("D"));
         }
 
     private LdapGroup ldapGroup(String name, String description)
@@ -503,14 +412,6 @@ public class AcmGroupsSyncResultTest
     private static Set<String> fromArray(String... elements)
     {
         return new HashSet<>(Arrays.asList(elements));
-    }
-
-    private Map<String, AcmGroup> getSyncedGroups(Map<String, Set<AcmGroup>> groupsByUserId)
-    {
-        return groupsByUserId.values().stream()
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toMap(AcmGroup::getName, Function.identity()));
     }
 
     private Map<String, AcmGroup> getGroupByName(List<AcmGroup> groups)

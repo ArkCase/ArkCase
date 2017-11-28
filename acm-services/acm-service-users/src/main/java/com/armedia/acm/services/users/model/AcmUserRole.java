@@ -63,19 +63,4 @@ public class AcmUserRole
         this.userRoleState = userRoleState;
     }
 
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AcmUserRole that = (AcmUserRole) o;
-        return Objects.equals(roleName, that.roleName) &&
-                Objects.equals(userId, that.userId);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(roleName, userId);
-    }
 }
