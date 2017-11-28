@@ -65,9 +65,9 @@ public class HistoryCleanService
 
     private String createDeleteNotificationSolrQuery(Date threshold)
     {
-        String query = "object_type_s:" + NotificationConstants.OBJECT_TYPE
-                + "AND modified_date_tdt:";
         SimpleDateFormat dateParser = new SimpleDateFormat(DateFormats.DEFAULT_DATE_FORMAT);
+        String query = "object_type_s:" + NotificationConstants.OBJECT_TYPE
+                + " AND modified_date_tdt:";
         query += "[* TO " + dateParser.format(threshold) + "]";
         return query;
     }
