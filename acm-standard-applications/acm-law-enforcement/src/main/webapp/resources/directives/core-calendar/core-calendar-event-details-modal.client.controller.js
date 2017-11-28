@@ -25,6 +25,8 @@ angular.module('directives').controller('Directives.CoreCalendarEventDetailsModa
 
 			$scope.privateEvent = $scope.eventDetails.sensitivity !== 'PRIVATE';
 
+            $scope.eventSummary = $scope.eventDetails.details;
+
 			$scope.eventReminder = _.find($scope.reminderOptions, function(option) {
 				return option.value === $scope.eventDetails.remindIn;
 			}).label;
