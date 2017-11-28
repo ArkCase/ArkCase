@@ -53,7 +53,7 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             getAuditPropertyEntityAdapter().setUserId(folderCreated.getUserId());
             AcmFolder created = getFolderDao().save(newFolder);
 
-            getFileParticipantService().setFolderParticipantsFromParentFolder(created);
+            created = getFileParticipantService().setFolderParticipantsFromParentFolder(created);
 
             log.debug("Finished creating new folder with node id {}, ArkCase id {}", folderCreated.getNodeId(), created.getId());
         }

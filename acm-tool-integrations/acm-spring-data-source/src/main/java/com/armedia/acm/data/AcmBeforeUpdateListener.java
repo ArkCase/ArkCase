@@ -7,5 +7,5 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
  */
 public interface AcmBeforeUpdateListener
 {
-    void beforeUpdate(Object object, Object originalObject) throws AcmAccessControlException;
+    void beforeUpdate(Object object) throws AcmAccessControlException;
 }

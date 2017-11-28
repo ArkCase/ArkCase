@@ -154,7 +154,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             try
             {
-                getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+                result = getFileParticipantService().setFolderParticipantsFromParentFolder(result);
             }
             catch (AcmAccessControlException ace)
             {
@@ -376,7 +376,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             movedFolder = getFolderDao().save(folderForMoving);
 
-            getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            movedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
         {
@@ -438,7 +438,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderForMoving.setParentFolder(dstFolder);
             movedFolder = getFolderDao().save(folderForMoving);
 
-            getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            movedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
         {
@@ -579,7 +579,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             acmNewFolder.setName(toCopyFolder.getName());
             copiedFolder = getFolderDao().save(acmNewFolder);
 
-            getFileParticipantService().setFolderParticipantsFromParentFolder(copiedFolder);
+            copiedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(copiedFolder);
 
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
@@ -1042,7 +1042,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         try
         {
             result = getFolderDao().save(newFolder);
-            getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+            result = getFileParticipantService().setFolderParticipantsFromParentFolder(result);
         }
         catch (Exception e)
         {

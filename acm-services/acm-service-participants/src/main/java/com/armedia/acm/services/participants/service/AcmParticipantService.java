@@ -68,7 +68,7 @@ public class AcmParticipantService
     private List<String> applyParticipantRules(AcmParticipant participant, CheckParticipantListModel model)
     {
         List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(),
-                participant.getObjectId());
+                participant.getObjectId(), FlushModeType.AUTO);
         if (allParticipantsFromParentObject != null)
         {
             allParticipantsFromParentObject
@@ -119,9 +119,9 @@ public class AcmParticipantService
         return updatedParticipant;
     }
 
-    public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId)
+    public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
     {
-        return getParticipantDao().findParticipantsForObject(objectType, objectId);
+        return getParticipantDao().findParticipantsForObject(objectType, objectId, flushModeType);
     }
 
     public void removeParticipant(Long participantId)

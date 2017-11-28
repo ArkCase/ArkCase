@@ -102,7 +102,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
                 .anyMatch(participant -> userGroups.contains(participant.getParticipantLdapId()));
     }
 
-    public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
+    public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId, FlushModeType flushModeType)
     {
 
         String jpql = "SELECT ap " + "FROM AcmParticipant ap " + "WHERE ap.objectId = :objectId " + "AND ap.objectType = :objectType";
@@ -110,6 +110,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         TypedQuery<AcmParticipant> query = getEm().createQuery(jpql, AcmParticipant.class);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);
+
+        query.setFlushMode(flushModeType);
 
         List<AcmParticipant> retval = query.getResultList();
 
@@ -128,7 +130,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
             keepTheseIds.add(keep.getId());
         }
 
-        List<AcmParticipant> current = findParticipantsForObject(objectType, objectId);
+        List<AcmParticipant> current = findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
 
         int deleted = 0;
 
