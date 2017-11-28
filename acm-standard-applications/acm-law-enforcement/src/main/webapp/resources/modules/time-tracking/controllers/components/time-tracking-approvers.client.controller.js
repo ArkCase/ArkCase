@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('time-tracking').controller('TimeTracking.ApproverController', ['$scope', '$stateParams'
+angular.module('time-tracking').controller('TimeTracking.ApproversController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'Helper.UiGridService', 'TimeTracking.InfoService', 'Helper.ObjectBrowserService', 'LookupService'
     , function ($scope, $stateParams
         , Util, ConfigService, HelperUiGridService, TimeTrackingInfoService, HelperObjectBrowserService, LookupService) {
