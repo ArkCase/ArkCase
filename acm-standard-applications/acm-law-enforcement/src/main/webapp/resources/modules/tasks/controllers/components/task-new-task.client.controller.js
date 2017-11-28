@@ -95,7 +95,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             if (Util.isEmpty($scope.config.data.taskStartDate) || Util.isEmpty($scope.config.data.dueDate)) {
                 return false;
             }
-            if (moment($scope.getFixedDate).isAfter($scope.config.data.taskStartDate) || moment($scope.getFixedDate).isAfter($scope.config.data.dueDate)) {
+            if (moment($scope.fixedDate).isAfter($scope.config.data.taskStartDate) || moment($scope.fixedDate).isAfter($scope.config.data.dueDate)) {
                 return false;
             }
             if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
@@ -108,13 +108,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.$watchGroup(['config.data.dueDate', 'config.data.taskStartDate'], function () {
             var todayDate = new Date();
 
-            $scope.getFixedDate = new Date(todayDate.getMonth() + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
+            $scope.fixedDate = new Date(todayDate.getMonth() + 1 + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
 
-            if ($scope.isValidDate()) {
-                $scope.isDateValid = true;
-            } else {
-                $scope.isDateValid = false;
-            }
+            $scope.validDate = $scope.isValidDate();
         });
 
         $scope.saveNewTask = function () {

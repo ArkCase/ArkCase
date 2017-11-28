@@ -54,11 +54,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
 
-            if ($scope.isValidDate()) {
-                $scope.isDateValid = true;
-            } else {
-                $scope.isDateValid = false;
-            }
+            $scope.validDate = $scope.isValidDate();
         }
 
         $scope.isValidDate = function () {
