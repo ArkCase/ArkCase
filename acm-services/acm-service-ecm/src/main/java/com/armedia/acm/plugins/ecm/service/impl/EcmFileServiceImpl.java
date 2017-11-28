@@ -959,7 +959,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             result = getEcmFileDao().save(fileCopy);
 
-            getFileParticipantService().setFileParticipantsFromParentFolder(result);
+            result = getFileParticipantService().setFileParticipantsFromParentFolder(result);
 
             return result;
         }
@@ -1274,7 +1274,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
 
             movedFile = getEcmFileDao().save(file);
 
-            getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
+            movedFile = getFileParticipantService().setFileParticipantsFromParentFolder(movedFile);
 
             return movedFile;
         }

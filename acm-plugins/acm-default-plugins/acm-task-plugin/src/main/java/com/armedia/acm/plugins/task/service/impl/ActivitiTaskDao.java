@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -61,6 +62,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.FlushModeType;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -301,7 +304,15 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             // have to apply the assignment and data access control rules right here, inline with the save operation.
             // Tasks generated or updated by the Activiti engine will have participants set by a specialized
             // Mule flow.
-            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
+
+            try
+            {
+                getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
+            }
+            catch (AcmAccessControlException e)
+            {
+                log.error("Failed to apply assignment and access rules while updating task", e);
+            }
 
             // Now we have to check the assignee again, to be sure the Activiti task assignee is the "assignee"
             // participant. I know we're calling the same method twice!, to overwrite any changes the rules make to the
@@ -424,7 +435,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
 
         // Task participant privileges updated immediately, not to wait for DAC batch update
-        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        try
+        {
+            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        }
+        catch (AcmAccessControlException e)
+        {
+            log.error("Failed to apply assignment and access rules while completing task", e);
+        }
 
         return retval;
     }
@@ -452,7 +470,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         retval = deleteTask(retval, user, null);
 
         // Task participant privileges updated immediately, not to wait for DAC batch update
-        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        try
+        {
+            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        }
+        catch (AcmAccessControlException e)
+        {
+            log.error("Failed to apply assignment and access rules while deleting task", e);
+        }
 
         return retval;
     }
@@ -1051,7 +1076,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             retval.setAdhocTask(true);
         }
 
-        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId());
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId(), FlushModeType.AUTO);
         retval.setParticipants(participants);
 
         log.trace("Activiti task id '{}' for object type '{}', object id '{}' found for user '{}'", retval.getTaskId(),
@@ -1325,7 +1350,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(), acmTask.getAttachedToObjectName(),
                 acmTask.getAssignee());
 
-        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId(), FlushModeType.AUTO);
         acmTask.setParticipants(participants);
 
         return acmTask;

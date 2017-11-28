@@ -377,4 +377,13 @@ GO
         </sql>
     </changeSet>
 
+    <!-- This column is needed for the transient field replaceChildrenParticipant which value needs to be kept after em.merge() -->
+    <changeSet id="12-add-replaceChildrenParticipant-column-extensibility" author="bojan.milenkoski">
+        <addColumn tableName="acm_participant">
+            <column name="replaceChildrenParticipant" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>    
+
 </databaseChangeLog>

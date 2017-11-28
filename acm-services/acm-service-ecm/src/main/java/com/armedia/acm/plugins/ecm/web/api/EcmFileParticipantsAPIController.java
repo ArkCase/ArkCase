@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,7 +60,8 @@ public class EcmFileParticipantsAPIController
 
         List<AcmParticipant> participantsToReturn = new ArrayList<>();
 
-        List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId);
+        List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
+                FlushModeType.COMMIT);
 
         // change existing participants role
         for (AcmParticipant participant : participants)

@@ -49,6 +49,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
+import javax.persistence.FlushModeType;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -328,7 +330,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(EasyMock.anyObject(AcmTask.class));
         EasyMock.expectLastCall();
@@ -435,7 +437,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         mockDataAccessPrivilegeListener.applyAssignmentAndAccessRules(EasyMock.anyObject(AcmTask.class));
         EasyMock.expectLastCall();
@@ -529,7 +531,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 
@@ -631,7 +633,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 
@@ -753,7 +755,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 
@@ -808,7 +810,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         {
             unit.findById(taskId);
             fail("Should have exception since task was not found");
-        } catch (AcmTaskException ate)
+        }
+        catch (AcmTaskException ate)
         {
             // expected, so test passes
         }
@@ -887,7 +890,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 
@@ -940,7 +943,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         try
         {
             unit.claimTask(taskId, user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // expected so pass
         }
@@ -961,7 +965,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         try
         {
             unit.unclaimTask(taskId);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // expected so pass
         }
@@ -1071,7 +1076,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 

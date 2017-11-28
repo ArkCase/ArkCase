@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -38,15 +39,17 @@ public class EcmFileParticipantService
     private static List<String> fileParticipantTypes = Arrays.asList("group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
 
-    @Transactional
-    public void setFileParticipantsFromParentFolder(EcmFile file)
+    @Transactional(rollbackFor = Exception.class)
+    public EcmFile setFileParticipantsFromParentFolder(EcmFile file)
     {
         if (file.getFolder() == null)
         {
             throw new RuntimeException("File doesn't have parent folder!");
         }
 
-        // Use the participants service to avoid execution of Drools Assignment rules
+        // Use the participants service to avoid execution of Drools Assignment and Access rules
+        // if the user doesn't have permissions on the file, the participants cannot be changed by inheriting
+        // participants from parent entity
         file.getParticipants().forEach(participant -> getParticipantService().removeParticipant(participant.getId()));
         file.getParticipants().clear();
 
@@ -58,11 +61,11 @@ public class EcmFileParticipantService
             file.getParticipants().add(participant);
         });
 
-        getFileDao().save(file);
+        return getFileDao().save(file);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void setFolderParticipantsFromParentFolder(AcmFolder folder) throws AcmAccessControlException
+    public AcmFolder setFolderParticipantsFromParentFolder(AcmFolder folder) throws AcmAccessControlException
     {
         if (folder.getParentFolder() == null)
         {
@@ -75,76 +78,86 @@ public class EcmFileParticipantService
         folder.getParticipants().clear();
 
         // set participants from parent folder
-        folder.getParentFolder().getParticipants().forEach(folderParticipant -> {
+        for (AcmParticipant folderParticipant : folder.getParentFolder().getParticipants())
+        {
             AcmParticipant participant = new AcmParticipant();
             participant.setParticipantType(folderParticipant.getParticipantType());
             participant.setParticipantLdapId(folderParticipant.getParticipantLdapId());
             folder.getParticipants().add(participant);
-        });
-        getFolderDao().save(folder);
+        }
+        folder = getFolderDao().save(folder);
 
         // set participants to child folders
-        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+        List<AcmFolder> subfolders = folder.getChildrenFolders();
         for (AcmFolder subFolder : subfolders)
         {
-            setFolderParticipantsFromParentFolder(subFolder);
+            AcmFolder updatedSubfolder = setFolderParticipantsFromParentFolder(subFolder);
+            // replace subfolder with updated instance
+            subfolders.set(subfolders.indexOf(subFolder), updatedSubfolder);
         }
 
         // set participants to files in the folder
         getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT).forEach(file -> setFileParticipantsFromParentFolder(file));
+
+        return folder;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant) throws AcmAccessControlException
+    public AcmFolder setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant) throws AcmAccessControlException
     {
         if (StringUtils.isEmpty(participant.getParticipantLdapId()))
         {
-            // we don't use participants without for files/folders as we do for AssignedObject
-            return;
+            // we don't use participants without ldapId for files/folders as we do for AssignedObject
+            return folder;
         }
 
         // set participant to child folders
-        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+        List<AcmFolder> subfolders = folder.getChildrenFolders();
         for (AcmFolder subFolder : subfolders)
         {
-            setParticipantToFolderChildren(subFolder, participant);
+            AcmFolder updatedSubfolder = setParticipantToFolderChildren(subFolder, participant);
+            // replace subfolder with updated instance
+            subfolders.set(subfolders.indexOf(subFolder), updatedSubfolder);
         }
 
         // set participant to current folder
-        List<AcmParticipant> existingParticipants = getParticipantService().getParticipantsByLdapIdObjectTypeObjectId(
-                participant.getParticipantLdapId(), EcmFileConstants.OBJECT_FOLDER_TYPE, folder.getId(),
-                FlushModeType.COMMIT);
+        Optional<AcmParticipant> existingFolderParticipants = folder.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                .findFirst();
 
         // for files and folders only one AcmParticipant per user is allowed
-        if (existingParticipants.size() > 0)
+        if (existingFolderParticipants.isPresent())
         {
             // change the role of the existing participant if needed
-            if (!existingParticipants.get(0).getParticipantType().equals(participant.getParticipantType()))
+            if (!existingFolderParticipants.get().getParticipantType().equals(participant.getParticipantType()))
             {
-                getParticipantService().changeParticipantRole(existingParticipants.get(0), participant.getParticipantType());
+                getParticipantService().changeParticipantRole(existingFolderParticipants.get(), participant.getParticipantType());
+                existingFolderParticipants.get().setParticipantType(participant.getParticipantType());
             }
         }
         else
         {
-            getParticipantService().saveParticipant(participant.getParticipantLdapId(), participant.getParticipantType(), folder.getId(),
+            AcmParticipant savedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
+                    participant.getParticipantType(), folder.getId(),
                     EcmFileConstants.OBJECT_FOLDER_TYPE);
+            folder.getParticipants().add(savedParticipant);
         }
 
         // set participant to files in folder
         List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
         for (EcmFile file : files)
         {
-            List<AcmParticipant> existingFileParticipants = getParticipantService().getParticipantsByLdapIdObjectTypeObjectId(
-                    participant.getParticipantLdapId(), EcmFileConstants.OBJECT_FILE_TYPE, file.getId(),
-                    FlushModeType.COMMIT);
+            Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
+                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                    .findFirst();
 
             // for files and folders only one AcmParticipant per user is allowed
-            if (existingFileParticipants.size() > 0)
+            if (existingFileParticipant.isPresent())
             {
                 // change the role of the existing participant if needed
-                if (!existingFileParticipants.get(0).getParticipantType().equals(participant.getParticipantType()))
+                if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
                 {
-                    getParticipantService().changeParticipantRole(existingFileParticipants.get(0), participant.getParticipantType());
+                    getParticipantService().changeParticipantRole(existingFileParticipant.get(), participant.getParticipantType());
                 }
             }
             else
@@ -153,26 +166,34 @@ public class EcmFileParticipantService
                         EcmFileConstants.OBJECT_FILE_TYPE);
             }
         }
+
+        return folder;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
+    public AcmFolder removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
             throws AcmAccessControlException
     {
-        // remove participant to child folders
-        List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
+        // remove participant from child folders
+        List<AcmFolder> subfolders = folder.getChildrenFolders();
         for (AcmFolder subFolder : subfolders)
         {
-            removeParticipantFromFolderAndChildren(subFolder, participantLdapId, participantType);
+            AcmFolder updatedSubfolder = removeParticipantFromFolderAndChildren(subFolder, participantLdapId, participantType);
+            // replace subfolder with updated instance
+            subfolders.set(subfolders.indexOf(subFolder), updatedSubfolder);
         }
 
         // remove participant from current folder
         getParticipantService().removeParticipant(participantLdapId, participantType, EcmFileConstants.OBJECT_FOLDER_TYPE, folder.getId());
+        folder.getParticipants().removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
+                && participant.getParticipantType().equals(participantType));
 
         // remove participants from files in folder
         getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT)
                 .forEach(file -> getParticipantService().removeParticipant(participantLdapId,
                         participantType, EcmFileConstants.OBJECT_FILE_TYPE, file.getId()));
+
+        return folder;
     }
 
     public List<AcmParticipant> getFolderParticipantsFromParentAssignedObject(String objectType, Long objectId)
@@ -218,7 +239,7 @@ public class EcmFileParticipantService
         }
     }
 
-    private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
+    private AcmFolder inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmFolder folder) throws AcmAccessControlException
     {
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
@@ -229,7 +250,7 @@ public class EcmFileParticipantService
         {
             if (participant.isReplaceChildrenParticipant())
             {
-                setParticipantToFolderChildren(folder, getDocumentParticipantFromAssignedObjectParticipant(participant));
+                folder = setParticipantToFolderChildren(folder, getDocumentParticipantFromAssignedObjectParticipant(participant));
             }
         }
 
@@ -251,36 +272,44 @@ public class EcmFileParticipantService
                 // do not delete added participant to folder if not deleted from assignedObject
                 if (inheritAllParticipants || existsOriginalParentParticipant)
                 {
-                    removeParticipantFromFolderAndChildren(folder, rootFolderParticipant.getParticipantLdapId(),
+                    folder = removeParticipantFromFolderAndChildren(folder, rootFolderParticipant.getParticipantLdapId(),
                             rootFolderParticipant.getParticipantType());
                 }
             }
         }
+
+        return folder;
     }
 
     @Transactional
-    public void setRestrictedFlagRecursively(Boolean restricted, AcmContainer acmContainer)
+    public AcmContainer setRestrictedFlagRecursively(Boolean restricted, AcmContainer acmContainer)
     {
         if (acmContainer.getFolder() != null)
         {
-            setRestrictedFlagRecursively(restricted, acmContainer.getFolder());
+            AcmFolder savedFolder = setRestrictedFlagRecursively(restricted, acmContainer.getFolder());
+            acmContainer.setFolder(savedFolder);
         }
         if (acmContainer.getAttachmentFolder() != null)
         {
-            setRestrictedFlagRecursively(restricted, acmContainer.getAttachmentFolder());
+            AcmFolder savedFolder = setRestrictedFlagRecursively(restricted, acmContainer.getAttachmentFolder());
+            acmContainer.setAttachmentFolder(savedFolder);
         }
+
+        return acmContainer;
     }
 
-    private void setRestrictedFlagRecursively(Boolean restricted, AcmFolder folder)
+    private AcmFolder setRestrictedFlagRecursively(Boolean restricted, AcmFolder folder)
     {
         folder.setRestricted(restricted);
-        getFolderDao().save(folder);
+        folder = getFolderDao().save(folder);
 
         // set restricted flag to child folders
         List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
         for (AcmFolder subFolder : subfolders)
         {
-            setRestrictedFlagRecursively(restricted, subFolder);
+            AcmFolder updatedSubfolder = setRestrictedFlagRecursively(restricted, subFolder);
+            // replace subfolder with updated instance
+            subfolders.set(subfolders.indexOf(subFolder), updatedSubfolder);
         }
 
         // set restricted flag to files in the folder
@@ -288,6 +317,8 @@ public class EcmFileParticipantService
             file.setRestricted(restricted);
             getFileDao().save(file);
         });
+
+        return folder;
     }
 
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
