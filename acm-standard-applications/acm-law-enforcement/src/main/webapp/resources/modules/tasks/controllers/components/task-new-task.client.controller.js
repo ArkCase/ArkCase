@@ -63,11 +63,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
             $scope.userName = $scope.userFullName;
             $scope.config.data.assignee = $scope.userId;
-            $scope.config.data.taskStartDate = new Date();
-            $scope.config.data.taskStartDate.setHours(0);
-            $scope.config.data.taskStartDate.setMinutes(0);
-            $scope.config.data.taskStartDate.setSeconds(0);
-            $scope.config.data.taskStartDate.setMilliseconds(0);
+            $scope.config.data.taskStartDate = moment().startOf('day')._d;
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
 
