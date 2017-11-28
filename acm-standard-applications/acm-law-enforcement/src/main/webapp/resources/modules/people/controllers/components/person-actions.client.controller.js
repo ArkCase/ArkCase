@@ -22,6 +22,14 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
+            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
+                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+            }
+
+            $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
+                $scope.$emit("report-tree-updated");
+                $scope.active = "fa fa-stop";
+            });
         };
 
         $scope.onClickRestrict = function ($event) {
@@ -47,11 +55,13 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
+            $scope.active = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -75,6 +85,7 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
+                        $scope.active = "fa fa-stop";
                         return error;
                     }
                 );

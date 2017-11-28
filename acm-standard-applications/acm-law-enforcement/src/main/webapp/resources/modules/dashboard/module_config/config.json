@@ -380,7 +380,8 @@
     "cases",
     "relOrganizations",
     "tags",
-    "related"
+    "related",
+    "approvers"
   ],
   "structures": [
     {
