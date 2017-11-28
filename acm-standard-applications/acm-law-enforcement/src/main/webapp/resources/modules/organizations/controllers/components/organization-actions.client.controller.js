@@ -19,20 +19,20 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
             }
         });
 
-        $scope.isInActivationMode = false;
+        var activationMode = false;
         
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
             $scope.$bus.subscribe("object.changed/ORGANIZATION/" + $scope.objectInfo.organizationId, function () {
-                if ($scope.isInActivationMode) {
+                if (activationMode) {
                     $scope.$emit("report-tree-updated");
                     $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 }
             });
             if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin") {
                 $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
-                $scope.isInActivationMode = false;
+                activationMode = false;
             }
         };
 
@@ -85,7 +85,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
-                        $scope.isInActivationMode = true;
+                        $scope.activationMode = true;
                         return objectInfo;
                     }
                     , function (error) {
