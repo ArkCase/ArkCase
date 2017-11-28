@@ -15,17 +15,11 @@ public class AcmRoleToGroupMapping
 {
     private Map<String, String> roleToGroupMap;
 
-    public AcmRoleToGroupMapping(Map<String, String> roleToGroupMap)
-    {
-        this.roleToGroupMap = roleToGroupMap;
-    }
-
-    public Map<String, String> reloadRoleToGroupMap(Properties properties)
+    public void reloadRoleToGroupMap(Properties properties)
     {
         roleToGroupMap = properties.entrySet()
                 .stream()
                 .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
-        return roleToGroupMap;
     }
 
     public Map<String, List<String>> getGroupToRolesMap()
@@ -64,4 +58,8 @@ public class AcmRoleToGroupMapping
                 );
     }
 
+    public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
+    {
+        this.roleToGroupMap = roleToGroupMap;
+    }
 }
