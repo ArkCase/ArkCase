@@ -19,21 +19,21 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
             }
         });
 
-        $scope.inActivationMode = false;
+        var activationMode = false;
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
 
             $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
-                if ($scope.inActivationMode) {
+                if (activationMode) {
                     $scope.$emit("report-tree-updated");
                     $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
                 }
             });
             if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin"){
                 $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
-                $scope.inActivationMode = false;
+                activationMode = false;
             }
         };
 
@@ -86,7 +86,7 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
-                        $scope.inActivationMode = true;
+                        $scope.activationMode = true;
                         return objectInfo;
                     }
                     , function (error) {
