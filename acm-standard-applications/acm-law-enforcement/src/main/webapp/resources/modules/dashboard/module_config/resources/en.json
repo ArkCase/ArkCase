@@ -348,6 +348,11 @@
         "title": "Related People",
         "description": "Display related people",
         "noDataMessage": "Currently no related people to display"
+      },
+      "approvers": {
+        "title": "Approvers",
+        "description": "Displays Approvers",
+        "noDataMessage": "Currently there are no approvers to display"
       }
     }
   },
