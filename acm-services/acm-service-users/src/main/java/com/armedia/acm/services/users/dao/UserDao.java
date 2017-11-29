@@ -1,25 +1,10 @@
 package com.armedia.acm.services.users.dao;
 
-import com.armedia.acm.data.AcmAbstractDao;
-import com.armedia.acm.services.config.model.AcmConfig;
-import com.armedia.acm.services.users.model.AcmRole;
-import com.armedia.acm.services.users.model.AcmRoleType;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
-import com.armedia.acm.services.users.model.AcmUserRolePrimaryKey;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
-import com.armedia.acm.services.users.model.AcmUserState;
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -28,12 +13,26 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.config.model.AcmConfig;
+import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.model.AcmRoleType;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserRoleState;
+import com.armedia.acm.services.users.model.AcmUserState;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.Option;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
 public class UserDao extends AcmAbstractDao<AcmUser>
 {
@@ -58,7 +57,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             Configuration configuration = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
                     .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
             DEFAULT_LOCALE_CODE = JsonPath.using(configuration).parse(settings).read("$.defaultLocale", String.class);
-        } else
+        }
+        else
         {
             DEFAULT_LOCALE_CODE = Locale.getDefault().getLanguage();
         }
@@ -76,7 +76,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (existingUser != null)
             {
                 acmUser.setLang(existingUser.getLang());
-            } else
+            }
+            else
             {
                 // set default lang
                 acmUser.setLang(DEFAULT_LOCALE_CODE);
@@ -138,7 +139,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
             if (found != null && found.get() != null)
             {
                 return (AcmUser) found.get();
-            } else
+            }
+            else
             {
                 AcmUser user = findByUserId(userId);
                 if (user != null)
@@ -218,31 +220,6 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return in;
     }
 
-    public AcmUserRole saveAcmUserRole(AcmUserRole userRole)
-    {
-        AcmUserRolePrimaryKey key = new AcmUserRolePrimaryKey();
-        key.setRoleName(userRole.getRoleName());
-        key.setUserId(userRole.getUserId());
-        AcmUserRole existing = getEntityManager().find(AcmUserRole.class, key);
-
-        if (existing == null)
-        {
-            log.debug("Saving [{}] AcmUserRole [{}] for User [{}]", userRole.getUserRoleState(), userRole.getRoleName(),
-                    userRole.getUserId());
-            getEntityManager().persist(userRole);
-            return userRole;
-        }
-
-        if (!Objects.equals(existing.getUserRoleState(), userRole.getUserRoleState()))
-        {
-            log.debug("Change AcmUserRole [{}] for User [{}] to [{}]", userRole.getRoleName(), userRole.getUserId(),
-                    userRole.getUserRoleState());
-            existing.setUserRoleState(userRole.getUserRoleState());
-        }
-
-        return userRole;
-    }
-
     @Transactional
     public AcmUser markUserInvalid(String id)
     {
@@ -319,8 +296,8 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         }
         catch (NonUniqueResultException e)
         {
-            log.warn("There is no unique user found with userId [{}] and email [{}]. More than one user has this name or address",
-                    userId, email);
+            log.warn("There is no unique user found with userId [{}] and email [{}]. More than one user has this name or address", userId,
+                    email);
         }
         catch (Exception e)
         {
