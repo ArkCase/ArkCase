@@ -62,7 +62,8 @@
           "details",
           "person",
           "summary",
-          "tags"
+          "tags",
+          "approvers"
         ]
       },
       {
@@ -95,6 +96,14 @@
         "icon": "fa fa-tags",
         "components": [
           "tags"
+        ]
+        },
+      {
+        "type": "p/COSTSHEET/approvers",
+        "label": "costTracking.tree.nodeTypes.approvers.label",
+        "icon": "fa fa-users",
+        "components": [
+          "approvers"
         ]
       },
       {
@@ -177,6 +186,22 @@
               "displayName": "costTracking.comp.tags.table.columns.createdBy",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
+            }
+          ]
+        },
+        {
+          "id": "approvers",
+          "type": "component",
+          "columnDefs": [
+            {
+              "name": "fullName",
+              "displayName": "costTracking.comp.approvers.table.columns.fullName",
+              "headerCellFilter": "translate"
+            },
+            {
+              "name": "userId",
+              "displayName": "costTracking.comp.approvers.table.columns.userId",
+              "headerCellFilter": "translate"
             }
           ]
         }
@@ -324,6 +349,34 @@
       ],
       "filters": "\"Object Type\": TAG",
       "filterName": "Object Type"
+    },
+    {
+      "id": "approvers",
+      "title": "costTracking.comp.approvers.title",
+      "icon": "fa fa-users",
+      "enabled": true,
+      "configurable": true,
+      "type": "grid",
+      "enableFiltering": true,
+      "paginationPageSizes": [
+        5,
+        10,
+        20,
+        50
+      ],
+      "paginationPageSize": 5,
+      "columnDefs": [
+        {
+          "name": "fullName",
+          "displayName": "costTracking.comp.approvers.table.columns.fullName",
+          "headerCellFilter": "translate"
+        },
+        {
+          "name": "userId",
+          "displayName": "costTracking.comp.approvers.table.columns.userId",
+          "headerCellFilter": "translate"
+        }
+      ]
     }
   ]
 }

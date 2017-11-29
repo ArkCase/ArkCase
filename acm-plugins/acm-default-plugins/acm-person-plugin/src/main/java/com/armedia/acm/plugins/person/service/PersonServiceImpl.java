@@ -9,11 +9,14 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Identification;
@@ -24,7 +27,7 @@ import com.armedia.acm.plugins.person.model.xml.FrevvoPerson;
 import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-
+import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
@@ -35,6 +38,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -72,6 +76,7 @@ public class PersonServiceImpl implements PersonService
     private FolderAndFilesUtils folderAndFilesUtils;
     private PersonEventPublisher personEventPublisher;
     private ObjectConverter objectConverter;
+    private EcmTikaFileService ecmTikaFileService;
 
     @Override
     public Person get(Long id)
@@ -160,8 +165,7 @@ public class PersonServiceImpl implements PersonService
                     String value = identification.getIdentificationNumber();
 
                     person = (Person) FrevvoFormUtils.set(person, key, value);
-                }
-                catch (Exception e)
+                } catch (Exception e)
                 {
                     log.debug(
                             "Silent catch of exception while setting value of the property in the object Person. The property name maybe not exist, but execution should go forward.");
@@ -214,7 +218,7 @@ public class PersonServiceImpl implements PersonService
     @Override
     public EcmFile insertImageForPerson(Person person, MultipartFile image, boolean isDefault, String description, Authentication auth)
             throws IOException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException,
-            AcmObjectNotFoundException, PipelineProcessException
+            AcmObjectNotFoundException, PipelineProcessException, AcmFileTypesException
     {
         Objects.requireNonNull(person, "Person not found.");
         if (person.getContainer() == null)
@@ -223,6 +227,23 @@ public class PersonServiceImpl implements PersonService
         }
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
+
+
+        try
+        {
+            EcmTikaFile ecmTikaFile = ecmTikaFileService.detectFileUsingTika(image.getBytes(), image.getName());
+            if (!ecmTikaFile.getContentType().startsWith("image"))
+            {
+                throw new AcmFileTypesException("File is not a type of an image, got " + ecmTikaFile.getContentType());
+            }
+        } catch (SAXException e)
+        {
+            throw new AcmFileTypesException("Error parsing contentType", e);
+        } catch (TikaException e)
+        {
+            throw new AcmFileTypesException("Error parsing contentType", e);
+        }
+
 
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(), PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
                 PersonOrganizationConstants.PERSON_PICTURE_CATEGORY, image.getInputStream(), image.getContentType(),
@@ -263,8 +284,7 @@ public class PersonServiceImpl implements PersonService
             metadata.setFileName(fileName);
             uploaded = ecmFileService.upload(auth, PersonOrganizationConstants.PERSON_OBJECT_TYPE, personId,
                     picturesFolderObj.getCmisFolderId(), uniqueFileName, image.getInputStream(), metadata);
-        }
-        else
+        } else
         {
             uploaded = ecmFileService.updateFile(metadata);
         }
@@ -342,12 +362,9 @@ public class PersonServiceImpl implements PersonService
     /**
      * Validates the {@link PersonOrganizationAssociation}.
      *
-     * @param person
-     *            the {@link Person} to validate
-     * @throws AcmCreateObjectFailedException
-     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
-     * @throws AcmDuplicatePersonAssociationException
-     *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @param person the {@link Person} to validate
+     * @throws AcmCreateObjectFailedException when at least one of the {@link PersonOrganizationAssociation} is not valid.
+     * @throws AcmUpdateObjectFailedException when at least one of the {@link PersonOrganizationAssociation} is not valid.
      */
     private void validateOrganizationAssociations(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
@@ -392,12 +409,9 @@ public class PersonServiceImpl implements PersonService
     /**
      * save person data
      *
-     * @param person
-     *            person data
-     * @param pictures
-     *            person pictures
-     * @param authentication
-     *            authentication
+     * @param person         person data
+     * @param pictures       person pictures
+     * @param authentication authentication
      * @return Person saved person
      * @throws PipelineProcessException
      */
@@ -427,14 +441,15 @@ public class PersonServiceImpl implements PersonService
                     {
                         hasDefaultPicture = true;
                     }
-                }
-                catch (IOException e)
+                } catch (IOException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
-                }
-                catch (AcmObjectNotFoundException e)
+                } catch (AcmObjectNotFoundException e)
                 {
                     log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId());
+                } catch (AcmFileTypesException e)
+                {
+                    log.error("Error uploading picture [{}] to person id [{}]", picture, person.getId(), e);
                 }
             }
         }
@@ -491,8 +506,7 @@ public class PersonServiceImpl implements PersonService
     }
 
     /**
-     * @param personEventPublisher
-     *            the personEventPublisher to set
+     * @param personEventPublisher the personEventPublisher to set
      */
     public void setPersonEventPublisher(PersonEventPublisher personEventPublisher)
     {
@@ -517,5 +531,10 @@ public class PersonServiceImpl implements PersonService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public void setEcmTikaFileService(EcmTikaFileService ecmTikaFileService)
+    {
+        this.ecmTikaFileService = ecmTikaFileService;
     }
 }

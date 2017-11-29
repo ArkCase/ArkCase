@@ -37,6 +37,12 @@ angular.module('dashboard.participants', ['adf.provider'])
                     validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
                 },
                 {
+                    name: "MY_DOC_REPO",
+                    configName: "my-documents",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    validateInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo
+                },
+                {
                     name: "PERSON",
                     configName: "people",
                     getInfo: PersonInfoService.getPersonInfo,
