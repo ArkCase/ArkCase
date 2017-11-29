@@ -9,7 +9,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             });
 
             $scope.selectExisting = 0;
-            $scope.types = params.types;
+            $scope.types = Util.isEmpty(params.types) ? [] : params.types;
             $scope.showDescription = params.showDescription;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicatePersonRoleError = false;
@@ -23,6 +23,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
             //if not set, than use 'true' as default
             $scope.selectExistingEnabled = ('selectExistingEnabled' in params) && params.selectExistingEnabled != null ? params.selectExistingEnabled : true;
+            //if not set, than use 'false' as default
+            $scope.hideAssociationTypes = Util.isEmpty(params.hideAssociationTypes) ? false : params.hideAssociationTypes;
 
             $scope.personId = params.personId;
             $scope.editMode = !!params.personId;
@@ -32,6 +34,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.description = params.description;
             $scope.hideNoField = true;
             $scope.skipPeopleIdsInSearch = params.skipPeopleIdsInSearch;
+            $scope.isValid = true;
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
@@ -52,8 +55,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.onClickOk = function () {
                 var retValue = {
                     personId: $scope.personId,
-                    type: $scope.type.key,
-                    inverseType: $scope.type.inverseKey,
+                    type: Util.isEmpty($scope.type) ? "" : $scope.type.key,
+                    inverseType: Util.isEmpty($scope.type) ? "" : $scope.type.inverseKey,
                     person: $scope.person,
                     personImages: $scope.personImages,
                     isNew: $scope.isNew
@@ -78,9 +81,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
 
             $scope.pickPerson = function () {
                 $scope.isNew = false;
-                $scope.personId = '';
-                $scope.personName = '';
-                $scope.person = '';
 
                 var params = {};
                 params.header = $translate.instant("common.dialogPersonPicker.header");
@@ -109,6 +109,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                     }
                 });
                 modalInstance.result.then(function (selected) {
+                    $scope.isValid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.personId = selected.object_id_s;
                         $scope.personName = selected.name;
@@ -118,9 +119,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
 
             $scope.addNewPerson = function () {
                 $scope.isNew = true;
-                $scope.personId = '';
-                $scope.personName = '';
-                $scope.person = '';
 
                 var modalInstance = $modal.open({
                     scope: $scope,
@@ -131,6 +129,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 });
 
                 modalInstance.result.then(function (data) {
+                    $scope.isValid = false;
                     $scope.personId = '';
                     $scope.personName = data.person.givenName + ' ' + data.person.familyName;
                     $scope.person = data.person;
