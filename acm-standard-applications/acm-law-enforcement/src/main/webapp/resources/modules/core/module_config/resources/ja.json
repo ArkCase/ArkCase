@@ -47,8 +47,8 @@
         "noi": "調査の通知",
         "sig": "SF86署名",
         "wir": "目撃者のインタビューリクエスト",
-        "draw": "Engineer Drawing",
-        "other": "Other"
+        "draw": "エンジニア図面",
+        "other": "その他"
       },
       "identificationTypes": {
         "ssn": "SSN",
