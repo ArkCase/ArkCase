@@ -11,7 +11,7 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.hasSubCompany = false;
             $scope.newOrganizationPicked = null;
             $scope.selectExisting = 0;
-            $scope.types = params.types;
+            $scope.types = Util.isEmpty(params.types) ? [] : params.types;
             $scope.showDescription = params.showDescription;
             $scope.showSetPrimary = params.showSetPrimary;
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
@@ -31,6 +31,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             }
             //if not set, than use 'true' as default
             $scope.addNewEnabled = ('addNewEnabled' in params) && params.addNewEnabled != null ? params.addNewEnabled : true;
+            //if not set, than use 'false' as default
+            $scope.hideAssociationTypes = Util.isEmpty(params.hideAssociationTypes) ? false : params.hideAssociationTypes;
             if (!Util.isEmpty(params.organizationId)) {
                 $scope.isEditParent = true;
             }

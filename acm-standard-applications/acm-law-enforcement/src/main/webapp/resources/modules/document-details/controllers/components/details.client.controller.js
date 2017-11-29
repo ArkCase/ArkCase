@@ -126,7 +126,8 @@ angular.module('document-details').controller('Document.DetailsController',
 
         $scope.addOrganization = function () {
             var params = {};
-            params.types = $scope.organizationTypes;
+            params.organizationValue = $scope.details.organization;
+            params.hideAssociationTypes = true;
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -148,7 +149,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = saved.organizationId;
                         association.targetType = 'ORGANIZATION';
-                        association.targetSubtype = data.type;
+                        association.targetSubtype = "REFERENCE";
                         $scope.details.ecmFile.organizationAssociation = association;
                         $scope.details.organization = saved.organizationValue;
                     });
@@ -157,7 +158,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = organization.organizationId;
                         association.targetType = 'ORGANIZATION';
-                        association.targetSubtype = data.type;
+                        association.targetSubtype = "REFERENCE";
                         $scope.details.ecmFile.organizationAssociation = association;
                         $scope.details.organization = organization.organizationValue;
                     })
@@ -167,7 +168,8 @@ angular.module('document-details').controller('Document.DetailsController',
 
         $scope.addPerson = function () {
             var params = {};
-            params.types = $scope.personTypes;
+            params.personName = $scope.details.person;
+            params.hideAssociationTypes = true;
 
             var modalInstance = $modal.open({
                 scope: $scope,
@@ -190,7 +192,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = saved.id;
                         association.targetType = 'PERSON';
-                        association.targetSubtype = data.type;
+                        association.targetSubtype = "REFERENCE";
                         $scope.details.ecmFile.personAssociation = association;
                         $scope.details.person = fullName;
                     });
@@ -200,7 +202,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = person.id;
                         association.targetType = 'PERSON';
-                        association.targetSubtype = data.type
+                        association.targetSubtype = "REFERENCE";
                         $scope.details.ecmFile.personAssociation = association;
                         $scope.details.person = fullName;
                     })
