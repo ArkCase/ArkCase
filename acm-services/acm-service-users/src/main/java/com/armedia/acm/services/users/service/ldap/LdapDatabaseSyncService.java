@@ -82,16 +82,6 @@ public class LdapDatabaseSyncService
         });
     }
 
-    @Transactional
-    public void saveAcmUserRoles(List<AcmUserRole> acmUserRoles)
-    {
-        log.info("Saving AcmUserRoles [{}]", acmUserRoles.size());
-        acmUserRoles.forEach(userRole -> {
-            log.info("Saving AcmUserRole [{}] for user [{}]", userRole.getRoleName(), userRole.getUserId());
-            getUserDao().saveAcmUserRole(userRole);
-        });
-    }
-
     public UserDao getUserDao()
     {
         return userDao;

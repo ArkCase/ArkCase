@@ -35,13 +35,15 @@ public class AcmGroupsSyncResult
         this.deletedGroups = new ArrayList<>();
     }
 
-    public Map<String, Set<AcmGroup>> sync(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups,
-                                           Map<String, AcmUser> syncedUsers)
+    public void sync(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups, Map<String, AcmUser> syncedUsers)
     {
-        setUserAndGroupsFromGroupMembers(ldapGroups, syncedUsers);
+        Map<String, AcmUser> syncedUsersByDn = getUsersByDnMap(syncedUsers);
+
+        setUserAndGroupsFromGroupMembers(ldapGroups, syncedUsersByDn);
         setAscendants(ldapGroups);
 
         Map<String, AcmGroup> acmGroupsByName = getGroupsByNameMap(acmGroups);
+
         newGroups = findAndCreateNewGroups(ldapGroups, acmGroupsByName);
         log.debug("[{}] new groups to be synced", newGroups.size());
         modifiedGroups = findAndUpdateModifiedGroups(ldapGroups, acmGroupsByName);
@@ -51,10 +53,10 @@ public class AcmGroupsSyncResult
                 .collect(Collectors.toMap(LdapGroup::getName, Function.identity()));
 
         Map<String, AcmGroup> modifiedGroupsByName = getGroupsByNameMap(modifiedGroups);
-        addAndRemoveUserMembershipForExistingGroups(ldapGroups, syncedUsers, acmGroupsByName, modifiedGroupsByName);
+        addAndRemoveUserMembershipForExistingGroups(ldapGroups, syncedUsersByDn, acmGroupsByName, modifiedGroupsByName);
         addAndRemoveGroupMembershipForExistingGroups(ldapGroupsByName, acmGroupsByName, modifiedGroupsByName);
 
-        addUserMembershipForNewGroups(ldapGroupsByName, syncedUsers);
+        addUserMembershipForNewGroups(ldapGroupsByName, syncedUsersByDn);
         // now acmGroupsByName map can include new groups
         newGroups.forEach(acmGroup -> acmGroupsByName.put(acmGroup.getName(), acmGroup));
         addGroupMembershipForNewGroups(ldapGroupsByName, acmGroupsByName, modifiedGroupsByName);
@@ -68,8 +70,6 @@ public class AcmGroupsSyncResult
 
         // changedGroupsMap has been updated
         modifiedGroups = new ArrayList<>(modifiedGroupsByName.values());
-
-        return getGroupNamesByUserIdMap(acmGroupsByName);
     }
 
     public void setAscendants(List<LdapGroup> ldapGroups)
@@ -82,10 +82,9 @@ public class AcmGroupsSyncResult
         });
     }
 
-    private void setUserAndGroupsFromGroupMembers(List<LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsers)
+    private void setUserAndGroupsFromGroupMembers(List<LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsersByDn)
     {
         log.trace("Distinguish user and group members for each ldap group");
-        Map<String, AcmUser> syncedUsersByDn = getUsersByDnMap(syncedUsers);
 
         Map<String, LdapGroup> ldapGroupsByDnMap = ldapGroups.stream()
                 .collect(Collectors.toMap(LdapGroup::getDistinguishedName, Function.identity()));
@@ -159,7 +158,8 @@ public class AcmGroupsSyncResult
         });
     }
 
-    private void addAndRemoveGroupMembershipForExistingGroups(Map<String, LdapGroup> ldapGroups, Map<String, AcmGroup> acmGroups,
+    private void addAndRemoveGroupMembershipForExistingGroups(Map<String, LdapGroup> ldapGroups,
+                                                              Map<String, AcmGroup> acmGroups,
                                                               Map<String, AcmGroup> updatedGroups)
     {
         Predicate<LdapGroup> groupExists = it -> acmGroups.containsKey(it.getName());
@@ -209,11 +209,9 @@ public class AcmGroupsSyncResult
         });
     }
 
-    private void addAndRemoveUserMembershipForExistingGroups(List<LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsers,
+    private void addAndRemoveUserMembershipForExistingGroups(List<LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsersByDn,
                                                              Map<String, AcmGroup> acmGroups, Map<String, AcmGroup> updatedGroups)
     {
-        Map<String, AcmUser> dnUserMap = getUsersByDnMap(syncedUsers);
-
         Predicate<LdapGroup> groupExists = it -> acmGroups.containsKey(it.getName());
 
         ldapGroups.stream()
@@ -226,7 +224,7 @@ public class AcmGroupsSyncResult
                     Set<String> newUserMembersDns = ldapGroup.getNewUserMembers(groupUserMemberDns);
                     log.debug("Found [{}] new users in group [{}]", newUserMembersDns.size(), groupForUpdate.getName());
                     List<AcmUser> acmUsers = newUserMembersDns.stream()
-                            .map(dnUserMap::get)
+                            .map(syncedUsersByDn::get)
                             .collect(Collectors.toList());
 
                     acmUsers.forEach(acmUser -> {
@@ -238,7 +236,7 @@ public class AcmGroupsSyncResult
                     Set<String> removedUsers = ldapGroup.groupRemovedUsers(groupUserMemberDns);
                     log.debug("Found [{}] removed users from [{}] group", removedUsers.size(), groupForUpdate.getName());
                     List<AcmUser> removedAcmUsers = removedUsers.stream()
-                            .map(dnUserMap::get)
+                            .map(syncedUsersByDn::get)
                             .collect(Collectors.toList());
 
                     removedAcmUsers.forEach(acmUser -> {
@@ -277,7 +275,7 @@ public class AcmGroupsSyncResult
                 .collect(Collectors.toList());
     }
 
-    private List<AcmGroup> findDeletedGroups(List<LdapGroup> ldapGroups, List<AcmGroup> currentGroups)
+    private List<AcmGroup> findDeletedGroups(List<LdapGroup> ldapGroups, List<AcmGroup> acmGroups)
     {
         Set<String> ldapGroupNames = ldapGroups.stream()
                 .map(LdapGroup::getName)
@@ -286,7 +284,7 @@ public class AcmGroupsSyncResult
         Predicate<AcmGroup> notInLdap = it -> !ldapGroupNames.contains(it.getName());
         Predicate<AcmGroup> isActive = it -> it.getStatus() == AcmGroupStatus.ACTIVE;
 
-        List<AcmGroup> deletedGroups = currentGroups.stream()
+        List<AcmGroup> deletedGroups = acmGroups.stream()
                 .filter(notInLdap.and(isActive))
                 .collect(Collectors.toList());
 
@@ -298,15 +296,13 @@ public class AcmGroupsSyncResult
         return deletedGroups;
     }
 
-    private void addUserMembershipForNewGroups(Map<String, LdapGroup> ldapGroups, Map<String, AcmUser> currentUsers)
+    private void addUserMembershipForNewGroups(Map<String, LdapGroup> ldapGroups, Map<String, AcmUser> syncedUsersByDn)
     {
-        Map<String, AcmUser> acmUserByDn = getUsersByDnMap(currentUsers);
-
         newGroups.forEach(acmGroup -> {
             LdapGroup ldapGroup = ldapGroups.get(acmGroup.getName());
             ldapGroup.getMemberUserDns()
                     .forEach(userDn -> {
-                        AcmUser acmUser = acmUserByDn.get(userDn);
+                        AcmUser acmUser = syncedUsersByDn.get(userDn);
                         log.trace("Add user member [{}] to group [{}]", acmUser.getUserId(), acmGroup.getName());
                         acmGroup.addUserMember(acmUser);
                     });
@@ -316,8 +312,8 @@ public class AcmGroupsSyncResult
     private void removeDeletedGroupsUserMembership(List<AcmGroup> deletedGroups)
     {
         deletedGroups.forEach(group -> {
-            log.debug("Found [{}] users to remove from deleted group [{}]", group.getMemberGroups().size(), group.getName());
-            group.setUserMembers(new HashSet<>());
+            log.debug("Found [{}] users to remove from deleted group [{}]", group.getUserMembers().size(), group.getName());
+            group.getUserMembers().clear();
         });
     }
 
@@ -328,8 +324,8 @@ public class AcmGroupsSyncResult
     {
         deletedGroups.forEach(group -> {
             setGroupAscendants(group, modifiedGroupsByName, acmGroupsByName, ldapGroupMap);
-            group.setMemberGroups(new HashSet<>());
-            group.setMemberOfGroups(new HashSet<>());
+            group.getMemberGroups().clear();
+            group.getMemberOfGroups().clear();
             group.setAscendantsList(null);
         });
     }
@@ -342,24 +338,6 @@ public class AcmGroupsSyncResult
             return updatedGroups.get(groupName);
         }
         return acmGroups.get(groupName);
-    }
-
-    /**
-     * Transforms a map of groups into map of (user -> Set<AcmGroup.name>)
-     *
-     * @param groupsByIdMap group.id -> group map
-     * @return user -> Set<group> map
-     */
-    private Map<String, Set<AcmGroup>> getGroupNamesByUserIdMap(Map<String, AcmGroup> groupsByIdMap)
-    {
-        return groupsByIdMap.values()
-                .stream()
-                .filter(acmGroup -> acmGroup.getUserMembers() != null)
-                .flatMap(acmGroup -> acmGroup.getUserMembers().stream()
-                        .map(acmUser -> new AbstractMap.SimpleEntry<>(acmUser, acmGroup))
-                )
-                .collect(Collectors.groupingBy(it -> it.getKey().getUserId(),
-                        Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toSet())));
     }
 
     public List<AcmGroup> getNewGroups()

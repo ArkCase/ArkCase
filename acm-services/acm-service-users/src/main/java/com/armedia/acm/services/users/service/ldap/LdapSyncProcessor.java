@@ -34,13 +34,9 @@ public class LdapSyncProcessor
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
-        Map<String, Set<AcmGroup>> userGroupsMap = acmGroupsSyncResult.sync(ldapGroups, acmGroups, acmSyncedUsers);
+        acmGroupsSyncResult.sync(ldapGroups, acmGroups, acmSyncedUsers);
 
         Map<String, Set<String>> roleToGroup = roleToGroupConfig.getRoleToGroupsMap();
-        Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
-
-        List<AcmUserRole> acmUserRoles = userDao.findAllUserRoles();
-        AcmUserRolesSyncResult acmUserRolesSyncResult = new AcmUserRolesSyncResult(groupToRoleMap, userGroupsMap, acmUserRoles);
 
         ldapDatabaseSyncService.saveUsers(acmUsersSyncResult);
 
@@ -53,8 +49,6 @@ public class LdapSyncProcessor
                 .map(AcmGroup::getName)
                 .collect(Collectors.toList());
         ldapDatabaseSyncService.saveAcmRoles(newAcmGroups, AcmRoleType.LDAP_GROUP);
-
-        ldapDatabaseSyncService.saveAcmUserRoles(acmUserRolesSyncResult.getAcmUserRoles());
     }
 
     public void setUserDao(UserDao userDao)
