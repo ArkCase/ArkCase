@@ -535,5 +535,9 @@
             <column name="cm_ascendants" type="VARCHAR(4000)"/>
         </addColumn>
     </changeSet>
+    
+    <changeSet id="32-drop-acm_user_role-table" author="lazo.lazarev">
+        <dropTable tableName="acm_user_role" cascadeConstraints="true"/>
+    </changeSet>
 
 </databaseChangeLog>
