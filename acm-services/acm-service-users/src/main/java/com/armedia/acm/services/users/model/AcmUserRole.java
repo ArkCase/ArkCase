@@ -8,7 +8,6 @@ import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import java.util.Objects;
 
 @Entity
 @Table(name = "acm_user_role")
