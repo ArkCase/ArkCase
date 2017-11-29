@@ -171,12 +171,12 @@ public class CorrespondenceGenerator
             String unit = idArray.length > 3 ? idArray[3] : "";
             int unitInInt = getUnitInInt(unit);
 
-            if ("PLUS".equalsIgnoreCase(action))
+            if ("PLUS".equalsIgnoreCase(action) && unitInInt != 0)
             {
                 // Maybe this is not necessary, but just to be sure that there is a PLUS or MINUS
                 amount = Math.abs(amount);
             }
-            else if ("MINUS".equalsIgnoreCase(action))
+            else if ("MINUS".equalsIgnoreCase(action)  && unitInInt != 0)
             {
                 amount = Math.abs(amount)*(-1);
             }
