@@ -76,12 +76,20 @@
       }
     }
   },
+  "costTracking.comp.approvers": {
+    "title": "ja_Approvers",
+    "table.columns": {
+      "fullName": "ja_Full Name",
+      "userId": "ja_Username"
+    }
+  },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "詳細",
       "person.label": "人員",
       "summary.label": "費用",
-      "tags.label": "タグ"
+      "tags.label": "タグ",
+      "approvers.label": "ja_Approvers"
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",

@@ -33,7 +33,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (entry.then) {
                         entry.then(success, error);
                     } else {
-                        success.apply(this, [entry]);
+                        //sync the local helper-objbrowser cache with the value from the main frontend cache
+                        entry = that.data[key] = dataLoadFunc.apply(this, args);
+                        entry.then(function (data) {
+                            entry = that.data[key] = data;
+                            success.apply(this, [entry]);
+                            return entry;
+                        });
                     }
                 } else {
                     entry = that.data[key] = dataLoadFunc.apply(this, args);
