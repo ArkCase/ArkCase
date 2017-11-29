@@ -212,7 +212,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return allLdapGroupsInDirectory.getResultList();
     }
 
-    public List<AcmGroup> findGroupsWithUsersByType(AcmGroupType type)
+    public List<AcmGroup> findByTypeWithUsers(AcmGroupType type)
     {
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT DISTINCT acmGroup "
                 + "FROM AcmGroup acmGroup "
@@ -222,7 +222,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return query.getResultList();
     }
 
-    public List<AcmGroup> findGroupsByStatusAndType(AcmGroupStatus status, AcmGroupType type)
+    public List<AcmGroup> findByStatusAndType(AcmGroupStatus status, AcmGroupType type)
     {
         TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup "
                 + "FROM AcmGroup acmGroup "
