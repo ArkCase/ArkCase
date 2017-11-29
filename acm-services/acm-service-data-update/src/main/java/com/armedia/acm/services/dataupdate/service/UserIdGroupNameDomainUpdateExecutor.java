@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,16 +217,21 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         List<AcmGroup> adHocGroups = groupDao.findByTypeWithUsers(AcmGroupType.ADHOC_GROUP);
 
         log.debug("Updating user members for 'ADHOC' groups");
-        adHocGroups.forEach(group -> {
-            Set<AcmUser> userMembers = group.getUserMembers();
-            group.getUserMembers().clear();
-            userMembers.forEach(user -> {
-                AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
-                group.addUserMember(userUpdateHolder.getNewUser());
-                log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
-            });
-            groupDao.save(group);
-        });
+        adHocGroups.stream()
+                .filter(group -> !group.getUserMembers().isEmpty())
+                .forEach(group -> {
+                    Set<AcmUser> userMembers = group.getUserMembers();
+                    group.setUserMembers(new HashSet<>());
+                    userMembers.forEach(user -> {
+                        if (userHolderByOldId.containsKey(user.getUserId()))
+                        {
+                            AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
+                            group.addUserMember(userUpdateHolder.getNewUser());
+                            log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
+                        }
+                    });
+                    groupDao.save(group);
+                });
 
         Map<String, String> newOldGroupName = getNewToOldGroupNames();
 
