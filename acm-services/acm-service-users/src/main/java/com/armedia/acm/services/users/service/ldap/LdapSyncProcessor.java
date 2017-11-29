@@ -5,7 +5,6 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRole;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
@@ -32,7 +31,7 @@ public class LdapSyncProcessor
         AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult(fullSync);
         Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers);
 
-        List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
+        List<AcmGroup> acmGroups = groupDao.findLdapGroupsWithUsersByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
         acmGroupsSyncResult.sync(ldapGroups, acmGroups, acmSyncedUsers);
 

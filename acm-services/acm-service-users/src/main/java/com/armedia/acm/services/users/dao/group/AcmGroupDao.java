@@ -134,9 +134,10 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user");
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user",
+                AcmGroup.class);
         query.setParameter("user", user);
-        return (List<AcmGroup>) query.getResultList();
+        return query.getResultList();
     }
 
     private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
@@ -199,38 +200,37 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return acmGroup;
     }
 
-    public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
+    public List<AcmGroup> findLdapGroupsWithUsersByDirectory(String directoryName)
     {
         TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
                 createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
-                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName", AcmGroup.class);
-        allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
+                                + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
+                                + "AND acmGroup.directoryName = :directoryName",
+                        AcmGroup.class);
+       // allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
     }
 
-    public List<AcmGroup> findByDirectoryAndStatusAndType(String directoryName, AcmGroupStatus status, AcmGroupType type)
+    public List<AcmGroup> findGroupsWithUsersByType(AcmGroupType type)
     {
-        TypedQuery<AcmGroup> allValidLdapGroupsInDirectory = getEm().
-                createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
-                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName"
-                        + " AND acmGroup.status = :status", AcmGroup.class);
-        allValidLdapGroupsInDirectory.setParameter("groupType", type);
-        allValidLdapGroupsInDirectory.setParameter("directoryName", directoryName);
-        allValidLdapGroupsInDirectory.setParameter("status", status);
-        return allValidLdapGroupsInDirectory.getResultList();
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT DISTINCT acmGroup "
+                + "FROM AcmGroup acmGroup "
+                + "LEFT JOIN FETCH acmGroup.userMembers "
+                + "WHERE acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("groupType", type);
+        return query.getResultList();
     }
 
-    public void updateStateByDirectoryAndStatusAndType(String directoryName, AcmGroupStatus status, AcmGroupType type)
+    public List<AcmGroup> findGroupsByStatusAndType(AcmGroupStatus status, AcmGroupType type)
     {
-        Query markLdapGroupsDeleted = getEm()
-                .createQuery("UPDATE AcmGroup ag set ag.status = :status, ag.modified = :now "
-                        + "WHERE ag.directoryName = :directoryName AND ag.type = :type");
-        markLdapGroupsDeleted.setParameter("status", status);
-        markLdapGroupsDeleted.setParameter("now", new Date());
-        markLdapGroupsDeleted.setParameter("directoryName", directoryName);
-        markLdapGroupsDeleted.setParameter("type", type);
-        markLdapGroupsDeleted.executeUpdate();
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup "
+                + "FROM AcmGroup acmGroup "
+                + "WHERE acmGroup.status = :status "
+                + "AND acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("status", status);
+        query.setParameter("groupType", type);
+        return query.getResultList();
     }
 
     @Override
