@@ -213,7 +213,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         Map<String, AcmUserUpdateHolder> userHolderByOldId = userUpdateHolderSet.stream()
                 .collect(Collectors.toMap(AcmUserUpdateHolder::getOldId, Function.identity()));
 
-        List<AcmGroup> adHocGroups = groupDao.findGroupsWithUsersByType(AcmGroupType.ADHOC_GROUP);
+        List<AcmGroup> adHocGroups = groupDao.findByTypeWithUsers(AcmGroupType.ADHOC_GROUP);
 
         log.debug("Updating user members for 'ADHOC' groups");
         adHocGroups.forEach(group -> {
@@ -240,8 +240,8 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
     private Map<String, String> getNewToOldGroupNames()
     {
-        List<AcmGroup> activeLdapGroups = groupDao.findGroupsByStatusAndType(AcmGroupStatus.ACTIVE, AcmGroupType.LDAP_GROUP);
-        List<AcmGroup> inactiveLdapGroups = groupDao.findGroupsByStatusAndType(AcmGroupStatus.INACTIVE, AcmGroupType.LDAP_GROUP);
+        List<AcmGroup> activeLdapGroups = groupDao.findByStatusAndType(AcmGroupStatus.ACTIVE, AcmGroupType.LDAP_GROUP);
+        List<AcmGroup> inactiveLdapGroups = groupDao.findByStatusAndType(AcmGroupStatus.INACTIVE, AcmGroupType.LDAP_GROUP);
 
         Set<String> inactiveLdapGroupNames = inactiveLdapGroups.stream()
                 .map(AcmGroup::getName)
