@@ -9,19 +9,19 @@ angular.module('document-details').controller('Document.VersionHistoryController
         $scope.activeVersionTag = {};
         $scope.selectedRows = [];
 
-        var fileUpdateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + $scope.ecmFile.fileId;
-
-        $scope.$bus.subscribe(fileUpdateEvent, function (data) {
-            EcmService.getFile({fileId: data.objectId}).$promise.then(function (ecmFileInfo) {
-                updateVersionHistory(fileUpdateEvent, ecmFileInfo);
-            });
-        });
-
         function updateVersionHistory(event, documentDetails) {
             if (documentDetails.versions && documentDetails.versions.length) {
                 $scope.versions = documentDetails.versions;
                 $scope.activeVersionTag = documentDetails.activeVersionTag;
             }
+
+            var fileUpdateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + $scope.ecmFile.fileId;
+
+            $scope.$bus.subscribe(fileUpdateEvent, function (data) {
+                EcmService.getFile({fileId: data.objectId}).$promise.then(function (ecmFileInfo) {
+                    updateVersionHistory(fileUpdateEvent, ecmFileInfo);
+                });
+            });
         }
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
