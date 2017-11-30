@@ -149,7 +149,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = saved.organizationId;
                         association.targetType = 'ORGANIZATION';
-                        association.targetSubtype = "REFERENCE";
+                        association.associationType = "REFERENCE";
                         $scope.details.ecmFile.organizationAssociation = association;
                         $scope.details.organization = saved.organizationValue;
                     });
@@ -158,7 +158,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = organization.organizationId;
                         association.targetType = 'ORGANIZATION';
-                        association.targetSubtype = "REFERENCE";
+                        association.associationType = "REFERENCE";
                         $scope.details.ecmFile.organizationAssociation = association;
                         $scope.details.organization = organization.organizationValue;
                     })
@@ -192,7 +192,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = saved.id;
                         association.targetType = 'PERSON';
-                        association.targetSubtype = "REFERENCE";
+                        association.associationType = "REFERENCE";
                         $scope.details.ecmFile.personAssociation = association;
                         $scope.details.person = fullName;
                     });
@@ -202,7 +202,7 @@ angular.module('document-details').controller('Document.DetailsController',
                         var association = $scope.newAssociation();
                         association.targetId = person.id;
                         association.targetType = 'PERSON';
-                        association.targetSubtype = "REFERENCE";
+                        association.associationType = "REFERENCE";
                         $scope.details.ecmFile.personAssociation = association;
                         $scope.details.person = fullName;
                     })
@@ -220,6 +220,7 @@ angular.module('document-details').controller('Document.DetailsController',
                 targetId: null,
                 targetType: '',
                 targetSubtype: '',
+                associationType: '',
                 targetName: '',
                 targetTitle: '',
                 category: '',
