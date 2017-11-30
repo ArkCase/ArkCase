@@ -20,7 +20,11 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -146,13 +150,25 @@ public class DefaultFolderCompressor implements FolderCompressor
 
         List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
-
+        List<String> fileList = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("yyyy_M_d_k_m_s", Locale.ENGLISH);
         for (AcmObject obj : folderChildren)
         {
             String objectType = obj.getObjectType().toUpperCase();
+            /*
+            If filename is duplicate, we will have to rename it.
+            Otherwise, the zip file errors out.
+            Here we just append an underscore "_" and date the file was created
+             */
+            String fileName = EcmFile.class.cast(obj).getFileName();
+            String dateCreated = format.format(EcmFile.class.cast(obj).getCreated());
+            if(fileList.contains(fileName)){
+                fileName = fileName + "_" + dateCreated;
+            }
+            fileList.add(fileName);
             if (OBJECT_FILE_TYPE.equals(objectType))
             {
-                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, EcmFile.class.cast(obj).getFileName() + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
+                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, fileName + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
                 InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
                 copy(fileByteStream, zos);
             } else if (OBJECT_FOLDER_TYPE.equals(objectType))
