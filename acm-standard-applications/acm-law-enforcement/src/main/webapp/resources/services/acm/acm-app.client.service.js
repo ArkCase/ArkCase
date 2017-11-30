@@ -39,7 +39,7 @@ angular.module('services').factory('Acm.AppService', ['$location', 'Acm.StoreSer
                     var idxHome = str.indexOf("/home.html");
                     if (idxHost < idxHome) {
                         str = str.substring(idxHost, idxHome);
-                        var idxSlash = str.lastIndexOf("/");
+                        var idxSlash = str.indexOf("/");
                         appContext = (0 > idxSlash)? "/" : str.substring(idxSlash + 1);
                         cacheAppContext.set(appContext);
                     }
