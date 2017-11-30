@@ -1,7 +1,6 @@
 package com.armedia.acm.web.api;
 
 import com.armedia.acm.web.api.service.ApplicationMetaInfoService;
-import com.armedia.acm.web.api.service.LoginViewService;
 import com.armedia.acm.web.api.service.LoginWarningMessageService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,6 @@ import java.util.Map;
 public class LoginController
 {
     private LoginWarningMessageService loginWarningMessageService;
-    private LoginViewService loginViewService;
 
     @RequestMapping(value = {"/login", "/login.html"}, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public String getLogin(Model model)
@@ -27,7 +25,7 @@ public class LoginController
 
         loginWarningMessageService.buildModel(model);
 
-        return loginViewService.getLoginView();
+        return "login";
     }
 
     /**
@@ -45,10 +43,5 @@ public class LoginController
     public void setLoginWarningMessageService(LoginWarningMessageService loginWarningMessageService)
     {
         this.loginWarningMessageService = loginWarningMessageService;
-    }
-
-    public void setLoginViewService(LoginViewService loginViewService)
-    {
-        this.loginViewService = loginViewService;
     }
 }
