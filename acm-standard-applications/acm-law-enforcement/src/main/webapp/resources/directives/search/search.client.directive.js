@@ -108,6 +108,7 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                 scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
                     isSelected = true;
+                    searchObject.searchQuery = $label;
                 };
 
                 scope.queryExistingItems = function (start) {
