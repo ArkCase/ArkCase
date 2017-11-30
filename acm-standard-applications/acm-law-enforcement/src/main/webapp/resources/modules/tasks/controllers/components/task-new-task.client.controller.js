@@ -97,13 +97,13 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
-                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
+                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
             } else {
                 TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
             }
         };
 
-        function activitiTaskSuccessCallback(data) {
+        function reviewDocumentTaskSuccessCallback(data) {
             $scope.saved = false;
             $scope.loading = false;
             $scope.onModalClose();
