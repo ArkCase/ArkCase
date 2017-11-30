@@ -34,7 +34,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             $scope.description = params.description;
             $scope.hideNoField = true;
             $scope.skipPeopleIdsInSearch = params.skipPeopleIdsInSearch;
-            $scope.isValid = true;
+            $scope.isInvalid = true;
             if ($scope.editMode) {
                 $scope.addNewEnabled = false;
             }
@@ -109,7 +109,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                     }
                 });
                 modalInstance.result.then(function (selected) {
-                    $scope.isValid = false;
+                    $scope.isInvalid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.personId = selected.object_id_s;
                         $scope.personName = selected.name;
@@ -129,7 +129,7 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.isValid = false;
+                    $scope.isInvalid = false;
                     $scope.personId = '';
                     $scope.personName = data.person.givenName + ' ' + data.person.familyName;
                     $scope.person = data.person;
