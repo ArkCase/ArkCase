@@ -414,6 +414,7 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                                     objectTypeString = objectType;
                                 }
                                 MessageService.info(objectTypeString + " with ID " + objectId + " was updated.");
+                                that.scope.$emit('report-object-refreshed', that.stateParams.id);
 
                                 var frevvoRequest = null;
                                 switch (objectType) {
