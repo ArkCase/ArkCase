@@ -85,7 +85,9 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             if(!Util.isEmpty(objectInfo.id)){
                 CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", objectInfo.id)
                     .then(function (response){
-                        fetchBuckslipProcess(response.data[0]);
+                        if(!Util.isArrayEmpty(response.data)) {
+                            fetchBuckslipProcess(response.data[0]);
+                        }
                     });
             }
             else if(!Util.isEmpty(objectInfo.buckslipFutureTasks)){
