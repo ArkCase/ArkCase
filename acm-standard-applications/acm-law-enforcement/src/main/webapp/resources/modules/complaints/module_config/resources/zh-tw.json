@@ -307,7 +307,6 @@
     },
     "cancelButton": "取消",
     "confirmButton": "確認",
-    "_2_": "",
     "assigneeGridColumns": {
       "name": "名稱",
       "type": "類型",

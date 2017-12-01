@@ -307,7 +307,6 @@
     },
     "cancelButton": "Annuler",
     "confirmButton": "Confirmer",
-    "_enabled": "",
     "assigneeGridColumns": {
       "name": "Nom de famille",
       "type": "Gentil",
