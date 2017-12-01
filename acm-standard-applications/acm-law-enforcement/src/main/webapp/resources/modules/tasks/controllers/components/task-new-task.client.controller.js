@@ -63,7 +63,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.objectSearchConfig = _.find(moduleConfig.components, {id: "objectSearch"});
 
             $scope.userName = $scope.userFullName;
-            $scope.config.data.assignee = $scope.userId;
+            $scope.config.data.assignee = "";
             $scope.config.data.taskStartDate = new Date();
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
@@ -91,18 +91,19 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             if ($scope.config.data.attachedToObjectName === "") {
                 $scope.config.data.attachedToObjectName = "";
+                $scope.config.data.attachedToObjectId = "";
             }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
-                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
+                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
             } else {
                 TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
             }
         };
 
-        function activitiTaskSuccessCallback(data) {
+        function reviewDocumentTaskSuccessCallback(data) {
             $scope.saved = false;
             $scope.loading = false;
             $scope.onModalClose();
@@ -114,7 +115,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                 $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
             } else {
-                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
+                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
             }
             $scope.onModalClose();
         }
@@ -174,9 +175,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.inputClear = function(){
-            $scope.config.data.attachedToObjectName = null;
-
-            $scope.config.data.attachedToObjectId = null;
+            $scope.config.data.attachedToObjectName = "";
+            $scope.config.data.attachedToObjectId = "";
 
         };
 
@@ -225,21 +225,55 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
                         $scope.config.data.assignee = selectedUser.object_id_s;
                         $scope.userOrGroupName = selectedUser.name;
-                        $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
-                        $scope.groupName = selectedGroup.name;
+                        if(selectedGroup){
+                            $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
+                            $scope.groupName = selectedGroup.name;
+                        }
+
 
                         return;
                     } else if(selectedObjectType === 'GROUP') {  // Selected group
                         var selectedUser = selection.detailSelectedItems;
                         var selectedGroup = selection.masterSelectedItem;
-
-                        $scope.config.data.assignee = selectedUser.object_id_s;
+                        if(selectedUser){
+                            $scope.config.data.assignee = selectedUser.object_id_s;
+                            $scope.userOrGroupName = selectedUser.name;
+                        }
                         $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
-                        $scope.userOrGroupName = selectedUser.name;
                         $scope.groupName = selectedGroup.name;
 
                         return;
                     }
+                }
+
+            }, function () {
+                // Cancel button was clicked.
+                return [];
+            });
+
+        };
+        $scope.objectSearch = function () {
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/tasks/views/components/task-object-search.client.view.html',
+                controller: 'Tasks.ObjectSearchController',
+                size: 'lg',
+                resolve: {
+                    $filter: function () {
+                        return $scope.config.objectSearch.objectFacetFilter + $scope.config.data.attachedToObjectType;
+                    },
+                    $config: function () {
+                        return $scope.objectSearchConfig;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (chosenObject) {
+                if (chosenObject) {
+                    $scope.config.data.attachedToObjectName = chosenObject.name;
+                    $scope.config.data.attachedToObjectId = chosenObject['object_id_s'];
+
+                    return;
                 }
 
             }, function () {

@@ -91,7 +91,6 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(person.getParticipants());
         solrDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-        solrDoc.setAdditionalProperty("status_s", person.getStatus());
 
         return solrDoc;
     }
@@ -213,8 +212,8 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
 
         solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
         solrDoc.setTitle_parseable_lcs(in.getFamilyName() + " " + in.getGivenName());
+        solrDoc.setStatus_s(in.getStatus());
 
-        solrDoc.setAdditionalProperty("status_s", in.getStatus());
 
         return solrDoc;
     }
