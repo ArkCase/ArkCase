@@ -71,12 +71,20 @@
       }
     }
   },
+  "timeTracking.comp.approvers": {
+    "title": "zh-tw_Approvers",
+    "table.columns": {
+      "fullName": "zh-tw_Full Name",
+      "userId": "zh-tw_Username"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "詳情",
       "person.label": "成員",
       "summary.label": "時間",
-      "tags.label": "標籤"
+      "tags.label": "標籤",
+      "approvers.label": "zh-tw_Approvers"
     },
     "sorters": {
       "dateAsc": "按日期排序",
