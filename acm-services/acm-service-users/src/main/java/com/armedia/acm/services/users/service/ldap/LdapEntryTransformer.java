@@ -39,11 +39,7 @@ public class LdapEntryTransformer
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
-        String userId = user.getUserId();
-        if (StringUtils.isNotEmpty(userDomain) && userId.endsWith("@" + userDomain))
-        {
-            userId = userId.substring(0, userId.indexOf(userDomain) - 1);
-        }
+        String userId = StringUtils.substringBefore(user.getUserId(), "@" + userDomain);
 
         for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
         {
@@ -130,7 +126,7 @@ public class LdapEntryTransformer
         return context;
     }
 
-    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String baseDC)
+    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String baseDC, String domain)
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC));
 
@@ -139,6 +135,8 @@ public class LdapEntryTransformer
 
         Map<String, String> groupAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
+
+        String groupName = StringUtils.substringBefore(group.getName(), "@" + domain);
 
         groupAttributes.forEach((attr, value) ->
         {
@@ -152,7 +150,7 @@ public class LdapEntryTransformer
                 context.setAttributeValue(attr, Long.toString(timestamp));
             } else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
             {
-                context.setAttributeValue(attr, group.getName());
+                context.setAttributeValue(attr, groupName);
             } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
             {
                 // set member attribute which is required to create a group entry

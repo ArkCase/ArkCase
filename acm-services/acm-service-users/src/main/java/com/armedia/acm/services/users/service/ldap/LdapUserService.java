@@ -21,7 +21,6 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.spring.SpringContextHolder;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -81,17 +80,19 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public AcmUser createLdapUser(UserDTO userDto, String directoryName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        AcmUser user = checkExistingUser(userDto.getUserId());
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
+        String userId = String.format("%s@%s", userDto.getUserId().toLowerCase(), ldapSyncConfig.getUserDomain());
+
+        AcmUser user = checkExistingUser(userId);
 
         if (user == null)
         {
-            user = userDto.toAcmUser(userDto.getUserId(), userDao.getDefaultUserLang());
+            user = userDto.toAcmUser(userDao.getDefaultUserLang(),ldapSyncConfig.getUserDomain());
         } else
         {
             user = userDto.updateAcmUser(user);
         }
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
         String dn = buildDnForUser(user.getFullName(), userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
@@ -103,11 +104,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setsAMAccountName(user.getUserId());
-        }
-        //set the domain defined in the config to the userId
-        if (StringUtils.isNotEmpty(ldapSyncConfig.getUserDomain()))
-        {
-            user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
         }
 
         Set<AcmGroup> groups = new HashSet<>();

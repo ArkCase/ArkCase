@@ -39,7 +39,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
         String principal = authentication.getName();
-        Optional<String> userDomainOptional = Optional.empty();
 
         Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
@@ -54,11 +53,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
                     String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
                     if (principal.endsWith(userDomain))
                     {
-                        userDomainOptional = Optional.of(userDomain);
+                        providerAuthentication = provider.authenticate(authentication);
                     }
-
-                    providerAuthentication = provider.authenticate(authentication);
-
                 } else
                 {
                     providerAuthentication = providerEntry.getValue().authenticate(authentication);
@@ -79,7 +75,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
-            return getAcmAuthentication(providerAuthentication, userDomainOptional);
+            return getAcmAuthentication(providerAuthentication);
         }
         if (lastException != null)
         {
@@ -119,13 +115,9 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw providerNotFoundException;
     }
 
-    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication, Optional<String> userDomain)
+    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
-
-        String userId = userDomain.map(it -> String.format("%s@%s", providerAuthentication.getName(), it))
-                .orElse(providerAuthentication.getName());
-
-        AcmUser user = getUserDao().findByUserId(userId);
+        AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
 
