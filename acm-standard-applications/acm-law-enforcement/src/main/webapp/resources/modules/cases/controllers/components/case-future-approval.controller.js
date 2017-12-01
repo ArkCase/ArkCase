@@ -26,6 +26,8 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "approvalRouting"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
