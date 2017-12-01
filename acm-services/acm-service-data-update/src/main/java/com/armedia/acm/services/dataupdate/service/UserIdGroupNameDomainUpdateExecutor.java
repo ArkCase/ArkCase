@@ -51,7 +51,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional
     public void execute()
     {
         Map<String, LdapSyncService> ldapSyncServices = contextHolder.getAllBeansOfType(LdapSyncService.class);
