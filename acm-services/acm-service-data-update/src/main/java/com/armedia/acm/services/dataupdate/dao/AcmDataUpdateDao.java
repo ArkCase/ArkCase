@@ -166,6 +166,16 @@ public class AcmDataUpdateDao extends AcmAbstractDao<AcmDataUpdateExecutorLog>
         return update.executeUpdate();
     }
 
+    public int updateOutlookPasswordUserId(String userId, String newUserId)
+    {
+        Query update = em.createQuery("UPDATE OutlookPassword op"
+                + " set op.userId = :newUserId"
+                + " WHERE op.userId = :userId");
+        update.setParameter("newUserId", newUserId);
+        update.setParameter("userId", userId.toUpperCase());
+        return update.executeUpdate();
+    }
+
     public int updateCostsheetUser(AcmUser newUser, String oldUserId)
     {
         Query update = em.createQuery(

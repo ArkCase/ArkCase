@@ -84,7 +84,7 @@ public abstract class NotificationSender
             String messageBody = notificationLink != null ? String.format("%s Link: %s", notification.getNote(), notificationLink)
                     : notification.getNote();
 
-            in.setBody(new MessageBodyFactory(notificationTemplate).buildMessageBodyFromTemplate(messageBody, "", ""));
+            in.setBody(new MessageBodyFactory().buildMessageBodyFromTemplate(messageBody, "", ""));
             in.setSubject(notification.getTitle());
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
