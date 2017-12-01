@@ -42,15 +42,17 @@ public class LdapGroupService
                 get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-        AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
+        String groupName = String.format("%s@%s", group.getName().toUpperCase(), ldapSyncConfig.getUserDomain());
+
+        AcmGroup existingGroup = getGroupDao().findByName(groupName);
         if (existingGroup != null)
         {
-            log.debug("Group with name:{} already exists!", group.getName());
+            log.debug("Group [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
 
-        group.setName(group.getName().toUpperCase());
-        group.setDisplayName(group.getName().toUpperCase());
+        group.setName(groupName);
+        group.setDisplayName(groupName);
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -62,7 +64,8 @@ public class LdapGroupService
 
         log.debug("Saving Group [{}] with DN [{}] in LDAP server", group.getName(), group.getDistinguishedName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
+                ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
         log.debug("Ldap Group Context [{}]", context.getAttributes());
         try
         {
@@ -84,7 +87,9 @@ public class LdapGroupService
                 get(String.format("%s_sync", directoryName));
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-        AcmGroup existingGroup = getGroupDao().findByName(group.getName().toUpperCase());
+        String groupName = String.format("%s@%s", group.getName().toUpperCase(), ldapSyncConfig.getUserDomain());
+
+        AcmGroup existingGroup = getGroupDao().findByName(groupName);
         if (existingGroup != null)
         {
             log.debug("Group with name [{}] already exists!", group.getName());
@@ -94,8 +99,8 @@ public class LdapGroupService
         AcmGroup parentGroup = getGroupDao().findByName(parentGroupName);
         log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
 
-        group.setName(group.getName().toUpperCase());
-        group.setDisplayName(group.getName().toUpperCase());
+        group.setName(groupName);
+        group.setDisplayName(groupName);
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -111,7 +116,8 @@ public class LdapGroupService
         getGroupDao().save(parentGroup);
         log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
-        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup, ldapSyncConfig.getBaseDC());
+        DirContextAdapter context = ldapEntryTransformer.createContextForNewGroupEntry(directoryName, acmGroup,
+                ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
         log.debug("Ldap Sub-Group Context [{}]", context.getAttributes());
         try
         {

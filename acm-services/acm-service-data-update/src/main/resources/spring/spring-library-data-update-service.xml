@@ -28,6 +28,7 @@
     <bean id="userIdGroupNameDomainUpdateExecutor"
           class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
+        <property name="groupDao" ref="groupDao"/>
         <property name="dataUpdateDao" ref="dataUpdateDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
