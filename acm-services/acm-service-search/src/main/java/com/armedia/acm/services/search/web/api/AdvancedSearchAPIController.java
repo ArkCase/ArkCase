@@ -108,13 +108,7 @@ public class AdvancedSearchAPIController
      * @return Solr response
      * @throws MuleException on error
      */
-    private String advancedSearch(
-            @RequestParam(value = "q", required = true) String query,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            Authentication authentication
-    ) throws MuleException
+    private String advancedSearch(String query, String sort, int startRow, int maxRows, Authentication authentication) throws MuleException
     {
         log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
 
