@@ -42,12 +42,7 @@ public class EcmFileParticipantService
     {
         if (file.getFolder() == null)
         {
-            throw new RuntimeException("File doesn't have parent folder!");
-        }
-
-        if (file.getFolder() == null)
-        {
-            throw new RuntimeException("File doesn't have parent folder!");
+            throw new IllegalStateException("File doesn't have parent folder!");
         }
 
         // Use the participants service to avoid execution of Drools Assignment and Access rules
@@ -72,7 +67,7 @@ public class EcmFileParticipantService
     {
         if (folder.getParentFolder() == null)
         {
-            throw new RuntimeException("Folder doesn't have parent folder!");
+            throw new IllegalStateException("Folder doesn't have parent folder!");
         }
 
         // clear existing participants
@@ -358,8 +353,9 @@ public class EcmFileParticipantService
 
         if (documentParticipantType == null)
         {
-            throw new RuntimeException("No document participant type mapping found for participant type: " + assignedObjectParticipantType
-                    + ". Add mapping for new participant type in 'ecmFileService.properties'!");
+            throw new IllegalStateException(
+                    "No document participant type mapping found for participant type: " + assignedObjectParticipantType
+                            + ". Add mapping for new participant type in 'ecmFileService.properties'!");
         }
 
         return documentParticipantType;

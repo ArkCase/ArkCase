@@ -7,7 +7,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import java.util.Arrays;
 
 /**
  * Created by manoj.dhungana on 7/23/2015.
@@ -32,7 +29,6 @@ public class ListFileFolderByCategoryAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private EcmFileService ecmFileService;
-    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @RequestMapping(value = "/bycategory/{parentObjectType}/{parentObjectId}", method = RequestMethod.GET)
     @ResponseBody
@@ -52,12 +48,6 @@ public class ListFileFolderByCategoryAPIController
         {
             // not really possible since the cm_folder_id is not nullable. But we'll account for it anyway
             throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
-        }
-
-        if (!getArkPermissionEvaluator().hasPermission(auth, container.getFolder().getId(), "FOLDER", "read|group-read|write|group-write"))
-        {
-            throw new AcmAccessControlException(Arrays.asList(""),
-                    "The user {" + auth.getName() + "} is not allowed to read from folder with id=" + container.getFolder().getId());
         }
 
         if (category != null && !category.isEmpty())
@@ -82,15 +72,4 @@ public class ListFileFolderByCategoryAPIController
     {
         this.ecmFileService = ecmFileService;
     }
-
-    public ArkPermissionEvaluator getArkPermissionEvaluator()
-    {
-        return arkPermissionEvaluator;
-    }
-
-    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
-    {
-        this.arkPermissionEvaluator = arkPermissionEvaluator;
-    }
-
 }
