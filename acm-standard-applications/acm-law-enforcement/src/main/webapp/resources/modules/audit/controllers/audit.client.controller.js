@@ -36,9 +36,11 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {String} selectedObjectType String that represents value that is selected from dropdown
          * @param {String} inputObjectId String that represents value from text input(default is empty string "")
          */
-        function getObjectValues(e, selectedObjectType, inputObjectId) {
+        function getObjectValues(e, selectedObjectType, inputObjectId, validDate) {
             $scope.objectType = selectedObjectType;
             $scope.objectId = Util.goodValue(inputObjectId);
+
+            $scope.validDate = validDate;
         }
 
         /**
@@ -50,23 +52,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {Object} dateFrom Object of type date that represents value for date chosen from dateFrom input
          * @param {Object} dateTo Object of type date that represents value for date chosen from dateTo input
          */
-        function getDateValues(e, dateFrom, dateTo) {
+        function getDateValues(e, dateFrom, dateTo, validDate) {
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
 
-            $scope.validDate = $scope.isValidDate();
+            $scope.validDate = validDate;
         }
-
-        $scope.isValidDate = function () {
-            if (Util.isEmpty($scope.dateFrom) || Util.isEmpty($scope.dateTo)){
-                return false;
-            }
-            if (moment($scope.dateFrom).isAfter($scope.dateTo)) {
-                return false;
-            }
-
-            return true;
-        };
 
         // Retrieves the properties from the acm-reports-server-config.properties file
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
