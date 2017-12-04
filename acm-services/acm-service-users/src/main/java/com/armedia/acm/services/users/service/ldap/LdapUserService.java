@@ -131,7 +131,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         AcmUser acmUser = userDao.save(user);
         userDao.getEntityManager().flush();
 
-        userRoleService.saveValidUserRolesPerAddedUserGroups(acmUser.getUserId(), groups);
+        userRoleService.saveRolesPerAddedGroups(groups);
 
         LdapTemplate ldapTemplate = getLdapDao().buildLdapTemplate(ldapSyncConfig);
         try
@@ -208,7 +208,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             log.debug("Saving User [{}] with DN [{}] in database", existingUser.getUserId(), existingUser.getDistinguishedName());
             userDao.save(existingUser);
             userDao.getEntityManager().flush();
-            userRoleService.saveValidUserRolesPerAddedUserGroups(userId, groupsToUpdate);
+            userRoleService.saveRolesPerAddedGroups(groupsToUpdate);
         }
 
         Set<AcmGroup> ldapGroupsToUpdate = groupsToUpdate.stream().filter(AcmGroup::isLdapGroup).collect(Collectors.toSet());
@@ -405,7 +405,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             AcmUser savedUser = userDao.save(existingUser);
             userDao.getEntityManager().flush();
 
-            userRoleService.saveValidUserRolesPerAddedUserGroups(user.getUserId(), new HashSet<>(Arrays.asList(ldapGroup)));
+            userRoleService.saveRolesPerAddedGroups(new HashSet<>(Arrays.asList(ldapGroup)));
 
             String strippedBaseDCGroupDn = MapperUtils.stripBaseFromDn(ldapGroup.getDistinguishedName(), ldapSyncConfig.getBaseDC());
             try

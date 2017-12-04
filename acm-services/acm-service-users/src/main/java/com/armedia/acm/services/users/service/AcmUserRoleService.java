@@ -37,7 +37,7 @@ public class AcmUserRoleService
                 .collect(Collectors.toSet());
     }
 
-    public void saveValidUserRolesPerAddedUserGroups(String userId, Set<AcmGroup> groups)
+    public void saveRolesPerAddedGroups(Set<AcmGroup> groups)
     {
         // added groups are also valid AcmRoles
         groups.forEach(group -> {
@@ -48,7 +48,6 @@ public class AcmUserRoleService
         });
 
         userDao.getEntityManager().flush();
-        log.debug("User roles for User [{}] saved", userId);
     }
 
     public void setUserDao(UserDao userDao)
