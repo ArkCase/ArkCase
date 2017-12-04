@@ -126,6 +126,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             if ($scope.config.data.attachedToObjectName === "") {
                 $scope.config.data.attachedToObjectName = "";
+                $scope.config.data.attachedToObjectId = "";
             }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
