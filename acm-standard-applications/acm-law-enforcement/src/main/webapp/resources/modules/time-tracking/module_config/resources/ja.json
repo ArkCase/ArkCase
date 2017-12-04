@@ -70,13 +70,20 @@
         "error": "ja_Error deleting tag"
       }
     }
-  },
+  },"timeTracking.comp.approvers": {
+  "title": "ja_Approvers",
+  "table.columns": {
+    "fullName": "ja_Full Name",
+    "userId": "ja_Username"
+  }
+},
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "詳細",
       "person.label": "人員",
       "summary.label": "時間",
-      "tags.label": "タグ"
+      "tags.label": "タグ",
+      "approvers.label": "ja_Approvers"
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",

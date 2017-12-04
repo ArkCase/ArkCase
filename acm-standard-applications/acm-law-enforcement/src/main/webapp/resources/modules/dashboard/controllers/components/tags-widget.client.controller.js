@@ -25,7 +25,7 @@ angular.module('dashboard.tags', ['adf.provider'])
                 {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COMPLAINT},
                 {name: "TASK", configName: "tasks", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TASK},
                 {name: "DOC_REPO", configName: "document-repository", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
-                {name: "DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.DOC_REPO},
+                {name: "MY_DOC_REPO", configName: "my-documents", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.MY_DOC_REPO},
                 {name: "TIMESHEET", configName: "time-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.TIMESHEET},
                 {name: "COSTSHEET", configName: "cost-tracking", getInfo: ObjectTagsService.getAssociateTags, objectType: ObjectService.ObjectTypes.COSTSHEET}
             ];
