@@ -7,6 +7,13 @@
                placeholder="{{'dashboard.widgets.weather.label.enterLocation' | translate}}">
     </div>
     <div class="form-group">
+    <label for="zip">
+            <span translate>dashboard.widgets.weather.label.zip</span>
+        </label>
+        <input type="zip" class="form-control" id="zip" ng-model="config.zip"
+               placeholder="{{'dashboard.widgets.weather.label.enterZip' | translate}}">
+    </div>
+    <div class="form-group">
         <label for="description">
             <span translate>dashboard.widgets.weather.configDescription</span>
         </label>
