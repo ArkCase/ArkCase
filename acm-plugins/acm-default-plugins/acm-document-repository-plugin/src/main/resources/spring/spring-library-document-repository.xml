@@ -54,7 +54,6 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="pipelineManager" ref="documentRepositoryPipelineManager"/>
         <property name="documentRepositoryEventPublisher" ref="documentRepositoryEventPublisher"/>
-        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="documentRepositoryPluginProperties"

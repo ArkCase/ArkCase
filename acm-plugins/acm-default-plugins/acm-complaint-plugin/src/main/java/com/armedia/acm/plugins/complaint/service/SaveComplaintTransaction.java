@@ -1,11 +1,9 @@
 package com.armedia.acm.plugins.complaint.service;
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
@@ -13,8 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
 
 /**
  * Implement transactional responsibilities for the SaveComplaintController.
@@ -28,7 +24,6 @@ public class SaveComplaintTransaction
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private ComplaintDao complaintDao;
-    private EcmFileParticipantService fileParticipantService;
     private PipelineManager<Complaint, ComplaintPipelineContext> pipelineManager;
 
     @Transactional
@@ -42,31 +37,9 @@ public class SaveComplaintTransaction
         pipelineContext.setIpAddress(ipAddress);
 
         return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
-            Complaint originalComplaint = null;
-            if (complaint.getId() != null)
-            {
-                originalComplaint = complaintDao.find(complaint.getId());
-            }
+
             Complaint saved = complaintDao.save(complaint);
-            try
-            {
-                if (originalComplaint == null)
-                {
-                    saved.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                }
-                getFileParticipantService().inheritParticipantsFromAssignedObject(
-                        originalComplaint == null ? saved.getParticipants() : complaint.getParticipants(),
-                        originalComplaint == null ? new ArrayList<>() : originalComplaint.getParticipants(),
-                        saved.getContainer());
-                if (originalComplaint == null || !saved.getRestricted().equals(originalComplaint.getRestricted()))
-                {
-                    getFileParticipantService().setRestrictedFlagRecursively(saved.getRestricted(), saved.getContainer());
-                }
-            }
-            catch (AcmAccessControlException e)
-            {
-                throw new PipelineProcessException(e);
-            }
+
             log.info("Complaint saved '{}'", saved);
             return saved;
 
@@ -91,15 +64,5 @@ public class SaveComplaintTransaction
     public void setPipelineManager(PipelineManager pipelineManager)
     {
         this.pipelineManager = pipelineManager;
-    }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
     }
 }

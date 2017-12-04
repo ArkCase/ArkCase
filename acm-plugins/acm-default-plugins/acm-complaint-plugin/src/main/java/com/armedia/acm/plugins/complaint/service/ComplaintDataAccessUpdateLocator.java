@@ -26,14 +26,7 @@ public class ComplaintDataAccessUpdateLocator implements AcmObjectDataAccessBatc
     @Override
     public void save(Complaint assignedObject) throws AcmAccessControlException
     {
-        Complaint originalComplaint = getComplaintDao().find(assignedObject.getId());
-        Complaint saved = getComplaintDao().save(assignedObject);
-        getFileParticipantService().inheritParticipantsFromAssignedObject(assignedObject.getParticipants(),
-                originalComplaint.getParticipants(), assignedObject.getContainer());
-        if (originalComplaint == null || !saved.getRestricted().equals(originalComplaint.getRestricted()))
-        {
-            getFileParticipantService().setRestrictedFlagRecursively(saved.getRestricted(), saved.getContainer());
-        }
+        getComplaintDao().save(assignedObject);
     }
 
     public ComplaintDao getComplaintDao()

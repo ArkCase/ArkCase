@@ -19,7 +19,7 @@ public class EntityParticipantsChangedEventPublisher implements ApplicationEvent
 
     public void publishEvent(AcmObject source, List<AcmParticipant> originalParticipants)
     {
-        LOG.debug("Publishing AcmTimesheet event.");
+        LOG.debug("Publishing EntityParticipantsChangedEvent event.");
 
         AcmEntityParticipantsChangedEvent event = new AcmEntityParticipantsChangedEvent(source, originalParticipants);
 

@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.service;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.dataaccess.model.AcmEntityParticipantsChangedEvent;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -28,9 +27,7 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
         AcmObject obj = (AcmObject) event.getSource();
         List<AcmParticipant> originalParticipants = event.getOriginalParticipants();
 
-        if (obj instanceof AcmAssignedObject && obj instanceof AcmContainerEntity &&
-                !((AcmAssignedObject) obj).getObjectType().equals(EcmFileConstants.OBJECT_FILE_TYPE) &&
-                !((AcmAssignedObject) obj).getObjectType().equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
+        if (obj instanceof AcmAssignedObject && obj instanceof AcmContainerEntity)
         {
             // inherit participants
             if (obj.getId() == null)
@@ -39,6 +36,7 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
             }
             try
             {
+                log.debug("Inheriting file participants from " + obj.getObjectType() + "[" + obj.getId() + "]");
                 getFileParticipantService().inheritParticipantsFromAssignedObject(
                         ((AcmAssignedObject) obj).getParticipants(),
                         originalParticipants,

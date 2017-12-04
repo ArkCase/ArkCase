@@ -123,7 +123,6 @@
     <bean id="taskDataAccessUpdateLocator"
           class="com.armedia.acm.plugins.task.service.impl.TaskDataAccessUpdateLocator">
         <property name="taskDao" ref="acmTaskDao"/>
-        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="taskBusinessRule" class="com.armedia.acm.plugins.task.service.impl.TaskBusinessRule"
@@ -143,7 +142,6 @@
         <property name="objectAssociationService" ref="objectAssociationService"/>
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
-        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 

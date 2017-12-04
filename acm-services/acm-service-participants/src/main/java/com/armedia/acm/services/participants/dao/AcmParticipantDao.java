@@ -75,6 +75,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         find.setParameter("action", objectAction);
         find.setParameter("accessType", accessType);
 
+        find.setFlushMode(FlushModeType.COMMIT);
+
         // count query will always have exactly one result row.
         Long count = (Long) find.getSingleResult();
         return count > 0;
@@ -95,6 +97,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         findParticipants.setParameter("objectType", objectType);
         findParticipants.setParameter("action", objectAction);
         findParticipants.setParameter("accessType", accessType);
+
+        findParticipants.setFlushMode(FlushModeType.COMMIT);
 
         List<AcmParticipant> participants = findParticipants.getResultList();
 
