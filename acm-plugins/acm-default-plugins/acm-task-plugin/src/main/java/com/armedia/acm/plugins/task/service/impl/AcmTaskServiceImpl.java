@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.task.service.impl;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -16,7 +15,6 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
 import com.armedia.acm.plugins.objectassociation.model.Reference;
@@ -81,7 +79,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmFolderService acmFolderService;
     private EcmFileService ecmFileService;
     private AcmParticipantDao acmParticipantDao;
-    private EcmFileParticipantService fileParticipantService;
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
@@ -261,18 +258,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
                 task.getParticipants().add(group);
 
-                try
-                {
-                    task.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                    getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), new ArrayList<>(),
-                            task.getContainer());
-                    getFileParticipantService().setRestrictedFlagRecursively(task.getRestricted(), task.getContainer());
-                }
-                catch (AcmAccessControlException e)
-                {
-                    throw new AcmCreateObjectFailedException(task.getObjectType(), "Failed to set participants on child folders!", e);
-                }
-
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", user, true, "");
                 taskEventPublisher.publishTaskEvent(event);
             }
@@ -346,18 +331,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
             copyNotes(taskFromOriginal, task);
-
-            try
-            {
-                savedTask.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                getFileParticipantService().inheritParticipantsFromAssignedObject(savedTask.getParticipants(), new ArrayList<>(),
-                        savedTask.getContainer());
-                getFileParticipantService().setRestrictedFlagRecursively(savedTask.getRestricted(), savedTask.getContainer());
-            }
-            catch (AcmAccessControlException e)
-            {
-                throw new AcmCreateObjectFailedException(task.getObjectType(), "Failed to set participants on child folders!", e);
-            }
 
             AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", auth.getName(), true, ipAddress);
 
@@ -623,16 +596,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setAcmParticipantDao(AcmParticipantDao acmParticipantDao)
     {
         this.acmParticipantDao = acmParticipantDao;
-    }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
     }
 
     public ObjectConverter getObjectConverter()

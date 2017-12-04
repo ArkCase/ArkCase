@@ -154,7 +154,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             try
             {
-                result = getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+                getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+                result = getFolderDao().save(result);
             }
             catch (AcmAccessControlException ace)
             {
@@ -376,7 +377,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             movedFolder = getFolderDao().save(folderForMoving);
 
-            movedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            movedFolder = getFolderDao().save(movedFolder);
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
         {
@@ -438,7 +440,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderForMoving.setParentFolder(dstFolder);
             movedFolder = getFolderDao().save(folderForMoving);
 
-            movedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
+            movedFolder = getFolderDao().save(movedFolder);
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
         {
@@ -579,7 +582,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             acmNewFolder.setName(toCopyFolder.getName());
             copiedFolder = getFolderDao().save(acmNewFolder);
 
-            copiedFolder = getFileParticipantService().setFolderParticipantsFromParentFolder(copiedFolder);
+            getFileParticipantService().setFolderParticipantsFromParentFolder(copiedFolder);
+            copiedFolder = getFolderDao().save(copiedFolder);
 
         }
         catch (PersistenceException | MuleException | AcmAccessControlException e)
@@ -1042,7 +1046,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
         try
         {
             result = getFolderDao().save(newFolder);
-            result = getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+            getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+            result = getFolderDao().save(result);
         }
         catch (Exception e)
         {
@@ -1413,6 +1418,12 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             throw new AcmObjectNotFoundException(parentObjectType, parentObjectId, "Container object not found", null);
         }
         return container.getFolder();
+    }
+
+    @Override
+    public AcmFolder saveFolder(AcmFolder folder)
+    {
+        return getFolderDao().save(folder);
     }
 
     public EcmFileDao getFileDao()

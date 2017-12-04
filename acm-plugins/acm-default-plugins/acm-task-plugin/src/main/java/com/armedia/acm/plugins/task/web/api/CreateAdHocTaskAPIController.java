@@ -1,9 +1,7 @@
 package com.armedia.acm.plugins.task.web.api;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -29,15 +27,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-import java.util.ArrayList;
-
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class CreateAdHocTaskAPIController
 {
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
     private ExecuteSolrQuery executeSolrQuery;
-    private EcmFileParticipantService fileParticipantService;
 
     private SearchResults searchResults = new SearchResults();
 
@@ -97,17 +92,7 @@ public class CreateAdHocTaskAPIController
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
-            try
-            {
-                adHocTask.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                getFileParticipantService().inheritParticipantsFromAssignedObject(adHocTask.getParticipants(), new ArrayList<>(),
-                        adHocTask.getContainer());
-                getFileParticipantService().setRestrictedFlagRecursively(adHocTask.getRestricted(), adHocTask.getContainer());
-            }
-            catch (AcmAccessControlException e)
-            {
-                throw new AcmCreateObjectFailedException(adHocTask.getObjectType(), "Failed to set participants on child folders!", e);
-            }
+
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;
@@ -202,15 +187,5 @@ public class CreateAdHocTaskAPIController
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
-    }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
     }
 }

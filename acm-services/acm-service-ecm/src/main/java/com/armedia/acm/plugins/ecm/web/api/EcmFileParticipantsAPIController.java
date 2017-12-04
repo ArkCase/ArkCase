@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
@@ -82,7 +83,9 @@ public class EcmFileParticipantsAPIController
 
                 if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
                 {
-                    getFileParticipantService().setParticipantToFolderChildren(getFolderService().findById(objectId), participant);
+                    AcmFolder folder = getFolderService().findById(objectId);
+                    getFileParticipantService().setParticipantToFolderChildren(folder, participant);
+                    getFolderService().saveFolder(folder);
                 }
 
                 participantsToReturn.add(changedParticipant);
@@ -105,8 +108,10 @@ public class EcmFileParticipantsAPIController
 
                 if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
                 {
-                    getFileParticipantService().removeParticipantFromFolderAndChildren(getFolderService().findById(objectId),
+                    AcmFolder folder = getFolderService().findById(objectId);
+                    getFileParticipantService().removeParticipantFromFolderAndChildren(folder,
                             existingParticipant.getParticipantLdapId(), existingParticipant.getObjectType());
+                    getFolderService().saveFolder(folder);
                 }
             }
         }
@@ -123,7 +128,9 @@ public class EcmFileParticipantsAPIController
 
                 if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
                 {
-                    getFileParticipantService().setParticipantToFolderChildren(getFolderService().findById(objectId), participant);
+                    AcmFolder folder = getFolderService().findById(objectId);
+                    getFileParticipantService().setParticipantToFolderChildren(folder, participant);
+                    getFolderService().saveFolder(folder);
                 }
 
                 participantsToReturn.add(addedParticipant);

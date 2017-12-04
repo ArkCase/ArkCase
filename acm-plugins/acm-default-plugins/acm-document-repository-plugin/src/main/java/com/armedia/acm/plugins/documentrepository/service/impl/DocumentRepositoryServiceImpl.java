@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.documentrepository.service.impl;
 
 import com.armedia.acm.auth.AuthenticationUtils;
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.documentrepository.dao.DocumentRepositoryDao;
@@ -13,7 +12,6 @@ import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEven
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.services.note.dao.NoteDao;
@@ -51,8 +49,6 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     private DocumentRepositoryEventPublisher documentRepositoryEventPublisher;
 
-    private EcmFileParticipantService fileParticipantService;
-
     @Override
     public DocumentRepository findById(Long id)
     {
@@ -86,35 +82,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () -> {
             log.debug("Saving document repository: {}", documentRepository.getName());
 
-            DocumentRepository originalDocumentRepository = null;
-            if (documentRepository.getId() != null)
-            {
-                originalDocumentRepository = getDocumentRepositoryDao().find(documentRepository.getId());
-            }
-
             DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
-            try
-            {
-                if (originalDocumentRepository == null)
-                {
-                    savedDocumentRepository.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                }
-                getFileParticipantService().inheritParticipantsFromAssignedObject(
-                        originalDocumentRepository == null ? savedDocumentRepository.getParticipants()
-                                : documentRepository.getParticipants(),
-                        originalDocumentRepository == null ? new ArrayList<>() : originalDocumentRepository.getParticipants(),
-                        savedDocumentRepository.getContainer());
-                if (originalDocumentRepository == null
-                        || !savedDocumentRepository.getRestricted().equals(originalDocumentRepository.getRestricted()))
-                {
-                    getFileParticipantService().setRestrictedFlagRecursively(savedDocumentRepository.getRestricted(),
-                            savedDocumentRepository.getContainer());
-                }
-            }
-            catch (AcmAccessControlException e)
-            {
-                throw new PipelineProcessException(e);
-            }
 
             publishAuditEvents(pipelineContext.getAuditEventTypes(), savedDocumentRepository);
             return savedDocumentRepository;
@@ -248,15 +216,5 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
     public void setDocumentRepositoryEventPublisher(DocumentRepositoryEventPublisher documentRepositoryEventPublisher)
     {
         this.documentRepositoryEventPublisher = documentRepositoryEventPublisher;
-    }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
     }
 }

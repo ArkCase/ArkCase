@@ -54,13 +54,52 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             applyDataAccessRules(assignedObject);
             updateParentPointers(assignedObject);
             validateParticipantAssignmentRules(assignedObject);
+            handleParticipantsChanged(assignedObject);
+        }
+    }
 
-            List<AcmParticipant> originalParticipants = new ArrayList<>();
-            if (assignedObject.getId() != null)
+    private void handleParticipantsChanged(AcmAssignedObject assignedObject)
+    {
+        List<AcmParticipant> originalParticipants = new ArrayList<>();
+        if (assignedObject.getId() != null)
+        {
+            originalParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
+                    assignedObject.getId(), FlushModeType.COMMIT);
+        }
+
+        // publish EntityParticipantsChangedEvent if the participants are not equal
+        boolean hasEqualParticipants = true;
+
+        if (assignedObject.getParticipants().size() != originalParticipants.size())
+        {
+            hasEqualParticipants = false;
+        }
+        else
+        {
+            for (AcmParticipant assignedObjectParticipant : assignedObject.getParticipants())
             {
-                originalParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
-                        assignedObject.getId(), FlushModeType.COMMIT);
+                boolean found = false;
+                for (AcmParticipant originalParticipant : originalParticipants)
+                {
+
+                    if (assignedObjectParticipant.getParticipantLdapId().equals(originalParticipant.getParticipantLdapId()) &&
+                            assignedObjectParticipant.getParticipantType().equals(originalParticipant.getParticipantType()))
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                {
+                    hasEqualParticipants = false;
+                    break;
+                }
             }
+        }
+
+        if (!hasEqualParticipants)
+        {
             getEntityParticipantsChangedEventPublisher().publishEvent(assignedObject, originalParticipants);
         }
     }

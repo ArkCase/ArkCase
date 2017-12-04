@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -19,7 +18,6 @@ import java.util.List;
 public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpdateLocator<AcmTask>
 {
     private TaskDao taskDao;
-    private EcmFileParticipantService fileParticipantService;
 
     private final transient Logger log = LoggerFactory.getLogger(getClass());
 
@@ -34,14 +32,7 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
     {
         try
         {
-            AcmTask originalTask = getTaskDao().findById(task.getId());
-            AcmTask savedTask = getTaskDao().save(task);
-            getFileParticipantService().inheritParticipantsFromAssignedObject(task.getParticipants(), originalTask.getParticipants(),
-                    savedTask.getContainer());
-            if (originalTask == null || !savedTask.getRestricted().equals(originalTask.getRestricted()))
-            {
-                getFileParticipantService().setRestrictedFlagRecursively(savedTask.getRestricted(), savedTask.getContainer());
-            }
+            getTaskDao().save(task);
         }
         catch (AcmTaskException e)
         {
@@ -57,15 +48,5 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
     public void setTaskDao(TaskDao taskDao)
     {
         this.taskDao = taskDao;
-    }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
     }
 }

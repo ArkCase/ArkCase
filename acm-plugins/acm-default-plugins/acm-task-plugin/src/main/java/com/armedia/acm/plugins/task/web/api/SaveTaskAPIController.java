@@ -1,8 +1,6 @@
 package com.armedia.acm.plugins.task.web.api;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -25,7 +23,6 @@ import javax.servlet.http.HttpSession;
 public class SaveTaskAPIController
 {
     private TaskDao taskDao;
-    private EcmFileParticipantService fileParticipantService;
     private TaskEventPublisher taskEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -43,24 +40,9 @@ public class SaveTaskAPIController
         try
         {
             // make sure task exists - findById will throw an exception if there is no such task
-            AcmTask originalTask = getTaskDao().findById(taskId);
+            getTaskDao().findById(taskId);
 
             AcmTask retval = getTaskDao().save(in);
-            try
-            {
-                retval.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
-                getFileParticipantService().inheritParticipantsFromAssignedObject(retval.getParticipants(), originalTask.getParticipants(),
-                        retval.getContainer());
-                if (originalTask == null || !retval.getRestricted().equals(originalTask.getRestricted()))
-                {
-                    getFileParticipantService().setRestrictedFlagRecursively(retval.getRestricted(), retval.getContainer());
-                }
-            }
-            catch (AcmAccessControlException e)
-            {
-                throw new AcmUserActionFailedException("save", retval.getObjectType(), retval.getId(),
-                        "Failed to set participants on child folders!", e);
-            }
 
             publishTaskSavedEvent(authentication, httpSession, retval, true);
 
@@ -99,15 +81,4 @@ public class SaveTaskAPIController
     {
         this.taskEventPublisher = taskEventPublisher;
     }
-
-    public EcmFileParticipantService getFileParticipantService()
-    {
-        return fileParticipantService;
-    }
-
-    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
-    {
-        this.fileParticipantService = fileParticipantService;
-    }
-
 }
