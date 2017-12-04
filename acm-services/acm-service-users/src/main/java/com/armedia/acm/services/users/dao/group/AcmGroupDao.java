@@ -152,7 +152,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                                 + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
                                 + "AND acmGroup.directoryName = :directoryName",
                         AcmGroup.class);
-       // allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
     }
@@ -169,26 +168,14 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public List<AcmGroup> findByStatusAndType(AcmGroupStatus status, AcmGroupType type)
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup "
-                + "FROM AcmGroup acmGroup "
-                + "WHERE acmGroup.status = :status "
-                + "AND acmGroup.type = :groupType", AcmGroup.class);
+        TypedQuery<AcmGroup> query = getEm()
+                .createQuery("SELECT acmGroup "
+                        + "FROM AcmGroup acmGroup "
+                        + "WHERE acmGroup.status = :status "
+                        + "AND acmGroup.type = :groupType", AcmGroup.class);
         query.setParameter("status", status);
         query.setParameter("groupType", type);
         return query.getResultList();
-    }
-
-    public List<AcmGroup> findByTypeAndStatus(AcmGroupType type, AcmGroupStatus status)
-    {
-        TypedQuery<AcmGroup> findByTypeAndStatusQuery = getEm().
-                createQuery("SELECT acmGroup "
-                                + "FROM AcmGroup acmGroup "
-                                + "WHERE acmGroup.type = :groupType "
-                                + "AND acmGroup.status = :status",
-                        AcmGroup.class);
-        findByTypeAndStatusQuery.setParameter("groupType", type);
-        findByTypeAndStatusQuery.setParameter("status", status);
-        return findByTypeAndStatusQuery.getResultList();
     }
 
     @Override
