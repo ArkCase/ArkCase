@@ -6,7 +6,6 @@ import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
-import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -285,31 +284,26 @@ public class AcmDataUpdateDao extends AcmAbstractDao<AcmDataUpdateExecutorLog>
         markInvalid.executeUpdate();
     }
 
-    public int markInactiveActiveAdHocGroupsWithUUID()
-    {
-        Query update = em.createQuery("UPDATE AcmGroup ag "
-                + "SET ag.status = :newStatus "
-                + "WHERE ag.status = :status "
-                + "AND ag.name LIKE '%-UUID-%'"
-                + "AND LENGTH(ag.name) > 42 "
-                + "AND ag.type = :groupType");
-        update.setParameter("newStatus", AcmGroupStatus.INACTIVE);
-        update.setParameter("groupType", AcmGroupType.ADHOC_GROUP);
-        update.setParameter("status", AcmGroupStatus.ACTIVE);
-        return update.executeUpdate();
-    }
-
-    public List<AcmGroup> findAllActiveAdHocGroupsWithUUID()
+    public List<AcmGroup> findAdHocGroupsWithUUIDByStatus(AcmGroupStatus status)
     {
         TypedQuery<AcmGroup> findQuery = em.createQuery("SELECT ag "
                 + "FROM AcmGroup ag "
-                + "WHERE ag.type = :groupType "
+                + "WHERE ag.type = com.armedia.acm.services.users.model.group.AcmGroupType.ADHOC_GROUP "
                 + "AND ag.status = :status "
                 + "AND ag.name LIKE '%-UUID-%' "
                 + "AND LENGTH(ag.name) > 42", AcmGroup.class);
-        findQuery.setParameter("groupType", AcmGroupType.ADHOC_GROUP);
-        findQuery.setParameter("status", AcmGroupStatus.ACTIVE);
+        findQuery.setParameter("status", status);
         return findQuery.getResultList();
+    }
+
+    public int deleteLdapInvalidGroups()
+    {
+        Query query = em.createQuery("DELETE "
+                + "FROM AcmGroup ag "
+                + "WHERE ag.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
+                + "AND (ag.status = com.armedia.acm.services.users.model.group.AcmGroupStatus.INACTIVE "
+                + "OR ag.status = com.armedia.acm.services.users.model.group.AcmGroupStatus.DELETE)");
+        return query.executeUpdate();
     }
 
     public void updateUserMembershipForAdHocGroups()

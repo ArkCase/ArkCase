@@ -112,21 +112,18 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
             String user = getUserId();
 
             String modified = getDatabaseColumnName(event, AcmEntity.MODIFIED_PROPERTY_NAME);
-            if (modified != null)
+            if (modified != null && entity.getModified() == null)
             {
                 record.put(modified, today);
+                entity.setModified(today);
             }
 
             String modifier = getDatabaseColumnName(event, AcmEntity.MODIFIER_PROPERTY_NAME);
-            if (modifier != null)
+            if (modifier != null && entity.getModifier() == null)
             {
                 record.put(modifier, getUserId());
+                entity.setModifier(user);
             }
-
-            // note, we still have to update the object itself, so the client will have the right values
-
-            entity.setModified(today);
-            entity.setModifier(user);
         } else
         {
             if (log.isTraceEnabled())
