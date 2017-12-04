@@ -62,7 +62,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.objectSearchConfig = _.find(moduleConfig.components, {id: "objectSearch"});
 
             $scope.userName = $scope.userFullName;
-            $scope.config.data.taskStartDate = moment().startOf('day')._d;
+            $scope.config.data.assignee = $scope.userId;
+            $scope.config.data.taskStartDate = new Date();
+            $scope.config.data.dueDate = new Date();
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
 
@@ -83,49 +85,59 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
         $scope.saved = false;
-        $scope.minDate = new Date();
+        $scope.minStartDate = new Date();
+        $scope.minDueDate = new Date();
 
         $scope.isValidDate = function () {
             if (Util.isEmpty($scope.config.data.taskStartDate) || Util.isEmpty($scope.config.data.dueDate)) {
-                return false;
-            }
-            if (moment($scope.fixedDate).isAfter($scope.config.data.taskStartDate) || moment($scope.fixedDate).isAfter($scope.config.data.dueDate)) {
-                return false;
-            }
-            if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
                 return false;
             }
 
             return true;
         };
 
-
-        $scope.$watchGroup(['config.data.dueDate', 'config.data.taskStartDate'], function () {
+        $scope.startDateChanged = function () {
             var todayDate = new Date();
-            $scope.isDateValid = $scope.isValidDate();
-
-            $scope.fixedDate = new Date(todayDate.getMonth() + 1 + "/" + todayDate.getDate() + "/" + todayDate.getFullYear());
+            if(Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)){
+                $scope.config.data.taskStartDate = moment().year(todayDate.getFullYear()).month(todayDate.getMonth()).date(todayDate.getDate())._d;
+            }
+            if(!Util.isEmpty($scope.config.data.dueDate) && moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)){
+                $scope.config.data.dueDate = moment().year($scope.config.data.taskStartDate.getFullYear()).month($scope.config.data.taskStartDate.getMonth()).date($scope.config.data.taskStartDate.getDate())._d;
+            }
+            if(!Util.isEmpty($scope.config.data.taskStartDate)){
+                $scope.minDueDate = $scope.config.data.taskStartDate;
+            }
             $scope.validDate = $scope.isValidDate();
-        });
+        };
+
+        $scope.dueDateChanged = function () {
+            var todayDate = new Date();
+            if(Util.isEmpty($scope.config.data.dueDate)){
+                $scope.config.data.dueDate = moment().year(todayDate.getFullYear()).month(todayDate.getMonth()).date(todayDate.getDate())._d;
+            }
+            if(!Util.isEmpty($scope.config.data.dueDate) && moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)){
+                $scope.config.data.dueDate = moment().year($scope.config.data.taskStartDate.getFullYear()).month($scope.config.data.taskStartDate.getMonth()).date($scope.config.data.taskStartDate.getDate())._d;
+            }
+            $scope.validDate = $scope.isValidDate();
+        };
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
             $scope.loading = true;
             if ($scope.config.data.attachedToObjectName === "") {
                 $scope.config.data.attachedToObjectName = "";
-                $scope.config.data.attachedToObjectId = "";
             }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
-                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
+                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
             } else {
                 TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
             }
         };
 
-        function reviewDocumentTaskSuccessCallback(data) {
+        function activitiTaskSuccessCallback(data) {
             $scope.saved = false;
             $scope.loading = false;
             $scope.onModalClose();
@@ -137,7 +149,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                 $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
             } else {
-                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
+                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
             }
             $scope.onModalClose();
         }
@@ -197,9 +209,8 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.inputClear = function () {
-            $scope.config.data.attachedToObjectName = "";
-            $scope.config.data.attachedToObjectId = "";
-
+            $scope.config.data.attachedToObjectName = null;
+            $scope.config.data.attachedToObjectId = null;
         };
 
         //groupChange function
@@ -246,55 +257,21 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
                         $scope.config.data.assignee = selectedUser.object_id_s;
                         $scope.userOrGroupName = selectedUser.name;
-                        if(selectedGroup){
-                            $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
-                            $scope.groupName = selectedGroup.name;
-                        }
-
+                        $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
+                        $scope.groupName = selectedGroup.name;
 
                         return;
                     } else if(selectedObjectType === 'GROUP') {  // Selected group
                         var selectedUser = selection.detailSelectedItems;
                         var selectedGroup = selection.masterSelectedItem;
-                        if(selectedUser){
-                            $scope.config.data.assignee = selectedUser.object_id_s;
-                            $scope.userOrGroupName = selectedUser.name;
-                        }
+
+                        $scope.config.data.assignee = selectedUser.object_id_s;
                         $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
+                        $scope.userOrGroupName = selectedUser.name;
                         $scope.groupName = selectedGroup.name;
 
                         return;
                     }
-                }
-
-            }, function () {
-                // Cancel button was clicked.
-                return [];
-            });
-
-        };
-        $scope.objectSearch = function () {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/tasks/views/components/task-object-search.client.view.html',
-                controller: 'Tasks.ObjectSearchController',
-                size: 'lg',
-                resolve: {
-                    $filter: function () {
-                        return $scope.config.objectSearch.objectFacetFilter + $scope.config.data.attachedToObjectType;
-                    },
-                    $config: function () {
-                        return $scope.objectSearchConfig;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (chosenObject) {
-                if (chosenObject) {
-                    $scope.config.data.attachedToObjectName = chosenObject.name;
-                    $scope.config.data.attachedToObjectId = chosenObject['object_id_s'];
-
-                    return;
                 }
 
             }, function () {

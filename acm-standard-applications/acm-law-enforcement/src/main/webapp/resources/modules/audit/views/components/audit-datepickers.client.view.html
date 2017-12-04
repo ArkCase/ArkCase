@@ -15,6 +15,7 @@
                    close-on-date-selection="true"
                    show-button-bar="true"
                    on-open-focus="false"
+                   ng-blur="dateFromChanged()"
                    close-text="{{'audit.datepicker.close' | translate}}"
                    current-text="{{'audit.datepicker.current' | translate}}"
                    clear-text="{{'audit.datepicker.clear' | translate}}"/>
@@ -42,6 +43,7 @@
                    close-on-date-selection="true"
                    show-button-bar="true"
                    on-open-focus="false"
+                   ng-blur="dateToChanged()"
                    close-text="{{'audit.datepicker.close' | translate}}"
                    current-text="{{'audit.datepicker.current' | translate}}"
                    clear-text="{{'audit.datepicker.clear' | translate}}"/>
