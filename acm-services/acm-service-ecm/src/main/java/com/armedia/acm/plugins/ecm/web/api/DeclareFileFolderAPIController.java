@@ -7,7 +7,6 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.FileFolderDeclareDTO;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -35,7 +33,6 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ApplicationEventPublisher applicationEventPublisher;
-    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @RequestMapping(value = "/declare/{parentObjectType}/{parentObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -59,20 +56,10 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
                 {
                 case "FILE":
                     Long fileId = fileFolderDeclareDTO.getId();
-                    if (!getArkPermissionEvaluator().hasPermission(authentication, fileId, "FILE", "read|group-read|write|group-write"))
-                    {
-                        throw new AcmAccessControlException(Arrays.asList(""),
-                                "The user {" + authentication.getName() + "} is not allowed to read from file with id=" + fileId);
-                    }
                     getEcmFileService().declareFileAsRecord(fileId, authentication);
                     break;
                 case "FOLDER":
                     Long folderId = fileFolderDeclareDTO.getId();
-                    if (!getArkPermissionEvaluator().hasPermission(authentication, folderId, "FOLDER", "read|group-read|write|group-write"))
-                    {
-                        throw new AcmAccessControlException(Arrays.asList(""),
-                                "The user {" + authentication.getName() + "} is not allowed to read from folder with id=" + folderId);
-                    }
                     getEcmFileService().declareFolderAsRecord(folderId, authentication, parentObjectType, parentObjectId);
                     break;
                 default:
@@ -103,15 +90,4 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
     {
         this.ecmFileService = ecmFileService;
     }
-
-    public ArkPermissionEvaluator getArkPermissionEvaluator()
-    {
-        return arkPermissionEvaluator;
-    }
-
-    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
-    {
-        this.arkPermissionEvaluator = arkPermissionEvaluator;
-    }
-
 }

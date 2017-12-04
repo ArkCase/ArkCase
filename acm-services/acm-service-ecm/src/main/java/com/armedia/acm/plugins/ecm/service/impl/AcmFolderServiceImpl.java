@@ -143,7 +143,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             else
             {
 
-                log.error("Folder not added under {} successfully {}", parentFolder.getName(), e.getMessage(), e);
+                log.error("Folder {} not added successfully under as a child to folder {} with error mesage: {}", newFolderName,
+                        parentFolder.getName(), e.getMessage(), e);
                 throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                         parentFolder.getId(), "Folder was no added under " + parentFolder.getName() + " successfully", null);
             }

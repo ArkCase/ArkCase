@@ -118,13 +118,11 @@
   <bean id="declareFileFolderAPIController"
         class="com.armedia.acm.plugins.ecm.web.api.DeclareFileFolderAPIController">
     <property name="ecmFileService" ref="ecmFileService"/>
-    <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
   </bean>
 
   <bean id="listFileFolderByCategory"
         class="com.armedia.acm.plugins.ecm.web.api.ListFileFolderByCategoryAPIController">
     <property name="ecmFileService" ref="ecmFileService"/>
-    <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
   </bean>
 
   <bean id="updateFileTypeAPIController" class="com.armedia.acm.plugins.ecm.web.api.UpdateFileTypeAPIController">

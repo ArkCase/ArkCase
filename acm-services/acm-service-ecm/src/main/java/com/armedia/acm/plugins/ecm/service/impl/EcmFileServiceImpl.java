@@ -626,6 +626,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @PreAuthorize("hasPermission(#container.folder.id, 'FOLDER', 'read|group-read|write|group-write')")
     public AcmCmisObjectList listFolderContents(Authentication auth, AcmContainer container, String category, String sortBy,
             String sortDirection, int startRow, int maxRows) throws AcmListObjectsFailedException
     {
@@ -668,6 +669,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @PreAuthorize("hasPermission(#container.folder.id, 'FOLDER', 'read|group-read|write|group-write')")
     public AcmCmisObjectList listFileFolderByCategory(Authentication auth, AcmContainer container, String sortBy, String sortDirection,
             int startRow, int maxRows, String category) throws AcmListObjectsFailedException
     {
@@ -675,19 +677,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 + container.getContainerObjectType();
 
         String filterQuery = "fq=(object_type_s:FILE OR object_type_s:FOLDER) AND (category_s:" + category + " OR category_s:"
-                + category.toUpperCase() + ") AND hidden_b:false"; // in
-        // case
-        // some
-        // bad
-        // data
-        // gets
-        // through
+                + category.toUpperCase() + ") AND hidden_b:false"; // in case some bad data gets through
 
         return findObjects(auth, container, container.getFolder().getId(), category, query, filterQuery, startRow, maxRows, sortBy,
                 sortDirection);
     }
 
     @Override
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write)")
     public void declareFileAsRecord(Long fileId, Authentication authentication) throws AcmObjectNotFoundException
     {
 
@@ -712,6 +709,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write)")
     public void declareFolderAsRecord(Long folderId, Authentication authentication, String parentObjectType, Long parentObjectId)
             throws AcmObjectNotFoundException, AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
     {
