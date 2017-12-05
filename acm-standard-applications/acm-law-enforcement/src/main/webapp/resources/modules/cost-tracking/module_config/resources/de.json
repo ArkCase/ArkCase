@@ -77,12 +77,20 @@
       }
     }
   },
+  "costTracking.comp.approvers": {
+    "title": "de_Approvers",
+    "table.columns": {
+      "fullName": "de_Full Name",
+      "userId": "de_Username"
+    }
+  },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "Details",
       "person.label": "Menschen",
       "summary.label": "Kosten",
-      "tags.label": "Etiketten"
+      "tags.label": "Etiketten",
+      "approvers.label": "de_Approvers"
     },
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
