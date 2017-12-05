@@ -10,18 +10,20 @@ angular.module('document-details').controller('Document.VersionHistoryController
         $scope.selectedRows = [];
 
         function updateVersionHistory(event, documentDetails) {
+            var fileUpdateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + $scope.ecmFile.fileId;
+            updateVersionHistoryDetails(event, documentDetails);
+            $scope.$bus.subscribe(fileUpdateEvent, function (data) {
+                EcmService.getFile({fileId: data.objectId}).$promise.then(function (ecmFileInfo) {
+                    updateVersionHistoryDetails(fileUpdateEvent, ecmFileInfo);
+                });
+            });
+        }
+
+        function updateVersionHistoryDetails(event, documentDetails) {
             if (documentDetails.versions && documentDetails.versions.length) {
                 $scope.versions = documentDetails.versions;
                 $scope.activeVersionTag = documentDetails.activeVersionTag;
             }
-
-            var fileUpdateEvent = "object.changed/" + ObjectService.ObjectTypes.FILE + "/" + $scope.ecmFile.fileId;
-
-            $scope.$bus.subscribe(fileUpdateEvent, function (data) {
-                EcmService.getFile({fileId: data.objectId}).$promise.then(function (ecmFileInfo) {
-                    updateVersionHistory(fileUpdateEvent, ecmFileInfo);
-                });
-            });
         }
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
