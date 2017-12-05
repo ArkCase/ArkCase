@@ -9,8 +9,8 @@ import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDt
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +30,7 @@ public class UserPreferenceService
     private ModuleDao moduleDao;
     private UserPreferenceEventPublisher userPreferenceEventPublisher;
     private DashboardPropertyReader dashboardPropertyReader;
+    private AcmUserRoleService userRoleService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
 
@@ -118,7 +119,7 @@ public class UserPreferenceService
     private List<Widget> getAllAllowedWidgetsForUser(String userId) throws AcmObjectNotFoundException
     {
         List<Widget> result;
-        List<AcmRole> roles = getUserDao().findAllRolesByUser(userId);
+        Set<String> roles = userRoleService.getUserRoles(userId);
         try
         {
             result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
@@ -256,5 +257,10 @@ public class UserPreferenceService
     public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
     {
         this.dashboardPropertyReader = dashboardPropertyReader;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }
