@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupType;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class LdapGroup
@@ -18,9 +19,8 @@ public class LdapGroup
     private String directoryName;
     private String displayName;
     private Set<String> members = new HashSet<>();
-    private Set<String> memberUsers = new HashSet<>();
+    private Set<String> memberUserDns = new HashSet<>();
     private Set<LdapGroup> memberGroups = new HashSet<>();
-    private Set<LdapGroup> descendants = new HashSet<>();
     private Set<LdapGroup> ascendants = new HashSet<>();
 
     public AcmGroup toAcmGroup()
@@ -38,44 +38,49 @@ public class LdapGroup
     {
         acmGroup.setDescription(description);
         acmGroup.setStatus(AcmGroupStatus.ACTIVE);
-        acmGroup.setAscendantsList(getAscendantsAsString());
         acmGroup.setDisplayName(displayName);
+        acmGroup.setAscendantsList(getAscendantsAsString());
         return acmGroup;
     }
 
     public boolean isChanged(AcmGroup acmGroup)
     {
-        return !(Objects.equals(directoryName, acmGroup.getDirectoryName()) &&
-                Objects.equals(description, acmGroup.getDescription())) &&
-                Objects.equals(getAscendantsAsString(), acmGroup.getAscendantsList());
+        boolean directoryNameChanged = !Objects.equals(directoryName, acmGroup.getDirectoryName());
+        boolean descriptionChanged = !Objects.equals(description, acmGroup.getDescription());
+        boolean statusChanged = AcmGroupStatus.ACTIVE != acmGroup.getStatus();
+        boolean ascendantsChanged = !Objects.equals(getAscendantsAsString(), acmGroup.getAscendantsList());
+        return directoryNameChanged || descriptionChanged || statusChanged || ascendantsChanged;
     }
 
-    public Set<String> groupNewUsers(Set<String> existingUsersDns)
+    public Set<String> getNewUserMembers(Set<String> existingUsersDns)
     {
-        return memberUsers.stream()
-                .filter(it -> !existingUsersDns.contains(it))
+        Predicate<String> isNew = it -> !existingUsersDns.contains(it);
+        return memberUserDns.stream()
+                .filter(isNew)
                 .collect(Collectors.toSet());
     }
 
     public Set<String> groupNewGroups(Set<String> existingGroups)
     {
+        Predicate<String> isNew = groupName -> !existingGroups.contains(groupName);
         return getMemberGroupNames().stream()
-                .filter(groupName -> !existingGroups.contains(groupName))
+                .filter(isNew)
                 .collect(Collectors.toSet());
     }
 
     public Set<String> groupRemovedGroups(Set<String> existingGroups)
     {
-        final Set<String> memberGroupNames = getMemberGroupNames();
+        Predicate<String> notInMembers = groupName -> !getMemberGroupNames().contains(groupName);
         return existingGroups.stream()
-                .filter(groupName -> !memberGroupNames.contains(groupName))
+                .filter(notInMembers)
                 .collect(Collectors.toSet());
     }
 
     public Set<String> groupRemovedUsers(Set<String> existingUsersDns)
     {
+        Predicate<String> notInMembers = it -> !memberUserDns.contains(it);
         return existingUsersDns.stream()
-                .filter(it -> !memberUsers.contains(it))
+                .filter(notInMembers)
                 .collect(Collectors.toSet());
     }
 
@@ -84,11 +89,6 @@ public class LdapGroup
         return memberGroups.stream()
                 .map(LdapGroup::getName)
                 .collect(Collectors.toSet());
-    }
-
-    public boolean hasUserMember(String userId)
-    {
-        return memberUsers.contains(userId);
     }
 
     public String getName()
@@ -161,19 +161,19 @@ public class LdapGroup
         this.members = members;
     }
 
-    public void setMemberUsers(Set<String> memberUsers)
+    public void setMemberUserDns(Set<String> memberUserDns)
     {
-        this.memberUsers = memberUsers;
+        this.memberUserDns = memberUserDns;
     }
 
     public void addUserMember(String userDn)
     {
-        getMemberUsers().add(userDn);
+        getMemberUserDns().add(userDn);
     }
 
-    public Set<String> getMemberUsers()
+    public Set<String> getMemberUserDns()
     {
-        return memberUsers;
+        return memberUserDns;
     }
 
     public Set<LdapGroup> getMemberGroups()
@@ -192,21 +192,6 @@ public class LdapGroup
         {
             memberGroups.add(group);
         }
-    }
-
-    public Set<LdapGroup> getDescendants()
-    {
-        return descendants;
-    }
-
-    public void setDescendants(Set<LdapGroup> descendants)
-    {
-        this.descendants = descendants;
-    }
-
-    public Set<LdapGroup> getAscendants()
-    {
-        return ascendants;
     }
 
     public String getAscendantsAsString()

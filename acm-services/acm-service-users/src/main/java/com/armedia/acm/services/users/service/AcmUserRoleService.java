@@ -23,6 +23,23 @@ public class AcmUserRoleService
     private AcmRoleToGroupMapping roleToGroupConfig;
     private Logger log = LoggerFactory.getLogger(getClass());
 
+    public Set<String> getUserRoles(String userId)
+    {
+        Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
+
+        AcmUser user = userDao.findByUserId(userId);
+        Set<AcmGroup> userGroups = user.getGroups();
+
+        Set<String> userGroupNames = Stream.concat(userGroups.stream().map(AcmGroup::getName),
+                userGroups.stream().flatMap(AcmGroup::getAscendants))
+                .collect(Collectors.toSet());
+
+        return userGroupNames.stream()
+                .filter(groupToRoleMap::containsKey)
+                .flatMap(g -> groupToRoleMap.get(g).stream())
+                .collect(Collectors.toSet());
+    }
+
     public void saveValidUserRolesPerAddedUserGroups(String userId, Set<AcmGroup> groups)
     {
         Map<String, List<String>> groupToRoleMap = roleToGroupConfig.getGroupToRolesMap();
