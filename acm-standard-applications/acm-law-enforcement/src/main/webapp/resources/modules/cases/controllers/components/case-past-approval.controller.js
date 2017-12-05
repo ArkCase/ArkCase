@@ -20,6 +20,8 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "pastapprovals"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }

@@ -63,7 +63,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.objectSearchConfig = _.find(moduleConfig.components, {id: "objectSearch"});
 
             $scope.userName = $scope.userFullName;
-            $scope.config.data.assignee = $scope.userId;
+            $scope.config.data.assignee = "";
             $scope.config.data.taskStartDate = new Date();
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
@@ -91,18 +91,19 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.loading = true;
             if ($scope.config.data.attachedToObjectName === "") {
                 $scope.config.data.attachedToObjectName = "";
+                $scope.config.data.attachedToObjectId = "";
             }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
-                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(activitiTaskSuccessCallback, errorCallback);
+                TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
             } else {
                 TaskNewTaskService.saveAdHocTask(taskData).then(saveNewTaskSuccessCallback, errorCallback);
             }
         };
 
-        function activitiTaskSuccessCallback(data) {
+        function reviewDocumentTaskSuccessCallback(data) {
             $scope.saved = false;
             $scope.loading = false;
             $scope.onModalClose();
@@ -114,7 +115,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
                 $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
             } else {
-                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.taskId);
+                ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
             }
             $scope.onModalClose();
         }
@@ -171,12 +172,12 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         $scope.updateAssocParentType = function () {
             $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
-
         };
 
         $scope.inputClear = function(){
-            $scope.config.data.attachedToObjectName = null;
-            $scope.config.data.attachedToObjectId = null;
+            $scope.config.data.attachedToObjectName = "";
+            $scope.config.data.attachedToObjectId = "";
+
         };
 
         //groupChange function
@@ -193,6 +194,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.userOrGroupSearch = function () {
+
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
@@ -207,22 +209,38 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     },
                     $config: function () {
                         return $scope.userSearchConfig;
-                    }
+                    },
                 }
             });
 
-            modalInstance.result.then(function (chosenUserOrGroup) {
-                if (chosenUserOrGroup) {
-                    if (chosenUserOrGroup.object_type_s === 'USER') {  // Selected a user
-                        $scope.config.data.assignee = chosenUserOrGroup.object_id_s;
-                        $scope.userOrGroupName = chosenUserOrGroup.name;
-                        $scope.pickOwningGroup(chosenUserOrGroup.object_id_s, chosenUserOrGroup.name);
+
+
+            modalInstance.result.then(function (selection) {
+
+                if (selection) {
+                    var selectedObjectType = selection.masterSelectedItem.object_type_s;
+                    if(selectedObjectType === 'USER'){  // Selected user
+                        var selectedUser = selection.masterSelectedItem;
+                        var selectedGroup = selection.detailSelectedItems;
+
+                        $scope.config.data.assignee = selectedUser.object_id_s;
+                        $scope.userOrGroupName = selectedUser.name;
+                        if(selectedGroup){
+                            $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
+                            $scope.groupName = selectedGroup.name;
+                        }
+
 
                         return;
-                    } else if (chosenUserOrGroup.object_type_s === 'GROUP') {
-                        $scope.config.data.assignee = null;
-                        $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
-                        $scope.userOrGroupName = chosenUserOrGroup.name;
+                    } else if(selectedObjectType === 'GROUP') {  // Selected group
+                        var selectedUser = selection.detailSelectedItems;
+                        var selectedGroup = selection.masterSelectedItem;
+                        if(selectedUser){
+                            $scope.config.data.assignee = selectedUser.object_id_s;
+                            $scope.userOrGroupName = selectedUser.name;
+                        }
+                        $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
+                        $scope.groupName = selectedGroup.name;
 
                         return;
                     }
@@ -234,38 +252,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             });
 
         };
-
-        $scope.pickOwningGroup = function (assigneeLdapId, asigneeName) {
-            var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
-                templateUrl: 'modules/tasks/views/components/task-group-search.client.view.html',
-                controller: 'Tasks.GroupSearchController',
-                size: 'lg',
-                resolve: {
-                    $filter: function () {
-                        return $scope.config.groupSearch.groupFacetFilter + assigneeLdapId +$scope.config.groupSearch.groupFacetExtraFilter;
-                    },
-                    $searchValue: function () {
-                        return asigneeName;
-                    },
-                    $config: function () {
-                        return $scope.userSearchConfig;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (chosenUserOrGroup) {
-                $scope.config.data.candidateGroups = [chosenUserOrGroup.object_id_s];
-                $scope.testId = chosenUserOrGroup.object_id_s;
-
-                return;
-            }, function () {
-                // Cancel button was clicked.
-                return [];
-            });
-
-        };
-
         $scope.objectSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,

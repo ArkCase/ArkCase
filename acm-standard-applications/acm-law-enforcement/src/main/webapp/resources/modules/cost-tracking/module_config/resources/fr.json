@@ -76,12 +76,20 @@
       }
     }
   },
+  "costTracking.comp.approvers": {
+    "title": "fr_Approvers",
+    "table.columns": {
+      "fullName": "fr_Full Name",
+      "userId": "fr_Username"
+    }
+  },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "Détails",
       "person.label": "Personnes",
       "summary.label": "Frais",
-      "tags.label": "étiquettes"
+      "tags.label": "étiquettes",
+      "approvers.label": "fr_Approvers"
     },
     "sorters": {
       "dateAsc": "Trier Date Asc",

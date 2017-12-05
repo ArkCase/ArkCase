@@ -27,30 +27,36 @@ angular.module('dashboard.documents', ['adf.provider'])
                     configName: "cases",
                     getInfo: CaseInfoService.getCaseInfo,
                     objectType: ObjectService.ObjectTypes.CASE_FILE
-                }
-                , {
+                },
+                {
                     name: "COMPLAINT",
                     configName: "complaints",
                     getInfo: ComplaintInfoService.getComplaintInfo,
                     objectType: ObjectService.ObjectTypes.COMPLAINT
-                }
-                , {
+                },
+                {
                     name: "TASK",
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
                     objectType: ObjectService.ObjectTypes.TASK
-                }
-                , {
+                },
+                {
                     name: "ADHOC",
                     configName: "tasks",
                     getInfo: TaskInfoService.getTaskInfo,
                     objectType: ObjectService.ObjectTypes.ADHOC_TASK
-                }
-                , {
+                },
+                {
                     name: "DOC_REPO",
                     configName: "document-repository",
                     getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                     objectType: ObjectService.ObjectTypes.DOC_REPO
+                },
+                {
+                    name: "MY_DOC_REPO",
+                    configName: "my-documents",
+                    getInfo: DocumentRepositoryInfoService.getDocumentRepositoryInfo,
+                    objectType: ObjectService.ObjectTypes.MY_DOC_REPO
                 }
             ];
 
