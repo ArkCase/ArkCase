@@ -4,39 +4,45 @@
     "menus": {
       "leftnav.item": "Berichte"
     },
-    "selectReport" : {
-      "label": "de_Report",
-      "placeholder": "de_Select Report"
+    "selectReport": {
+      "label": "Bericht",
+      "placeholder": "Wählen Sie Bericht"
     },
-    "selectState" : {
-      "label": "de_State",
-      "placeholder": "de_Select State"
+    "selectState": {
+      "label": "Zustand",
+      "placeholder": "Staat wählen"
     },
     "startDate": {
-      "label": "de_From"
+      "label": "Von"
     },
-    "endDate" : {
-      "label": "de_To"
+    "endDate": {
+      "label": "Zu"
     },
-
     "dropdown": {
-      "turnaround": "de_Turnaround Time by Requester",
-      "requester": "de_Requester Type Summary",
-      "pending": "de_Pending Orders Report",
-      "associate": "de_Associate Productivity Report",
-      "origination": "de_Origination Count",
-      "transfers": "de_Transfers Report",
-      "exceptions": "de_Exceptions Report (Non-Compliance)"
+      "turnaround": "Bearbeitungszeit nach Anforderer",
+      "requester": "Zusammenfassung des Anforderertyps",
+      "pending": "Bericht über ausstehende Bestellungen",
+      "associate": "Associate-Produktivitätsbericht",
+      "origination": "Ursprungszählung",
+      "transfers": "Übertragungen Bericht",
+      "exceptions": "Ausnahmenbericht (Nichteinhaltung)"
     },
-    "datepicker":{
-      "close": "de_Done"
+    "datepicker": {
+      "close": "Erledigt",
+      "clear": "Klar",
+      "current": "Heute"
     },
     "btn": {
-      "generateReport": "de_Generate report"
+      "generateReport": "Bericht generieren"
     },
     "checkBox": {
       "xmlReport": "Als XML anzeigen"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "Datumsauswahl"
+  },
+  "reports.comp.reportselection": {
+    "title": "Berichte"
   }
 }
-

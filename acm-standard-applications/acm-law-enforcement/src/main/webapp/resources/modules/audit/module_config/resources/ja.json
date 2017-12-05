@@ -6,21 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "ja_Report Name",
-        "inputID": "ja_ID",
-        "dateFrom": "ja_From",
-        "dateTo": "ja_To"
+        "reportName": "レポート名",
+        "inputID": "",
+        "dateFrom": "から",
+        "dateTo": "に"
       },
       "placeholder": {
-        "selectAudit": "ja_ALL",
-        "inputId": "ja_#"
+        "selectAudit": "すべて",
+        "inputId": "＃"
+      },
+      "checkBox": {
+        "xmlReport": "XMLとして表示"
       },
       "button": {
-        "generateAuditReport.btn": "ja_Generate Audit Report"
+        "generateAuditReport.btn": "監査レポートの生成"
       }
     },
-    "datepickers":{
-      "close": "ja_Done"
+    "datepicker": {
+      "close": "完成した",
+      "clear": "クリア",
+      "current": "今日"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "監査"
+  },
+  "audit.comp.datepickers": {
+    "title": "監査"
   }
 }
