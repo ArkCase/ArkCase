@@ -36,7 +36,7 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException, AcmLdapActionFailedException
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
