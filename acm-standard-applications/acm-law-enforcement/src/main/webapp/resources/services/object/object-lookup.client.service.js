@@ -61,6 +61,21 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getAuditReportNames
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns a list of audit reports
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getAuditReportNames = function () {
+            return Service.getLookupByLookupName("auditReportNames");
+        };
+
+
+        /**
+         * @ngdoc method
          * @name getPriorities
          * @methodOf services:Object.LookupService
          *
@@ -604,6 +619,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          */
         Service.getOrganizationPersonRelationTypes = function () {
             return Service.getLookupByLookupName("organizationPersonRelationTypes");
+        };
+
+        /**
+         * @ngdoc method
+         * @name getBusinessProcessTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of Business Process Types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getBusinessProcessTypes = function () {
+            return Service.getLookupByLookupName('businessProcessTypes');
         };
 
         /**

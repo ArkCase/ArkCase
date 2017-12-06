@@ -88,7 +88,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-search.xml",
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
-        "/spring/spring-library-user-service.xml"})
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-object-converter.xml"})
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {

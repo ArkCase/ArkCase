@@ -1,4 +1,5 @@
-/* @override https://core.arkcase.dev.armedia.com/arkcase/modules/core/css/core.css */
+/* @override 
+	http://localhost:8080/arkcase/modules/core/css/core.css */
 
 html {
     height: 100%;
@@ -534,6 +535,15 @@ body.fullscreen .cancelFullScreen i.fa {
 /* Responsive - Small Devices, Tablets */
 
 @media only screen and (max-width: 768px) {
+
+	.page-content {
+	    display: block;
+	    position: absolute;
+	    top: 535px;
+	    width: 100%;
+	    overflow: scroll !important;
+	}
+
     .navbar-arkcase {
         width: 100%;
     }
@@ -677,7 +687,7 @@ body.fullscreen .cancelFullScreen i.fa {
 
     .page-content {
         display: block;
-        top: 270px;
+        top: 435px;
         width: 100%;
     }
 
@@ -696,6 +706,7 @@ body.fullscreen .cancelFullScreen i.fa {
 
     .module-content .left-sidebar {
         width: 100% !important;
+        height: auto;
     }
 
     .module-content .left-sidebar-sm {
@@ -741,11 +752,13 @@ body.fullscreen .cancelFullScreen i.fa {
 
 @media only screen and (max-width: 480px) {
 
-    .page-content {
-        display: block;
-        top: 310px;
-        width: 100%;
-    }
+	.page-content {
+	    display: block;
+	    position: absolute;
+	    top: 535px;
+	    width: 100%;
+	    overflow: scroll !important;
+	}
 
     .leftnav-menu ul.nav.nav-main li a {
         text-align: left;
@@ -758,6 +771,20 @@ body.fullscreen .cancelFullScreen i.fa {
         float: left;
         width: 50%;
     }
+    
+    .module-content {
+        border-spacing: 0;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding-right: 200px;
+        overflow: scroll !important;
+    }
+    
+    
+    
 
     .pull-left {
         float: left !important;
@@ -768,4 +795,21 @@ body.fullscreen .cancelFullScreen i.fa {
 /* Responsive - Custom, iPhone Retina */
 
 @media only screen and (max-width: 320px) {
+
+	.page-content {
+	    display: block;
+	    top: 535px;
+	    width: 100%;
+	}
+	
+	.leftnav-menu ul {
+		width: 320px !important;
+		max-width: 320px !important;
+	}
+
+    .pull-left {
+        float: left !important;
+    }
+    
+	
 }

@@ -491,6 +491,16 @@
         "cancel": "Отменить документ",
         "concur": "Совпадать",
         "nonConcur": "Отклонять"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -144,7 +145,7 @@ public class PeopleAPIController
     @ResponseBody
     public ResponseEntity uploadImage(@PathVariable("personId") Long personId, @RequestPart("data") UploadImageRequest data,
             @RequestPart(value = "file", required = false) MultipartFile image, Authentication auth) throws AcmCreateObjectFailedException,
-            AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException
+            AcmUpdateObjectFailedException, IOException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFileTypesException
     {
         Person person = personService.get(personId);
         try

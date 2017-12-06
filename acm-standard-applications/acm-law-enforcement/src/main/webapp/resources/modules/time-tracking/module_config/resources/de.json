@@ -71,12 +71,20 @@
       }
     }
   },
+  "timeTracking.comp.approvers": {
+    "title": "de_Approvers",
+    "table.columns": {
+      "fullName": "de_Full Name",
+      "userId": "de_Username"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Details",
       "person.label": "Menschen",
       "summary.label": "Stunde Zusammenfassung",
-      "tags.label": "Etiketten"
+      "tags.label": "Etiketten",
+      "approvers.label": "de_Approvers"
     },
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",

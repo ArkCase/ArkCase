@@ -14,8 +14,11 @@
                 </ng-switch>
                 <span class="required-asterisk">*</span><br/>
                 <button ngf-select ng-model="userPicture" id="file"
-                        ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                        class="btn btn-sm btn-default" ngf-change="upload()" required="required">
+                        ngf-pattern="'image/*'"
+                        accept="image/*"
+                        class="btn btn-sm btn-default"
+                        ngf-change="upload()"
+                        required="required">
                     <ng-switch on="userPicture.isEdit">
                         <span ng-switch-default translate>people.comp.pictures.dialog.browse</span>
                         <span ng-switch-when="true" translate>people.comp.pictures.dialog.edit.change</span>

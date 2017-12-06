@@ -79,6 +79,9 @@
       "yes": "Yes",
       "change": "Change Picture",
       "save": "Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "en-in_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {

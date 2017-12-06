@@ -491,6 +491,16 @@
         "cancel": "取消文件",
         "concur": "同意",
         "nonConcur": "不同意"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

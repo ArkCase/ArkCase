@@ -70,13 +70,20 @@
         "error": "ru_Error deleting tag"
       }
     }
-  },
+  },"timeTracking.comp.approvers": {
+  "title": "ru_Approvers",
+  "table.columns": {
+    "fullName": "ru_Full Name",
+    "userId": "ru_Username"
+  }
+},
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Детали",
       "person.label": "Люди",
       "summary.label": "расходы",
-      "tags.label": "Теги"
+      "tags.label": "Теги",
+      "approvers.label": "ru_Approvers"
     },
     "sorters": {
       "dateAsc": "Сортировка даты Asc",

@@ -112,7 +112,7 @@
     </bean>
 
     <bean id="acmRoleToGroupConfig" class="com.armedia.acm.services.users.model.AcmRoleToGroupMapping">
-        <constructor-arg name="roleToGroupMap" ref="applicationRoleToUserGroupProperties"/>
+        <property name="roleToGroupMap" ref="applicationRoleToUserGroupProperties"/>
     </bean>
 
     <!-- NOTE: LDAP sync service beans (of class com.armedia.acm.services.users.service.ldap.LdapSyncService) should
