@@ -20,6 +20,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,11 +55,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         LookupDefinition lookupDefinition = new LookupDefinition();
         lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
         lookupDefinition.setName("colors");
-        String lookupAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\"}]";
-        lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
 
         expect(mockConfigService.getLookupsAsJson()).andReturn("{\"standardLookup\" : [{\"colors\" : []}]}");
-        mockConfigService.saveLookups("{\"standardLookup\":[{\"colors\":" + lookupAsJson + "}]}");
+        mockConfigService.saveLookupsExt("{\"standardLookup\":[{\"colors\":" + entriesAsJson + "}]}");
         expectLastCall().once();
 
         // when
@@ -68,9 +69,9 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         // then
         verifyAll();
         ArrayNode updatedValue = JsonPath.using(configuration).parse(ret).read("$." + lookupDefinition.getLookupType().getTypeName()
-                + "..[?(@." + lookupDefinition.getName() + ")]." + lookupDefinition.getName());
+                + "..[?(@.name=='" + lookupDefinition.getName() + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), lookupAsJson, false);
+        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, false);
     }
 
     @Test
@@ -84,7 +85,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
 
         expect(mockConfigService.getLookupsAsJson()).andReturn("{\"nestedLookup\" : [{\"contactMethodTypes\" : []}]}");
-        mockConfigService.saveLookups("{\"nestedLookup\":[{\"contactMethodTypes\":" + lookupAsJson + "}]}");
+        mockConfigService.saveLookupsExt("{\"nestedLookup\":[{\"contactMethodTypes\":" + lookupAsJson + "}]}");
         expectLastCall().once();
 
         // when
@@ -143,10 +144,12 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String value1 = "someValue1";
         String key2 = "someKey2";
         String value2 = "someValue2";
-        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
-                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}]}]}";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
 
         expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
 
         // when
         replayAll();
@@ -172,10 +175,12 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String value1 = "someValue1";
         String key2 = "someKey2";
         String value2 = "someValue2";
-        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
-                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}]}]}";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
 
         expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
 
         // when
         replayAll();
@@ -184,5 +189,200 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         // then
         verifyAll();
         assertNull(acmLookup);
+    }
+
+    @Test
+    public void testMergeLookupsAddingNewLookup() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+
+        String lookupNameExt = "lookupNameExt";
+        String key1Ext = "someKey1Ext";
+        String value1Ext = "someValue1Ext";
+        String key2Ext = "someKey2Ext";
+        String value2Ext = "someValue2Ext";
+        Boolean readonlyExt = false;
+        String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
+                + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void testMergeLookupsUpdateLookup() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+        String lookupNameExt = "lookupName";
+        String key1Ext = "someKey1Ext";
+        String value1Ext = "someValue1Ext";
+        String key2Ext = "someKey2Ext";
+        String value2Ext = "someValue2Ext";
+        Boolean readonlyExt = false;
+        String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
+                + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void testMergeLookupsUpdateLookupNew() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1 + "\"},{\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+        String lookupNameExt = "lookupName";
+        String key1Ext = "someKey1Ext";
+        String value1Ext = "someValue1Ext";
+        String key2Ext = "someKey2Ext";
+        String value2Ext = "someValue2Ext";
+        Boolean readonlyExt = false;
+        String lookupsExt = "{\"standardLookup\":[{\"name\":\"" + lookupNameExt + "\",\"entries\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
+                + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void testMergeLookupsAddingNewLookupWithEmptyEntries() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+
+        String lookupNameExt = "lookupNameExt";
+        Boolean readonlyExt = false;
+        String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{}],\"readonly\":\"" + readonlyExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void testMergeLookupsUpdateLookupWithEmptyEntries() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
+                + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+
+        String lookupNameExt = "lookupName";
+        Boolean readonlyExt = false;
+        String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{}],\"readonly\":\"" + readonlyExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+    }
+
+    @Test
+    public void testMergeLookupsUpdateLookupOfDifferentTypes() {
+        // given
+        String lookupName = "lookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+
+        String inverseLookupName = "inverseLookupName";
+        String inverseKey1 = "someInverseKey1";
+        String inverseValue1 = "someInverseValue1";
+        String keyInv2 = "someKey2";
+        String valueInv2 = "someValue2";
+        Boolean readonlyInv = true;
+
+
+        String lookups = "{\"standardLookup\":[{\"" + lookupName + "\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1 + "\"},{\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}],\"inverseValuesLookup\":[{\"" + inverseLookupName + "\":[{\"inverseKey\":\"" + inverseKey1 + "\",\"inverseValue\":\"" + inverseValue1 + "\",\"key\":\"" + keyInv2 + "\",\"value\":\"" + valueInv2 + "\"}],\"readonly\":\"" + readonlyInv + "\"}]}";
+
+        String lookupNameExt = "lookupName";
+        String key1Ext = "someKey1Ext";
+        String value1Ext = "someValue1Ext";
+        String key2Ext = "someKey2Ext";
+        String value2Ext = "someValue2Ext";
+        Boolean readonlyExt = false;
+
+        String inverseLookupNameExt = "inverseLookupName";
+        String inverseKey1Ext = "someInverseKey1Ext";
+        String inverseValue1Ext = "someInverseValue1Ext";
+        String keyInv2Ext = "someKey2Ext";
+        String valueInv2Ext = "someValue2Ext";
+        Boolean readonlyInvExt = false;
+
+        String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext + "\"},{\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}],\"inverseValuesLookup\":[{\"" + inverseLookupNameExt + "\":[{\"inverseKey\":\"" + inverseKey1Ext + "\",\"inverseValue\":\"" + inverseValue1Ext + "\",\"key\":\"" + keyInv2Ext + "\",\"value\":\"" + valueInv2Ext + "\"}],\"readonly\":\"" + readonlyInvExt + "\"}]}";
+
+        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+
+        // when
+        replayAll();
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        verifyAll();
+
     }
 }
