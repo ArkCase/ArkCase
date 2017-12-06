@@ -99,10 +99,24 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.startDateChanged = function () {
             var todayDate = new Date();
             if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
-                $scope.config.data.taskStartDate = moment().year(todayDate.getFullYear()).month(todayDate.getMonth()).date(todayDate.getDate())._d;
+                $scope.config.data.taskStartDate = moment()
+                    .year(todayDate.getFullYear())
+                    .month(todayDate.getMonth())
+                    .date(todayDate.getDate())._d;
+            } else {
+                $scope.config.data.taskStartDate = moment()
+                    .year($scope.config.data.taskStartDate.getFullYear())
+                    .month($scope.config.data.taskStartDate.getMonth())
+                    .date($scope.config.data.taskStartDate.getDate())
+                    .hours(todayDate.getHours())
+                    .minutes(todayDate.getMinutes())
+                    .seconds(todayDate.getSeconds())._d;
             }
             if (!Util.isEmpty($scope.config.data.dueDate) && moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
-                $scope.config.data.dueDate = moment().year($scope.config.data.taskStartDate.getFullYear()).month($scope.config.data.taskStartDate.getMonth()).date($scope.config.data.taskStartDate.getDate())._d;
+                $scope.config.data.dueDate = moment()
+                    .year($scope.config.data.taskStartDate.getFullYear())
+                    .month($scope.config.data.taskStartDate.getMonth())
+                    .date($scope.config.data.taskStartDate.getDate())._d;
             }
             if (!Util.isEmpty($scope.config.data.taskStartDate)) {
                 $scope.minDueDate = $scope.config.data.taskStartDate;
@@ -113,10 +127,16 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.dueDateChanged = function () {
             var todayDate = new Date();
             if (Util.isEmpty($scope.config.data.dueDate)) {
-                $scope.config.data.dueDate = moment().year(todayDate.getFullYear()).month(todayDate.getMonth()).date(todayDate.getDate())._d;
+                $scope.config.data.dueDate = moment()
+                    .year(todayDate.getFullYear())
+                    .month(todayDate.getMonth())
+                    .date(todayDate.getDate())._d;
             }
             if (!Util.isEmpty($scope.config.data.dueDate) && moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
-                $scope.config.data.dueDate = moment().year($scope.config.data.taskStartDate.getFullYear()).month($scope.config.data.taskStartDate.getMonth()).date($scope.config.data.taskStartDate.getDate())._d;
+                $scope.config.data.dueDate = moment()
+                    .year($scope.config.data.taskStartDate.getFullYear())
+                    .month($scope.config.data.taskStartDate.getMonth())
+                    .date($scope.config.data.taskStartDate.getDate())._d;
             }
             $scope.validDate = $scope.isValidDate();
         };
