@@ -108,7 +108,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
             }
 
-            $scope.config.data.dueDate = UtilDateService.convertToSecondTime($scope.config.data.dueDate, $scope.config.data.taskStartDate);
+            $scope.config.data.dueDate = UtilDateService.setSameDateTime($scope.config.data.dueDate, $scope.config.data.taskStartDate);
             $scope.minDueDate = $scope.config.data.taskStartDate;
             $scope.validDate = $scope.isValidDate();
         };
@@ -125,7 +125,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
             }
 
-            $scope.config.data.taskStartDate = UtilDateService.convertToSecondTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
+            $scope.config.data.taskStartDate = UtilDateService.setSameDateTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
             $scope.validDate = $scope.isValidDate();
         };
 

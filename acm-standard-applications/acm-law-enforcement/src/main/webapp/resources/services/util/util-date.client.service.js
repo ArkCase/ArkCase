@@ -211,7 +211,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              *
              * @Returns {Date} Date object
              */
-            , setDifferenceOfOneDay: function (firstDate, secondDate) {
+            , setSameDateTime: function (firstDate, secondDate) {
                 firstDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
                 return firstDate;
             }
