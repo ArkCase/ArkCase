@@ -201,6 +201,21 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 var convertedTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), now.getHours(), now.getMinutes(), now.getSeconds(), now.getMilliseconds());
                 return convertedTime;
             }
+            /**
+             * @ngdoc method
+             * @name convertToSecondTime
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Sets difference of 24 hours between firstDate and secondDate by setting the hours, minutes, seconds and milisecond from the firstDate to the secondDate
+             *
+             * @Returns {Date} Date object
+             */
+            , setDifferenceOfOneDay: function (firstDate, secondDate) {
+                firstDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
+                return firstDate;
+            }
+
 
         };
 

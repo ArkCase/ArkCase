@@ -162,7 +162,7 @@
                 ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="task.$invalid || saved || !validDate || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
+        <button type="submit" ng-disabled="(task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)) && !validDate"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
