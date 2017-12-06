@@ -25,7 +25,7 @@ angular.module("dashboard.weather").controller("Dashboard.WeatherController", ["
 
             vm.units = config.units;
 
-            if (params.location != null || params.zip != null) {
+            if (!Util.isEmpty(params.location) || !Util.isEmpty(params.zip)) {
                 WidgetService.getWeather(url, appid, location, zip, units, type).then(function (weather) {
                     var oldWeather = JSON.parse($window.localStorage['lastWeatherData'] || '{}');
                     weather != null ? weather : oldWeather;
