@@ -3,13 +3,18 @@ package com.armedia.acm.services.config.service;
 import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.config.model.JsonConfig;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +31,30 @@ public class ConfigService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     private String lookupsFileLocation;
+    private String lookupsExtFileLocation;
     private List<AcmConfig> configList;
 
+    public void init() throws IOException {
+
+    try {
+
+        Path path = Paths.get(lookupsExtFileLocation);
+        // if lookups-ext.json doesn't exit, create it on file system
+        if(!Files.exists(path)) {
+            String data = "{\n" +
+                    "            \"inverseValuesLookup\": [],\n" +
+                    "            \"standardLookup\": [],\n" +
+                    "            \"nestedLookup\" :[]\n" +
+                    "        }";
+            JSONObject obj = new JSONObject(data);
+
+            Files.write(path, obj.toString().getBytes());
+        }
+    }
+    catch(IOException e){
+        throw new IOException("Could not create the file!");
+    }
+    }
     public List<Map<String, String>> getInfo()
     {
         List<Map<String, String>> retval = new ArrayList<>();
@@ -75,12 +102,17 @@ public class ConfigService
         return getConfigAsJson("lookups");
     }
 
-    public void saveLookups(String updatedLookupsAsJson) throws JSONException, IOException
+    public String getLookupsExtAsJson()
     {
-        Files.write(Paths.get(lookupsFileLocation), new JSONObject(updatedLookupsAsJson).toString(2).getBytes());
+        return getConfigAsJson("lookups-ext");
+    }
+
+    public void saveLookupsExt(String updatedLookupsAsJson) throws JSONException, IOException
+    {
+        Files.write(Paths.get(lookupsExtFileLocation), new JSONObject(updatedLookupsAsJson).toString(2).getBytes());
 
         // replace the lookups value in configList
-        configList.stream().filter(config -> config.getConfigName().equals("lookups"))
+        configList.stream().filter(config -> config.getConfigName().equals("lookups-ext"))
                 .forEach(config -> ((JsonConfig) config).setJson(updatedLookupsAsJson));
     }
 
@@ -102,5 +134,13 @@ public class ConfigService
     public void setLookupsFileLocation(String lookupsFileLocation)
     {
         this.lookupsFileLocation = lookupsFileLocation;
+    }
+
+    public String getLookupsExtFileLocation() {
+        return lookupsExtFileLocation;
+    }
+
+    public void setLookupsExtFileLocation(String lookupsExtFileLocation) {
+        this.lookupsExtFileLocation = lookupsExtFileLocation;
     }
 }

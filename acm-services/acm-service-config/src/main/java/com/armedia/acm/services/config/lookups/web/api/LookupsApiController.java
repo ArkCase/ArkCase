@@ -29,6 +29,17 @@ public class LookupsApiController
     private LookupDao lookupDao;
 
     /**
+     * Rest API method returns all the lookups as json.
+     */
+    @RequestMapping(method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_XML_VALUE})
+    @ResponseBody
+    public String getLookups() {
+        return lookupDao.getMergedLookups();
+    }
+
+    /**
      * Rest API method to update the server side lookups. Returns all the lookups as json, with the updated lookup.
      *
      * @param lookupDefinition
@@ -46,11 +57,8 @@ public class LookupsApiController
     public String updateLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
         log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}", lookupDefinition.getLookupType(),
-                lookupDefinition.getName(), lookupDefinition.getLookupEntriesAsJson());
-
-        String lookupsAsJson = lookupDao.updateLookup(lookupDefinition);
-
-        return lookupsAsJson;
+                lookupDefinition.getName(), lookupDefinition.getReadonly(), lookupDefinition.getLookupEntriesAsJson());
+        return lookupDao.saveLookup(lookupDefinition);
     }
 
     public LookupDao getLookupDao()

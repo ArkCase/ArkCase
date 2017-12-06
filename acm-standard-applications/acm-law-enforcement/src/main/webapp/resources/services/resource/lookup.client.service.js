@@ -18,6 +18,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 url: "api/latest/service/config/:name"
                 , method: "GET"
                 , cache: false
+            },
+            _getLookups: {
+                url: "api/latest/service/config/lookups"
+                , method: "GET"
+                , cache: false
             }
             , _getLookup: {
                 url: "api/latest/service/config/:name"
@@ -358,8 +363,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             var configMap = cacheConfigMap.get();
             var lookups = Util.goodMapValue(configMap, 'lookups', null);
             return Util.serviceCall({
-                service: Service._getConfig
-                , param: {name: 'lookups'}
+                service: Service._getLookups
+                ,, param
+        :
+            {
+            }
                 , result: lookups
                 , onSuccess: function (data) {
                     lookups = Util.omitNg(data);
@@ -415,25 +423,25 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             
             // check if the lookups are array objects
             if (data.standardLookup) {
-                for (var i = 0; i < data.standardLookup.length; i++) {
-                    if (!Util.isArray(data.standardLookup[i][Object.keys(data.standardLookup[i])[0]])) {
+                angular.forEach(data.standardLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             if (data.nestedLookup) {
-                for (var i = 0; i < data.nestedLookup.length; i++) {
-                    if (!Util.isArray(data.nestedLookup[i][Object.keys(data.nestedLookup[i])[0]])) {
+                angular.forEach(data.nestedLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             if (data.inverseValuesLookup) {
-                for (var i = 0; i < data.inverseValuesLookup.length; i++) {
-                    if (!Util.isArray(data.inverseValuesLookup[i][Object.keys(data.inverseValuesLookup[i])[0]])) {
+                angular.forEach(data.inverseValuesLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             return true;
         };

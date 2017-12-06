@@ -12,6 +12,19 @@ import java.io.IOException;
 public interface LookupDao
 {
     /**
+     * Returns all the lookups as json.
+     */
+    String getMergedLookups();
+
+    /**
+     * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
+     *
+     * @param name the name of the lookup to find
+     * @return the {@link AcmLookup} found
+     */
+    AcmLookup<?> getLookupByName(String name);
+
+    /**
      * Returns all the lookups as json, with the updated lookup.
      *
      * @param lookupDefinition
@@ -22,14 +35,5 @@ public interface LookupDao
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    public String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
-
-    /**
-     * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
-     *
-     * @param name
-     *            the name of the lookup to find
-     * @return the {@link AcmLookup} found
-     */
-    public AcmLookup<?> getLookupByName(String name);
+    String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
 }
