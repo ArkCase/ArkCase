@@ -23,76 +23,75 @@
   },
   "timeTracking.comp.details": {
     "title": "विवरण",
-    "informSaved": "hi_Timesheet details saved",
+    "informSaved": "टाइम्सशीट विवरण सहेजे गए",
     "table.columns": {
-      "title": "hi_Details",
-      "modified": "hi_Date Last Modified",
-      "modifier": "hi_User Last Modified"
+      "title": "विवरण",
+      "modified": "अंतिम संशोधित तारीख",
+      "modifier": "उपयोगकर्ता अंतिम संशोधित"
     }
   },
   "timeTracking.comp.person": {
-    "title": "लोग",
+    "title": "व्यक्ति",
     "table.columns": {
-      "fullName": "hi_Full Name",
-      "userId": "hi_Username"
+      "fullName": "पूरा नाम",
+      "userId": "उपयोगकर्ता नाम"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "घंटा सारांश",
+    "title": "घंटे",
     "table.columns": {
-      "code": "hi_Parent ID",
-      "type": "hi_Parent Type",
-      "value": "hi_Total Hours",
-      "date": "hi_Date Charged",
-      "modified": "hi_Modified Date"
+      "code": "मूल आईडी",
+      "type": "माता पिता का प्रकार",
+      "value": "कुल घंटे",
+      "date": "तिथि चार्ज",
+      "modified": "संशोधित तिथि"
     }
   },
   "timeTracking.comp.tags": {
     "title": "टैग",
     "table.columns": {
-      "tag": "hi_Tag",
-      "created": "hi_Created",
-      "createdBy": "hi_Created By"
+      "tag": "टैग",
+      "created": "बनाया था",
+      "createdBy": "के द्वारा बनाई गई"
     },
     "modal": {
-      "title": "hi_Tag",
-      "search": "hi_Search for Tag",
+      "title": "टैग",
+      "search": "टैग के लिए खोजें",
       "buttons": {
-        "cancel": "hi_Cancel",
-        "ok": "hi_Add Tag"
+        "cancel": "रद्द करना",
+        "ok": "टैग जोड़ो"
       }
     },
     "message": {
-      "tagExists": "hi_Tag with that name or description or text already exists",
-      "tagAssociated": "hi_already associated",
+      "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+      "tagAssociated": "पहले से जुड़े हुए हैं",
       "delete": {
-        "success": "hi_Tag deleted successfully",
-        "error": "hi_Error deleting tag"
+        "success": "टैग सफलतापूर्वक हटाया गया",
+        "error": "टैग हटाने में त्रुटि"
       }
     }
   },
   "timeTracking.comp.approvers": {
-    "title": "hi_Approvers",
+    "title": "",
     "table.columns": {
-      "fullName": "hi_Full Name",
-      "userId": "hi_Username"
+      "fullName": "पूरा नाम",
+      "userId": "उपयोगकर्ता नाम"
     }
   },
-
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "विवरण",
-      "person.label": "लोग",
-      "summary.label": "व्यय",
+      "person.label": "व्यक्ति",
+      "summary.label": "घंटे",
       "tags.label": "टैग",
-      "approvers.label": "hi_Approvers"
+      "approvers.label": ""
     },
     "sorters": {
-      "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
-      "dateDesc": "क्रमबद्ध करें दिनांक वर्णन",
-      "idAsc": "चढ़ाई में व्यय पत्रक को सॉर्ट करें",
-      "idDesc": "व्यय पत्रक आईडी उतरते क्रमबद्ध करें",
-      "nameDesc": "सॉर्ट इन एएनएससी",
+      "dateAsc": "दिनांक आरोही क्रमबद्ध करें",
+      "dateDesc": "क्रमबद्ध दिनांक आरोहण",
+      "idAsc": "टाइम्सशीट आईडी आरोही क्रमबद्ध करें",
+      "idDesc": "टाइम्सशीट आईडी क्रमबद्ध करें",
+      "nameDesc": "टाइम्सशीट नाम से क्रमबद्ध करें",
       "noSort": "(कोई सॉर्ट नहीं)"
     }
   }
