@@ -207,7 +207,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
              * @methodOf services:Util.DateService
              *
              * @description
-             * Sets difference of 24 hours between firstDate and secondDate by setting the hours, minutes, seconds and milisecond from the firstDate to the secondDate
+             * Sets the same time for firstDate and secondDate by setting the hours, minutes, seconds and milisecond from the firstDate to the secondDate
              *
              * @Returns {Date} Date object
              */
