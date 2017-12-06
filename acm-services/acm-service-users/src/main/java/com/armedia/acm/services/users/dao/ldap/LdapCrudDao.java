@@ -11,7 +11,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
 
-public class LdapCrudDao
+class LdapCrudDao
 {
     private SpringLdapDao ldapDao;
 
@@ -20,7 +20,7 @@ public class LdapCrudDao
     public void create(DirContextAdapter context, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
     {
         execute(ldapSyncConfig, ldapTemplate -> {
-            new RetryExecutor().retry(() -> ldapTemplate.bind(context));
+            new RetryExecutor<Void>().retry(() -> ldapTemplate.bind(context));
             log.debug("Entry with context [{}] was successfully created in LDAP", context.getAttributes());
             return null;
         });
@@ -38,7 +38,7 @@ public class LdapCrudDao
     public void update(DirContextOperations context, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
     {
         execute(ldapSyncConfig, ldapTemplate -> {
-            new RetryExecutor().retry(() -> ldapTemplate.modifyAttributes(context));
+            new RetryExecutor<Void>().retry(() -> ldapTemplate.modifyAttributes(context));
             log.debug("Updated entry with dn: [{}]", context.getDn());
             return null;
         });
@@ -47,7 +47,7 @@ public class LdapCrudDao
     public void delete(String dn, AcmLdapSyncConfig ldapSyncConfig) throws AcmLdapActionFailedException
     {
         execute(ldapSyncConfig, ldapTemplate -> {
-            new RetryExecutor().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(dn,
+            new RetryExecutor<Void>().retry(() -> ldapTemplate.unbind(MapperUtils.stripBaseFromDn(dn,
                     ldapSyncConfig.getBaseDC())));
             log.debug("Entry [{}] was successfully deleted", dn);
             return null;

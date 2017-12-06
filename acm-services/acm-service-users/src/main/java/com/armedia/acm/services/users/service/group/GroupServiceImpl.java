@@ -211,7 +211,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup removeGroupMemberFromGroup(String groupName, String parentGroupName) throws AcmObjectNotFoundException
+    public AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException
     {
         AcmGroup acmGroup = findByName(groupName);
         AcmGroup parentGroup = findByName(parentGroupName);

@@ -57,7 +57,7 @@ public class LdapGroupDao
                         log.warn("Failed to rollback changes for Group with DN [{}]", updatedGroupDn, e1);
                     }
                 });
-                throw new AcmLdapActionFailedException("Removing members from LDAP Group failed", null);
+                throw new AcmLdapActionFailedException("Removing members from LDAP Group failed", e);
             }
         }
     }
@@ -90,7 +90,7 @@ public class LdapGroupDao
                         log.warn("Failed to rollback changes for Ldap Group with DN [{}]", updatedGroupDn, e1);
                     }
                 });
-                throw new AcmLdapActionFailedException("Updating LDAP Group with new member failed", null);
+                throw new AcmLdapActionFailedException("Updating LDAP Group with new member failed", e);
             }
         }
     }

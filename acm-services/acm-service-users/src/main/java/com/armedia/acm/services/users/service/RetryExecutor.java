@@ -1,7 +1,10 @@
 package com.armedia.acm.services.users.service;
 
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
+import org.springframework.ldap.ServiceUnavailableException;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
@@ -11,16 +14,19 @@ public class RetryExecutor<T>
 {
     private final long timeout;
     private int retryAttempts;
+    private final List<Class> exceptions;
 
     public RetryExecutor()
     {
-        this(AcmLdapConstants.RETRY_ATTEMPTS, AcmLdapConstants.RETRY_TIMEOUT);
+        this(AcmLdapConstants.RETRY_ATTEMPTS, AcmLdapConstants.RETRY_TIMEOUT,
+                Collections.singletonList(ServiceUnavailableException.class));
     }
 
-    public RetryExecutor(int retryAttempts, long timeout)
+    public RetryExecutor(int retryAttempts, long timeout, List<Class> exceptions)
     {
         this.retryAttempts = retryAttempts;
         this.timeout = timeout;
+        this.exceptions = exceptions;
     }
 
     public T retryResult(Callable<T> callable) throws Exception
@@ -29,9 +35,10 @@ public class RetryExecutor<T>
         {
             retryAttempts--;
             return callable.call();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            if (retryAttempts > 0)
+            if (retryOnException(e) && retryAttempts > 0)
             {
                 sleep(timeout);
                 return retryResult(callable);
@@ -46,9 +53,10 @@ public class RetryExecutor<T>
         {
             retryAttempts--;
             action.run();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            if (retryAttempts > 0)
+            if (retryOnException(e) && retryAttempts > 0)
             {
                 sleep(timeout);
                 retry(action);
@@ -66,7 +74,7 @@ public class RetryExecutor<T>
         }
         catch (Exception e)
         {
-            if (retryAttempts > 0)
+            if (retryOnException(e) && retryAttempts > 0)
             {
                 sleep(timeout);
                 retryChecked(action);
@@ -81,13 +89,15 @@ public class RetryExecutor<T>
         {
             retryAttempts--;
             action.run();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
-            if (retryAttempts > 0)
+            if (retryOnException(e) && retryAttempts > 0)
             {
                 sleep(timeout);
                 retrySilent(action);
             }
+
         }
     }
 
@@ -96,9 +106,17 @@ public class RetryExecutor<T>
         try
         {
             Thread.sleep(timeout);
-        } catch (InterruptedException e)
+        }
+        catch (InterruptedException e)
         {
         }
+    }
+
+    private boolean retryOnException(Exception e)
+    {
+        return exceptions.isEmpty() ||
+                exceptions.stream().anyMatch(it -> e.getClass().isAssignableFrom(it));
+
     }
 
     @FunctionalInterface
