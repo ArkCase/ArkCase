@@ -203,7 +203,7 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             }
             /**
              * @ngdoc method
-             * @name convertToSecondTime
+             * @name setDifferenceOfOneDay
              * @methodOf services:Util.DateService
              *
              * @description
