@@ -31,7 +31,7 @@ angular.module('admin').controller('Admin.SecurityCalendarConfigurationControlle
                 if (calendarAdminConfig.data.configurationsByType[configurableObjectType.id]) {
                     $scope.calendarConfigDataModel.configurationsByType[configurableObjectType.id] = calendarAdminConfig.data.configurationsByType[configurableObjectType.id];
                     if (calendarAdminConfig.data.configurationsByType[configurableObjectType.id].systemEmail){
-                        $scope.calendarConfigDataModel.configurationsByType[configurableObjectType.id].password = "******";
+                        $scope.calendarConfigDataModel.configurationsByType[configurableObjectType.id].isPasswordSet= true;
                     }
                 }
                 /*Check if password required by object type*/
