@@ -500,13 +500,14 @@
         "closed": "cn_Closed"
       },
       "auditReportNames": {
-        "cases": "cn_Case Files",
-        "complaints": "cn_Complaints Approval",
-        "tasks": "cn_Tasks",
-        "files": "cn_Files",
-        "documents": "cn_Documents",
-        "people": "cn_People",
-        "organizations": "cn_Organizations"
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

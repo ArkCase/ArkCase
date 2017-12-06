@@ -8,6 +8,8 @@ import com.googlecode.mp4parser.MemoryDataSourceImpl;
 import com.googlecode.mp4parser.boxes.apple.AppleGPSCoordinatesBox;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.exception.TikaException;
@@ -50,6 +52,13 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     private transient final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Map<String, String> tikaMetadataToFilePropertiesMap;
+
+
+    static
+    {
+        // enable BeanUtils to set null to Date field
+        ConvertUtils.register(new DateConverter(null), Date.class);
+    }
 
     @Override
     public EcmTikaFile detectFileUsingTika(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException

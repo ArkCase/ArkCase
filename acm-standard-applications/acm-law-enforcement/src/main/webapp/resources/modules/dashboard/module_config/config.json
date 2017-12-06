@@ -331,7 +331,7 @@
       "configName": "document-repository"
     },
     {
-      "name": "DOC_REPO",
+      "name": "MY_DOC_REPO",
       "configName": "my-documents"
     },
     {
@@ -380,7 +380,8 @@
     "cases",
     "relOrganizations",
     "tags",
-    "related"
+    "related",
+    "approvers"
   ],
   "structures": [
     {

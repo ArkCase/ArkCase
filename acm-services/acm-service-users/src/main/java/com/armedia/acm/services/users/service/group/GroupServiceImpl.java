@@ -22,16 +22,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Function;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -75,14 +70,14 @@ public class GroupServiceImpl implements GroupService
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
 
-        log.info("Taking all groups and subgroups from Solr. Authenticated user is {}", usernamePasswordAuthenticationToken.getName());
+        log.info("Taking all groups and ascendant groups from Solr. Authenticated user is [{}]",
+                usernamePasswordAuthenticationToken.getName());
 
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken,
-                SolrCore.ADVANCED_SEARCH, query, 0, 1000, "name asc");
-
+        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
+                "name asc");
     }
 
     @Override
@@ -103,27 +98,24 @@ public class GroupServiceImpl implements GroupService
     public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException
     {
         String statusQuery = userStatus.map(it -> {
-                    try
-                    {
-                        AcmUserState state = AcmUserState.valueOf(it);
-                        return String.format(" AND status_lcs:%s", state);
-                    }
-                    catch (IllegalArgumentException e)
-                    {
-                        log.debug("usersStatus: [{}] is not a valid value. Won't be included in the query!", userStatus);
-                        return "";
-                    }
-                }
-        ).orElse("");
+            try
+            {
+                AcmUserState state = AcmUserState.valueOf(it);
+                return String.format(" AND status_lcs:%s", state);
+            }
+            catch (IllegalArgumentException e)
+            {
+                log.debug("usersStatus: [{}] is not a valid value. Won't be included in the query!", userStatus);
+                return "";
+            }
+        }).orElse("");
 
-        String query = String.format("object_type_s:USER AND groups_id_ss:%s",
-                buildSafeGroupNameForSolrSearch(groupName));
+        String query = String.format("object_type_s:USER AND groups_id_ss:%s", buildSafeGroupNameForSolrSearch(groupName));
         query = query.replace("_002E_", ".");
         query += statusQuery;
 
         log.debug("Executing query for users in group: [{}]", query);
-        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
-                query, 0, 1000, "");
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1000, "");
     }
 
     private String buildSafeGroupNameForSolrSearch(String groupName)
@@ -141,7 +133,7 @@ public class GroupServiceImpl implements GroupService
      * Creates or updates ad-hoc group based on the client info coming in from CRM
      *
      * @param //acmGroup group we want to rename
-     * @param //         newName  group new name
+     * @param //         newName group new name
      */
     @Override
     @Transactional
@@ -182,9 +174,6 @@ public class GroupServiceImpl implements GroupService
 
         Assert.isTrue(acmGroup.getMemberOfGroups().isEmpty());
 
-        Map<AcmUser, Set<AcmGroup>> removedGroupsPerUser = acmGroup.getUserMembers().stream()
-                .collect(Collectors.toMap(Function.identity(), acmUser -> Collections.singleton(acmGroup)));
-
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
 
@@ -205,7 +194,6 @@ public class GroupServiceImpl implements GroupService
             save(group);
         });
 
-        userRoleService.saveInvalidUserRolesPerRemovedUserGroups(removedGroupsPerUser);
         return acmGroup;
     }
 
@@ -236,13 +224,6 @@ public class GroupServiceImpl implements GroupService
             acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
             save(acmGroup);
 
-            Map<AcmUser, Set<AcmGroup>> userGroupsForRemoval = acmGroup.getUserMembers()
-                    .stream()
-                    .collect(Collectors.toMap(Function.identity(), acmUser -> Collections.singleton(parentGroup)));
-
-            log.debug("Remove roles for user members from the parent group [{}]", parentGroupName);
-            userRoleService.saveInvalidUserRolesPerRemovedUserGroups(userGroupsForRemoval);
-
             Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
 
             descendantGroups.forEach(group -> {
@@ -264,8 +245,8 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to set supervisor to group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Set supervisor", "Group", -1L, "Failed to set supervisor to group. Group "
-                    + groupId + " was not found.", null);
+            throw new AcmUserActionFailedException("Set supervisor", "Group", -1L,
+                    "Failed to set supervisor to group. Group " + groupId + " was not found.", null);
         }
 
         supervisor = userDao.findByUserId(supervisor.getUserId());
@@ -315,7 +296,6 @@ public class GroupServiceImpl implements GroupService
 
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
         group.addUserMember(user);
-        userRoleService.saveValidUserRolesPerAddedUserGroups(user.getUserId(), new HashSet<>(Arrays.asList(group)));
         return group;
     }
 
@@ -326,8 +306,8 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to remove supervisor from group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Remove Supervisor", "Group", -1L, "Failed to remove supervisor from group. Group "
-                    + groupId + " was not found.", null);
+            throw new AcmUserActionFailedException("Remove Supervisor", "Group", -1L,
+                    "Failed to remove supervisor from group. Group " + groupId + " was not found.", null);
         }
         group.setSupervisor(null);
 
@@ -368,7 +348,6 @@ public class GroupServiceImpl implements GroupService
         }
 
         group.removeUserMember(user);
-        userRoleService.saveInvalidUserRolesPerRemovedUserGroups(user, new HashSet<>(Arrays.asList(group)));
         return group;
     }
 
@@ -393,8 +372,7 @@ public class GroupServiceImpl implements GroupService
         AcmGroup parent = groupDao.findByName(parentId);
         if (parent == null)
         {
-            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " +
-                    parentId + " not found", null);
+            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " + parentId + " not found", null);
         }
 
         // If supervisor for the subgroup is empty, get from the parent group

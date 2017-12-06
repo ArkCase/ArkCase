@@ -3,9 +3,9 @@
 //Comments are welcome. But do not use @ngdoc format in controllers.
 
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
-    'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService'
+    'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService'
     , function ($scope, $sce, $q, ConfigService, LookupService
-        , BuildUrl, Util, UtilDateService, $window, LocaleHelper
+        , BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService
     ) {
         new LocaleHelper.Locale({scope: $scope});
 
@@ -57,8 +57,9 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
 
         // Retrieves the properties from the auditPlugin.properties file
         var promiseAuditConfig = LookupService.getConfig("audit");
+        var promiseLookupAuditDropdown = ObjectLookupService.getAuditReportNames();
 
-        $q.all([promiseServerConfig, promiseAuditConfig])
+        $q.all([promiseServerConfig, promiseAuditConfig, promiseLookupAuditDropdown])
             .then(function (data) {
                 $scope.acmReportsProperties = data[0];
                 $scope.auditPluginProperties = data[1];
@@ -68,19 +69,19 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
                 $scope.auditReportUri = $scope.auditPluginProperties['AUDIT_REPORT'];
                 $scope.pentahoUser = $scope.acmReportsProperties['PENTAHO_SERVER_USER'];
                 $scope.pentahoPassword = $scope.acmReportsProperties['PENTAHO_SERVER_PASSWORD'];
+                $scope.auditDropdown = data[2];
             });
 
         $scope.showIframe = function () {
             var reportUri = $scope.auditReportUri;
-            var dateFormat = $scope.locale.DATETIME_FORMATS.shortDate;
             if ($scope.showXmlReport) {
                 reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
                 $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport));
             } else {
                 $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
             }
         }

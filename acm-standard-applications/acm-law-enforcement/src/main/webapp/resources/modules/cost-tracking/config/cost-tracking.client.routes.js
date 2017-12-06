@@ -43,6 +43,11 @@ angular.module('cost-tracking').config(['$stateProvider',
                 templateUrl: 'modules/cost-tracking/views/components/cost-tracking-tags.client.view.html'
             })
 
+            .state('cost-tracking.approvers', {
+                url: '/:id/approvers',
+                templateUrl: 'modules/cost-tracking/views/components/cost-tracking-approvers.client.view.html'
+            })
+
 	}
 ]).run(['Helper.DashboardService', function (DashboardHelper) {
     DashboardHelper.addLocales();

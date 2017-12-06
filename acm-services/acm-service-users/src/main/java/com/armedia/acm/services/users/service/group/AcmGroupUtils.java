@@ -33,6 +33,7 @@ public class AcmGroupUtils
         String ancestorsString = visitedNodes.stream()
                 .map(AcmGroup::getName)
                 .filter(node -> !node.equals(targetNode))
+                .sorted()
                 .collect(Collectors.joining(","));
 
         return ancestorsString.isEmpty() ? null : ancestorsString;
@@ -66,6 +67,7 @@ public class AcmGroupUtils
     public static String getAscendantsString(Set<String> ascendantGroupNames)
     {
         return ascendantGroupNames.stream()
+                .sorted()
                 .collect(Collectors.joining(","));
     }
 }

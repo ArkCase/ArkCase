@@ -491,6 +491,16 @@
         "cancel": "Cancelar documento",
         "concur": "Concordo",
         "nonConcur": "Não concordo"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

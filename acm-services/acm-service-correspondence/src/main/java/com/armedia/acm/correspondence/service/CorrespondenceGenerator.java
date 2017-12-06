@@ -27,11 +27,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.Format;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by armdev on 12/15/14.
@@ -129,8 +127,8 @@ public class CorrespondenceGenerator
         for (CorrespondenceMergeField mergeField : mergeFields)
         {
             Object value = queryResult.get(mergeField.getFieldId());
-            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()));
-            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()));
+            value = formatValue(value, Date.class, new SimpleDateFormat(template.getDateFormatString()), mergeField);
+            value = formatValue(value, Number.class, new DecimalFormat(template.getNumberFormatString()), mergeField);
 
             // Remove all HTML elements if the value is not null
             String columnValue = value == null ? null : Jsoup.parse(value.toString()).text();
@@ -141,15 +139,98 @@ public class CorrespondenceGenerator
         return retval;
     }
 
-    private Object formatValue(Object result, Class toBeFormatted, Format format)
+    private Object formatValue(Object result, Class toBeFormatted, Format format, CorrespondenceMergeField mergeField)
     {
 
         if (result != null && toBeFormatted.isAssignableFrom(result.getClass()))
         {
+            if (result instanceof Date)
+            {
+                result = addOrRemoveAmountOfTime((Date) result, mergeField);
+            }
             result = format.format(result);
         }
 
         return result;
+    }
+
+    private Date addOrRemoveAmountOfTime(Date date, CorrespondenceMergeField mergeField)
+    {
+        if (date != null && mergeField != null && mergeField.getFieldId() != null)
+        {
+            // ID must be in this format: <FIELD_ID_NAME>_<ACTION>_<AMOUNT>_<UNIT>
+            // Where:
+            // <FIELD_ID_NAME> is the name that will not have "_" in the name
+            // <ACTION> can have two values: PLUS or MINUS (can be any case sensitive)
+            // <AMOUNT> any positive integer number
+            // <UNIT> can have these values: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, YEARS (can be any case sensitive)
+            String id = mergeField.getFieldId();
+            String[] idArray = id.split("_");
+            String action = idArray.length > 1 ? idArray[1] : "";
+            int amount = idArray.length > 2 ? stringToInt(idArray[2]) : 0;
+            String unit = idArray.length > 3 ? idArray[3] : "";
+            int unitInInt = getUnitInInt(unit);
+
+            if ("PLUS".equalsIgnoreCase(action) && unitInInt != 0)
+            {
+                // Maybe this is not necessary, but just to be sure that there is a PLUS or MINUS
+                amount = Math.abs(amount);
+            }
+            else if ("MINUS".equalsIgnoreCase(action)  && unitInInt != 0)
+            {
+                amount = Math.abs(amount)*(-1);
+            }
+            else
+            {
+                return date;
+            }
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(unitInInt, amount);
+
+            return cal.getTime();
+        }
+
+        return date;
+    }
+
+    private int stringToInt(String str)
+    {
+        try
+        {
+            return Integer.parseInt(str);
+        }
+        catch (NumberFormatException e)
+        {
+            log.warn("[{}] is not valid string representation of an integer.", str);
+        }
+
+        return 0;
+    }
+
+    private int getUnitInInt(String str)
+    {
+        if (str != null)
+        {
+            switch (str.toUpperCase())
+            {
+                case "MILLISECONDS":
+                    return Calendar.MILLISECOND;
+                case "SECONDS":
+                    return Calendar.SECOND;
+                case "MINUTES":
+                    return Calendar.MINUTE;
+                case "HOURS":
+                    return Calendar.HOUR;
+                case "DAYS":
+                    return Calendar.DATE;
+                case "YEARS":
+                    return Calendar.YEAR;
+            }
+        }
+
+        return 0;
     }
 
     private Map<String, Object> query(CorrespondenceTemplate template, Object[] queryArguments)

@@ -11,6 +11,12 @@
                            placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
                            style="background-color: white;" ng-click="userOrGroupSearch()" readonly >
                 </div>
+
+                <div class="col-sm-6 form-group">
+                    <label for="candidateGroups" translate> tasks.newTask.candidateGroups.label </label>
+                    <input type="text" id="candidateGroups" ng-disabled="true" ng-model="groupName" class="input-md form-control" id="candidateGroups">
+                </div>
+
                 <div class="form-group col-sm-2">
                     <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
 
@@ -58,9 +64,11 @@
                                    on-open-focus="false"
                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
                             <span class="input-group-btn">
-      <button type="button" class="btn btn-default"
-              ng-click="opened.openedStart = !opened.openedStart"><i class="fa fa-calendar"></i></button>
-      </span></div>
+                              <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
+                                <i class="fa fa-calendar"></i>
+                              </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-sm-4 form-group">
@@ -76,12 +84,14 @@
                                    on-open-focus="false"
                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
                             <span class="input-group-btn">
-      <button type="button" class="btn btn-default"
-              ng-click="opened.openedEnd = !opened.openedEnd"><i class="fa fa-calendar"></i></button>
-      </span></div>
+                            <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
+                              <i class="fa fa-calendar"></i>
+                            </button>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="form-group col-sm-2 form-group">
+                <div class="form-group col-sm-2" ng-if="taskType === 'ACM_TASK'">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
                     </label>
                     <select ng-model="config.data.priority"
@@ -89,8 +99,19 @@
                             class="form-control input-md">
                     </select>
                 </div>
+                <div class="form-group col-sm-4" ng-if="taskType === 'REVIEW_DOCUMENT'">
+                    <label class="control-label">{{ 'tasks.newTask.businessProcessTypes.label' | translate }}
+
+                    </label>
+                    <select ng-model="selectedBusinessProcessType"
+                            ng-change="updateBusinessProcessType(selectedBusinessProcessType)"
+                            ng-options="businessProcessType.key as businessProcessType.value | translate for businessProcessType in businessProcessTypes"
+                            class="form-control input-md"
+                            required>
+                    </select>
+                </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="taskType === 'ACM_TASK'">
                 <div class="col-sm-4 form-group">
                     <label for="percentComplete" translate> tasks.newTask.percentComplete.label </label>
                     <input id="percentComplete" type="number" min="0" max="100"
@@ -100,10 +121,32 @@
                            id="percentComplete">
                 </div>
             </div>
-            <div class="row">
+            <div class="row" ng-if="taskType === 'ACM_TASK'">
                 <div class="col-sm-12 form-group">
                     <label translate> tasks.newTask.notes.label </label>
                     <summernote config="options" ng-model="config.data.details"></summernote>
+                </div>
+            </div>
+            <div class="row" ng-if="taskType === 'REVIEW_DOCUMENT' && documentsToReview">
+                <div class="col-sm-12 form-group">
+                    <label for="docsToReview">
+                        <span translate>tasks.newTask.documentsToReview.label</span>
+                    </label>
+                    <fieldset id="docsToReview" class="well-sm">
+                        <label ng-repeat="node in documentsToReview" class="checkbox-inline">
+                            <input
+                                    type="checkbox"
+                                    value="{{node.data.objectId}}"
+                                    ng-click="onSelectFile(node.data.objectId)"
+                                    ng-checked="documentsToReviewIds.indexOf(node.data.objectId) > -1">
+                            <span>
+                              {{node.data.name + '' + node.data.ext}}
+                          </span>
+                        </label>
+                    </fieldset>
+                    <span ng-if="documentsToReviewIds.length === 0" class="text-danger" translate>
+                      tasks.newTask.noSelectedDocsErrorMsg
+                    </span>
                 </div>
             </div>
         </div>
@@ -114,7 +157,7 @@
                 ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="task.$invalid || saved"
+        <button type="submit" ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>

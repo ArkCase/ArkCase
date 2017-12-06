@@ -1,5 +1,7 @@
 package com.armedia.acm.web.api.service;
 
+import org.springframework.ui.Model;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +12,7 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
 {
     private Boolean warningEnabled;
     private String warningMessage;
+    private ApplicationMetaInfoService applicationMetaInfoService;
 
     @Override
     public boolean isEnabled()
@@ -32,6 +35,12 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
         return map;
     }
 
+    public void buildModel(Model model) {
+        model.addAttribute("warningEnabled", isEnabled());
+        model.addAttribute("warningMessage", getMessage());
+        model.addAttribute("version", applicationMetaInfoService.getVersion());
+    }
+
     public void setWarningEnabled(String warningEnabled)
     {
         this.warningEnabled = Boolean.parseBoolean(warningEnabled == null ? "false" : warningEnabled);
@@ -40,5 +49,15 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
     public void setWarningMessage(String warningMessage)
     {
         this.warningMessage = warningMessage;
+    }
+
+    public ApplicationMetaInfoService getApplicationMetaInfoService()
+    {
+        return applicationMetaInfoService;
+    }
+
+    public void setApplicationMetaInfoService(ApplicationMetaInfoService applicationMetaInfoService)
+    {
+        this.applicationMetaInfoService = applicationMetaInfoService;
     }
 }

@@ -131,8 +131,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         AcmUser acmUser = userDao.save(user);
         userDao.getEntityManager().flush();
 
-        userRoleService.saveValidUserRolesPerAddedUserGroups(acmUser.getUserId(), groups);
-
         ldapUserDao.createUserEntry(acmUser, userDto.getPassword(), ldapSyncConfig);
 
         try
@@ -270,7 +268,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
-        userRoleService.saveInvalidUserRolesPerRemovedUserGroups(user, new HashSet<>(lookupGroups));
         ldapUserDao.deleteUserEntry(user.getDistinguishedName(), ldapSyncConfig);
         return user;
     }

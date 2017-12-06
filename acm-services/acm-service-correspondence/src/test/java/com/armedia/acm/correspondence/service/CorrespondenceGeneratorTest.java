@@ -28,12 +28,7 @@ import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by armdev on 12/15/14.
@@ -58,10 +53,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
     private String key1;
     private String key2;
     private String key3;
+    private String key4;
 
     private String var1;
     private String var2;
     private String var3;
+    private String var4;
 
     private String correspondenceFolder = "/correspondenceFolder";
 
@@ -95,17 +92,20 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         key1 = "key1";
         key2 = "key2";
         key3 = "key3";
+        key4 = "key4_PLUS_30_DAYS";
 
         var1 = "var1";
         var2 = "var2";
         var3 = "var3";
+        var4 = "var4";
 
-        List<String> fieldNames = Arrays.asList(key1, key2, key3);
+        List<String> fieldNames = Arrays.asList(key1, key2, key3, key4);
 
         Map<String, String> substitutionVars = new HashMap<>();
         substitutionVars.put(key1, var1);
         substitutionVars.put(key2, var2);
         substitutionVars.put(key3, var3);
+        substitutionVars.put(key4, var4);
 
         correspondenceQuery = new CorrespondenceQuery();
         correspondenceQuery.setJpaQuery(jpaQuery);
@@ -131,8 +131,9 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         Date column1 = new Date();
         String column2 = "Subject Name";
         Number column3 = 123456L;
+        Date column4 = new Date();
 
-        Object[] row = { column1, column2, column3 };
+        Object[] row = { column1, column2, column3, column4 };
         results.add(row);
 
         Capture<Resource> captureResourceTemplate = new Capture<>();
@@ -143,10 +144,16 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         NumberFormat nf = new DecimalFormat(correspondenceTemplate.getNumberFormatString());
         String expectedNumber = nf.format(column3);
 
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(column4);
+        calendar.add(Calendar.DATE, 30);
+        String expectedDate2 = sdf.format(calendar.getTime());
+
         Map<String, String> substitutions = new HashMap<>();
         substitutions.put(var1, expectedDate);
         substitutions.put(var2, column2);
         substitutions.put(var3, expectedNumber);
+        substitutions.put(var4, expectedDate2);
 
         List<CorrespondenceMergeField> mergeFields = new ArrayList<>();
         CorrespondenceMergeField mergeField = new CorrespondenceMergeField();
@@ -164,6 +171,12 @@ public class CorrespondenceGeneratorTest extends EasyMockSupport
         mergeField = new CorrespondenceMergeField();
         mergeField.setFieldId(key3);
         mergeField.setFieldValue(var3);
+        mergeField.setFieldType("CASE_FILE");
+        mergeFields.add(mergeField);
+
+        mergeField = new CorrespondenceMergeField();
+        mergeField.setFieldId(key4);
+        mergeField.setFieldValue(var4);
         mergeField.setFieldType("CASE_FILE");
         mergeFields.add(mergeField);
 

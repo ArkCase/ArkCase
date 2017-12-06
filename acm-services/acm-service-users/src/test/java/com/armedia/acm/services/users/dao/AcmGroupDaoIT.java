@@ -23,7 +23,8 @@ import static junit.framework.Assert.assertTrue;
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-config-user-service-test-dummy-beans.xml",
-        "/spring/spring-library-search.xml"
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @Rollback
 public class AcmGroupDaoIT
