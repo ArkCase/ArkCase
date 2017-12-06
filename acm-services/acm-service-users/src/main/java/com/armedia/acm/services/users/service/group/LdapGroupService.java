@@ -115,12 +115,27 @@ public class LdapGroupService
     public AcmGroup deleteLdapGroup(String group, String directoryName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
-        log.debug("Removing LDAP group [{}] from database", group);
-
+        log.debug("Deleting LDAP group [{}]", group);
         AcmGroup markedGroup = groupService.markGroupDeleted(group);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         ldapGroupDao.deleteGroupEntry(markedGroup.getDistinguishedName(), ldapSyncConfig);
         return markedGroup;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void removeGroupMembership(String groupName, String parentGroupName, String directoryName)
+            throws AcmObjectNotFoundException, AcmLdapActionFailedException
+    {
+        AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName);
+        AcmGroup parentGroup = groupService.findByName(parentGroupName);
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+        if (acmGroup.getStatus() == AcmGroupStatus.DELETE)
+        {
+            ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
+        } else
+        {
+            ldapGroupDao.removeMemberFromGroup(acmGroup.getDistinguishedName(), parentGroup.getDistinguishedName(), ldapSyncConfig);
+        }
     }
 
     private AcmLdapSyncConfig getLdapSyncConfig(String directoryName)

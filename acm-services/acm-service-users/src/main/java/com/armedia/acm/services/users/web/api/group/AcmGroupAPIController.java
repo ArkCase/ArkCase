@@ -164,7 +164,7 @@ public class AcmGroupAPIController
     public String getTopLevelGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
                                     @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
                                     @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                    @RequestParam(value = "groupSubtype", required = false, defaultValue = "") List<String> groupSubtype,
+                                    @RequestParam(value = "groupSubtype", required = false) List<String> groupSubtype,
                                     Authentication auth) throws Exception
     {
         LOG.info("Taking all top level groups from Solr.");
@@ -268,7 +268,7 @@ public class AcmGroupAPIController
     {
         try
         {
-            return getGroupService().removeGroupMemberFromGroup(groupId, parentId);
+            return getGroupService().removeGroupMembership(groupId, parentId);
         }
         catch (AcmObjectNotFoundException e)
         {
