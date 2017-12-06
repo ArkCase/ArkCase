@@ -1,7 +1,7 @@
 {
   "id": "dashboard",
   "title": "Dashboard",
-  "configurable": false,
+  "configurable": true,
   "menus": [
     {
       "menuId": "leftnav",
