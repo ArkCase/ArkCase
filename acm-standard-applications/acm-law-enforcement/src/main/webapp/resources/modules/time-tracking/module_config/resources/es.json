@@ -1,16 +1,16 @@
 {
   "timeTracking": {
     "title": "Seguimiento de Tiempo",
-    "progressNoTimesheet": "[ No hay datos de la hoja de tiempo ]",
-    "progressLoading": "Cargando la hoja de tiempo",
-    "progressError": "No se pudo cargar la hoja de tiempo"
+    "progressNoTimesheet": "[No se selecciona la hoja de tiempo]",
+    "progressLoading": "Hoja de tiempos de carga",
+    "progressError": "Error al cargar la hoja de horas"
   },
   "timeTracking.menus": {
-    "leftnav.item": "Seguimiento de Tiempo",
+    "leftnav.item": "Seguimiento de tiempo",
     "topbar.item": "Hoja de tiempo"
   },
   "timeTracking.comp.main": {
-    "title": "Descripción general"
+    "title": "Visión de conjunto"
   },
   "timeTracking.comp.info": {
     "title": "Información",
@@ -23,76 +23,76 @@
   },
   "timeTracking.comp.details": {
     "title": "Detalles",
-    "informSaved": "es_Timesheet details saved",
+    "informSaved": "Detalles de la hoja de tiempo guardados",
     "table.columns": {
-      "title": "es_Details",
-      "modified": "es_Date Last Modified",
-      "modifier": "es_User Last Modified"
+      "title": "Detalles",
+      "modified": "Fecha de última modificación",
+      "modifier": "Última modificación del usuario"
     }
   },
   "timeTracking.comp.person": {
-    "title": "Personas",
+    "title": "Persona",
     "table.columns": {
-      "fullName": "es_Full Name",
-      "userId": "es_Username"
+      "fullName": "Nombre completo",
+      "userId": "Nombre de usuario"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Resumen de la hora",
+    "title": "Horas",
     "table.columns": {
-      "code": "es_Parent ID",
-      "type": "es_Parent Type",
-      "value": "es_Total Hours",
-      "date": "es_Date Charged",
-      "modified": "es_Modified Date"
+      "code": "Identificación de los padres",
+      "type": "Tipo de padre",
+      "value": "Horas totales",
+      "date": "Fecha cargada",
+      "modified": "Fecha modificada"
     }
   },
   "timeTracking.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "es_Tag",
-      "created": "es_Created",
-      "createdBy": "es_Created By"
+      "tag": "Etiqueta",
+      "created": "Creado",
+      "createdBy": "Creado por"
     },
     "modal": {
-      "title": "es_Tag",
-      "search": "es_Search for Tag",
+      "title": "Etiqueta",
+      "search": "Buscar etiqueta",
       "buttons": {
-        "cancel": "es_Cancel",
-        "ok": "es_Add Tag"
+        "cancel": "Cancelar",
+        "ok": "Añadir etiqueta"
       }
     },
     "message": {
-      "tagExists": "es_Tag with that name or description or text already exists",
-      "tagAssociated": "es_already associated",
+      "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
+      "tagAssociated": "Ya asociado",
       "delete": {
-        "success": "es_Tag deleted successfully",
-        "error": "es_Error deleting tag"
+        "success": "Tag eliminado con éxito",
+        "error": "Error al eliminar la etiqueta"
       }
     }
   },
   "timeTracking.comp.approvers": {
-    "title": "es_Approvers",
+    "title": "Aprobadores",
     "table.columns": {
-      "fullName": "es_Full Name",
-      "userId": "es_Username"
+      "fullName": "Nombre completo",
+      "userId": "Nombre de usuario"
     }
   },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Detalles",
-      "person.label": "Personas",
-      "summary.label": "Gastos",
+      "person.label": "Persona",
+      "summary.label": "Horas",
       "tags.label": "Etiquetas",
-      "approvers.label": "es_Approvers"
+      "approvers.label": "Aprobadores"
     },
     "sorters": {
-      "dateAsc": "Ordenar Fecha Asc",
-      "dateDesc": "Ordenar Fecha Dec",
+      "dateAsc": "Ordenar fecha ascendente",
+      "dateDesc": "Ordenar fecha descendente",
       "idAsc": "Ordenar tiempos de la identificación Asc",
       "idDesc": "Ordenar tiempos de la identificación Dec",
       "nameDesc": "Ordenar por nombre Dec",
-      "noSort": "(Sin Clasificar)"
+      "noSort": "(No Ordenar)"
     }
   }
 }
