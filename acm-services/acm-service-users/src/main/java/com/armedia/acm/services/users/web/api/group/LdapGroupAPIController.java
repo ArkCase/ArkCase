@@ -34,7 +34,7 @@ public class LdapGroupAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup createLdapGroup(@RequestBody AcmGroup group, @PathVariable String directory)
-            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            throws AcmAppErrorJsonMsg
     {
 
         checkIfLdapManagementIsAllowed(directory);
@@ -60,7 +60,8 @@ public class LdapGroupAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups/{parentGroupName:.+}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory, @PathVariable String parentGroupName)
+    public AcmGroup createLdapSubgroup(@RequestBody AcmGroup group, @PathVariable String directory,
+                                       @PathVariable String parentGroupName)
             throws AcmAppErrorJsonMsg
     {
 
@@ -87,7 +88,7 @@ public class LdapGroupAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteLdapGroup(@PathVariable("directory") String directory,
                                              @PathVariable("groupName") String groupName)
-            throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            throws AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -109,6 +110,34 @@ public class LdapGroupAPIController extends SecureLdapController
         catch (Exception e)
         {
             throw new AcmAppErrorJsonMsg("Deleting LDAP group failed", "LDAP_GROUP", e);
+        }
+    }
+
+    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/parent/{parentName:.+}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> removeGroupMembership(@PathVariable("directory") String directory,
+                                                   @PathVariable("groupName") String groupName,
+                                                   @PathVariable("parentName") String parentName)
+            throws AcmAppErrorJsonMsg
+    {
+        checkIfLdapManagementIsAllowed(directory);
+        try
+        {
+            ldapGroupService.removeGroupMembership(groupName, parentName, directory);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (AcmLdapActionFailedException e)
+        {
+            throw new AcmAppErrorJsonMsg("Removing LDAP group membership failed. Cause: " + e.getMessage(),
+                    "LDAP_GROUP", e);
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            throw new AcmAppErrorJsonMsg("Removing LDAP group membership failed. Cause: " + e.getCauseMessage(),
+                    "LDAP_GROUP", e);
+        }
+        catch (Exception e)
+        {
+            throw new AcmAppErrorJsonMsg("Removing LDAP group membership failed", "LDAP_GROUP", e);
         }
     }
 

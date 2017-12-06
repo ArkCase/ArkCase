@@ -76,7 +76,7 @@ public interface GroupService
      */
     AcmGroup markGroupDeleted(String groupId) throws AcmObjectNotFoundException;
 
-    AcmGroup removeGroupMemberFromGroup(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
+    AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
 
     AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
