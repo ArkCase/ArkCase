@@ -131,6 +131,14 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     .year(todayDate.getFullYear())
                     .month(todayDate.getMonth())
                     .date(todayDate.getDate())._d;
+            } else {
+                $scope.config.data.dueDate = moment()
+                    .year($scope.config.data.dueDate.getFullYear())
+                    .month($scope.config.data.dueDate.getMonth())
+                    .date($scope.config.data.dueDate.getDate())
+                    .hours(todayDate.getHours())
+                    .minutes(todayDate.getMinutes())
+                    .seconds(todayDate.getSeconds())._d;
             }
             if (!Util.isEmpty($scope.config.data.dueDate) && moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
                 $scope.config.data.dueDate = moment()
