@@ -1,5 +1,22 @@
 package com.armedia.acm.services.users.service.group;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.mule.api.MuleException;
+import org.mule.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -11,22 +28,6 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
-import org.mule.api.MuleException;
-import org.mule.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -67,10 +68,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public Set<AcmUser> updateMembersWithDatabaseInfo(Set<AcmUser> members)
     {
-        return members.stream()
-                .map(it -> userDao.findByUserId(it.getUserId()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+        return members.stream().map(it -> userDao.findByUserId(it.getUserId())).filter(Objects::nonNull).collect(Collectors.toSet());
     }
 
     @Override
@@ -83,8 +81,8 @@ public class GroupServiceImpl implements GroupService
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken,
-                SolrCore.ADVANCED_SEARCH, query, 0, 1000, "name asc");
+        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
+                "name asc");
     }
 
     @Override
@@ -105,27 +103,24 @@ public class GroupServiceImpl implements GroupService
     public String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException
     {
         String statusQuery = userStatus.map(it -> {
-                    try
-                    {
-                        AcmUserState state = AcmUserState.valueOf(it);
-                        return String.format(" AND status_lcs:%s", state);
-                    }
-                    catch (IllegalArgumentException e)
-                    {
-                        log.debug("usersStatus: [{}] is not a valid value. Won't be included in the query!", userStatus);
-                        return "";
-                    }
-                }
-        ).orElse("");
+            try
+            {
+                AcmUserState state = AcmUserState.valueOf(it);
+                return String.format(" AND status_lcs:%s", state);
+            }
+            catch (IllegalArgumentException e)
+            {
+                log.debug("usersStatus: [{}] is not a valid value. Won't be included in the query!", userStatus);
+                return "";
+            }
+        }).orElse("");
 
-        String query = String.format("object_type_s:USER AND groups_id_ss:%s",
-                buildSafeGroupNameForSolrSearch(groupName));
+        String query = String.format("object_type_s:USER AND groups_id_ss:%s", buildSafeGroupNameForSolrSearch(groupName));
         query = query.replace("_002E_", ".");
         query += statusQuery;
 
         log.debug("Executing query for users in group: [{}]", query);
-        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH,
-                query, 0, 1000, "");
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, 0, 1000, "");
     }
 
     private String buildSafeGroupNameForSolrSearch(String groupName)
@@ -142,8 +137,10 @@ public class GroupServiceImpl implements GroupService
     /**
      * Creates or updates ad-hoc group based on the client info coming in from CRM
      *
-     * @param //acmGroup group we want to rename
-     * @param //         newName  group new name
+     * @param //acmGroup
+     *            group we want to rename
+     * @param //
+     *            newName group new name
      */
     @Override
     @Transactional
@@ -188,8 +185,8 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to set supervisor to group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Set supervisor", "Group", -1L, "Failed to set supervisor to group. Group "
-                    + groupId + " was not found.", null);
+            throw new AcmUserActionFailedException("Set supervisor", "Group", -1L,
+                    "Failed to set supervisor to group. Group " + groupId + " was not found.", null);
         }
 
         supervisor = userDao.findByUserId(supervisor.getUserId());
@@ -211,13 +208,13 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to add members to group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Save Members", "Group", -1L, "Failed to add members to group. Group "
-                    + groupId + " was not found.", null);
+            throw new AcmUserActionFailedException("Save Members", "Group", -1L,
+                    "Failed to add members to group. Group " + groupId + " was not found.", null);
         }
         members = updateMembersWithDatabaseInfo(members);
         members.forEach(group::addUserMember);
-        members.forEach(member ->
-                userRoleService.saveValidUserRolesPerAddedUserGroups(member.getUserId(), new HashSet<>(Arrays.asList(group))));
+        members.forEach(
+                member -> userRoleService.saveRolesPerAddedGroups(new HashSet<>(Arrays.asList(group))));
         return group;
     }
 
@@ -228,8 +225,8 @@ public class GroupServiceImpl implements GroupService
         if (group == null)
         {
             log.error("Failed to remove supervisor from group. Group [{}] was not found.", groupId);
-            throw new AcmUserActionFailedException("Remove Supervisor", "Group", -1L, "Failed to remove supervisor from group. Group "
-                    + groupId + " was not found.", null);
+            throw new AcmUserActionFailedException("Remove Supervisor", "Group", -1L,
+                    "Failed to remove supervisor from group. Group " + groupId + " was not found.", null);
         }
         group.setSupervisor(null);
 
@@ -246,8 +243,6 @@ public class GroupServiceImpl implements GroupService
     {
         members = updateMembersWithDatabaseInfo(members);
         AcmGroup group = groupDao.removeMembersFromGroup(groupId, members);
-        members.forEach(member ->
-                userRoleService.saveInvalidUserRolesPerRemovedUserGroups(member, new HashSet<>(Arrays.asList(group))));
         return group;
     }
 
@@ -258,8 +253,7 @@ public class GroupServiceImpl implements GroupService
         AcmGroup parent = groupDao.findByName(parentId);
         if (parent == null)
         {
-            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " +
-                    parentId + " not found", null);
+            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " + parentId + " not found", null);
         }
 
         // If supervisor for the subgroup is empty, get from the parent group
