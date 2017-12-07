@@ -22,6 +22,7 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
             CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
                 $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
                 $scope.objectId = objectInfo.complaintId;
+                $scope.eventSources = [];
                 if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled)
                 {
                     $scope.objectInfoRetrieved = true;
