@@ -4,7 +4,7 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
     , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService'
     , function ($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService) {
 
-        $scope.objectInfoRetrieved = {};
+        $scope.objectInfoRetrieved = false;
 
         new HelperObjectBrowserService.Component({
             scope: $scope
