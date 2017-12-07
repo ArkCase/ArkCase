@@ -26,11 +26,9 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
             scope: {
                 objectId: '=',
                 objectType: '=',
-                eventSources: '=?'
+                eventSources: '='
             },
             link: function(scope) {
-                /* Event sources array */
-                scope.eventSources = [];
 
                 /* Render Popover */
                 scope.eventRender = function(event, element, view) {

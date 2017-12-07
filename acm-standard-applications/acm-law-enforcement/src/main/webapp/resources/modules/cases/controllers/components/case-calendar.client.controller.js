@@ -22,6 +22,7 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
             CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
                 $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
                 $scope.objectId = objectInfo.id;
+                $scope.eventSources = [];
                 if(calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled)
                 {
                     $scope.objectInfoRetrieved = true;
