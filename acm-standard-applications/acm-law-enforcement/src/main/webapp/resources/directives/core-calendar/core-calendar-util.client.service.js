@@ -903,7 +903,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             var startDateTime = $filter('date')(moment(calendarEvent.start).toDate(), 'MM/dd/yyyy h:mm a');
             var endDateTime = $filter('date')(moment(calendarEvent.end).toDate(), 'MM/dd/yyyy h:mm a');
 
-            var popoverTemplate = getHtmlSummary(calendarEvent.details, 'span', 50) + '</p>' + '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
+            var popoverTemplate = getHtmlSummary(calendarEvent.details, 'span', 50) + '</br></p>' + '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
 
             return popoverTemplate;
         };
