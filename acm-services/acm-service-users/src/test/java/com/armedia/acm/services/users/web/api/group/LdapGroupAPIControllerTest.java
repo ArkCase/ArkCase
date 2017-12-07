@@ -93,7 +93,6 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
-        when(mockGroupService.findByName(anyString())).thenReturn(group);
         when(mockLdapGroupService.deleteLdapGroup(anyString(), anyString())).thenReturn(group);
     }
 }
