@@ -88,14 +88,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.minStartDate = new Date();
         $scope.minDueDate = new Date();
 
-        $scope.isValidDate = function () {
-            if (Util.isEmpty($scope.config.data.taskStartDate) || Util.isEmpty($scope.config.data.dueDate)) {
-                return false;
-            }
-
-            return true;
-        };
-
         $scope.startDateChanged = function () {
             var todayDate = new Date();
             if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
@@ -110,7 +102,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
             $scope.config.data.dueDate = UtilDateService.setSameDateTime($scope.config.data.dueDate, $scope.config.data.taskStartDate);
             $scope.minDueDate = $scope.config.data.taskStartDate;
-            $scope.validDate = $scope.isValidDate();
         };
 
         $scope.dueDateChanged = function () {
@@ -126,7 +117,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
 
             $scope.config.data.taskStartDate = UtilDateService.setSameDateTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
-            $scope.validDate = $scope.isValidDate();
         };
 
         $scope.saveNewTask = function () {
@@ -276,9 +266,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                             $scope.groupName = selectedGroup.name;
                         }
 
-                        $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
-                        $scope.groupName = selectedGroup.name;
-
                         return;
                     } else if (selectedObjectType === 'GROUP') {  // Selected group
                         var selectedUser = selection.detailSelectedItems;
@@ -288,9 +275,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                             $scope.userOrGroupName = selectedUser.name;
                         }
 
-                        $scope.config.data.assignee = selectedUser.object_id_s;
                         $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
-                        $scope.userOrGroupName = selectedUser.name;
                         $scope.groupName = selectedGroup.name;
 
                         return;

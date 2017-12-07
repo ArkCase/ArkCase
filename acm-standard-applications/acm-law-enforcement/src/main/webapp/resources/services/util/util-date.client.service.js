@@ -203,15 +203,15 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
             }
             /**
              * @ngdoc method
-             * @name setSameDateTime
+             * @name setSameTime
              * @methodOf services:Util.DateService
              *
              * @description
-             * Sets the same time for firstDate and secondDate by setting the hours, minutes, seconds and milisecond from the firstDate to the secondDate
+             * Setter which sets the same time for firstDate and secondDate by setting the hours, minutes, seconds and milisecond from the secondDate to the firstDate
              *
              * @Returns {Date} Date object
              */
-            , setSameDateTime: function (firstDate, secondDate) {
+            , setSameTime: function (firstDate, secondDate) {
                 firstDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
                 return firstDate;
             }
