@@ -9,6 +9,7 @@ import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
+import javax.persistence.FlushModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,19 +69,56 @@ public interface GroupService
     List<AcmGroup> findByUserMember(AcmUser user);
 
     /**
-     * AcmGroups are not deleted from the system. They are just set with status AcmGroupStatus.DELETE and relations to
+     * AcmGroups are not deleted from the system. This method sets the group with status
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
      * groups, users and roles for users per the target group are removed.
      *
      * @param groupId name of the group
-     * @return group with updated status and ancestors
+     * @return group with updated status, ancestors and removed user and group relations
+     * @throws AcmObjectNotFoundException in case group with groupId is not found
      */
     AcmGroup markGroupDeleted(String groupId) throws AcmObjectNotFoundException;
 
+    /**
+     * AcmGroups are not deleted from the system. This method sets the group with status
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
+     * groups, users and roles for users per the target group are removed.
+     *
+     * @param groupId name of the group
+     * @param flushModeType if set to AUTO there is an explicit flush before the end of the method
+     * @return group with updated status, ancestors and removed user and group relations
+     * @throws AcmObjectNotFoundException in case group with groupId is not found
+     */
+    AcmGroup markGroupDeleted(String groupId, FlushModeType flushModeType) throws AcmObjectNotFoundException;
+
+    /**
+     * Removes group membership to the given parent group. In case this group is
+     * not member to any other group, the group is deleted.
+     *
+     * @param groupName       name of the group to be removed
+     * @param parentGroupName name of the parent group
+     * @return updated AcmGroup
+     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     */
     AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
+
+    /**
+     * Removes group membership to the given parent group. In case this group is
+     * not member to any other group, the group is deleted.
+     *
+     * @param groupName       name of the group to be removed
+     * @param parentGroupName name of the parent group
+     * @param flushModeType if set to AUTO there is an explicit flush before the end of the method
+     * @return updated AcmGroup
+     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     */
+    AcmGroup removeGroupMembership(String groupName, String parentGroupName, FlushModeType flushModeType) throws AcmObjectNotFoundException;
 
     AcmGroup setSupervisor(AcmUser supervisor, String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
     AcmGroup addUserMemberToGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
+
+    AcmGroup addUserMemberToGroup(AcmUser user, String groupId, FlushModeType flushModeType) throws AcmObjectNotFoundException;
 
     AcmGroup removeSupervisor(String groupId, boolean applyToAll) throws AcmUserActionFailedException;
 
@@ -89,6 +127,8 @@ public interface GroupService
     AcmGroup removeUserMembersFromGroup(List<String> members, String groupId) throws AcmObjectNotFoundException;
 
     AcmGroup removeUserMemberFromGroup(String userMember, String groupId) throws AcmObjectNotFoundException;
+
+    AcmGroup removeUserMemberFromGroup(String userMember, String groupId, FlushModeType flushModeType) throws AcmObjectNotFoundException;
 
     AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 

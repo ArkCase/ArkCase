@@ -281,7 +281,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         for (String groupName : groups)
         {
-            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName);
+            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName, FlushModeType.AUTO);
             if (group.isLdapGroup())
             {
                 groupsDnToUpdate.add(group.getDistinguishedName());
