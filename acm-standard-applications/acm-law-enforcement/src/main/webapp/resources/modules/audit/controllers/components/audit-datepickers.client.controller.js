@@ -22,8 +22,8 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Ut
             $scope.dateTo = UtilDateService.convertToCurrentTime($scope.dateFrom);
         }
 
-        $scope.dateFrom = UtilDateService.setSameDateTime($scope.dateFrom, $scope.dateTo);
-        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo, true);
+        $scope.dateFrom = UtilDateService.setSameTime($scope.dateFrom, $scope.dateTo);
+        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
     };
 
     $scope.dateToChanged = function () {
@@ -38,8 +38,8 @@ angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'Ut
             $scope.dateTo = UtilDateService.convertToCurrentTime($scope.dateFrom);
         }
 
-        $scope.dateTo = UtilDateService.setSameDateTime($scope.dateTo, $scope.dateFrom);
-        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo, true);
+        $scope.dateTo = UtilDateService.setSameTime($scope.dateTo, $scope.dateFrom);
+        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
     };
 
     $scope.dateFromChanged();

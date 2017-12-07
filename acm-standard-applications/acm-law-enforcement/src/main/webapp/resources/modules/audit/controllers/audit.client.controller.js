@@ -52,11 +52,10 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {Object} dateFrom Object of type date that represents value for date chosen from dateFrom input
          * @param {Object} dateTo Object of type date that represents value for date chosen from dateTo input
          */
-        function getDateValues(e, dateFrom, dateTo, validDate) {
+        function getDateValues(e, dateFrom, dateTo) {
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
 
-            $scope.validDate = validDate;
         }
 
         // Retrieves the properties from the acm-reports-server-config.properties file
