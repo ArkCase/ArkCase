@@ -25,7 +25,8 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
             scope: {
                 objectId: '=',
-                objectType: '='
+                objectType: '=',
+                eventSources: '=?'
             },
             link: function(scope) {
                 /* Event sources array */
