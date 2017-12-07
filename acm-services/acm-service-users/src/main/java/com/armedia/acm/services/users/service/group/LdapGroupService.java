@@ -2,7 +2,7 @@ package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.dao.ldap.LdapGroupDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -22,7 +23,7 @@ public class LdapGroupService
 {
     private GroupService groupService;
 
-    private LdapGroupDao ldapGroupDao;
+    private SpringLdapGroupDao ldapGroupDao;
 
     private UserDao userDao;
 
@@ -35,14 +36,15 @@ public class LdapGroupService
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
-        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         AcmGroup existingGroup = groupService.findByName(group.getName().toUpperCase());
         if (existingGroup != null)
         {
             log.debug("Group with name: [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
+
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         group.setName(group.getName().toUpperCase());
         group.setDisplayName(group.getName().toUpperCase());
         group.setType(AcmGroupType.LDAP_GROUP);
@@ -60,7 +62,7 @@ public class LdapGroupService
 
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName)
-            throws AcmLdapActionFailedException
+            throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         AcmGroup existingGroup = groupService.findByName(group.getName().toUpperCase());
         if (existingGroup != null)
@@ -70,6 +72,10 @@ public class LdapGroupService
         }
 
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
+        if (parentGroup == null)
+        {
+            throw new AcmObjectNotFoundException("LDAP_GROUP", null, "Parent group not found");
+        }
         log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
@@ -116,7 +122,7 @@ public class LdapGroupService
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         log.debug("Deleting LDAP group [{}]", group);
-        AcmGroup markedGroup = groupService.markGroupDeleted(group);
+        AcmGroup markedGroup = groupService.markGroupDeleted(group, FlushModeType.AUTO);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         ldapGroupDao.deleteGroupEntry(markedGroup.getDistinguishedName(), ldapSyncConfig);
         return markedGroup;
@@ -126,7 +132,7 @@ public class LdapGroupService
     public void removeGroupMembership(String groupName, String parentGroupName, String directoryName)
             throws AcmObjectNotFoundException, AcmLdapActionFailedException
     {
-        AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName);
+        AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, FlushModeType.AUTO);
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         if (acmGroup.getStatus() == AcmGroupStatus.DELETE)
@@ -159,12 +165,12 @@ public class LdapGroupService
         this.groupService = groupService;
     }
 
-    public LdapGroupDao getLdapGroupDao()
+    public SpringLdapGroupDao getLdapGroupDao()
     {
         return ldapGroupDao;
     }
 
-    public void setLdapGroupDao(LdapGroupDao ldapGroupDao)
+    public void setLdapGroupDao(SpringLdapGroupDao ldapGroupDao)
     {
         this.ldapGroupDao = ldapGroupDao;
     }
