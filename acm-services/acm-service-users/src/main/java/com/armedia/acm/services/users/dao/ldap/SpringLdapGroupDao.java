@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LdapGroupDao
+public class SpringLdapGroupDao
 {
     private LdapEntryTransformer ldapEntryTransformer;
 

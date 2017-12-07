@@ -97,6 +97,11 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             _removeLdapGroupMembership: {
                 method: 'DELETE',
                 url: 'api/latest/ldap/:directoryName/groups/:groupName/parent/:parentName'
+            },
+
+            _removeGroupMembership: {
+                method: 'DELETE',
+                url: 'api/latest/users/group/:groupName/parent/:parentName'
             }
         });
 
@@ -316,17 +321,6 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          */
         function removeGroup(group) {
             var url = 'api/latest/users/group/' + group.object_id_s + '/remove';
-            return $http({
-                method: 'DELETE',
-                url: url,
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-        }
-
-        function removeGroupMembership(groupName, parentName) {
-            var url = 'api/latest/users/group/' + groupName + '/parent/' + parentName;
             return $http({
                 method: 'DELETE',
                 url: url,
@@ -572,4 +566,18 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 }
             });
         }
+
+        function removeGroupMembership(groupName, parentName) {
+            return Util.serviceCall({
+                service: Service._removeGroupMembership
+                , param: {
+                    groupName: groupName,
+                    parentName: parentName
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
     }]);
