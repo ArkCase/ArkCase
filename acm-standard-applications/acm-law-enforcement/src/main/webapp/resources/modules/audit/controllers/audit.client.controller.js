@@ -74,15 +74,14 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
 
         $scope.showIframe = function () {
             var reportUri = $scope.auditReportUri;
-            var dateFormat = $scope.locale.DATETIME_FORMATS.shortDate;
             if ($scope.showXmlReport) {
                 reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
                 $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport));
             } else {
                 $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
             }
         }

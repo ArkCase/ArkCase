@@ -46,7 +46,7 @@ public class AcmGroup implements Serializable, AcmEntity
     @Id
     @Column(name = "cm_group_name")
     private String name;
-    
+
     @Column(name = "cm_group_display_name")
     private String displayName;
 
@@ -380,8 +380,8 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public Stream<String> getAscendants()
     {
-        if (ascendantsList == null) return Stream.empty();
-        return Arrays.stream(ascendantsList.split(","));
+        if (StringUtils.isBlank(ascendantsList)) return Stream.empty();
+        return Arrays.stream(ascendantsList.split(",")).sorted();
     }
 
     public void addAscendant(String ascendantGroup)
@@ -390,13 +390,7 @@ public class AcmGroup implements Serializable, AcmEntity
                 .collect(Collectors.toSet());
         ascendants.add(ascendantGroup);
         ascendantsList = ascendants.stream()
-                .collect(Collectors.joining(","));
-    }
-
-    public void removeAscendant(String ascendantGroup)
-    {
-        ascendantsList = getAscendants()
-                .filter(it -> !it.equals(ascendantGroup))
+                .sorted()
                 .collect(Collectors.joining(","));
     }
 
