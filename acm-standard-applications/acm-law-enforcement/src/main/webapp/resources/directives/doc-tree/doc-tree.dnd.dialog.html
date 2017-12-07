@@ -21,7 +21,7 @@
     <div ng-if="showSelFileTypes()">
         <label translate>common.directive.docTree.dndDialog.selFileTypes.label</label>
         <select ng-model="result.fileType"
-                ng-options="option.label for option in fileTypes">
+                ng-options="item.key as item.value | translate for item in fileTypes">
             <option value="" translate>common.directive.docTree.dndDialog.optFileType.prompt</option>
         </select>
     </div>
