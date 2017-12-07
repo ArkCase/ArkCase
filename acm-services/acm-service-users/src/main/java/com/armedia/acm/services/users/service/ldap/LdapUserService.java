@@ -3,8 +3,8 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.dao.ldap.LdapGroupDao;
-import com.armedia.acm.services.users.dao.ldap.LdapUserDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
@@ -30,6 +30,7 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -50,9 +51,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private AcmUserRoleService userRoleService;
 
-    private LdapUserDao ldapUserDao;
+    private SpringLdapUserDao ldapUserDao;
 
-    private LdapGroupDao ldapGroupDao;
+    private SpringLdapGroupDao ldapGroupDao;
 
     private SpringContextHolder acmContextHolder;
 
@@ -172,7 +173,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
         for (String groupName : groups)
         {
-            AcmGroup group = groupService.addUserMemberToGroup(user, groupName);
+            AcmGroup group = groupService.addUserMemberToGroup(user, groupName, FlushModeType.AUTO);
             if (group.isLdapGroup())
             {
                 groupsToUpdate.add(group.getDistinguishedName());
@@ -224,7 +225,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         {
             AcmUser existingUser = userDao.findByUserId(user.getUserId());
             log.debug("Adding Group [{}] to User [{}]", groupName, user.getUserId());
-            AcmGroup ldapGroup = groupService.addUserMemberToGroup(user, groupName);
+            AcmGroup ldapGroup = groupService.addUserMemberToGroup(existingUser, groupName, FlushModeType.AUTO);
 
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
@@ -241,7 +242,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
                     log.debug("Rollback updates on Group [{}] with DN [{}]", ldapGroup.getName(), ldapGroup.getDistinguishedName());
                     ldapGroupDao.removeMemberFromGroup(user1.getDistinguishedName(), ldapGroup.getDistinguishedName(), ldapSyncConfig);
                 }
-                throw new AcmLdapActionFailedException("Failed to add users to group");
+                throw new AcmLdapActionFailedException("Failed to add users to group", e);
             }
         }
         return ldapUsers;
@@ -264,7 +265,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         for (AcmGroup group : lookupGroups)
         {
             group.removeUserMember(user);
-            groupService.save(group);
+            groupService.saveAndFlush(group);
         }
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
@@ -276,14 +277,14 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public AcmUser removeUserFromGroups(String userId, List<String> groups, String directory)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
-        Set<String> groupsToUpdate = new HashSet<>();
+        Set<String> groupsDnToUpdate = new HashSet<>();
 
         for (String groupName : groups)
         {
             AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName);
             if (group.isLdapGroup())
             {
-                groupsToUpdate.add(group.getDistinguishedName());
+                groupsDnToUpdate.add(group.getDistinguishedName());
             }
         }
 
@@ -291,7 +292,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directory);
 
-        ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsToUpdate, ldapSyncConfig);
+        ldapGroupDao.removeMemberFromGroups(user.getDistinguishedName(), groupsDnToUpdate, ldapSyncConfig);
 
         return user;
     }
@@ -359,12 +360,12 @@ public class LdapUserService implements ApplicationEventPublisherAware
         this.userRoleService = userRoleService;
     }
 
-    public void setLdapUserDao(LdapUserDao ldapUserDao)
+    public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
     {
         this.ldapUserDao = ldapUserDao;
     }
 
-    public void setLdapGroupDao(LdapGroupDao ldapGroupDao)
+    public void setLdapGroupDao(SpringLdapGroupDao ldapGroupDao)
     {
         this.ldapGroupDao = ldapGroupDao;
     }

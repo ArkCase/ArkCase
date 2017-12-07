@@ -46,7 +46,7 @@ public class SpringLdapDaoIT
     private AcmLdapSyncConfig acmSyncLdapConfig;
 
     @Autowired
-    private LdapUserDao springLdapUserDao;
+    private SpringLdapUserDao springLdapUserDao;
 
     @Test
     public void findUsersWithAllAttributes()

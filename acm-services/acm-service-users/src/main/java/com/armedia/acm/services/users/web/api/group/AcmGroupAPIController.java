@@ -263,7 +263,7 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/{groupId:.+}/parent/{parentId:.+}", method = RequestMethod.DELETE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup removeGroupMemberFromGroup(@PathVariable String groupId, @PathVariable String parentId)
+    public AcmGroup removeGroupMembership(@PathVariable String groupId, @PathVariable String parentId)
             throws AcmAppErrorJsonMsg
     {
         try

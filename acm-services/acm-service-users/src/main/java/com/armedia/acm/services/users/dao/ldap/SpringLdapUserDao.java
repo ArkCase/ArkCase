@@ -29,7 +29,7 @@ import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
 import java.util.List;
 
-public class LdapUserDao
+public class SpringLdapUserDao
 {
     private LdapCrudDao ldapCrudDao;
 

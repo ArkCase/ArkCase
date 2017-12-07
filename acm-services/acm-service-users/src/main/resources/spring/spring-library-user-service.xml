@@ -14,13 +14,13 @@
 
     <bean id="customPagedLdapDao" class="com.armedia.acm.services.users.dao.ldap.CustomPagedLdapDao"/>
 
-    <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.LdapUserDao">
+    <bean id="springLdapUserDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao">
         <property name="ldapCrudDao" ref="ldapCrudDao"/>
         <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
         <property name="passwordLengthValidationRule" ref="passwordLengthValidationRule"/>
     </bean>
 
-    <bean id="ldapGroupDao" class="com.armedia.acm.services.users.dao.ldap.LdapGroupDao">
+    <bean id="springLdapGroupDao" class="com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao">
         <property name="ldapCrudDao" ref="ldapCrudDao"/>
         <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
     </bean>
@@ -66,7 +66,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
-        <property name="userRoleService" ref="userRoleService"/>
     </bean>
 
     <bean id="userActionExecutor" class="com.armedia.acm.services.users.service.ldap.AcmUserActionExecutor">
@@ -139,7 +138,7 @@
         <property name="ldapUserDao" ref="springLdapUserDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="userRoleService" ref="userRoleService"/>
-        <property name="ldapGroupDao" ref="ldapGroupDao"/>
+        <property name="ldapGroupDao" ref="springLdapGroupDao"/>
         <property name="groupService" ref="groupService"/>
     </bean>
 
@@ -148,7 +147,7 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
-        <property name="ldapGroupDao" ref="ldapGroupDao"/>
+        <property name="ldapGroupDao" ref="springLdapGroupDao"/>
     </bean>
 
     <bean id="ldapAddUserPropertiesFile"
