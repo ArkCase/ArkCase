@@ -76,12 +76,20 @@
       }
     }
   },
+  "costTracking.comp.approvers": {
+    "title": "hi_Approvers",
+    "table.columns": {
+      "fullName": "hi_Full Name",
+      "userId": "hi_Username"
+    }
+  },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "विवरण",
       "person.label": "लोग",
       "summary.label": "लागत",
-      "tags.label": "टैग"
+      "tags.label": "टैग",
+      "approvers.label": "hi_Approvers"
     },
     "sorters": {
       "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",
