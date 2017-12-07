@@ -38,7 +38,7 @@
                 admin.branding.logo.warningMessage
             </p>
 
-            <button class="btn btn-sm btn-default" ng-click="saveFiles()" ng-disabled="validateFileTypes()===false">
+            <button class="btn btn-sm btn-default" ng-click="saveFiles()" ng-disabled="!isFileTypeValid()">
                 <i class="fa fa-save"/>
                 <span translate>admin.branding.logo.btn.saveFiles</span>
             </button>
