@@ -4,6 +4,8 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
     , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService'
     , function ($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService) {
 
+        $scope.objectInfoRetrieved = false;
+
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
@@ -20,15 +22,14 @@ angular.module('complaints').controller('Complaints.CalendarController', ['$scop
             CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
                 $scope.objectType = ObjectService.ObjectTypes.COMPLAINT;
                 $scope.objectId = objectInfo.complaintId;
-                if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled){
+                if(calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled)
+                {
                     $scope.objectInfoRetrieved = true;
-                }else{
+                } else {
                     MessageService.info('Calendar Integration Configuration Not Enabled');
                     $scope.objectInfoRetrieved = false;
-
                 }
             });
-
         };
     }
 ]);
