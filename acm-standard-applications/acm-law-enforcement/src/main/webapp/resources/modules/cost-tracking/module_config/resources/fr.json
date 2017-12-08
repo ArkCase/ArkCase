@@ -1,24 +1,24 @@
 {
   "costTracking": {
     "title": "Suivi des coûts",
-    "progressNoCostsheet": "[ Aucune feuille de coûts n'est sélectionnée ]",
-    "progressLoading": "Feuille de coûts de chargement",
+    "progressNoCostsheet": "[Aucune feuille de coûts n'est sélectionnée]",
+    "progressLoading": "Chargement de la feuille de coûts",
     "progressError": "Impossible de charger la feuille de coûts"
   },
   "costTracking.menus": {
     "leftnav.item": "Suivi des coûts",
-    "topbar.item": "Coûts"
+    "topbar.item": "Feuille de coût"
   },
   "costTracking.comp.main": {
-    "title": "Vue d'ensemble"
+    "title": "Aperçu"
   },
   "costTracking.comp.info": {
     "title": "Information",
-    "incidentDate": "Date d'incident",
+    "incidentDate": "Date de l'incident",
     "priority": "Priorité",
     "assignedTo": "Assigné à",
     "subjectType": "Type de sujet",
-    "state": "État"
+    "state": "Etat"
   },
   "costTracking.comp.actions": {
     "title": "Actes",
@@ -27,60 +27,60 @@
   },
   "costTracking.comp.details": {
     "title": "Détails",
-    "informSaved": "fr_Costsheet details saved",
+    "informSaved": "Détails des coûts enregistrés",
     "table.columns": {
-      "title": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "costTracking.comp.person": {
-    "title": "Personnes",
+    "title": "La personne",
     "table.columns": {
-      "fullName": "fr_Full Name",
-      "userId": "fr_Username"
+      "fullName": "Nom complet",
+      "userId": "Nom d'utilisateur"
     }
   },
   "costTracking.comp.summary": {
     "title": "Résumé des coûts",
     "table.columns": {
-      "parentId": "fr_ID",
-      "parentNumber": "fr_Parent ID",
-      "parentType": "fr_Parent Type",
-      "value": "fr_Total Cost",
-      "title": "fr_Title",
-      "description": "fr_Description"
+      "parentId": "Identification",
+      "parentNumber": "ID du parent",
+      "parentType": "Type de parent",
+      "value": "Coût total",
+      "title": "Titre",
+      "description": "La description"
     }
   },
   "costTracking.comp.tags": {
-    "title": "étiquettes",
+    "title": "Étiquettes",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Marque",
+      "created": "Date de création",
+      "createdBy": "Créé par"
     },
     "modal": {
-    "title": "fr_Tag",
-    "search": "fr_Search for Tag",
-    "buttons": {
-          "cancel": "fr_Cancel",
-          "ok": "fr_Add Tag"
-     }
+      "title": "Marque",
+      "search": "Recherche de tag",
+      "buttons": {
+        "cancel": "Annuler",
+        "ok": "Ajouter une étiquette"
+      }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression d'un tag"
       }
     }
   },
   "costTracking.comp.approvers": {
-    "title": "fr_Approvers",
+    "title": "Approbateurs",
     "table.columns": {
-      "fullName": "fr_Full Name",
-      "userId": "fr_Username"
+      "fullName": "Nom complet",
+      "userId": "Nom d'utilisateur"
     }
   },
   "costTracking.tree": {
@@ -88,8 +88,8 @@
       "details.label": "Détails",
       "person.label": "Personnes",
       "summary.label": "Frais",
-      "tags.label": "étiquettes",
-      "approvers.label": "fr_Approvers"
+      "tags.label": "Étiquettes",
+      "approvers.label": "Approbateurs"
     },
     "sorters": {
       "dateAsc": "Trier Date Asc",
