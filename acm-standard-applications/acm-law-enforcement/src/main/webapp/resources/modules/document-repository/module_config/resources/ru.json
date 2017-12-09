@@ -31,162 +31,165 @@
   },
   "document-repository.comp.details": {
     "title": "Детали",
-    "informSaved": "ru_Document Repository details saved",
+    "informSaved": "Сведения о репозитории хранилища",
     "table.columns": {
-      "title": "ru_Details",
-      "modified": "ru_Date Last Modified",
-      "modifier": "ru_User Last Modified"
+      "title": "Детали",
+      "modified": "Дата последнего изменения",
+      "modifier": "Последнее изменение пользователем"
     }
   },
   "document-repository.comp.documents": {
     "title": "Документы",
-    "sendEmail": "ru_Send Email",
-    "filterInputPlaceholder": "ru_Filter",
-    "searchInputPlaceholder": "ru_Search"
+    "sendEmail": "Отправить электронное письмо",
+    "filterInputPlaceholder": "Фильтр",
+    "searchInputPlaceholder": "Поиск",
+    "newTask": "Новое задание"
   },
   "document-repository.comp.participants": {
     "title": "Участники",
     "table.columns": {
-      "type": "ru_Type",
-      "name": "ru_Name"
+      "type": "Тип",
+      "name": "Имя"
     },
     "dialogUserPicker": {
-      "header": "ru_Choose User",
+      "header": "Выберите пользователя",
       "table.columns": {
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "id": "ru_Username"
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "id": "Имя пользователя"
       }
     },
     "dialogGroupPicker": {
-      "header": "ru_Choose Group",
+      "header": "Выберите группу",
       "table.columns": {
-        "name": "ru_Name"
+        "name": "Имя"
       }
     }
   },
   "document-repository.comp.notes": {
     "title": "Заметки",
     "table.columns": {
-      "note": "ru_Note",
-      "created": "ru_Created",
-      "creator": "ru_Author"
+      "note": "Заметка",
+      "created": "Созданный",
+      "creator": "Автор"
     }
   },
   "document-repository.comp.references": {
     "title": "Ссылки",
     "table.columns": {
-      "targetName": "ru_Number",
-      "parentName": "ru_Parent",
-      "targetTitle": "ru_Title",
-      "modified": "ru_Modified",
-      "targetType": "ru_Reference Type",
-      "status": "ru_Status"
+      "targetName": "Число",
+      "parentName": "Родитель",
+      "targetTitle": "Заглавие",
+      "modified": "Модифицированный",
+      "targetType": "Тип ссылки",
+      "status": "Положение дел"
     }
   },
   "document-repository.comp.history": {
     "title": "История",
     "table.columns": {
-      "eventType": "ru_Event Name",
-      "eventDate": "ru_Date",
-      "userId": "ru_User"
+      "eventType": "Название события",
+      "eventDate": "Дата",
+      "userId": "Пользователь"
     }
   },
   "document-repository.comp.tags": {
     "title": "Теги",
     "table.columns": {
-      "tag": "ru_Tag",
-      "created": "ru_Created",
-      "createdBy": "ru_Created By"
+      "tag": "Тег",
+      "created": "Созданный",
+      "createdBy": "Сделано"
     },
     "modal": {
-      "title": "ru_Tag",
-      "search": "ru_Search for Tag",
+      "title": "Тег",
+      "search": "Поиск тегов",
       "buttons": {
-        "cancel": "ru_Cancel",
-        "ok": "ru_Add Tag"
+        "cancel": "Отмена",
+        "ok": "Добавить метку"
       }
     },
     "message": {
-      "tagExists": "ru_Tag with that name or description or text already exists",
-      "tagAssociated": "ru_already associated",
+      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+      "tagAssociated": "Уже связанный",
       "delete": {
-        "success": "ru_Tag deleted successfully",
-        "error": "ru_Error deleting tag"
+        "success": "Удаленный тег",
+        "error": "Ошибка удаления тега"
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Поиск ссылок"
+  },
   "document-repository.comp.addreference": {
-    "title": "ru_Add Reference",
-    "cancelButton": "ru_Cancel",
-    "confirmButton": "ru_Add",
+    "title": "Добавить ссылку",
+    "cancelButton": "Отмена",
+    "confirmButton": "Добавить",
     "search": {
-      "placeholder": "ru_Search for case, complaint, file, task",
-      "btn": "ru_Search"
+      "placeholder": "Поиск случая, жалобы, файла, задачи",
+      "btn": "Поиск"
     },
     "grid": {
       "columns": {
-        "id": "ru_Id",
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "parent": "ru_Parent",
-        "assignee": "ru_Assignee",
-        "modified": "ru_Modified"
+        "id": "Id",
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "parent": "Родитель",
+        "assignee": "Правопреемник",
+        "modified": "Модифицированный"
       }
     }
   },
   "document-repository.comp.assigneePickerModal": {
-    "title": "ru_Change Assignee",
-    "assigneeNamelabel": "ru_Assignee Name",
-    "btnCancelText": "ru_Cancel",
-    "btnSaveText": "ru_Save",
-    "searchAssigneeHeader": "ru_Search Assignee"
+    "title": "Изменить получателя",
+    "assigneeNamelabel": "Имя получателя",
+    "btnCancelText": "Отмена",
+    "btnSaveText": "Сохранить",
+    "searchAssigneeHeader": "Поиск Правопреемник"
   },
   "document-repository.comp.groupPickerModal": {
-    "title": "ru_Change Group",
-    "groupNamelabel": "ru_Group Name",
-    "btnCancelText": "ru_Cancel",
-    "btnSaveText": "ru_Save",
-    "searchGroupHeader": "ru_Search Group"
+    "title": "Изменить группу",
+    "groupNamelabel": "Название группы",
+    "btnCancelText": "Отмена",
+    "btnSaveText": "Сохранить",
+    "searchGroupHeader": "Поиск группы"
   },
   "document-repository.userOrGroupSearch": {
-    "id": "ru_userSearch",
-    "title": "ru_User/Group Search",
+    "id": "UserSearch",
+    "title": "Поиск пользователей / групп",
     "search": {
-      "btn": "ru_Search",
-      "placeholder": "ru_Search for the user or group."
+      "btn": "Поиск",
+      "placeholder": "Поиск пользователя или группы."
     },
-    "cancelButton": "ru_Cancel",
-    "confirmButton": "ru_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Отмена",
+    "confirmButton": "Подтвердить",
     "assigneeGridColumns": {
-      "name": "ru_Name",
-      "type": "ru_Type",
-      "title": "ru_Title",
-      "username": "ru_Username"
+      "name": "Имя",
+      "type": "Тип",
+      "title": "Заглавие",
+      "username": "Имя пользователя"
     }
   },
   "document-repository.newRepository": {
-    "title": "ru_Create Repository",
-    "assigneeLabel": "ru_Assignee",
-    "owningGroupLabel": "ru_Owning Group",
-    "assignee.placeholder": "ru_Search Assignee",
-    "saveButton": "ru_Create Repository",
-    "cancelButton": "ru_Cancel",
-    "nameLabel": "ru_Name",
-    "name.placeholder": "ru_Enter Name",
-    "descriptionLabel": "ru_Description",
-    "description.placeholder": "ru_Enter Description",
-    "searchUser": "ru_Search User"
+    "title": "Создать репозиторий",
+    "assigneeLabel": "Правопреемник",
+    "owningGroupLabel": "Собственная группа",
+    "assignee.placeholder": "Поиск Правопреемник",
+    "saveButton": "Создать репозиторий",
+    "cancelButton": "Отмена",
+    "nameLabel": "Имя",
+    "name.placeholder": "Введите имя",
+    "descriptionLabel": "Описание",
+    "description.placeholder": "Введите описание",
+    "searchUser": "Поиск пользователя",
+    "personalRepository": "Мои документы"
   },
-  "document-repository.dialogUserPicker":{
-    "table.columns.name": "ru_Name",
-    "table.columns.type": "ru_Type",
-    "table.columns.title": "ru_Title",
-    "table.columns.id": "ru_Username"
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "Имя",
+    "table.columns.type": "Тип",
+    "table.columns.title": "Заглавие",
+    "table.columns.id": "Имя пользователя"
   },
   "document-repository.tree": {
     "nodeTypes": {
@@ -204,10 +207,10 @@
       "noFilter": "(Нет фильтра)"
     },
     "sorters": {
-      "dateAsc": "Сортировка даты Asc",
-      "dateDesc": "Сортировка даты Desc",
-      "idAsc": "Сортировка идентификатора репозитория Asc",
-      "idDesc": "Сортировка идентификатора репозитория Desc",
+      "dateAsc": "Сортировка даты по возрастанию",
+      "dateDesc": "Сортировка даты по убыванию",
+      "idAsc": "Сортировка ID репозитория по возрастанию",
+      "idDesc": "Сортировка ID репозитория по убыванию",
       "nameAsc": "Сортировать по имени Asc",
       "noSort": "(Нет Сортировать)"
     }
