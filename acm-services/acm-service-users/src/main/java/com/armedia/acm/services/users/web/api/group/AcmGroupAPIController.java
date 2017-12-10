@@ -21,12 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
 public class AcmGroupAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -94,6 +95,7 @@ public class AcmGroupAPIController
                                        @RequestParam(value = "s", required = false, defaultValue = "") String sort,
                                        Authentication auth) throws MuleException
     {
+
         LOG.info("Taking groups by directory from Solr.");
 
         StringBuilder solrQuery = new StringBuilder();
@@ -119,6 +121,9 @@ public class AcmGroupAPIController
                            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
                            Authentication auth) throws Exception
     {
+
+        //we need to decode base64 encoded group id because can contain characters which can interfere with url
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
         LOG.info("Taking group from Solr with ID = [{}]", groupId);
 
         String query = "object_id_s:" + groupId
@@ -154,6 +159,10 @@ public class AcmGroupAPIController
                                @RequestParam(value = "s", required = false, defaultValue = "") String sort,
                                Authentication auth) throws MuleException
     {
+
+        //we need to decode base64 encoded group id because can contain characters which can interfere with url
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+
         LOG.info("Taking subgroups from Solr with ID = [{}] " + groupId);
         return getGroupsByParent(groupId, startRow, maxRows, sort, auth);
     }
@@ -199,6 +208,7 @@ public class AcmGroupAPIController
     private String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth)
             throws MuleException
     {
+
         String query = "ascendants_id_ss:\"" + groupId
                 + "\" AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
@@ -239,6 +249,9 @@ public class AcmGroupAPIController
                                  @PathVariable("parentId") String parentId)
             throws AcmCreateObjectFailedException
     {
+
+        //we need to decode base64 encoded group id because can contain characters which can interfere with url
+        parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
         LOG.info("Saving ad-hoc subgroup [{}]", subGroup.getName());
         return groupService.saveAdHocSubGroup(subGroup, parentId);
     }
@@ -247,6 +260,10 @@ public class AcmGroupAPIController
     @ResponseBody
     public AcmGroup deleteGroup(@PathVariable String groupId) throws AcmUserActionFailedException
     {
+
+        //we need to decode base64 encoded group id because can contain characters which can interfere with url
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+
         LOG.info("Removing group with id [{}]", groupId);
         return getGroupService().markGroupDeleted(groupId);
     }

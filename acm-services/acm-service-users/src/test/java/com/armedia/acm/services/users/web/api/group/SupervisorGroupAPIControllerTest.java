@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Base64;
 
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
@@ -64,7 +65,7 @@ public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                delete("/api/latest/users/group/A/supervisor/remove/false")
+                delete("/api/latest/users/group/" + Base64.getUrlEncoder().encodeToString(group.getName().getBytes()) + "/supervisor/remove/false")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication))
@@ -98,7 +99,7 @@ public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{groupId}/supervisor/save/false", group.getName())
+                post("/api/latest/users/group/{groupId}/supervisor/save/false", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)

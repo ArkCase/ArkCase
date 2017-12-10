@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
 import java.util.Set;
 
 /**
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
 public class AdHocGroupMembersAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -34,6 +35,7 @@ public class AdHocGroupMembersAPIController
                                             @RequestParam(value = "addToAllParentGroups", required = false,
                                                     defaultValue = "false") String addToAllParentGroups) throws AcmUserActionFailedException
     {
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
         LOG.info("Saving members to the group with ID = [{}]", groupId);
         return groupService.addMembersToAdHocGroup(members, groupId);
     }
@@ -44,6 +46,7 @@ public class AdHocGroupMembersAPIController
     public AcmGroup removeMembersFromAdHocGroup(@RequestBody Set<AcmUser> members,
                                                 @PathVariable("groupId") String groupId)
     {
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
         LOG.info("Removing members from group with ID = [{}]", groupId);
         return groupService.removeMembersFromAdHocGroup(members, groupId);
     }

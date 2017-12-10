@@ -1,6 +1,8 @@
 package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.group.AcmGroup;
+import java.util.Base64;
 
 /**
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
 public class SupervisorGroupAPIController
 {
 
@@ -33,6 +34,7 @@ public class SupervisorGroupAPIController
                                          @PathVariable("groupId") String groupId,
                                          @PathVariable("applyToAll") boolean applyToAll) throws AcmUserActionFailedException
     {
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
         LOG.info("Saving supervisor to the group with ID = [{}]", groupId);
         return groupService.setSupervisor(supervisor, groupId, applyToAll);
     }
@@ -43,6 +45,7 @@ public class SupervisorGroupAPIController
     public AcmGroup removeSupervisorFromGroup(@PathVariable("groupId") String groupId,
                                               @PathVariable("applyToAll") boolean applyToAll) throws AcmUserActionFailedException
     {
+        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
         LOG.info("Removing supervisor from the group with ID = [{}]", groupId);
         return groupService.removeSupervisor(groupId, applyToAll);
     }
