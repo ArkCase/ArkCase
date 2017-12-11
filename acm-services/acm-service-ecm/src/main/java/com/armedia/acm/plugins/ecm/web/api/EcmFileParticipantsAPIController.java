@@ -103,15 +103,18 @@ public class EcmFileParticipantsAPIController
                     .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
                     .count() == 0)
             {
-                getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
-                        existingParticipant.getParticipantType(), existingParticipant.getObjectType(), existingParticipant.getObjectId());
-
                 if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
                 {
                     AcmFolder folder = getFolderService().findById(objectId);
                     getFileParticipantService().removeParticipantFromFolderAndChildren(folder,
                             existingParticipant.getParticipantLdapId(), existingParticipant.getObjectType());
                     getFolderService().saveFolder(folder);
+                }
+                else
+                {
+                    getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
+                            existingParticipant.getParticipantType(), existingParticipant.getObjectType(),
+                            existingParticipant.getObjectId());
                 }
             }
         }

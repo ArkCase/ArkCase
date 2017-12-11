@@ -583,6 +583,7 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
         return fileExtension;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

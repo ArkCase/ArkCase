@@ -16,7 +16,7 @@ public class EcmFileParticipantsHandler implements PipelineHandler<EcmFile, EcmF
     @Override
     public void execute(EcmFile entity, EcmFileTransactionPipelineContext pipelineContext) throws PipelineProcessException
     {
-        if (entity.getParticipants().size() == 0)
+        if (pipelineContext.getEcmFile().getParticipants().size() == 0)
         {
             pipelineContext.setEcmFile(getFileParticipantService().setFileParticipantsFromParentFolder(pipelineContext.getEcmFile()));
         }
