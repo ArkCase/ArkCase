@@ -48,7 +48,7 @@ public class EcmFileParticipantService
         // Use the participants service to avoid execution of Drools Assignment and Access rules
         // if the user doesn't have permissions on the file, the participants cannot be changed by inheriting
         // participants from parent entity
-        file.getParticipants().forEach(participant -> getParticipantService().removeParticipant(participant.getId()));
+        file.getParticipants().forEach(participant -> getParticipantService().removeParticipant(participant));
         file.getParticipants().clear();
 
         // set participants from parent folder
@@ -163,14 +163,17 @@ public class EcmFileParticipantService
                     // change the role of the existing participant if needed
                     if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
                     {
-                        getParticipantService().changeParticipantRole(existingFileParticipant.get(), participant.getParticipantType());
+                        existingFileParticipant.get().setParticipantType(participant.getParticipantType());
+                        getFileDao().save(file);
                     }
                 }
                 else
                 {
-                    getParticipantService().saveParticipant(participant.getParticipantLdapId(), participant.getParticipantType(),
-                            file.getId(),
-                            EcmFileConstants.OBJECT_FILE_TYPE);
+                    AcmParticipant fileParticipant = new AcmParticipant();
+                    fileParticipant.setParticipantType(participant.getParticipantType());
+                    fileParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+                    file.getParticipants().add(fileParticipant);
+                    getFileDao().save(file);
                 }
             }
         }
@@ -198,8 +201,11 @@ public class EcmFileParticipantService
         {
             // remove participants from files in folder
             getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT)
-                    .forEach(file -> getParticipantService().removeParticipant(participantLdapId,
-                            participantType, EcmFileConstants.OBJECT_FILE_TYPE, file.getId()));
+                    .forEach(file -> {
+                        file.getParticipants().removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
+                                && participant.getParticipantType().equals(participantType));
+                        getFileDao().save(file);
+                    });
         }
     }
 
@@ -240,7 +246,7 @@ public class EcmFileParticipantService
                     originalAssignedObjectParticipants, acmContainer.getFolder());
 
         }
-        if (acmContainer.getAttachmentFolder() != null)
+        if (acmContainer.getAttachmentFolder() != null && !acmContainer.getAttachmentFolder().equals(acmContainer.getFolder()))
         {
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
                     originalAssignedObjectParticipants, acmContainer.getAttachmentFolder());
@@ -262,8 +268,12 @@ public class EcmFileParticipantService
             }
         }
 
-        // remove deleted parent participants from children
-        for (AcmParticipant folderParticipant : folder.getParticipants())
+        // remove deleted parent participants from folder and children
+
+        // copy folder participants to a new list because the folder.getParticipants() list will be modified in
+        // removeParticipantFromFolderAndChildren() method and will cause ConcurrentModificationException
+        List<AcmParticipant> folderParticipants = folder.getParticipants().stream().collect(Collectors.toList());
+        for (AcmParticipant folderParticipant : folderParticipants)
         {
             boolean existsParentParticipant = assignedObjectParticipants.stream()
                     .anyMatch(participant -> folderParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId())

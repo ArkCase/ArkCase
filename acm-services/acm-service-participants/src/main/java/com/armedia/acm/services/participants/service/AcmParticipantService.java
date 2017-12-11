@@ -98,13 +98,6 @@ public class AcmParticipantService
                 flushModeType);
     }
 
-    public List<AcmParticipant> getParticipantsByLdapIdObjectTypeObjectId(String participantLdapId, String objectType, Long objectId,
-            FlushModeType flushModeType)
-    {
-        return getParticipantDao().getParticipantsByLdapIdObjectTypeObjectId(participantLdapId, objectType, objectId,
-                flushModeType);
-    }
-
     public AcmParticipant changeParticipantRole(AcmParticipant participant, String newRole) throws AcmAccessControlException
     {
         participant.setParticipantType(newRole);
@@ -147,7 +140,7 @@ public class AcmParticipantService
     public void removeParticipant(String userId, String participantType, String objectType, Long objectId)
     {
         AcmParticipant participant = getParticipantByLdapIdParticipantTypeObjectTypeObjectId(userId, participantType, objectType, objectId,
-                FlushModeType.AUTO);
+                FlushModeType.COMMIT);
         removeParticipant(participant);
     }
 

@@ -179,23 +179,6 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return acmParticipant;
     }
 
-    public List<AcmParticipant> getParticipantsByLdapIdObjectTypeObjectId(String participantLdapId, String objectType, Long objectId,
-            FlushModeType flushModeType)
-    {
-        Query query = getEm().createQuery(
-                "SELECT par FROM AcmParticipant par " +
-                        "WHERE par.objectId =:objectId " +
-                        "AND par.objectType =:objectType " +
-                        "AND par.participantLdapId =:userId");
-        query.setParameter("objectId", objectId);
-        query.setParameter("objectType", objectType);
-        query.setParameter("userId", participantLdapId);
-
-        query.setFlushMode(flushModeType);
-
-        return query.getResultList();
-    }
-
     @Transactional
     public void deleteParticipant(Long id)
     {

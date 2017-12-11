@@ -68,9 +68,12 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
         }
 
         // publish EntityParticipantsChangedEvent if the participants are not equal
+        boolean hasInheritanceFlag = assignedObject.getParticipants().stream()
+                .anyMatch(participant -> participant.isReplaceChildrenParticipant());
+
         boolean hasEqualParticipants = true;
 
-        if (assignedObject.getParticipants().size() != originalParticipants.size())
+        if (hasInheritanceFlag || assignedObject.getParticipants().size() != originalParticipants.size())
         {
             hasEqualParticipants = false;
         }
