@@ -4,41 +4,45 @@
     "menus": {
       "leftnav.item": "报告"
     },
-    "selectReport" : {
-      "label": "zh-cn_Report",
-      "placeholder": "zh-cn_Select Report"
+    "selectReport": {
+      "label": "报告",
+      "placeholder": "选择报告"
     },
-    "selectState" : {
-      "label": "zh-cn_State",
-      "placeholder": "zh-cn_Select State"
+    "selectState": {
+      "label": "状态",
+      "placeholder": "选择状态"
     },
     "startDate": {
-      "label": "zh-cn_From"
+      "label": "从"
     },
-    "endDate" : {
-      "label": "zh-cn_To"
+    "endDate": {
+      "label": "至"
     },
-
     "dropdown": {
-      "turnaround": "zh-cn_Turnaround Time by Requester",
-      "requester": "zh-cn_Requester Type Summary",
-      "pending": "zh-cn_Pending Orders Report",
-      "associate": "zh-cn_Associate Productivity Report",
-      "origination": "zh-cn_Origination Count",
-      "transfers": "zh-cn_Transfers Report",
-      "exceptions": "zh-cn_Exceptions Report (Non-Compliance)"
+      "turnaround": "请求者周转时间",
+      "requester": "请求者类型摘要",
+      "pending": "挂单订单报告",
+      "associate": "联合生产力报告",
+      "origination": "起源计数",
+      "transfers": "转移报告",
+      "exceptions": "例外报告（不合规）"
     },
-    "datepicker":{
-      "close": "cn_Done",
-      "clear": "cn_Clear",
-      "current": "cn_Today"
+    "datepicker": {
+      "close": "完毕",
+      "clear": "清除",
+      "current": "今天"
     },
     "btn": {
-      "generateReport": "zh-cn_Generate report"
+      "generateReport": "生成报告"
     },
-    "checkBox":{
+    "checkBox": {
       "xmlReport": "显示为XML"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "日期选择器"
+  },
+  "reports.comp.reportselection": {
+    "title": "报告"
   }
 }
-

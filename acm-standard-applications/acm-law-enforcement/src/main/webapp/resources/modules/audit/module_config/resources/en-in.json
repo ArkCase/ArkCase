@@ -15,12 +15,23 @@
         "selectAudit": "ALL",
         "inputId": "#"
       },
+      "checkBox": {
+        "xmlReport": "Show as XML"
+      },
       "button": {
         "generateAuditReport.btn": "Generate Audit Report"
       }
     },
-    "datepickers":{
-      "close": "Done"
+    "datepicker":{
+      "close": "Done",
+      "clear": "Clear",
+      "current": "Today"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "Audit"
+  },
+  "audit.comp.datepickers": {
+    "title": "Audits"
   }
 }
