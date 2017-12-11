@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.FlushModeType;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -122,7 +121,7 @@ public class LdapGroupService
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         log.debug("Deleting LDAP group [{}]", group);
-        AcmGroup markedGroup = groupService.markGroupDeleted(group, FlushModeType.AUTO);
+        AcmGroup markedGroup = groupService.markGroupDeleted(group, true);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         ldapGroupDao.deleteGroupEntry(markedGroup.getDistinguishedName(), ldapSyncConfig);
         return markedGroup;
@@ -132,7 +131,7 @@ public class LdapGroupService
     public void removeGroupMembership(String groupName, String parentGroupName, String directoryName)
             throws AcmObjectNotFoundException, AcmLdapActionFailedException
     {
-        AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, FlushModeType.AUTO);
+        AcmGroup acmGroup = groupService.removeGroupMembership(groupName, parentGroupName, true);
         AcmGroup parentGroup = groupService.findByName(parentGroupName);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         if (acmGroup.getStatus() == AcmGroupStatus.DELETE)

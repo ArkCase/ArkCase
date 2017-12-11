@@ -21,7 +21,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
-import javax.persistence.FlushModeType;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -75,8 +74,8 @@ public class GroupServiceImpl implements GroupService
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
-                "name asc");
+        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
+                0, 1000, "name asc");
     }
 
     @Override
@@ -167,12 +166,12 @@ public class GroupServiceImpl implements GroupService
     @Transactional
     public AcmGroup markGroupDeleted(String groupName) throws AcmObjectNotFoundException
     {
-        return markGroupDeleted(groupName, FlushModeType.COMMIT);
+        return markGroupDeleted(groupName, false);
     }
 
     @Override
     @Transactional
-    public AcmGroup markGroupDeleted(String groupName, FlushModeType flushModeType) throws AcmObjectNotFoundException
+    public AcmGroup markGroupDeleted(String groupName, boolean flushInstructions) throws AcmObjectNotFoundException
     {
         AcmGroup acmGroup = findByName(groupName);
         if (acmGroup == null)
@@ -202,7 +201,7 @@ public class GroupServiceImpl implements GroupService
             save(group);
         });
 
-        if (flushModeType == FlushModeType.AUTO)
+        if (flushInstructions)
         {
             groupDao.getEm().flush();
         }
@@ -214,12 +213,12 @@ public class GroupServiceImpl implements GroupService
     @Transactional
     public AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException
     {
-        return removeGroupMembership(groupName, parentGroupName, FlushModeType.COMMIT);
+        return removeGroupMembership(groupName, parentGroupName, false);
     }
 
     @Override
     @Transactional
-    public AcmGroup removeGroupMembership(String groupName, String parentGroupName, FlushModeType flushModeType)
+    public AcmGroup removeGroupMembership(String groupName, String parentGroupName, boolean flushInstructions)
             throws AcmObjectNotFoundException
     {
         AcmGroup acmGroup = findByName(groupName);
@@ -254,7 +253,7 @@ public class GroupServiceImpl implements GroupService
                 save(group);
             });
 
-            if (flushModeType == FlushModeType.AUTO)
+            if (flushInstructions)
             {
                 groupDao.getEm().flush();
             }
@@ -306,7 +305,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, FlushModeType flushModeType)
+    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, boolean flushInstructions)
             throws AcmObjectNotFoundException
     {
         AcmGroup group = groupDao.findByName(groupId);
@@ -324,7 +323,7 @@ public class GroupServiceImpl implements GroupService
         log.debug("Add User [{}] as member to Group [{}]", user.getUserId(), group.getName());
         group.addUserMember(user);
 
-        if (FlushModeType.AUTO == flushModeType)
+        if (flushInstructions)
         {
             groupDao.getEm().flush();
         }
@@ -334,7 +333,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup addUserMemberToGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException
     {
-        return addUserMemberToGroup(user, groupId, FlushModeType.COMMIT);
+        return addUserMemberToGroup(user, groupId, false);
     }
 
     @Override
@@ -397,7 +396,7 @@ public class GroupServiceImpl implements GroupService
         if (user == null)
         {
             log.warn("User [{}] was not found.", userId);
-            throw new AcmObjectNotFoundException("USER", null, "User " + user + " was not found");
+            throw new AcmObjectNotFoundException("USER", null, "User " + userId + " was not found");
         }
         log.debug("Removing User [{}] from Group [{}]", user.getUserId(), groupId);
         return removeUserMemberFromGroup(user, groupId);
@@ -405,11 +404,11 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup removeUserMemberFromGroup(String userMember, String groupId, FlushModeType flushModeType)
+    public AcmGroup removeUserMemberFromGroup(String userMember, String groupId, boolean flushInstructions)
             throws AcmObjectNotFoundException
     {
         AcmGroup acmGroup = removeUserMemberFromGroup(userMember, groupId);
-        if (FlushModeType.AUTO == flushModeType)
+        if (flushInstructions)
         {
             groupDao.getEm().flush();
         }
