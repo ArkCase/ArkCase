@@ -105,6 +105,8 @@ angular.module('services').factory('Person.ListService', ['$resource', '$transla
                                     , nodeType: ObjectService.ObjectTypes.PERSON
                                     , nodeTitle: Util.goodValue(doc.title_parseable)
                                     , nodeToolTip: Util.goodValue(doc.title_parseable)
+                                    , nodeStatus: Util.goodValue(doc.status_s)
+                                    , nodeStatusColor: Util.goodValue(doc.status_s) && (doc.status_s == "INACTIVE") ? "list-group-item-inactive-icon" : ""
                                 };
                             }
                             treeData.docs.push(node);

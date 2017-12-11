@@ -27,7 +27,7 @@ angular.module('my-documents').config(['$stateProvider',
 
             .state('my-documents.main', {
                 url: '/:id/main',
-                templateUrl: 'modules/document-repository/views/components/document-repository-main.client.view.html',
+                templateUrl: 'modules/my-documents/views/components/my-documents-main.client.view.html',
                 params: {
                     "type": "MY_DOC_REPO"
                 }

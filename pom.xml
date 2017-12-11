@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -116,7 +116,7 @@
         <pdfbox.version>2.0.6</pdfbox.version>
         <barcode4j.version>2.1</barcode4j.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
-        <milton.version>2.7.1.3</milton.version>
+        <milton.version>2.7.3.5</milton.version>
         <hamcrest.version>1.3</hamcrest.version>
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <reactor.version>2.0.8.RELEASE</reactor.version>
@@ -554,7 +554,7 @@
 
         <repository>
             <id>milton-repo</id>
-            <url>http://milton.io/maven</url>
+            <url>http://dl.bintray.com/milton/Milton</url>
         </repository>
 
 

@@ -1,5 +1,7 @@
 package com.armedia.acm.web.api.service;
 
+import org.springframework.ui.Model;
+
 import java.util.Map;
 
 /**
@@ -12,4 +14,6 @@ public interface LoginWarningMessageService
     String getMessage();
 
     Map<String, Object> getWarning();
+
+    void buildModel(Model model);
 }
