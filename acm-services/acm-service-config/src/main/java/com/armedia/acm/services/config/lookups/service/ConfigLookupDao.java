@@ -6,7 +6,6 @@ import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.model.LookupType;
 import com.armedia.acm.services.config.lookups.model.LookupValidationResult;
-import com.armedia.acm.services.config.service.ConfigService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -16,13 +15,14 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
-import com.sun.mail.handlers.message_rfc822;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.Iterator;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * Created by bojan.milenkoski on 25.8.2017
@@ -33,8 +33,11 @@ public class ConfigLookupDao implements LookupDao {
     private static final Configuration configurationWithSuppressedExceptions = Configuration.builder().options(Option.SUPPRESS_EXCEPTIONS)
             .jsonProvider(new JacksonJsonNodeJsonProvider()).mappingProvider(new JacksonMappingProvider()).build();
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    private ConfigService configService;
     private ObjectConverter objectConverter;
+
+    private String lookups;
+    private String lookupsExt;
+    private String lookupsExtFileLocation;
 
     @Override
     public AcmLookup<?> getLookupByName(String name) {
@@ -63,9 +66,6 @@ public class ConfigLookupDao implements LookupDao {
 
     @Override
     public String getMergedLookups() {
-        String lookups = configService.getLookupsAsJson();
-        String lookupsExt = configService.getLookupsExtAsJson();
-
         //merge both json files
         for (LookupType lookupType : LookupType.values())  //get lookupType
         {
@@ -108,10 +108,8 @@ public class ConfigLookupDao implements LookupDao {
     @Override
     public synchronized String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException {
         // find lookup by name in lookups-ext.json
-        String lookups = configService.getLookupsExtAsJson();
-
         boolean found = false;
-        ArrayNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(lookups)
+        ArrayNode jsonArray = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@." + lookupDefinition.getName() + ")]." + lookupDefinition.getName());
 
         if (jsonArray.size() > 0) {
@@ -147,12 +145,11 @@ public class ConfigLookupDao implements LookupDao {
         }
 
         // load lookups json from file
-        String lookupsAsJson = configService.getLookupsExtAsJson();
 
         // replace the json content of the lookup to update
         String updatedLookupsAsJson = null;
         try {
-            updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsAsJson)
+            updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
                     .set("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@." + lookupDefinition.getName() + ")]."
                             + lookupDefinition.getName(), lookup.getEntries())
                     .jsonString();
@@ -163,15 +160,13 @@ public class ConfigLookupDao implements LookupDao {
         }
 
         // save updated lookups to file
-        configService.saveLookupsExt(updatedLookupsAsJson);
+        saveLookupsExt(updatedLookupsAsJson);
 
         return updatedLookupsAsJson;
     }
 
     private String addNewLookup(LookupDefinition lookupDefinition) throws IOException {
         // add lookupExt object to jsonArrayExt
-        String lookupsExt = configService.getLookupsExtAsJson();
-
         ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
                 .read("$." + lookupDefinition.getLookupType().getTypeName());
 
@@ -189,17 +184,13 @@ public class ConfigLookupDao implements LookupDao {
         String updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
                 .set("$." + lookupDefinition.getLookupType().getTypeName(), jsonArrayExt).jsonString();
 
-        configService.saveLookupsExt(updatedLookupsAsJson);
+        saveLookupsExt(updatedLookupsAsJson);
         return updatedLookupsAsJson;
     }
 
-
-    public ConfigService getConfigService() {
-        return configService;
-    }
-
-    public void setConfigService(ConfigService configService) {
-        this.configService = configService;
+    public void saveLookupsExt(String updatedLookupsAsJson) throws JSONException, IOException {
+        Files.write(Paths.get(getLookupsExtFileLocation()), new JSONObject(updatedLookupsAsJson).toString(2).getBytes());
+        lookupsExt = updatedLookupsAsJson;
     }
 
     public ObjectConverter getObjectConverter() {
@@ -208,5 +199,30 @@ public class ConfigLookupDao implements LookupDao {
 
     public void setObjectConverter(ObjectConverter converter) {
         this.objectConverter = converter;
+    }
+
+
+    public String getLookups() {
+        return lookups;
+    }
+
+    public void setLookups(String lookups) {
+        this.lookups = lookups;
+    }
+
+    public String getLookupsExt() {
+        return lookupsExt;
+    }
+
+    public void setLookupsExt(String lookupsExt) {
+        this.lookupsExt = lookupsExt;
+    }
+
+    public String getLookupsExtFileLocation() {
+        return lookupsExtFileLocation;
+    }
+
+    public void setLookupsExtFileLocation(String lookupsExtFileLocation) {
+        this.lookupsExtFileLocation = lookupsExtFileLocation;
     }
 }

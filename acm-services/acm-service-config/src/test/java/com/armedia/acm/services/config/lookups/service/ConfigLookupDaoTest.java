@@ -44,7 +44,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     {
         configLookupDao = new ConfigLookupDao();
         mockConfigService = createMock(ConfigService.class);
-        configLookupDao.setConfigService(mockConfigService);
+        //configLookupDao.setConfigService(mockConfigService);
         configLookupDao.setObjectConverter(ObjectConverter.createObjectConverterForTests());
     }
 
@@ -58,8 +58,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\"}]";
         lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn("{\"standardLookup\" : [{\"colors\" : []}]}");
-        mockConfigService.saveLookupsExt("{\"standardLookup\":[{\"colors\":" + entriesAsJson + "}]}");
+        //expect(mockConfigService.getLookupsAsJson()).andReturn("{\"standardLookup\" : [{\"colors\" : []}]}");
+        // mockConfigService.saveLookupsExt("{\"standardLookup\":[{\"colors\":" + entriesAsJson + "}]}");
         expectLastCall().once();
 
         // when
@@ -84,8 +84,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookupAsJson = "[{\"key\":\"phone\",\"value\":\"lookups.contactMethodTypes.phone\",\"subLookup\":[{\"key\":\"Home1\",\"value\":\"lookups.common.home\"},{\"key\":\"Work\",\"value\":\"lookups.contactMethodTypes.work\"},{\"key\":\"Mobile\",\"value\":\"lookups.contactMethodTypes.mobile\"}]},{\"key\":\"Fax\",\"value\":\"lookups.contactMethodTypes.fax\",\"subLookup\":[]},{\"key\":\"email\",\"value\":\"lookups.contactMethodTypes.email\",\"subLookup\":[{\"key\":\"Personal\",\"value\":\"Personal\"},{\"key\":\"Business\",\"value\":\"Business\"}]},{\"key\":\"url\",\"value\":\"Url\",\"subLookup\":[{\"key\":\"Web Site\",\"value\":\"Web Site\"},{\"key\":\"Facebook\",\"value\":\"Facebook\"},{\"key\":\"LinkedIn\",\"value\":\"LinkedIn\"},{\"key\":\"Twitter\",\"value\":\"Twitter\"},{\"key\":\"Other\",\"value\":\"Other\"}]}]";
         lookupDefinition.setLookupEntriesAsJson(lookupAsJson);
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn("{\"nestedLookup\" : [{\"contactMethodTypes\" : []}]}");
-        mockConfigService.saveLookupsExt("{\"nestedLookup\":[{\"contactMethodTypes\":" + lookupAsJson + "}]}");
+        //expect(mockConfigService.getLookupsAsJson()).andReturn("{\"nestedLookup\" : [{\"contactMethodTypes\" : []}]}");
+        // mockConfigService.saveLookupsExt("{\"nestedLookup\":[{\"contactMethodTypes\":" + lookupAsJson + "}]}");
         expectLastCall().once();
 
         // when
@@ -148,8 +148,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
                 + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
 
         // when
         replayAll();
@@ -179,8 +179,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\"" + value1
                 + "\"}, {\"key\":\"" + key2 + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn("{\"standardLookup\":[],\"inverseValuesLookup\":[],\"nestedLookup\":[]}");
 
         // when
         replayAll();
@@ -212,8 +212,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
                 + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
@@ -243,8 +243,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
                 + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
@@ -273,8 +273,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String lookupsExt = "{\"standardLookup\":[{\"name\":\"" + lookupNameExt + "\",\"entries\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
                 + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
@@ -300,8 +300,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         Boolean readonlyExt = false;
         String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{}],\"readonly\":\"" + readonlyExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
@@ -327,8 +327,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         Boolean readonlyExt = false;
         String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{}],\"readonly\":\"" + readonlyExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
@@ -374,8 +374,8 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 
         String lookupsExt = "{\"standardLookup\":[{\"" + lookupNameExt + "\":[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext + "\"},{\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}],\"readonly\":\"" + readonlyExt + "\"}],\"inverseValuesLookup\":[{\"" + inverseLookupNameExt + "\":[{\"inverseKey\":\"" + inverseKey1Ext + "\",\"inverseValue\":\"" + inverseValue1Ext + "\",\"key\":\"" + keyInv2Ext + "\",\"value\":\"" + valueInv2Ext + "\"}],\"readonly\":\"" + readonlyInvExt + "\"}]}";
 
-        expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
-        expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
+        //expect(mockConfigService.getLookupsAsJson()).andReturn(lookups);
+        //expect(mockConfigService.getLookupsExtAsJson()).andReturn(lookupsExt);
 
         // when
         replayAll();
