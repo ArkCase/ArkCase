@@ -137,7 +137,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="ldapUserDao" ref="springLdapUserDao"/>
         <property name="acmContextHolder" ref="acmContextHolder"/>
-        <property name="userRoleService" ref="userRoleService"/>
         <property name="ldapGroupDao" ref="springLdapGroupDao"/>
         <property name="groupService" ref="groupService"/>
     </bean>

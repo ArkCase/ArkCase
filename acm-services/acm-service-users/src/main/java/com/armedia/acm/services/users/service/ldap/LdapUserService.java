@@ -3,9 +3,9 @@ package com.armedia.acm.services.users.service.ldap;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.event.LdapUserCreatedEvent;
@@ -17,7 +17,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
-import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +29,6 @@ import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
@@ -48,8 +46,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private UserDao userDao;
 
     private GroupService groupService;
-
-    private AcmUserRoleService userRoleService;
 
     private SpringLdapUserDao ldapUserDao;
 
@@ -173,7 +169,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         }
         for (String groupName : groups)
         {
-            AcmGroup group = groupService.addUserMemberToGroup(user, groupName, FlushModeType.AUTO);
+            AcmGroup group = groupService.addUserMemberToGroup(user, groupName, true);
             if (group.isLdapGroup())
             {
                 groupsToUpdate.add(group.getDistinguishedName());
@@ -225,7 +221,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         {
             AcmUser existingUser = userDao.findByUserId(user.getUserId());
             log.debug("Adding Group [{}] to User [{}]", groupName, user.getUserId());
-            AcmGroup ldapGroup = groupService.addUserMemberToGroup(existingUser, groupName, FlushModeType.AUTO);
+            AcmGroup ldapGroup = groupService.addUserMemberToGroup(existingUser, groupName, true);
 
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
@@ -281,7 +277,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
         for (String groupName : groups)
         {
-            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName, FlushModeType.AUTO);
+            AcmGroup group = groupService.removeUserMemberFromGroup(userId, groupName, false);
             if (group.isLdapGroup())
             {
                 groupsDnToUpdate.add(group.getDistinguishedName());
@@ -353,11 +349,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public void setGroupService(GroupService groupService)
     {
         this.groupService = groupService;
-    }
-
-    public void setUserRoleService(AcmUserRoleService userRoleService)
-    {
-        this.userRoleService = userRoleService;
     }
 
     public void setLdapUserDao(SpringLdapUserDao ldapUserDao)
