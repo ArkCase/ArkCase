@@ -1,89 +1,90 @@
 {
   "timeTracking": {
-    "title": "トラック時間",
+    "title": "時間追跡",
     "progressNoTimesheet": "[ 時間シートが選択されていません ]",
     "progressLoading": "時間シートの読み込み",
     "progressError": "時間シートの読み込みに失敗しました"
   },
   "timeTracking.menus": {
-    "leftnav.item": "トラック時間",
-    "topbar.item": "時間シート"
+    "leftnav.item": "時間追跡",
+    "topbar.item": "タイムシート"
   },
   "timeTracking.comp.main": {
-    "title": "概観"
+    "title": "概要"
   },
   "timeTracking.comp.info": {
     "title": "情報",
-    "lastModified.label": "前回の時間変更"
+    "lastModified.label": "最終更新日"
   },
   "timeTracking.comp.actions": {
-    "title": "行动",
+    "title": "行動",
     "new.button": "新しい時間シート",
     "edit.button": "時間シートの編集"
   },
   "timeTracking.comp.details": {
     "title": "詳細",
-    "informSaved": "ja_Timesheet details saved",
+    "informSaved": "タイムシートの詳細が保存されました",
     "table.columns": {
-      "title": "ja_Details",
-      "modified": "ja_Date Last Modified",
-      "modifier": "ja_User Last Modified"
+      "title": "詳細",
+      "modified": "最終変更日",
+      "modifier": "ユーザー最終更新日"
     }
   },
   "timeTracking.comp.person": {
     "title": "人員",
     "table.columns": {
-      "fullName": "ja_Full Name",
-      "userId": "ja_Username"
+      "fullName": "フルネーム",
+      "userId": "ユーザー名"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "時間の概要",
+    "title": "時間の要約",
     "table.columns": {
-      "code": "ja_Parent ID",
-      "type": "ja_Parent Type",
-      "value": "ja_Total Hours",
-      "date": "ja_Date Charged",
-      "modified": "ja_Modified Date"
+      "code": "親ID",
+      "type": "親タイプ",
+      "value": "合計時間",
+      "date": "充電された日付",
+      "modified": "変更日"
     }
   },
   "timeTracking.comp.tags": {
     "title": "タグ",
     "table.columns": {
-      "tag": "ja_Tag",
-      "created": "ja_Created",
-      "createdBy": "ja_Created By"
+      "tag": "タグ",
+      "created": "作成した",
+      "createdBy": "によって作成された"
     },
     "modal": {
-      "title": "ja_Tag",
-      "search": "ja_Search for Tag",
+      "title": "タグ",
+      "search": "タグを検索する",
       "buttons": {
-        "cancel": "ja_Cancel",
-        "ok": "ja_Add Tag"
+        "cancel": "キャンセル",
+        "ok": "タグ付けする"
       }
     },
     "message": {
-      "tagExists": "ja_Tag with that name or description or text already exists",
-      "tagAssociated": "ja_already associated",
+      "tagExists": "その名前または説明またはテキストのタグは既に存在します",
+      "tagAssociated": "すでに関連付けられている",
       "delete": {
-        "success": "ja_Tag deleted successfully",
-        "error": "ja_Error deleting tag"
+        "success": "タグを削除しました",
+        "error": "タグ削除中にエラーが発生しました"
       }
     }
-  },"timeTracking.comp.approvers": {
-  "title": "ja_Approvers",
-  "table.columns": {
-    "fullName": "ja_Full Name",
-    "userId": "ja_Username"
-  }
-},
+  },
+  "timeTracking.comp.approvers": {
+    "title": "承認者",
+    "table.columns": {
+      "fullName": "フルネーム",
+      "userId": "ユーザー名"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "詳細",
       "person.label": "人員",
       "summary.label": "時間",
       "tags.label": "タグ",
-      "approvers.label": "ja_Approvers"
+      "approvers.label": "承認者"
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",
