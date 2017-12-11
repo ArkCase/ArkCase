@@ -272,7 +272,7 @@
     "searchGroupHeader": "Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "Future Approvers",
+    "title": "Approvers",
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {

@@ -1,21 +1,24 @@
 {
   "notifications": {
     "title": "Уведомления",
-    "search.btn": "ru_Search",
-    "export.btn": "ru_Export",
-    "search.placeholder": "ru_Search for notifications",
+    "search.btn": "Поиск",
+    "export.btn": "Экспорт",
+    "search.placeholder": "Поиск уведомлений",
     "menus": {
       "leftnav.item": "Уведомления"
     },
-    "comp":{
+    "comp": {
+      "notificationsFacetedSearch": {
+        "title": "Уведомления Графический поиск"
+      },
       "grid": {
         "columns": {
-          "id": "ru_ID",
-          "description": "ru_Description",
-          "objNumber": "ru_Object Number",
-          "parentNumber": "ru_Parent Number",
-          "objType": "ru_Object Type",
-          "modified": "ru_Modified"
+          "id": "Идентификация",
+          "description": "Описание",
+          "objNumber": "Номер объекта",
+          "parentNumber": "Родительский номер",
+          "objType": "Тип объекта",
+          "modified": "Измененная дата"
         }
       }
     }

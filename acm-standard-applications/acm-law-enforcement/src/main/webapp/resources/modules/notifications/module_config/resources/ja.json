@@ -2,20 +2,23 @@
   "notifications": {
     "title": "通知",
     "search.btn": "検索",
-    "export.btn": "ja_Export",
-    "search.placeholder": "ja_Search for notifications",
+    "export.btn": "輸出",
+    "search.placeholder": "検索通知",
     "menus": {
       "leftnav.item": "通知"
     },
-    "comp":{
+    "comp": {
+      "notificationsFacetedSearch": {
+        "title": "ファセット検索"
+      },
       "grid": {
         "columns": {
-          "id": "ja_ID",
-          "description": "ja_Description",
-          "objNumber": "ja_Object Number",
-          "parentNumber": "ja_Parent Number",
-          "objType": "ja_Object Type",
-          "modified": "ja_Modified"
+          "id": "識別の番号",
+          "description": "説明",
+          "objNumber": "オブジェクト番号",
+          "parentNumber": "元の番号",
+          "objType": "オブジェクトタイプ",
+          "modified": "変更日"
         }
       }
     }
