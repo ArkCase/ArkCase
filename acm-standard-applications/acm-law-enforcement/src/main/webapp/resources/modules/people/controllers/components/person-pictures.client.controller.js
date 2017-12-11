@@ -91,6 +91,7 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                 templateUrl: "modules/people/views/components/person-pictures-upload.dialog.view.html",
                 controller: 'Person.PictureUploadDialogController',
                 size: 'md',
+                scope: $scope,
                 backdrop: 'static',
                 resolve: {
                     params: function () {
@@ -110,12 +111,25 @@ angular.module('people').controller('Person.PicturesController', ['$scope', '$st
                         MessageService.errorAction();
                     });
                 } else if (data.file) {
-                    PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
-                        MessageService.succsessAction();
-                        $scope.refresh();
-                    }, function () {
-                        MessageService.errorAction();
-                    });
+                    var name = data.file.name.substr(0, (data.file.name.lastIndexOf('.'))); //get file name example.png -> example
+                    var ext = data.file.name.substr(data.file.name.lastIndexOf('.'));   //get file extension example.png -> .png
+                    if(!Util.isEmpty($scope.images)){
+                        var found = _.find($scope.images, function(image){
+                            return image.title_parseable == name && image.ext_s == ext;
+                        });
+                    }
+                    if(found)
+                    {
+                        MessageService.error($translate.instant("people.comp.pictures.message.error.uploadSamePicture"));
+                    }
+                    else {
+                        PersonPicturesService.insertPersonPicture($scope.objectInfo.id, data.file, data.isDefault, data.image.description).then(function () {
+                            MessageService.succsessAction();
+                            $scope.refresh();
+                        }, function () {
+                            MessageService.errorAction();
+                        });
+                    }
                 }
             });
         }

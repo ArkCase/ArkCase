@@ -110,6 +110,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
             //set this params for editing
             if (association.person) {
                 angular.extend(params, {
+                    selectExistingEnabled: false,
                     personId: association.person.id,
                     personName: association.person.givenName + ' ' + association.person.familyName,
                     type: association.organizationToPersonAssociationType,

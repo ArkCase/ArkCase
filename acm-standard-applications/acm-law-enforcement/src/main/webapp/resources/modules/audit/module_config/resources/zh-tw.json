@@ -6,21 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "zh-tw_Report Name",
-        "inputID": "zh-tw_ID",
-        "dateFrom": "zh-tw_From",
-        "dateTo": "zh-tw_To"
+        "reportName": "報告名稱",
+        "inputID": "識別號",
+        "dateFrom": "從",
+        "dateTo": "至"
       },
       "placeholder": {
-        "selectAudit": "zh-tw_ALL",
-        "inputId": "zh-tw_#"
+        "selectAudit": "所有",
+        "inputId": "＃"
+      },
+      "checkBox": {
+        "xmlReport": "顯示為XML"
       },
       "button": {
-        "generateAuditReport.btn": "zh-tw_Generate Audit Report"
+        "generateAuditReport.btn": "生成審計報告"
       }
     },
-    "datepickers":{
-      "close": "zh-tw_Done"
+    "datepicker": {
+      "close": "完畢",
+      "clear": "清除",
+      "current": "今天"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "審計"
+  },
+  "audit.comp.datepickers": {
+    "title": "審計"
   }
 }

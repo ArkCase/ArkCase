@@ -19,6 +19,7 @@ import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tika.exception.TikaException;
+import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -92,6 +93,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         } catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass())) {
+                throw (MuleException) e.getCause();
+            }
         }
 
         log.debug("Returning from addFileTransaction method");
