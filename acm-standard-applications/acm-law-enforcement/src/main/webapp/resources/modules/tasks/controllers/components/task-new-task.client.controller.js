@@ -93,6 +93,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 $scope.config.data.attachedToObjectName = "";
                 $scope.config.data.attachedToObjectId = "";
             }
+            if(Util.isEmpty($scope.config.data.assignee) && $scope.config.data.candidateGroups.length < 1){
+                $scope.config.data.assignee = $scope.userId;
+            }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
             if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
