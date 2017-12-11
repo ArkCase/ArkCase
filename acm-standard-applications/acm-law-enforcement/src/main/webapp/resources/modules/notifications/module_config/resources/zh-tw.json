@@ -2,20 +2,23 @@
   "notifications": {
     "title": "通知",
     "search.btn": "搜索",
-    "export.btn": "zh-tw_Export",
-    "search.placeholder": "zh-tw_Search for notifications",
+    "export.btn": "導出",
+    "search.placeholder": "搜索通知",
     "menus": {
       "leftnav.item": "通知"
     },
-    "comp":{
+    "comp": {
+      "notificationsFacetedSearch": {
+        "title": "通知分類搜索"
+      },
       "grid": {
         "columns": {
-          "id": "zh-tw_ID",
-          "description": "zh-tw_Description",
-          "objNumber": "zh-tw_Object Number",
-          "parentNumber": "zh-tw_Parent Number",
-          "objType": "zh-tw_Object Type",
-          "modified": "zh-tw_Modified"
+          "id": "識別號",
+          "description": "描述",
+          "objNumber": "對象編號",
+          "parentNumber": "原屬號碼",
+          "objType": "對像類型",
+          "modified": "更改日期"
         }
       }
     }
