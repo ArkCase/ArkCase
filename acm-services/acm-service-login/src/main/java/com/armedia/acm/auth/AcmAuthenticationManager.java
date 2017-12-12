@@ -20,7 +20,9 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Cycle through the configured authentication provider. If one of them works, map the provider's groups to ACM groups.
@@ -49,7 +51,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 {
                     break;
                 }
-            } catch (Exception ae)
+            }
+            catch (Exception ae)
             {
                 lastException = ae;
             }
@@ -99,7 +102,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
         throw providerNotFoundException;
     }
 
-    private AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
+    protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
 
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
@@ -120,15 +123,24 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 providerAuthentication.isAuthenticated(), user.getUserId());
     }
 
-    private Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
+    protected Collection<AcmGrantedAuthority> getAuthorityGroups(AcmUser user)
     {
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
-        return groups.stream()
-                .map(group -> new AcmGrantedAuthority(groupService.isUUIDPresentInTheGroupName(group.getName()) ?
-                        group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) :
-                        group.getName()))
+        Function<String, AcmGrantedAuthority> groupToAuthority = groupName -> new AcmGrantedAuthority(
+                groupService.isUUIDPresentInTheGroupName(groupName) ?
+                        groupName.substring(0, groupName.lastIndexOf("-UUID-")) : groupName);
+
+        Stream<AcmGrantedAuthority> authorityGroups = groups.stream()
+                .map(AcmGroup::getName)
+                .map(groupToAuthority);
+
+        Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
+                .flatMap(AcmGroup::getAscendants)
+                .map(groupToAuthority);
+
+        return Stream.concat(authorityGroups, authorityAscendantsGroups)
                 .collect(Collectors.toSet());
     }
 

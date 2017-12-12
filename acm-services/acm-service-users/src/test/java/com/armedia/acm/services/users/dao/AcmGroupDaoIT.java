@@ -18,18 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/spring/spring-library-data-source.xml",
+@ContextConfiguration(locations = {"/spring/spring-library-data-source.xml",
         "/spring/spring-library-user-service.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml",
         "/spring/spring-config-user-service-test-dummy-beans.xml",
-        "/spring/spring-library-search.xml"
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 @Rollback
 public class AcmGroupDaoIT

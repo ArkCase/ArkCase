@@ -6,22 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "ru_Report Name",
-        "inputID": "ru_ID",
-        "dateFrom": "ru_From",
-        "dateTo": "ru_To"
+        "reportName": "Название отчета",
+        "inputID": "Идентификация",
+        "dateFrom": "Из",
+        "dateTo": "К"
       },
       "placeholder": {
-        "selectAudit": "ru_ALL",
-        "inputId": "ru_#"
+        "selectAudit": "ВСЕ",
+        "inputId": "#"
+      },
+      "checkBox": {
+        "xmlReport": "Показать как XML"
       },
       "button": {
-        "generateAuditReport.btn": "ru_Generate Audit Report"
+        "generateAuditReport.btn": "Создание отчета аудита"
       }
     },
-    "datepickers":{
-      "close": "ru_Done"
+    "datepicker": {
+      "close": "Готово",
+      "clear": "Очистить",
+      "current": "Cегодня"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "Аудит"
+  },
+  "audit.comp.datepickers": {
+    "title": "Аудити"
   }
 }
-

@@ -35,6 +35,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.history.HistoricTaskInstanceQuery;
 import org.activiti.engine.history.HistoricVariableInstance;
 import org.activiti.engine.history.HistoricVariableInstanceQuery;
+import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -45,6 +46,7 @@ import org.activiti.engine.task.TaskQuery;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
+import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -177,6 +179,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         in.setParentObjectType("parent object type");
         in.setParentObjectName("parent object name");
         in.setNextAssignee(nextAssignee);
+        in.setWorkflowRequestType("REQUEST_TYPE");
 
         // candidate group should not be saved... it is read-only, we read it from Activiti, but don't save it.
         in.setCandidateGroups(Arrays.asList(candidateGroup));
@@ -219,6 +222,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_TYPE", "parent object type");
         mockTaskService.setVariableLocal(taskId.toString(), "PARENT_OBJECT_NAME", "parent object name");
         mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_NEXT_ASSIGNEE, in.getNextAssignee());
+        mockTaskService.setVariable(taskId.toString(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE, in.getWorkflowRequestType());
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_PARENT_OBJECT_TITLE, null);
         mockTaskService.setVariableLocal(taskId.toString(), TaskConstants.VARIABLE_NAME_LEGACY_SYSTEM_ID, null);
         // data access and assignment rules
@@ -1083,5 +1087,78 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         unit.deleteProcessInstance(objectId.toString(), processId, deleteReason, mockAuthentication, ipAddress);
 
         verifyAll();
+    }
+
+    @Test
+    public void startBusinessProcess() throws  Exception {
+        Long taskId = 500L;
+        String testTitle = "Test title";
+        String processId = "500";
+        String businessProcessName = "acmDocumentWorkflow";
+        List<AcmParticipant> partList = new ArrayList<>();
+        partList.add(new AcmParticipant());
+        String taskDefKey = "taskDefinitionKey";
+        Map<String, Object> pVars = new HashMap<>();
+        Map<String, Object> taskLocalVars = new HashMap<>();
+
+        Task task = new TaskEntity(taskId.toString());
+
+        pVars.put("reviewers", Arrays.asList("jerry", "bob", "mickey"));
+        pVars.put("taskName", testTitle);
+        pVars.put("documentAuthor", "DOCUMENT_AUTHOR");
+        pVars.put("formXmlId", null);
+        pVars.put("candidateGroups", "TEST_GROUP");
+
+        pVars.put("OBJECT_TYPE", "FILE");
+        pVars.put("OBJECT_ID", 500L);
+        pVars.put("OBJECT_NAME", "DOCUMENT_NAME");
+        pVars.put("PARENT_OBJECT_TYPE", "CASE_FILE");
+        pVars.put("PARENT_OBJECT_ID", 500L);
+
+        expect(mockRuntimeService.startProcessInstanceByKey(businessProcessName, pVars)).andReturn(mockProcessInstance);
+        expect(mockProcessInstance.getProcessInstanceId()).andReturn(processId);
+        expect(mockTaskService.createTaskQuery()).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.processInstanceId(processId)).andReturn(mockTaskQuery);
+        expect(mockTaskQuery.singleResult()).andReturn(mockTask);
+
+        expect(mockTask.getId()).andReturn(taskId.toString()).atLeastOnce();
+        expect(mockTask.getDueDate()).andReturn(new Date());
+        expect(mockTask.getPriority()).andReturn(50);
+        expect(mockTask.getName()).andReturn(testTitle);
+        expect(mockTask.getProcessVariables()).andReturn(pVars).atLeastOnce();
+        expect(mockTask.getTaskLocalVariables()).andReturn(taskLocalVars).atLeastOnce();
+        expect(mockTask.getAssignee()).andReturn("test").times(2);
+        expect(mockTask.getProcessDefinitionId()).andReturn(processId);
+        expect(mockTask.getCreateTime()).andReturn(new Date()).times(2);
+        expect(mockTask.getOwner()).andReturn("test");
+        expect(mockTask.getProcessInstanceId()).andReturn(processId).atLeastOnce();
+        expect(mockTask.getTaskDefinitionKey()).andReturn(taskDefKey);
+
+        expect(mockRepositoryService.createProcessDefinitionQuery()).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.processDefinitionId(processId)).andReturn(mockProcessDefinitionQuery);
+        expect(mockProcessDefinitionQuery.singleResult()).andReturn(mockProcessDefinition);
+        expect(mockProcessDefinition.getName()).andReturn("processName");
+        expect(mockRepositoryService.getBpmnModel(processId)).andReturn(mockBpmnModel);
+        expect(mockBpmnModel.getProcesses()).andReturn(Arrays.asList(mockProcess));
+        expect(mockProcess.getFlowElementRecursive(taskDefKey)).andReturn(mockFlowElement);
+        expect(mockFlowElement.getFormProperties()).andReturn(Arrays.asList(mockFormProperty));
+        expect(mockFormProperty.getName()).andReturn("Test Outcome").atLeastOnce();
+        expect(mockFormProperty.getId()).andReturn("TestOutcome").atLeastOnce();
+        expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
+        expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
+        expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
+        expect(mockTaskService.getIdentityLinksForTask(task.getId())).andReturn(new ArrayList<>());
+        expect(mockParticipantDao.findParticipantsForObject("TASK",taskId)).andAnswer(() -> new ArrayList<>()).anyTimes();
+
+        replayAll();
+
+        AcmTask createdAcmTask = unit.startBusinessProcess(pVars, businessProcessName);
+
+        verifyAll();
+
+        assertNotNull(createdAcmTask);
+        assertEquals(createdAcmTask.getTaskId(), taskId);
+        assertEquals(createdAcmTask.getTitle(), testTitle);
     }
 }

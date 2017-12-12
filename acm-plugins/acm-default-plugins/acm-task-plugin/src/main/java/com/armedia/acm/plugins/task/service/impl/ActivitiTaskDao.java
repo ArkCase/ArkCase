@@ -58,6 +58,7 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -68,12 +69,7 @@ import javax.persistence.FlushModeType;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
@@ -279,6 +275,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 getActivitiTaskService().setVariableLocal(activitiTask.getId(), TaskConstants.VARIABLE_NAME_OUTCOME,
                         in.getTaskOutcome().getName());
             }
+
+            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE, in.getWorkflowRequestType());
 
             if (in.isBuckslipTask())
             {
@@ -1417,6 +1415,16 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         }
 
         return diagram;
+    }
+
+    @Override
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws  AcmTaskException
+    {
+            ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
+            Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
+            AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
+
+            return createdAcmTask;
     }
 
     private List<String> findCandidateGroups(String taskId)

@@ -34,10 +34,12 @@ import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
+import org.mule.module.cmis.exception.CMISConnectorException;
 import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -255,7 +257,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         catch (IOException | MuleException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getMessage(), e);
+            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getCause() == null ? e.getMessage() : e.getCause().getMessage(), e);
         }
     }
 

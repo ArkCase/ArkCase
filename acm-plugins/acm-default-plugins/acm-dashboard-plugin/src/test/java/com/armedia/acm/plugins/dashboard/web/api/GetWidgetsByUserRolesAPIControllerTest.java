@@ -1,14 +1,12 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
-
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -29,7 +27,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
@@ -54,7 +54,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
     private GetWidgetsByUserRolesAPIController unit;
 
     private WidgetDao mockWidgetDao;
-    private UserDao mockUserDao;
+    private AcmUserRoleService mockUserRoleService;
     private WidgetEventPublisher mockWidgetEventPublisher;
     private Authentication mockAuthentication;
     private DashboardPropertyReader mockDashboardPropertyReader;
@@ -69,21 +69,20 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         mockWidgetDao = createMock(WidgetDao.class);
-        mockUserDao = createMock(UserDao.class);
         mockWidgetEventPublisher = createMock(WidgetEventPublisher.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
         mockDashboardService = createMock(DashboardService.class);
-
+        mockUserRoleService = createMock(AcmUserRoleService.class);
 
         unit = new GetWidgetsByUserRolesAPIController();
 
         unit.setWidgetDao(mockWidgetDao);
         unit.setEventPublisher(mockWidgetEventPublisher);
-        unit.setUserDao(mockUserDao);
         unit.setDashboardPropertyReader(mockDashboardPropertyReader);
         unit.setDashboardService(mockDashboardService);
+        unit.setUserRoleService(mockUserRoleService);
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
@@ -102,13 +101,12 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
         returned.setWidgetId(widgetId);
         returned.setWidgetName(widgetName);
 
-        AcmRole userRole = new AcmRole();
-        userRole.setRoleName("ROLE_ADMINISTRATOR");
-
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-        expect(mockWidgetDao.getAllWidgetsByRoles(Arrays.asList(userRole))).andReturn(Arrays.asList(returned));
-        expect(mockUserDao.findAllRolesByUser(user.getUserId())).andReturn(Arrays.asList(userRole));
+        Set<String> userRoles = new HashSet<>(Arrays.asList("ROLE_ADMINISTRATOR"));
+
+        expect(mockUserRoleService.getUserRoles("ann-acm")).andReturn(userRoles);
+        expect(mockWidgetDao.getAllWidgetsByRoles(userRoles)).andReturn(Arrays.asList(returned));
         expect(mockDashboardService.onlyUniqueValues(Arrays.asList(returned))).andReturn(Arrays.asList(returned));
         mockWidgetEventPublisher.publishGetWidgetsByUserRoles(
                 eq(Arrays.asList(returned)),
@@ -136,7 +134,7 @@ public class GetWidgetsByUserRolesAPIControllerTest extends EasyMockSupport
 
         String json = result.getResponse().getContentAsString();
 
-        log.info("results: " + json);
+        log.info("results: [{}]", json);
 
         ObjectMapper objectMapper = new ObjectMapper();
 

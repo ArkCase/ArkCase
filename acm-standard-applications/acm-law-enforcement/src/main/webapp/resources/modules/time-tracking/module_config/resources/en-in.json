@@ -38,7 +38,7 @@
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Hours Summary",
+    "title": "Hours",
     "table.columns": {
       "code": "Parent ID",
       "type": "Parent Type",
@@ -71,12 +71,20 @@
       }
     }
   },
+  "timeTracking.comp.approvers": {
+    "title": "Approvers",
+    "table.columns": {
+      "fullName": "Full Name",
+      "userId": "Username"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Details",
       "person.label": "Person",
-      "summary.label": "Hours Summary",
-      "tags.label": "Tags"
+      "summary.label": "Hours",
+      "tags.label": "Tags",
+      "approvers.label": "Approvers"
     },
     "sorters": {
       "dateAsc": "Sort Date Ascending",

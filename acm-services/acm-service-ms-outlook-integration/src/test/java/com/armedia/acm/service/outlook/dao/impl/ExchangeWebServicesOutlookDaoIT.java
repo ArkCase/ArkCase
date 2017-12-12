@@ -1,5 +1,6 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
+import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
@@ -71,7 +72,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-email-smtp.xml"
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 public class ExchangeWebServicesOutlookDaoIT
 {
@@ -386,11 +388,18 @@ public class ExchangeWebServicesOutlookDaoIT
     {
         ExchangeService service = dao.connect(user);
         OutlookFolder newFolderData = new OutlookFolder();
-        newFolderData.setDisplayName("Folder Test");
+        newFolderData.setDisplayName("Folder Test " + new Date());
         OutlookFolder createdFolder = dao.createFolder(service, user.getEmailAddress(), WellKnownFolderName.Calendar, newFolderData);
         assertNotNull(createdFolder.getId());
 
-        dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+        try
+        {
+
+            dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+        } catch (AcmOutlookItemNotDeletedException e)
+        {
+            log.warn("Could not delete folder: {}", e.getMessage(), e);
+        }
     }
 
     @Test
@@ -457,7 +466,14 @@ public class ExchangeWebServicesOutlookDaoIT
         assertTrue(sizeAfterRemove <= sizeAfterAdd);
 
         //delete the folder
-        dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+        try
+        {
+
+            dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+        } catch (AcmOutlookItemNotDeletedException e)
+        {
+            log.warn("Could not remove folder: {}", e.getMessage(), e);
+        }
     }
 
     @Test
@@ -491,7 +507,16 @@ public class ExchangeWebServicesOutlookDaoIT
         {
             //delete the folder
             if (createdFolder.getId() != null)
-                dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+            {
+                try
+                {
+
+                    dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
+                } catch (AcmOutlookItemNotDeletedException e)
+                {
+                    log.warn("Cannot delete item: {}", e.getMessage(), e);
+                }
+            }
         }
     }
 
