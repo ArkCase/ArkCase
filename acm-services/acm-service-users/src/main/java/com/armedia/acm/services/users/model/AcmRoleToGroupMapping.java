@@ -6,17 +6,20 @@ import java.util.AbstractMap;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class AcmRoleToGroupMapping
 {
-    private final Map<String, String> roleToGroupMap;
+    private Map<String, String> roleToGroupMap;
 
-    public AcmRoleToGroupMapping(Map<String, String> roleToGroupMap)
+    public void reloadRoleToGroupMap(Properties properties)
     {
-        this.roleToGroupMap = roleToGroupMap;
+        roleToGroupMap = properties.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> entry.getKey().toString(), entry -> entry.getValue().toString()));
     }
 
     public Map<String, List<String>> getGroupToRolesMap()
@@ -34,18 +37,29 @@ public class AcmRoleToGroupMapping
         Function<String, Set<String>> groupsStringToSet = s -> {
             String[] groupsPerRole = s.split(",");
             return Arrays.stream(groupsPerRole)
-                    .filter(StringUtils::isNotEmpty)
+                    .filter(StringUtils::isNotBlank)
                     .collect(Collectors.toSet());
         };
 
         return roleToGroupMap.entrySet()
                 .stream()
-                .filter(entry -> StringUtils.isNotEmpty(entry.getKey()))
-                .filter(entry -> StringUtils.isNotEmpty(entry.getValue()))
+                .filter(entry -> StringUtils.isNotBlank(entry.getKey()))
+                .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
-                        Collectors.toMap(entry -> entry.getKey().toUpperCase(),
-                                entry -> groupsStringToSet.apply(entry.getValue()))
+                        Collectors.toMap(entry -> {
+                                    String groupName = entry.getKey().trim().toUpperCase();
+                                    if (!groupName.startsWith("ROLE_"))
+                                    {
+                                        groupName = "ROLE_" + groupName;
+                                    }
+                                    return groupName;
+                                },
+                                entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase()))
                 );
     }
 
+    public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
+    {
+        this.roleToGroupMap = roleToGroupMap;
+    }
 }

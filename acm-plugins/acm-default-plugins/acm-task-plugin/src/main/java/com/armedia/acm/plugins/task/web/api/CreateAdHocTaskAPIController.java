@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.servlet.http.HttpSession;
 
@@ -56,7 +57,7 @@ public class CreateAdHocTaskAPIController
 
             String parentObjectType = null;
             Long objectId = null;
-            if (attachedToObjectName != "")
+            if (StringUtils.isNotBlank(attachedToObjectName) && StringUtils.isNotBlank(attachedToObjectType) )
             {
                 // find the associated object (CASE/COMPLAINT) id by it's name
                 String obj = getObjectsFromSolr(attachedToObjectType, attachedToObjectName, authentication, 0, 10, "", null);

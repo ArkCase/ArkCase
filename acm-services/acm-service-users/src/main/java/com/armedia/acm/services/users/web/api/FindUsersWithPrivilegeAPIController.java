@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = { "/api/v1/users", "/api/latest/users" } )
+@RequestMapping(value = { "/api/v1/users", "/api/latest/users" })
 public class FindUsersWithPrivilegeAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -26,20 +26,14 @@ public class FindUsersWithPrivilegeAPIController
             method = RequestMethod.GET,
             value = "/withPrivilege/{privilege}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody List<AcmUser> withPrivilege(
+    public @ResponseBody
+    List<AcmUser> withPrivilege(
             @PathVariable(value = "privilege") String privilege)
     {
-        if ( log.isDebugEnabled() )
-        {
-            log.debug("Looking for users with privilege '" + privilege + "'");
-        }
+        log.debug("Looking for users with privilege [{}]", privilege);
 
         List<String> rolesForPrivilege = getPluginManager().getRolesForPrivilege(privilege);
-        List<AcmUser> users = getUserDao().findUsersWithRoles(rolesForPrivilege);
-
-        return users;
-
-
+        return getUserDao().findUsersWithRoles(rolesForPrivilege);
     }
 
     public void setPluginManager(AcmPluginManager pluginManager)

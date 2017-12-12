@@ -1,20 +1,23 @@
 {
   "subscriptions": {
     "title": "Abonnements",
-    "search.btn": "de_Search",
-    "export.btn": "de_Export",
-    "search.placeholder": "de_Search for subscriptions",
+    "search.btn": "Suche",
+    "export.btn": "Export",
+    "search.placeholder": "Nach Abonnements suchen",
     "menus": {
       "leftnav.item": "Abonnements"
     },
-    "comp":{
+    "comp": {
+      "subscriptionsFacetedSearch": {
+        "title": "Facettierte Suche nach Abonnements"
+      },
       "grid": {
         "columns": {
-          "id": "de_ID",
-          "event": "de_Event",
-          "parentName": "de_Parent Name",
-          "parentType": "de_Parent Type",
-          "modified": "de_Modified"
+          "id": "Identifizierung",
+          "event": "Veranstaltung",
+          "parentName": "Elternname",
+          "parentType": "Übergeordneter Typ",
+          "modified": "Änderungsdatum"
         }
       }
     }

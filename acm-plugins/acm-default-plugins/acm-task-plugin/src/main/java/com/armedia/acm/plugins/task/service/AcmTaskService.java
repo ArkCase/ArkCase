@@ -153,4 +153,6 @@ public interface AcmTaskService
      * @throws AcmTaskException
      */
     BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException;
+
+    List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
 }

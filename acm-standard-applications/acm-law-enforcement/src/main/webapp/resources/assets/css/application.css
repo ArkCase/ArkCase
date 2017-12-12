@@ -297,6 +297,10 @@ span.fancytree-title {
 
 /* Navigation List (Grouped)  */
 
+.list-group-item-inactive-icon {
+    color: orange;
+}
+
 .list-group-item {
     cursor: pointer;
     cursor: hand;

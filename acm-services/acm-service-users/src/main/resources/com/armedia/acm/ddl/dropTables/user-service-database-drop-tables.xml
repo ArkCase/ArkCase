@@ -8,5 +8,12 @@
         <dropForeignKeyConstraint baseTableName="acm_group" constraintName="fk_group_parent_name"/>
         <dropColumn tableName="acm_group" columnName="cm_group_parent_name"/>
     </changeSet>
+    
+    <changeSet id="02-drop-acm_user_role-table" author="lazo.lazarev">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="acm_user_role"/>
+        </preConditions>
+        <dropTable tableName="acm_user_role" cascadeConstraints="true"/>
+    </changeSet>
 
 </databaseChangeLog>

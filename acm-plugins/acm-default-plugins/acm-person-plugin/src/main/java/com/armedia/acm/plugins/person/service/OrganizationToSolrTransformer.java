@@ -100,8 +100,10 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return sb.toString().trim();
     }
 
-    private String getDefaultIdentification(Organization organization) {
-        if (organization.getDefaultIdentification() == null) {
+    private String getDefaultIdentification(Organization organization)
+    {
+        if (organization.getDefaultIdentification() == null)
+        {
             return null;
         }
         StringBuilder sb = new StringBuilder();
@@ -178,6 +180,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setName(in.getOrganizationValue());
         orgDoc.setTitle_parseable(in.getOrganizationValue());
         orgDoc.setTitle_parseable_lcs(in.getOrganizationValue());
+        orgDoc.setStatus_s(in.getStatus());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());

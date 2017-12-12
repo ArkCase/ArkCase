@@ -196,8 +196,9 @@
     "title": "New Task",
     "assignee.button": "Choose Assignee",
     "assignee.label": "Assign To",
-    "assignee.placeholder": "Please choose assignee by clicking the button above",
-    "assigneeOrGroup.placeholder": "Please choose assignee or group by clicking the button above",
+    "assignee.placeholder": "Please choose assignee ",
+    "assigneeOrGroup.placeholder": "Please choose assignee or group ",
+    "candidateGroups.label": "Owning group",
     "priority.placeholder": "Select Priority",
     "priority.label": "Priority",
     "status.placeholder": "Select Status",
@@ -216,7 +217,10 @@
     "overdue.tooltip": "Task is Overdue",
     "deadline.tooltip": "Deadline is Approaching",
     "groupToggle.label": "Group Task?",
-    "group.placeholder": "Please select a group."
+    "group.placeholder": "Please select a group.",
+    "documentsToReview.label": "Documents to review",
+    "businessProcessTypes.label": "Business Process Type",
+    "noSelectedDocsErrorMsg": "Please select at least one document to be reviewed."
   },
   "tasks.userOrGroupSearch": {
     "id": "userSearch",
@@ -225,6 +229,8 @@
       "btn": "Search",
       "placeholder": "Search for the user or group to assign to this task."
     },
+    "pickUserLabel": "Pick Associated User",
+    "pickGroupLabel": "Pick Associated Group",
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
     "enabled": true,

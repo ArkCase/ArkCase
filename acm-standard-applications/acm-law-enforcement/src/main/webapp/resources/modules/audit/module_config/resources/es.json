@@ -6,21 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "es_Report Name",
-        "inputID": "es_ID",
-        "dateFrom": "es_From",
-        "dateTo": "es_To"
+        "reportName": "Reportar nombre",
+        "inputID": "Identificación",
+        "dateFrom": "De",
+        "dateTo": "A"
       },
       "placeholder": {
-        "selectAudit": "es_ALL",
-        "inputId": "es_#"
+        "selectAudit": "TODAS",
+        "inputId": "#"
+      },
+      "checkBox": {
+        "xmlReport": "Mostrar como XML"
       },
       "button": {
-        "generateAuditReport.btn": "es_Generate Audit Report"
+        "generateAuditReport.btn": "Generar informe de auditoría"
       }
     },
-    "datepickers":{
-      "close": "es_Done"
+    "datepicker": {
+      "close": "Hecho",
+      "clear": "Claro",
+      "current": "Hoy"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "Auditoría"
+  },
+  "audit.comp.datepickers": {
+    "title": "Auditorias"
   }
 }

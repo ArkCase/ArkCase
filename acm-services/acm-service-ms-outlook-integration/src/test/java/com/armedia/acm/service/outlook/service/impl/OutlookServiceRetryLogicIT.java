@@ -21,7 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -43,7 +43,8 @@ import static org.junit.Assert.*;
         "/spring/spring-library-ecm-tika.xml",
         "/spring/spring-library-email.xml",
         "/spring/spring-library-calendar-config-service.xml",
-        "/spring/spring-library-email-smtp.xml"
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-object-converter.xml"
 })
 public class OutlookServiceRetryLogicIT extends EasyMockSupport
 {

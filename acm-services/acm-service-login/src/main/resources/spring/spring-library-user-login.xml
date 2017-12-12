@@ -7,6 +7,7 @@
     <bean id="acmAuthoritiesMapper" class="com.armedia.acm.auth.AcmGrantedAuthoritiesMapper" init-method="initBean">
         <property name="applicationRoleToUserGroupProperties" ref="applicationRoleToUserGroupProperties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
+        <property name="roleToGroupMapping" ref="acmRoleToGroupConfig"/>
     </bean>
 
     <bean id="acmAuthenticationManager" class="com.armedia.acm.auth.AcmAuthenticationManager">
@@ -107,7 +108,7 @@
     </bean>
 
 
-    <beans profile="ldap,kerberos,externalAuth">
+    <beans profile="ldap,kerberos,externalAuth,mfa-okta">
         <bean id="acmLogoutSuccessHandler" class="com.armedia.acm.auth.AcmLogoutSuccessHandler">
             <property name="authenticationDetailsFactory" ref="acmAuthenticationDetailsFactory"/>
             <property name="defaultTargetUrl" value="/login?logout"/>

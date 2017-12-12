@@ -264,7 +264,7 @@
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="addNewOrganization();">
+                                            ng-click="addNewOrganization();" ng-disabled="!organizationAssociation.organization.organizationValue" ng-show="$last">
                                         <i class="fa fa-plus text-success"></i><span
                                             translate>people.comp.editPerson.addAnother</span>
                                     </button>
@@ -335,14 +335,14 @@
                                    class="input-md form-control"
                                    placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-1 form-group">
+                        <div class="col-sm-3 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
                             <input type="text" ng-model="person.defaultAddress.zip"
                                    class="input-md form-control"
                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
                         </div>
-                        <div class="col-sm-4 form-group">
+                        <div class="col-sm-2 form-group">
                             <div class="pull-left">
                                 <label class="control-label">&nbsp;</label>
                                 <button type="button" class="btn btn-link form-control"
@@ -406,14 +406,14 @@
                                        class="input-md form-control"
                                        placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-1 form-group">
+                            <div class="col-sm-3 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.zip</label>
                                 <input type="text" ng-model="address.zip"
                                        class="input-md form-control"
                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
                             </div>
-                            <div class="col-sm-4 form-group">
+                            <div class="col-sm-2 form-group">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"

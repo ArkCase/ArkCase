@@ -57,6 +57,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -521,6 +522,50 @@ public class AcmTaskServiceImpl implements AcmTaskService
             log.error("Task with id=[{}] not found!", id, e);
         }
         return null;
+    }
+
+    @Override
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication)
+            throws AcmTaskException
+    {
+        List<String> reviewers = new ArrayList<>();
+        reviewers.add(task.getAssignee());
+        List<AcmTask> createdAcmTasks = new ArrayList<>();
+        Long parentObjectId = task.getAttachedToObjectId();
+        String parentObjectType = (task.getAttachedToObjectType().equals("")) ? null : task.getAttachedToObjectType();
+
+        if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
+        {
+            throw new AcmTaskException("You must select at least one document to be reviewed.");
+        }
+        else
+        {
+            // Iterate through the list of documentsToReview and start business process for each of them
+            for (EcmFile documentToReview : task.getDocumentsToReview())
+            {
+                Map<String, Object> pVars = new HashMap<>();
+
+                pVars.put("reviewers", reviewers);
+                pVars.put("taskName", task.getTitle());
+                pVars.put("documentAuthor", authentication.getName());
+                pVars.put("pdfRenditionId", documentToReview.getFileId());
+                pVars.put("formXmlId", null);
+                pVars.put("candidateGroups", String.join(",", task.getCandidateGroups()));
+
+                pVars.put("OBJECT_TYPE", "FILE");
+                pVars.put("OBJECT_ID", documentToReview.getFileId());
+                pVars.put("OBJECT_NAME", documentToReview.getFileName());
+                pVars.put("PARENT_OBJECT_TYPE", parentObjectType);
+                pVars.put("PARENT_OBJECT_ID", parentObjectId);
+                pVars.put("REQUEST_TYPE", "DOCUMENT_REVIEW");
+
+                AcmTask createdAcmTask = taskDao.startBusinessProcess(pVars, businessProcessName);
+
+                createdAcmTasks.add(createdAcmTask);
+            }
+
+            return createdAcmTasks;
+        }
     }
 
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
