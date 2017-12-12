@@ -99,8 +99,6 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                 types: $scope.relationshipTypes,
                 showDescription: true,
                 externalSearchServiceName: "Organization.SearchService",
-                // parentOrganizationId: Util.isEmpty($scope.objectInfo.parentOrganization) ? null : $scope.objectInfo.parentOrganization.organizationId,
-                // relatedToOrganizationId: $scope.organizationId,
                 externalSearchParams: externalSearchParams
             };
             if (rowEntity) {
