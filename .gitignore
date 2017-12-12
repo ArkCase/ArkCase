@@ -7,7 +7,6 @@ target
 bin
 atlassian-ide-plugin.xml
 
-
 *.project
 *.classpath
 .settings/
