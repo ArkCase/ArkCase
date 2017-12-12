@@ -23,67 +23,68 @@
   },
   "timeTracking.comp.details": {
     "title": "Детали",
-    "informSaved": "ru_Timesheet details saved",
+    "informSaved": "Детали расписания сохранены",
     "table.columns": {
-      "title": "ru_Details",
-      "modified": "ru_Date Last Modified",
-      "modifier": "ru_User Last Modified"
+      "title": "Детали",
+      "modified": "Дата последнего изменения",
+      "modifier": "Последнее изменение пользователем"
     }
   },
   "timeTracking.comp.person": {
-    "title": "Люди",
+    "title": "Человек",
     "table.columns": {
-      "fullName": "ru_Full Name",
-      "userId": "ru_Username"
+      "fullName": "Полное имя",
+      "userId": "Имя пользователя"
     }
   },
   "timeTracking.comp.summary": {
     "title": "Обзор часов",
     "table.columns": {
-      "code": "ru_Parent ID",
-      "type": "ru_Parent Type",
-      "value": "ru_Total Hours",
-      "date": "ru_Date Charged",
-      "modified": "ru_Modified Date"
+      "code": "Идентификатор родителя",
+      "type": "Родительский тип",
+      "value": "Общее количество часов",
+      "date": "Дата зарядки",
+      "modified": "Измененная дата"
     }
   },
   "timeTracking.comp.tags": {
     "title": "Теги",
     "table.columns": {
-      "tag": "ru_Tag",
-      "created": "ru_Created",
-      "createdBy": "ru_Created By"
+      "tag": "Тег",
+      "created": "Созданный",
+      "createdBy": "Сделано"
     },
     "modal": {
-      "title": "ru_Tag",
-      "search": "ru_Search for Tag",
+      "title": "Тег",
+      "search": "Поиск тегов",
       "buttons": {
-        "cancel": "ru_Cancel",
-        "ok": "ru_Add Tag"
+        "cancel": "Отмена",
+        "ok": "Добавить метку"
       }
     },
     "message": {
-      "tagExists": "ru_Tag with that name or description or text already exists",
-      "tagAssociated": "ru_already associated",
+      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+      "tagAssociated": "Уже связанный",
       "delete": {
-        "success": "ru_Tag deleted successfully",
-        "error": "ru_Error deleting tag"
+        "success": "Удаленный тег",
+        "error": "Ошибка удаления тега"
       }
     }
-  },"timeTracking.comp.approvers": {
-  "title": "ru_Approvers",
-  "table.columns": {
-    "fullName": "ru_Full Name",
-    "userId": "ru_Username"
-  }
-},
+  },
+  "timeTracking.comp.approvers": {
+    "title": "Утверждающие",
+    "table.columns": {
+      "fullName": "Полное имя",
+      "userId": "Имя пользователя"
+    }
+  },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Детали",
       "person.label": "Люди",
-      "summary.label": "расходы",
+      "summary.label": "Часов",
       "tags.label": "Теги",
-      "approvers.label": "ru_Approvers"
+      "approvers.label": "Утверждающие"
     },
     "sorters": {
       "dateAsc": "Сортировка даты Asc",
@@ -95,4 +96,3 @@
     }
   }
 }
-

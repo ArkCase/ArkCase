@@ -15,6 +15,7 @@ import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+import org.springframework.transaction.annotation.Transactional;
 
 public class AcmUserRoleService
 {
@@ -37,6 +38,7 @@ public class AcmUserRoleService
                 .collect(Collectors.toSet());
     }
 
+    @Transactional
     public void saveRolesPerAddedGroups(Set<AcmGroup> groups)
     {
         // added groups are also valid AcmRoles

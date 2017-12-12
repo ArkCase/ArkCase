@@ -6,21 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "hi_Report Name",
-        "inputID": "hi_ID",
-        "dateFrom": "hi_From",
-        "dateTo": "hi_To"
+        "reportName": "रिपोर्ट नाम",
+        "inputID": "पहचान",
+        "dateFrom": "से",
+        "dateTo": "सेवा मेरे"
       },
       "placeholder": {
-        "selectAudit": "hi_ALL",
-        "inputId": "hi_#"
+        "selectAudit": "सब",
+        "inputId": "#"
+      },
+      "checkBox": {
+        "xmlReport": "एक्सएमएल के रूप में दिखाएं"
       },
       "button": {
-        "generateAuditReport.btn": "hi_Generate Audit Report"
+        "generateAuditReport.btn": "ऑडिट रिपोर्ट तैयार करें"
       }
     },
-    "datepickers":{
-      "close": "hi_Done"
+    "datepicker": {
+      "close": "किया हुआ",
+      "clear": "स्पष्ट",
+      "current": "आज "
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "लेखा परीक्षा"
+  },
+  "audit.comp.datepickers": {
+    "title": "ऑडिट"
   }
 }
