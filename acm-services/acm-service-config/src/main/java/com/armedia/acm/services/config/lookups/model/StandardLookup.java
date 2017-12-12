@@ -24,7 +24,7 @@ public class StandardLookup extends AcmLookup<StandardLookupEntry>
         // Check empty key or value
         for (StandardLookupEntry entry : entries)
         {
-            if (entry.getKey() == null || entry.getKey().isEmpty())
+            if (entry.getKey() == null)
             {
                 return new LookupValidationResult(false, "Empty key found in '" + lookupName + "' lookup!");
             }
