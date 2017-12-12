@@ -67,7 +67,6 @@ public class AcmUserAPIControllerTest extends EasyMockSupport
     {
         mockMvc = MockMvcBuilders.standaloneSetup(acmUserAPIController).build();
         mockLdapUserService.setUserDao(mockUserDao);
-        mockLdapUserService.setGroupDao(mockGroupDao);
     }
 
     @Test
@@ -75,7 +74,6 @@ public class AcmUserAPIControllerTest extends EasyMockSupport
     {
         String directory = "armedia";
         AcmUser user = new AcmUser();
-
         user.setUserId("test-user");
         user.setUserState(AcmUserState.VALID);
         user.setFirstName("First Name");
@@ -157,7 +155,6 @@ public class AcmUserAPIControllerTest extends EasyMockSupport
         when(mockLdapUserService.getUserDao()).thenReturn(mockUserDao);
         when(mockUserDao.findByUserId(anyString())).thenReturn(user);
 
-        when(mockLdapUserService.getGroupDao()).thenReturn(mockGroupDao);
         when(mockLdapUserService.deleteAcmUser(anyString(), anyString())).thenReturn(user);
         doNothing().when(acmUserAPIController).checkIfLdapManagementIsAllowed(anyString());
     }

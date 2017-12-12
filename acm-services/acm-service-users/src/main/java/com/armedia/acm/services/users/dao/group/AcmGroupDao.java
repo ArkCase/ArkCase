@@ -2,8 +2,6 @@ package com.armedia.acm.services.users.dao.group;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
-import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
@@ -14,14 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -72,51 +67,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     }
 
     @Transactional
-    public boolean deleteAcmGroupByName(String name)
-    {
-        AcmGroup groupToBeDeleted = findByName(name);
-        if (groupToBeDeleted != null)
-        {
-            getEm().remove(groupToBeDeleted);
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-
-    @Transactional
-    public AcmGroup markGroupDeleted(String groupName)
-    {
-        AcmGroup acmGroup = findByName(groupName);
-        if (acmGroup == null) return null;
-
-        acmGroup.setAscendantsList(null);
-        acmGroup.setStatus(AcmGroupStatus.DELETE);
-
-        acmGroup.getUserMembers()
-                .forEach(user -> user.getGroups().remove(acmGroup));
-        acmGroup.getMemberOfGroups()
-                .forEach(it -> it.getMemberGroups().remove(acmGroup));
-        acmGroup.getMemberGroups()
-                .forEach(it -> acmGroup.getMemberOfGroups().remove(acmGroup));
-
-        acmGroup.setUserMembers(new HashSet<>());
-        acmGroup.setMemberOfGroups(new HashSet<>());
-        acmGroup.setMemberGroups(new HashSet<>());
-        return acmGroup;
-    }
-
-    public void markRolesByGroupInvalid(String groupName)
-    {
-        Query markInvalid = getEm().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state "
-                + "WHERE aur.roleName = :groupName");
-        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
-        markInvalid.setParameter("groupName", groupName);
-        markInvalid.executeUpdate();
-    }
-
-    @Transactional
     public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
     {
         AcmGroup group = findByName(name);
@@ -134,18 +84,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user",
-                AcmGroup.class);
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group "
+                + "WHERE group.userMembers = :user", AcmGroup.class);
         query.setParameter("user", user);
+
         return query.getResultList();
-    }
-
-    private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
-    {
-        @SuppressWarnings("unchecked")
-        Set<AcmUser> clonedMembers = (HashSet) new HashSet<>(members).clone();
-
-        return clonedMembers;
     }
 
     public AcmGroup groupByUIName(AcmGroup group)
@@ -207,7 +150,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
                                 + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
                                 + "AND acmGroup.directoryName = :directoryName",
                         AcmGroup.class);
-       // allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
     }
