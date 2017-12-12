@@ -2,19 +2,22 @@
   "subscriptions": {
     "title": "購読",
     "search.btn": "検索",
-    "export.btn": "ja_Export",
-    "search.placeholder": "ja_Search for subscriptions",
+    "export.btn": "輸出",
+    "search.placeholder": "サブスクリプションを検索する",
     "menus": {
       "leftnav.item": "購読"
     },
-    "comp":{
+    "comp": {
+      "subscriptionsFacetedSearch": {
+        "title": "購読ファセット検索"
+      },
       "grid": {
         "columns": {
-          "id": "ja_ID",
-          "event": "ja_Event",
-          "parentName": "ja_Parent Name",
-          "parentType": "ja_Parent Type",
-          "modified": "ja_Modified"
+          "id": "識別の番号",
+          "event": "イベント",
+          "parentName": "親の名前",
+          "parentType": "親タイプ",
+          "modified": "変更日"
         }
       }
     }

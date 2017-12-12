@@ -4,39 +4,45 @@
     "menus": {
       "leftnav.item": "Отчеты"
     },
-    "selectReport" : {
-      "label": "ru_Report",
-      "placeholder": "ru_Select Report"
+    "selectReport": {
+      "label": "Отчет",
+      "placeholder": "Выберите отчет"
     },
-    "selectState" : {
-      "label": "ru_State",
-      "placeholder": "ru_Select State"
+    "selectState": {
+      "label": "Состояние",
+      "placeholder": "Выберите состояние"
     },
     "startDate": {
-      "label": "ru_From"
+      "label": "Из"
     },
-    "endDate" : {
-      "label": "ru_To"
+    "endDate": {
+      "label": "к"
     },
-
     "dropdown": {
-      "turnaround": "ru_Turnaround Time by Requester",
-      "requester": "ru_Requester Type Summary",
-      "pending": "ru_Pending Orders Report",
-      "associate": "ru_Associate Productivity Report",
-      "origination": "ru_Origination Count",
-      "transfers": "ru_Transfers Report",
-      "exceptions": "ru_Exceptions Report (Non-Compliance)"
+      "turnaround": "Время выполнения реквестера",
+      "requester": "Краткое описание",
+      "pending": "Отчет о ожидающих заказах",
+      "associate": "Ассоциированный отчет о производительности",
+      "origination": "Счетчик происхождения",
+      "transfers": "Отчет о переводах",
+      "exceptions": "Отчет об исключениях (несоответствие)"
     },
-    "datepicker":{
-      "close": "ru_Done"
+    "datepicker": {
+      "close": "Готово",
+      "clear": "Очистить",
+      "current": "Cегодня"
     },
     "btn": {
-      "generateReport": "ru_Generate report"
+      "generateReport": "Создать отчет"
     },
     "checkBox": {
       "xmlReport": "Показать как XML"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "Выбор даты"
+  },
+  "reports.comp.reportselection": {
+    "title": "Отчеты"
   }
 }
-
