@@ -3,8 +3,10 @@ import org.springframework.security.core.GrantedAuthority
 
 import java.nio.charset.StandardCharsets
 
-String SPACE_REPLACE = "_0020_";
-String COMMA_REPLACE = "_002C_";
+SPACE_REPLACE = "_0020_";
+COMMA_REPLACE = "_002C_";
+LEFT_PARENTHESIS_ESCAPE_REPLACE = "_2215__0028";
+RIGHT_PARENTHESIS_ESCAPE_REPLACE = "_2215__0029";
 
 // include records with no protected object field
 // include records where protected_object_b is false
@@ -24,8 +26,7 @@ String denyAccessFilter = "-deny_acl_ss:" + safeUserId;
 for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
-    String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
+    String safeAuthName = escapeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
     // exclude records where current user is in a locked-out group
@@ -48,8 +49,7 @@ childObjectDacFilter += " OR allow_acl_ss:" + safeUserId;
 for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
-    String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
+    String safeAuthName = escapeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
@@ -59,8 +59,7 @@ childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
 for (GrantedAuthority granted : authentication.getAuthorities())
 {
     String authName = granted.getAuthority();
-    String sAuthName = authName.replace(" ", SPACE_REPLACE);
-    String safeAuthName = sAuthName.replace(",", COMMA_REPLACE);
+    String safeAuthName = escapeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
@@ -90,6 +89,15 @@ if(filterSubscriptionEvents)
 } else
 {
     message.setInboundProperty("isSubscribed", "");
+}
+
+def escapeCharacters(toBeEscaped)
+{
+    toBeEscaped
+            .replace(" ", SPACE_REPLACE)
+            .replace(",", COMMA_REPLACE)
+            .replace("(", LEFT_PARENTHESIS_ESCAPE_REPLACE)
+            .replace(")", RIGHT_PARENTHESIS_ESCAPE_REPLACE);
 }
 
 return payload;
