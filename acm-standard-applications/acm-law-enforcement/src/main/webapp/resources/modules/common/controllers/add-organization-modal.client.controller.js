@@ -105,8 +105,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
-                params.organizationId = $scope.externalSearchParams.organizationId;
-                params.parentOrganizationId = $scope.parentOrganizationId;
+                if (!Util.isEmpty($scope.externalSearchParams)) {
+                    params.organizationId = $scope.externalSearchParams.organizationId;
+                }
                 params.externalSearchServiceName = $scope.externalSearchServiceName;
 
                 var modalInstance = $modal.open({
