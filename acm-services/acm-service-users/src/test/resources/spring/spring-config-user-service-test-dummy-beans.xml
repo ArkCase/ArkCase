@@ -42,4 +42,7 @@
         <constructor-arg value="UTF-8"/>
     </bean>
 
+    <bean id="objectConverter" class="com.armedia.acm.objectonverter.ObjectConverter"
+          factory-method="createObjectConverterForTests"/>
+
 </beans>

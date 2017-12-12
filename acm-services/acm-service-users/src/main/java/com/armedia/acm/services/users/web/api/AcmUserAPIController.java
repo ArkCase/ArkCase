@@ -36,6 +36,7 @@ import java.util.Map;
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
+
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -51,7 +52,8 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory, @PathVariable String groupName)
+    public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory,
+                                         @PathVariable String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
