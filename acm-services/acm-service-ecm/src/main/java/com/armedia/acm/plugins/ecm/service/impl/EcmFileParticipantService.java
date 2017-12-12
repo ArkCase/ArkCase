@@ -304,7 +304,7 @@ public class EcmFileParticipantService
         {
             setRestrictedFlagRecursively(restricted, acmContainer.getFolder());
         }
-        if (acmContainer.getAttachmentFolder() != null)
+        if (acmContainer.getAttachmentFolder() != null && !acmContainer.getAttachmentFolder().equals(acmContainer.getFolder()))
         {
             setRestrictedFlagRecursively(restricted, acmContainer.getAttachmentFolder());
         }

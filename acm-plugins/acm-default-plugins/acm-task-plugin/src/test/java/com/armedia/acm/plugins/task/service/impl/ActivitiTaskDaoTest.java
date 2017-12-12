@@ -46,7 +46,6 @@ import org.activiti.engine.task.TaskQuery;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
-import org.easymock.IAnswer;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
@@ -1090,7 +1089,8 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void startBusinessProcess() throws  Exception {
+    public void startBusinessProcess() throws Exception
+    {
         Long taskId = 500L;
         String testTitle = "Test title";
         String processId = "500";
@@ -1147,9 +1147,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormProperty.getFormValues()).andReturn(Arrays.asList(mockFormValue));
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
-        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId)).andReturn(partList);
         expect(mockTaskService.getIdentityLinksForTask(task.getId())).andReturn(new ArrayList<>());
-        expect(mockParticipantDao.findParticipantsForObject("TASK",taskId)).andAnswer(() -> new ArrayList<>()).anyTimes();
 
         replayAll();
 

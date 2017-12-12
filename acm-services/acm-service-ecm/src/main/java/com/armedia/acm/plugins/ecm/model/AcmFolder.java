@@ -18,6 +18,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -90,8 +91,9 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_folder_restricted_flag", nullable = false)

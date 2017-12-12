@@ -28,6 +28,7 @@ import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -158,8 +159,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_file_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @ManyToOne
