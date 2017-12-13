@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Связанные люди",
+    "linkTitle": "ru_Rel People",
     "table.columns": {
       "firstName": "ru_First Name",
       "lastName": "ru_Last Name",
