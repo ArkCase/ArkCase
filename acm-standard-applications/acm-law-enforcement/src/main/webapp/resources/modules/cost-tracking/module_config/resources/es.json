@@ -27,69 +27,69 @@
   },
   "costTracking.comp.details": {
     "title": "Detalles",
-    "informSaved": "es_Costsheet details saved",
+    "informSaved": "Detalles de la hoja de costos guardados",
     "table.columns": {
-      "title": "es_Details",
-      "modified": "es_Date Last Modified",
-      "modifier": "es_User Last Modified"
+      "title": "Detalles",
+      "modified": "Fecha de última modificación",
+      "modifier": "Última modificación del usuario"
     }
   },
   "costTracking.comp.person": {
-    "title": "Personas",
+    "title": "Persona",
     "table.columns": {
-      "fullName": "es_Full Name",
-      "userId": "es_Username"
+      "fullName": "Nombre completo",
+      "userId": "Nombre de usuario"
     }
   },
   "costTracking.comp.summary": {
-    "title": "Costo total",
+    "title": "Costo",
     "table.columns": {
-      "parentId": "es_ID",
-      "parentNumber": "es_Parent ID",
-      "parentType": "es_Parent Type",
-      "value": "es_Total Cost",
-      "title": "es_Title",
-      "description": "es_Description"
+      "parentId": "Identificación",
+      "parentNumber": "Identificación de los padres",
+      "parentType": "Tipo de padre",
+      "value": "Coste total",
+      "title": "Título",
+      "description": "Descripción"
     }
   },
   "costTracking.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "es_Tag",
-      "created": "es_Created",
-      "createdBy": "es_Created By"
+      "tag": "Etiqueta",
+      "created": "Fecha de creación",
+      "createdBy": "Creado por"
     },
     "modal": {
-    "title": "es_Tag",
-    "search": "es_Search for Tag",
-    "buttons": {
-          "cancel": "es_Cancel",
-          "ok": "es_Add Tag"
-     }
+      "title": "Etiqueta",
+      "search": "Buscar etiqueta",
+      "buttons": {
+        "cancel": "Cancelar",
+        "ok": "Añadir etiqueta"
+      }
     },
     "message": {
-      "tagExists": "es_Tag with that name or description or text already exists",
-      "tagAssociated": "es_already associated",
+      "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
+      "tagAssociated": "Ya asociado",
       "delete": {
-        "success": "es_Tag deleted successfully",
-        "error": "es_Error deleting tag"
+        "success": "Tag eliminado con éxito",
+        "error": "Error al eliminar la etiqueta"
       }
     }
   },
   "costTracking.comp.approvers": {
-    "title": "es_Approvers",
+    "title": "Aprobadores",
     "table.columns": {
-      "fullName": "es_Full Name",
-      "userId": "es_Username"
+      "fullName": "Nombre completo",
+      "userId": "Nombre de usuario"
     }
   },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "Detalles",
-      "person.label": "Personas",
+      "person.label": "Persona",
       "summary.label": "Gastos",
       "tags.label": "Etiquetas",
-      "approvers.label": "es_Approvers"
+      "approvers.label": "Aprobadores"
     },
     "sorters": {
       "dateAsc": "Ordenar Fecha Asc",

@@ -16,6 +16,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -293,10 +294,10 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private String buildDnForUser(String userFullName, String userId, AcmLdapSyncConfig syncConfig)
     {
-        String uidAttr = String.format("%s=%s", "uid", userId);
+        String uidAttr = String.format("%s=%s", "uid", userId.toLowerCase());
         String cnAttr = String.format("%s=%s", "cn", userFullName);
         String dnAttr = Directory.openldap.name().equals(syncConfig.getDirectoryType()) ? uidAttr : cnAttr;
-        return String.format("%s,%s,%s", dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
+        return MapperUtils.appendToDn(dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 
     public AcmUser findByPasswordResetToken(String token)

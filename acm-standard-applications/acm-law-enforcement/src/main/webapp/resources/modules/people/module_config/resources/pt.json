@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Pessoas Relacionadas",
+    "linkTitle": "pt_Rel People",
     "table.columns": {
       "firstName": "pt_First Name",
       "lastName": "pt_Last Name",

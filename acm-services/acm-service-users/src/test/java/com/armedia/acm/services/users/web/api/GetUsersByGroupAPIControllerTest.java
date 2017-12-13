@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.Base64;
 import java.util.Optional;
 
 import static junit.framework.Assert.assertEquals;
@@ -54,7 +55,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result =
-                mockMvc.perform(get("/api/latest/users/by-group/{group}", group)
+                mockMvc.perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
                         .param("status", "VALID")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
@@ -78,7 +79,7 @@ public class GetUsersByGroupAPIControllerTest extends EasyMockSupport
         replayAll();
 
         MvcResult result =
-                mockMvc.perform(get("/api/latest/users/by-group/{group}", group)
+                mockMvc.perform(get("/api/latest/users/by-group/{group}", Base64.getUrlEncoder().encodeToString(group.getBytes()))
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)).andReturn();

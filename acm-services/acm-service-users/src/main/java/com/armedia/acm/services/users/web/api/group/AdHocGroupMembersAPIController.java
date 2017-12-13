@@ -14,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
 public class AdHocGroupMembersAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -34,6 +36,7 @@ public class AdHocGroupMembersAPIController
         LOG.info("Add user members group: [{}]", groupId);
         try
         {
+            groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
             return groupService.addUserMembersToGroup(members, groupId);
         }
         catch (AcmObjectNotFoundException e)
@@ -50,6 +53,7 @@ public class AdHocGroupMembersAPIController
         LOG.info("Remove user members from group: [{}]", groupId);
         try
         {
+            groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
             return groupService.removeUserMembersFromGroup(members, groupId);
         }
         catch (AcmObjectNotFoundException e)

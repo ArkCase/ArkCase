@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
@@ -158,7 +159,8 @@ public class LdapGroupService
 
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)
     {
-        return String.format("cn=%s,%s,%s", cn, ldapSyncConfig.getGroupSearchBase(), ldapSyncConfig.getBaseDC());
+        String cnRdn = String.format("cn=%s", cn);
+        return MapperUtils.appendToDn(cnRdn, ldapSyncConfig.getGroupSearchBase(), ldapSyncConfig.getBaseDC());
     }
 
     public GroupService getGroupService()

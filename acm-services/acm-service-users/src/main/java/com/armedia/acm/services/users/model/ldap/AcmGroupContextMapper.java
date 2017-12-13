@@ -30,7 +30,7 @@ public class AcmGroupContextMapper implements ContextMapper
             group.setName(String.format("%s@%s", groupName.toUpperCase(), acmLdapSyncConfig.getUserDomain()));
         }
 
-        group.setDistinguishedName(MapperUtils.appendBaseToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
+        group.setDistinguishedName(MapperUtils.appendToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         group.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getGroupsSortingAttribute()));
         group.setDescription(MapperUtils.getAttribute(adapter, "description"));
         group.setDirectoryName(acmLdapSyncConfig.getDirectoryName());

@@ -179,7 +179,7 @@ public class SpringLdapUserDao
     {
         DirContextOperations context = ldapCrudDao.lookup(acmUser.getDistinguishedName(), ldapSyncConfig);
         DirContextOperations editContext = ldapEntryTransformer.createContextForEditUserEntry(context, acmUser,
-                ldapSyncConfig.getBaseDC());
+                ldapSyncConfig.getDirectoryName());
         ldapCrudDao.update(editContext, ldapSyncConfig);
     }
 

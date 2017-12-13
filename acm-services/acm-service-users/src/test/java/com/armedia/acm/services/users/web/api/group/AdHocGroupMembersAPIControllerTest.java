@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.stream.Collectors;
 
 import static org.easymock.EasyMock.expect;
@@ -84,7 +85,7 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{groupId}/members/save", group.getName())
+                post("/api/latest/users/group/{groupId}/members/save", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new JSONArray(Arrays.asList("ann-acm", "sally-acm")).toString())
@@ -127,7 +128,7 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{groupId}/members/remove/", group.getName())
+                post("/api/latest/users/group/{groupId}/members/remove/", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
@@ -141,7 +142,7 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         AcmGroup acmGroup = om.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        String[] members = { "sally-acm" };
+        String[] members = {"sally-acm"};
         assertArrayEquals(acmGroup.getUserMemberIds().toArray(), members);
     }
 
