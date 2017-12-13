@@ -130,29 +130,7 @@ public class EcmFileParticipantService
             }
         }
 
-        // set participant to current folder
-        Optional<AcmParticipant> existingFolderParticipants = folder.getParticipants().stream()
-                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
-                .findFirst();
-
-        // for files and folders only one AcmParticipant per user is allowed
-        if (existingFolderParticipants.isPresent())
-        {
-            // change the role of the existing participant if needed
-            if (!existingFolderParticipants.get().getParticipantType().equals(participant.getParticipantType()))
-            {
-                existingFolderParticipants.get().setParticipantType(participant.getParticipantType());
-            }
-        }
-        else
-        {
-            AcmParticipant newParticipant = new AcmParticipant();
-            newParticipant.setParticipantType(participant.getParticipantType());
-            newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
-            newParticipant.setObjectType(EcmFileConstants.OBJECT_FOLDER_TYPE);
-            newParticipant.setObjectId(folder.getId());
-            folder.getParticipants().add(newParticipant);
-        }
+        setParticipantToFolder(folder, participant);
 
         if (folder.getId() != null)
         {
@@ -192,6 +170,33 @@ public class EcmFileParticipantService
 
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
+    }
+
+    private void setParticipantToFolder(AcmFolder folder, AcmParticipant participant)
+    {
+        // set participant to current folder
+        Optional<AcmParticipant> existingFolderParticipants = folder.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                .findFirst();
+
+        // for files and folders only one AcmParticipant per user is allowed
+        if (existingFolderParticipants.isPresent())
+        {
+            // change the role of the existing participant if needed
+            if (!existingFolderParticipants.get().getParticipantType().equals(participant.getParticipantType()))
+            {
+                existingFolderParticipants.get().setParticipantType(participant.getParticipantType());
+            }
+        }
+        else
+        {
+            AcmParticipant newParticipant = new AcmParticipant();
+            newParticipant.setParticipantType(participant.getParticipantType());
+            newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+            newParticipant.setObjectType(EcmFileConstants.OBJECT_FOLDER_TYPE);
+            newParticipant.setObjectId(folder.getId());
+            folder.getParticipants().add(newParticipant);
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -409,98 +414,125 @@ public class EcmFileParticipantService
         validateFileParticipants(participants);
 
         List<AcmParticipant> participantsToReturn = new ArrayList<>();
+        if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
+        {
+            AcmFolder folder = getFolderService().findById(objectId);
+            setFolderParticipants(folder, participants);
+            // modify the instance to trigger the Solr transformers
+            folder.setModified(new Date());
+            AcmFolder savedFolder = getFolderService().saveFolder(folder);
+            // make sure the session is flushed so that the Drools rules have been run
+            getFileDao().getEm().flush();
+            participantsToReturn = savedFolder.getParticipants();
+        }
+        else
+        {
+            EcmFile file = getFileDao().find(objectId);
+            setFileParticipants(file, participants);
+            // modify the instance to trigger the Solr transformers
+            file.setModified(new Date());
+            EcmFile savedFile = getFileDao().save(file);
+            // make sure the session is flushed so that the Drools rules have been run
+            getFileDao().getEm().flush();
+            participantsToReturn = savedFile.getParticipants();
+        }
 
-        List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
-                FlushModeType.COMMIT);
+        return participantsToReturn;
+    }
 
+    private void setFileParticipants(EcmFile file, List<AcmParticipant> participants)
+    {
         for (AcmParticipant participant : participants)
         {
-            AcmParticipant savedParticipant = participant;
-            if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
-            {
-                AcmFolder folder = getFolderService().findById(objectId);
-                if (participant.isReplaceChildrenParticipant())
-                {
-                    setParticipantToFolderChildren(folder, participant);
-                }
-                else
-                {
-                    Optional<AcmParticipant> returnedParticipant = existingParticipants.stream()
-                            .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
-                                    .equals(participant.getParticipantLdapId()))
-                            .findFirst();
+            Optional<AcmParticipant> returnedParticipant = file.getParticipants().stream()
+                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
+                            .equals(participant.getParticipantLdapId()))
+                    .findFirst();
 
-                    if (returnedParticipant.isPresent())
-                    {
-                        savedParticipant = getParticipantService().changeParticipantRole(participant, participant.getParticipantType());
-                    }
-                    else
-                    {
-                        savedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
-                                participant.getParticipantType(),
-                                objectId, objectType);
-                    }
-                }
-                // modify the instance to trigger the Solr transformers
-                folder.setModified(new Date());
-                getFolderService().saveFolder(folder);
+            if (returnedParticipant.isPresent())
+            {
+                returnedParticipant.get().setParticipantType(participant.getParticipantType());
             }
             else
             {
-
-                EcmFile file = getFileDao().find(objectId);
-                Optional<AcmParticipant> returnedParticipant = existingParticipants.stream()
-                        .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
-                                .equals(participant.getParticipantLdapId()))
-                        .findFirst();
-
-                if (returnedParticipant.isPresent())
-                {
-                    savedParticipant = getParticipantService().changeParticipantRole(participant, participant.getParticipantType());
-                }
-                else
-                {
-                    savedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
-                            participant.getParticipantType(), objectId,
-                            objectType);
-                }
-                // modify the instance to trigger the Solr transformers
-                file.setModified(new Date());
-                getFileDao().save(file);
+                setParticipantToFile(file, participant);
             }
-            participantsToReturn.add(savedParticipant);
         }
 
+        // copy file participants to a new list because the file.getParticipants() list will be modified in the loop and
+        // will cause ConcurrentModificationException
+        List<AcmParticipant> fileParticipants = file.getParticipants().stream().collect(Collectors.toList());
+
         // remove deleted participants
-        for (AcmParticipant existingParticipant : existingParticipants)
+        for (AcmParticipant existingParticipant : fileParticipants)
         {
             if (participants.stream()
                     .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
                     .count() == 0)
             {
-                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
-                {
-                    AcmFolder folder = getFolderService().findById(objectId);
-                    removeParticipantFromFolderAndChildren(folder,
-                            existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
-                    // modify the instance to trigger the Solr transformers
-                    folder.setModified(new Date());
-                    getFolderService().saveFolder(folder);
-                }
-                else
-                {
-                    EcmFile file = getFileDao().find(objectId);
-                    getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
-                            existingParticipant.getParticipantType(), existingParticipant.getObjectType(),
-                            existingParticipant.getObjectId());
-                    // modify the instance to trigger the Solr transformers
-                    file.setModified(new Date());
-                    getFileDao().save(file);
-                }
+                file.getParticipants()
+                        .removeIf(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
+                                && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
+            }
+        }
+    }
+
+    private void setParticipantToFile(EcmFile file, AcmParticipant participant)
+    {
+        // set participant to current folder
+        Optional<AcmParticipant> existingFolderParticipants = file.getParticipants().stream()
+                .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
+                .findFirst();
+
+        // for files and folders only one AcmParticipant per user is allowed
+        if (existingFolderParticipants.isPresent())
+        {
+            // change the role of the existing participant if needed
+            if (!existingFolderParticipants.get().getParticipantType().equals(participant.getParticipantType()))
+            {
+                existingFolderParticipants.get().setParticipantType(participant.getParticipantType());
+            }
+        }
+        else
+        {
+            AcmParticipant newParticipant = new AcmParticipant();
+            newParticipant.setParticipantType(participant.getParticipantType());
+            newParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+            newParticipant.setObjectType(EcmFileConstants.OBJECT_FILE_TYPE);
+            newParticipant.setObjectId(file.getId());
+            file.getParticipants().add(newParticipant);
+        }
+    }
+
+    private void setFolderParticipants(AcmFolder folder, List<AcmParticipant> participants) throws AcmAccessControlException
+    {
+        for (AcmParticipant participant : participants)
+        {
+            if (participant.isReplaceChildrenParticipant())
+            {
+                setParticipantToFolderChildren(folder, participant);
+            }
+            else
+            {
+                setParticipantToFolder(folder, participant);
             }
         }
 
-        return participantsToReturn;
+        // copy folder participants to a new list because the folder.getParticipants() list will be modified in
+        // removeParticipantFromFolderAndChildren() method and will cause ConcurrentModificationException
+        List<AcmParticipant> folderParticipants = folder.getParticipants().stream().collect(Collectors.toList());
+
+        // remove deleted participants
+        for (AcmParticipant existingParticipant : folderParticipants)
+        {
+            if (participants.stream()
+                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
+                    .count() == 0)
+            {
+                removeParticipantFromFolderAndChildren(folder,
+                        existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
+            }
+        }
     }
 
     /**
