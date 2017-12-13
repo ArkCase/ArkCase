@@ -44,7 +44,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
 
         var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseFileLanguages = LocaleService.getSettings();
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;

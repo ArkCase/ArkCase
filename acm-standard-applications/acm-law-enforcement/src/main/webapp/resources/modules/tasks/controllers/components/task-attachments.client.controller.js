@@ -34,7 +34,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
         });
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.TASK);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.config = config;

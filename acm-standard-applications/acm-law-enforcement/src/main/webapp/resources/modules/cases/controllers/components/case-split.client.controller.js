@@ -8,7 +8,7 @@ angular.module('cases').controller('Cases.SplitController', ['$scope', '$statePa
         , HelperObjectBrowserService
     ) {
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         ConfigService.getComponentConfig("cases", "documents").then(function (componentConfig) {
             $scope.config = componentConfig;
             $scope.treeConfig = config.docTree;
