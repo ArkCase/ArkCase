@@ -143,7 +143,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return acmGroup;
     }
 
-    public List<AcmGroup> findLdapGroupsWithUsersByDirectory(String directoryName)
+    public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
         TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
                 createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
