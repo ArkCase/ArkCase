@@ -35,7 +35,7 @@ angular.module('cases').controller('Cases.DocumentsController', ['$scope', '$sta
         });
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.CASE_FILE);
         var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {

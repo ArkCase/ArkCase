@@ -41,7 +41,7 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
         });
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.DOC_REPO);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseFileLanguages = LocaleService.getSettings();
         var onConfigRetrieved = function (config) {
             $scope.treeConfig = config.docTree;

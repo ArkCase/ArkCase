@@ -42,7 +42,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
         });
 
         var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.COMPLAINT);
-        var promiseFileTypes = ObjectLookupService.getLookupByLookupName("fileTypes");
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(ObjectService.ObjectTypes.COMPLAINT);
         var promiseFileLanguages = LocaleService.getSettings();
 
