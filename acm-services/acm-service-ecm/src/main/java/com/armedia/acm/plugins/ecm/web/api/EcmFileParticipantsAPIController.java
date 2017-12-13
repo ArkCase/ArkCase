@@ -1,15 +1,10 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
-import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.persistence.FlushModeType;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Created by bojan.milenkoski on 06.10.2017
@@ -37,8 +28,6 @@ import java.util.Optional;
 @RequestMapping({ "/api/v1/service/ecm/participants", "/api/latest/service/ecm/participants" })
 public class EcmFileParticipantsAPIController
 {
-    private AcmFolderService folderService;
-    private AcmParticipantService participantService;
     private EcmFileParticipantService fileParticipantService;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -48,7 +37,7 @@ public class EcmFileParticipantsAPIController
     @ResponseBody
     public List<AcmParticipant> saveParticipants(@PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId, @RequestBody List<AcmParticipant> participants, Authentication authentication)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmParticipantsException, AcmAccessControlException
+            throws AcmParticipantsException, AcmAccessControlException
     {
         log.info("Participants will be set on object [{}]:[{}]", objectType, objectId);
 
@@ -57,110 +46,8 @@ public class EcmFileParticipantsAPIController
             throw new AcmAccessControlException(Arrays.asList(""),
                     "The called method cannot be executed on objectType {" + objectType + "}!");
         }
-        getFileParticipantService().validateFileParticipants(participants);
 
-        List<AcmParticipant> participantsToReturn = new ArrayList<>();
-
-        List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
-                FlushModeType.COMMIT);
-
-        // change existing participants role
-        for (AcmParticipant participant : participants)
-        {
-            Optional<AcmParticipant> returnedParticipant = existingParticipants.stream()
-                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
-                    .findFirst();
-
-            if (!returnedParticipant.isPresent())
-            {
-                continue;
-            }
-
-            if (!returnedParticipant.get().getParticipantType().equals(participant.getParticipantType()))
-            {
-                AcmParticipant changedParticipant = getParticipantService().changeParticipantRole(participant,
-                        participant.getParticipantType());
-
-                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
-                {
-                    AcmFolder folder = getFolderService().findById(objectId);
-                    getFileParticipantService().setParticipantToFolderChildren(folder, participant);
-                    getFolderService().saveFolder(folder);
-                }
-
-                participantsToReturn.add(changedParticipant);
-            }
-            else
-            {
-                participantsToReturn.add(participant);
-            }
-        }
-
-        // remove deleted participants
-        for (AcmParticipant existingParticipant : existingParticipants)
-        {
-            if (participants.stream()
-                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
-                    .count() == 0)
-            {
-                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
-                {
-                    AcmFolder folder = getFolderService().findById(objectId);
-                    getFileParticipantService().removeParticipantFromFolderAndChildren(folder,
-                            existingParticipant.getParticipantLdapId(), existingParticipant.getObjectType());
-                    getFolderService().saveFolder(folder);
-                }
-                else
-                {
-                    getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
-                            existingParticipant.getParticipantType(), existingParticipant.getObjectType(),
-                            existingParticipant.getObjectId());
-                }
-            }
-        }
-
-        // add new participants
-        for (AcmParticipant participant : participants)
-        {
-            if (existingParticipants.stream()
-                    .filter(existingParticipant -> existingParticipant.getParticipantLdapId().equals(participant.getParticipantLdapId()))
-                    .count() == 0)
-            {
-                AcmParticipant addedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
-                        participant.getParticipantType(), objectId, objectType);
-
-                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE) && (participant.isReplaceChildrenParticipant()))
-                {
-                    AcmFolder folder = getFolderService().findById(objectId);
-                    getFileParticipantService().setParticipantToFolderChildren(folder, participant);
-                    getFolderService().saveFolder(folder);
-                }
-
-                participantsToReturn.add(addedParticipant);
-            }
-        }
-
-        return participantsToReturn;
-    }
-
-    public AcmFolderService getFolderService()
-    {
-        return folderService;
-    }
-
-    public void setFolderService(AcmFolderService folderService)
-    {
-        this.folderService = folderService;
-    }
-
-    public AcmParticipantService getParticipantService()
-    {
-        return participantService;
-    }
-
-    public void setParticipantService(AcmParticipantService acmParticipantService)
-    {
-        this.participantService = acmParticipantService;
+        return getFileParticipantService().setFileParticipants(objectId, objectType, participants);
     }
 
     public EcmFileParticipantService getFileParticipantService()

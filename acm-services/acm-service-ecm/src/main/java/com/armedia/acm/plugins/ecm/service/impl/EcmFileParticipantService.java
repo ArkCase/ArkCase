@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
@@ -18,6 +19,7 @@ import javax.persistence.FlushModeType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class EcmFileParticipantService
 {
     private EcmFileDao fileDao;
+    private AcmFolderService folderService;
     private AcmParticipantService participantService;
     private Properties ecmFileServiceProperties;
 
@@ -59,6 +62,8 @@ public class EcmFileParticipantService
             file.getParticipants().add(participant);
         });
 
+        // modify the instance to trigger the Solr transformers
+        file.setModified(new Date());
         return getFileDao().save(file);
     }
 
@@ -101,6 +106,9 @@ public class EcmFileParticipantService
             // set participants to files in the folder
             getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT).forEach(file -> setFileParticipantsFromParentFolder(file));
         }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -164,6 +172,8 @@ public class EcmFileParticipantService
                     if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
                     {
                         existingFileParticipant.get().setParticipantType(participant.getParticipantType());
+                        // modify the instance to trigger the Solr transformers
+                        file.setModified(new Date());
                         getFileDao().save(file);
                     }
                 }
@@ -173,10 +183,15 @@ public class EcmFileParticipantService
                     fileParticipant.setParticipantType(participant.getParticipantType());
                     fileParticipant.setParticipantLdapId(participant.getParticipantLdapId());
                     file.getParticipants().add(fileParticipant);
+                    // modify the instance to trigger the Solr transformers
+                    file.setModified(new Date());
                     getFileDao().save(file);
                 }
             }
         }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -204,9 +219,14 @@ public class EcmFileParticipantService
                     .forEach(file -> {
                         file.getParticipants().removeIf(participant -> participant.getParticipantLdapId().equals(participantLdapId)
                                 && participant.getParticipantType().equals(participantType));
+                        // modify the instance to trigger the Solr transformers
+                        file.setModified(new Date());
                         getFileDao().save(file);
                     });
         }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
     }
 
     public List<AcmParticipant> getFolderParticipantsFromParentAssignedObject(String objectType, Long objectId)
@@ -251,6 +271,9 @@ public class EcmFileParticipantService
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
                     originalAssignedObjectParticipants, acmContainer.getAttachmentFolder());
         }
+
+        // make sure the changes made are flushed and not overridden later
+        getFileDao().getEm().flush();
     }
 
     private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
@@ -295,9 +318,12 @@ public class EcmFileParticipantService
                 }
             }
         }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void setRestrictedFlagRecursively(Boolean restricted, AcmContainer acmContainer)
     {
         if (acmContainer.getFolder() != null)
@@ -326,9 +352,14 @@ public class EcmFileParticipantService
             // set restricted flag to files in the folder
             getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT).forEach(file -> {
                 file.setRestricted(restricted);
+                // modify the instance to trigger the Solr transformers
+                file.setModified(new Date());
                 getFileDao().save(file);
             });
         }
+
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
     }
 
     private AcmParticipant getDocumentParticipantFromAssignedObjectParticipant(AcmParticipant participant)
@@ -369,6 +400,107 @@ public class EcmFileParticipantService
         }
 
         return documentParticipantType;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public List<AcmParticipant> setFileParticipants(Long objectId, String objectType, List<AcmParticipant> participants)
+            throws AcmAccessControlException, AcmParticipantsException
+    {
+        validateFileParticipants(participants);
+
+        List<AcmParticipant> participantsToReturn = new ArrayList<>();
+
+        List<AcmParticipant> existingParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
+                FlushModeType.COMMIT);
+
+        for (AcmParticipant participant : participants)
+        {
+            AcmParticipant savedParticipant = participant;
+            if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
+            {
+                AcmFolder folder = getFolderService().findById(objectId);
+                if (participant.isReplaceChildrenParticipant())
+                {
+                    setParticipantToFolderChildren(folder, participant);
+                }
+                else
+                {
+                    Optional<AcmParticipant> returnedParticipant = existingParticipants.stream()
+                            .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
+                                    .equals(participant.getParticipantLdapId()))
+                            .findFirst();
+
+                    if (returnedParticipant.isPresent())
+                    {
+                        savedParticipant = getParticipantService().changeParticipantRole(participant, participant.getParticipantType());
+                    }
+                    else
+                    {
+                        savedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
+                                participant.getParticipantType(),
+                                objectId, objectType);
+                    }
+                }
+                // modify the instance to trigger the Solr transformers
+                folder.setModified(new Date());
+                getFolderService().saveFolder(folder);
+            }
+            else
+            {
+
+                EcmFile file = getFileDao().find(objectId);
+                Optional<AcmParticipant> returnedParticipant = existingParticipants.stream()
+                        .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
+                                .equals(participant.getParticipantLdapId()))
+                        .findFirst();
+
+                if (returnedParticipant.isPresent())
+                {
+                    savedParticipant = getParticipantService().changeParticipantRole(participant, participant.getParticipantType());
+                }
+                else
+                {
+                    savedParticipant = getParticipantService().saveParticipant(participant.getParticipantLdapId(),
+                            participant.getParticipantType(), objectId,
+                            objectType);
+                }
+                // modify the instance to trigger the Solr transformers
+                file.setModified(new Date());
+                getFileDao().save(file);
+            }
+            participantsToReturn.add(savedParticipant);
+        }
+
+        // remove deleted participants
+        for (AcmParticipant existingParticipant : existingParticipants)
+        {
+            if (participants.stream()
+                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
+                    .count() == 0)
+            {
+                if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
+                {
+                    AcmFolder folder = getFolderService().findById(objectId);
+                    removeParticipantFromFolderAndChildren(folder,
+                            existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
+                    // modify the instance to trigger the Solr transformers
+                    folder.setModified(new Date());
+                    getFolderService().saveFolder(folder);
+                }
+                else
+                {
+                    EcmFile file = getFileDao().find(objectId);
+                    getParticipantService().removeParticipant(existingParticipant.getParticipantLdapId(),
+                            existingParticipant.getParticipantType(), existingParticipant.getObjectType(),
+                            existingParticipant.getObjectId());
+                    // modify the instance to trigger the Solr transformers
+                    file.setModified(new Date());
+                    getFileDao().save(file);
+                }
+            }
+        }
+
+        return participantsToReturn;
     }
 
     /**
@@ -468,5 +600,15 @@ public class EcmFileParticipantService
     public void setEcmFileServiceProperties(Properties ecmFileServiceProperties)
     {
         this.ecmFileServiceProperties = ecmFileServiceProperties;
+    }
+
+    public AcmFolderService getFolderService()
+    {
+        return folderService;
+    }
+
+    public void setFolderService(AcmFolderService folderService)
+    {
+        this.folderService = folderService;
     }
 }
