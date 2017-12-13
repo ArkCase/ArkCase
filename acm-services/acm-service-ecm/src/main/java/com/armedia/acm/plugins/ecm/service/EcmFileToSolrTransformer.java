@@ -112,6 +112,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         mapAdditionalProperties(in, doc.getAdditionalProperties());
 
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
         return doc;
     }
 
