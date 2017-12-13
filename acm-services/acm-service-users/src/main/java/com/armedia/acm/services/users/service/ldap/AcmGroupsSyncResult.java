@@ -10,7 +10,6 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -53,13 +52,14 @@ public class AcmGroupsSyncResult
                 .collect(Collectors.toMap(LdapGroup::getName, Function.identity()));
 
         Map<String, AcmGroup> modifiedGroupsByName = getGroupsByNameMap(modifiedGroups);
-        addAndRemoveUserMembershipForExistingGroups(ldapGroups, syncedUsersByDn, acmGroupsByName, modifiedGroupsByName);
-        addAndRemoveGroupMembershipForExistingGroups(ldapGroupsByName, acmGroupsByName, modifiedGroupsByName);
 
+        addAndRemoveUserMembershipForExistingGroups(ldapGroups, syncedUsersByDn, acmGroupsByName, modifiedGroupsByName);
         addUserMembershipForNewGroups(ldapGroupsByName, syncedUsersByDn);
+
         // now acmGroupsByName map can include new groups
         newGroups.forEach(acmGroup -> acmGroupsByName.put(acmGroup.getName(), acmGroup));
         addGroupMembershipForNewGroups(ldapGroupsByName, acmGroupsByName, modifiedGroupsByName);
+        addAndRemoveGroupMembershipForExistingGroups(ldapGroupsByName, acmGroupsByName, modifiedGroupsByName);
 
         modifiedGroups.forEach(acmGroup -> acmGroupsByName.put(acmGroup.getName(), acmGroup));
 
@@ -153,7 +153,6 @@ public class AcmGroupsSyncResult
                         });
                         acmGroup.addGroupMember(acmMemberGroup);
                         log.trace("Add member group [{}] to parent group [{}]", acmMemberGroup.getName(), acmGroup.getName());
-
                     });
         });
     }

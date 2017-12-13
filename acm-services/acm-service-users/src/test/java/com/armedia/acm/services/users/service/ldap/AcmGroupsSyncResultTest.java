@@ -351,6 +351,103 @@ public class AcmGroupsSyncResultTest
             assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), is("A,D"));
         }
 
+            // @formatter:off
+        /**
+         * ldap state                        db state
+         *
+         * Group A ->                        AcmGroup A ->
+         *       member cn=1,cn=Users             member cn=1,cn=Users
+         *       member cn=2,cn=Users             member cn=2,cn=Users
+         * Group B ->                        AcmGroup B ->
+         *       member cn=3,cn=Users             member cn=3,cn=Users
+         *       member cn=X,cn=Groups            member cn=C,cn=Groups
+         * Group C ->                        AcmGroup C ->
+         *       member cn=A,cn=Groups            member
+         *       member cn=D,cn=Groups
+         * Group D ->
+         *       member cn=A,cn=Groups
+         * Group X ->
+         *       member cn=D,cn=Groups
+         */
+        // @formatter:on
+        @Test
+        public void syncTwoNewGroupsOneAddedInExistingAndRemovedGroupFromGroupTest()
+        {
+            LdapGroup a = ldapGroup("A");
+            LdapGroup b = ldapGroup("B");
+            LdapGroup c = ldapGroup("C");
+            LdapGroup d = ldapGroup("D");
+            LdapGroup x = ldapGroup("X");
+
+            AcmUser u1 = acmUser("1");
+            AcmUser u2 = acmUser("2");
+            AcmUser u3 = acmUser("3");
+
+            a.setMembers(fromArray("cn=1,cn=Users", "cn=2,cn=Users"));
+            b.setMembers(fromArray("cn=3,cn=Users", "cn=X,cn=Groups"));
+            c.setMembers(fromArray("cn=A,cn=Groups", "cn=D,cn=Groups"));
+            d.setMembers(fromArray("cn=A,cn=Groups"));
+            x.setMembers(fromArray("cn=D,cn=Groups"));
+
+            Map<String, AcmUser> acmUsers = userStream(u1, u2, u3)
+                    .collect(Collectors.toMap(AcmUser::getUserId, Function.identity()));
+
+            AcmGroup acmGroupA = acmGroup("A", "", "D");
+            AcmGroup acmGroupB = acmGroup("B");
+            AcmGroup acmGroupC = acmGroup("C", "", "B");
+
+            acmGroupA.setUserMembers(userStream(u1, u2).collect(Collectors.toSet()));
+            acmGroupB.setUserMembers(userStream(u3).collect(Collectors.toSet()));
+            acmGroupB.setMemberGroups(groupSet(acmGroupC));
+
+            List<AcmGroup> acmGroups = Arrays.asList(acmGroupA, acmGroupB, acmGroupC);
+
+            unit.sync(Arrays.asList(a, b, c, d, x), acmGroups, acmUsers);
+
+            assertThat(unit.getNewGroups().size(), is(2));
+            assertThat(unit.getDeletedGroups(), is(empty()));
+            assertThat(unit.getModifiedGroups().size(), is(4));
+
+            Map<String, AcmGroup> newGroupsByName = getGroupByName(unit.getNewGroups());
+
+            assertThat("New groups should be:",  newGroupsByName.keySet(),
+                    everyItem(isIn(fromArray( "D", "X"))));
+
+            assertThat("Ascendants string for group X should be", newGroupsByName.get("X").getAscendantsList(),
+                    is("B"));
+            assertThat("Group X should have member groups", newGroupsByName.get("X").getGroupMemberNames()
+                    .collect(Collectors.toSet()), everyItem(isIn(fromArray("D"))));
+            assertThat("Group X should have 0 user members", newGroupsByName.get("X").getUserMembers().size(), is(0));
+
+            assertThat("Ascendants string for group D should be", newGroupsByName.get("D").getAscendantsList(), is("B,C,X"));
+            assertThat("Group D should have 0 user members", newGroupsByName.get("D").getUserMembers().size(), is(0));
+            assertThat("Group D should have member groups", newGroupsByName.get("D")
+                    .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A"))));
+
+            Map<String, AcmGroup> modifiedGroupsByName = getGroupByName(unit.getModifiedGroups());
+
+            assertThat("Changed groups should be:", modifiedGroupsByName.keySet(),
+                    everyItem(isIn(fromArray("A", "B", "C", "D"))));
+
+            assertThat("Ascendants string for group A should be", modifiedGroupsByName.get("A").getAscendantsList(),
+                    is("B,C,D,X"));
+            assertThat("Group A should have 0 member groups", modifiedGroupsByName.get("A").getMemberGroups().size(), is(0));
+            assertThat("Group A should have user members", modifiedGroupsByName.get("A")
+                    .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("1", "2"))));
+
+            assertThat("Ascendants string for group B should be", modifiedGroupsByName.get("B").getAscendantsList(),
+                    nullValue());
+            assertThat("Group B should have member groups", modifiedGroupsByName.get("B")
+                    .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("C", "X"))));
+            assertThat("Group B should have user members", modifiedGroupsByName.get("B")
+                    .getUserMemberIds().collect(Collectors.toSet()), everyItem(isIn(fromArray("3"))));
+
+            assertThat("Group C should have member groups", modifiedGroupsByName.get("C")
+                    .getGroupMemberNames().collect(Collectors.toSet()), everyItem(isIn(fromArray("A", "D"))));
+            assertThat("Group C should have 0 user members", modifiedGroupsByName.get("C").getUserMembers().size(), is(0));
+            assertThat("Ascendants string for group C should be", modifiedGroupsByName.get("C").getAscendantsList(), nullValue());
+        }
+
     private LdapGroup ldapGroup(String name, String description)
     {
         LdapGroup ldapGroup = new LdapGroup();
