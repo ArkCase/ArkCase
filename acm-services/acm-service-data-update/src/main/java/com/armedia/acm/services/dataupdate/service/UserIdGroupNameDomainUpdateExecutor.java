@@ -9,8 +9,6 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
-import com.armedia.acm.services.users.service.ldap.LdapSyncService;
-import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +38,6 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
     private AcmDataUpdateDao dataUpdateDao;
 
-    private SpringContextHolder contextHolder;
-
     private Function<String, String> idStripDomain = it -> StringUtils.substringBeforeLast(it, "@");
 
     @Override
@@ -54,17 +50,6 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     @Transactional
     public void execute()
     {
-        Map<String, LdapSyncService> ldapSyncServices = contextHolder.getAllBeansOfType(LdapSyncService.class);
-        ldapSyncServices.forEach((beanId, service) -> {
-            if (beanId.endsWith("_ldapSyncJob"))
-            {
-                String directoryName = service.getLdapSyncConfig().getDirectoryName();
-                dataUpdateDao.setUserIdsAsDn(directoryName);
-                service.setSyncEnabled(true);
-                service.ldapSync();
-            }
-        });
-
         Set<AcmUserUpdateHolder> userUpdateHolderSet = getUpdateUserHolders();
 
         Map<String, String> newOldUserIds = userUpdateHolderSet.stream()
@@ -239,7 +224,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         newOldGroupName.forEach(
                 (newGroupName, oldGroupName) -> {
                     int rows = dataUpdateDao.updateParticipantLdapId(oldGroupName, newGroupName);
-                    log.debug("For groupName: [{}] affected [{}] rows", newGroupName, rows);
+                    log.debug("Affected [{}] rows for groupName: [{}]", rows, newGroupName);
                 }
         );
     }
@@ -292,11 +277,6 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     public void setDataUpdateDao(AcmDataUpdateDao dataUpdateDao)
     {
         this.dataUpdateDao = dataUpdateDao;
-    }
-
-    public void setContextHolder(SpringContextHolder contextHolder)
-    {
-        this.contextHolder = contextHolder;
     }
 
     public void setGroupDao(AcmGroupDao groupDao)
