@@ -50,16 +50,8 @@ angular.module('document-repository').controller('DocumentRepository.DocumentsCo
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-<<<<<<< HEAD
                     $scope.treeConfig.fileTypes = data[1];
-                    $scope.treeConfig.fileLanguages = data[2]; 
-=======
-                    $scope.treeConfig.fileTypes=[];
-                    for(var i = 0; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key":data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
                     $scope.treeConfig.fileLanguages = data[2];
->>>>>>> 97f74dea0c4c9b1c2a76be4d508d77b023925e21
                 });
         };
 

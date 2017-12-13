@@ -161,7 +161,7 @@
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "titleKey": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
