@@ -48,19 +48,7 @@ public class EcmFileParticipantService
             throw new IllegalStateException("File doesn't have parent folder!");
         }
 
-        // Use the participants service to avoid execution of Drools Assignment and Access rules
-        // if the user doesn't have permissions on the file, the participants cannot be changed by inheriting
-        // participants from parent entity
-        file.getParticipants().forEach(participant -> getParticipantService().removeParticipant(participant));
-        file.getParticipants().clear();
-
-        // set participants from parent folder
-        file.getFolder().getParticipants().forEach(folderParticipant -> {
-            AcmParticipant participant = new AcmParticipant();
-            participant.setParticipantType(folderParticipant.getParticipantType());
-            participant.setParticipantLdapId(folderParticipant.getParticipantLdapId());
-            file.getParticipants().add(participant);
-        });
+        setFileParticipants(file, file.getFolder().getParticipants());
 
         // modify the instance to trigger the Solr transformers
         file.setModified(new Date());
@@ -75,21 +63,7 @@ public class EcmFileParticipantService
             throw new IllegalStateException("Folder doesn't have parent folder!");
         }
 
-        // clear existing participants
-        // Use the participants service to avoid execution of Drools Assignment rules
-        folder.getParticipants().forEach(participant -> getParticipantService().removeParticipant(participant.getId()));
-        folder.getParticipants().clear();
-
-        // set participants from parent folder
-        for (AcmParticipant folderParticipant : folder.getParentFolder().getParticipants())
-        {
-            AcmParticipant participant = new AcmParticipant();
-            participant.setParticipantType(folderParticipant.getParticipantType());
-            participant.setParticipantLdapId(folderParticipant.getParticipantLdapId());
-            participant.setObjectType(EcmFileConstants.OBJECT_FOLDER_TYPE);
-            participant.setObjectId(folder.getParentFolder().getId());
-            folder.getParticipants().add(participant);
-        }
+        setFolderParticipants(folder, folder.getParentFolder().getParticipants());
 
         // set participants to child folders
         List<AcmFolder> subfolders = folder.getChildrenFolders();
@@ -138,33 +112,11 @@ public class EcmFileParticipantService
             List<EcmFile> files = getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT);
             for (EcmFile file : files)
             {
-                Optional<AcmParticipant> existingFileParticipant = file.getParticipants().stream()
-                        .filter(existingParticipant -> existingParticipant.getParticipantLdapId()
-                                .equals(participant.getParticipantLdapId()))
-                        .findFirst();
+                setParticipantToFile(file, participant);
 
-                // for files and folders only one AcmParticipant per user is allowed
-                if (existingFileParticipant.isPresent())
-                {
-                    // change the role of the existing participant if needed
-                    if (!existingFileParticipant.get().getParticipantType().equals(participant.getParticipantType()))
-                    {
-                        existingFileParticipant.get().setParticipantType(participant.getParticipantType());
-                        // modify the instance to trigger the Solr transformers
-                        file.setModified(new Date());
-                        getFileDao().save(file);
-                    }
-                }
-                else
-                {
-                    AcmParticipant fileParticipant = new AcmParticipant();
-                    fileParticipant.setParticipantType(participant.getParticipantType());
-                    fileParticipant.setParticipantLdapId(participant.getParticipantLdapId());
-                    file.getParticipants().add(fileParticipant);
-                    // modify the instance to trigger the Solr transformers
-                    file.setModified(new Date());
-                    getFileDao().save(file);
-                }
+                // modify the instance to trigger the Solr transformers
+                file.setModified(new Date());
+                getFileDao().save(file);
             }
         }
 
