@@ -1148,11 +1148,8 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                         , {
                             name: "type",
                             renderer: function (element, node, columnDef, isReadOnly) {
-                                var filter = $filter('capitalizeFirst');
-                                var typeColumn = (DocTree.getDocumentTypeDisplayLabel(node.data.type));
-                                var filteredType = filter(typeColumn);
-
-                                $(element).text(filteredType); // document type is mapped (afdp-1249)
+                                var value = DocTree.getDocumentTypeDisplayLabel(node.data.type);
+                                $(element).text(value); // document type is mapped (afdp-1249)
                             }
                         }
                         , {
@@ -2116,7 +2113,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 })
                                 , function (result) {
                                     var op = result.op;
-                                    var fileType = result.fileType.type;
+                                    var fileType = result.fileType;
                                     if (DialogDnd.OpTypes.OP_UPLOAD_TO_FOLDER == op && !Util.isEmpty(fileType)) {
                                         DocTree.uploadSetting = {
                                             uploadToFolderNode: node
@@ -3647,12 +3644,15 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 if (documentType && Util.isArray(labelMappings)) {
                     documentType = documentType.trim().toLowerCase();
                     for (var i = 0; i < labelMappings.length; i++) {
-                        if (labelMappings[i]["type"] && labelMappings[i]["type"].trim().toLowerCase() == documentType) {
-                            return labelMappings[i]["label"];
+                        if (labelMappings[i]["key"] && labelMappings[i]["key"].trim().toLowerCase() == documentType) {
+                            return labelMappings[i]["value"];
                         }
                     }
                 }
-                return documentType; // label could not be found, the raw document type will be displayed
+
+                var filter = $filter('capitalizeFirst');
+                var filteredType = filter(documentType);
+                return filteredType; // label could not be found, the raw document type will be displayed
             }
 
 

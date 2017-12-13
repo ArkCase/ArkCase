@@ -4,38 +4,45 @@
     "menus": {
       "leftnav.item": "Rapports"
     },
-    "selectReport" : {
-      "label": "fr_Report",
-      "placeholder": "fr_Select Report"
+    "selectReport": {
+      "label": "Rapport",
+      "placeholder": "Sélectionnez le rapport"
     },
-    "selectState" : {
-      "label": "fr_State",
-      "placeholder": "fr_Select State"
+    "selectState": {
+      "label": "Etat",
+      "placeholder": "Sélectionnez l'état"
     },
     "startDate": {
-      "label": "fr_From"
+      "label": "De"
     },
-    "endDate" : {
-      "label": "fr_To"
+    "endDate": {
+      "label": "À"
     },
-
     "dropdown": {
-      "turnaround": "fr_Turnaround Time by Requester",
-      "requester": "fr_Requester Type Summary",
-      "pending": "fr_Pending Orders Report",
-      "associate": "fr_Associate Productivity Report",
-      "origination": "fr_Origination Count",
-      "transfers": "fr_Transfers Report",
-      "exceptions": "fr_Exceptions Report (Non-Compliance)"
+      "turnaround": "Délai d'exécution par le demandeur",
+      "requester": "Récapitulatif du type de demandeur",
+      "pending": "Rapport sur les commandes en attente",
+      "associate": "Rapport de productivité associé",
+      "origination": "Nombre d'origines",
+      "transfers": "Rapport sur les transferts",
+      "exceptions": "Rapport d'exceptions (non-conformité)"
     },
-    "datepicker":{
-      "close": "fr_Done"
+    "datepicker": {
+      "close": "Terminé",
+      "clear": "Clair",
+      "current": "Aujourd'hui"
     },
     "btn": {
-      "generateReport": "fr_Generate report"
+      "generateReport": "Générer un rapport"
     },
-    "CheckBox": {
-      "xmlReport": "Afficher comme XML"
+    "checkBox": {
+      "xmlReport": "Afficher en XML"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "Sélecteurs de date"
+  },
+  "reports.comp.reportselection": {
+    "title": "Rapports"
   }
 }

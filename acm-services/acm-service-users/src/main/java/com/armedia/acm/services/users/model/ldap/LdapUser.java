@@ -53,19 +53,26 @@ public class LdapUser
         return acmUser;
     }
 
+    private boolean objChanged(Object o1, Object o2) {
+        return !Objects.equals(o1, o2);
+    }
+
     public boolean isChanged(AcmUser acmUser)
     {
-        return !(Objects.equals(directoryName, acmUser.getUserDirectoryName()) &&
-                Objects.equals(state, acmUser.getUserState().name()) &&
-                Objects.equals(title, acmUser.getTitle()) &&
-                Objects.equals(mail, acmUser.getMail()) &&
-                Objects.equals(firstName, acmUser.getFirstName()) &&
-                Objects.equals(lastName, acmUser.getLastName()) &&
-                Objects.equals(company, acmUser.getCompany()) &&
-                Objects.equals(country, acmUser.getCountry()) &&
-                Objects.equals(countryAbbreviation, acmUser.getCountryAbbreviation()) &&
-                Objects.equals(department, acmUser.getDepartment()) &&
-                Objects.equals(passwordExpirationDate, acmUser.getPasswordExpirationDate()));
+        boolean directoryNameChanged = objChanged(directoryName, acmUser.getUserDirectoryName());
+        boolean stateChanged = objChanged(state, acmUser.getUserState().name());
+        boolean titleChanged = objChanged(title, acmUser.getTitle());
+        boolean mailChanged = objChanged(mail, acmUser.getMail());
+        boolean firstNameChanged = objChanged(firstName, acmUser.getFirstName());
+        boolean lastNameChanged = objChanged(lastName, acmUser.getLastName());
+        boolean companyChanged = objChanged(company, acmUser.getCompany());
+        boolean countryChanged = objChanged(country, acmUser.getCountry());
+        boolean countryAbbreviationChanged = objChanged(countryAbbreviation, acmUser.getCountryAbbreviation());
+        boolean departmentChanged = objChanged(department, acmUser.getDepartment());
+        boolean passwordExpirationDateChanged = objChanged(passwordExpirationDate, acmUser.getPasswordExpirationDate());
+        return directoryNameChanged || stateChanged || titleChanged || mailChanged || firstNameChanged
+                || lastNameChanged || companyChanged || countryChanged || countryAbbreviationChanged
+                || departmentChanged || passwordExpirationDateChanged;
     }
 
     public String getUserId()

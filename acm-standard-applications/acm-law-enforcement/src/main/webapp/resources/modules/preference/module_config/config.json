@@ -133,7 +133,7 @@
     {
       "id": "my-documents",
       "title": "core.menus.leftnav.my-documents.main",
-      "name": "DOC_REPO",
+      "name": "MY_DOC_REPO",
       "allowedWidgets": [
         "details",
         "documents",

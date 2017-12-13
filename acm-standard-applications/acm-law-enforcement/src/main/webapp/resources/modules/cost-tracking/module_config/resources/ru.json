@@ -27,78 +27,77 @@
   },
   "costTracking.comp.details": {
     "title": "Детали",
-    "informSaved": "ru_Costsheet details saved",
+    "informSaved": "Детали из таблицы затрат сохранены",
     "table.columns": {
-      "title": "ru_Details",
-      "modified": "ru_Date Last Modified",
-      "modifier": "ru_User Last Modified"
+      "title": "Детали",
+      "modified": "Дата последнего изменения",
+      "modifier": "Последнее изменение пользователем"
     }
   },
   "costTracking.comp.person": {
     "title": "Люди",
     "table.columns": {
-      "fullName": "ru_Full Name",
-      "userId": "ru_Username"
+      "fullName": "Полное имя",
+      "userId": "Имя пользователя"
     }
   },
   "costTracking.comp.summary": {
-    "title": "Сводка расходов",
+    "title": "Стоимость",
     "table.columns": {
-      "parentId": "ru_ID",
-      "parentNumber": "ru_Parent ID",
-      "parentType": "ru_Parent Type",
-      "value": "ru_Total Cost",
-      "title": "ru_Title",
-      "description": "ru_Description"
+      "parentId": "Идентификация",
+      "parentNumber": "Идентификатор родителя",
+      "parentType": "Родительский тип",
+      "value": "Общая стоимость",
+      "title": "Заглавие",
+      "description": "Описание"
     }
   },
   "costTracking.comp.tags": {
     "title": "Теги",
     "table.columns": {
-      "tag": "ru_Tag",
-      "created": "ru_Created",
-      "createdBy": "ru_Created By"
+      "tag": "Тег",
+      "created": "Дата создания",
+      "createdBy": "Сделано"
     },
     "modal": {
-    "title": "ru_Tag",
-    "search": "ru_Search for Tag",
-    "buttons": {
-          "cancel": "ru_Cancel",
-          "ok": "ru_Add Tag"
-     }
+      "title": "Тег",
+      "search": "Поиск тегов",
+      "buttons": {
+        "cancel": "Отмена",
+        "ok": "Добавить метку"
+      }
     },
     "message": {
-      "tagExists": "ru_Tag with that name or description or text already exists",
-      "tagAssociated": "ru_already associated",
+      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+      "tagAssociated": "Уже связанный",
       "delete": {
-        "success": "ru_Tag deleted successfully",
-        "error": "ru_Error deleting tag"
+        "success": "Удаленный тег",
+        "error": "Ошибка удаления тега"
       }
     }
   },
   "costTracking.comp.approvers": {
-    "title": "ru_Approvers",
+    "title": "Утверждающие",
     "table.columns": {
-      "fullName": "ru_Full Name",
-      "userId": "ru_Username"
+      "fullName": "Полное имя",
+      "userId": "Имя пользователя"
     }
   },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "Детали",
-      "person.label": "Люди",
-      "summary.label": "расходы",
+      "person.label": "Человек",
+      "summary.label": "Затраты",
       "tags.label": "Теги",
-      "approvers.label": "ru_Approvers"
+      "approvers.label": "Утверждающие"
     },
     "sorters": {
-      "dateAsc": "Сортировка даты Asc",
-      "dateDesc": "Сортировка даты Desc",
-      "idAsc": "Сортировка Стоимость Asc",
-      "idDesc": "Сортировка Стоимость Desc",
+      "dateAsc": "Сортировка даты по возрастанию",
+      "dateDesc": "Сортировка даты по убыванию",
+      "idAsc": "Сортировка Стоимость по возрастанию",
+      "idDesc": "Сортировка Стоимость по убыванию",
       "nameDesc": "Сортировать по имени",
       "noSort": "(Нет Сортировать)"
     }
   }
 }
-

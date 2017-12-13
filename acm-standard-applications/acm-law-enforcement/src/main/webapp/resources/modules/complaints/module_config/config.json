@@ -703,7 +703,7 @@
         },
         {
           "name": "organization",
-          "field": "person.defaultOrganization.organizationValue",
+          "field": "person.defaultOrganization.organization.organizationValue",
           "displayName": "complaints.comp.people.table.columns.organization",
           "headerCellFilter": "translate"
         },
