@@ -146,7 +146,7 @@ public class MapperUtils
 
     public static String generatePassword(int minLength)
     {
-        String specialChar = RandomStringUtils.random(1, "[[~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-]]");
+        String specialChar = RandomStringUtils.random(1, "~!@#$%^?");
         String lcsPart = RandomStringUtils.random(minLength, "abcdefghijklmnopqrstuvwxyz");
         String ucsPart = RandomStringUtils.random(2, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
         String digitChar = RandomStringUtils.random(2, "0123456789");

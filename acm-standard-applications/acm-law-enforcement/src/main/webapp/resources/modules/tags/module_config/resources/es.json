@@ -1,21 +1,25 @@
 {
   "tags": {
     "title": "Etiquetas",
-    "search.btn": "Búsqueda",
-    "search.placeholder": "es_Search for tags",
+    "search.btn": "Buscar",
+    "export.btn": "Exportar",
+    "search.placeholder": "Buscar etiquetas",
     "menus": {
       "leftnav.item": "Etiquetas"
     },
-    "comp":{
+    "comp": {
+      "tagsFacetedSearch": {
+        "title": "Etiquetas Faceted Search"
+      },
       "grid": {
         "columns": {
-          "id": "es_ID",
-          "name": "es_Name",
-          "type": "es_Type",
-          "title": "es_Title",
-          "parent": "es_Parent",
-          "assignee": "es_Assignee",
-          "modified": "es_Modified"
+          "id": "Identificación",
+          "name": "Nombre",
+          "type": "Tipo",
+          "title": "Título",
+          "parent": "Padre",
+          "assignee": "Cesionario",
+          "modified": "Fecha modificada"
         }
       }
     }

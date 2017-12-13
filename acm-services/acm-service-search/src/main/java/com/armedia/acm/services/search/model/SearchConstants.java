@@ -34,6 +34,7 @@ public interface SearchConstants
     String PROPERTY_RESPONSE = "response";
     String PROPERTY_DOCS = "docs";
     String PROPERTY_NAME = "name";
+    String PROPERTY_ASCENDANTS = "ascendants_id_ss";
     String PROPERTY_FACET_COUNTS = "facet_counts";
     String PROPERTY_FACET_FIELDS = "facet_fields";
     String PROPERTY_OBJECT_ID_S = "object_id_s";
