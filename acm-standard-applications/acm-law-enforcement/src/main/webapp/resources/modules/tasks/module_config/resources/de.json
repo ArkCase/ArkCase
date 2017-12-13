@@ -1,7 +1,7 @@
 {
   "tasks": {
     "title": "Aufgaben",
-    "progressNoCase": "[ Keine Aufgabe Daten ]",
+    "progressNoTask": "[Keine Aufgabendaten]",
     "progressLoading": "Aufgabe laden",
     "progressError": "Fehler beim Laden der Aufgabe"
   },
@@ -47,7 +47,8 @@
     },
     "timesheet": {
       "approver.label": "Genehmiger"
-    }
+    },
+    "_xxx_courtRoomName": "Name des Gerichtsraums:"
   },
   "tasks.comp.actions": {
     "title": "Aktionen",
@@ -70,269 +71,290 @@
     }
   },
   "tasks.comp.details": {
-    "title": "Details",
-    "informSaved": "de_Task details saved",
+    "title": "Aufgabendetails",
+    "informSaved": "Aufgabendetails gespeichert",
     "table.columns": {
-      "details": "de_Details",
-      "modified": "de_Date Last Modified",
-      "modifier": "de_User Last Modified"
+      "details": "Einzelheiten",
+      "modified": "Datum der letzten Änderung",
+      "modifier": "Benutzer zuletzt geändert"
     }
   },
   "tasks.comp.reworkdetails": {
-    "title": "Wiederholen Arbeit",
-    "informSaved": "de_Rework details saved",
+    "title": "Überarbeitungsdetails",
+    "informSaved": "Nacharbeitsdetails gespeichert",
     "table.columns": {
-      "title": "de_Rework Details",
-      "modified": "de_Date Last Modified",
-      "modifier": "de_User Last Modified"
+      "title": "Überarbeitungsdetails",
+      "modified": "Datum der letzten Änderung",
+      "modifier": "Benutzer zuletzt geändert"
     }
   },
   "tasks.comp.parentdocs": {
     "title": "Übergeordnete Dokumente",
-    "noParentDataMessage": "de_No parent documents for standalone task",
-    "sendEmail": "de_Send Email",
-    "filterInputPlaceholder": "de_Filter",
-    "searchInputPlaceholder": "de_Search"
+    "noParentDataMessage": "Keine übergeordneten Dokumente für eigenständige Aufgabe",
+    "sendEmail": "E-Mail senden",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Suche",
+    "folderName": "Ordnernamen"
   },
   "tasks.comp.attachments": {
     "title": "Anhänge",
-    "sendEmail": "de_Send Email",
-    "filterInputPlaceholder": "de_Filter",
-    "searchInputPlaceholder": "de_Search"
+    "sendEmail": "E-Mail senden",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Suche"
   },
   "tasks.comp.notes": {
     "title": "Notizen",
     "table.columns": {
-      "note": "de_Note",
-      "created": "de_Created",
-      "creator": "de_Author"
+      "note": "Hinweis",
+      "created": "Erstellt",
+      "creator": "Autor"
     }
   },
   "tasks.comp.references": {
     "title": "Referenzen",
     "table.columns": {
-      "targetName": "de_Number",
-      "targetTitle": "de_Title",
-      "modified": "de_Modified",
-      "targetType": "de_Reference Type",
-      "status": "de_Status"
+      "targetName": "Nummer",
+      "targetTitle": "Titel",
+      "targetType": "Art",
+      "assignee": "Beauftragter",
+      "modified": "Geändert",
+      "status": "Status"
     }
   },
   "tasks.comp.rejcomments": {
     "title": "Kommentare ablehnen",
     "table.columns": {
-      "note": "de_Comment",
-      "created": "de_Created",
-      "creator": "de_Author"
+      "note": "Kommentar",
+      "created": "Erstellt",
+      "creator": "Autor"
     }
   },
   "tasks.comp.workflow": {
     "title": "Arbeitsablauf",
     "table.columns": {
-      "participant": "de_Participant",
-      "role": "de_Role",
-      "status": "de_Status",
-      "startDateTime": "de_Start",
-      "endDateTime": "de_End"
+      "participant": "Teilnehmer",
+      "role": "Rolle",
+      "status": "Status",
+      "startDateTime": "Anfang",
+      "endDateTime": "Ende"
     }
   },
   "tasks.comp.diagram": {
-    "title": "de_Process Diagram",
-    "error.loading": "de_Diagram can't be loaded"
+    "title": "Prozessdiagramm",
+    "error.loading": "Diagramm kann nicht geladen werden"
   },
   "tasks.comp.signatures": {
-    "title": "eSignaturen",
+    "title": "ESignaturen",
     "table.columns": {
-      "signedDate": "de_Date",
-      "signedBy": "de_Signed By"
+      "signedDate": "Datum",
+      "signedBy": "Unterzeichnet von"
     }
   },
   "tasks.comp.docsreview": {
     "title": "Dokumente unter Überprüfung",
     "table.columns": {
-      "fileId": "de_ID",
-      "fileName": "de_Title",
-      "created": "de_Created",
-      "creator": "de_Author",
-      "status": "de_Status"
+      "fileId": "ID",
+      "fileName": "Titel",
+      "created": "Erstellt",
+      "creator": "Autor",
+      "status": "Status"
     }
   },
   "tasks.comp.history": {
     "title": "Geschichte",
     "table.columns": {
-      "eventType": "de_Event Name",
-      "eventDate": "de_Date",
-      "userId": "de_User"
+      "eventType": "Veranstaltungsname",
+      "eventDate": "Datum",
+      "userId": "Benutzer"
     }
   },
   "tasks.comp.tags": {
     "title": "Etiketten",
     "table.columns": {
-      "tag": "de_Tag",
-      "created": "de_Created",
-      "createdBy": "de_Created By"
+      "tag": "Etikett",
+      "created": "Erstellt",
+      "createdBy": "Erstellt von"
     },
     "modal": {
-      "title": "de_Tag",
-      "search": "de_Search for Tag",
+      "title": "Etikett",
+      "search": "Suche nach Tag",
       "buttons": {
-        "cancel": "de_Cancel",
-        "ok": "de_Add Tag"
+        "cancel": "Stornieren",
+        "ok": "Tag hinzufügen"
       }
     },
     "message": {
-      "tagExists": "de_Tag with that name or description or text already exists",
-      "tagAssociated": "de_already associated",
+      "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+      "tagAssociated": "Bereits verbunden",
       "delete": {
-        "success": "de_Tag deleted successfully",
-        "error": "de_Error deleting tag"
+        "success": "Markierung erfolgreich gelöscht",
+        "error": "Fehler beim Löschen des Tags"
       }
     }
   },
   "tasks.newTask": {
-    "title": "de_New Task",
-    "assignee.button": "de_Choose Assignee",
-    "assignee.label": "de_Assign To",
-    "assignee.placeholder": "de_Please choose assignee",
-    "assigneeOrGroup.placeholder": "de_Please choose assignee or group",
-    "candidateGroups.label": "de_Owning group",
-    "priority.placeholder": "de_Select Priority",
-    "priority.label": "de_Priority",
-    "status.placeholder": "de_Select Status",
-    "status.label": "de_Status",
-    "associateNumber.label": "de_Associate with Complaint or Case",
-    "associateNumber.placeholder": "de_Complaint or Case #",
-    "associateType.label": "de_Parent Type",
-    "subject.label": "de_Subject",
-    "taskStartDate.label": "de_Start Date",
-    "dueDate.label": "de_Due Date",
-    "datepicker.close": "de_Done",
-    "percentComplete.label": "de_% Complete",
-    "notes.label": "de_Notes",
-    "saveButton": "de_Save",
-    "overdue.tooltip": "de_Task is Overdue",
-    "deadline.tooltip": "de_Deadline is Approaching",
-    "groupToggle.label": "de_Group Task?",
-    "group.placeholder": "de_Please select a group."
+    "title": "Neue Aufgabe",
+    "assignee.button": "Wählen Sie Beauftragter",
+    "assignee.label": "Zuweisen",
+    "assignee.placeholder": "Bitte wählen Sie den Empfänger",
+    "assigneeOrGroup.placeholder": "Bitte wählen Sie den Bearbeiter oder die Gruppe",
+    "candidateGroups.label": "Besitzende Gruppe",
+    "priority.placeholder": "Wählen Sie Priorität",
+    "priority.label": "Priorität",
+    "status.placeholder": "Wählen Sie Status",
+    "status.label": "Status",
+    "associateNumber.label": "Assoziieren mit Reklamation oder Fall",
+    "associateNumber.placeholder": "Beschwerde oder Fall #",
+    "associateType.label": "Übergeordneter Typ",
+    "subject.label": "Gegenstand",
+    "taskStartDate.label": "Anfangsdatum",
+    "dueDate.label": "Geburtstermin",
+    "datepicker.close": "Erledigt",
+    "percentComplete.label": "% Komplett",
+    "notes.label": "Anmerkungen",
+    "saveButton": "Aufgabe speichern",
+    "cancelButton": "Stornieren",
+    "overdue.tooltip": "Aufgabe ist überfällig",
+    "deadline.tooltip": "Frist nähert sich",
+    "groupToggle.label": "Gruppenaufgabe?",
+    "group.placeholder": "Bitte wähle eine Gruppe aus.",
+    "documentsToReview.label": "Dokumente zur Überprüfung",
+    "businessProcessTypes.label": "Geschäftsprozessart",
+    "noSelectedDocsErrorMsg": "Bitte wählen Sie mindestens ein Dokument aus, das überprüft werden soll."
   },
   "tasks.userOrGroupSearch": {
-    "id": "de_userSearch",
-    "title": "de_User/Group Search",
+    "id": "Benutzersuche",
+    "title": "Benutzer- / Gruppensuche",
     "search": {
-      "btn": "de_Search",
-      "placeholder": "de_Search for the user or group to assign to this task."
+      "btn": "Suche",
+      "placeholder": "Suchen Sie nach dem Benutzer oder der Gruppe, die dieser Aufgabe zugewiesen werden sollen."
     },
-    "pickUserLabel": "de_Pick Associated User",
-    "pickGroupLabel": "de_Pick Associated Group",
-    "cancelButton": "de_Cancel",
-    "confirmButton": "de_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "de_\"object_type_s\":(GROUP OR USER)",
+    "pickUserLabel": "Wählen Sie den zugehörigen Benutzer aus",
+    "pickGroupLabel": "Wählen Sie Zugehörige Gruppe",
+    "cancelButton": "Stornieren",
+    "confirmButton": "Bestätigen",
     "assigneeGridColumns": {
-      "name": "de_Name",
-      "type": "de_Type",
-      "title": "de_Title",
-      "username": "de_Username"
+      "name": "Name",
+      "type": "Art",
+      "title": "Titel",
+      "username": "Nutzername"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "OwningGroupSearch",
+    "title": "Nach dieser Benutzergruppe suchen",
+    "search": {
+      "btn": "Suche",
+      "placeholder": "Suchen Sie nach den Gruppen, denen dieser Benutzer angehört."
+    },
+    "cancelButton": "Stornieren",
+    "confirmButton": "Bestätigen",
+    "assigneeGridColumns": {
+      "name": "Name",
+      "type": "Art",
+      "title": "Titel",
+      "username": "Nutzername"
     }
   },
   "tasks.objectSearch": {
-    "id": "de_objectSearch",
-    "title": "de_Object Search",
+    "id": "ObjectSearch",
+    "title": "Objektsuche",
     "search": {
-      "btn": "de_Search",
-      "placeholder": "de_Search for the case or complaint to this task."
+      "btn": "Suche",
+      "placeholder": "Suchen Sie nach dem Fall oder der Beschwerde zu dieser Aufgabe."
     },
-    "cancelButton": "de_Cancel",
-    "confirmButton": "de_Confirm",
-    "enabled": true,
-    "userFacetFilter": "de_\"Object Type\": ",
+    "cancelButton": "Stornieren",
+    "confirmButton": "Bestätigen",
     "objectGridColumns": {
-      "name": "de_Number",
-      "type": "de_Type",
-      "title": "de_Title",
-      "username": "de_Assignee"
+      "name": "Nummer",
+      "type": "Art",
+      "title": "Titel",
+      "username": "Beauftragter"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "Referenzsuche"
+  },
   "tasks.comp.addreference": {
-    "title": "de_Add Reference",
-    "cancelButton": "de_Cancel",
-    "confirmButton": "de_Add",
+    "title": "Referenz hinzufügen",
+    "cancelButton": "Stornieren",
+    "confirmButton": "Hinzufügen",
     "search": {
-      "placeholder": "de_Search for case, complaint, file, task",
-      "btn": "de_Search"
+      "placeholder": "Suche nach Fall, Beschwerde, Datei, Aufgabe",
+      "btn": "Suche"
     },
     "grid": {
       "columns": {
-        "id": "de_Id",
-        "name": "de_Name",
-        "type": "de_Type",
-        "title": "de_Title",
-        "parent": "de_Parent",
-        "assignee": "de_Assignee",
-        "modified": "de_Modified"
+        "id": "ID",
+        "name": "Name",
+        "type": "Art",
+        "title": "Titel",
+        "parent": "Elternteil",
+        "assignee": "Beauftragter",
+        "modified": "Geändert"
       }
     }
   },
   "tasks.comp.participants": {
-    "title": "de_Participants",
+    "title": "Teilnehmer",
     "table.columns": {
-      "type": "de_Type",
-      "name": "de_Name"
+      "type": "Art",
+      "name": "Name"
     },
     "dialogUserPicker": {
-      "header": "de_Choose User",
+      "header": "Wählen Sie Benutzer",
       "table.columns": {
-        "name": "de_Name",
-        "type": "de_Type",
-        "title": "de_Title",
-        "id": "de_Username"
+        "name": "Name",
+        "type": "Art",
+        "title": "Titel",
+        "id": "Nutzername"
       }
     },
     "dialogGroupPicker": {
-      "header": "de_Choose Group",
+      "header": "Wählen Sie Gruppe",
       "table.columns": {
-        "name": "de_Name"
+        "name": "Name"
       }
     }
   },
   "tasks.comp.assigneePickerModal": {
-    "title": "de_Change Assignee",
-    "assigneeNamelabel": "de_Assignee Name",
-    "btnCancelText": "de_Cancel",
-    "btnSaveText": "de_Save",
-    "searchAssigneeHeader": "de_Search Assignee"
+    "title": "Ändern Sie den Beauftragten",
+    "assigneeNamelabel": "Name des Beauftragten",
+    "btnCancelText": "Stornieren",
+    "btnSaveText": "Sparen",
+    "searchAssigneeHeader": "Suchbeauftragter"
   },
   "tasks.comp.groupPickerModal": {
-    "title": "de_Change Group",
-    "groupNamelabel": "de_Group Name",
-    "btnCancelText": "de_Cancel",
-    "btnSaveText": "de_Save",
-    "searchGroupHeader": "de_Search Group"
+    "title": "Gruppe ändern",
+    "groupNamelabel": "Gruppenname",
+    "btnCancelText": "Stornieren",
+    "btnSaveText": "Sparen",
+    "searchGroupHeader": "Suchgruppe"
   },
   "tasks.comp.approvalRouting": {
-    "title": "de_Future Approvers",
-    "addNewTooltip": "de_Add new approver",
-    "noBuckslipMessage": "No Data",
+    "title": "Zukünftige Genehmiger",
+    "addNewTooltip": "Fügen Sie einen neuen Genehmiger hinzu",
+    "noBuckslipMessage": "Keine Daten",
     "button": {
-      "save.tooltip": "de_Save Changes"
+      "save.tooltip": "Änderungen speichern"
     },
     "table.columns": {
-      "fullName": "de_Full Name"
+      "fullName": "Vollständiger Name"
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "de_Past Approvers",
-    "noBuckslipMessage": "No Data",
+    "title": "Vorherige Genehmiger",
+    "noBuckslipMessage": "Keine Daten",
     "table.columns": {
-      "approvalDate": "de_Approval Date",
-      "approverId": "de_Approver",
-      "approverFullName": "de_Full Name",
-      "approverDecision": "de_Approver Decision"
+      "approvalDate": "Datum der Genehmigung",
+      "approverId": "Genehmiger",
+      "approverFullName": "Vollständiger Name",
+      "approverDecision": "Genehmigungsbeschluss"
     }
   },
   "tasks.tree": {
     "nodeTypes": {
-      "details.label": "Details",
+      "details.label": "Einzelheiten",
       "reworkDetails.label": "Wiederholen Arbeit",
       "docReview.label": "Dokumente unter Überprüfung",
       "parentDoc.label": "Übergeordnete Dokumente",
@@ -341,7 +363,7 @@
       "notes.label": "Notizen",
       "workflow.label": "Arbeitsablauf",
       "history.label": "Geschichte",
-      "eSignatures.label": "eSignaturen",
+      "eSignatures.label": "ESignaturen",
       "tags.label": "Etiketten",
       "reject.label": "Kommentare ablehnen"
     },
