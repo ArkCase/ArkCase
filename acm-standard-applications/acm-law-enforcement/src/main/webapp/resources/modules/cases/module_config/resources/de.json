@@ -77,206 +77,151 @@
     "split.button": "Teilt"
   },
   "cases.comp.details": {
-    "title": "Details",
-    "informSaved": "de_Case details saved",
+    "title": "Einzelheiten",
+    "informSaved": "Falldetails gespeichert",
     "table.columns": {
-      "title": "de_Details",
-      "modified": "de_Date Last Modified",
-      "modifier": "de_User Last Modified"
+      "title": "Einzelheiten",
+      "modified": "Datum der letzten Änderung",
+      "modifier": "Benutzer zuletzt geändert"
     }
   },
   "cases.comp.documents": {
     "title": "Dokumente",
-    "sendEmail": "de_Send Email",
-    "filterInputPlaceholder": "de_Filter",
-    "searchInputPlaceholder": "de_Search"
+    "sendEmail": "E-Mail senden",
+    "filterInputPlaceholder": "Filter",
+    "searchInputPlaceholder": "Suche",
+    "newTask": "Neue Aufgabe"
   },
   "cases.comp.people": {
     "title": "Menschen",
     "table.columns": {
-      "entity": "de_Entity",
-      "type": "de_Type",
-      "firstName": "de_FirstName",
-      "lastName": "de_LastName"
-    },
-    "contactMethods": {
-      "title": "de_ContactMethods",
-      "table.columns": {
-        "type": "de_Type",
-        "value": "de_Value",
-        "created": "de_Date Added",
-        "creator": "de_Added By",
-        "modified": "de_Last Modified",
-        "modifier": "de_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organisationen",
-      "table.columns": {
-        "type": "de_Type",
-        "value": "de_Value",
-        "created": "de_Date Added",
-        "creator": "de_Added By",
-        "modified": "de_Last Modified",
-        "modifier": "de_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "de_Locations",
-      "table.columns": {
-        "type": "de_Type",
-        "streetAddress": "de_Address",
-        "city": "de_City",
-        "state": "de_State",
-        "zip": "de_Zip",
-        "country": "de_Country",
-        "created": "de_Date Added",
-        "creator": "de_Added By",
-        "modified": "de_Last Modified",
-        "modifier": "de_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "de_Aliases",
-      "table.columns": {
-        "type": "de_Type",
-        "value": "de_Value",
-        "created": "de_Date Added",
-        "creator": "de_Added By",
-        "modified": "de_Last Modified",
-        "modifier": "de_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "de_Security Tags",
-      "table.columns": {
-        "type": "de_Type",
-        "value": "de_Value",
-        "created": "de_Date Added",
-        "creator": "de_Added By",
-        "modified": "de_Last Modified",
-        "modifier": "de_Modified By"
-      }
+      "entity": "Entität",
+      "type": "Rolle",
+      "firstName": "Vorname",
+      "lastName": "Familienname, Nachname",
+      "organization": "Organisation",
+      "phone": "Telefon",
+      "location": "Ort"
     }
   },
   "cases.comp.organizations": {
     "title": "Organisationen",
     "table.columns": {
-      "name": "de_Organization Name",
-      "associationType": "de_Role",
-      "type": "de_Organization Type",
-      "identification": "de_ID",
-      "value": "de_Organization",
-      "contact": "de_Primary Contact",
-      "phone": "de_Phone",
-      "location": "de_Location"
+      "name": "Name der Organisation",
+      "associationType": "Rolle",
+      "type": "Organisationstyp",
+      "identification": "ICH WÜRDE",
+      "value": "Organisation",
+      "contact": "Hauptansprechpartner",
+      "phone": "Telefon",
+      "location": "Ort"
     }
   },
   "cases.comp.participants": {
     "title": "Teilnehmer",
     "table.columns": {
-      "type": "de_Type",
-      "name": "de_Name"
+      "type": "Art",
+      "name": "Name"
     },
     "dialogUserPicker": {
-      "header": "de_Choose User",
+      "header": "Wähle Benutzer",
       "table.columns": {
-        "name": "de_Name",
-        "type": "de_Type",
-        "title": "de_Title",
-        "id": "de_Username"
+        "name": "Name",
+        "type": "Art",
+        "title": "Titel",
+        "id": "Nutzername"
       }
     },
     "dialogGroupPicker": {
-      "header": "de_Choose Group",
+      "header": "Wählen Sie Gruppe",
       "table.columns": {
-        "name": "de_Name"
+        "name": "Name"
       }
     }
   },
   "cases.comp.notes": {
     "title": "Notizen",
     "table.columns": {
-      "note": "de_Note",
-      "created": "de_Created",
-      "creator": "de_Author"
+      "note": "Hinweis",
+      "created": "Erstellt",
+      "creator": "Autor"
     }
   },
   "cases.comp.tasks": {
     "title": "Aufgaben",
     "table.columns": {
-      "title": "de_Title",
-      "assignee": "de_Assignee",
-      "created": "de_Created",
-      "priority": "de_Priority",
-      "due": "de_Due",
-      "status": "de_Status"
+      "title": "Titel",
+      "assignee": "Empfänger",
+      "created": "Erstellt",
+      "priority": "Priorität",
+      "due": "Fällig",
+      "status": "Status"
     },
-    "table.overdue.tooltip": "de_Task is Overdue",
-    "table.deadline.tooltip": "de_Deadline is Approaching"
+    "table.overdue.tooltip": "Aufgabe ist überfällig",
+    "table.deadline.tooltip": "Frist nähert sich"
   },
   "cases.comp.references": {
-    "title": "Referenzen",
+    "title": "Verweise",
     "table.columns": {
-      "targetName": "de_Number",
-      "parentName": "de_Parent",
-      "targetTitle": "de_Title",
-      "modified": "de_Modified",
-      "targetType": "de_Reference Type",
-      "status": "de_Status"
+      "targetName": "Nummer",
+      "targetTitle": "Titel",
+      "targetType": "Art",
+      "assignee": "Empfänger",
+      "modified": "Geändert",
+      "status": "Status"
     }
   },
   "cases.comp.history": {
     "title": "Geschichte",
     "table.columns": {
-      "eventType": "de_Event Name",
-      "eventDate": "de_Date",
-      "userId": "de_User"
+      "eventType": "Veranstaltungsname",
+      "eventDate": "Datum",
+      "userId": "Benutzer"
     }
   },
   "cases.comp.time": {
     "title": "Zeit",
     "table.columns": {
-      "name": "de_Form Name",
-      "user": "de_User",
-      "tally": "de_Total Hours",
-      "modified": "de_Modified Date",
-      "status": "de_Status"
+      "name": "Formularname",
+      "user": "Benutzer",
+      "tally": "Gesamtstunden",
+      "modified": "Änderungsdatum",
+      "status": "Status"
     },
-    "formNamePrefix": "de_Timesheet"
+    "formNamePrefix": "Arbeitszeittabelle"
   },
   "cases.comp.cost": {
     "title": "Kosten",
     "table.columns": {
-      "name": "de_Form Name",
-      "user": "de_User",
-      "tally": "de_Total Cost",
-      "modified": "de_Modified Date",
-      "status": "de_Status"
+      "name": "Formularname",
+      "user": "Benutzer",
+      "tally": "Gesamtkosten",
+      "modified": "Änderungsdatum",
+      "status": "Status"
     },
-    "formNamePrefix": "de_Costsheet"
+    "formNamePrefix": "Kostentabelle"
   },
   "cases.comp.tags": {
-    "title": "Etiketten",
+    "title": "Stichworte",
     "table.columns": {
-      "tag": "de_Tag",
-      "created": "de_Created",
-      "createdBy": "de_Created By"
+      "tag": "Etikett",
+      "created": "Erstellt",
+      "createdBy": "Erstellt von"
     },
     "modal": {
-      "title": "de_Tag",
-      "search": "de_Search for Tag",
+      "title": "Etikett",
+      "search": "Nach Tag suchen",
       "buttons": {
-        "cancel": "de_Cancel",
-        "ok": "de_Add Tag"
+        "cancel": "Stornieren",
+        "ok": "Tag hinzufügen"
       }
     },
     "message": {
-      "tagExists": "de_Tag with that name or description or text already exists",
-      "tagAssociated": "de_already associated",
+      "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+      "tagAssociated": "Bereits assoziiert",
       "delete": {
-        "success": "de_Tag deleted successfully",
-        "error": "de_Error deleting tag"
+        "success": "Tag erfolgreich gelöscht",
+        "error": "Fehler beim Löschen des Tags"
       }
     }
   },
@@ -284,109 +229,135 @@
     "title": "Kalender"
   },
   "cases.comp.merge": {
-    "id": "de_merge",
-    "title": "de_Merge",
-    "cancel.btn": "de_Cancel",
-    "merge.btn": "de_Merge",
-    "search.placeholder": "de_Search for case file.",
-    "search.btn": "de_Search",
-    "enabled": true,
+    "id": "Verschmelzen",
+    "title": "Verschmelzen",
+    "cancel.btn": "Stornieren",
+    "merge.btn": "Verschmelzen",
+    "search.placeholder": "Nach Falldatei suchen",
+    "search.btn": "Suche",
     "table.columns": {
-      "incident": "de_Type",
-      "name": "de_Name",
-      "assignee": "de_Assignee",
-      "title": "de_Title",
-      "parent": "de_Parent",
-      "modified": "de_Modified"
+      "incident": "Art",
+      "name": "Name",
+      "assignee": "Empfänger",
+      "title": "Titel",
+      "parent": "Elternteil",
+      "modified": "Geändert"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Referenzsuche"
+  },
   "cases.comp.split": {
-    "title": "de_Split",
-    "cancel": "de_Cancel",
-    "split": "de_Split"
+    "title": "Teilt",
+    "cancel": "Stornieren",
+    "split": "Teilt"
   },
   "cases.comp.addreference": {
-    "title": "de_Add Reference",
-    "cancelButton": "de_Cancel",
-    "confirmButton": "de_Add",
+    "title": "Referenz hinzufügen",
+    "cancelButton": "Stornieren",
+    "confirmButton": "Hinzufügen",
     "search": {
-      "placeholder": "de_Search for case, complaint, file, task",
-      "btn": "de_Search"
+      "placeholder": "Suche nach Fall, Beschwerde, Datei, Aufgabe",
+      "btn": "Suche"
     },
     "grid": {
       "columns": {
-        "id": "de_Id",
-        "name": "de_Name",
-        "type": "de_Type",
-        "title": "de_Title",
-        "parent": "de_Parent",
-        "assignee": "de_Assignee",
-        "modified": "de_Modified"
+        "id": "Ich würde",
+        "name": "Name",
+        "type": "Art",
+        "title": "Titel",
+        "parent": "Elternteil",
+        "assignee": "Empfänger",
+        "modified": "Geändert"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "de_Change Assignee",
-    "assigneeNamelabel": "de_Assignee Name",
-    "btnCancelText": "de_Cancel",
-    "btnSaveText": "de_Save",
-    "searchAssigneeHeader": "de_Search Assignee"
+    "title": "Sachbearbeiter ändern",
+    "assigneeNamelabel": "Name des Empfängers",
+    "btnCancelText": "Stornieren",
+    "btnSaveText": "Sparen",
+    "searchAssigneeHeader": "Empfänger suchen"
   },
   "cases.comp.groupPickerModal": {
-    "title": "de_Change Group",
-    "groupNamelabel": "de_Group Name",
-    "btnCancelText": "de_Cancel",
-    "btnSaveText": "de_Save",
-    "searchGroupHeader": "de_Search Group"
+    "title": "Gruppe ändern",
+    "groupNamelabel": "Gruppenname",
+    "btnCancelText": "Stornieren",
+    "btnSaveText": "Sparen",
+    "searchGroupHeader": "Suchgruppe"
   },
   "cases.comp.approvalRouting": {
-    "title": "Toekomstige Goedkeuringen",
-    "addNewTooltip": "de_Add new approver",
-    "noBuckslipMessage": "de_No Data",
+    "title": "Genehmiger",
+    "addNewTooltip": "Neuen Genehmiger hinzufügen",
+    "noBuckslipMessage": "Keine Daten",
+    "processInitialize.successfull": "Prozess initialisiert",
+    "processInitialize.fail": "Prozess nicht initialisiert",
+    "processWithdraw.successfull": "Prozess zurückgezogen",
+    "processWithdraw.fail": "Prozess nicht zurückgezogen",
+    "businessProcessUpdate.successfull": "Genehmigungs-Routing aktualisiert",
+    "businessProcessUpdate.fail": "Genehmigungs-Routing nicht aktualisiert",
     "button": {
-      "save.tooltip": "de_Save Changes"
+      "save.tooltip": "Änderungen speichern",
+      "initiate.tooltip": "Aufgabe initiieren",
+      "withdraw.tooltip": "Aufgabe zurückziehen"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "Nicht übereinstimmend beendet den Genehmigungszyklus"
     },
     "table.columns": {
-      "fullName": "de_Full Name"
+      "assignee": "Empfänger",
+      "group": "Eigentümergruppe",
+      "subject": "Gegenstand",
+      "details": "Einzelheiten",
+      "dueDate": "Geburtstermin",
+      "status": "Status",
+      "addedBy": "Hinzugefügt von"
     },
-    "assignee.label": "de_Assignee",
-    "owningGroup.label": "de_Owning Group",
-    "priority.label": "de_Priority",
-    "startDate.label": "de_Start Date",
-    "dueDate.label": "de_Due Date",
-    "state.label": "de_State"
+    "assignee.label": "Empfänger",
+    "owningGroup.label": "Eigentümergruppe",
+    "priority.label": "Priorität",
+    "startDate.label": "Anfangsdatum",
+    "dueDate.label": "Geburtstermin",
+    "state.label": "Zustand",
+    "future.task.modal": {
+      "title": "Neue zukünftige Aufgabe",
+      "assignee": "Empfänger",
+      "subject.label": "Gegenstand",
+      "subject.placeholder": "Geben Sie zukünftiges Fallthema ein",
+      "details.label": "Einzelheiten",
+      "cancel.button": "Stornieren",
+      "save.button": "Sparen"
+    }
   },
   "cases.comp.pastApprovals": {
-    "title": "Vorige Goedkeuringen",
-    "noBuckslipMessage": "de_No Data",
+    "title": "Frühere Genehmiger",
+    "noBuckslipMessage": "Keine Daten",
     "table.columns": {
-      "approvalDate": "de_Approval Date",
-      "approverId": "de_Approver",
-      "approverFullName": "de_Approver",
-      "approverDecision": "de_Approver Decision"
+      "approvalDate": "Datum der Genehmigung",
+      "approverId": "Genehmiger",
+      "approverFullName": "Genehmiger",
+      "approverDecision": "Genehmigungsentscheidung"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "de_userSearch",
-    "title": "de_User/Group Search",
+    "id": "BenutzerSuche",
+    "title": "Benutzer- / Gruppensuche",
     "search": {
-      "btn": "de_Search",
-      "placeholder": "de_Search for the user or group."
+      "btn": "Suche",
+      "placeholder": "Suchen Sie nach dem Benutzer oder der Gruppe."
     },
-    "cancelButton": "de_Cancel",
-    "confirmButton": "de_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "de_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Stornieren",
+    "confirmButton": "Bestätigen",
     "assigneeGridColumns": {
-      "name": "de_Name",
-      "type": "de_Type",
-      "title": "de_Title",
-      "username": "de_Username"
+      "name": "Name",
+      "type": "Art",
+      "title": "Titel",
+      "username": "Nutzername"
     }
   },
   "cases.tree": {
     "nodeTypes": {
-      "details.label": "Details",
+      "details.label": "Einzelheiten",
       "people.label": "Menschen",
       "organizations.label": "Organisationen",
       "documents.label": "Dokumente",
