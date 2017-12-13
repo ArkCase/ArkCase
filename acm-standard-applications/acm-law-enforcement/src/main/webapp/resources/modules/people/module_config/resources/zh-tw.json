@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "相關人士",
+    "linkTitle": "zh-tw_Rel People",
     "table.columns": {
       "firstName": "zh-tw_First Name",
       "lastName": "zh-tw_Last Name",
