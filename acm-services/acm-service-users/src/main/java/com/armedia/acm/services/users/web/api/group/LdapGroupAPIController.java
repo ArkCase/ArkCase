@@ -22,8 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
+
 @Controller
-@RequestMapping({ "/api/v1/ldap", "/api/latest/ldap" })
+@RequestMapping({"/api/v1/ldap", "/api/latest/ldap"})
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
@@ -49,8 +51,7 @@ public class LdapGroupAPIController extends SecureLdapController
                     AcmGroupType.LDAP_GROUP.name(), "groupName", e);
             acmAppErrorJsonMsg.putExtra("group", group);
             throw acmAppErrorJsonMsg;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.error("Adding new LDAP group [{}] failed!", group, e);
             throw new AcmAppErrorJsonMsg("Adding new LDAP group failed", "LDAP_GROUP", e);
@@ -65,6 +66,8 @@ public class LdapGroupAPIController extends SecureLdapController
             throws AcmAppErrorJsonMsg
     {
 
+        parentGroupName = new String(Base64.getUrlDecoder().decode(parentGroupName.getBytes()));
+
         checkIfLdapManagementIsAllowed(directory);
         try
         {
@@ -77,8 +80,7 @@ public class LdapGroupAPIController extends SecureLdapController
                     "LDAP_GROUP", "groupName", e);
             acmAppErrorJsonMsg.putExtra("subgroup", group);
             throw acmAppErrorJsonMsg;
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.warn("Adding subgroup:{} within LDAP group:{} failed!", group.getName(), parentGroupName, e);
             throw new AcmAppErrorJsonMsg("Adding new LDAP subgroup failed!", "LDAP_GROUP", e);
@@ -93,6 +95,7 @@ public class LdapGroupAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
+            groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
             AcmGroup source = ldapGroupService.deleteLdapGroup(groupName, directory);
             getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
             return new ResponseEntity<>(HttpStatus.OK);
