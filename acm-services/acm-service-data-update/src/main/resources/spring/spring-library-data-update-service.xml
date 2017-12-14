@@ -11,6 +11,8 @@
 
     <bean id="dataUpdateDao" class="com.armedia.acm.services.dataupdate.dao.AcmDataUpdateDao"/>
 
+    <bean id="userIdGroupNameDomainUpdateDao" class="com.armedia.acm.services.dataupdate.dao.UserIdGroupNameDomainUpdateDao"/>
+
     <bean id="dataUpdateService" class="com.armedia.acm.services.dataupdate.service.AcmDataUpdateService">
         <property name="dataUpdateDao" ref="dataUpdateDao"/>
     </bean>
@@ -28,6 +30,6 @@
           class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="dataUpdateDao" ref="dataUpdateDao"/>
+        <property name="userIdGroupNameDomainUpdateDao" ref="userIdGroupNameDomainUpdateDao"/>
     </bean>
 </beans>

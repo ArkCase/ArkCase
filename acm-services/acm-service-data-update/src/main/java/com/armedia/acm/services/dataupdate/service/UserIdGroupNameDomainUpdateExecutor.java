@@ -1,6 +1,6 @@
 package com.armedia.acm.services.dataupdate.service;
 
-import com.armedia.acm.services.dataupdate.dao.AcmDataUpdateDao;
+import com.armedia.acm.services.dataupdate.dao.UserIdGroupNameDomainUpdateDao;
 import com.armedia.acm.services.dataupdate.model.AcmUserUpdateHolder;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
@@ -23,10 +23,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
- * Specific implementation of {@link AcmDataUpdateExecutor} to initiate ldap sync
- * which will insert all LDAP users and groups with appended domain. Once the sync
- * is finished, all tables where userId or groupName is found are updated with new
- * values of these entities.
+ * Specific implementation of {@link AcmDataUpdateExecutor} which will execute after
+ * ldap sync which will insert all LDAP users and groups with appended domain. Once
+ * the sync is finished, all tables where userId or groupName is found are updated
+ * with new values of these entities.
  */
 public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecutor
 {
@@ -36,7 +36,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
     private AcmGroupDao groupDao;
 
-    private AcmDataUpdateDao dataUpdateDao;
+    private UserIdGroupNameDomainUpdateDao userIdGroupNameDomainUpdateDao;
 
     private Function<String, String> idStripDomain = it -> StringUtils.substringBeforeLast(it, "@");
 
@@ -56,12 +56,12 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
                 .collect(Collectors.toMap(AcmUserUpdateHolder::getNewId, AcmUserUpdateHolder::getOldId));
 
         log.debug("Updating 'creator' and 'modifier' for AcmEntity(s)");
-        dataUpdateDao.updateCreatorAndModifierToAllAcmEntities(newOldUserIds);
+        userIdGroupNameDomainUpdateDao.updateCreatorAndModifierToAllAcmEntities(newOldUserIds);
 
         log.debug("Updating 'newAssignee' for AcmAssignments");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateAssignmentNewAssignee(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateAssignmentNewAssignee(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -69,7 +69,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'oldAssignee' for AcmAssignments");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateAssignmentOldAssignee(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateAssignmentOldAssignee(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -77,7 +77,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'userId' for AuditEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateAuditEventUserId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateAuditEventUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -85,7 +85,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'author' for Note");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateNoteAuthor(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateNoteAuthor(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -93,7 +93,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'user' for Notification");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateNotificationUser(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateNotificationUser(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -101,7 +101,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'participantLdapId' for AcmParticipant");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateParticipantLdapId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateParticipantLdapId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -109,7 +109,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'signedBy' for Signature");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateSignatureSignedBy(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateSignatureSignedBy(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -117,7 +117,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'subscriptionOwner' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateSubscriptionEventOwnerId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionEventOwnerId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -125,7 +125,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'eventUser' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateSubscriptionEventUserId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionEventUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -133,7 +133,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'userId' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateSubscriptionUserId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -141,7 +141,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'userId' for AcmUserAction");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateUserActionUserId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateUserActionUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -149,7 +149,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'userId' for OutlookPassword");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
-                    int rows = dataUpdateDao.updateOutlookPasswordUserId(oldUserId, newUserId);
+                    int rows = userIdGroupNameDomainUpdateDao.updateOutlookPasswordUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
                 }
         );
@@ -157,42 +157,42 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'user' for AcmCostsheet");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateCostsheetUser(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateCostsheetUser(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
         log.debug("Updating 'user' for AcmTimesheet");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateTimesheetUser(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateTimesheetUser(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
         log.debug("Updating 'user' for UserPreference");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateUserPreferenceUser(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateUserPreferenceUser(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
         log.debug("Updating 'user' for UserOrg");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateUserOrgUser(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateUserOrgUser(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
         log.debug("Updating 'supervisor' for AcmGroup");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateGroupSupervisor(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateGroupSupervisor(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
         log.debug("Updating 'dashboardOwner' for AcmDashboard");
         userUpdateHolderSet.forEach(holder -> {
             AcmUser user = holder.getNewUser();
-            int rows = dataUpdateDao.updateDashboardOwner(user, idStripDomain.apply(user.getUserId()));
+            int rows = userIdGroupNameDomainUpdateDao.updateDashboardOwner(user, idStripDomain.apply(user.getUserId()));
             log.debug("For userId: [{}] affected [{}] rows", user.getUserId(), rows);
         });
 
@@ -223,10 +223,76 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         log.debug("Updating 'participantLdapId' for AcmParticipant");
         newOldGroupName.forEach(
                 (newGroupName, oldGroupName) -> {
-                    int rows = dataUpdateDao.updateParticipantLdapId(oldGroupName, newGroupName);
+                    int rows = userIdGroupNameDomainUpdateDao.updateParticipantLdapId(oldGroupName, newGroupName);
                     log.debug("Affected [{}] rows for groupName: [{}]", rows, newGroupName);
                 }
         );
+
+        log.debug("Updating ASSIGNEE_ in ACT_HI_ACTINST table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateActHiActinst(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating USER_ID_ in ACT_HI_ATTACHMENT table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateActHiAttachment(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating USER_ID_ in ACT_HI_COMMENT table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateActHiComment(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating USER_ID_ in ACT_HI_IDENTITYLINK table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateUserIdActHiIdentitylink(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating GROUP_ID_ in ACT_HI_IDENTITYLINK table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateGroupIdActHiIdentityLink(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating GROUP_ID_ in ACT_HI_TASKINST table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateAssigneeActHiTaskinst(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating OWNER_ in ACT_HI_TASKINST table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateOwnerActHiTaskinst(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating GROUP_ID_ in ACT_RU_IDENTITYLINK table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateGroupIdActRuIdentitylink(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating USER_ID_ in ACT_RU_IDENTITYLINK table");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateUserIdActRuIdentityLink(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating OWNER_ in ACT_RU_TASK tables");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateOwnerActRuTask(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
+
+        log.debug("Updating ASSIGNEE_ in ACT_RU_TASK tables");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateAssigneeActRuTask(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
     }
 
     private Map<String, String> getNewToOldGroupNames()
@@ -274,9 +340,10 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         this.userDao = userDao;
     }
 
-    public void setDataUpdateDao(AcmDataUpdateDao dataUpdateDao)
+    public void setUserIdGroupNameDomainUpdateDao(
+            UserIdGroupNameDomainUpdateDao userIdGroupNameDomainUpdateDao)
     {
-        this.dataUpdateDao = dataUpdateDao;
+        this.userIdGroupNameDomainUpdateDao = userIdGroupNameDomainUpdateDao;
     }
 
     public void setGroupDao(AcmGroupDao groupDao)
