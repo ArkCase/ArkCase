@@ -802,7 +802,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         return retval;
     }
 
-    private AcmCmisObject buildAcmCmisObject(SimpleDateFormat solrFormat, JSONObject doc) throws ParseException
+    protected AcmCmisObject buildAcmCmisObject(SimpleDateFormat solrFormat, JSONObject doc) throws ParseException
     {
         AcmCmisObject object = new AcmCmisObject();
 
