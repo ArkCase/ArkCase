@@ -41,8 +41,8 @@ public class SearchAccessControlFields
         return toBeEncoded.stream()
                 .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
                 .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
-                .map(s -> s.replace("(", DataAccessControlConstants.LEFT_PARENTHESIS_REPLACE))
-                .map(s -> s.replace(")", DataAccessControlConstants.RIGHT_PARENTHESIS_REPLACE))
+                .map(s -> s.replace("(", DataAccessControlConstants.OPENING_PARENTHESIS_REPLACE))
+                .map(s -> s.replace(")", DataAccessControlConstants.CLOSING_PARENTHESIS_REPLACE))
                 .collect(Collectors.toList());
     }
 

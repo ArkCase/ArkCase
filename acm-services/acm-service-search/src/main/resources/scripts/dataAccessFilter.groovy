@@ -5,8 +5,8 @@ import java.nio.charset.StandardCharsets
 
 SPACE_REPLACE = "_0020_";
 COMMA_REPLACE = "_002C_";
-LEFT_PARENTHESIS_REPLACE = "_0028";
-RIGHT_PARENTHESIS_REPLACE = "_0029";
+OPENING_PARENTHESIS_REPLACE = "_0028_";
+CLOSING_PARENTHESIS_REPLACE = "_0029_";
 
 // include records with no protected object field
 // include records where protected_object_b is false
@@ -96,8 +96,8 @@ def escapeCharacters(toBeEscaped)
     toBeEscaped
             .replace(" ", SPACE_REPLACE)
             .replace(",", COMMA_REPLACE)
-            .replace("(", LEFT_PARENTHESIS_REPLACE)
-            .replace(")", RIGHT_PARENTHESIS_REPLACE);
+            .replace("(", OPENING_PARENTHESIS_REPLACE)
+            .replace(")", CLOSING_PARENTHESIS_REPLACE);
 }
 
 return payload;
