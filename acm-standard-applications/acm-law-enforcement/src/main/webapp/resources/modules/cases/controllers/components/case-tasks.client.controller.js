@@ -29,9 +29,9 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
-            gridHelper.addButton(config, "delete");
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.addButton(config, "delete");
 
             componentHelper.doneConfig(config);
 
@@ -57,11 +57,11 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     var tasks = data.response.docs;
                     var filteredTasks = [];
                     angular.forEach(tasks,function (task) {
-                        if(task.status_s !== 'DELETE'){
+                        if(task.status_s !== 'DELETE')
+                        {
                             //calculate to show alert icons if task is in overdue or deadline is approaching
                             task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
                             task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
-
                             filteredTasks.push(task);
                         }
                     });
@@ -92,7 +92,8 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         $scope.deleteRow = function (rowEntity) {
             var caseInfo = Util.omitNg($scope.objectInfo);
-            if (CaseInfoService.validateCaseInfo(caseInfo)) {
+            if (CaseInfoService.validateCaseInfo(caseInfo))
+            {
                 TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
                     function (caseInfo) {
                         $scope.$emit("report-object-updated", caseInfo);
