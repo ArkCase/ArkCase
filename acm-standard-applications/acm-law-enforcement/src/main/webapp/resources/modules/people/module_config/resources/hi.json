@@ -1,7 +1,7 @@
 {
   "people": {
     "title": "लोग",
-    "progressNoComplaint": "[ कोई भी डेटा नहीं ]",
+    "progressNoComplaint": "[कोई भी डेटा नहीं]",
     "progressLoading": "लोगों को लोड करना",
     "progressError": "लोगों को लोड करने में विफल"
   },
@@ -14,471 +14,584 @@
   },
   "people.comp.info": {
     "title": "जानकारी",
-    "phone.label": "फोन",
-    "email.label": "ईमेल",
+    "phone.label": "फ़ोन",
+    "email.label": "ई-मेल",
     "status.label": "स्थिति",
     "organization.label": "संगठन",
-    "identification.label": "आईडी"
+    "identification.label": "पहचान"
   },
   "people.comp.actions": {
-    "title": "क्रियाएं",
+    "title": "स्टॉक",
     "export.button": "निर्यात",
     "import.button": "आयात",
-    "delete.button": "हटाएं",
-    "activate.button": "सक्रिय",
-    "deactivate.button": "निष्क्रिय करें",
-    "merge.button": "मर्ज"
+    "delete.button": "हटाना",
+    "activate.button": "सक्रिय करें",
+    "deactivate.button": "निष्क्रिय",
+    "merge.button": "मर्ज",
+    "restrict": "प्रतिबंधित करें?"
   },
   "people.comp.details": {
     "title": "विवरण",
-    "informSaved": "hi_Person details saved",
+    "informSaved": "व्यक्ति विवरण सहेजे गए",
     "table.columns": {
-      "title": "hi_Details",
-      "modified": "hi_Date Last Modified",
-      "modifier": "hi_User Last Modified"
+      "title": "विवरण",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "उपयोगकर्ता अंतिम संशोधित"
     }
   },
   "people.comp.history": {
     "title": "इतिहास",
     "table.columns": {
-      "eventType": "hi_Event Name",
-      "eventDate": "hi_Date",
-      "userId": "hi_User"
+      "eventType": "ईवेंट का नाम",
+      "eventDate": "तिथि",
+      "userId": "पहनना",
+      "details.btn.text": "विवरण"
     }
   },
   "people.comp.pictures": {
     "title": "चित्र",
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "upload": "hi_Upload"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "upload": "अपलोड"
     },
     "table.columns": {
-      "thumbnail": "hi_Thumbnail",
-      "title": "hi_Filename",
-      "description": "hi_Description",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "thumbnail": "थंबनेल",
+      "title": "फ़ाइल नाम",
+      "description": "विवरण",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "dialog": {
-      "title": "hi_Upload Picture",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "cancel": "hi_Cancel",
-      "upload": "hi_Upload Picture",
-      "noPictureSelected": "hi_No Files Selected.",
-      "browse": "hi_Browse",
-      "description": "hi_Description"
+      "title": "चित्र अपलोड करें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।",
+      "cancel": "रद्द करना",
+      "upload": "चित्र अपलोड करें",
+      "noPictureSelected": "कोई फ़ाइलें चयनित नहीं",
+      "browse": "ब्राउज",
+      "description": "विवरण"
     },
     "dialog.edit": {
-      "title": "hi_Edit Picture",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "change": "hi_Change Picture",
-      "save": "hi_Save changes"
+      "title": "चित्र संपादित करें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "change": "चित्र बदलें",
+      "save": "परिवर्तन सहेजें"
     },
     "message.error": {
-      "uploadSamePicture": "hi_Picture with this name is already uploaded"
+      "uploadSamePicture": "इस नाम के साथ चित्र पहले ही अपलोड किया गया है"
     }
   },
   "people.comp.addresses": {
-    "title": "स्थान",
+    "title": "किराया",
     "table.columns": {
-      "type": "hi_Type",
-      "streetAddress": "hi_Address 1",
-      "streetAddress2": "hi_Address 2",
-      "city": "hi_City",
-      "state": "hi_State",
-      "zip": "hi_Zip",
-      "country": "hi_Country",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "टाइप",
+      "streetAddress": "पता 1",
+      "streetAddress2": "पता 2",
+      "city": "शहर",
+      "state": "राज्य",
+      "zip": "पोस्टल कोड",
+      "country": "देश",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "addNew": "hi_Add New",
-      "map": "hi_Map"
+      "addNew": "नया जोड़ें",
+      "map": "नक्शा"
     },
     "modal": {
-      "addAddress": "hi_Add Location",
-      "editAddress": "hi_Edit Record",
-      "type.label": "hi_Address Type",
-      "type.placeholder": "hi_Enter Address Type",
-      "streetAddress.label": "hi_Address 1",
-      "streetAddress.placeholder": "hi_Enter Address 1",
-      "streetAddress2.label": "hi_Address 2",
-      "streetAddress2.placeholder": "hi_Enter Address 2",
-      "city.label": "hi_City",
-      "city.placeholder": "hi_Enter City",
-      "zip.label": "hi_Zip",
-      "zip.placeholder": "hi_Enter Zip",
-      "state.label": "hi_State",
-      "state.placeholder": "hi_Enter State",
-      "country.label": "hi_Country",
-      "country.placeholder": "hi_Enter Country",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save Location",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No"
+      "addAddress": "स्थान जोड़ें",
+      "editAddress": "रिकॉर्ड संपादित करें",
+      "type.label": "पता प्रकार",
+      "type.placeholder": "पता प्रकार दर्ज करें",
+      "streetAddress.label": "पता 1",
+      "streetAddress.placeholder": "पता 1 दर्ज करें",
+      "streetAddress2.label": "पता 2",
+      "streetAddress2.placeholder": "पता 2 दर्ज करें",
+      "city.label": "शहर",
+      "city.placeholder": "शहर दर्ज करें",
+      "zip.label": "पोस्टल कोड",
+      "zip.placeholder": "ज़िप दर्ज करें",
+      "state.label": "राज्य",
+      "state.placeholder": "राज्य दर्ज करें",
+      "country.label": "देश",
+      "country.placeholder": "देश दर्ज करें",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "स्थान सहेजें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।"
     }
   },
   "people.comp.phones": {
-    "title": "फ़ोन नंबर",
+    "title": "फोन नंबर",
     "table.columns": {
-      "type": "hi_Type",
-      "value": "hi_Phone Number",
-      "description": "hi_Description",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "टाइप",
+      "value": "फोन नंबर",
+      "description": "विवरण",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "addNew": "hi_Add New"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "addNew": "नया जोड़ें"
     },
     "modal": {
-      "addPhone": "hi_Add New Phone Number",
-      "editPhone": "hi_Edit Phone Number",
-      "title": "hi_Add New Phone Number",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "description": "hi_Description",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save Phone Number",
-      "type.label": "hi_Phone Type",
-      "type.placeholder": "hi_Enter Phone Type",
-      "value.label": "hi_Phone Number",
-      "value.placeholder": "hi_Enter Phone Number"
+      "addPhone": "नया फ़ोन नंबर जोड़ें",
+      "editPhone": "फोन नंबर संपादित करें",
+      "title": "नया फ़ोन नंबर जोड़ें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।",
+      "description": "विवरण",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "फोन नंबर सहेजें",
+      "type.label": "फ़ोन प्रकार",
+      "type.placeholder": "फ़ोन प्रकार दर्ज करें",
+      "value.label": "फोन नंबर",
+      "value.placeholder": "फ़ोन नंबर दर्ज करें"
     }
   },
   "people.comp.emails": {
     "title": "ईमेल पते",
     "table.columns": {
-      "type": "hi_Type",
-      "value": "hi_Email Address",
-      "description": "hi_Description",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "टाइप",
+      "value": "ईमेल पता",
+      "description": "विवरण",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "addNew": "hi_Add New"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "addNew": "नया जोड़ें"
     },
     "modal": {
-      "title": "hi_Add New Email Address",
-      "addEmail": "hi_Add New Email Address",
-      "editEmail": "hi_Edit Email Address",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "description": "hi_Description",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save Email Address",
-      "type.label": "hi_Email Type",
-      "type.placeholder": "hi_Enter Email Type",
-      "value.label": "hi_Email Address",
-      "value.placeholder": "hi_Enter Email Address"
+      "title": "नया ईमेल पता जोड़ें",
+      "addEmail": "नया ईमेल पता जोड़ें",
+      "editEmail": "ईमेल पता संपादित करें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।",
+      "description": "विवरण",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "ईमेल पता सहेजें",
+      "type.label": "ईमेल प्रकार",
+      "type.placeholder": "ईमेल प्रकार दर्ज करें",
+      "value.label": "ईमेल पता",
+      "value.placeholder": "ईमेल पता दर्ज करें"
     }
   },
   "people.comp.urls": {
     "title": "यूआरएल",
     "table.columns": {
-      "value": "hi_URL",
-      "type": "hi_Type",
-      "description": "hi_Description",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "value": "यूआरएल",
+      "type": "टाइप",
+      "description": "विवरण",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "addNew": "hi_Add New"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "addNew": "नया जोड़ें"
     },
     "modal": {
-      "title": "hi_Add New URL",
-      "addUrl": "hi_Add New URL",
-      "editUrl": "hi_Edit URL",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "description": "hi_Description",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save URL",
-      "type.label": "hi_Type",
-      "type.placeholder": "hi_Enter Type",
-      "value.label": "hi_URL",
-      "value.placeholder": "hi_Enter URL"
+      "title": "नया URL जोड़ें",
+      "addUrl": "नया URL जोड़ें",
+      "editUrl": "URL संपादित करें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।",
+      "description": "विवरण",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "यूआरएल सहेजें",
+      "type.label": "टाइप",
+      "type.placeholder": "प्रकार दर्ज करें",
+      "value.label": "यूआरएल",
+      "value.placeholder": "यूआरएल दर्ज करें"
     }
   },
   "people.comp.participants": {
     "title": "प्रतिभागियों",
     "table.columns": {
-      "type": "hi_Type",
-      "name": "hi_Name"
+      "type": "टाइप",
+      "name": "नाम"
     },
     "dialogUserPicker": {
-      "header": "hi_Choose User",
+      "header": "उपयोगकर्ता चुनें",
       "table.columns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "id": "hi_Username"
+        "name": "नाम",
+        "type": "टाइप",
+        "title": "शीर्षक",
+        "id": "प्रयोक्ता नाम"
       }
     },
     "dialogGroupPicker": {
-      "header": "hi_Choose Group",
+      "header": "समूह चुनें",
       "table.columns": {
-        "name": "hi_Name"
+        "name": "नाम"
       }
     }
   },
   "people.comp.aliases": {
     "title": "उपनाम",
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "upload": "hi_New Alias"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "upload": "नया उपनाम"
     },
     "table.columns": {
-      "type": "hi_Type",
-      "aliasValue": "hi_Alias",
-      "description": "hi_Description",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "टाइप",
+      "aliasValue": "उपनाम",
+      "description": "विवरण",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "modal": {
-      "aliasValue": "hi_Alias Value",
-      "type": "hi_Type",
-      "addAlias": "hi_Add New Alias",
-      "editAlias": "hi_Edit Alias",
-      "title": "hi_Insert New Alias",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save Alias",
-      "value.label": "hi_Alias",
-      "value.placeholder": "hi_Enter Alias",
-      "description": "hi_Description",
-      "aliasType.label": "hi_Alias Type",
-      "aliasType.placeholder": "hi_Enter Alias Type"
+      "aliasValue": "उपनाम मान",
+      "type": "टाइप",
+      "addAlias": "नया उपनाम जोड़ें",
+      "editAlias": "उपनाम संपादित करें",
+      "title": "नया उपनाम डालें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हां",
+      "no": "नहीं।",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "उपनाम सहेजें",
+      "value.label": "उपनाम",
+      "value.placeholder": "उपनाम दर्ज करें",
+      "description": "विवरण",
+      "aliasType.label": "उपनाम प्रकार",
+      "aliasType.placeholder": "उपनाम प्रकार दर्ज करें"
     }
   },
   "people.comp.ids": {
-    "title": "आईडी",
+    "title": "पहचान",
     "table.columns": {
-      "type": "hi_Type",
-      "id": "hi_ID",
-      "number": "hi_Number",
-      "issuer": "hi_Issuer",
-      "yearIssued": "hi_Year Issued",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "टाइप",
+      "id": "पहचान",
+      "number": "संख्या",
+      "issuer": "जारीकर्ता",
+      "yearIssued": "वर्ष जारी",
+      "created": "दिनांक जोड़ा गया",
+      "creator": "द्वारा जोड़ा गया",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "addNew": "hi_Add New"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "addNew": "नया जोड़ें"
     },
     "modal": {
-      "addID": "hi_Add New Identification",
-      "editID": "hi_Edit Identification",
-      "title": "hi_Add New Identification",
-      "setPrimary": "hi_Set as Primary?",
-      "yes": "hi_Yes",
-      "no": "hi_No",
-      "type.label": "hi_Type",
-      "type.placeholder": "hi_Enter Type",
-      "id.label": "hi_ID",
-      "id.placeholder": "hi_Enter ID",
-      "number.label": "hi_Number",
-      "number.placeholder": "hi_Enter Number",
-      "issuer.label": "hi_Issuer",
-      "issuer.placeholder": "hi_Enter Issuer",
-      "yearIssued.label": "hi_Year Issued",
-      "yearIssued.placeholder": "hi_Enter Year Issued",
-      "yearIssued.close.button": "hi_Close",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save ID"
+      "addID": "नई पहचान जोड़ें",
+      "editID": "पहचान संपादित करें",
+      "title": "नई पहचान जोड़ें",
+      "setPrimary": "प्राथमिक के रूप में सेट करें?",
+      "yes": "हाँ",
+      "no": "नहीं",
+      "type.label": "प्रकार",
+      "type.placeholder": "प्रकार दर्ज करें",
+      "id.label": "पहचान",
+      "id.placeholder": "आईडी दर्ज करें",
+      "number.label": "संख्या",
+      "number.placeholder": "नंबर डालें",
+      "issuer.label": "जारीकर्ता",
+      "issuer.placeholder": "जारीकर्ता दर्ज करें",
+      "yearIssued.label": "वर्ष जारी",
+      "yearIssued.placeholder": "वर्ष जारी जारी",
+      "yearIssued.close.button": "बंद करे",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "आईडी सहेजें"
     }
   },
   "people.comp.organizations": {
     "title": "संगठन",
     "table.columns": {
-      "type": "hi_Type",
-      "id": "hi_ID",
-      "value": "hi_Organization",
-      "identification": "hi_ID",
-      "contact": "hi_Primary Contact",
-      "phone": "hi_Phone",
-      "location": "hi_Location",
-      "created": "hi_Date Added",
-      "creator": "hi_Added By",
-      "modified": "hi_Last Modified",
-      "modifier": "hi_Modified By"
+      "type": "प्रकार",
+      "id": "पहचान",
+      "value": "संगठन",
+      "identification": "पहचान",
+      "contact": "प्राथमिक सम्पर्क",
+      "phone": "फ़ोन",
+      "location": "स्थान",
+      "created": "तारीख संकलित हुई",
+      "creator": "द्वारा जोड़ा",
+      "modified": "अंतिम संशोधित तिथि",
+      "modifier": "द्वारा संशोधित"
     },
     "actions": {
-      "delete": "hi_Delete",
-      "setPrimary": "hi_Set as Primary",
-      "addNew": "hi_Add New",
-      "addExisting": "hi_Add Existing"
+      "delete": "हटाना",
+      "setPrimary": "प्राथमिक के रूप में सेट करें",
+      "addNew": "नया जोड़ें",
+      "addExisting": "मौजूदा जोड़ें"
     }
   },
   "people.comp.cases": {
     "title": "मामले",
+    "objectType.label": "मुकदमे की फ़ाइल",
     "table.columns": {
-      "priority": "hi_Priority",
-      "id": "hi_ID",
-      "title": "hi_Title",
-      "status": "hi_Status",
-      "assignee": "hi_Assignee",
-      "modified": "hi_Modified"
+      "role": "भूमिका",
+      "priority": "प्राथमिकता",
+      "id": "पहचान",
+      "title": "शीर्षक",
+      "status": "स्थिति",
+      "assignee": "संपत्ति-भागी",
+      "modified": "संशोधित तिथि"
     }
   },
   "people.comp.complaints": {
     "title": "शिकायतें",
+    "objectType.label": "शिकायत",
     "table.columns": {
-      "priority": "hi_Priority",
-      "id": "hi_ID",
-      "title": "hi_Title",
-      "status": "hi_Status",
-      "assignee": "hi_Assignee",
-      "modified": "hi_Modified"
+      "role": "भूमिका",
+      "priority": "प्राथमिकता",
+      "id": "पहचान",
+      "title": "शीर्षक",
+      "status": "स्थिति",
+      "assignee": "संपत्ति-भागी",
+      "modified": "संशोधित तिथि"
     }
   },
   "people.comp.related": {
-    "title": "संबंधित लोग",
+    "title": "रील लोग",
     "table.columns": {
-      "firstName": "hi_First Name",
-      "lastName": "hi_Last Name",
-      "type": "hi_Relationship",
-      "description": "hi_Description",
-      "organization": "hi_Organization",
-      "phone": "hi_Phone",
-      "location": "hi_Location"
+      "firstName": "पहला नाम",
+      "lastName": "अंतिम नाम",
+      "type": "संबंध",
+      "description": "विवरण",
+      "organization": "संगठन",
+      "phone": "फ़ोन",
+      "location": "स्थान"
     },
     "modal": {
-      "title": "hi_Add Related Person",
-      "type.label": "hi_Relationship",
-      "type.placeholder": "hi_Enter Relationship",
-      "person.label": "hi_Person",
-      "person.placeholder": "hi_Search People",
-      "btnCancel.text": "hi_Cancel",
-      "btnOk.text": "hi_Save Related Person"
+      "title": "संबंधित व्यक्ति को जोड़ें",
+      "type.label": "संबंध",
+      "type.placeholder": "रिश्ते दर्ज करें",
+      "person.label": "व्यक्ति",
+      "person.placeholder": "लोगों को खोजें",
+      "btnCancel.text": "रद्द करना",
+      "btnOk.text": "संबंधित व्यक्ति को बचाएं"
     }
   },
   "people.comp.editPerson": {
-    "title": "hi_Person",
-    "addAnother": "hi_Add Another",
-    "remove": "hi_Remove",
-    "familyName": "hi_Last Name",
-    "familyName.placeholder": "hi_Enter Last Name",
-    "givenName": "hi_First Name",
-    "givenName.placeholder": "hi_Enter First Name",
-    "middleName": "hi_Middle Name",
-    "middleName.placeholder": "hi_Enter Middle Name",
-    "saveButton": "hi_Save Person",
-    "informCreated": "hi_{{personType}} {{firstName}} {{lastName}} was created.",
-    "informUpdated": "hi_{{firstName}} {{lastName}} Updated",
+    "title": "व्यक्ति",
+    "addAnother": "एक और जोड़ें",
+    "remove": "हटाना",
+    "familyName": "अंतिम नाम",
+    "familyName.placeholder": "अंतिम नाम दर्ज करो",
+    "givenName": "पहला नाम",
+    "givenName.placeholder": "पहला नाम डालो",
+    "middleName": "मध्य नाम",
+    "middleName.placeholder": "मध्य नाम दर्ज करें",
+    "saveButton": "व्यक्ति को बचाएं",
+    "cancelButton": "रद्द करना",
+    "informCreated": "{{personType}} {{प्रथम नाम}} {{lastName}} बनाया गया था।",
+    "informUpdated": "{{प्रथम नाम}} {{lastName}} अपडेट किया गया",
     "communicationAccounts": {
-      "title": "hi_Communication Accounts",
-      "phone": "hi_Phone",
-      "phone.placeholder": "hi_Enter Phone",
-      "phoneType": "hi_Phone Type",
-      "email": "hi_Email",
-      "email.placeholder": "hi_Enter Email",
-      "emailType": "hi_Email Type",
-      "url": "hi_URL",
-      "url.placeholder": "hi_Enter URL",
-      "removeContactMethod": "hi_Remove",
-      "urlType": "hi_URL Type"
+      "title": "संचार खातों",
+      "phone": "फ़ोन",
+      "phone.placeholder": "फ़ोन दर्ज करें",
+      "phoneType": "फोन का प्रकार",
+      "email": "ईमेल",
+      "email.placeholder": "ईमेल दर्ज करें",
+      "emailType": "ईमेल प्रकार",
+      "url": "यूआरएल",
+      "url.placeholder": "यू आर एल दर्ज करो",
+      "removeContactMethod": "हटाना",
+      "urlType": "URL टाइप करें"
     },
     "organizations": {
-      "title": "hi_Organizations",
-      "searchExisting.placeholder": "hi_Search Existing Organizations",
-      "organizationType": "hi_Relation Type"
+      "title": "संगठन",
+      "searchExisting.placeholder": "मौजूदा संगठन खोजें",
+      "organizationType": "संबंध प्रकार"
     },
     "picture": {
-      "title": "hi_Picture"
+      "title": "चित्र"
     },
     "locations": {
-      "title": "hi_Locations",
-      "country": "hi_Country",
-      "country.placeholder": "hi_Select Country",
-      "state": "hi_State",
-      "state.placeholder": "hi_Enter State",
-      "zip": "hi_Zip",
-      "zip.placeholder": "hi_Enter Zip",
-      "city": "hi_City",
-      "city.placeholder": "hi_Enter City",
-      "type": "hi_Address Type",
-      "type.placeholder": "hi_Select Address Type",
-      "streetAddress": "hi_Street Address",
-      "streetAddress.placeholder": "hi_Enter Street Address",
-      "streetAddress2": "hi_Street Address2",
-      "streetAddress2.placeholder": "hi_Enter Street Address2"
+      "title": "स्थान",
+      "country": "देश",
+      "country.placeholder": "देश चुनिए",
+      "state": "राज्य",
+      "state.placeholder": "राज्य दर्ज करें",
+      "zip": "डाक कोड",
+      "zip.placeholder": "ज़िप दर्ज करें",
+      "city": "शहर",
+      "city.placeholder": "शहर दर्ज करें",
+      "type": "पता प्रकार",
+      "type.placeholder": "पता प्रकार चुनें",
+      "streetAddress": "गली का पता",
+      "streetAddress.placeholder": "सड़क का पता दर्ज करें",
+      "streetAddress2": "गली का पता 2",
+      "streetAddress2.placeholder": "सड़क पता 2 दर्ज करें"
     },
     "identification": {
-      "title": "hi_Identifications",
-      "identificationID": "hi_Identification ID",
-      "identificationID.placeholder": "hi_Enter Identification ID",
-      "identificationType": "hi_Identification Type",
-      "identificationType.placeholder": "hi_Select Identification Type",
-      "identificationNumber": "hi_Identification Number",
-      "identificationNumber.placeholder": "hi_Enter Identification Number",
-      "identificationIssuer": "hi_Identification Issuer",
-      "identificationIssuer.placeholder": "hi_Enter Identification Issuer",
-      "identificationYearIssued": "hi_Identification Issued",
-      "identificationYearIssued.placeholder": "hi_Select Identification Issued",
-      "identificationYearIssued.close.button": "hi_Close"
+      "title": "पहचान",
+      "identificationID": "पहचान आईडी",
+      "identificationID.placeholder": "पहचान आईडी दर्ज करें",
+      "identificationType": "पहचान प्रकार",
+      "identificationType.placeholder": "पहचान प्रकार चुनें",
+      "identificationNumber": "पहचान संख्या",
+      "identificationNumber.placeholder": "पहचान संख्या दर्ज करें",
+      "identificationIssuer": "पहचान जारीकर्ता",
+      "identificationIssuer.placeholder": "पहचान जारीकर्ता दर्ज करें",
+      "identificationYearIssued": "पहचान जारी",
+      "identificationYearIssued.placeholder": "पहचान जारी जारी करें",
+      "identificationYearIssued.close.button": "बंद करे"
     }
   },
   "people.tree": {
     "nodeTypes": {
       "details.label": "विवरण",
-      "pictures.label": "चित्र",
+      "pictures.label": "चित्रों",
       "addresses.label": "स्थान",
-      "phones.label": "फ़ोन नंबर",
-      "emails.label": "ईमेल पते",
+      "phones.label": "फोन नंबर",
+      "emails.label": "ईमेल पता",
       "urls.label": "यूआरएल",
-      "participants.label": "प्रतिभागियों को",
+      "participants.label": "प्रतिभागियों",
       "aliases.label": "उपनाम",
       "organizations.label": "संगठन",
-      "ids.label": "आईडी",
+      "ids.label": "पहचान",
       "complaints.label": "शिकायतें",
       "cases.label": "मामले",
       "related.label": "संबंधित लोग",
       "history.label": "इतिहास"
     },
     "filters": {
-      "iHaveCreated": "सभी मैंने बनाया है",
-      "noFilter": "(नो फिटर)"
+      "iHaveCreated": "मैंने बनाया है सब",
+      "noFilter": "(कोई फिल्टर नहीं)"
     },
     "sorters": {
-      "createdDateAsc": "सॉर्ट तिथि दिनांक बढ़ते हुए",
-      "createdDateDesc": "क्रमबद्ध दिनांक दिनांक उतरना",
-      "idAsc": "लोग आईडी आरोही क्रमबद्ध करें",
-      "idDesc": "क्रमबद्ध लोग आईडी अवरोही",
+      "createdDateAsc": "क्रमबद्ध दिनांक आरोही बढ़ते",
+      "createdDateDesc": "सॉर्ट दिनांक दिनांक अवरोही",
+      "idAsc": "लोगों आईडी आरोही क्रमबद्ध करें",
+      "idDesc": "क्रमबद्ध लोग आईडी उतरते हैं",
       "nameAsc": "लोगों द्वारा क्रमबद्ध करें नाम A-Z",
       "nameDesc": "लोगों द्वारा क्रमबद्ध करें नाम Z-A",
       "noSort": "(कोई सॉर्ट नहीं)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "person": {
+        "defaultPhone": "डिफ़ॉल्ट फ़ोन बदल गया",
+        "defaultEmail": "डिफ़ॉल्ट ईमेल परिवर्तित",
+        "defaultAddress": "डिफ़ॉल्ट पता बदल गया",
+        "defaultUrl": "डिफ़ॉल्ट यूआरएल बदल दिया",
+        "defaultAlias": "डिफ़ॉल्ट उपनाम परिवर्तित",
+        "defaultIdentification": "डिफ़ॉल्ट पहचान बदली गई",
+        "defaultPicture": "डिफ़ॉल्ट चित्र बदले गए"
+      }
+    },
+    "value_changed": {
+      "person": {
+        "details": "व्यक्ति - विवरण बदले गए",
+        "title": "व्यक्ति - शीर्षक बदला गया",
+        "company": "व्यक्ति - कंपनी बदल गई",
+        "status": "व्यक्ति - स्थिति बदल गई",
+        "givenName": "व्यक्ति - दिया गया नाम बदल गया",
+        "middleName": "व्यक्ति - मध्य नाम परिवर्तित",
+        "familyName": "व्यक्ति - परिवार का नाम परिवर्तित",
+        "hairColor": "व्यक्ति - बालों का रंग बदल गया",
+        "eyeColor": "व्यक्ति - नेत्र का रंग बदल गया",
+        "heightInInches": "व्यक्ति - इंच में ऊंचाई परिवर्तित",
+        "weightInPounds": "व्यक्ति - इंच का वजन बदल गया",
+        "dateOfBirth": "व्यक्ति - जन्म तिथि बदल दिया",
+        "placeOfBirth": "व्यक्ति - स्थान का जन्म बदल गया",
+        "dateMarried": "व्यक्ति - तारीख विवाहित बदल गई",
+        "contactMethods.contactMethod": {
+          "subType": "संपर्क विधि - प्रकार परिवर्तित",
+          "value": "संपर्क विधि - मान बदल गया"
+        },
+        "defaultPhone": {
+          "subType": "डिफ़ॉल्ट फ़ोन - प्रकार बदल गया",
+          "value": "डिफ़ॉल्ट फ़ोन - मान बदल गया"
+        },
+        "defaultEmail": {
+          "subType": "डिफ़ॉल्ट ईमेल - प्रकार बदल गया",
+          "value": "डिफ़ॉल्ट ईमेल - मान बदल गया"
+        },
+        "defaultUrl": {
+          "subType": "डिफ़ॉल्ट यूआरएल - प्रकार बदल गया",
+          "value": "डिफ़ॉल्ट यूआरएल - मान बदल गया"
+        },
+        "addresses.address": {
+          "city": "पता - शहर बदल गया",
+          "zip": "पता - ज़िप कोड परिवर्तित",
+          "streetAddress": "पता - सड़क बदल गई",
+          "streetAddress2": "पता - सड़क 2 बदल गया",
+          "type": "पता - प्रकार परिवर्तित",
+          "country": "पता - देश परिवर्तित",
+          "state": "पता - राज्य बदल गया"
+        },
+        "defaultAddress": {
+          "city": "पता - शहर बदल गया",
+          "zip": "पता - ज़िप कोड परिवर्तित",
+          "streetAddress": "पता - सड़क बदल गई",
+          "streetAddress2": "पता - सड़क 2 बदल गया",
+          "type": "पता - प्रकार परिवर्तित",
+          "country": "पता - देश परिवर्तित",
+          "state": "पता - राज्य बदल गया"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "पहचान - प्रकार बदल गया",
+          "identificationNumber": "पहचान - संख्या बदल गई",
+          "identificationIssuer": "पहचान - जारीकर्ता बदल गया",
+          "identificationYearIssued": "पहचान - वर्ष जारी बदला गया"
+        },
+        "defaultIdentification": {
+          "identificationType": "पहचान - प्रकार बदल गया",
+          "identificationNumber": "पहचान - संख्या बदल गई",
+          "identificationIssuer": "पहचान - जारीकर्ता बदल गया",
+          "identificationYearIssued": "पहचान - वर्ष जारी बदला गया"
+        }
+      }
+    },
+    "collection_element_added": {
+      "person": {
+        "identifications.identification": "पहचान जोड़ा गया",
+        "contactMethods.contactMethod": "संपर्क विधि जोड़ा गया",
+        "personAliases.alias": "उपनाम जोड़ा गया",
+        "addresses.address": "पता जोड़ा गया",
+        "organizations.organization": "संगठन जोड़ा गया",
+        "associationsToObjects": "एसोसिएशन जोड़ा गया",
+        "associationsFromObjects": "एसोसिएशन जोड़ा गया",
+        "organizationAssociations": "संगठन जोड़ा गया"
+      }
+    },
+    "collection_element_removed": {
+      "person": {
+        "identifications.identification": "पहचान निकाली गई",
+        "contactMethods.contactMethod": "संपर्क विधि निकाली गई",
+        "personAliases.alias": "उपनाम निकाला गया",
+        "addresses.address": "पता निकाला गया",
+        "organizations.organization": "संगठन निकाला गया",
+        "associationsToObjects": "एसोसिएशन हटाया गया",
+        "associationsFromObjects": "एसोसिएशन हटाया गया",
+        "organizationAssociations": "संगठन निकाला गया"
+      },
+      "personAliases.alias": {
+        "aliasType": "उपनाम - प्रकार बदल गया",
+        "aliasValue": "उपनाम - मान बदल गया",
+        "description": "उपनाम - विवरण बदले गए"
+      }
     }
   }
 }

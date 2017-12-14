@@ -22,438 +22,445 @@
   },
   "people.comp.actions": {
     "title": "行动",
-    "export.button": "输出",
-    "import.button": "输入",
+    "export.button": "导出",
+    "import.button": "导入",
     "delete.button": "删除",
-    "activate.button": "激活",
+    "activate.button": "启用",
     "deactivate.button": "停用",
-    "merge.button": "合并"
+    "merge.button": "合并",
+    "restrict": "限制？"
   },
   "people.comp.details": {
     "title": "详情",
-    "informSaved": "zh-cn_Person details saved",
+    "informSaved": "人员详情保存",
     "table.columns": {
-      "title": "zh-cn_Details",
-      "modified": "zh-cn_Date Last Modified",
-      "modifier": "zh-cn_User Last Modified"
+      "title": "详情",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     }
   },
   "people.comp.history": {
     "title": "历史",
     "table.columns": {
-      "eventType": "zh-cn_Event Name",
-      "eventDate": "zh-cn_Date",
-      "userId": "zh-cn_User"
+      "eventType": "事件名称",
+      "eventDate": "事件日期",
+      "userId": "用户",
+      "details.btn.text": "详情"
     }
   },
   "people.comp.pictures": {
-    "title": "相片",
+    "title": "图片标题",
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "upload": "zh-cn_Upload"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "upload": "上传"
     },
     "table.columns": {
-      "thumbnail": "zh-cn_Thumbnail",
-      "title": "zh-cn_Filename",
-      "description": "zh-cn_Description",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "thumbnail": "缩略图",
+      "title": "文件名",
+      "description": "描述",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "dialog": {
-      "title": "zh-cn_Upload Picture",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "cancel": "zh-cn_Cancel",
-      "upload": "zh-cn_Upload Picture",
-      "noPictureSelected": "zh-cn_No Files Selected.",
-      "browse": "zh-cn_Browse",
-      "description": "zh-cn_Description"
+      "title": "上传图片",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "cancel": "取消",
+      "upload": "上传图片",
+      "noPictureSelected": "没有选择文件。",
+      "browse": "浏览",
+      "description": "描述"
     },
     "dialog.edit": {
-      "title": "zh-cn_Edit Picture",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "change": "zh-cn_Change Picture",
-      "save": "zh-cn_Save changes"
+      "title": "编辑图片",
+      "setPrimary": "设置为主要？",
+      "yes": "是",
+      "change": "更换图片",
+      "save": "保存更改"
     },
     "message.error": {
-      "uploadSamePicture": "zh-cn_Picture with this name is already uploaded"
+      "uploadSamePicture": "这个名字的图片已经上传过"
     }
   },
   "people.comp.addresses": {
     "title": "地点",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "streetAddress": "zh-cn_Address 1",
-      "streetAddress2": "zh-cn_Address 2",
-      "city": "zh-cn_City",
-      "state": "zh-cn_State",
-      "zip": "zh-cn_Zip",
-      "country": "zh-cn_Country",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "streetAddress": "地址1",
+      "streetAddress2": "地址2",
+      "city": "市",
+      "state": "州",
+      "zip": "邮政编号",
+      "country": "国家",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "addNew": "zh-cn_Add New",
-      "map": "zh-cn_Map"
+      "addNew": "添新",
+      "map": "地图"
     },
     "modal": {
-      "addAddress": "zh-cn_Add Location",
-      "editAddress": "zh-cn_Edit Record",
-      "type.label": "zh-cn_Address Type",
-      "type.placeholder": "zh-cn_Enter Address Type",
-      "streetAddress.label": "zh-cn_Address 1",
-      "streetAddress.placeholder": "zh-cn_Enter Address 1",
-      "streetAddress2.label": "zh-cn_Address 2",
-      "streetAddress2.placeholder": "zh-cn_Enter Address 2",
-      "city.label": "zh-cn_City",
-      "city.placeholder": "zh-cn_Enter City",
-      "zip.label": "zh-cn_Zip",
-      "zip.placeholder": "zh-cn_Enter Zip",
-      "state.label": "zh-cn_State",
-      "state.placeholder": "zh-cn_Enter State",
-      "country.label": "zh-cn_Country",
-      "country.placeholder": "zh-cn_Enter Country",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save Location",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No"
+      "addAddress": "添加位置",
+      "editAddress": "编辑记录",
+      "type.label": "地址类型",
+      "type.placeholder": "键入地址类型",
+      "streetAddress.label": "地址1",
+      "streetAddress.placeholder": "键入地址1",
+      "streetAddress2.label": "地址2",
+      "streetAddress2.placeholder": "键入地址2",
+      "city.label": "市",
+      "city.placeholder": "键入城市",
+      "zip.label": "压缩",
+      "zip.placeholder": "键入邮编",
+      "state.label": "州",
+      "state.placeholder": "进入状态",
+      "country.label": "国家",
+      "country.placeholder": "键入国家",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存位置",
+      "setPrimary": "设置为主要？",
+      "yes": "是",
+      "no": "没有"
     }
   },
   "people.comp.phones": {
     "title": "电话号码",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "value": "zh-cn_Phone Number",
-      "description": "zh-cn_Description",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "value": "电话号码",
+      "description": "描述",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "addNew": "zh-cn_Add New"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "addNew": "添新"
     },
     "modal": {
-      "addPhone": "zh-cn_Add New Phone Number",
-      "editPhone": "zh-cn_Edit Phone Number",
-      "title": "zh-cn_Add New Phone Number",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "description": "zh-cn_Description",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save Phone Number",
-      "type.label": "zh-cn_Phone Type",
-      "type.placeholder": "zh-cn_Enter Phone Type",
-      "value.label": "zh-cn_Phone Number",
-      "value.placeholder": "zh-cn_Enter Phone Number"
+      "addPhone": "添加新电话号码",
+      "editPhone": "编辑电话号码",
+      "title": "添加新电话号码",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "description": "描述",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存电话号码",
+      "type.label": "电话类型",
+      "type.placeholder": "键入电话类型",
+      "value.label": "电话号码",
+      "value.placeholder": "键入电话号码"
     }
   },
   "people.comp.emails": {
     "title": "电子邮箱",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "value": "zh-cn_Email Address",
-      "description": "zh-cn_Description",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "value": "电子邮箱",
+      "description": "描述",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "addNew": "zh-cn_Add New"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "addNew": "添新"
     },
     "modal": {
-      "title": "zh-cn_Add New Email Address",
-      "addEmail": "zh-cn_Add New Email Address",
-      "editEmail": "zh-cn_Edit Email Address",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "description": "zh-cn_Description",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save Email Address",
-      "type.label": "zh-cn_Email Type",
-      "type.placeholder": "zh-cn_Enter Email Type",
-      "value.label": "zh-cn_Email Address",
-      "value.placeholder": "zh-cn_Enter Email Address"
+      "title": "添加新电子邮件地址",
+      "addEmail": "添加新电子邮件地址",
+      "editEmail": "编辑电子邮件地址",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "description": "描述",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存电邮地址",
+      "type.label": "电子邮件类型",
+      "type.placeholder": "键入电子邮件类型",
+      "value.label": "电子邮件地址",
+      "value.placeholder": "请键入电邮地址"
     }
   },
   "people.comp.urls": {
     "title": "网址",
     "table.columns": {
-      "value": "zh-cn_URL",
-      "type": "zh-cn_Type",
-      "description": "zh-cn_Description",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "value": "网址",
+      "type": "类型",
+      "description": "描述",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "addNew": "zh-cn_Add New"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "addNew": "添新"
     },
     "modal": {
-      "title": "zh-cn_Add New URL",
-      "addUrl": "zh-cn_Add New URL",
-      "editUrl": "zh-cn_Edit URL",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "description": "zh-cn_Description",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save URL",
-      "type.label": "zh-cn_Type",
-      "type.placeholder": "zh-cn_Enter Type",
-      "value.label": "zh-cn_URL",
-      "value.placeholder": "zh-cn_Enter URL"
+      "title": "添加新的URL",
+      "addUrl": "添加新的URL",
+      "editUrl": "修改网址",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "description": "描述",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存网址",
+      "type.label": "类型",
+      "type.placeholder": "键入类型",
+      "value.label": "网址",
+      "value.placeholder": "键入网址"
     }
   },
   "people.comp.participants": {
     "title": "参与成员",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "name": "zh-cn_Name"
+      "type": "类型",
+      "name": "名称"
     },
     "dialogUserPicker": {
-      "header": "zh-cn_Choose User",
+      "header": "选择用户",
       "table.columns": {
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "id": "zh-cn_Username"
+        "name": "名称",
+        "type": "类型",
+        "title": "标题",
+        "id": "用户名"
       }
     },
     "dialogGroupPicker": {
-      "header": "zh-cn_Choose Group",
+      "header": "选择群组",
       "table.columns": {
-        "name": "zh-cn_Name"
+        "name": "名称"
       }
     }
   },
   "people.comp.aliases": {
     "title": "别名",
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "upload": "zh-cn_New Alias"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "upload": "新的别名"
     },
     "table.columns": {
-      "type": "zh-cn_Type",
-      "aliasValue": "zh-cn_Alias",
-      "description": "zh-cn_Description",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "aliasValue": "别号",
+      "description": "描述",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "modal": {
-      "aliasValue": "zh-cn_Alias Value",
-      "type": "zh-cn_Type",
-      "addAlias": "zh-cn_Add New Alias",
-      "editAlias": "zh-cn_Edit Alias",
-      "title": "zh-cn_Insert New Alias",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save Alias",
-      "value.label": "zh-cn_Alias",
-      "value.placeholder": "zh-cn_Enter Alias",
-      "description": "zh-cn_Description",
-      "aliasType.label": "zh-cn_Alias Type",
-      "aliasType.placeholder": "zh-cn_Enter Alias Type"
+      "aliasValue": "别名值",
+      "type": "类型",
+      "addAlias": "添加新的别名",
+      "editAlias": "编辑别名",
+      "title": "插入新的别名",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存别名",
+      "value.label": "别号",
+      "value.placeholder": "键入别名",
+      "description": "描述",
+      "aliasType.label": "别名类型",
+      "aliasType.placeholder": "键入别名类型"
     }
   },
   "people.comp.ids": {
-    "title": "成员号码",
+    "title": "标识",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "id": "zh-cn_ID",
-      "number": "zh-cn_Number",
-      "issuer": "zh-cn_Issuer",
-      "yearIssued": "zh-cn_Year Issued",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "id": "识别号",
+      "number": "数",
+      "issuer": "发行者",
+      "yearIssued": "发行年份",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "addNew": "zh-cn_Add New"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "addNew": "添新"
     },
     "modal": {
-      "addID": "zh-cn_Add New Identification",
-      "editID": "zh-cn_Edit Identification",
-      "title": "zh-cn_Add New Identification",
-      "setPrimary": "zh-cn_Set as Primary?",
-      "yes": "zh-cn_Yes",
-      "no": "zh-cn_No",
-      "type.label": "zh-cn_Type",
-      "type.placeholder": "zh-cn_Enter Type",
-      "id.label": "zh-cn_ID",
-      "id.placeholder": "zh-cn_Enter ID",
-      "number.label": "zh-cn_Number",
-      "number.placeholder": "zh-cn_Enter Number",
-      "issuer.label": "zh-cn_Issuer",
-      "issuer.placeholder": "zh-cn_Enter Issuer",
-      "yearIssued.label": "zh-cn_Year Issued",
-      "yearIssued.placeholder": "zh-cn_Enter Year Issued",
-      "yearIssued.close.button": "zh-cn_Close",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save ID"
+      "addID": "添加新标识",
+      "editID": "编辑标识",
+      "title": "添加新标识",
+      "setPrimary": "设置为主要？",
+      "yes": "确定",
+      "no": "否",
+      "type.label": "类型",
+      "type.placeholder": "键入类型",
+      "id.label": "ID",
+      "id.placeholder": "键入ID",
+      "number.label": "数",
+      "number.placeholder": "键入号码",
+      "issuer.label": "发行者",
+      "issuer.placeholder": "键入发行者",
+      "yearIssued.label": "发行年份",
+      "yearIssued.placeholder": "键入发行年份",
+      "yearIssued.close.button": "关",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存识别号"
     }
   },
   "people.comp.organizations": {
     "title": "组织",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "id": "zh-cn_ID",
-      "value": "zh-cn_Organization",
-      "identification": "zh-cn_ID",
-      "contact": "zh-cn_Primary Contact",
-      "phone": "zh-cn_Phone",
-      "location": "zh-cn_Location",
-      "created": "zh-cn_Date Added",
-      "creator": "zh-cn_Added By",
-      "modified": "zh-cn_Last Modified",
-      "modifier": "zh-cn_Modified By"
+      "type": "类型",
+      "id": "识别号",
+      "value": "组织",
+      "identification": "识别号",
+      "contact": "主要联系人",
+      "phone": "电话",
+      "location": "位置",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上次更改日期",
+      "modifier": "上次更改用户"
     },
     "actions": {
-      "delete": "zh-cn_Delete",
-      "setPrimary": "zh-cn_Set as Primary",
-      "addNew": "zh-cn_Add New",
-      "addExisting": "zh-cn_Add Existing"
+      "delete": "删除",
+      "setPrimary": "设置为主要",
+      "addNew": "添新",
+      "addExisting": "添加现有的"
     }
   },
   "people.comp.cases": {
     "title": "案件",
+    "objectType.label": "案例文件",
     "table.columns": {
-      "priority": "zh-cn_Priority",
-      "id": "zh-cn_ID",
-      "title": "zh-cn_Title",
-      "status": "zh-cn_Status",
-      "assignee": "zh-cn_Assignee",
-      "modified": "zh-cn_Modified"
+      "role": "角色",
+      "priority": "优先",
+      "id": "识别号",
+      "title": "标题",
+      "status": "状态",
+      "assignee": "代理人",
+      "modified": "改性"
     }
   },
   "people.comp.complaints": {
     "title": "投诉",
+    "objectType.label": "投诉",
     "table.columns": {
-      "priority": "zh-cn_Priority",
-      "id": "zh-cn_ID",
-      "title": "zh-cn_Title",
-      "status": "zh-cn_Status",
-      "assignee": "zh-cn_Assignee",
-      "modified": "zh-cn_Modified"
+      "role": "角色",
+      "priority": "优先",
+      "id": "识别号",
+      "title": "标题",
+      "status": "状态",
+      "assignee": "代理人",
+      "modified": "改性"
     }
   },
   "people.comp.related": {
     "title": "相关人士",
     "table.columns": {
-      "firstName": "zh-cn_First Name",
-      "lastName": "zh-cn_Last Name",
-      "type": "zh-cn_Relationship",
-      "description": "zh-cn_Description",
-      "organization": "zh-cn_Organization",
-      "phone": "zh-cn_Phone",
-      "location": "zh-cn_Location"
+      "firstName": "名字",
+      "lastName": "姓",
+      "type": "关系",
+      "description": "描述",
+      "organization": "组织",
+      "phone": "电话",
+      "location": "位置"
     },
     "modal": {
-      "title": "zh-cn_Add Related Person",
-      "type.label": "zh-cn_Relationship",
-      "type.placeholder": "zh-cn_Enter Relationship",
-      "person.label": "zh-cn_Person",
-      "person.placeholder": "zh-cn_Search People",
-      "btnCancel.text": "zh-cn_Cancel",
-      "btnOk.text": "zh-cn_Save Related Person"
+      "title": "添加相关人员",
+      "type.label": "关系",
+      "type.placeholder": "键入关系",
+      "person.label": "人员",
+      "person.placeholder": "搜索人员",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存相关人员"
     }
   },
   "people.comp.editPerson": {
-    "title": "zh-cn_Person",
-    "addAnother": "zh-cn_Add Another",
-    "remove": "zh-cn_Remove",
-    "familyName": "zh-cn_Last Name",
-    "familyName.placeholder": "zh-cn_Enter Last Name",
-    "givenName": "zh-cn_First Name",
-    "givenName.placeholder": "zh-cn_Enter First Name",
-    "middleName": "zh-cn_Middle Name",
-    "middleName.placeholder": "zh-cn_Enter Middle Name",
-    "saveButton": "zh-cn_Save Person",
-    "informCreated": "zh-cn_{{personType}} {{firstName}} {{lastName}} was created.",
-    "informUpdated": "zh-cn_{{firstName}} {{lastName}} Updated",
+    "title": "人员",
+    "addAnother": "加上另一个",
+    "remove": "删除",
+    "familyName": "姓",
+    "familyName.placeholder": "键入姓氏",
+    "givenName": "名字",
+    "givenName.placeholder": "键入名字",
+    "middleName": "中间名字",
+    "middleName.placeholder": "键入中间名称",
+    "saveButton": "保存人员",
+    "cancelButton": "取消",
+    "informCreated": "已创建 {{personType}} {{firstName}} {{lastName}}.",
+    "informUpdated": "已更新 {{firstName}} {{lastName}}",
     "communicationAccounts": {
-      "title": "zh-cn_Communication Accounts",
-      "phone": "zh-cn_Phone",
-      "phone.placeholder": "zh-cn_Enter Phone",
-      "phoneType": "zh-cn_Phone Type",
-      "email": "zh-cn_Email",
-      "email.placeholder": "zh-cn_Enter Email",
-      "emailType": "zh-cn_Email Type",
-      "url": "zh-cn_URL",
-      "url.placeholder": "zh-cn_Enter URL",
-      "removeContactMethod": "zh-cn_Remove",
-      "urlType": "zh-cn_URL Type"
+      "title": "通信帐户",
+      "phone": "电话",
+      "phone.placeholder": "键入电话",
+      "phoneType": "电话类型",
+      "email": "电子邮址",
+      "email.placeholder": "键入电子邮址",
+      "emailType": "电子邮件类型",
+      "url": "网址",
+      "url.placeholder": "键入网址",
+      "removeContactMethod": "删除",
+      "urlType": "网址类型"
     },
     "organizations": {
-      "title": "zh-cn_Organizations",
-      "searchExisting.placeholder": "zh-cn_Search Existing Organizations",
-      "organizationType": "zh-cn_Relation Type"
+      "title": "组织",
+      "searchExisting.placeholder": "搜索现有组织",
+      "organizationType": "关系类型"
     },
     "picture": {
-      "title": "zh-cn_Picture"
+      "title": "图片"
     },
     "locations": {
-      "title": "zh-cn_Locations",
-      "country": "zh-cn_Country",
-      "country.placeholder": "zh-cn_Select Country",
-      "state": "zh-cn_State",
-      "state.placeholder": "zh-cn_Enter State",
-      "zip": "zh-cn_Zip",
-      "zip.placeholder": "zh-cn_Enter Zip",
-      "city": "zh-cn_City",
-      "city.placeholder": "zh-cn_Enter City",
-      "type": "zh-cn_Address Type",
-      "type.placeholder": "zh-cn_Select Address Type",
-      "streetAddress": "zh-cn_Street Address",
-      "streetAddress.placeholder": "zh-cn_Enter Street Address",
-      "streetAddress2": "zh-cn_Street Address2",
-      "streetAddress2.placeholder": "zh-cn_Enter Street Address2"
+      "title": "地点",
+      "country": "国家",
+      "country.placeholder": "选择国家",
+      "state": "州",
+      "state.placeholder": "键入州名",
+      "zip": "邮编",
+      "zip.placeholder": "键入邮编",
+      "city": "市",
+      "city.placeholder": "键入城市",
+      "type": "地址类型",
+      "type.placeholder": "选择地址类型",
+      "streetAddress": "街道地址",
+      "streetAddress.placeholder": "键入街道地址",
+      "streetAddress2": "街道地址2",
+      "streetAddress2.placeholder": "键入街道地址2"
     },
     "identification": {
-      "title": "zh-cn_Identifications",
-      "identificationID": "zh-cn_Identification ID",
-      "identificationID.placeholder": "zh-cn_Enter Identification ID",
-      "identificationType": "zh-cn_Identification Type",
-      "identificationType.placeholder": "zh-cn_Select Identification Type",
-      "identificationNumber": "zh-cn_Identification Number",
-      "identificationNumber.placeholder": "zh-cn_Enter Identification Number",
-      "identificationIssuer": "zh-cn_Identification Issuer",
-      "identificationIssuer.placeholder": "zh-cn_Enter Identification Issuer",
-      "identificationYearIssued": "zh-cn_Identification Issued",
-      "identificationYearIssued.placeholder": "zh-cn_Select Identification Issued",
-      "identificationYearIssued.close.button": "zh-cn_Close"
+      "title": "身份证",
+      "identificationID": "身份证号",
+      "identificationID.placeholder": "键入身份证号",
+      "identificationType": "身份证类型",
+      "identificationType.placeholder": "选择身份证类型",
+      "identificationNumber": "身份证号码",
+      "identificationNumber.placeholder": "键入身份证号码",
+      "identificationIssuer": "身份证发行人",
+      "identificationIssuer.placeholder": "键入身份证签发人",
+      "identificationYearIssued": "身份证签发日期",
+      "identificationYearIssued.placeholder": "选择身份证签发日期",
+      "identificationYearIssued.close.button": "关闭"
     }
   },
   "people.tree": {
     "nodeTypes": {
       "details.label": "详情",
-      "pictures.label": "相片",
+      "pictures.label": "图片",
       "addresses.label": "地点",
       "phones.label": "电话号码",
       "emails.label": "电子邮箱",
@@ -479,6 +486,112 @@
       "nameAsc": "按成员名排序",
       "nameDesc": "按成员名反排序",
       "noSort": "(不排序)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "person": {
+        "defaultPhone": "默认电话已更改",
+        "defaultEmail": "默认电子邮件已更改",
+        "defaultAddress": "默认地址已更改",
+        "defaultUrl": "默认网址已更改",
+        "defaultAlias": "默认别名已更改",
+        "defaultIdentification": "默认识别已更改",
+        "defaultPicture": "默认图片已更改"
+      }
+    },
+    "value_changed": {
+      "person": {
+        "details": "人员 详情已更改",
+        "title": "人员标题已更改",
+        "company": "人员公司已更改",
+        "status": "人员状态已更改",
+        "givenName": "人员名称已更改",
+        "middleName": "人员中间名已更改",
+        "familyName": "人员姓氏已更改",
+        "hairColor": "人员头发颜色已更改",
+        "eyeColor": "人员眼睛颜色已更改",
+        "heightInInches": "人员身高已更改",
+        "weightInPounds": "人员重量已更改",
+        "dateOfBirth": "人员出生日期已更改",
+        "placeOfBirth": "人员出生地点已更改",
+        "dateMarried": "人员婚姻状况已更改",
+        "contactMethods.contactMethod": {
+          "subType": "联系方式类型已更改",
+          "value": "联系方法已更改"
+        },
+        "defaultPhone": {
+          "subType": "默认电话类型已更改",
+          "value": "默认电话已更改"
+        },
+        "defaultEmail": {
+          "subType": "默认电邮类型已更改",
+          "value": "默认电邮已更改"
+        },
+        "defaultUrl": {
+          "subType": "默认网址类型已更改",
+          "value": "默认网址已更改"
+        },
+        "addresses.address": {
+          "city": "地址 - 城市已更改",
+          "zip": "地址 - 邮政编码已更改",
+          "streetAddress": "地址 - 街道已更改",
+          "streetAddress2": "地址 - 街道2已更改",
+          "type": "地址 - 类型已更改",
+          "country": "地址 - 国家已更改",
+          "state": "地址 - 州已更改"
+        },
+        "defaultAddress": {
+          "city": "地址 - 城市已更改",
+          "zip": "地址 - 邮政编码已更改",
+          "streetAddress": "地址 - 街道已更改",
+          "streetAddress2": "地址 - 街道2已更改",
+          "type": "地址 - 类型已更改",
+          "country": "地址 - 国家已更改",
+          "state": "地址 - 州已更改"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "身份证 类型已更改",
+          "identificationNumber": "身份证号码已更改",
+          "identificationIssuer": "身份证发行人已更改",
+          "identificationYearIssued": "身份证发行年份已更改"
+        },
+        "defaultIdentification": {
+          "identificationType": "身份证类型已更改",
+          "identificationNumber": "身份证号码已更改",
+          "identificationIssuer": "身份证发行人已更改",
+          "identificationYearIssued": "身份证发行年份已更改"
+        }
+      }
+    },
+    "collection_element_added": {
+      "person": {
+        "identifications.identification": "身份证已添加",
+        "contactMethods.contactMethod": "联系方式已添加",
+        "personAliases.alias": "别名已添加",
+        "addresses.address": "地址已添加",
+        "organizations.organization": "组织已添加",
+        "associationsToObjects": "关联已添加",
+        "associationsFromObjects": "关联已添加",
+        "organizationAssociations": "组织已添加"
+      }
+    },
+    "collection_element_removed": {
+      "person": {
+        "identifications.identification": "身份证已删除",
+        "contactMethods.contactMethod": "联系方式已删除",
+        "personAliases.alias": "别名已删除",
+        "addresses.address": "地址已删除",
+        "organizations.organization": "组织已删除",
+        "associationsToObjects": "关联已删除",
+        "associationsFromObjects": "关联已删除",
+        "organizationAssociations": "组织已删除"
+      },
+      "personAliases.alias": {
+        "aliasType": "别名类型已更改",
+        "aliasValue": "别名已更改",
+        "description": "别名描述已更改"
+      }
     }
   }
 }
