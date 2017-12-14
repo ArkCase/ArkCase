@@ -324,6 +324,7 @@
     "future.task.modal": {
       "title": "New Future Task",
       "assignee": "Assignee",
+      "group": "Group",
       "subject.label": "Subject",
       "subject.placeholder": "Enter future case subject",
       "details.label": "Details",
