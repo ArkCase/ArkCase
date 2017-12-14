@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,7 @@ public class LdapGroupService
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
 
-        String groupName = String.format("%s@%s", group.getName().toUpperCase(), ldapSyncConfig.getUserDomain());
+        String groupName = MapperUtils.buildGroupName(group.getName(), Optional.of(ldapSyncConfig.getUserDomain()));
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null)
@@ -49,8 +50,8 @@ public class LdapGroupService
         }
 
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-        group.setName(group.getName().toUpperCase());
-        group.setDisplayName(group.getName().toUpperCase());
+        group.setName(groupName);
+        group.setDisplayName(groupName);
         group.setType(AcmGroupType.LDAP_GROUP);
         group.setDescription(group.getDescription());
         group.setDistinguishedName(groupDN);
@@ -71,12 +72,13 @@ public class LdapGroupService
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
 
-        String groupName = String.format("%s@%s", group.getName().toUpperCase(), ldapSyncConfig.getUserDomain());
+        String givenName = group.getName();
+        String groupName = MapperUtils.buildGroupName(givenName, Optional.of(ldapSyncConfig.getUserDomain()));
 
         AcmGroup existingGroup = groupService.findByName(groupName);
         if (existingGroup != null)
         {
-            log.debug("Group with name [{}] already exists!", group.getName());
+            log.debug("Group with name [{}] already exists!", groupName);
             throw new NameAlreadyBoundException(null);
         }
 
@@ -85,14 +87,15 @@ public class LdapGroupService
         {
             throw new AcmObjectNotFoundException("LDAP_GROUP", null, "Parent group not found");
         }
-        log.debug("Found parent-group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
+        log.debug("Found parent group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
+
+        String groupDN = buildDnForGroup(givenName, ldapSyncConfig);
 
         AcmGroup acmGroup = new AcmGroup();
-        acmGroup.setName(group.getName().toUpperCase());
-        acmGroup.setDisplayName(group.getName().toUpperCase());
+        acmGroup.setName(groupName);
+        acmGroup.setDisplayName(groupName);
         acmGroup.setType(AcmGroupType.LDAP_GROUP);
         acmGroup.setDescription(group.getDescription());
-        String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         acmGroup.setDistinguishedName(groupDN);
         acmGroup.setDirectoryName(directoryName);
 
@@ -101,7 +104,7 @@ public class LdapGroupService
         acmGroup.setAscendantsList(AcmGroupUtils.getAscendantsString(ancestors));
 
         parentGroup.addGroupMember(acmGroup);
-        log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), group.getName());
+        log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), acmGroup.getName());
         groupService.saveAndFlush(parentGroup);
 
         log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());

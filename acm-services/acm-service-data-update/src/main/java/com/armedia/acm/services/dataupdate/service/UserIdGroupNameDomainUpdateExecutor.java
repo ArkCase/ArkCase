@@ -302,6 +302,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
         Set<String> inactiveLdapGroupNames = inactiveLdapGroups.stream()
                 .map(AcmGroup::getName)
+                .map(String::toUpperCase)
                 .collect(Collectors.toSet());
 
         Predicate<AcmGroup> groupUpdatedWithDomain = group -> {
@@ -322,6 +323,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
         Set<String> invalidUserIds = invalidUsers.stream()
                 .map(AcmUser::getUserId)
+                .map(String::toLowerCase)
                 .collect(Collectors.toSet());
 
         Predicate<AcmUser> userUpdatedWithDomain = user -> {
