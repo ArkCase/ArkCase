@@ -45,7 +45,7 @@
                     <label for="types" translate>common.addPerson.type.label</label>
                     <span class="required-asterisk">*</span>
                 </div>
-                <select class="input-md form-control" id="types" ng-model="$parent.type"
+                <select class="input-md form-control" id="types" ng-model="$parent.type" ng-change="isChanged()"
                         ng-options="o.value | translate for o in types" ng-disabled="!$parent.pickerTypeEnabled"
                         required></select>
             </div>
