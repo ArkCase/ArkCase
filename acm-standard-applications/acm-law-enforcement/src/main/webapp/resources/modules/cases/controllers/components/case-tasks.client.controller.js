@@ -29,6 +29,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.setColumnDefs(config);
             gridHelper.setBasicOptions(config);
             gridHelper.disableGridScrolling(config);
+            gridHelper.addButton(config, "delete");
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
 
@@ -54,13 +55,18 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                     , Util.goodValue($scope.sort.dir)
                 ).then(function (data) {
                     var tasks = data.response.docs;
+                    var filteredTasks = [];
                     angular.forEach(tasks,function (task) {
-                        //calculate to show alert icons if task is in overdue or deadline is approaching
-                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                        if(task.status_s !== 'DELETE'){
+                            //calculate to show alert icons if task is in overdue or deadline is approaching
+                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+
+                            filteredTasks.push(task);
+                        }
                     });
                     $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridOptions.data = tasks;
+                    $scope.gridOptions.data = filteredTasks;
                     $scope.gridOptions.totalItems = data.response.numFound;
 
                     return data;
@@ -82,6 +88,19 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 }
             };
             ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var caseInfo = Util.omitNg($scope.objectInfo);
+            if (CaseInfoService.validateCaseInfo(caseInfo)) {
+                TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
+                    function (caseInfo) {
+                        $scope.$emit("report-object-updated", caseInfo);
+                        return caseInfo;
+                    }
+                );
+            }
+            gridHelper.deleteRow(rowEntity);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
