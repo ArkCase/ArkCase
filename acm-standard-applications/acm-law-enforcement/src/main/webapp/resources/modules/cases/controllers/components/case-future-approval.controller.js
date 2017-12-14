@@ -117,6 +117,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             };
             ModalDialogService.showModal(modalMetadata)
                 .then(function (result){
+                    if(Util.isEmpty(result)) return;
                     var futureTask = {
                         approverId: result.pickedUserId,
                         groupName: result.pickedUserGroup,

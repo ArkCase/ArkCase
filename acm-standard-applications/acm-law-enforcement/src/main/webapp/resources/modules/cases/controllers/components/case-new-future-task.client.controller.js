@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '$modal', 'ConfigService',
-    function ($scope, $modal, ConfigService) {
+angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '$modal', 'ConfigService', 'UtilService',
+    function ($scope, $modal, ConfigService, Util) {
 
 
         $scope.futureTaskConfig = null;
@@ -33,7 +33,7 @@ angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '
         $scope.userOrGroupSearch = function () {
             var modalInstance = $modal.open({
                 animation: true,
-                templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
+                templateUrl: 'modules/cases/views/components/case-user-search.client.view.html',
                 controller: 'Tasks.UserSearchController',
                 size: 'lg',
                 resolve: {
@@ -51,54 +51,18 @@ angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '
 
             modalInstance.result.then(function (chosenUserOrGroup) {
                 if (chosenUserOrGroup) {
-                    if (chosenUserOrGroup.object_type_s === 'USER') {  // Selected a user
-                        $scope.pickedUserId = chosenUserOrGroup.object_id_s;
-                        $scope.pickedUserName = chosenUserOrGroup.name;
-                        $scope.pickOwningGroup(chosenUserOrGroup.object_id_s, chosenUserOrGroup.name);
-
-                        return;
+                    $scope.pickedUserId = chosenUserOrGroup.masterSelectedItem.object_id_s;
+                    $scope.pickedUserName = chosenUserOrGroup.masterSelectedItem.name;
+                    if(!Util.isEmpty(chosenUserOrGroup.detailSelectedItems)){
+                        $scope.pickedUserGroup = chosenUserOrGroup.detailSelectedItems.object_id_s;
                     }
-                    else if (chosenUserOrGroup.object_type_s === 'GROUP') {
-                        $scope.pickedUserGroup = chosenUserOrGroup.object_id_s;
-                        return;
-                    }
+                    return;
                 }
 
             }, function () {
                 // Cancel button was clicked.
                 return [];
             });
-        };
-
-        $scope.pickOwningGroup = function (assigneeLdapId, asigneeName) {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/tasks/views/components/task-group-search.client.view.html',
-                controller: 'Tasks.GroupSearchController',
-                size: 'lg',
-                resolve: {
-                    $filter: function () {
-                        return $scope.futureTaskConfig.groupSearch.groupFacetFilter + assigneeLdapId +$scope.futureTaskConfig.groupSearch.groupFacetExtraFilter;
-                    },
-                    $searchValue: function () {
-                        return asigneeName;
-                    },
-                    $config: function () {
-                        return $scope.userSearchConfig;
-                    }
-                }
-            });
-
-            modalInstance.result.then(function (chosenUserOrGroup) {
-                $scope.pickedUserGroup = chosenUserOrGroup.object_id_s;
-
-                return;
-            }, function () {
-                // Cancel button was clicked.
-                return [];
-            });
-
-
         };
     }
 ]);
