@@ -2128,7 +2128,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 })
                                 , function (result) {
                                     var op = result.op;
-                                    var fileType = result.fileType.type;
                                     if (DialogDnd.OpTypes.OP_REPLACE == op) {
                                         DocTree.uploadSetting = {
                                             replaceFileNode: node
@@ -2141,10 +2140,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
                                         DocTree.Command.handleCommand(replaceFiles, [node], args);
 
-                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
+                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(result.fileType)) {
                                         DocTree.uploadSetting = {
                                             uploadToFolderNode: node.parent
-                                            , uploadFileType: fileType
+                                            , uploadFileType: Util.goodValue(result.fileType.type)
                                             , uploadFileNew: true
                                             , deferUploadFile: $q.defer()
                                         };
