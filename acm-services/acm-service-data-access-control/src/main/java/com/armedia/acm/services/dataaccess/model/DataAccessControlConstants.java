@@ -19,4 +19,6 @@ public interface DataAccessControlConstants
 
     String SPACE_REPLACE = "_0020_";
     String COMMA_REPLACE = "_002C_";
+    String OPENING_PARENTHESIS_REPLACE = "_0028_";
+    String CLOSING_PARENTHESIS_REPLACE = "_0029_";
 }
