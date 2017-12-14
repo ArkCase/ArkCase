@@ -83,13 +83,13 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
-        String userId = String.format("%s@%s", userDto.getUserId().toLowerCase(), ldapSyncConfig.getUserDomain());
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain());
 
         AcmUser user = checkExistingUser(userId);
 
         if (user == null)
         {
-            user = userDto.toAcmUser(userDao.getDefaultUserLang(), ldapSyncConfig.getUserDomain());
+            user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
         } else
         {
             user = userDto.updateAcmUser(user);
@@ -101,13 +101,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
         user.setUserState(AcmUserState.VALID);
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setUid(user.getUserId());
+            user.setUid(userDto.getUserId());
         } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setsAMAccountName(user.getUserId());
+            user.setsAMAccountName(userDto.getUserId());
         }
-
-        user.setUserId(String.format("%s@%s", user.getUserId(), ldapSyncConfig.getUserDomain()));
 
         Set<AcmGroup> groups = new HashSet<>();
 
@@ -118,8 +116,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
             {
                 groups.add(group);
                 group.addUserMember(user);
+                log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group.getName());
             }
-            log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group.getName());
         }
 
         log.debug("Saving new User [{}] with DN [{}] in database", user.getUserId(), user.getDistinguishedName());

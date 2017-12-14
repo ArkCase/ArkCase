@@ -28,8 +28,7 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword,
-                                                          String baseDC, String userDomain)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
             throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
@@ -39,7 +38,7 @@ public class LdapEntryTransformer
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
-        String userId = StringUtils.substringBefore(user.getUserId(), "@" + userDomain);
+        String userId = StringUtils.substringBeforeLast(user.getUserId(), "@");
 
         for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
         {
@@ -126,7 +125,7 @@ public class LdapEntryTransformer
         return context;
     }
 
-    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String baseDC, String domain)
+    public DirContextAdapter createContextForNewGroupEntry(String directoryName, AcmGroup group, String baseDC)
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(group.getDistinguishedName(), baseDC));
 
@@ -136,7 +135,7 @@ public class LdapEntryTransformer
         Map<String, String> groupAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
 
-        String groupName = StringUtils.substringBefore(group.getName(), "@" + domain);
+        String groupName = StringUtils.substringBeforeLast(group.getName(), "@");
 
         groupAttributes.forEach((attr, value) ->
         {
