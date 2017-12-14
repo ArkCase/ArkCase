@@ -767,9 +767,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateStandardLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
@@ -793,18 +790,12 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateNestedLookup(lookup) {
             // Check empty keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
                 // check sublookup for empty keys or values
                 if (lookup[i].subLookup) {
                     for (var j = 0, lenSub = lookup[i].subLookup.length; j < lenSub; j++) {
-                        if (!lookup[i].subLookup[j].key) {
-                            return { isValid : false, errorMessage: "Empty key found!" };
-                        }
                         if (!lookup[i].subLookup[j].value) {
                             return { isValid : false, errorMessage: "Empty value found!" };
                         }
@@ -843,9 +834,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateInverseValuesLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
