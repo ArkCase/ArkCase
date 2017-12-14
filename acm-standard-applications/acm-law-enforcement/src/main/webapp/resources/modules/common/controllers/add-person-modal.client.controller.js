@@ -79,6 +79,10 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 }
             };
 
+            $scope.isChanged = function () {
+                $scope.isInvalid = false;
+            };
+
             $scope.pickPerson = function () {
                 $scope.isNew = false;
 
