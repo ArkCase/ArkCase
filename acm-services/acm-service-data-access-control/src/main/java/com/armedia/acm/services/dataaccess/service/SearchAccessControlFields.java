@@ -22,26 +22,28 @@ public class SearchAccessControlFields
         boolean publicDoc = getParticipantAccessChecker().defaultUserHasRead(object);
         doc.setPublic_doc_b(publicDoc);
 
-        if ( !publicDoc )
+        if (!publicDoc)
         {
             List<String> readers = getParticipantAccessChecker().getReaders(object);
 
             // due to how Solr works we have to replace any spaces in the participant ids with an unusual character.
-            readers = readers
-                    .stream()
-                    .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
-                    .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
-                    .collect(Collectors.toList());
+            readers = encode(readers);
             doc.setAllow_acl_ss(readers);
         }
 
         List<String> denied = getParticipantAccessChecker().getDenied(object);
-        denied = denied
-                .stream()
+        denied = encode(denied);
+        doc.setDeny_acl_ss(denied);
+    }
+
+    private List<String> encode(List<String> toBeEncoded)
+    {
+        return toBeEncoded.stream()
                 .map(s -> s.replace(" ", DataAccessControlConstants.SPACE_REPLACE))
                 .map(s -> s.replace(",", DataAccessControlConstants.COMMA_REPLACE))
+                .map(s -> s.replace("(", DataAccessControlConstants.LEFT_PARENTHESIS_REPLACE))
+                .map(s -> s.replace(")", DataAccessControlConstants.RIGHT_PARENTHESIS_REPLACE))
                 .collect(Collectors.toList());
-        doc.setDeny_acl_ss(denied);
     }
 
     public ParticipantAccessChecker getParticipantAccessChecker()
