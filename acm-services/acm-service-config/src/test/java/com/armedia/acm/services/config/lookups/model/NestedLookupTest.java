@@ -41,21 +41,9 @@ public class NestedLookupTest extends EasyMockSupport
         validEntries.add(new NestedLookupEntry("key1", "value1", validStandardLookupEntries1));
         validEntries.add(new NestedLookupEntry("key2", "value2", validStandardLookupEntries2));
 
-        List<NestedLookupEntry> emptyKeyEntries = new ArrayList<>();
-        emptyKeyEntries.add(new NestedLookupEntry("", "value1", validStandardLookupEntries1));
-        emptyKeyEntries.add(new NestedLookupEntry("key2", "value2", validStandardLookupEntries2));
-
         List<NestedLookupEntry> emptyValueEntries = new ArrayList<>();
         emptyValueEntries.add(new NestedLookupEntry("key1", "value1", validStandardLookupEntries1));
         emptyValueEntries.add(new NestedLookupEntry("key2", "", validStandardLookupEntries2));
-
-        List<StandardLookupEntry> emptyKeyInSubLookupEntries = new ArrayList<>();
-        emptyKeyInSubLookupEntries.add(new StandardLookupEntry("sub1key1", "sub1value1"));
-        emptyKeyInSubLookupEntries.add(new StandardLookupEntry("", "sub1value2"));
-
-        List<NestedLookupEntry> emptyKeyInSubLookupEntriesNestedLookupEntries = new ArrayList<>();
-        emptyKeyInSubLookupEntriesNestedLookupEntries.add(new NestedLookupEntry("key1", "value1", validStandardLookupEntries1));
-        emptyKeyInSubLookupEntriesNestedLookupEntries.add(new NestedLookupEntry("key2", "value2", emptyKeyInSubLookupEntries));
 
         List<StandardLookupEntry> emptyValueInSubLookupEntries = new ArrayList<>();
         emptyValueInSubLookupEntries.add(new StandardLookupEntry("sub2key1", "sub2value1"));
@@ -96,17 +84,9 @@ public class NestedLookupTest extends EasyMockSupport
                         true,
                         null },
                 {
-                        emptyKeyEntries,
-                        false,
-                        "Empty key found in '" + testLookupName + "' lookup!" },
-                {
                         emptyValueEntries,
                         false,
                         "Empty value found in '" + testLookupName + "' lookup!" },
-                {
-                        emptyKeyInSubLookupEntriesNestedLookupEntries,
-                        false,
-                        "Empty key found in '" + testLookupName + "' lookup!" },
                 {
                         emptyValueInSubLookupEntriesLookupNestedLookupEntries,
                         false,

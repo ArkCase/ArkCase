@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "संबंधित लोग",
+    "linkTitle": "hi_Rel People",
     "table.columns": {
       "firstName": "hi_First Name",
       "lastName": "hi_Last Name",

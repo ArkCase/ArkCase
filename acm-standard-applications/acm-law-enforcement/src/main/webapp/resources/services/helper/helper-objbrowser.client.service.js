@@ -890,9 +890,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
                     var foundComponent = _.find(componentsConfig, {id: component});
                     if (foundComponent) {
+                        var title = "";
+                        if(foundComponent.linkTitle){
+                            title = foundComponent.linkTitle;
+                        } else{
+                            title = foundComponent.title;
+                        }
+
                         componentLinks.push({
                             id: Util.goodValue(foundComponent.id)
-                            , title: Util.goodValue(foundComponent.title)
+                            , title: Util.goodValue(title)
                             , icon: Util.goodValue(foundComponent.icon)
                         });
                     }
