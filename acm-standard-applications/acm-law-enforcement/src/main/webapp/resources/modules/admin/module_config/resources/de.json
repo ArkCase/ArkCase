@@ -67,6 +67,8 @@
       "allUsersFilter": "Geben Sie den Suchfilter für alle Benutzer ein (z. B. (objectClass = person))",
       "allUsersPageFilter": "Geben Sie einen Filter einschließlich Sortierattribut ein (z. B. (& (objectClass = person) (uidNumber> =% s)))",
       "allUsersSortingAttribute": "Geben Sie das Sortierattribut für Benutzer ein (z. B. 'uidNumber')",
+      "allChangedUsersFilter": "Geben Sie den Filter für alle geänderten Benutzer ein",
+      "allChangedUsersPageFilter": "Geben Sie den Filter mit Sortierattribut für alle geänderten Benutzer ein",
       "groupSearchBase": "Geben Sie die Suchbasis für Gruppen ein (z. B. ou = groups)",
       "groupSearchFilterForUser": "Geben Sie den Suchfilter für den Benutzer in der Gruppe ein (z. B. (& (objectClass = group) (member =% s)))",
       "userIdAttributeName": "Geben Sie das für die Benutzer-ID verwendete Attribut ein (z. B. 'uid')",
@@ -74,10 +76,8 @@
       "syncPageSize": "Paging-Größe eingeben",
       "groupSearchFilter": "Geben Sie den Suchfilter für Gruppen ein (z. B. (objectClass = group))",
       "groupsSortingAttribute": "Geben Sie das Attribut für das Sortieren von Gruppen ein (z. B. 'gidNumber')",
-      "allChangedUsersFilter": "de_Enter the filter for all changed users",
-      "allChangedUsersPageFilter": "de_Enter the filter including sort-attribute for all changed users",
-      "changedGroupSearchFilter": "de_Enter search filter for all changed groups",
-      "changedGroupSearchPageFilter": "de_Enter filter including sort-attribute for all changed groups",
+      "changedGroupSearchFilter": "Suchfilter für alle geänderten Gruppen eingeben",
+      "changedGroupSearchPageFilter": "Filter mit Sortierattribut für alle geänderten Gruppen eingeben",
       "groupSearchPageFilter": "Geben Sie einen Filter einschließlich Sortierattribut ein (z. B. (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Überprüfen Sie, ob die Verwaltung von Benutzern und Gruppen in Ihrem DS zulässig ist."
     },
@@ -157,9 +157,9 @@
           "lastName": "Nachnamen eingeben",
           "email": "Email eingeben",
           "password": "Passwort eingeben",
-          "confirmation": "de_Enter your password again",
+          "confirmation": "Gib dein Passwort erneut ein",
           "minLengthForPassword": "7"
-         },
+        },
         "editLdapMember": {
           "title": "Ldap-Mitglied bearbeiten",
           "btn": {
@@ -172,7 +172,7 @@
         "lastName": "Familienname, Nachname",
         "email": "Email",
         "password": "Passwort",
-        "confirmation": "de_Confirm Password"
+        "confirmation": "Bestätige das Passwort"
       },
       "addMembersGridColumns": {
         "name": "Name",
@@ -258,8 +258,8 @@
         "email.label": "System E-Mail-Adresse",
         "password.label": "Systemkennwort",
         "purgeDays.label": "Tage",
-        "emailValid": "System Email Adresse ist gültig",
-        "emailNotValid": "System-E-Mail-Adresse ist nicht gültig",
+        "emailValid": "System Email Adresse und Passwort sind gültig",
+        "emailNotValid": "System Email Adresse oder Passwort sind ungültig",
         "enableCalendarIntegration.checkbox": "Kalenderintegration aktivieren",
         "purgeOptions": {
           "retainIndefinitely": "Unbegrenzt behalten",
