@@ -12,7 +12,10 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$
             $scope.objectTypeList = config.objectTypes;
             $scope.actionList = config.actions;
             $scope.sourceList = config.sources;
-
+            var columnDef = _.find(componentConfig.columnDefs, {name: "act"});
+            if (columnDef) {
+                columnDef.cellTemplate = "";
+            }
             gridHelper.addButton(config, "edit");
             gridHelper.addButton(config, "delete");
             gridHelper.setColumnDefs(config);

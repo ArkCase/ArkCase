@@ -10,7 +10,10 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
         $scope.config.$promise.then(function (config) {
             var componentConfig = _.find(config.components, {id: 'cmisConfiguration'});
             $scope.config = config;
-
+            var columnDef = _.find(componentConfig.columnDefs, {name: "act"});
+            if (columnDef) {
+                columnDef.cellTemplate = "";
+            }
             gridHelper.addButton(componentConfig, 'edit');
 
             //Deletion isn't working currently.
