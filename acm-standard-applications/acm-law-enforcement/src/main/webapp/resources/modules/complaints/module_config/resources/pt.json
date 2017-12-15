@@ -48,6 +48,21 @@
     "sendEmail": "Enviar email",
     "filterInputPlaceholder": "Filtro",
     "searchInputPlaceholder": "Pesquisa",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Relatório de Investigação"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Convite para correspondência",
+        "approvalLetter%": "Carta de aprovação de queixa",
+        "generalRelease%": "Liberação geral",
+        "medicalRelease%": "Alta médica",
+        "clearanceGranted%": "Liquidação concedida",
+        "clearanceDenied%": "Liquidação negada",
+        "witnessInterview%": "Pedido de entrevista de testemunha",
+        "witnessInterview2%": "Witness Interview Request-2.0"
+      }
+    },
     "newTask": "Nova tarefa"
   },
   "complaints.comp.people": {

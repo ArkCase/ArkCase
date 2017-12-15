@@ -53,13 +53,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes=[];
-                    for(var i = 0 ; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
-                    $scope.treeControl.refreshTree();
                 });
         };
 

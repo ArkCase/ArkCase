@@ -90,6 +90,24 @@
     "sendEmail": "メールを送る",
     "filterInputPlaceholder": "フィルタ",
     "searchInputPlaceholder": "サーチ",
+    "menu": {
+      "forms": {
+        "info%": "情報",
+        "rptInvestigation%": "調査報告",
+        "ecomm%": "電子通信"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "通信招待状",
+        "approvalLetter%": "承認の手紙",
+        "medicalRelease%": "医療リリース",
+        "generalRelease%": "標準リリース",
+        "clearanceGranted%": "許可されたクリアランス",
+        "clearanceDenied%": "クリアランスを拒否した",
+        "noticeInvestigation%": "調査の通知",
+        "witnessInterview%": "目撃者のインタビュー要求",
+        "witnessInterview2%": "目撃者のインタビュー要求2.0"
+      }
+    },
     "newTask": "新しい仕事"
   },
   "cases.comp.people": {
