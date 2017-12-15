@@ -255,7 +255,7 @@ public interface EcmFileService
 
     void deleteFile(Long fileId, Boolean allVersions) throws AcmUserActionFailedException, AcmObjectNotFoundException;
     
-    void deleteCmisObject(CmisObject cmisObject) throws Exception;
+    void deleteCmisObject(CmisObject cmisObject, String cmisReposirotyId) throws Exception;
 
     void deleteFile(Long fileId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException;
 
