@@ -1319,6 +1319,20 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
+    public void deleteCmisObject(CmisObject cmisObject) throws Exception
+    {
+
+        Map<String, Object> props = new HashMap<>();
+        props.put(EcmFileConstants.ECM_FILE_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
+        props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
+                cmisConfigUtils.getCmisConfiguration(ecmFileServiceProperties.getProperty("ecm.defaultCmisId")));
+        props.put(EcmFileConstants.ALL_VERSIONS, false);
+
+        getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
+
+    }
+    
+    @Override
     @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
