@@ -182,8 +182,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ],
         "file": [
@@ -298,8 +297,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ]
       },
@@ -454,8 +452,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ],
         "folders": [
@@ -480,8 +477,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ],
         "filesAndFolders": [
@@ -506,8 +502,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ],
         "filesOrFoldersRecord": [
@@ -526,8 +521,7 @@
           {
             "title": "Declare as Record(s)",
             "cmd": "declare",
-            "uiIcon": "ui-icon-locked",
-            "disabledExpression": "DocTree.hasPermission('declareAsRecords')"
+            "uiIcon": "ui-icon-locked"
           }
         ]
       },

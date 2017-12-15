@@ -1924,19 +1924,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 item.disabled = true;
                             } else {
                                 if (item.disabledExpression) {
-                                    var result = eval(item.disabledExpression);
-                                    if (!Util.isEmpty(result) && angular.isFunction(result.then)){
-                                        item.disabled = true;
-                                        result.then(
-                                            function success(enabled) {
-                                                item.disabled = !enabled;
-                                            }, function error() {
-                                                $log.error('Can\'t get permission info for action ' + action);
-                                            }
-                                        );
-                                    }else {
-                                        item.disabled = result;
-                                    }
+                                    item.disabled = eval(item.disabledExpression);
                                 } else {
                                     item.disabled = false;
                                 }
@@ -3916,10 +3904,6 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                 DocTree.fileTypes = fileTypes;
                 var jqTreeBody = DocTree.jqTree.find("tbody");
                 DocTree.Menu.useContextMenu(jqTreeBody, false);
-            }
-
-            , hasPermission: function (action) {
-                return PermissionsService.getActionPermission(action, DocTree.objectInfo, {objectType: DocTree.objectType});
             }
         };  //end DocTree
 
