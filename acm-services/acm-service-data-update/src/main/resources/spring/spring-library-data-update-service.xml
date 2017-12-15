@@ -31,5 +31,6 @@
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="userIdGroupNameDomainUpdateDao" ref="userIdGroupNameDomainUpdateDao"/>
+        <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>

@@ -348,6 +348,16 @@ public class UserIdGroupNameDomainUpdateDao
         return query.executeUpdate();
     }
 
+    public int updateLockOwnerActRuJob(String userId, String newUserId)
+    {
+        Query query = em.createNativeQuery("UPDATE ACT_RU_JOB "
+                + "SET LOCK_OWNER_ = ? "
+                + "WHERE LOCK_OWNER_ = ?");
+        query.setParameter(1, newUserId);
+        query.setParameter(2, userId);
+        return query.executeUpdate();
+    }
+
     @Transactional
     public void updateCreatorAndModifierToAllAcmEntities(Map<String, String> newOldUserId)
     {
