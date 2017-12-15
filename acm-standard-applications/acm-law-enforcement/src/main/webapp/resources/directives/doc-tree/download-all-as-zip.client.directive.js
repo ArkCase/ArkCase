@@ -19,8 +19,8 @@
  </example>
  */
 
-angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'UtilService', '$translate'
-    , function (MessageService, Util, $translate) {
+angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'UtilService', '$translate', 'DocTreeExt.DownloadSelectedAsZip'
+    , function (MessageService, Util, $translate, DownloadSelectedAsZip) {
         return {
             restrict: 'E',
             templateUrl: 'directives/doc-tree/download-all-as-zip.html',
@@ -31,25 +31,29 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                     scope.downloadInProgress = true;
 
                     var folderId = Util.goodMapValue(scope.objectInfo, 'container.folder.id', false);
+                    var selectedNodes =  [];
+                    var tmpSelectedNodes = scope.treeControl.getSelectedNodes();
+                    for(var i = 0; i < tmpSelectedNodes.length; i++ ){
 
-                    if (folderId) {
-                        var url = "api/latest/service/compressor/download/" + folderId;
+                        var _folder =  tmpSelectedNodes[i].folder;
+                        var _objectId = tmpSelectedNodes[i].data.objectId;
 
-                        //Triggers a download popup, to allow the user to select where to download the file
-                        $('#downloadForm').attr("action", url);
-                        this.$input = $('<input>').attr({
-                            folderId: folderId
+                        selectedNodes.push({
+                            folder: _folder,
+                            objectId: _objectId
                         });
-                        this.$input.val(folderId).appendTo($('#downloadForm'));
-                        $('#downloadForm').submit();
-                        $('#downloadForm').empty();
-
-                        scope.downloadInProgress = false;
-
-                    } else {
-                        scope.downloadInProgress = false;
-                        MessageService.error($translate.instant('common.directive.downloadAllAsZip.message.containerError'));
                     }
+                    var zipNodes = {
+                      rootFolder: folderId,
+                      selectedNodes: selectedNodes
+                    };
+
+                    DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(zipNodes)
+                        .then(function (result){
+                            debugger;
+                        });
+
+
                 };
             }
         };
