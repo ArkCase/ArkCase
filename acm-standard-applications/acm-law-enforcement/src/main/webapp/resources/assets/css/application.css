@@ -708,7 +708,7 @@ thead {
 }
 
 .ui-grid a.btn {
-    display: initial;
+    display: inline;
 }
 
 /* Dates Padding Issues */

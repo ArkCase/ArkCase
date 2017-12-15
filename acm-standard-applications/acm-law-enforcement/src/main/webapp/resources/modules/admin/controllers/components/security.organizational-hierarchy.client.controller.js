@@ -1,13 +1,15 @@
 'use strict';
 
-angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope'
+angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['$scope', '$timeout'
     , 'Admin.OrganizationalHierarchyService', '$q', '$modal', 'MessageService', '$translate', 'Admin.ModalDialogService'
     , 'UtilService', 'Admin.LdapConfigService',
-    function ($scope, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util
+    function ($scope, $timeout, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util
         , LdapConfigService) {
 
         $scope.data = [];
         var groupsMap = {};
+        var gridCurrentPage;
+        var gridPageSize;
 
         $scope.addAdHocGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
         $scope.addLdapGroupBtn = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
@@ -32,14 +34,27 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         });
 
         function createTreeData(groups) {
-            var source = [];
-
-            //group details
-            for (var i = 0; i < groups.length; i++) {
-                var group = groups[i];
+            _.forEach(groups, function (group) {
                 addToTree(group);
-            }
-            return source;
+            });
+        }
+
+        function refreshPageData() {
+            $timeout(function () {
+                $scope.data = [];
+                groupsMap = {};
+                $scope.onLoadMore(gridCurrentPage, gridPageSize);
+            }, 1000);
+        }
+
+        function addToGroupsMap(groups) {
+            _.forEach(groups, function (group) {
+                groupsMap[group.object_id_s] = group;
+            });
+        }
+
+        function removeFromGroupsMap(group) {
+            delete groupsMap[group.object_id_s];
         }
 
         function addToTree(group, top) {
@@ -63,33 +78,20 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 else
                     $scope.data.push(group);
             }
-
         }
 
         $scope.onLoadMore = function (currentPage, pageSize) {
-            var groupsPromise;
-            if ($scope.cfgOrgHierarchy && Util.isArray($scope.cfgOrgHierarchy.topLevelGroupTypes)) {
-                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, $scope.cfgOrgHierarchy.topLevelGroupTypes);
-            }
-            else {
-                groupsPromise = organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []);
-            }
-
-            groupsPromise.then(function (payload) {
-                var tempGroups = [];
-                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
-                    tempGroups = _.get(payload, 'data.response.docs');
-                }
-                $scope.totalGroups = _.get(payload, 'data.response.numFound');
-                //create map from groups
-                for (var i = 0; i < tempGroups.length; i++) {
-                    var tempGroup = tempGroups[i];
-                    groupsMap[tempGroup.object_id_s] = tempGroup;
-                }
-                $scope.data = [];
-                createTreeData(tempGroups);
-            });
-
+            gridPageSize = pageSize;
+            gridCurrentPage = currentPage;
+            organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, [])
+                .then(function (payload) {
+                    var groups = _.get(payload, 'data.response.docs');
+                    $scope.data = [];
+                    groupsMap = {};
+                    $scope.totalGroups = _.get(payload, 'data.response.numFound');
+                    addToGroupsMap(groups);
+                    createTreeData(groups);
+                });
         };
 
         $scope.onAddSubGroup = function (parent) {
@@ -126,11 +128,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
                     groupsMap[newGroup.object_id_s] = newGroup;
 
-                    if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
-                        groupsMap[newGroup.parent_id_s].child_id_ss = [];
-                    }
-                    groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
-
                     newGroup.ascendants_id_ss = [newGroup.parent_id_s];
                     addToTree(newGroup, true);
                     deferred.resolve(newGroup);
@@ -145,7 +142,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             return deferred.promise;
         };
 
-        $scope.onDeleteGroup = function (group) {
+        $scope.onDeleteGroup = function (group, parentGroup) {
             var deferred = $q.defer();
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
@@ -155,16 +152,23 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             };
             ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.removeGroup(group).then(function (payload) {
-                    delete groupsMap[group.object_id_s];
-                    var index = $scope.data.findIndex(function (el) {
-                        return el.object_id_s === group.object_id_s;
-                    });
-                    $scope.data.splice(index, 1);
-                    deferred.resolve(payload);
-                }, function (payload) {
-                    deferred.reject(payload);
-                });
+                if (!_.isEmpty(parentGroup)) {
+                    organizationalHierarchyService.removeGroupMembership(group.object_id_s, parentGroup.object_id_s)
+                        .then(function (group) {
+                            removeFromGroupsMap(group);
+                            deferred.resolve(group);
+                        }, function (errorData) {
+                            deferred.reject(errorData);
+                        });
+                } else {
+                    organizationalHierarchyService.removeGroup(group)
+                        .then(function (payload) {
+                            refreshPageData();
+                            deferred.resolve(payload);
+                        }, function (payload) {
+                            deferred.reject(payload);
+                        });
+                }
             }, function () {
                 //cancel btn
             });
@@ -214,31 +218,24 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
             modalInstance.result.then(function (membersSelected) {
                 //ok button clicked
-                var mappedMembers = [];
-                if (Util.isArray(membersSelected)) {
-                    for (var i = 0; i < membersSelected.length; i++) {
-                        mappedMembers.push(mapMember(membersSelected[i]));
-                    }
-                }
-                else {
-                    mappedMembers.push(mapMember(membersSelected));
+                var selectedUserIds = [];
+                if (Util.isArray((membersSelected))) {
+                    selectedUserIds = _.map(membersSelected, function (member) {
+                        return member.object_id_s;
+                    })
+                } else {
+                    selectedUserIds = [membersSelected.object_id_s];
                 }
 
-
-                organizationalHierarchyService.saveMembers(group, mappedMembers).then(function (payload) {
+                organizationalHierarchyService.saveMembers(group, selectedUserIds).then(function (payload) {
                     //saving success
-                    //map members
-                    var mappedMembersMap = {};
-                    angular.forEach(mappedMembers, function (memb) {
-                        mappedMembersMap[memb.userId] = memb;
-                    });
                     var members = payload.data.members;
-                    var unmappedMembers = [];
-                    for (var i = 0; i < members.length; i++) {
-                        var unmappedMember = unMapMember(members[i]);
-                        if (mappedMembersMap[unmappedMember.object_id_s])
-                            unmappedMembers.push(unmappedMember);
-                    }
+                    var selectedMembers = _.filter(members, function (member) {
+                        return _.includes(selectedUserIds, member.userId);
+                    });
+                    var unmappedMembers = _.map(selectedMembers, function (member) {
+                        return unMapMember(member);
+                    });
                     deferred.resolve(unmappedMembers);
                 }, function (payload) {
                     //saving error
@@ -427,64 +424,40 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
 
         $scope.onLazyLoad = function (event, groupNode) {
 
-            var parentId = groupNode.object_id_s;
-            var dfd = $q.defer();
-            var group = groupsMap[parentId];
+            var groupId = groupNode.object_id_s;
+            var group = groupsMap[groupId];
             var children = [];
 
+            var dfd = $q.defer();
+
+            var memberGroupsPromise;
+            var memberUsersPromise;
+
             //find child groups
-            var subGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(parentId);
-            subGroupsPromise.then(function (payload) {
-                var tempGroups = [];
-                if (!Util.isArrayEmpty(_.get(payload, 'data.response.docs'))) {
-                    tempGroups = _.get(payload, 'data.response.docs');
-                }
-                //create map from groups
-                for (var i = 0; i < tempGroups.length; i++) {
-                    var tempGroup = tempGroups[i];
-                    groupsMap[tempGroup.object_id_s] = tempGroup;
-                }
-                createTreeData(tempGroups);
+            memberGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(groupId);
 
-                if (group && group.child_id_ss) {
-                    for (var i = 0; i < group.child_id_ss.length; i++) {
-                        var groupId = group.child_id_ss[i];
-                        children.push(getGroup(groupId));
-                    }
-                }
+            //find child users
+            memberUsersPromise = organizationalHierarchyService
+                .getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_'), 'VALID');
 
-                //find child users
-                if (group && group.member_id_ss) {
-                    organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_'), 'VALID').then(function (payload) {
-                        //successfully users received, insert with groups in same array
-                        var data = _.get(payload, 'data.response.docs');
-                        if (data) {
-                            for (var i = 0; i < data.length; i++) {
-                                data[i].title = data[i].name;
-                                data[i].isMember = true;
-                                children.push(data[i]);
-                            }
-                            group.children = children;
-                        }
-                        dfd.resolve(children);
-                    }, function (payload) {
-                        //error getting users
-                        console.log("Error getting users: " + payload);
+            $q.all([memberGroupsPromise, memberUsersPromise]).then(function (data) {
+                var memberGroups = _.get(data[0], 'data.response.docs');
+                addToGroupsMap(memberGroups);
+                createTreeData(memberGroups);
+                children = children.concat(memberGroups);
 
-                        //be we still need to return sub groups which are included in children, that's why we are not using reject
-                        group.children = children;
-                        dfd.resolve(children);
-                    });
-                } else {
-                    dfd.resolve(children);
+                var memberUsers = _.get(data[1], 'data.response.docs');
+                for (var i = 0; i < memberUsers.length; i++) {
+                    memberUsers[i].title = memberUsers[i].name;
+                    memberUsers[i].isMember = true;
+                    children.push(memberUsers[i]);
                 }
+                dfd.resolve(children);
             });
+
+            group.children = children;
             return dfd.promise;
         };
-
-        function getGroup(id) {
-            return groupsMap[id];
-        }
 
         function mapMember(member) {
             var mapped = {};
@@ -585,10 +558,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     newGroup.parent_id_s = data.parentGroupName;
                     newGroup.directory_name_s = data.parentGroupDirectoryName;
                     groupsMap[group.name] = newGroup;
-                    if (!groupsMap[newGroup.parent_id_s].child_id_ss) {
-                        groupsMap[newGroup.parent_id_s].child_id_ss = [];
-                    }
-                    groupsMap[newGroup.parent_id_s].child_id_ss.push(newGroup.object_id_s);
+
                     newGroup.ascendants_id_ss = [newGroup.parent_id_s];
 
                     addToTree(newGroup);
@@ -614,7 +584,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
         }
 
-        $scope.onDeleteLdapGroup = function (group) {
+        $scope.onDeleteLdapGroup = function (group, parent) {
             var deferred = $q.defer();
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
@@ -624,16 +594,21 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
             };
             ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
-                    delete groupsMap[group.object_id_s];
-                    var index = $scope.data.findIndex(function (el) {
-                        return el.object_id_s === group.object_id_s;
+                if (!_.isEmpty(parent)) {
+                    organizationalHierarchyService.removeLdapGroupMembership(group, parent).then(function (payload) {
+                        removeFromGroupsMap(group);
+                        deferred.resolve(payload);
+                    }, function (payload) {
+                        deferred.reject(payload);
                     });
-                    $scope.data.splice(index, 1);
-                    deferred.resolve(payload);
-                }, function (payload) {
-                    deferred.reject(payload);
-                });
+                } else {
+                    organizationalHierarchyService.deleteLdapGroup(group).then(function (payload) {
+                        refreshPageData();
+                        deferred.resolve(payload);
+                    }, function (payload) {
+                        deferred.reject(payload);
+                    });
+                }
             }, function () {
                 //cancel btn
                 deferred.reject("cancel");

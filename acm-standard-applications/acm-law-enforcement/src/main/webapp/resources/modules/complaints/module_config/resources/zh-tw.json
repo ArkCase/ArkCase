@@ -14,8 +14,8 @@
   },
   "complaints.comp.info": {
     "title": "信息",
-    "complaintId": "投訴號碼:",
-    "complaintNumber": "投訴編號:",
+    "complaintId": "投訴識別號:",
+    "complaintNumber": "投訴識別號:",
     "courtRoomName": "法庭名稱:",
     "type.label": "種類",
     "created.label": "創建日期",
@@ -36,234 +36,198 @@
   },
   "complaints.comp.details": {
     "title": "詳情",
-    "informSaved": "zh-tw_Complaint details saved",
+    "informSaved": "投訴詳細信息已保存",
     "table.columns": {
-      "title": "zh-tw_Details",
-      "modified": "zh-tw_Date Last Modified",
-      "modifier": "zh-tw_User Last Modified"
+      "title": "詳情",
+      "modified": "上次修改日期",
+      "modifier": "上次更改用戶"
     }
   },
   "complaints.comp.documents": {
     "title": "文件",
-    "sendEmail": "zh-tw_Send Email",
-    "filterInputPlaceholder": "zh-tw_Filter",
-    "searchInputPlaceholder": "zh-tw_Search"
+    "sendEmail": "發電子郵件",
+    "filterInputPlaceholder": "過濾",
+    "searchInputPlaceholder": "搜索",
+    "newTask": "新任務"
   },
   "complaints.comp.people": {
     "title": "成員",
     "table.columns": {
-      "entity": "zh-tw_Entity",
-      "type": "zh-tw_Type",
-      "firstName": "zh-tw_FirstName",
-      "lastName": "zh-tw_LastName"
-    },
-    "contactMethods": {
-      "title": "zh-tw_ContactMethods",
-      "table.columns": {
-        "type": "zh-tw_Type",
-        "value": "zh-tw_Value",
-        "created": "zh-tw_Date Added",
-        "creator": "zh-tw_Added By",
-        "modified": "zh-tw_Last Modified",
-        "modifier": "zh-tw_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "組織",
-      "table.columns": {
-        "type": "zh-tw_Type",
-        "value": "zh-tw_Value",
-        "created": "zh-tw_Date Added",
-        "creator": "zh-tw_Added By",
-        "modified": "zh-tw_Last Modified",
-        "modifier": "zh-tw_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "地點",
-      "table.columns": {
-        "type": "zh-tw_Type",
-        "streetAddress": "zh-tw_Address",
-        "city": "zh-tw_City",
-        "state": "zh-tw_State",
-        "zip": "zh-tw_Zip",
-        "country": "zh-tw_Country",
-        "created": "zh-tw_Date Added",
-        "creator": "zh-tw_Added By",
-        "modified": "zh-tw_Last Modified",
-        "modifier": "zh-tw_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "zh-tw_Aliases",
-      "table.columns": {
-        "type": "zh-tw_Type",
-        "value": "zh-tw_Value",
-        "created": "zh-tw_Date Added",
-        "creator": "zh-tw_Added By",
-        "modified": "zh-tw_Last Modified",
-        "modifier": "zh-tw_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "zh-tw_Security Tags",
-      "table.columns": {
-        "type": "zh-tw_Type",
-        "value": "zh-tw_Value",
-        "created": "zh-tw_Date Added",
-        "creator": "zh-tw_Added By",
-        "modified": "zh-tw_Last Modified",
-        "modifier": "zh-tw_Modified By"
-      }
+      "type": "角色",
+      "firstName": "名字",
+      "lastName": "姓",
+      "organization": "組織",
+      "phone": "電話",
+      "location": "位置"
     }
   },
   "complaints.comp.organizations": {
     "title": "組織",
     "table.columns": {
-      "name": "zh-tw_Organization Name",
-      "associationType": "zh-tw_Role",
-      "type": "zh-tw_Organization Type",
-      "identification": "zh-tw_ID",
-      "value": "zh-tw_Organization",
-      "contact": "zh-tw_Primary Contact",
-      "phone": "zh-tw_Phone",
-      "location": "zh-tw_Location"
+      "name": "機構名稱",
+      "associationType": "角色",
+      "type": "組織類型",
+      "identification": "識別號",
+      "value": "組織",
+      "contact": "主要聯繫人",
+      "phone": "電話",
+      "location": "位置"
     },
     "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New",
-      "addExisting": "zh-tw_Add New"
+      "delete": "刪除",
+      "setPrimary": "設置為主要",
+      "addNew": "添新",
+      "addExisting": "添新"
     }
   },
   "complaints.comp.participants": {
     "title": "參與成員",
     "table.columns": {
-      "type": "zh-tw_Type",
-      "name": "zh-tw_Name"
+      "type": "類型",
+      "name": "名稱"
     },
     "dialogUserPicker": {
-      "header": "zh-tw_Choose User",
+      "header": "選擇用戶",
       "table.columns": {
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type",
-        "title": "zh-tw_Title",
-        "id": "zh-tw_Username"
+        "name": "名稱",
+        "type": "類型",
+        "title": "標題",
+        "id": "用戶名"
       }
     },
     "dialogGroupPicker": {
-      "header": "zh-tw_Choose Group",
+      "header": "選擇群組",
       "table.columns": {
-        "name": "zh-tw_Name"
+        "name": "名稱"
       }
     }
   },
-  "complaints.comp.locations": {
+  "complaints.comp.addresses": {
     "title": "地點",
     "table.columns": {
-      "address": "zh-tw_Address",
-      "type": "zh-tw_Type",
-      "city": "zh-tw_City",
-      "state": "zh-tw_State",
-      "zip": "zh-tw_Zip",
-      "modified": "zh-tw_Date Last Modified",
-      "modifier": "zh-tw_User Last Modified"
+      "type": "類型",
+      "streetAddress": "地址1",
+      "streetAddress2": "地址2",
+      "city": "市",
+      "state": "州",
+      "zip": "郵政編號",
+      "country": "國家",
+      "created": "添加日期",
+      "creator": "添加者",
+      "modified": "上一次更改",
+      "modifier": "更改者"
+    },
+    "actions": {
+      "addNew": "添新",
+      "map": "地圖"
     },
     "modal": {
-      "addLocation": "zh-tw_Add Location",
-      "editLocation": "zh-tw_Edit Record",
-      "type.label": "zh-tw_Type",
-      "street.label": "zh-tw_Street",
-      "city.label": "zh-tw_City",
-      "state.label": "zh-tw_State",
-      "zip.label": "zh-tw_Zip",
-      "btnOk.text": "zh-tw_Save",
-      "btnCancel.text": "zh-tw_Cancel"
+      "addAddress": "添加位置",
+      "editAddress": "編輯記錄",
+      "type.label": "地址類型",
+      "type.placeholder": "鍵入地址類型",
+      "streetAddress.label": "地址1",
+      "streetAddress.placeholder": "鍵入地址1",
+      "streetAddress2.label": "地址2",
+      "streetAddress2.placeholder": "鍵入地址2",
+      "city.label": "市",
+      "city.placeholder": "鍵入城市",
+      "zip.label": "",
+      "zip.placeholder": "鍵入郵編",
+      "state.label": "州",
+      "state.placeholder": "鍵入州名",
+      "country.label": "國家",
+      "country.placeholder": "鍵入國家",
+      "btnCancel.text": "取消",
+      "btnOk.text": "保存位置",
+      "setPrimary": "設置為主要？",
+      "yes": "確認",
+      "no": "否"
     }
   },
   "complaints.comp.notes": {
     "title": "註釋",
     "table.columns": {
-      "note": "zh-tw_Note",
-      "created": "zh-tw_Created",
-      "creator": "zh-tw_Author"
+      "note": "註釋",
+      "created": "創建日期",
+      "creator": "作者"
     }
   },
   "complaints.comp.tasks": {
     "title": "任務",
     "table.columns": {
-      "title": "zh-tw_Title",
-      "assignee": "zh-tw_Assignee",
-      "created": "zh-tw_Created",
-      "priority": "zh-tw_Priority",
-      "due": "zh-tw_Due",
-      "status": "zh-tw_Status"
+      "title": "標題",
+      "assignee": "指定人",
+      "created": "創建",
+      "priority": "優先級別",
+      "due": "到期",
+      "status": "狀態"
     },
-    "table.overdue.tooltip": "zh-tw_Task is Overdue",
-    "table.deadline.tooltip": "zh-tw_Deadline is Approaching"
+    "table.overdue.tooltip": "任務已過期",
+    "table.deadline.tooltip": "截止日期即將到來"
   },
   "complaints.comp.references": {
     "title": "參考",
     "table.columns": {
-      "targetName": "zh-tw_Number",
-      "targetTitle": "zh-tw_Title",
-      "parentName": "zh-tw_Parent",
-      "modified": "zh-tw_Modified",
-      "targetType": "zh-tw_Reference Type",
-      "status": "zh-tw_Status"
+      "targetName": "數據",
+      "targetTitle": "標題",
+      "targetType": "類型",
+      "assignee": "指定人",
+      "modified": "更改",
+      "status": "狀態"
     }
   },
   "complaints.comp.history": {
     "title": "歷史",
     "table.columns": {
-      "eventType": "zh-tw_Event Name",
-      "eventDate": "zh-tw_Date",
-      "userId": "zh-tw_User"
+      "eventType": "事件名稱",
+      "eventDate": "日期",
+      "userId": "用戶"
     }
   },
   "complaints.comp.time": {
     "title": "時間",
     "table.columns": {
-      "name": "zh-tw_Form Name",
-      "user": "zh-tw_User",
-      "tally": "zh-tw_Total Hours",
-      "modified": "zh-tw_Modified Date",
-      "status": "zh-tw_Status"
+      "name": "表單名稱",
+      "user": "用戶",
+      "tally": "小時總數",
+      "modified": "更改日期",
+      "status": "狀態"
     },
-    "formNamePrefix": "zh-tw_Timesheet"
+    "formNamePrefix": "時間表"
   },
   "complaints.comp.cost": {
     "title": "成本",
     "table.columns": {
-      "name": "zh-tw_Form Name",
-      "user": "zh-tw_User",
-      "tally": "zh-tw_Total Cost",
-      "modified": "zh-tw_Modified Date",
-      "status": "zh-tw_Status"
+      "name": "表單名稱",
+      "user": "用戶",
+      "tally": "總成本",
+      "modified": "修改日期",
+      "status": "狀態"
     },
-    "formNamePrefix": "zh-tw_Costsheet"
+    "formNamePrefix": "費用表"
   },
   "complaints.comp.tags": {
     "title": "標籤",
     "table.columns": {
-      "tag": "zh-tw_Tag",
-      "created": "zh-tw_Created",
-      "createdBy": "zh-tw_Created By"
+      "tag": "標籤",
+      "created": "創建",
+      "createdBy": "創建者"
     },
     "modal": {
-      "title": "zh-tw_Tag",
-      "search": "zh-tw_Search for Tag",
+      "title": "標籤",
+      "search": "搜索標籤",
       "buttons": {
-        "cancel": "zh-tw_Cancel",
-        "ok": "zh-tw_Add Tag"
+        "cancel": "取消",
+        "ok": "添加標籤"
       }
     },
     "message": {
-      "tagExists": "zh-tw_Tag with that name or description or text already exists",
-      "tagAssociated": "zh-tw_already associated",
+      "tagExists": "具有該名稱或說明或文本的標籤已經存在",
+      "tagAssociated": "已經關聯",
       "delete": {
-        "success": "zh-tw_Tag deleted successfully",
-        "error": "zh-tw_Error deleting tag"
+        "success": "標籤已成功刪除",
+        "error": "刪除標籤時出錯"
       }
     }
   },
@@ -274,82 +238,80 @@
     "title": "參考搜索"
   },
   "complaints.comp.addreference": {
-    "title": "zh-tw_Add Reference",
-    "cancelButton": "zh-tw_Cancel",
-    "confirmButton": "zh-tw_Add",
+    "title": "添加參考",
+    "cancelButton": "取消",
+    "confirmButton": "添加",
     "search": {
-      "placeholder": "zh-tw_Search for case, complaint, file, task",
-      "btn": "zh-tw_Search"
+      "placeholder": "搜索案件，投訴，文件，任務",
+      "btn": "搜索"
     },
     "grid": {
       "columns": {
-        "id": "zh-tw_Id",
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type",
-        "title": "zh-tw_Title",
-        "parent": "zh-tw_Parent",
-        "assignee": "zh-tw_Assignee",
-        "modified": "zh-tw_Modified"
+        "id": "識別號",
+        "name": "名稱",
+        "type": "類型",
+        "title": "標題",
+        "parent": "原屬",
+        "assignee": "指定人",
+        "modified": "更改"
       }
     }
   },
   "complaints.comp.assigneePickerModal": {
-    "title": "zh-tw_Change Assignee",
-    "assigneeNamelabel": "zh-tw_Assignee Name",
-    "btnCancelText": "zh-tw_Cancel",
-    "btnSaveText": "zh-tw_Save",
-    "searchAssigneeHeader": "zh-tw_Search Assignee"
+    "title": "更改指定人",
+    "assigneeNamelabel": "受讓人姓名",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchAssigneeHeader": "搜索受讓人"
   },
   "complaints.comp.groupPickerModal": {
-    "title": "zh-tw_Change Group",
-    "groupNamelabel": "zh-tw_Group Name",
-    "btnCancelText": "zh-tw_Cancel",
-    "btnSaveText": "zh-tw_Save",
-    "searchGroupHeader": "zh-tw_Search Group"
+    "title": "更改組",
+    "groupNamelabel": "團隊名字",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchGroupHeader": "搜索組"
   },
   "complaints.comp.approvalRouting": {
-    "title": "批准流程",
-    "addNewTooltip": "zh-tw_Add new approver",
-    "noBuckslipMessage": "zh-tw_No Data",
+    "title": "未來審批",
+    "addNewTooltip": "添加新審批",
+    "noBuckslipMessage": "沒有數據",
     "button": {
-      "save.tooltip": "zh-tw_Save Changes"
+      "save.tooltip": "保存更改"
     },
     "table.columns": {
-      "fullName": "zh-tw_Full Name"
+      "fullName": "全名"
     },
-    "assignee.label": "zh-tw_Assignee",
-    "owningGroup.label": "zh-tw_Owning Group",
-    "priority.label": "zh-tw_Priority",
-    "startDate.label": "zh-tw_Start Date",
-    "dueDate.label": "zh-tw_Due Date",
-    "state.label": "zh-tw_State"
+    "assignee.label": "指定人",
+    "owningGroup.label": "擁有集團",
+    "priority.label": "優先",
+    "startDate.label": "開始日期",
+    "dueDate.label": "截止日期",
+    "state.label": "州"
   },
   "complaints.comp.pastApprovals": {
-    "title": "過去批准",
-    "noBuckslipMessage": "zh-tw_No Data",
+    "title": "過去的審批人",
+    "noBuckslipMessage": "沒有數據",
     "table.columns": {
-      "approvalDate": "zh-tw_Approval Date",
-      "approverId": "zh-tw_Approver",
-      "approverFullName": "zh-tw_Approver",
-      "approverDecision": "zh-tw_Approver Decision"
+      "approvalDate": "審批日期",
+      "approverId": "審批人",
+      "approverFullName": "審批人",
+      "approverDecision": "審批決定"
     }
   },
   "complaints.userOrGroupSearch": {
-    "id": "zh-tw_userSearch",
-    "title": "選擇用戶",
+    "id": "用戶搜索",
+    "title": "用戶/群組搜索",
     "search": {
-      "btn": "zh-tw_Search",
-      "placeholder": "zh-tw_Search for the user or group."
+      "btn": "搜索",
+      "placeholder": "搜索用戶或組。"
     },
-    "cancelButton": "zh-tw_Cancel",
-    "confirmButton": "zh-tw_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "zh-tw_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "取消",
+    "confirmButton": "確認",
     "assigneeGridColumns": {
-      "name": "zh-tw_Name",
-      "type": "zh-tw_Type",
-      "title": "zh-tw_Title",
-      "username": "zh-tw_Username"
+      "name": "名稱",
+      "type": "類型",
+      "title": "標題",
+      "username": "用戶名"
     }
   },
   "complaints.tree": {
@@ -368,7 +330,7 @@
       "cost.label": "成本",
       "tags.label": "標籤",
       "calendar.label": "日曆",
-      "approvalRouting.label": "批准流程"
+      "approvalRouting.label": "審批流程"
     },
     "filters": {
       "opened": "所有打開的",

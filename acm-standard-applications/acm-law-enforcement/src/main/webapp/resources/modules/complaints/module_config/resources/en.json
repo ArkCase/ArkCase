@@ -272,7 +272,7 @@
     "searchGroupHeader": "Search Group"
   },
   "complaints.comp.approvalRouting": {
-    "title": "Future Approvers",
+    "title": "Approvers",
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
     "button": {
@@ -307,8 +307,10 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "_1_": "'enabled' and 'userOrGroupFacetFilter' appear not in use. _TO_BE_REMOVED_",
+    "_2_": "If do need them, please move them to config file. Resource file is only for STRING values of labels",
+    "_enabled": true,
+    "_userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",

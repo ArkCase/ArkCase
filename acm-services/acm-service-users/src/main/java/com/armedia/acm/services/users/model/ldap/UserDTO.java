@@ -18,10 +18,10 @@ public class UserDTO
     private String currentPassword;
     private List<String> groupNames;
 
-    public AcmUser toAcmUser(String defaultLang, String userDomain)
+    public AcmUser toAcmUser(String userId, String defaultLang)
     {
         AcmUser acmUser = new AcmUser();
-        acmUser.setUserId(String.format("%s@%s", userId.toLowerCase(), userDomain));
+        acmUser.setUserId(userId);
         acmUser.setLang(defaultLang);
         updateAcmUser(acmUser);
         return acmUser;
