@@ -18,7 +18,7 @@
     "percentage.label": "% от завершения",
     "assignee.label": "Правообладатель",
     "priority.label": "Приоритет",
-    "startDate.label": "rДата начала",
+    "startDate.label": "Дата начала",
     "dueDate.label": "Дата погашения",
     "state.label": "Состояние",
     "overdue.tooltip": "Задача просрочена",
@@ -47,7 +47,8 @@
     },
     "timesheet": {
       "approver.label": "Приверженец"
-    }
+    },
+    "_xxx_courtRoomName": "Название судебного зала:"
   },
   "tasks.comp.actions": {
     "title": "Действия",
@@ -71,270 +72,291 @@
   },
   "tasks.comp.details": {
     "title": "Детали",
-    "informSaved": "ru_Task details saved",
+    "informSaved": "Сведения о задаче сохранены",
     "table.columns": {
-      "details": "ru_Details",
-      "modified": "ru_Date Last Modified",
-      "modifier": "ru_User Last Modified"
+      "details": "Детали",
+      "modified": "Дата последнего изменения",
+      "modifier": "Последнее изменение пользователем"
     }
   },
   "tasks.comp.reworkdetails": {
     "title": "Детали исправления",
-    "informSaved": "ru_Rework details saved",
+    "informSaved": "Сохранение сохраненных данных",
     "table.columns": {
-      "title": "ru_Rework Details",
-      "modified": "ru_Date Last Modified",
-      "modifier": "ru_User Last Modified"
+      "title": "Подробная информация",
+      "modified": "Дата последнего изменения",
+      "modifier": "Последнее изменение пользователем"
     }
   },
   "tasks.comp.parentdocs": {
     "title": "Родительские документы",
-    "noParentDataMessage": "ru_No parent documents for standalone task",
-    "sendEmail": "ru_Send Email",
-    "filterInputPlaceholder": "ru_Filter",
-    "searchInputPlaceholder": "ru_Search"
+    "noParentDataMessage": "Нет родительских документов для автономной задачи",
+    "sendEmail": "Отправить электронное письмо",
+    "filterInputPlaceholder": "Фильтр",
+    "searchInputPlaceholder": "Поиск",
+    "folderName": "Имя папки"
   },
   "tasks.comp.attachments": {
     "title": "Вложения",
-    "sendEmail": "ru_Send Email",
-    "filterInputPlaceholder": "ru_Filter",
-    "searchInputPlaceholder": "ru_Search"
+    "sendEmail": "Отправить электронное письмо",
+    "filterInputPlaceholder": "Фильтр",
+    "searchInputPlaceholder": "Поиск"
   },
   "tasks.comp.notes": {
     "title": "Заметки",
     "table.columns": {
-      "note": "ru_Note",
-      "created": "ru_Created",
-      "creator": "ru_Author"
+      "note": "Заметка",
+      "created": "Созданный",
+      "creator": "Автор"
     }
   },
   "tasks.comp.references": {
     "title": "Ссылки ",
     "table.columns": {
-      "targetName": "ru_Number",
-      "targetTitle": "ru_Title",
-      "modified": "ru_Modified",
-      "targetType": "ru_Reference Type",
-      "status": "ru_Status"
+      "targetName": "Число",
+      "targetTitle": "Заглавие",
+      "targetType": "Тип",
+      "assignee": "Правопреемник",
+      "modified": "Модифицированный",
+      "status": "Положение дел"
     }
   },
   "tasks.comp.rejcomments": {
     "title": "Отклонить комментарии",
     "table.columns": {
-      "note": "ru_Comment",
-      "created": "ru_Created",
-      "creator": "ru_Author"
+      "note": "Комментарий",
+      "created": "Созданный",
+      "creator": "Автор"
     }
   },
   "tasks.comp.workflow": {
-    "title": "рабочего процесса",
+    "title": "Рабочего процесса",
     "table.columns": {
-      "participant": "ru_Participant",
-      "role": "ru_Role",
-      "status": "ru_Status",
-      "startDateTime": "ru_Start",
-      "endDateTime": "ru_End"
+      "participant": "Участник",
+      "role": "Роль",
+      "status": "Положение дел",
+      "startDateTime": "Начало",
+      "endDateTime": "Конец"
     }
   },
   "tasks.comp.diagram": {
-    "title": "ru_Process Diagram",
-    "error.loading": "ru_Diagram can't be loaded"
+    "title": "Технологическая схема",
+    "error.loading": "Диаграмма не может быть загружена"
   },
   "tasks.comp.signatures": {
     "title": "Электронные подписи",
     "table.columns": {
-      "signedDate": "ru_Date",
-      "signedBy": "ru_Signed By"
+      "signedDate": "Дата",
+      "signedBy": "Подписано"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "находящиеся на рассмотрении",
+    "title": "Находящиеся на рассмотрении",
     "table.columns": {
-      "fileId": "ru_ID",
-      "fileName": "ru_Title",
-      "created": "ru_Created",
-      "creator": "ru_Author",
-      "status": "ru_Status"
+      "fileId": "ID",
+      "fileName": "Заглавие",
+      "created": "Созданный",
+      "creator": "Автор",
+      "status": "Положение дел"
     }
   },
   "tasks.comp.history": {
     "title": "История",
     "table.columns": {
-      "eventType": "ru_Event Name",
-      "eventDate": "ru_Date",
-      "userId": "ru_User"
+      "eventType": "Название события",
+      "eventDate": "Дата",
+      "userId": "Пользователь"
     }
   },
   "tasks.comp.tags": {
     "title": "Теги",
     "table.columns": {
-      "tag": "ru_Tag",
-      "created": "ru_Created",
-      "createdBy": "ru_Created By"
+      "tag": "Тег",
+      "created": "Созданный",
+      "createdBy": "Сделано"
     },
     "modal": {
-      "title": "ru_Tag",
-      "search": "ru_Search for Tag",
+      "title": "Тег",
+      "search": "Поиск тегов",
       "buttons": {
-        "cancel": "ru_Cancel",
-        "ok": "ru_Add Tag"
+        "cancel": "Отмена",
+        "ok": "Добавить метку"
       }
     },
     "message": {
-      "tagExists": "ru_Tag with that name or description or text already exists",
-      "tagAssociated": "ru_already associated",
+      "tagExists": "Тег с этим именем или описанием или текстом уже существует",
+      "tagAssociated": "Уже связанный",
       "delete": {
-        "success": "ru_Tag deleted successfully",
-        "error": "ru_Error deleting tag"
+        "success": "Удаленный тег",
+        "error": "Ошибка удаления тега"
       }
     }
   },
   "tasks.newTask": {
-    "title": "ru_New Task",
-    "assignee.button": "ru_Choose Assignee",
-    "assignee.label": "ru_Assign To",
-    "assignee.placeholder": "ru_Please choose assignee",
-    "assigneeOrGroup.placeholder": "ru_Please choose assignee or group",
-    "candidateGroups.label": "ru_Owning group",
-    "priority.placeholder": "ru_Select Priority",
-    "priority.label": "ru_Priority",
-    "status.placeholder": "ru_Select Status",
-    "status.label": "ru_Status",
-    "associateNumber.label": "ru_Associate with Complaint or Case",
-    "associateNumber.placeholder": "ru_Complaint or Case #",
-    "associateType.label": "ru_Parent Type",
-    "subject.label": "ru_Subject",
-    "taskStartDate.label": "ru_Start Date",
-    "dueDate.label": "ru_Due Date",
-    "datepicker.close": "ru_Done",
-    "percentComplete.label": "ru_% Complete",
-    "notes.label": "ru_Notes",
-    "saveButton": "ru_Save",
-    "overdue.tooltip": "ru_Task is Overdue",
-    "deadline.tooltip": "ru_Deadline is Approaching",
-    "groupToggle.label": "ru_Group Task?",
-    "group.placeholder": "ru_Please select a group."
+    "title": "Новое задание",
+    "assignee.button": "Выберите Назначено",
+    "assignee.label": "Назначено",
+    "assignee.placeholder": "Выберите правопреемника",
+    "assigneeOrGroup.placeholder": "Выберите правопреемника или группу",
+    "candidateGroups.label": "Собственная группа",
+    "priority.placeholder": "Выберите приоритет",
+    "priority.label": "Приоритет",
+    "status.placeholder": "Выберите статус",
+    "status.label": "Положение дел",
+    "associateNumber.label": "Свяжите с жалобой или случаем",
+    "associateNumber.placeholder": "Жалоба или дело №",
+    "associateType.label": "Родительский тип",
+    "subject.label": "Предмет",
+    "taskStartDate.label": "Дата начала",
+    "dueDate.label": "Срок",
+    "datepicker.close": "Готово",
+    "percentComplete.label": "Завершенный процент",
+    "notes.label": "Заметки",
+    "saveButton": "Сохранить задачу",
+    "cancelButton": "Отмена",
+    "overdue.tooltip": "Задача просрочена",
+    "deadline.tooltip": "Крайний срок приближается",
+    "groupToggle.label": "Групповая задача?",
+    "group.placeholder": "Выберите группу.",
+    "documentsToReview.label": "Документы для рассмотрения",
+    "businessProcessTypes.label": "Тип бизнес-процесса",
+    "noSelectedDocsErrorMsg": "Выберите хотя бы один документ, подлежащий рассмотрению."
   },
   "tasks.userOrGroupSearch": {
-    "id": "ru_userSearch",
-    "title": "ru_User/Group Search",
+    "id": "UserSearch",
+    "title": "Поиск пользователей / групп",
     "search": {
-      "btn": "ru_Search",
-      "placeholder": "ru_Search for the user or group to assign to this task."
+      "btn": "Поиск",
+      "placeholder": "Найдите пользователя или группу для назначения этой задачи."
     },
-    "pickUserLabel": "ru_Pick Associated User",
-    "pickGroupLabel": "ru_Pick Associated Group",
-    "cancelButton": "ru_Cancel",
-    "confirmButton": "ru_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "ru_\"object_type_s\":(GROUP OR USER)",
+    "pickUserLabel": "Выбрать ассоциированного пользователя",
+    "pickGroupLabel": "Выбрать ассоциированную группу",
+    "cancelButton": "Отмена",
+    "confirmButton": "Подтвердить",
     "assigneeGridColumns": {
-      "name": "ru_Name",
-      "type": "ru_Type",
-      "title": "ru_Title",
-      "username": "ru_Username"
+      "name": "Имя",
+      "type": "Тип",
+      "title": "Заглавие",
+      "username": "Имя пользователя"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "OwningGroupSearch",
+    "title": "Поиск групп (ов) этого пользователя",
+    "search": {
+      "btn": "Поиск",
+      "placeholder": "Поиск групп, в которых этот пользователь является участником."
+    },
+    "cancelButton": "Отмена",
+    "confirmButton": "Подтвердить",
+    "assigneeGridColumns": {
+      "name": "Имя",
+      "type": "Тип",
+      "title": "Заглавие",
+      "username": "Имя пользователя"
     }
   },
   "tasks.objectSearch": {
-    "id": "ru_objectSearch",
-    "title": "ru_Object Search",
+    "id": "ObjectSearch",
+    "title": "Поиск объектов",
     "search": {
-      "btn": "ru_Search",
-      "placeholder": "ru_Search for the case or complaint to this task."
+      "btn": "Поиск",
+      "placeholder": "Найдите дело или жалобу на эту задачу."
     },
-    "cancelButton": "ru_Cancel",
-    "confirmButton": "ru_Confirm",
-    "enabled": true,
-    "userFacetFilter": "ru_\"Object Type\": ",
+    "cancelButton": "Отмена",
+    "confirmButton": "Подтвердить",
     "objectGridColumns": {
-      "name": "ru_Number",
-      "type": "ru_Type",
-      "title": "ru_Title",
-      "username": "ru_Assignee"
+      "name": "Число",
+      "type": "Тип",
+      "title": "Заглавие",
+      "username": "Правопреемник"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "Поиск ссылок"
+  },
   "tasks.comp.addreference": {
-    "title": "ru_Add Reference",
-    "cancelButton": "ru_Cancel",
-    "confirmButton": "ru_Add",
+    "title": "Добавить ссылку",
+    "cancelButton": "Отмена",
+    "confirmButton": "Добавить",
     "search": {
-      "placeholder": "ru_Search for case, complaint, file, task",
-      "btn": "ru_Search"
+      "placeholder": "Поиск случая, жалобы, файла, задачи",
+      "btn": "Поиск"
     },
     "grid": {
       "columns": {
-        "id": "ru_Id",
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "parent": "ru_Parent",
-        "assignee": "ru_Assignee",
-        "modified": "ru_Modified"
+        "id": "ID",
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "parent": "Родитель",
+        "assignee": "Правопреемник",
+        "modified": "Модифицированный"
       }
     }
   },
   "tasks.comp.participants": {
-    "title": "ru_Participants",
+    "title": "Участники",
     "table.columns": {
-      "type": "ru_Type",
-      "name": "ru_Name"
+      "type": "Тип",
+      "name": "Имя"
     },
     "dialogUserPicker": {
-      "header": "ru_Choose User",
+      "header": "Выберите пользователя",
       "table.columns": {
-        "name": "ru_Name",
-        "type": "ru_Type",
-        "title": "ru_Title",
-        "id": "ru_Username"
+        "name": "Имя",
+        "type": "Тип",
+        "title": "Заглавие",
+        "id": "Имя пользователя"
       }
     },
     "dialogGroupPicker": {
-      "header": "ru_Choose Group",
+      "header": "Выберите группу",
       "table.columns": {
-        "name": "ru_Name"
+        "name": "Имя"
       }
     }
   },
   "tasks.comp.assigneePickerModal": {
-    "title": "ru_Change Assignee",
-    "assigneeNamelabel": "ru_Assignee Name",
-    "btnCancelText": "ru_Cancel",
-    "btnSaveText": "ru_Save",
-    "searchAssigneeHeader": "ru_Search Assignee"
+    "title": "Изменить получателя",
+    "assigneeNamelabel": "Имя получателя",
+    "btnCancelText": "Отмена",
+    "btnSaveText": "Сохранить",
+    "searchAssigneeHeader": "Поиск Правопреемник"
   },
   "tasks.comp.groupPickerModal": {
-    "title": "ru_Change Group",
-    "groupNamelabel": "ru_Group Name",
-    "btnCancelText": "ru_Cancel",
-    "btnSaveText": "ru_Save",
-    "searchGroupHeader": "ru_Search Group"
+    "title": "Изменить группу",
+    "groupNamelabel": "Название группы",
+    "btnCancelText": "Отмена",
+    "btnSaveText": "Сохранить",
+    "searchGroupHeader": "Поиск группы"
   },
   "tasks.comp.approvalRouting": {
-    "title": "ru_Future Approvers",
-    "addNewTooltip": "ru_Add new approver",
-    "noBuckslipMessage": "No Data",
+    "title": "Будущие утверждающие",
+    "addNewTooltip": "Добавить новый одобритель",
+    "noBuckslipMessage": "Нет данных",
     "button": {
-      "save.tooltip": "ru_Save Changes"
+      "save.tooltip": "Сохранить изменения"
     },
     "table.columns": {
-      "fullName": "ru_Full Name"
+      "fullName": "Полное имя"
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "ru_Past Approvers",
-    "noBuckslipMessage": "No Data",
+    "title": "Прошлые утверждающие",
+    "noBuckslipMessage": "Нет данных",
     "table.columns": {
-      "approvalDate": "ru_Approval Date",
-      "approverId": "ru_Approver",
-      "approverFullName": "ru_Full Name",
-      "approverDecision": "ru_Approver Decision"
+      "approvalDate": "Дата утверждения",
+      "approverId": "Утверждающий",
+      "approverFullName": "Полное имя",
+      "approverDecision": "Принятие решения"
     }
   },
   "tasks.tree": {
     "nodeTypes": {
       "details.label": "Детали",
       "reworkDetails.label": "Детали исправления",
-      "docReview.label": "находящиеся на рассмотрении",
+      "docReview.label": "Находящиеся на рассмотрении",
       "parentDoc.label": "Родительские документы",
       "attachments.label": "Вложения",
       "references.label": "Ссылки",
