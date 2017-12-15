@@ -116,6 +116,9 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     private String buckslipPastApprovers;
 
+    // TODO: we might need this field as a column in the database and use it in Drools rules
+    private Boolean restricted = false;
+
     public AcmContainer getContainer()
     {
         return container;
@@ -649,7 +652,11 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     @Override
     public Boolean getRestricted()
     {
-        // TODO We might need to add restrictedFlag to AcmTask at some point
-        return false;
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 }
