@@ -1319,13 +1319,17 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
     }
 
     @Override
-    public void deleteCmisObject(CmisObject cmisObject) throws Exception
+    public void deleteCmisObject(CmisObject cmisObject, String cmisRepositoryId) throws Exception
     {
 
         Map<String, Object> props = new HashMap<>();
         props.put(EcmFileConstants.ECM_FILE_ID, cmisObject.getProperty("cmis:versionSeriesId").getFirstValue());
+        if (cmisRepositoryId == null)
+        {
+            cmisRepositoryId = ecmFileServiceProperties.getProperty("ecm.defaultCmisId");
+        }
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
-                cmisConfigUtils.getCmisConfiguration(ecmFileServiceProperties.getProperty("ecm.defaultCmisId")));
+                cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.ALL_VERSIONS, false);
 
         getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
