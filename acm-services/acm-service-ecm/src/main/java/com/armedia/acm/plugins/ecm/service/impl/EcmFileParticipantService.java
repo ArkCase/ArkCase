@@ -13,6 +13,8 @@ import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
@@ -32,6 +34,8 @@ import java.util.stream.Collectors;
  */
 public class EcmFileParticipantService
 {
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+
     private EcmFileDao fileDao;
     private AcmFolderService folderService;
     private AcmParticipantService participantService;
@@ -217,6 +221,12 @@ public class EcmFileParticipantService
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer) throws AcmAccessControlException
     {
+        if (acmContainer == null)
+        {
+            log.warn("Null container passed in " + getClass().getName() + ".inheritParticipantsFromAssignedObject()");
+            return;
+        }
+
         if (acmContainer.getFolder() != null)
         {
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
@@ -283,6 +293,12 @@ public class EcmFileParticipantService
     @Transactional(rollbackFor = Exception.class)
     public void setRestrictedFlagRecursively(Boolean restricted, AcmContainer acmContainer)
     {
+        if (acmContainer == null)
+        {
+            log.warn("Null container passed in " + getClass().getName() + ".setRestrictedFlagRecursively()");
+            return;
+        }
+
         if (acmContainer.getFolder() != null)
         {
             setRestrictedFlagRecursively(restricted, acmContainer.getFolder());

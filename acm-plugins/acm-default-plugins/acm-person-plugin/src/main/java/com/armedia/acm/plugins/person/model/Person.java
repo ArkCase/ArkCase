@@ -16,16 +16,43 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.JoinTable;
+import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.PostLoad;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -59,14 +86,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     private String status;
 
     @Column(name = "cm_given_name")
-    @Size(min=1)
+    @Size(min = 1)
     private String givenName;
 
     @Column(name = "cm_middle_name")
     private String middleName;
 
     @Column(name = "cm_family_name")
-    @Size(min=1)
+    @Size(min = 1)
     private String familyName;
 
     @Column(name = "cm_person_hair_color")
@@ -108,14 +135,14 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_postal_address", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "acm_person_contact_method", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     @OrderBy(value = "id")
     private List<ContactMethod> contactMethods = new ArrayList<>();
 
@@ -131,32 +158,32 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             CascadeType.DETACH,
             CascadeType.REFRESH,
             CascadeType.REMOVE,
-            CascadeType.PERSIST}, orphanRemoval = true, mappedBy = "person")
+            CascadeType.PERSIST }, orphanRemoval = true, mappedBy = "person")
     private List<PersonAssociation> associationsFromObjects = new ArrayList<>();
 
     @OneToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
-            CascadeType.REMOVE})
+            CascadeType.REMOVE })
     @JoinColumns({
             @JoinColumn(name = "cm_person_assoc_parent_id", referencedColumnName = "cm_person_id"),
-            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type")})
+            @JoinColumn(name = "cm_person_assoc_parent_type", referencedColumnName = "cm_object_type") })
     @OrderBy("created ASC")
     private List<PersonAssociation> associationsToObjects = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(name = "acm_person_identification", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true) })
     private List<Identification> identifications = new ArrayList<>();
 
     @ManyToMany(cascade = {
             CascadeType.DETACH,
             CascadeType.REFRESH,
-            CascadeType.REMOVE})
+            CascadeType.REMOVE })
     @JoinTable(name = "acm_person_organization", joinColumns = {
-            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id")}, inverseJoinColumns = {
-            @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id")})
+            @JoinColumn(name = "cm_person_id", referencedColumnName = "cm_person_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_organization_id", referencedColumnName = "cm_organization_id") })
     private List<Organization> organizations = new ArrayList<>();
 
     @Column(name = "cm_class_name")
@@ -231,7 +258,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumns({
             @JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @Column(name = "cm_person_restricted_flag", nullable = false)
@@ -246,27 +273,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             setStatus("ACTIVE");
         }
 
-        for (PersonAlias pa : getPersonAliases())
-        {
-            pa.setPerson(this);
-        }
-
-        for (PersonAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setPerson(this);
-        }
-        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
-        {
-            poa.setPerson(this);
-        }
-        if (getDefaultOrganization() != null)
-        {
-            getDefaultOrganization().setPerson(this);
-        }
+        setupChildPointers();
     }
 
     @PreUpdate
     protected void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
     {
         for (PersonAlias pa : getPersonAliases())
         {
@@ -285,10 +301,18 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             getDefaultOrganization().setPerson(this);
         }
+
         for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+
+        if (getContainer() != null)
+        {
+            getContainer().setContainerObjectId(getId());
+            getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle("Person-" + getId());
         }
     }
 
@@ -296,9 +320,12 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
     protected void postLoad()
     {
         /*
-         * FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch same person which is
-         * parent to them. Because of deadline didn't have time to find better solution for this like: get object from cache or explore new
-         * possibilities So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code
+         * FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
+         * same person which is
+         * parent to them. Because of deadline didn't have time to find better solution for this like: get object from
+         * cache or explore new
+         * possibilities So when we optimize JPA not to fetch same entity (with same ID) more than once in same
+         * transaction, this code
          * should be removed linked with technical dept: AFDP-3487
          */
         for (PersonAlias pa : getPersonAliases())
@@ -796,6 +823,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.participants = participants;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

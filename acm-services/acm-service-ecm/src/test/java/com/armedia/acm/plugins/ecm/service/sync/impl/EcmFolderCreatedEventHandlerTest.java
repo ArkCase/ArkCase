@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -7,6 +15,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.json.JSONObject;
@@ -14,10 +24,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import javax.persistence.NoResultException;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by dmiller on 5/17/17.
@@ -29,8 +35,9 @@ public class EcmFolderCreatedEventHandlerTest
     private AcmFolderDao acmFolderDao = EasyMock.createMock(AcmFolderDao.class);
     private AcmFolderService acmFolderService = EasyMock.createMock(AcmFolderService.class);
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter = EasyMock.createMock(AuditPropertyEntityAdapter.class);
+    private EcmFileParticipantService fileParticipantService = EasyMock.createMock(EcmFileParticipantService.class);
 
-    private Object[] mocks = {acmFolderDao, acmFolderService, auditPropertyEntityAdapter};
+    private Object[] mocks = { acmFolderDao, acmFolderService, auditPropertyEntityAdapter, fileParticipantService };
     private EcmEvent folderCreated;
 
     @Before
@@ -41,6 +48,7 @@ public class EcmFolderCreatedEventHandlerTest
         unit.setFolderDao(acmFolderDao);
         unit.setFolderService(acmFolderService);
         unit.setAuditPropertyEntityAdapter(auditPropertyEntityAdapter);
+        unit.setFileParticipantService(fileParticipantService);
 
         folderCreated = new EcmEvent(new JSONObject());
         folderCreated.setEcmEventType(EcmEventType.CREATE);
@@ -71,7 +79,13 @@ public class EcmFolderCreatedEventHandlerTest
         // be sure the folder has creator and modifier of the user that made the change in the ECM service
         auditPropertyEntityAdapter.setUserId(folderCreated.getUserId());
 
-        expect(acmFolderDao.save(capture(newFolder))).andReturn(new AcmFolder());
+        AcmFolder savedFolder = new AcmFolder();
+        expect(acmFolderDao.save(capture(newFolder))).andReturn(savedFolder);
+
+        fileParticipantService.setFolderParticipantsFromParentFolder(savedFolder);
+        expectLastCall();
+
+        expect(acmFolderDao.save(savedFolder)).andReturn(savedFolder);
 
         replay(mocks);
 
@@ -87,7 +101,6 @@ public class EcmFolderCreatedEventHandlerTest
         assertEquals(parentFolder.getCmisRepositoryId(), created.getCmisRepositoryId());
 
     }
-
 
     @Test
     public void onEcmFolderCreated_ifAlreadyInArkcase_thenNoFurtherAction() throws Exception

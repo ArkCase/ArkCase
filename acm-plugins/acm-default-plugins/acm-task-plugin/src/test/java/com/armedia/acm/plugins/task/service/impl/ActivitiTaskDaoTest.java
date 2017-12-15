@@ -1148,6 +1148,7 @@ public class ActivitiTaskDaoTest extends EasyMockSupport
         expect(mockFormValue.getId()).andReturn("formValueId").atLeastOnce();
         expect(mockFormValue.getName()).andReturn("formValueName").atLeastOnce();
         expect(mockTaskService.getIdentityLinksForTask(task.getId())).andReturn(new ArrayList<>());
+        expect(mockParticipantDao.findParticipantsForObject("TASK", taskId, FlushModeType.AUTO)).andReturn(partList);
 
         replayAll();
 

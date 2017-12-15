@@ -69,6 +69,7 @@
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
         <property name="acmUserService" ref="acmUserService"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">
