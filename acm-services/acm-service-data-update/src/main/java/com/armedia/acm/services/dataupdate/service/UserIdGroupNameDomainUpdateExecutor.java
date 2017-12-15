@@ -9,6 +9,8 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,8 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
 
     private UserIdGroupNameDomainUpdateDao userIdGroupNameDomainUpdateDao;
 
+    private SpringContextHolder contextHolder;
+
     private Function<String, String> idStripDomain = it -> StringUtils.substringBeforeLast(it, "@");
 
     @Override
@@ -50,6 +54,14 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     @Transactional
     public void execute()
     {
+        Map<String, LdapSyncService> ldapSyncServices = contextHolder.getAllBeansOfType(LdapSyncService.class);
+        ldapSyncServices.forEach((beanId, service) -> {
+            if (beanId.endsWith("_ldapSyncJob"))
+            {
+                service.ldapSync();
+            }
+        });
+
         Set<AcmUserUpdateHolder> userUpdateHolderSet = getUpdateUserHolders();
 
         Map<String, String> newOldUserIds = userUpdateHolderSet.stream()
@@ -293,6 +305,12 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
             int rows = userIdGroupNameDomainUpdateDao.updateAssigneeActRuTask(oldUserId, newUserId);
             log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
         });
+
+        log.debug("Updating LOCK_OWNER_ in ACT_RU_TASK tables");
+        newOldUserIds.forEach((newUserId, oldUserId) -> {
+            int rows = userIdGroupNameDomainUpdateDao.updateLockOwnerActRuJob(oldUserId, newUserId);
+            log.debug("Affected [{}] rows for userId: [{}]", rows, newUserId);
+        });
     }
 
     private Map<String, String> getNewToOldGroupNames()
@@ -351,5 +369,10 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
     public void setGroupDao(AcmGroupDao groupDao)
     {
         this.groupDao = groupDao;
+    }
+
+    public void setContextHolder(SpringContextHolder contextHolder)
+    {
+        this.contextHolder = contextHolder;
     }
 }
