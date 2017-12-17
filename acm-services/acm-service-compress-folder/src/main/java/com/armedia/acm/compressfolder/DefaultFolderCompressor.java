@@ -171,25 +171,15 @@ public class DefaultFolderCompressor implements FolderCompressor
         for (AcmObject obj : folderChildren)
         {
             String objectType = obj.getObjectType().toUpperCase();
-            if (OBJECT_FILE_TYPE.equals(objectType) && (isFileSelected(obj.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode)))
+            if(OBJECT_FILE_TYPE.equals(objectType) && compressNode == null)
             {
-                String fileName = EcmFile.class.cast(obj).getFileName();
-                /*
-                If filename is duplicate, we will have to rename it.
-                Otherwise, the zip file errors out.
-                Here we just append an underscore "_" and date the file was created
-                 */
-                if(fileFolderList.contains(fileName)){
-                    Date forFilenameUniquenessDt = (obj instanceof AcmEntity ) ? AcmEntity.class.cast(obj).getCreated() : new Date();
-                    String forFilenameUniqueness = format.format(forFilenameUniquenessDt);
-                    fileName = fileName + "_" + forFilenameUniqueness;
-                }
-                fileFolderList.add(fileName);
-
-                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, fileName + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
-                InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
-                copy(fileByteStream, zos);
-            } else if (OBJECT_FOLDER_TYPE.equals(objectType))
+                compressFile(zos, parentPath, fileFolderList, format, obj);
+            }
+            else if (OBJECT_FILE_TYPE.equals(objectType) && (isFileSelected(obj.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode)) && compressNode != null)
+            {
+                compressFile(zos, parentPath, fileFolderList, format, obj);
+            }
+            else if (OBJECT_FOLDER_TYPE.equals(objectType))
             {
                 AcmFolder childFolder = AcmFolder.class.cast(obj);
 
@@ -213,6 +203,27 @@ public class DefaultFolderCompressor implements FolderCompressor
             zos.closeEntry();
         }
 
+    }
+
+    private void compressFile(ZipOutputStream zos, String parentPath, List<String> fileFolderList, DateFormat format, AcmObject obj)
+            throws IOException, MuleException, AcmUserActionFailedException
+    {
+        String fileName = EcmFile.class.cast(obj).getFileName();
+                /*
+                If filename is duplicate, we will have to rename it.
+                Otherwise, the zip file errors out.
+                Here we just append an underscore "_" and date the file was created
+                 */
+        if(fileFolderList.contains(fileName)){
+            Date forFilenameUniquenessDt = (obj instanceof AcmEntity) ? AcmEntity.class.cast(obj).getCreated() : new Date();
+            String forFilenameUniqueness = format.format(forFilenameUniquenessDt);
+            fileName = fileName + "_" + forFilenameUniqueness;
+        }
+        fileFolderList.add(fileName);
+
+        zos.putNextEntry(new ZipEntry(concatStrings(parentPath, fileName + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
+        InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
+        copy(fileByteStream, zos);
     }
 
     private boolean isFileSelected(Long fileId, CompressNode compressNode)
