@@ -48,6 +48,21 @@
     "sendEmail": "ईमेल भेजें",
     "filterInputPlaceholder": "फिल्टर",
     "searchInputPlaceholder": "खोज",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "जांच की रिपोर्ट"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "पत्राचार निमंत्रण",
+        "approvalLetter%": "शिकायत अनुमोदन पत्र",
+        "generalRelease%": "सामान्य रिलीज़",
+        "medicalRelease%": "मेडिकल रिलीज",
+        "clearanceGranted%": "मंजूरी दी",
+        "clearanceDenied%": "मंजूरी अस्वीकृत",
+        "witnessInterview%": "गवाह साक्षात्कार अनुरोध",
+        "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
+      }
+    },
     "newTask": "नया कार्य"
   },
   "complaints.comp.people": {

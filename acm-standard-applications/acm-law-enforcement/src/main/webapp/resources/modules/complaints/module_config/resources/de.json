@@ -48,6 +48,21 @@
     "sendEmail": "E-Mail senden",
     "filterInputPlaceholder": "Filter",
     "searchInputPlaceholder": "Suche",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Untersuchungsbericht"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Korrespondenz-Einladung",
+        "approvalLetter%": "Beschwerde-Genehmigungsbrief",
+        "generalRelease%": "Allgemeine Freigabe",
+        "medicalRelease%": "Medizinische Freigabe",
+        "clearanceGranted%": "Freigabe erteilt",
+        "clearanceDenied%": "Freigabe verweigert",
+        "witnessInterview%": "Zeugen-Interview-Anfrage",
+        "witnessInterview2%": "Zeugen-Interviewantrag-2.0"
+      }
+    },
     "newTask": "Neue Aufgabe"
   },
   "complaints.comp.people": {

@@ -9,6 +9,7 @@ import com.armedia.acm.compressfolder.model.FileFolderNode;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
@@ -22,8 +23,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
+import java.util.Date;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.Deflater;
@@ -107,11 +113,11 @@ public class DefaultFolderCompressor implements FolderCompressor
     }
 
     /*
-         * (non-Javadoc)
-         *
-         * @see com.armedia.acm.compressfolder.FolderCompressor#compressFolder(java.lang.Long, long,
-         * com.armedia.acm.compressfolder.SizeUnit)
-         */
+     * (non-Javadoc)
+     *
+     * @see com.armedia.acm.compressfolder.FolderCompressor#compressFolder(java.lang.Long, long,
+     * com.armedia.acm.compressfolder.SizeUnit)
+     */
     @Override
     public String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws FolderCompressorException
     {
@@ -160,19 +166,47 @@ public class DefaultFolderCompressor implements FolderCompressor
 
         List<AcmObject> folderChildren = folderService.getFolderChildren(folder.getId()).stream().filter(obj -> obj.getObjectType() != null)
                 .collect(Collectors.toList());
-
+        List<String> fileFolderList = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("yyyy_M_d_k_m_s", Locale.ENGLISH);
         for (AcmObject obj : folderChildren)
         {
             String objectType = obj.getObjectType().toUpperCase();
             if (OBJECT_FILE_TYPE.equals(objectType) && (isFileSelected(obj.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode)))
             {
-                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, EcmFile.class.cast(obj).getFileName() + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
+                String fileName = EcmFile.class.cast(obj).getFileName();
+                /*
+                If filename is duplicate, we will have to rename it.
+                Otherwise, the zip file errors out.
+                Here we just append an underscore "_" and date the file was created
+                 */
+                if(fileFolderList.contains(fileName)){
+                    Date forFilenameUniquenessDt = (obj instanceof AcmEntity ) ? AcmEntity.class.cast(obj).getCreated() : new Date();
+                    String forFilenameUniqueness = format.format(forFilenameUniquenessDt);
+                    fileName = fileName + "_" + forFilenameUniqueness;
+                }
+                fileFolderList.add(fileName);
+
+                zos.putNextEntry(new ZipEntry(concatStrings(parentPath, fileName + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
                 InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
                 copy(fileByteStream, zos);
             } else if (OBJECT_FOLDER_TYPE.equals(objectType))
             {
                 AcmFolder childFolder = AcmFolder.class.cast(obj);
-                String entryName = concatStrings(parentPath, childFolder.getName(), "/");
+
+                String folderName = childFolder.getName();
+                /*
+                If foldername is duplicate, we will have to rename it.
+                Otherwise, the zip file errors out.
+                Here we just append an underscore "_" and date the file was created
+                 */
+                if(fileFolderList.contains(folderName)){
+                    Date forFoldernameUniquenessDt = (obj instanceof AcmEntity ) ? AcmEntity.class.cast(obj).getCreated() : new Date();
+                    String forFoldernameUniqueness = format.format(forFoldernameUniquenessDt);
+                    folderName = folderName + "_" + forFoldernameUniqueness;
+                }
+                fileFolderList.add(folderName);
+
+                String entryName = concatStrings(parentPath, folderName, "/");
                 zos.putNextEntry(new ZipEntry(entryName));
                 compressFolder(zos, childFolder, entryName, compressNode);
             }
@@ -195,8 +229,6 @@ public class DefaultFolderCompressor implements FolderCompressor
                     .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(String.valueOf(parentFolderId)) && fileFolderNode.isFolder() == true);
     }
 
-
-    
     /**
      * Returns path of compressed folder file
      */
