@@ -8,6 +8,7 @@ angular.module('services').factory('DocTreeExt.DownloadSelectedAsZip', ['$http'
             method: 'POST',
             url: 'api/latest/service/compressor/download',
             data: selectedNodes,
+            responseType:'arraybuffer',
             headers: {
                 'Accept': 'application/zip'
             },

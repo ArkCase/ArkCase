@@ -27,6 +27,26 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
             link: function (scope) {
                 scope.downloadInProgress = false;
 
+                var downloadFile = function(data){
+                    //TRIGGER DOWNLOAD
+
+                    var blob = new Blob([data], {type: "application/zip"})
+                    var url = window.URL.createObjectURL(blob);
+
+                    var a = document.createElement('a');
+                    document.body.appendChild(a);
+
+                    a.style = "display: none";
+                    a.href = url;
+                    a.download = "acm-documents.zip";
+                    a.click();
+
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+
+                    scope.downloadInProgress = false;
+                };
+
                 scope.downloadAllAsZip = function () {
                     scope.downloadInProgress = true;
 
@@ -43,17 +63,15 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                             objectId: _objectId
                         });
                     }
-                    var zipNodes = {
+                    var compressNode = {
                       rootFolder: folderId,
                       selectedNodes: selectedNodes
                     };
 
-                    DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(zipNodes)
+                    DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode)
                         .then(function (result){
-                            debugger;
+                            downloadFile(result.data);
                         });
-
-
                 };
             }
         };
