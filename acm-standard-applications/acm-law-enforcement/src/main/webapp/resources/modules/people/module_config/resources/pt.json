@@ -79,6 +79,9 @@
       "yes": "pt_Yes",
       "change": "pt_Change Picture",
       "save": "pt_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "pt_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
@@ -362,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Pessoas Relacionadas",
+    "linkTitle": "pt_Rel People",
     "table.columns": {
       "firstName": "pt_First Name",
       "lastName": "pt_Last Name",

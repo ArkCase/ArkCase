@@ -46,7 +46,9 @@
         "mr": "Libération médicale",
         "noi": "Avis d'enquête",
         "sig": "Signature SF86",
-        "wir": "Demande d'entrevue de témoin"
+        "wir": "Demande d'entrevue de témoin",
+        "draw": "Ingénieur Dessin",
+        "other": "Autre"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "Annuler le document",
         "concur": "Concurrir",
         "nonConcur": "No concurra"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

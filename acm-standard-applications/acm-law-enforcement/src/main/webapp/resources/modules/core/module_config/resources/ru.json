@@ -46,7 +46,9 @@
         "mr": "Медицинский релиз",
         "noi": "Уведомление о расследовании",
         "sig": "Подпись SF86",
-        "wir": "Свидетельство о проведении собеседования"
+        "wir": "Свидетельство о проведении собеседования",
+        "draw": "Инженерный чертеж",
+        "other": "Другие"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "Отменить документ",
         "concur": "Совпадать",
         "nonConcur": "Отклонять"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

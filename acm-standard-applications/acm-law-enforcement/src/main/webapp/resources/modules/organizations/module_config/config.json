@@ -1324,6 +1324,7 @@
     {
       "id": "related",
       "title": "organizations.comp.related.title",
+      "linkTitle": "organizations.comp.related.linkTitle",
       "icon": "fa fa-exchange",
       "enabled": true,
       "configurable": true,

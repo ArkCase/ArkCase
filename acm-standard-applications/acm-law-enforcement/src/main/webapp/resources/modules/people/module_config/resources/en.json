@@ -81,6 +81,9 @@
       "yes": "Yes",
       "change": "Change Picture",
       "save": "Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
@@ -367,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Rel People",
+    "title": "Related People",
+    "linkTitle": "Rel People",
     "table.columns": {
       "firstName": "First Name",
       "lastName": "Last Name",

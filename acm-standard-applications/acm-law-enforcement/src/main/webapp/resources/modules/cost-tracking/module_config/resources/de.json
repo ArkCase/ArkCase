@@ -17,9 +17,8 @@
     "incidentDate": "Vorfallsdatum",
     "priority": "Priorität",
     "assignedTo": "Zugewiesen",
-    "subjectType": "Thema Typ",
+    "subjectType": "Betreff-Typ",
     "state": "Zustand"
-
   },
   "costTracking.comp.actions": {
     "title": "Aktionen",
@@ -27,62 +26,70 @@
     "edit.button": "Kostenblatt bearbeiten"
   },
   "costTracking.comp.details": {
-    "title": "Details",
-    "informSaved": "de_Costsheet details saved",
+    "title": "Einzelheiten",
+    "informSaved": "Kostenstellendetails gespeichert",
     "table.columns": {
-      "title": "de_Details",
-      "modified": "de_Date Last Modified",
-      "modifier": "de_User Last Modified"
+      "title": "Einzelheiten",
+      "modified": "Datum der letzten Änderung",
+      "modifier": "Benutzer zuletzt geändert"
     }
   },
   "costTracking.comp.person": {
     "title": "Menschen",
     "table.columns": {
-      "fullName": "de_Full Name",
-      "userId": "de_Username"
+      "fullName": "Vollständiger Name",
+      "userId": "Nutzername"
     }
   },
   "costTracking.comp.summary": {
-    "title": "Kostenübersicht",
+    "title": "Kosten",
     "table.columns": {
-      "parentId": "de_ID",
-      "parentNumber": "de_Parent ID",
-      "parentType": "de_Parent Type",
-      "value": "de_Total Cost",
-      "title": "de_Title",
-      "description": "de_Description"
+      "parentId": "Identifizierung",
+      "parentNumber": "Eltern ID",
+      "parentType": "Übergeordneter Typ",
+      "value": "Gesamtkosten",
+      "title": "Titel",
+      "description": "Beschreibung"
     }
   },
   "costTracking.comp.tags": {
     "title": "Etiketten",
     "table.columns": {
-      "tag": "de_Tag",
-      "created": "de_Created",
-      "createdBy": "de_Created By"
+      "tag": "Etikett",
+      "created": "Erstellungsdatum",
+      "createdBy": "Erstellt von"
     },
     "modal": {
-    "title": "de_Tag",
-    "search": "de_Search for Tag",
-    "buttons": {
-          "cancel": "de_Cancel",
-          "ok": "de_Add Tag"
-     }
+      "title": "Etikett",
+      "search": "Suche nach Tag",
+      "buttons": {
+        "cancel": "Stornieren",
+        "ok": "Tag hinzufügen"
+      }
     },
     "message": {
-      "tagExists": "de_Tag with that name or description or text already exists",
-      "tagAssociated": "de_already associated",
+      "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+      "tagAssociated": "Bereits verbunden",
       "delete": {
-        "success": "de_Tag deleted successfully",
-        "error": "de_Error deleting tag"
+        "success": "Markierung erfolgreich gelöscht",
+        "error": "Fehler beim Löschen des Tags"
       }
+    }
+  },
+  "costTracking.comp.approvers": {
+    "title": "Genehmiger",
+    "table.columns": {
+      "fullName": "Vollständiger Name",
+      "userId": "Nutzername"
     }
   },
   "costTracking.tree": {
     "nodeTypes": {
-      "details.label": "Details",
+      "details.label": "Einzelheiten",
       "person.label": "Menschen",
       "summary.label": "Kosten",
-      "tags.label": "Etiketten"
+      "tags.label": "Etiketten",
+      "approvers.label": "Genehmiger"
     },
     "sorters": {
       "dateAsc": "Sortieren Datum Auf",
@@ -94,4 +101,3 @@
     }
   }
 }
-

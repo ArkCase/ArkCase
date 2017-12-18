@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = { "/api/v1/users", "/api/latest/users" })
+@RequestMapping(value = {"/api/v1/users", "/api/latest/users"})
 public class GetUsersByGroupAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -32,6 +33,8 @@ public class GetUsersByGroupAPIController
                        @RequestParam(value = "status", required = false) String userStatus)
             throws MuleException
     {
+
+        group = new String(Base64.getUrlDecoder().decode(group.getBytes()));
         log.debug("Getting users for group [{}]", group);
         return groupService.getUserMembersForGroup(group, Optional.ofNullable(userStatus), auth);
     }

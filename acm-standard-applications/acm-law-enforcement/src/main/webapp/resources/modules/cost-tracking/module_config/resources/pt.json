@@ -27,53 +27,60 @@
   },
   "costTracking.comp.details": {
     "title": "Detalhes",
-    "informSaved": "pt_Costsheet details saved",
+    "informSaved": "Detalhes da folha de custos economizados",
     "table.columns": {
-      "title": "pt_Details",
-      "modified": "pt_Date Last Modified",
-      "modifier": "pt_User Last Modified"
+      "title": "Detalhes",
+      "modified": "Data de última modificação",
+      "modifier": "Último usuário modificado"
     }
   },
   "costTracking.comp.person": {
-    "title": "Pessoas",
+    "title": "Pessoa",
     "table.columns": {
-      "fullName": "pt_Full Name",
-      "userId": "pt_Username"
+      "fullName": "Nome completo",
+      "userId": "Nome de usuário"
     }
   },
   "costTracking.comp.summary": {
-    "title": "Resumo da Custo",
+    "title": "Custo",
     "table.columns": {
-      "parentId": "pt_ID",
-      "parentNumber": "pt_Parent ID",
-      "parentType": "pt_Parent Type",
-      "value": "pt_Total Cost",
-      "title": "pt_Title",
-      "description": "pt_Description"
+      "parentId": "Identificação",
+      "parentNumber": "ID do pai",
+      "parentType": "Tipo de pai",
+      "value": "Custo total",
+      "title": "Título",
+      "description": "Descrição"
     }
   },
   "costTracking.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "pt_Tag",
-      "created": "pt_Created",
-      "createdBy": "pt_Created By"
+      "tag": "Tag",
+      "created": "Data criada",
+      "createdBy": "Criado por"
     },
     "modal": {
-    "title": "pt_Tag",
-    "search": "pt_Search for Tag",
-    "buttons": {
-          "cancel": "pt_Cancel",
-          "ok": "pt_Add Tag"
-     }
+      "title": "Tag",
+      "search": "Pesquisar Tag",
+      "buttons": {
+        "cancel": "Cancelar",
+        "ok": "Adicionar etiqueta"
+      }
     },
     "message": {
-      "tagExists": "pt_Tag with that name or description or text already exists",
-      "tagAssociated": "pt_already associated",
+      "tagExists": "Tag com esse nome ou descrição ou texto já existe",
+      "tagAssociated": "Já associado",
       "delete": {
-        "success": "pt_Tag deleted successfully",
-        "error": "pt_Error deleting tag"
+        "success": "Tag excluído com sucesso",
+        "error": "Erro ao excluir a tag"
       }
+    }
+  },
+  "costTracking.comp.approvers": {
+    "title": "Aproximadores",
+    "table.columns": {
+      "fullName": "Nome completo",
+      "userId": "Nome de usuário"
     }
   },
   "costTracking.tree": {
@@ -81,7 +88,8 @@
       "details.label": "Detalhes",
       "person.label": "Pessoas",
       "summary.label": "Despesa",
-      "tags.label": "Etiquetas"
+      "tags.label": "Etiquetas",
+      "approvers.label": "Aproximadores"
     },
     "sorters": {
       "dateAsc": "Ordenar Data Asc",

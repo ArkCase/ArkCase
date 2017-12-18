@@ -1,8 +1,10 @@
 'use strict';
 
 angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stateParams', 'Case.InfoService'
-    , 'Helper.ObjectBrowserService', 'ObjectService', 'Object.CalendarService', 'MessageService'
-    , function ($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarService, MessageService) {
+    , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService', 'MessageService'
+    , function ($scope, $stateParams, CaseInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService, MessageService) {
+
+        $scope.objectInfoRetrieved = false;
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -17,18 +19,18 @@ angular.module('cases').controller('Cases.CalendarController', ['$scope', '$stat
         });
 
         var onObjectInfoRetrieved = function(objectInfo) {
-            CalendarService.getCalendarIntegration('CASE_FILE').then(function (calendarAdminConfigRes) {
+            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
                 $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;
                 $scope.objectId = objectInfo.id;
-                if(calendarAdminConfigRes.data === true){
+                $scope.eventSources = [];
+                if(calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled)
+                {
                     $scope.objectInfoRetrieved = true;
-                }else{
+                } else {
                     MessageService.info('Calendar Integration Configuration Not Enabled');
                     $scope.objectInfoRetrieved = false;
-
                 }
             });
-
         };
     }
 ]);

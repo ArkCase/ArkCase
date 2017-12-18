@@ -703,7 +703,7 @@
         },
         {
           "name": "organization",
-          "field": "person.defaultOrganization.organizationValue",
+          "field": "person.defaultOrganization.organization.organizationValue",
           "displayName": "complaints.comp.people.table.columns.organization",
           "headerCellFilter": "translate"
         },
@@ -798,7 +798,11 @@
           "objectNumberRegexGroup": 2
         },
         "noteRequiredOnCheckin": false,
-        "allowParentOwnerToCancel": true
+        "allowParentOwnerToCancel": true,
+        "menu": {
+          "subMenuForms": "complaints.comp.documents.menu.forms",
+          "subMenuCorrespondences": "complaints.comp.documents.menu.correspondences"
+        }
       }
     },
     {

@@ -85,6 +85,10 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
             }
         });
 
+        $scope.$bus.subscribe('object.changed/' + $stateParams.type + '/' + $stateParams.id, function(data){
+            $scope.$emit('report-object-refreshed', $stateParams.id);
+        });
+
         $scope.$bus.subscribe('CHILD_OBJECT_OUTCOME_CLICKED', function (name) {
             var taskInfo = Util.omitNg($scope.objectInfo);
 

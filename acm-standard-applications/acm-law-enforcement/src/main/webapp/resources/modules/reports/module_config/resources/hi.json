@@ -4,38 +4,45 @@
     "menus": {
       "leftnav.item": "रिपोर्ट"
     },
-    "selectReport" : {
-      "label": "hi_Report",
-      "placeholder": "hi_Select Report"
+    "selectReport": {
+      "label": "रिपोर्ट",
+      "placeholder": "रिपोर्ट चुनें"
     },
-    "selectState" : {
-      "label": "hi_State",
-      "placeholder": "hi_Select State"
+    "selectState": {
+      "label": "राज्य",
+      "placeholder": "राज्य चुनें"
     },
     "startDate": {
-      "label": "hi_From"
+      "label": "से"
     },
-    "endDate" : {
-      "label": "hi_To"
+    "endDate": {
+      "label": "सेवा मेरे"
     },
-
     "dropdown": {
-      "turnaround": "hi_Turnaround Time by Requester",
-      "requester": "hi_Requester Type Summary",
-      "pending": "hi_Pending Orders Report",
-      "associate": "hi_Associate Productivity Report",
-      "origination": "hi_Origination Count",
-      "transfers": "hi_Transfers Report",
-      "exceptions": "hi_Exceptions Report (Non-Compliance)"
+      "turnaround": "रिजस्टर द्वारा टर्नअराउंड टाइम",
+      "requester": "अनुरोधकर्ता प्रकार सारांश",
+      "pending": "लंबित आदेशों की रिपोर्ट",
+      "associate": "एसोसिएट उत्पादकता रिपोर्ट",
+      "origination": "उत्पत्ति गणना",
+      "transfers": "स्थानांतरण रिपोर्ट",
+      "exceptions": "अपवाद रिपोर्ट (गैर-अनुपालन)"
     },
-    "datepicker":{
-      "close": "hi_Done"
+    "datepicker": {
+      "close": "किया हुआ",
+      "clear": "स्पष्ट",
+      "current": "आज "
     },
     "btn": {
-      "generateReport": "hi_Generate report"
+      "generateReport": "रिपोर्ट बनाओ"
     },
     "checkBox": {
-      "XMLReport": "XML के रूप में दिखाएं"
+      "xmlReport": "एक्सएमएल के रूप में दिखाएं"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "तिथि पिकर"
+  },
+  "reports.comp.reportselection": {
+    "title": "रिपोर्ट"
   }
 }

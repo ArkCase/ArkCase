@@ -79,6 +79,9 @@
       "yes": "fr_Yes",
       "change": "fr_Change Picture",
       "save": "fr_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "fr_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
@@ -362,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Personnes apparentées",
+    "linkTitle": "fr_Rel People",
     "table.columns": {
       "firstName": "fr_First Name",
       "lastName": "fr_Last Name",

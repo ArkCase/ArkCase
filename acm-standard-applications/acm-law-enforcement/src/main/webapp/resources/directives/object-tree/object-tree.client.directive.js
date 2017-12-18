@@ -137,8 +137,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService','Helper.ObjectBrowserService',
-    function ($q, $translate, Util, Store, HelperObjectBrowserService) {
+angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilService', 'Acm.StoreService','Helper.ObjectBrowserService', 'ObjectService',
+    function ($q, $translate, Util, Store, HelperObjectBrowserService, ObjectService) {
         var Tree = {
             create: function (treeArgs) {
                 Tree.Info.create({name: "ObjectTree"});
@@ -287,7 +287,7 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     var span = node.span;
                     var $spanIcon = $(span.children[1]);
                     $spanIcon.removeClass("fancytree-icon");
-                    $spanIcon.html("<i class='" + nodeIcon + "'></i>");
+                    $spanIcon.html("<i class='" + nodeIcon + " " + node.data.nodeStatusColor + " ' title='" + node.data.nodeStatus + "'></i>");
                 }
             }
             , getIconByKey: function (key) {
@@ -448,6 +448,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 _.each(objList, function (obj) {
                     var nodeId = obj.nodeId;
                     var nodeType = obj.nodeType;
+                    var nodeStatus = obj.nodeStatus;
+                    var nodeStatusColor = obj.nodeStatusColor;
                     var nodeTitleLabel = obj.nodeTitleLabel;
                     var nodeTitle = nodeTitleLabel? $translate.instant(nodeTitleLabel) : obj.nodeTitle;
                     var nodeToolTipLabel = obj.nodeToolTipLabel;
@@ -470,6 +472,8 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                             , leadComponent: leadComponent
                             , nodeType: nodeType
                             , nodeId: nodeId
+                            , nodeStatus: nodeStatus
+                            , nodeStatusColor: nodeStatusColor
                         });
                     }
                 });

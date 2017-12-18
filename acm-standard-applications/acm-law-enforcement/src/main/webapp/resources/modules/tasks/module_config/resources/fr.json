@@ -47,7 +47,8 @@
     },
     "timesheet": {
       "approver.label": "Approuvant"
-    }
+    },
+    "_xxx_courtRoomName": "Nom de la salle d'audience:"
   },
   "tasks.comp.actions": {
     "title": "Actes",
@@ -70,268 +71,292 @@
     }
   },
   "tasks.comp.details": {
-    "title": "Détails",
-    "informSaved": "fr_Task details saved",
+    "title": "Détails de la tâche",
+    "informSaved": "Détails de la tâche enregistrés",
     "table.columns": {
-      "details": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "details": "Détails",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "tasks.comp.reworkdetails": {
     "title": "Détails de rétractation",
-    "informSaved": "fr_Rework details saved",
+    "informSaved": "Détails de retravail enregistrés",
     "table.columns": {
-      "title": "fr_Rework Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails du retravaillage",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "tasks.comp.parentdocs": {
     "title": "Documents Parentaux",
-    "noParentDataMessage": "fr_No parent documents for standalone task",
-    "sendEmail": "fr_Send Email",
-    "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "noParentDataMessage": "Aucun document parent pour une tâche autonome",
+    "sendEmail": "Envoyer un email",
+    "filterInputPlaceholder": "Filtre",
+    "searchInputPlaceholder": "Chercher",
+    "folderName": "Nom de dossier"
   },
   "tasks.comp.attachments": {
     "title": "Pièces jointes",
-    "sendEmail": "fr_Send Email",
-    "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "sendEmail": "Envoyer un email",
+    "filterInputPlaceholder": "Filtre",
+    "searchInputPlaceholder": "Chercher"
   },
   "tasks.comp.notes": {
     "title": "Notes",
     "table.columns": {
-      "note": "fr_Note",
-      "created": "fr_Created",
-      "creator": "fr_Author"
+      "note": "Remarque",
+      "created": "Créé",
+      "creator": "Auteur"
     }
   },
   "tasks.comp.references": {
     "title": "Références",
     "table.columns": {
-      "targetName": "fr_Number",
-      "targetTitle": "fr_Title",
-      "modified": "fr_Modified",
-      "targetType": "fr_Reference Type",
-      "status": "fr_Status"
+      "targetName": "Nombre",
+      "targetTitle": "Titre",
+      "targetType": "Type",
+      "assignee": "Cessionnaire",
+      "modified": "Modifié",
+      "status": "Statut"
     }
   },
   "tasks.comp.rejcomments": {
     "title": "Rejeter des commentaires",
     "table.columns": {
-      "note": "fr_Comment",
-      "created": "fr_Created",
-      "creator": "fr_Author"
+      "note": "Commentaire",
+      "created": "Créé",
+      "creator": "Auteur"
     }
   },
   "tasks.comp.workflow": {
     "title": "Flux de travail",
     "table.columns": {
-      "participant": "fr_Participant",
-      "role": "fr_Role",
-      "status": "fr_Status",
-      "startDateTime": "fr_Start",
-      "endDateTime": "fr_End"
+      "participant": "Participant",
+      "role": "Rôle",
+      "status": "Statut",
+      "startDateTime": "Début",
+      "endDateTime": "Fin"
     }
   },
   "tasks.comp.diagram": {
-    "title": "fr_Process Diagram",
-    "error.loading": "fr_Diagram can't be loaded"
+    "title": "Diagramme de processus",
+    "error.loading": "Le diagramme ne peut pas être chargé"
   },
   "tasks.comp.signatures": {
     "title": "Signatures électroniques",
     "table.columns": {
-      "signedDate": "fr_Date",
-      "signedBy": "fr_Signed By"
+      "signedDate": "Rendez-vous amoureux",
+      "signedBy": "Signé par"
     }
   },
   "tasks.comp.docsreview": {
-    "title": "Documents sous revue",
+    "title": "Documents en cours d'examen",
     "table.columns": {
-      "fileId": "fr_ID",
-      "fileName": "fr_Title",
-      "created": "fr_Created",
-      "creator": "fr_Author",
-      "status": "fr_Status"
+      "fileId": "ID",
+      "fileName": "Titre",
+      "created": "Créé",
+      "creator": "Auteur",
+      "status": "Statut"
     }
   },
   "tasks.comp.history": {
     "title": "Histoire",
     "table.columns": {
-      "eventType": "fr_Event Name",
-      "eventDate": "fr_Date",
-      "userId": "fr_User"
+      "eventType": "Nom de l'événement",
+      "eventDate": "Rendez-vous amoureux",
+      "userId": "Utilisateur"
     }
   },
   "tasks.comp.tags": {
     "title": "Étiquettes",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Marque",
+      "created": "Créé",
+      "createdBy": "Créé par"
     },
     "modal": {
-      "title": "fr_Tag",
-      "search": "fr_Search for Tag",
+      "title": "Marque",
+      "search": "Recherche de tag",
       "buttons": {
-        "cancel": "fr_Cancel",
-        "ok": "fr_Add Tag"
+        "cancel": "Annuler",
+        "ok": "Ajouter une étiquette"
       }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression d'un tag"
       }
     }
   },
   "tasks.newTask": {
-    "title": "fr_New Task",
-    "assignee.button": "fr_Choose Assignee",
-    "assignee.label": "fr_Assign To",
-    "assignee.placeholder": "fr_Please choose assignee by clicking the button above",
-    "assigneeOrGroup.placeholder": "fr_Please choose assignee or group by clicking the button above",
-    "priority.placeholder": "fr_Select Priority",
-    "priority.label": "fr_Priority",
-    "status.placeholder": "fr_Select Status",
-    "status.label": "fr_Status",
-    "associateNumber.label": "fr_Associate with Complaint or Case",
-    "associateNumber.placeholder": "fr_Complaint or Case #",
-    "associateType.label": "fr_Parent Type",
-    "subject.label": "fr_Subject",
-    "taskStartDate.label": "fr_Start Date",
-    "dueDate.label": "fr_Due Date",
-    "datepicker.close": "fr_Done",
-    "percentComplete.label": "fr_% Complete",
-    "notes.label": "fr_Notes",
-    "saveButton": "fr_Save",
-    "overdue.tooltip": "fr_Task is Overdue",
-    "deadline.tooltip": "fr_Deadline is Approaching",
-    "groupToggle.label": "fr_Group Task?",
-    "group.placeholder": "fr_Please select a group."
+    "title": "Nouvelle tâche",
+    "assignee.button": "Choisissez le destinataire",
+    "assignee.label": "Affecter à",
+    "assignee.placeholder": "Veuillez choisir un cessionnaire",
+    "assigneeOrGroup.placeholder": "Veuillez choisir un destinataire ou un groupe",
+    "candidateGroups.label": "Groupe propriétaire",
+    "priority.placeholder": "Sélectionnez Priorité",
+    "priority.label": "Priorité",
+    "status.placeholder": "Sélectionnez le statut",
+    "status.label": "Statut",
+    "associateNumber.label": "Associer à une plainte ou à un cas",
+    "associateNumber.placeholder": "Plainte ou numéro de dossier",
+    "associateType.label": "Type de parent",
+    "subject.label": "Assujettir",
+    "taskStartDate.label": "Date de début",
+    "dueDate.label": "Date d'échéance",
+    "datepicker.close": "Terminé",
+    "percentComplete.label": "% Achevée",
+    "notes.label": "Remarques",
+    "saveButton": "Enregistrer la tâche",
+    "cancelButton": "Annuler",
+    "overdue.tooltip": "La tâche est en retard",
+    "deadline.tooltip": "La date limite approche",
+    "groupToggle.label": "Tâche de groupe?",
+    "group.placeholder": "Veuillez sélectionner un groupe",
+    "documentsToReview.label": "Documents à examiner",
+    "businessProcessTypes.label": "Type de processus métier",
+    "noSelectedDocsErrorMsg": "Veuillez sélectionner au moins un document à examiner."
   },
   "tasks.userOrGroupSearch": {
-    "id": "fr_userSearch",
-    "title": "fr_User/Group Search",
+    "id": "UserSearch",
+    "title": "Recherche d'utilisateur / groupe",
     "search": {
-      "btn": "fr_Search",
-      "placeholder": "fr_Search for the user or group to assign to this task."
+      "btn": "Chercher",
+      "placeholder": "Recherchez l'utilisateur ou le groupe à affecter à cette tâche."
     },
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "pickUserLabel": "Choisir un utilisateur associé",
+    "pickGroupLabel": "Choisir un groupe associé",
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
     "assigneeGridColumns": {
-      "name": "fr_Name",
-      "type": "fr_Type",
-      "title": "fr_Title",
-      "username": "fr_Username"
+      "name": "Prénom",
+      "type": "Type",
+      "title": "Titre",
+      "username": "Nom d'utilisateur"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "OwningGroupSearch",
+    "title": "Rechercher le (s) groupe (s) de cet utilisateur",
+    "search": {
+      "btn": "Chercher",
+      "placeholder": "Recherchez le (s) groupe (s) dont cet utilisateur est membre."
+    },
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
+    "assigneeGridColumns": {
+      "name": "Prénom",
+      "type": "Type",
+      "title": "Titre",
+      "username": "Nom d'utilisateur"
     }
   },
   "tasks.objectSearch": {
-    "id": "fr_objectSearch",
-    "title": "fr_Object Search",
+    "id": "ObjectSearch",
+    "title": "Recherche d'objet",
     "search": {
-      "btn": "fr_Search",
-      "placeholder": "fr_Search for the case or complaint to this task."
+      "btn": "Chercher",
+      "placeholder": "Recherchez le cas ou la plainte à cette tâche."
     },
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Confirm",
-    "enabled": true,
-    "userFacetFilter": "fr_\"Object Type\": ",
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
     "objectGridColumns": {
-      "name": "fr_Number",
-      "type": "fr_Type",
-      "title": "fr_Title",
-      "username": "fr_Assignee"
+      "name": "Nombre",
+      "type": "Type",
+      "title": "Titre",
+      "username": "Cessionnaire"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "Recherche de référence"
+  },
   "tasks.comp.addreference": {
-    "title": "fr_Add Reference",
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Add",
+    "title": "Ajouter une référence",
+    "cancelButton": "Annuler",
+    "confirmButton": "Ajouter",
     "search": {
-      "placeholder": "fr_Search for case, complaint, file, task",
-      "btn": "fr_Search"
+      "placeholder": "Recherche de cas, plainte, fichier, tâche",
+      "btn": "Chercher"
     },
     "grid": {
       "columns": {
-        "id": "fr_Id",
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "parent": "fr_Parent",
-        "assignee": "fr_Assignee",
-        "modified": "fr_Modified"
+        "id": "Id",
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "parent": "Parent",
+        "assignee": "Cessionnaire",
+        "modified": "Modifié"
       }
     }
   },
   "tasks.comp.participants": {
-    "title": "fr_Participants",
+    "title": "Participants",
     "table.columns": {
-      "type": "fr_Type",
-      "name": "fr_Name"
+      "type": "Type",
+      "name": "Prénom"
     },
     "dialogUserPicker": {
-      "header": "fr_Choose User",
+      "header": "Choisissez l'utilisateur",
       "table.columns": {
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "id": "fr_Username"
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "id": "Nom d'utilisateur"
       }
     },
     "dialogGroupPicker": {
-      "header": "fr_Choose Group",
+      "header": "Choisissez un groupe",
       "table.columns": {
-        "name": "fr_Name"
+        "name": "Prénom"
       }
     }
   },
   "tasks.comp.assigneePickerModal": {
-    "title": "fr_Change Assignee",
-    "assigneeNamelabel": "fr_Assignee Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchAssigneeHeader": "fr_Search Assignee"
+    "title": "Changer le cessionnaire",
+    "assigneeNamelabel": "Nom du cessionnaire",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchAssigneeHeader": "Rechercher cessionnaire"
   },
   "tasks.comp.groupPickerModal": {
-    "title": "fr_Change Group",
-    "groupNamelabel": "fr_Group Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchGroupHeader": "fr_Search Group"
+    "title": "Changer de groupe",
+    "groupNamelabel": "Nom de groupe",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchGroupHeader": "Groupe de recherche"
   },
   "tasks.comp.approvalRouting": {
-    "title": "fr_Future Approvers",
-    "addNewTooltip": "fr_Add new approver",
-    "noBuckslipMessage": "No Data",
+    "title": "Futurs approbateurs",
+    "addNewTooltip": "Ajouter un nouvel approbateur",
+    "noBuckslipMessage": "Pas de données",
     "button": {
-      "save.tooltip": "fr_Save Changes"
+      "save.tooltip": "Sauvegarder les modifications"
     },
     "table.columns": {
-      "fullName": "fr_Full Name"
+      "fullName": "Nom complet"
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "fr_Past Approvers",
-    "noBuckslipMessage": "No Data",
+    "title": "Anciens approbateurs",
+    "noBuckslipMessage": "Pas de données",
     "table.columns": {
-      "approvalDate": "fr_Approval Date",
-      "approverId": "fr_Approver",
-      "approverFullName": "fr_Full Name",
-      "approverDecision": "fr_Approver Decision"
+      "approvalDate": "Date d'approbation",
+      "approverId": "Approbateur",
+      "approverFullName": "Nom complet",
+      "approverDecision": "Décision d'approbation"
     }
   },
   "tasks.tree": {
     "nodeTypes": {
       "details.label": "Détails",
       "reworkDetails.label": "Détails de rétractation",
-      "docReview.label": "Documents sous revue",
+      "docReview.label": "Documents en cours d'examen",
       "parentDoc.label": "Documents Parentaux",
       "attachments.label": "Pièces jointes",
       "references.label": "Références",

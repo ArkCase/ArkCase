@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.1.27-SNAPSHOT</version>
+    <version>3.2.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -117,7 +116,7 @@
         <pdfbox.version>2.0.6</pdfbox.version>
         <barcode4j.version>2.1</barcode4j.version>
         <jai-imageio-core.version>1.3.1</jai-imageio-core.version>
-        <milton.version>2.7.1.3</milton.version>
+        <milton.version>2.7.3.5</milton.version>
         <hamcrest.version>1.3</hamcrest.version>
         <reactor-spring.version>2.0.7.RELEASE</reactor-spring.version>
         <reactor.version>2.0.8.RELEASE</reactor.version>
@@ -555,7 +554,7 @@
 
         <repository>
             <id>milton-repo</id>
-            <url>http://milton.io/maven</url>
+            <url>http://dl.bintray.com/milton/Milton</url>
         </repository>
 
 

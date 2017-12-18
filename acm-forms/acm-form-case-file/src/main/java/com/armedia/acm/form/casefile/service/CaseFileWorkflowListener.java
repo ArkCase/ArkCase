@@ -11,8 +11,8 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 12/5/14.
@@ -26,6 +26,12 @@ public class CaseFileWorkflowListener
                                   FrevvoFormAbstractService formService)
     {
         EcmFile pdfRendition = files.getPdfRendition();
+
+        if (pdfRendition == null)
+        {
+            return;
+        }
+
         EcmFileWorkflowConfiguration configuration = new EcmFileWorkflowConfiguration();
         configuration.setEcmFile(pdfRendition);
 
@@ -52,11 +58,19 @@ public class CaseFileWorkflowListener
 
         Map<String, Object> pvars = new HashMap<>();
 
+        String reviewersCsv = configuration.getApprovers();
+        List<String> reviewers = reviewersCsv == null ? new ArrayList<>()
+                : Arrays.stream(reviewersCsv.split(",")).filter(s -> s != null).map(s -> s.trim()).collect(Collectors.toList());
+        pvars.put("reviewers", reviewers);
+        pvars.put("taskName", configuration.getTaskName());
+        pvars.put("documentAuthor", caseFile.getCreator());
+        pvars.put("pdfRenditionId", configuration.getEcmFile().getFileId());
+        pvars.put("documentType", caseFile.getContainer().getContainerObjectTitle());
         pvars.put("OBJECT_TYPE", "CASE_FILE");
         pvars.put("OBJECT_ID", caseFile.getId());
         pvars.put("OBJECT_NAME", caseFile.getCaseNumber());
         pvars.put("CASE_FILE", caseFile.getId());
-        pvars.put("REQUEST_TYPE", "BACKGROUND_INVESTIGATION");
+        pvars.put("REQUEST_TYPE", !configuration.getRequestType().isEmpty() ? configuration.getRequestType() : "BACKGROUND_INVESTIGATION");
         pvars.put("REQUEST_ID", caseFile.getId());
         String cmisFolderId = formService.findFolderIdForAttachments(caseFile.getContainer(), caseFile.getObjectType(), caseFile.getId());
         pvars.put("OBJECT_FOLDER_ID", cmisFolderId);
