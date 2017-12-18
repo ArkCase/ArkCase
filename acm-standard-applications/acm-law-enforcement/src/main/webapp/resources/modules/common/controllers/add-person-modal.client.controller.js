@@ -79,8 +79,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 }
             };
 
-            $scope.isChanged = function (personAssociationType) {
-                $scope.isInvalid = !Util.isEmpty(personAssociationType.key) && !Util.isEmpty(params.type) && personAssociationType.key === params.type ? true : false;
+            $scope.isInvalid = function () {
+                return $scope.type.key === params.type ? true : false;
             };
 
             $scope.pickPerson = function () {
