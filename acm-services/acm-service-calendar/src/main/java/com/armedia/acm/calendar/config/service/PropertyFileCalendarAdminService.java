@@ -65,9 +65,9 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
                 Class<? extends Throwable> causeClass = cause.getClass();
                 if (causeClass.equals(IOException.class))
                 {
-                    errorDetails.put("error_cause", "UPDATE_CONFIGURATION_EXCEPTION.");
+                    errorDetails.put(ERROR_CAUSE, UPDATE_CONFIGURATION_EXCEPTION);
                 }
-                errorDetails.put("error_message", ce.getMessage());
+                errorDetails.put(ERROR_MESSAGE, ce.getMessage());
             }
 
             Throwable[] suppressed = ce.getSuppressed();
@@ -86,13 +86,13 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
                 if (t.getCause() != null && t.getCause().getClass().equals(AcmEncryptionException.class))
                 {
-                    validationfaiulureByType.put("error_cause", "ENCRYPT_EXCEPTION");
+                    validationfaiulureByType.put(ERROR_CAUSE, ENCRYPT_EXCEPTION);
                 }
                 else
                 {
-                    validationfaiulureByType.put("error_cause", "INPUT_DATA_EXCEPTION");
+                    validationfaiulureByType.put(ERROR_CAUSE, INPUT_DATA_EXCEPTION);
                 }
-                validationfaiulureByType.put("error_message", ce.getMessage());
+                validationfaiulureByType.put(ERROR_MESSAGE, ce.getMessage());
             }
 
             errorDetails.put("validationFailures", validationFailures);
