@@ -4,6 +4,7 @@ import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FILE_TYP
 import static com.armedia.acm.plugins.ecm.model.EcmFileConstants.OBJECT_FOLDER_TYPE;
 import static org.apache.commons.io.IOUtils.copy;
 
+import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -104,16 +105,28 @@ public class DefaultFolderCompressor implements FolderCompressor
         return compressFolder(folderId, maxSize, sizeUnit);
     }
 
+    @Override
+    public String compressFolder(CompressNode compressNode) throws FolderCompressorException
+    {
+        return compressFolder(compressNode.getRootFolderId(), compressNode, maxSize, sizeUnit);
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see com.armedia.acm.compressfolder.FolderCompressor#compressFolder(java.lang.Long, long,
      * com.armedia.acm.compressfolder.SizeUnit)
      */
     @Override
     public String compressFolder(Long folderId, long size, SizeUnit sizeUnit) throws FolderCompressorException
     {
+        return compressFolder(folderId, null, size, sizeUnit);
+    }
 
+    @Override
+    public String compressFolder(Long folderId, CompressNode compressNode, long size, SizeUnit sizeUnit)
+            throws FolderCompressorException
+    {
         AcmFolder folder = Optional.ofNullable(folderService.findById(folderId)).orElseThrow(() -> new FolderCompressorException(folderId));
 
         String filename = getCompressedFolderFilePath(folder);
@@ -123,7 +136,7 @@ public class DefaultFolderCompressor implements FolderCompressor
         try (ZipOutputStream zos = new ZipOutputStream(new MaxThroughputAwareFileOutputStream(file, size, sizeUnit)))
         {
             zos.setLevel(Deflater.BEST_COMPRESSION);
-            compressFolder(zos, folder, "");
+            compressFolder(zos, folder, "", compressNode);
         } catch (AcmUserActionFailedException | AcmObjectNotFoundException | MuleException | IOException e)
         {
             FileUtils.deleteQuietly(file);
@@ -146,7 +159,7 @@ public class DefaultFolderCompressor implements FolderCompressor
      * @throws MuleException can be thrown while retrieving the <code>InputStream</code> for a file.
      * @throws IOException can be thrown while writing to the output zip file.
      */
-    private void compressFolder(ZipOutputStream zos, AcmFolder folder, String parentPath)
+    private void compressFolder(ZipOutputStream zos, AcmFolder folder, String parentPath, CompressNode compressNode)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, MuleException, IOException
     {
 
@@ -157,8 +170,7 @@ public class DefaultFolderCompressor implements FolderCompressor
         for (AcmObject obj : folderChildren)
         {
             String objectType = obj.getObjectType().toUpperCase();
-
-            if (OBJECT_FILE_TYPE.equals(objectType))
+            if(canBeCompressed(obj, folder, compressNode))
             {
                 String fileName = EcmFile.class.cast(obj).getFileName();
                 /*
@@ -167,7 +179,7 @@ public class DefaultFolderCompressor implements FolderCompressor
                 Here we just append an underscore "_" and date the file was created
                  */
                 if(fileFolderList.contains(fileName)){
-                    Date forFilenameUniquenessDt = (obj instanceof AcmEntity ) ? AcmEntity.class.cast(obj).getCreated() : new Date();
+                    Date forFilenameUniquenessDt = (obj instanceof AcmEntity) ? AcmEntity.class.cast(obj).getCreated() : new Date();
                     String forFilenameUniqueness = format.format(forFilenameUniquenessDt);
                     fileName = fileName + "_" + forFilenameUniqueness;
                 }
@@ -176,7 +188,8 @@ public class DefaultFolderCompressor implements FolderCompressor
                 zos.putNextEntry(new ZipEntry(concatStrings(parentPath, fileName + EcmFile.class.cast(obj).getFileActiveVersionNameExtension())));
                 InputStream fileByteStream = fileService.downloadAsInputStream(obj.getId());
                 copy(fileByteStream, zos);
-            } else if (OBJECT_FOLDER_TYPE.equals(objectType))
+            }
+            else if (OBJECT_FOLDER_TYPE.equals(objectType))
             {
                 AcmFolder childFolder = AcmFolder.class.cast(obj);
 
@@ -195,13 +208,48 @@ public class DefaultFolderCompressor implements FolderCompressor
 
                 String entryName = concatStrings(parentPath, folderName, "/");
                 zos.putNextEntry(new ZipEntry(entryName));
-                compressFolder(zos, childFolder, entryName);
+                compressFolder(zos, childFolder, entryName, compressNode);
             }
             zos.closeEntry();
         }
 
     }
-    
+
+    private boolean isFileSelected(Long fileId, CompressNode compressNode)
+    {
+        return compressNode.getSelectedNodes()
+                .stream()
+                .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(fileId)  && fileFolderNode.isFolder() == false);
+    }
+
+    private boolean isFileParentFolderSelected(Long parentFolderId, CompressNode compressNode)
+    {
+        return compressNode.getSelectedNodes()
+                    .stream()
+                    .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(parentFolderId) && fileFolderNode.isFolder() == true);
+    }
+
+    private boolean isRootFolderSelected(CompressNode compressNode)
+    {
+        return compressNode.getSelectedNodes()
+                .stream()
+                .anyMatch(fileFolderNode -> fileFolderNode.getObjectId().equals(compressNode.getRootFolderId()) && fileFolderNode.isFolder() == true);
+    }
+
+    private boolean canBeCompressed(AcmObject acmObject, AcmFolder folder, CompressNode compressNode)
+    {
+        if(compressNode == null && OBJECT_FILE_TYPE.equals(acmObject.getObjectType().toUpperCase()))
+        {
+            return true;
+        }
+        else if(compressNode != null && OBJECT_FILE_TYPE.equals(acmObject.getObjectType().toUpperCase())
+                && (isFileSelected(acmObject.getId(), compressNode) || isFileParentFolderSelected(folder.getId(), compressNode) || isRootFolderSelected(compressNode)))
+        {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Returns path of compressed folder file
      */
