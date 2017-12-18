@@ -865,7 +865,6 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
 
             return recurrenceRange;
         };
-
         /**
          * @description
          * Only show first 50 characters in the tooltip of event.
@@ -877,11 +876,30 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
          * @param characters
          * @returns string
          */
-        var getHtmlSummary = function(htmlCode, tag, characters){
-            var parser = new DOMParser();
-            var htmlDoc = parser.parseFromString(htmlCode, "text/html");
-            var details = htmlDoc.getElementsByTagName(tag)[0].innerHTML;
+        var getHtmlSummary = function(htmlCode, characters){
+            /*
+            if the html is blank, we just return and not bother with processing.
+            */
+            if(UtilService.isEmpty(htmlCode)) return;
+            var details;
+            /*
+            get rid of newlines as it causes issues when parsing
+            */
+            var cleanHtmlCode = htmlCode.replace(/(\n|\r)/g, '');
+            /*
+            extract only the body element, so we can have a clean html file
+            */
+            var regex = /.*(<body.*body>).*/gm;
+            var resultArray = regex.exec(cleanHtmlCode);
+            if(resultArray.length > 1) details = resultArray[resultArray.length - 1];
+            /*
+            remove all html tags and you're left with only displayable text
+            */
+            details = details.replace(/<[^>]+>/gm, '');
             var detailsSummary = details.slice(0,characters);
+            /*
+             Add "..." to indicate text continuation
+            */
             if(details.length > characters) detailsSummary = detailsSummary + '...';
             return detailsSummary;
         }
@@ -902,8 +920,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             var endLabel = $translate.instant('common.directive.coreCalendar.end.label');
             var startDateTime = $filter('date')(moment(calendarEvent.start).toDate(), 'MM/dd/yyyy h:mm a');
             var endDateTime = $filter('date')(moment(calendarEvent.end).toDate(), 'MM/dd/yyyy h:mm a');
-
-            var popoverTemplate = getHtmlSummary(calendarEvent.details, 'span', 50) + '</br></p>' + '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
+            var popoverTemplate = getHtmlSummary(calendarEvent.details, 50) + '</p>' + '<label>' + startLabel + '</label>' + startDateTime + '</br>' + '<label>' + endLabel + '</label>' + endDateTime;
 
             return popoverTemplate;
         };
@@ -948,7 +965,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
             var startTimeFormatedString = $filter('date')(eventDetails.start, 'h:mm a');
             var endTimeFormatedString = $filter('date')(eventDetails.end, 'h:mm a');
             durationString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.from') + ' ' +
-             startTimeFormatedString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.to') + ' ' + endTimeFormatedString;
+                startTimeFormatedString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.to') + ' ' + endTimeFormatedString;
 
             /*build pattern string*/
             patternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.occurs');
@@ -957,14 +974,14 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                     if (!recurrenceDetails.everyWeekDay) {
                         if(recurrenceDetails.interval === 1) {
                             patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.day');
+                                ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.day');
                         } else {
                             patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                             ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.days');
+                                ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.days');
                         }
                     } else {
                         patternString = patternString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weekday');
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weekday');
                     }
                     break;
                 case 'WEEKLY':
@@ -981,7 +998,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                                 daysString = $translate.instant(dayOption.label);
                             } else if (successIndex === recurrenceDetails.days.length) {
                                 daysString = daysString + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.and') +
-                                ' ' + $translate.instant(dayOption.label);
+                                    ' ' + $translate.instant(dayOption.label);
                             } else {
                                 daysString = daysString + ',' + ' ' + $translate.instant(dayOption.label);
                             }
@@ -991,26 +1008,26 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                         weekNumString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every');
                     } else {
                         weekNumString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weeks') +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.weeks') +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
                     }
                     patternString = patternString + ' ' + weekNumString + ' ' + daysString;
                     break;
                 case 'MONTHLY':
                     if (!recurrenceDetails.weekOfMonth) {
                         var absoluteMonthlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.day') +
-                        ' ' + recurrenceDetails.day + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
+                            ' ' + recurrenceDetails.day + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
+                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
                         patternString = patternString + ' ' + absoluteMonthlyPatternString;
                     } else {
                         var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
                         var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
                         var relativeMonthlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.the') +
-                        ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                        ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
+                            ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
+                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.months');
                         patternString = patternString + ' ' + relativeMonthlyPatternString;
                     }
                     break;
@@ -1021,8 +1038,8 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                     if (!recurrenceDetails.weekOfMonth) {
                         if(recurrenceDetails.interval !== 1) {
                             numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') +
-                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                                ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') +
+                                ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
                         } else {
                             numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every');
                         }
@@ -1031,17 +1048,17 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                     } else {
                         if(recurrenceDetails.interval !== 1) {
                             numYearString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.every') +
-                            ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') +
-                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
+                                ' ' + recurrenceDetails.interval + ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.years') +
+                                ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.on');
                         } else {
                             numYearString = '';
                         }
                         var weekOfMonth = _.find(DAY_OCCURRENCE_IN_MONTH_OPTIONS, function(o) { return o.value === recurrenceDetails.weekOfMonth; });
                         var dayOfWeek = _.find(RELATIVE_RECURRENCE_DAY_OPTIONS, function(o) { return o.value === recurrenceDetails.dayOfWeek; });
                         var relativeYearlyPatternString = $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.the') +
-                        ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) +
-                        ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
-                        ' ' +$translate.instant(month.label);
+                            ' ' + $translate.instant(weekOfMonth.label) + ' ' + $translate.instant(dayOfWeek.label) +
+                            ' ' + $translate.instant('common.directive.coreCalendar.recurrencePatternDialog.descriptionString.of') +
+                            ' ' +$translate.instant(month.label);
                         patternString = patternString + ' ' + numYearString + ' ' + relativeYearlyPatternString;
                     }
                     break;
@@ -1069,7 +1086,7 @@ angular.module('directives').factory('Directives.CalendarUtilService', ['$filter
                 var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
                 var matches = filenameRegex.exec(disposition);
                 if (matches != null && matches[1]) {
-                  filename = matches[1].replace(/['"]/g, '');
+                    filename = matches[1].replace(/['"]/g, '');
                 }
             }
             var url = URL.createObjectURL(attachmentResponse.data);
