@@ -34,7 +34,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
              */
             _queryChildTasks: {
                 method: 'GET',
-                url: 'api/latest/plugin/search/children?parentType=:parentType&childType=TASK&parentId=:parentId&start=:start&n=:n&s=:sort',
+                url: 'api/latest/plugin/search/children?parentType=:parentType&childType=TASK&parentId=:parentId&start=:start&exceptDeleteOnly=:exceptDeleteOnly&n=:n&s=:sort',
                 cache: false
             }
             /**
@@ -118,15 +118,16 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @param {String} parentType  Object type
          * @param {Number} parentId  Object ID
          * @param {Number} start Zero based start number of record
+         * @param {Boolean} exceptDeleteOnly show only non 'DELETE' tasks
          * @param {Number} n Max Number of list to return
          * @param {String} sortBy  (Optional)Sort property
          * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
          *
          * @returns {Object} Promise
          */
-        Service.queryChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
+        Service.queryChildTasks = function (parentType, parentId, start, exceptDeleteOnly, n, sortBy, sortDir) {
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
-            var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
+            var cacheKey = parentType + "." + parentId + "." + start + "." + exceptDeleteOnly + "." + n + "." + sortBy + "." + sortDir;
             var taskData = cacheChildTaskData.get(cacheKey);
             
             var sort = "";
@@ -140,6 +141,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                     parentType: parentType
                     , parentId: parentId
                     , start: start
+                    , exceptDeleteOnly: exceptDeleteOnly
                     , n: n
                     , sort: sort
                 }

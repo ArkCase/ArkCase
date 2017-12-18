@@ -46,27 +46,24 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+            var exceptDeleteOnly = true;
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
+                    , exceptDeleteOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
                 ).then(function (data) {
                     var tasks = data.response.docs;
-                    var filteredTasks = [];
                     angular.forEach(tasks,function (task) {
-                        if(task.status_s !== 'DELETE')
-                        {
-                            //calculate to show alert icons if task is in overdue or deadline is approaching
-                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
-                            filteredTasks.push(task);
-                        }
+                        //calculate to show alert icons if task is in overdue or deadline is approaching
+                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
                     });
                     $scope.gridOptions = $scope.gridOptions || {};
-                    $scope.gridOptions.data = filteredTasks;
+                    $scope.gridOptions.data = tasks;
                     $scope.gridOptions.totalItems = data.response.numFound;
 
                     return data;
