@@ -74,6 +74,20 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
+
+            $scope.treeControl.addCommandHandler({
+                name: "declare"
+                , onAllowCmd: function (nodes) {
+                    return PermissionsService.getActionPermission('declareAsRecords', $scope.objectInfo, {objectType: $scope.objectType}).then(
+                        function success(enabled) {
+                            return enabled ? 'enable' : 'disable';
+                        }, function error() {
+                            $log.error('Can\'t get permission info for action declareAsRecords. The menu item will be disabled.');
+                            return 'disable';
+                        }
+                    );
+                }
+            });
         };
 
 
