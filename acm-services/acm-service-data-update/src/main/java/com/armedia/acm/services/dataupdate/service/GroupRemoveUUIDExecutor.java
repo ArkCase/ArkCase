@@ -21,6 +21,10 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Specific implementation of {@link AcmDataUpdateExecutor} which will insert all
+ * ADHOC groups as new groups with removed UUID string and invalidate old ones.
+ */
 public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
 {
     private AcmGroupDao groupDao;
