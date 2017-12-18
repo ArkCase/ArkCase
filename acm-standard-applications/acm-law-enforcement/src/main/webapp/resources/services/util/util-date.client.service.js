@@ -215,7 +215,81 @@ angular.module('services').factory('Util.DateService', ['$translate', 'UtilServi
                 firstDate = new Date(firstDate.getFullYear(), firstDate.getMonth(), firstDate.getDate(), secondDate.getHours(), secondDate.getMinutes(), secondDate.getSeconds(), secondDate.getMilliseconds());
                 return firstDate;
             }
+            /**
+             * @ngdoc method
+             * @name validateFromDate
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Date format: mm/d/yyyy
+             * Validations:
+             *      - on load sets today date
+             *      - it doesn't accept invalid date:
+             *          - characters that aren't numbers
+             *          - date format
+             *          - date after today
+             *
+             *
+             * @Returns {Object} {from: from, to: to}
+             */
+            , validateFromDate: function (from, to) {
+                var todayDate = new Date();
+                if (Util.isEmpty(from)) {
+                    from = new Date();
+                } else {
+                    from = this.convertToCurrentTime(from);
+                }
 
+                if (moment(from).isAfter(todayDate)) {
+                    from = this.convertToCurrentTime(todayDate);
+                }
+
+                if (moment(from).isAfter(to)) {
+                    to = this.convertToCurrentTime(from);
+                }
+
+                from = this.setSameTime(from, to);
+
+                return {
+                    from: from,
+                    to: to
+                };
+            }
+            /**
+             * @ngdoc method
+             * @name validateToDate
+             * @methodOf services:Util.DateService
+             *
+             * @description
+             * Date format: mm/d/yyyy
+             * Validations:
+             *      - on load sets today date
+             *      - it doesn't accept invalid date:
+             *          - characters that aren't numbers
+             *          - date format
+             *          - date before startDay
+             *
+             *
+             * @Returns {Object} {from: from, to: to}
+             */
+            , validateToDate: function (from, to) {
+                if (Util.isEmpty(to)) {
+                    to = this.convertToCurrentTime(from);
+                } else {
+                    to = this.convertToCurrentTime(to);
+                }
+
+                if (moment(to).isBefore(from)) {
+                    to = this.convertToCurrentTime(from);
+                }
+
+                to = this.setSameTime(to, from);
+
+                return {
+                    from: from,
+                    to: to
+                };
+            }
 
         };
 
