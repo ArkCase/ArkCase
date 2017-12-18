@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class FileFolderNode
 {
     private boolean folder;
-    private String objectId;
+    private Long objectId;
 
     public boolean isFolder()
     {
@@ -18,12 +18,12 @@ public class FileFolderNode
         this.folder = folder;
     }
 
-    public String getObjectId()
+    public Long getObjectId()
     {
         return objectId;
     }
 
-    public void setObjectId(String objectId)
+    public void setObjectId(Long objectId)
     {
         this.objectId = objectId;
     }

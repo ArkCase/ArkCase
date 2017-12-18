@@ -5,17 +5,17 @@ import java.util.List;
 
 public class CompressNode
 {
-    private Long rootFolder;
+    private Long rootFolderId;
     private List<FileFolderNode> selectedNodes = new ArrayList<>();
 
-    public Long getRootFolder()
+    public Long getRootFolderId()
     {
-        return rootFolder;
+        return rootFolderId;
     }
 
-    public void setRootFolder(Long rootFolder)
+    public void setRootFolderId(Long rootFolderId)
     {
-        this.rootFolder = rootFolder;
+        this.rootFolderId = rootFolderId;
     }
 
     public List<FileFolderNode> getSelectedNodes()

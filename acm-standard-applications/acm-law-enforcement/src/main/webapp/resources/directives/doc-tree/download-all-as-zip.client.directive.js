@@ -19,13 +19,20 @@
  </example>
  */
 
-angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'UtilService', '$translate', 'DocTreeExt.DownloadSelectedAsZip'
-    , function (MessageService, Util, $translate, DownloadSelectedAsZip) {
+angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'UtilService', '$translate', 'DocTreeExt.DownloadSelectedAsZip', '$timeout'
+    , function (MessageService, Util, $translate, DownloadSelectedAsZip, $timeout) {
         return {
             restrict: 'E',
             templateUrl: 'directives/doc-tree/download-all-as-zip.html',
             link: function (scope) {
                 scope.downloadInProgress = false;
+
+                scope.tmpSelectedNodes = [];
+                scope.$bus.subscribe('docTreeNodeChecked', function () {
+                    $timeout(function(){
+                        scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
+                    }, 500);
+                });
 
                 var downloadFile = function(data){
                     //TRIGGER DOWNLOAD
@@ -51,12 +58,13 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                     scope.downloadInProgress = true;
 
                     var folderId = Util.goodMapValue(scope.objectInfo, 'container.folder.id', false);
+                    scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
                     var selectedNodes =  [];
-                    var tmpSelectedNodes = scope.treeControl.getSelectedNodes();
-                    for(var i = 0; i < tmpSelectedNodes.length; i++ ){
 
-                        var _folder =  tmpSelectedNodes[i].folder;
-                        var _objectId = tmpSelectedNodes[i].data.objectId;
+                    for(var i = 0; i < scope.tmpSelectedNodes.length; i++ ){
+
+                        var _folder =  scope.tmpSelectedNodes[i].folder;
+                        var _objectId = scope.tmpSelectedNodes[i].data.objectId;
 
                         selectedNodes.push({
                             folder: _folder,
@@ -64,8 +72,8 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                         });
                     }
                     var compressNode = {
-                      rootFolder: folderId,
-                      selectedNodes: selectedNodes
+                        rootFolderId: folderId,
+                        selectedNodes: selectedNodes
                     };
 
                     DownloadSelectedAsZip.downloadSelectedFoldersAndFiles(compressNode)
