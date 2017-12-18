@@ -46,6 +46,7 @@ public class CompleteTaskWithOutcomeAPIController
 
             AcmTask completed = getTaskDao().completeTask(authentication, in.getTaskId(), in.getOutcomeName(),
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
+            completed.setTaskOutcome(in.getTaskOutcome());
 
             publishTaskCompletedEvent(authentication, httpSession, completed, true, in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 

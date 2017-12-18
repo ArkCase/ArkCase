@@ -79,6 +79,9 @@
       "yes": "zh-cn_Yes",
       "change": "zh-cn_Change Picture",
       "save": "zh-cn_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "zh-cn_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
@@ -362,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "相关人士",
+    "linkTitle": "zh-cn_Rel People",
     "table.columns": {
       "firstName": "zh-cn_First Name",
       "lastName": "zh-cn_Last Name",

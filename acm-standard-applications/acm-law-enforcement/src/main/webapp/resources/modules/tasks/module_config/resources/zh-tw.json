@@ -47,7 +47,8 @@
     },
     "timesheet": {
       "approver.label": "審批者"
-    }
+    },
+    "_xxx_courtRoomName": "法院房間名稱："
   },
   "tasks.comp.actions": {
     "title": "行動",
@@ -70,261 +71,285 @@
     }
   },
   "tasks.comp.details": {
-    "title": "詳情",
-    "informSaved": "zh-tw_Task details saved",
+    "title": "任務詳情",
+    "informSaved": "任務詳情保存",
     "table.columns": {
-      "details": "zh-tw_Details",
-      "modified": "zh-tw_Date Last Modified",
-      "modifier": "zh-tw_User Last Modified"
+      "details": "詳情",
+      "modified": "上次修改日期",
+      "modifier": "上次修改用戶"
     }
   },
   "tasks.comp.reworkdetails": {
     "title": "重做詳情",
-    "informSaved": "zh-tw_Rework details saved",
+    "informSaved": "返工細節保存",
     "table.columns": {
-      "title": "zh-tw_Rework Details",
-      "modified": "zh-tw_Date Last Modified",
-      "modifier": "zh-tw_User Last Modified"
+      "title": "返工細節",
+      "modified": "上次修改日期",
+      "modifier": "用戶上次修改"
     }
   },
   "tasks.comp.parentdocs": {
     "title": "原屬文件",
-    "noParentDataMessage": "zh-tw_No parent documents for standalone task",
-    "sendEmail": "zh-tw_Send Email",
-    "filterInputPlaceholder": "zh-tw_Filter",
-    "searchInputPlaceholder": "zh-tw_Search"
+    "noParentDataMessage": "獨立任務沒有父文檔",
+    "sendEmail": "發電子郵件",
+    "filterInputPlaceholder": "過濾",
+    "searchInputPlaceholder": "搜索",
+    "folderName": "文件夾名稱"
   },
   "tasks.comp.attachments": {
     "title": "附件",
-    "sendEmail": "zh-tw_Send Email",
-    "filterInputPlaceholder": "zh-tw_Filter",
-    "searchInputPlaceholder": "zh-tw_Search"
+    "sendEmail": "發電子郵件",
+    "filterInputPlaceholder": "過濾",
+    "searchInputPlaceholder": "搜索"
   },
   "tasks.comp.notes": {
     "title": "註釋",
     "table.columns": {
-      "note": "zh-tw_Note",
-      "created": "zh-tw_Created",
-      "creator": "zh-tw_Author"
+      "note": "註釋",
+      "created": "創建",
+      "creator": "作者"
     }
   },
   "tasks.comp.references": {
     "title": "參考",
     "table.columns": {
-      "targetName": "zh-tw_Number",
-      "targetTitle": "zh-tw_Title",
-      "modified": "zh-tw_Modified",
-      "targetType": "zh-tw_Reference Type",
-      "status": "zh-tw_Status"
+      "targetName": "數據",
+      "targetTitle": "標題",
+      "targetType": "類型",
+      "assignee": "指定人員",
+      "modified": "更改日期",
+      "status": "狀態"
     }
   },
   "tasks.comp.rejcomments": {
     "title": "回絕說明",
     "table.columns": {
-      "note": "zh-tw_Comment",
-      "created": "zh-tw_Created",
-      "creator": "zh-tw_Author"
+      "note": "評論",
+      "created": "創建",
+      "creator": "作者"
     }
   },
   "tasks.comp.workflow": {
     "title": "流程概述",
     "table.columns": {
-      "participant": "zh-tw_Participant",
-      "role": "zh-tw_Role",
-      "status": "zh-tw_Status",
-      "startDateTime": "zh-tw_Start",
-      "endDateTime": "zh-tw_End"
+      "participant": "參加者",
+      "role": "角色",
+      "status": "狀態",
+      "startDateTime": "開始",
+      "endDateTime": "結束"
     }
   },
   "tasks.comp.diagram": {
-    "title": "zh-tw_Process Diagram",
-    "error.loading": "zh-tw_Diagram can't be loaded"
+    "title": "流程圖",
+    "error.loading": "無法加載流程圖"
   },
   "tasks.comp.signatures": {
     "title": "電子簽名",
     "table.columns": {
-      "signedDate": "zh-tw_Date",
-      "signedBy": "zh-tw_Signed By"
+      "signedDate": "簽字日期",
+      "signedBy": "簽字人"
     }
   },
   "tasks.comp.docsreview": {
     "title": "審查文件",
     "table.columns": {
-      "fileId": "zh-tw_ID",
-      "fileName": "zh-tw_Title",
-      "created": "zh-tw_Created",
-      "creator": "zh-tw_Author",
-      "status": "zh-tw_Status"
+      "fileId": "識別號",
+      "fileName": "標題",
+      "created": "創建",
+      "creator": "作者",
+      "status": "狀態"
     }
   },
   "tasks.comp.history": {
     "title": "歷史",
     "table.columns": {
-      "eventType": "zh-tw_Event Name",
-      "eventDate": "zh-tw_Date",
-      "userId": "zh-tw_User"
+      "eventType": "事件名稱",
+      "eventDate": "事件日期",
+      "userId": "用戶"
     }
   },
   "tasks.comp.tags": {
     "title": "標籤",
     "table.columns": {
       "tag": "標籤",
-      "created": "zh-tw_Created",
-      "createdBy": "zh-tw_Created By"
+      "created": "創建日期",
+      "createdBy": "創建人"
     },
     "modal": {
       "title": "標籤",
-      "search": "zh-tw_Search for Tag",
+      "search": "搜索標籤",
       "buttons": {
-        "cancel": "zh-tw_Cancel",
-        "ok": "zh-tw_Add Tag"
+        "cancel": "取消",
+        "ok": "添加標籤"
       }
     },
     "message": {
-      "tagExists": "zh-tw_Tag with that name or description or text already exists",
-      "tagAssociated": "zh-tw_already associated",
+      "tagExists": "具有該名稱或說明或文字的標籤已經存在",
+      "tagAssociated": "已經關聯",
       "delete": {
-        "success": "zh-tw_Tag deleted successfully",
-        "error": "zh-tw_Error deleting tag"
+        "success": "標記已成功刪除",
+        "error": "刪除標籤時出錯"
       }
     }
   },
   "tasks.newTask": {
-    "title": "zh-tw_New Task",
-    "assignee.button": "zh-tw_Choose Assignee",
-    "assignee.label": "zh-tw_Assign To",
-    "assignee.placeholder": "zh-tw_Please choose assignee by clicking the button above",
-    "assigneeOrGroup.placeholder": "zh-tw_Please choose assignee or group by clicking the button above",
-    "priority.placeholder": "zh-tw_Select Priority",
-    "priority.label": "zh-tw_Priority",
-    "status.placeholder": "zh-tw_Select Status",
-    "status.label": "zh-tw_Status",
-    "associateNumber.label": "zh-tw_Associate with Complaint or Case",
-    "associateNumber.placeholder": "zh-tw_Complaint or Case #",
-    "associateType.label": "zh-tw_Parent Type",
-    "subject.label": "zh-tw_Subject",
-    "taskStartDate.label": "zh-tw_Start Date",
-    "dueDate.label": "zh-tw_Due Date",
-    "datepicker.close": "zh-tw_Done",
-    "percentComplete.label": "zh-tw_% Complete",
-    "notes.label": "zh-tw_Notes",
-    "saveButton": "zh-tw_Save",
-    "overdue.tooltip": "zh-tw_Task is Overdue",
-    "deadline.tooltip": "zh-tw_Deadline is Approaching",
-    "groupToggle.label": "zh-tw_Group Task?",
-    "group.placeholder": "zh-tw_Please select a group."
+    "title": "新任務",
+    "assignee.button": "選擇指定人員",
+    "assignee.label": "指定人員",
+    "assignee.placeholder": "請選擇指定人",
+    "assigneeOrGroup.placeholder": "請選擇指定人或群組",
+    "candidateGroups.label": "擁有群組",
+    "priority.placeholder": "選擇優先級別",
+    "priority.label": "優先級別",
+    "status.placeholder": "選擇狀態",
+    "status.label": "狀態",
+    "associateNumber.label": "與投訴或案件相關聯",
+    "associateNumber.placeholder": "投訴或案件＃",
+    "associateType.label": "原屬類型",
+    "subject.label": "主題",
+    "taskStartDate.label": "開始日期",
+    "dueDate.label": "截止日期",
+    "datepicker.close": "完成",
+    "percentComplete.label": "完成百分比",
+    "notes.label": "註釋",
+    "saveButton": "保存任務",
+    "cancelButton": "取消",
+    "overdue.tooltip": "任務已過期",
+    "deadline.tooltip": "截止日期即將到來",
+    "groupToggle.label": "群組任務？",
+    "group.placeholder": "請選擇一個群組。",
+    "documentsToReview.label": "要審查的文件",
+    "businessProcessTypes.label": "業務流程類型",
+    "noSelectedDocsErrorMsg": "請至少選擇一個文件進行審查。"
   },
   "tasks.userOrGroupSearch": {
-    "id": "選擇用戶",
-    "title": "zh-tw_User/Group Search",
+    "id": "userSearch",
+    "title": "用戶/群組搜索",
     "search": {
-      "btn": "zh-tw_Search",
-      "placeholder": "zh-tw_Search for the user or group to assign to this task."
+      "btn": "搜索",
+      "placeholder": "搜索要分配給此任務的用戶或群組。"
     },
-    "cancelButton": "zh-tw_Cancel",
-    "confirmButton": "zh-tw_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "zh-tw_\"object_type_s\":(GROUP OR USER)",
+    "pickUserLabel": "選擇關聯用戶",
+    "pickGroupLabel": "選擇關聯群組",
+    "cancelButton": "取消",
+    "confirmButton": "確認",
     "assigneeGridColumns": {
-      "name": "zh-tw_Name",
-      "type": "zh-tw_Type",
-      "title": "zh-tw_Title",
-      "username": "zh-tw_Username"
+      "name": "名稱",
+      "type": "類型",
+      "title": "標題",
+      "username": "用戶名"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "搜索此用戶的群組",
+    "search": {
+      "btn": "搜索",
+      "placeholder": "搜索該用戶是其成員的群組。"
+    },
+    "cancelButton": "取消",
+    "confirmButton": "確認",
+    "assigneeGridColumns": {
+      "name": "名稱",
+      "type": "類型",
+      "title": "標題",
+      "username": "用戶名"
     }
   },
   "tasks.objectSearch": {
-    "id": "zh-tw_objectSearch",
-    "title": "zh-tw_Object Search",
+    "id": "objectSearch",
+    "title": "對象搜索",
     "search": {
-      "btn": "zh-tw_Search",
-      "placeholder": "zh-tw_Search for the case or complaint to this task."
+      "btn": "搜索",
+      "placeholder": "搜索該任務的案件或投訴。"
     },
-    "cancelButton": "zh-tw_Cancel",
-    "confirmButton": "zh-tw_Confirm",
-    "enabled": true,
-    "userFacetFilter": "zh-tw_\"Object Type\": ",
+    "cancelButton": "取消",
+    "confirmButton": "確認",
     "objectGridColumns": {
-      "name": "zh-tw_Number",
-      "type": "zh-tw_Type",
-      "title": "zh-tw_Title",
-      "username": "zh-tw_Assignee"
+      "name": "數據",
+      "type": "類型",
+      "title": "標題",
+      "username": "指定人員"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "參考搜索"
+  },
   "tasks.comp.addreference": {
-    "title": "zh-tw_Add Reference",
-    "cancelButton": "zh-tw_Cancel",
-    "confirmButton": "zh-tw_Add",
+    "title": "添加參考",
+    "cancelButton": "取消",
+    "confirmButton": "添加",
     "search": {
-      "placeholder": "zh-tw_Search for case, complaint, file, task",
-      "btn": "zh-tw_Search"
+      "placeholder": "搜索案件，投訴，文件，任務",
+      "btn": "搜索"
     },
     "grid": {
       "columns": {
-        "id": "zh-tw_Id",
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type",
-        "title": "zh-tw_Title",
-        "parent": "zh-tw_Parent",
-        "assignee": "zh-tw_Assignee",
-        "modified": "zh-tw_Modified"
+        "id": "識別號",
+        "name": "名稱",
+        "type": "類型",
+        "title": "標題",
+        "parent": "原屬",
+        "assignee": "指定人員",
+        "modified": "更改日期"
       }
     }
   },
   "tasks.comp.participants": {
-    "title": "參與成員",
+    "title": "參與者",
     "table.columns": {
-      "type": "zh-tw_Type",
-      "name": "zh-tw_Name"
+      "type": "類型",
+      "name": "名稱"
     },
     "dialogUserPicker": {
-      "header": "zh-tw_Choose User",
+      "header": "選擇用戶",
       "table.columns": {
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type",
-        "title": "zh-tw_Title",
-        "id": "zh-tw_Username"
+        "name": "名稱",
+        "type": "類型",
+        "title": "標題",
+        "id": "用戶名"
       }
     },
     "dialogGroupPicker": {
-      "header": "zh-tw_Choose Group",
+      "header": "選擇群組",
       "table.columns": {
-        "name": "zh-tw_Name"
+        "name": "名稱"
       }
     }
   },
   "tasks.comp.assigneePickerModal": {
-    "title": "zh-tw_Change Assignee",
-    "assigneeNamelabel": "zh-tw_Assignee Name",
-    "btnCancelText": "zh-tw_Cancel",
-    "btnSaveText": "zh-tw_Save",
-    "searchAssigneeHeader": "zh-tw_Search Assignee"
+    "title": "更改指定人員",
+    "assigneeNamelabel": "指定人姓名",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchAssigneeHeader": "搜索指定人"
   },
   "tasks.comp.groupPickerModal": {
-    "title": "zh-tw_Change Group",
-    "groupNamelabel": "zh-tw_Group Name",
-    "btnCancelText": "zh-tw_Cancel",
-    "btnSaveText": "zh-tw_Save",
-    "searchGroupHeader": "zh-tw_Search Group"
+    "title": "更改群組",
+    "groupNamelabel": "群組名字",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchGroupHeader": "搜索群組"
   },
   "tasks.comp.approvalRouting": {
-    "title": "批准流程",
-    "addNewTooltip": "zh-tw_Add new approver",
-    "noBuckslipMessage": "No Data",
+    "title": "未來批准人",
+    "addNewTooltip": "添加新的批准者人",
+    "noBuckslipMessage": "沒有數據",
     "button": {
-      "save.tooltip": "zh-tw_Save Changes"
+      "save.tooltip": "保存更改"
     },
     "table.columns": {
-      "fullName": "zh-tw_Full Name"
+      "fullName": "全名"
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "過去批准",
-    "noBuckslipMessage": "No Data",
+    "title": "過去批准人",
+    "noBuckslipMessage": "沒有數據",
     "table.columns": {
-      "approvalDate": "zh-tw_Approval Date",
-      "approverId": "zh-tw_Approver",
-      "approverFullName": "zh-tw_Full Name",
-      "approverDecision": "zh-tw_Approver Decision"
+      "approvalDate": "批准日期",
+      "approverId": "批准人",
+      "approverFullName": "全名",
+      "approverDecision": "批准人決定"
     }
   },
   "tasks.tree": {
@@ -334,7 +359,7 @@
       "docReview.label": "審查文件",
       "parentDoc.label": "原屬文件",
       "attachments.label": "附件",
-      "references.label": "参考",
+      "references.label": "參考",
       "notes.label": "註釋",
       "workflow.label": "流程概述",
       "history.label": "歷史",

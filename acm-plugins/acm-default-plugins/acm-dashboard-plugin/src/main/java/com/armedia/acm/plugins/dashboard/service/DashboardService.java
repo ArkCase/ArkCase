@@ -9,8 +9,8 @@ import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +32,7 @@ public class DashboardService
     private UserDao userDao;
     private WidgetDao widgetDao;
     private DashboardPropertyReader dashboardPropertyReader;
+    private AcmUserRoleService userRoleService;
 
     public static String removeWidgetsFromJson(JSONObject dashboardJson, Set<String> widgetNames)
     {
@@ -56,9 +57,10 @@ public class DashboardService
                     }
                 }
             }
-        } catch (JSONException e)
+        }
+        catch (JSONException e)
         {
-           log.warn("JSON configuration can not be parsed. {}", e.getMessage());
+            log.warn("JSON configuration can not be parsed. {}", e.getMessage());
         }
 
         return dashboardJson.toString();
@@ -108,7 +110,7 @@ public class DashboardService
         Dashboard d = new Dashboard();
         d.setDashboardOwner(owner);
         d.setModuleName(moduleName);
-        d.setCollapsed(new Boolean(false));
+        d.setCollapsed(Boolean.FALSE);
         if (!dashboardPlugin.getPluginProperties().isEmpty())
         {
             if (moduleName.equals(DashboardConstants.DEFAULT_DASHBOARD_NAME))
@@ -139,12 +141,13 @@ public class DashboardService
         try
         {
             dashboard = dashboardDao.getDashboardConfigForUserAndModuleName(user, moduleName);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             throw e;
         }
         String dashboardModifiedString = dashboard.getDashboardConfig();
-        List<AcmRole> roles = getUserDao().findAllRolesByUser(user.getUserId());
+        Set<String> roles = userRoleService.getUserRoles(userId);
         try
         {
             List<Widget> result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
@@ -155,7 +158,8 @@ public class DashboardService
             JSONObject dashboardJSONObject = new JSONObject(dashboard.getDashboardConfig());
 
             dashboardModifiedString = removeNotAuthorizedWidgets(dashboardJSONObject, dashboardWidgetsOnly);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.info("There are no widgets associated with roles of the user: {}", userId);
         }
@@ -234,5 +238,10 @@ public class DashboardService
     public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
     {
         this.dashboardPropertyReader = dashboardPropertyReader;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }

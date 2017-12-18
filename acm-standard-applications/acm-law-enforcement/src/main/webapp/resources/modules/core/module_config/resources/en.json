@@ -46,7 +46,9 @@
         "mr": "Medical Release",
         "noi": "Notice of Investigation",
         "sig": "SF86 Signature",
-        "wir": "Witness Interview Request"
+        "wir": "Witness Interview Request",
+        "draw": "Engineer Drawing",
+        "other": "Other"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -492,6 +494,9 @@
         "concur": "Concur",
         "nonConcur": "Non-Concur"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Acm Document Workflow"
+      },
       "reportStates": {
         "draft": "Draft",
         "inApproval": "In Approval",
@@ -500,13 +505,14 @@
         "closed": "Closed"
       },
       "auditReportNames": {
-        "cases": "Case Files",
-        "complaints": "Complaints Approval",
-        "tasks": "Tasks",
-        "files": "Files",
-        "documents": "Documents",
-        "people": "People",
-        "organizations": "Organizations"
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

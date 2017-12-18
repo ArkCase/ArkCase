@@ -5,6 +5,9 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class RetryExecutorTest
 {
 
@@ -19,31 +22,41 @@ public class RetryExecutorTest
     @Test
     public void test() throws Exception
     {
-        RetryExecutor retryExecutor = new RetryExecutor(1000, 3);
+        RetryExecutor retryExecutor = new RetryExecutor(attempts, 3, new ArrayList<>());
         retryExecutor.retry(() -> System.out.println("Test"));
     }
 
     @Test(expected = Exception.class)
     public void testRetryWithSecondTrySuccess() throws Exception
     {
-        RetryExecutor retryExecutor = new RetryExecutor(1000, 3);
-        retryExecutor.retry(() -> success());
+        RetryExecutor retryExecutor = new RetryExecutor(attempts, 3, new ArrayList<>());
+        retryExecutor.retry(this::success);
         System.out.println("Successful attempt");
     }
 
     @Test(expected = Exception.class)
     public void testRetry() throws Exception
     {
-        RetryExecutor retryExecutor = new RetryExecutor(1000, 3);
-        retryExecutor.retry(() -> failure());
+        RetryExecutor retryExecutor = new RetryExecutor(attempts, 3, Arrays.asList(RuntimeException.class));
+        retryExecutor.retry(this::failure);
         Assert.fail("The executor should throw exception");
+        Assert.assertTrue(attempts == 0);
+    }
+
+    @Test(expected = Exception.class)
+    public void testNoRetryAttempts() throws Exception
+    {
+        RetryExecutor retryExecutor = new RetryExecutor(attempts, 3, Arrays.asList(Exception.class));
+        retryExecutor.retry(this::failure);
+        Assert.fail("The executor should throw exception");
+        Assert.assertTrue(attempts == 2);
     }
 
     @Test(expected = Exception.class)
     public void testRetryResult() throws Exception
     {
-        RetryExecutor<String> retryExecutor = new RetryExecutor<>(1000, 3);
-        String result = retryExecutor.retryResult(() -> noResult());
+        RetryExecutor<String> retryExecutor = new RetryExecutor<>(attempts, 3, new ArrayList<>());
+        String result = retryExecutor.retryResult(this::noResult);
         Assert.fail("The executor should throw exception");
     }
 

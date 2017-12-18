@@ -8,6 +8,9 @@
       "leftnav.item": "Notifications"
     },
     "comp":{
+      "notificationsFacetedSearch": {
+        "title": "Notifications Faceted Search"
+      },
       "grid": {
         "columns": {
           "id": "ID",

@@ -46,7 +46,9 @@
         "mr": "医療リリース",
         "noi": "調査の通知",
         "sig": "SF86署名",
-        "wir": "目撃者のインタビューリクエスト"
+        "wir": "目撃者のインタビューリクエスト",
+        "draw": "エンジニア図面",
+        "other": "その他"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "文書を取り消す",
         "concur": "同意する",
         "nonConcur": "同意しない"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

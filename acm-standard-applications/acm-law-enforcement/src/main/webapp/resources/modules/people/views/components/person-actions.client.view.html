@@ -20,11 +20,11 @@
                 <!--<span translate>people.comp.actions.import.button</span>-->
             <!--</button>-->
             <button permission="editPerson" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="activate()" ng-hide="objectInfo.status == 'ACTIVE'">
-                <i class="fa fa-play-circle"></i>
+                <i class="{{activationIcon}}"></i>
                 <span translate>people.comp.actions.activate.button</span>
             </button>
             <button permission="editPerson" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="deactivate()" ng-hide="objectInfo.status != 'ACTIVE'">
-                <i class="fa fa-stop"></i>
+                <i class="{{activationIcon}}"></i>
                 <span translate>people.comp.actions.deactivate.button</span>
             </button>
             <!--<button permission="editPerson" permission-properties="objectInfo" permission-action="disable" class="btn btn-sm btn-default" ng-click="merge()">-->

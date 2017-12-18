@@ -46,7 +46,9 @@
         "mr": "Alta médica",
         "noi": "Aviso de Investigação",
         "sig": "Assinatura SF86",
-        "wir": "Pedido de entrevista de testemunha"
+        "wir": "Pedido de entrevista de testemunha",
+        "draw": "Desenho do engenheiro",
+        "other": "De outros"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "Cancelar documento",
         "concur": "Concordo",
         "nonConcur": "Não concordo"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

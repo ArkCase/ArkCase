@@ -46,7 +46,7 @@ public class AcmGroup implements Serializable, AcmEntity
     @Id
     @Column(name = "cm_group_name")
     private String name;
-    
+
     @Column(name = "cm_group_display_name")
     private String displayName;
 
@@ -191,7 +191,7 @@ public class AcmGroup implements Serializable, AcmEntity
     public void removeGroupMember(AcmGroup group)
     {
         memberGroups.remove(group);
-        group.getMemberOfGroups().remove(group);
+        group.getMemberOfGroups().remove(this);
     }
 
     public String getName()
@@ -380,25 +380,17 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public Stream<String> getAscendants()
     {
-        if (ascendantsList == null) return Stream.empty();
-        return Arrays.stream(ascendantsList.split(","));
+        if (StringUtils.isBlank(ascendantsList)) return Stream.empty();
+        return Arrays.stream(ascendantsList.split(",")).sorted();
     }
 
     public void addAscendant(String ascendantGroup)
     {
-        if (StringUtils.isNotEmpty(ascendantsList))
-        {
-            ascendantsList += "," + ascendantGroup;
-        } else
-        {
-            ascendantsList = ascendantGroup;
-        }
-    }
-
-    public void removeAscendant(String ascendantGroup)
-    {
-        ascendantsList = getAscendants()
-                .filter(it -> !it.equals(ascendantGroup))
+        Set<String> ascendants = getAscendants()
+                .collect(Collectors.toSet());
+        ascendants.add(ascendantGroup);
+        ascendantsList = ascendants.stream()
+                .sorted()
                 .collect(Collectors.joining(","));
     }
 

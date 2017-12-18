@@ -67,6 +67,8 @@
       "allUsersFilter": "為所有用戶輸入搜索過濾器（例如（objectClass = person））",
       "allUsersPageFilter": "輸入包含排序屬性的過濾器（例如（＆（objectClass = person）（uidNumber> =％s）））",
       "allUsersSortingAttribute": "輸入用戶的排序屬性（例如“uidNumber”）",
+      "allChangedUsersFilter": "鍵入過濾限制為所有更改的用戶",
+      "allChangedUsersPageFilter": "鍵入包含sort-attribute的過濾限制為所有更改的用戶",
       "groupSearchBase": "輸入組的搜索庫（例如ou = groups）",
       "groupSearchFilterForUser": "輸入組中用戶的搜索過濾器（例如（＆（objectClass = group）（member =％s）））",
       "userIdAttributeName": "輸入用於用戶ID的屬性（例如“uid”）",
@@ -74,10 +76,8 @@
       "syncPageSize": "輸入分頁大小",
       "groupSearchFilter": "輸入組搜索過濾器（例如（objectClass = group））",
       "groupsSortingAttribute": "輸入排序組的屬性（例如“gidNumber”）",
-      "allChangedUsersFilter": "zh-tw_Enter the filter for all changed users",
-      "allChangedUsersPageFilter": "zh-tw_Enter the filter including sort-attribute for all changed users",
-      "changedGroupSearchFilter": "zh-tw_Enter search filter for all changed groups",
-      "changedGroupSearchPageFilter": "zh-tw_Enter filter including sort-attribute for all changed groups",
+      "changedGroupSearchFilter": "鍵入搜索過濾限制為所有更改的群組",
+      "changedGroupSearchPageFilter": "鍵入包含sort-attribute的過濾限制為所有更改的群組",
       "groupSearchPageFilter": "輸入包含sort-attribute（例如（＆（objectClass = group）（gidNumber> =％s））的過濾器））",
       "enableEditingLdapUsers": "檢查是否允許管理您的DS的用戶和組"
     },
@@ -157,7 +157,7 @@
           "lastName": "輸入姓氏",
           "email": "輸入電子郵件",
           "password": "輸入密碼",
-          "confirmation": "zh-tw_Enter password again",
+          "confirmation": "再次鍵入您的密碼",
           "minLengthForPassword": "7"
         },
         "editLdapMember": {
@@ -172,7 +172,7 @@
         "lastName": "姓",
         "email": "電子郵件",
         "password": "密碼",
-        "confirmation": "zh-tw_Confirm Password"
+        "confirmation": "確認密碼"
       },
       "addMembersGridColumns": {
         "name": "名稱",
@@ -258,8 +258,8 @@
         "email.label": "系統電子郵件地址",
         "password.label": "系統密碼",
         "purgeDays.label": "天",
-        "emailValid": "系統電子郵件地址有效",
-        "emailNotValid": "系統電子郵件地址無效",
+        "emailValid": "系統電子郵件地址和密碼有效",
+        "emailNotValid": "系統電子郵件地址或密碼無效",
         "enableCalendarIntegration.checkbox": "啟用日曆集成",
         "purgeOptions": {
           "retainIndefinitely": "保留無限期",

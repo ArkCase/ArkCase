@@ -3,11 +3,11 @@
 angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$stateParams', '$q', '$modal', '$translate'
     , 'UtilService', 'Config.LocaleService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Task.InfoService', 'Helper.ObjectBrowserService'
     , 'Authentication', 'DocTreeService', 'PermissionsService', 'DocTreeExt.WebDAV', 'DocTreeExt.Checkin'
-    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email'
+    , 'Case.InfoService', 'Complaint.InfoService', 'CostTracking.InfoService', 'TimeTracking.InfoService', 'Admin.CMTemplatesService', 'DocTreeExt.Email', 'Admin.EmailSenderConfigurationService'
     , function ($scope, $stateParams, $q, $modal, $translate
         , Util, LocaleService, ConfigService, ObjectService, ObjectLookupService, TaskInfoService, HelperObjectBrowserService
         , Authentication, DocTreeService, PermissionsService, DocTreeExtWebDAV, DocTreeExtCheckin
-        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail) {
+        , CaseInfoService, ComplaintInfoService, CostTrackingInfoService, TimeTrackingInfoService, CorrespondenceService, DocTreeExtEmail, EmailSenderConfigurationService) {
 
         Authentication.queryUserInfo().then(
             function (userInfo) {
@@ -15,6 +15,10 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
                 return userInfo;
             }
         );
+
+        EmailSenderConfigurationService.getEmailSenderConfiguration().then(function (emailData) {
+            $scope.sendEmailEnabled = emailData.data.allowDocuments;
+        });
 
         var componentHelper = new HelperObjectBrowserService.Component({
             moduleId: "tasks"
@@ -39,17 +43,16 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
         $scope.objectType = ObjectService.ObjectTypes.TASK;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
 
+        var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileLanguages = LocaleService.getSettings();
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
             $scope.parentObjectId = objectInfo.parentObjectId;
             $scope.parentObjectType = objectInfo.parentObjectType;
 
-            var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
-            var promiseFileTypes = ObjectLookupService.getFileTypes();
-            var promiseFileLanguages = LocaleService.getSettings();
             var promiseCorrespondenceForms;
-
             switch ($scope.parentObjectType) {
                 case ObjectService.ObjectTypes.COMPLAINT:
                     ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
@@ -89,10 +92,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
             $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes = [];
-                    for(var i = 0; i < data[1].length; i++ ){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
                 });

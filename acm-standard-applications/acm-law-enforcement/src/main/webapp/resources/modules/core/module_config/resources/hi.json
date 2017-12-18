@@ -46,7 +46,9 @@
         "mr": "मेडिकल रिलीज",
         "noi": "जांच की सूचना",
         "sig": "एसएफ 86 हस्ताक्षर",
-        "wir": "गवाह साक्षात्कार अनुरोध"
+        "wir": "गवाह साक्षात्कार अनुरोध",
+        "draw": "इंजीनियर ड्राइंग",
+        "other": "अन्य"
       },
       "identificationTypes": {
         "ssn": "एसएसएन",
@@ -491,6 +493,16 @@
         "cancel": "दस्तावेज़ रद्द करें",
         "concur": "एक मत होना",
         "nonConcur": "सहमत न करें"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

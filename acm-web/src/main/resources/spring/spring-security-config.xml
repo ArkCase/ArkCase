@@ -42,7 +42,7 @@
     </beans:beans>
 
     <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
-    <beans:beans profile="ldap,kerberos">
+    <beans:beans profile="ldap,kerberos,mfa-okta">
         <http
                 security="none"
                 pattern="/views/login.jsp" />
