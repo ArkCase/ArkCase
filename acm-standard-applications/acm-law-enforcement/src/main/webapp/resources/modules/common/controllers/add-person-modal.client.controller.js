@@ -79,8 +79,8 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 }
             };
 
-            $scope.isChanged = function () {
-                $scope.isInvalid = false;
+            $scope.isChanged = function (personAssociationType) {
+                $scope.isInvalid = !Util.isEmpty(personAssociationType.key) && !Util.isEmpty(params.type) && personAssociationType.key === params.type ? true : false;
             };
 
             $scope.pickPerson = function () {
@@ -113,7 +113,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                     }
                 });
                 modalInstance.result.then(function (selected) {
-                    $scope.isInvalid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.personId = selected.object_id_s;
                         $scope.personName = selected.name;
@@ -133,7 +132,6 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.isInvalid = false;
                     $scope.personId = '';
                     $scope.personName = data.person.givenName + ' ' + data.person.familyName;
                     $scope.person = data.person;
