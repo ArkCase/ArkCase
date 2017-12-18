@@ -17,9 +17,9 @@ angular.module('dashboard.calendar', ['adf.provider'])
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService'
-        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Admin.CalendarConfigurationService', 'Util.DateService',
+        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Util.DateService',
         function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, CalendarService, ObjectService, CalendarConfigurationService, DateService) {
+            , HelperObjectBrowserService, CalendarService, ObjectService, DateService) {
 
             var vm = this;
 
@@ -149,8 +149,8 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 return retVal;
             };
             
-            CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
-                vm.isCalendarIntegrationEnabled = calendarAdminConfigRes.data.configurationsByType[module.name].integrationEnabled;
+            CalendarService.getCalendarIntegration(module.name).then(function (calendarAdminConfigRes) {
+                vm.isCalendarIntegrationEnabled = calendarAdminConfigRes.data === true;
             });
         }
     ]);
