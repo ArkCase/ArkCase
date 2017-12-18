@@ -38,20 +38,24 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                     //TRIGGER DOWNLOAD
 
                     var blob = new Blob([data], {type: "application/zip"})
-                    var url = window.URL.createObjectURL(blob);
+                    if(window.navigator.msSaveOrOpenBlob){
+                        window.navigator.msSaveOrOpenBlob(blob, "acm-documents.zip");
+                        scope.downloadInProgress = false;
+                    }
+                    else {
+                        var url = window.URL.createObjectURL(blob);
+                        var downloadLink = angular.element('<a></a>');
+                        
+                        downloadLink.css('display', 'none');
+                        downloadLink.attr('href', url);
+                        downloadLink.attr('download', "acm-documents.zip");
+                        angular.element(document.body).append(downloadLink);
+                        downloadLink[0].click();
 
-                    var a = document.createElement('a');
-                    document.body.appendChild(a);
-
-                    a.style = "display: none";
-                    a.href = url;
-                    a.download = "acm-documents.zip";
-                    a.click();
-
-                    window.URL.revokeObjectURL(url);
-                    a.remove();
-
-                    scope.downloadInProgress = false;
+                        downloadLink.remove();
+                        window.URL.revokeObjectURL(url);
+                        scope.downloadInProgress = false;
+                    }
                 };
 
                 scope.downloadAllAsZip = function () {
