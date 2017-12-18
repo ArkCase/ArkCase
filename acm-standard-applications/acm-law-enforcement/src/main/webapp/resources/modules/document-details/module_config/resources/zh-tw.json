@@ -1,104 +1,104 @@
 {
   "documentDetails": {
-    "title": "zh-tw_Document details",
-    "creator": "zh-tw_Creator",
-    "created": "zh-tw_Created",
-    "assignee": "zh-tw_Assignee",
-    "fileType": "zh-tw_File type",
-    "status": "zh-tw_Status",
-    "name": "zh-tw_Name",
+    "title": "文檔詳情",
+    "creator": "創建人",
+    "created": "創建日期",
+    "assignee": "指定人員",
+    "fileType": "文件類型",
+    "status": "狀態",
+    "name": "名稱",
     "comp.eventHistory": {
-      "title": "zh-tw_Event History",
+      "title": "事件歷史",
       "table.columns": {
-        "eventType": "zh-tw_Event Name",
-        "eventDate": "zh-tw_Created",
-        "userId": "zh-tw_User"
+        "eventType": "事件名稱",
+        "eventDate": "創建人",
+        "userId": "用戶"
       }
     },
     "comp.tags": {
-      "title": "zh-tw_Tags",
+      "title": "標籤",
       "table.columns": {
-        "tag": "zh-tw_Tag",
-        "created": "zh-tw_Created",
-        "createdBy": "zh-tw_Created By"
+        "tag": "標籤",
+        "created": "創建日期",
+        "createdBy": "創建人"
       },
       "modal": {
-        "title": "zh-tw_Tag",
-        "search": "zh-tw_Search for Tag",
+        "title": "標籤",
+        "search": "搜索標籤",
         "buttons": {
-          "cancel": "zh-tw_Cancel",
-          "ok": "zh-tw_Add Tag"
+          "cancel": "取消",
+          "ok": "添加標籤"
         }
       },
-      "message.tagExists": "zh-tw_Tag with that name or description or text already exists",
-      "message.tagAssociated": "zh-tw_already associated",
-      "message.delete.success": "zh-tw_Tag deleted successfully",
-      "message.delete.error": "zh-tw_Error deleting tag"
+      "message.tagExists": "具有該名稱或說明或文字的標籤已經存在",
+      "message.tagAssociated": "已經關聯",
+      "message.delete.success": "標籤已成功刪除",
+      "message.delete.error": "刪除標籤時出錯"
     },
     "comp.participants": {
-      "title": "zh-tw_Participants",
+      "title": "參與用戶",
       "table.columns": {
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type"
+        "name": "名稱",
+        "type": "類型"
       },
       "dialogUserPicker": {
-        "header": "zh-tw_Choose User",
+        "header": "選擇用戶",
         "table.columns": {
-          "name": "zh-tw_Name",
-          "type": "zh-tw_Type",
-          "title": "zh-tw_Title",
-          "id": "zh-tw_Username"
+          "name": "名稱",
+          "type": "類型",
+          "title": "標題",
+          "id": "用戶名"
         }
       },
       "dialogGroupPicker": {
-        "header": "zh-tw_Choose Group",
+        "header": "選擇群組",
         "table.columns": {
-          "name": "zh-tw_Name"
+          "name": "名稱"
         }
       }
     },
     "comp.notes": {
-      "title": "zh-tw_Notes",
+      "title": "筆記",
       "table.columns": {
-        "note": "zh-tw_Note",
-        "tag": "zh-tw_Document Version",
-        "created": "zh-tw_Created",
-        "creator": "zh-tw_Author"
+        "note": "註釋",
+        "tag": "文檔版本",
+        "created": "創建日期",
+        "creator": "作者"
       }
     },
     "comp.versionHistory": {
-      "title": "zh-tw_Version History",
+      "title": "版本歷史",
       "table.columns": {
-        "creator": "zh-tw_User",
-        "created": "zh-tw_Created",
-        "versionTag": "zh-tw_Version"
+        "creator": "用戶",
+        "created": "創建日期",
+        "versionTag": "版本"
       }
     },
     "comp.details": {
-      "title": "zh-tw_Details",
+      "title": "詳情",
       "label": {
-        "creator": "zh-tw_Owner",
-        "modifier": "zh-tw_Author",
-        "created": "zh-tw_Creation Date",
-        "modified": "zh-tw_Modified Date",
-        "description": "zh-tw_Description",
-        "type": "zh-tw_Type",
-        "organization": "zh-tw_Source Organization",
-        "person": "zh-tw_Source Entity",
-        "format": "zh-tw_Format",
-        "size": "zh-tw_Size",
-        "gps": "zh-tw_Location",
-        "duration": "zh-tw_Duration (seconds)",
-        "width": "zh-tw_Width (pixels)",
-        "height": "zh-tw_Height (pixels)",
-        "camera.type": "zh-tw_Camera Type",
-        "camera.version": "zh-tw_Camera Version",
-        "button.save": "zh-tw_Save",
-        "button.wait": "zh_tw_Please Wait"
+        "creator": "擁有人",
+        "modifier": "作者",
+        "created": "創建日期",
+        "modified": "修改日期",
+        "description": "描述",
+        "type": "類型",
+        "organization": "來源組織",
+        "person": "來源實體",
+        "format": "格式",
+        "size": "大小",
+        "gps": "位置",
+        "duration": "持續時間（秒）",
+        "width": "寬度（像素）",
+        "height": "高度（像素）",
+        "camera.type": "相機類型",
+        "camera.version": "相機版本",
+        "button.save": "保存",
+        "button.wait": "請稍候"
       },
       "message": {
-        "save.success": "zh-tw_File metadata are successfully updated",
-        "save.error": "zh-tw_Unable to update file metadata"
+        "save.success": "文件元數據已成功更新",
+        "save.error": "無法更新文件元數據"
       }
     }
   }
