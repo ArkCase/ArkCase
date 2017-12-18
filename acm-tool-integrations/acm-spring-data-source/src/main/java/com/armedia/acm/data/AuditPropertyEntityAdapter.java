@@ -34,10 +34,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         // insert record directly, instead of just modifying the AcmEntity.
         if (data instanceof AcmEntity)
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting insert fields.");
-            }
+            log.trace("Entity type [{}] is an AcmEntity, setting insert fields.", data.getClass());
 
             AcmEntity entity = (AcmEntity) data;
 
@@ -76,10 +73,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
             // note, we still have to update the object itself, so the client will have the right values
         } else
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting insert fields.");
-            }
+            log.trace("Entity type [{}] is NOT an AcmEntity, NOT setting insert fields.", data.getClass());
         }
     }
 
@@ -101,10 +95,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         // insert record directly, instead of just modifying the AcmEntity.
         if (data instanceof AcmEntity)
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Entity type '" + data.getClass() + "' is an AcmEntity, setting update fields.");
-            }
+            log.trace("Entity type [{}] is an AcmEntity, setting update fields.", data.getClass());
 
             AcmEntity entity = (AcmEntity) data;
 
@@ -112,24 +103,23 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
             String user = getUserId();
 
             String modified = getDatabaseColumnName(event, AcmEntity.MODIFIED_PROPERTY_NAME);
-            if (modified != null && entity.getModified() == null)
+            if (modified != null)
             {
                 record.put(modified, today);
-                entity.setModified(today);
             }
 
             String modifier = getDatabaseColumnName(event, AcmEntity.MODIFIER_PROPERTY_NAME);
-            if (modifier != null && entity.getModifier() == null)
+            if (modifier != null)
             {
                 record.put(modifier, getUserId());
-                entity.setModifier(user);
             }
+
+            // note, we still have to update the object itself, so the client will have the right values
+            entity.setModified(today);
+            entity.setModifier(user);
         } else
         {
-            if (log.isTraceEnabled())
-            {
-                log.trace("Entity type '" + data.getClass() + "' is NOT an AcmEntity, NOT setting update fields.");
-            }
+            log.trace("Entity type [{}] is NOT an AcmEntity, NOT setting update fields.", data.getClass());
         }
     }
 
