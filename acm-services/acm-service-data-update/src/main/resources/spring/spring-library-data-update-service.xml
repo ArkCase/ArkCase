@@ -15,6 +15,10 @@
         <property name="dataUpdateDao" ref="dataUpdateDao"/>
     </bean>
 
+    <bean id="userIdGroupNameDomainUpdateDao" class="com.armedia.acm.services.dataupdate.dao.UserIdGroupNameDomainUpdateDao"/>
+
+    <bean id="groupUuidUpdateDao" class="com.armedia.acm.services.dataupdate.dao.GroupUUIDUpdateDao"/>
+
     <bean id="acmDataUpdateManager" class="com.armedia.acm.services.dataupdate.service.AcmDataUpdateManager">
         <property name="dataUpdateExecutors">
             <list>
@@ -29,13 +33,14 @@
           class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
-        <property name="dataUpdateDao" ref="dataUpdateDao"/>
+        <property name="userIdGroupNameDomainUpdateDao" ref="userIdGroupNameDomainUpdateDao"/>
         <property name="contextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="groupRemoveUUIDExecutor" class="com.armedia.acm.services.dataupdate.service.GroupRemoveUUIDExecutor">
-        <property name="dataUpdateDao" ref="dataUpdateDao"/>
         <property name="groupDao" ref="groupDao"/>
+        <property name="uuidUpdateDao" ref="groupUuidUpdateDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
 
 </beans>

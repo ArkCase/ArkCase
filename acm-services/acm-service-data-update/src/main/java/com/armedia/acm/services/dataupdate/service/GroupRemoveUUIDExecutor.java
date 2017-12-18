@@ -1,7 +1,9 @@
 package com.armedia.acm.services.dataupdate.service;
 
-import com.armedia.acm.services.dataupdate.dao.AcmDataUpdateDao;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.services.dataupdate.dao.GroupUUIDUpdateDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
@@ -11,16 +13,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
 {
     private AcmGroupDao groupDao;
-    private AcmDataUpdateDao dataUpdateDao;
-
+    private GroupUUIDUpdateDao uuidUpdateDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -33,31 +38,32 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
     @Transactional
     public void execute()
     {
+        auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
+
         List<AcmGroup> deletedGroups = groupDao.findByStatusAndType(AcmGroupStatus.DELETE, AcmGroupType.LDAP_GROUP);
 
         invalidateGroups(deletedGroups);
 
-        int rows = dataUpdateDao.deleteLdapInvalidGroups();
-        log.debug("[{}] groups were deleted", rows);
+        List<AcmGroup> groupsWithUUID = uuidUpdateDao.findAdHocGroupsWithUUIDByStatus(AcmGroupStatus.ACTIVE);
 
-        List<AcmGroup> groupsWithUUID = dataUpdateDao.findAdHocGroupsWithUUIDByStatus(AcmGroupStatus.ACTIVE);
+        Set<AcmGroup> newGroups = insertAdHocGroupsWithRemovedUUID(groupsWithUUID);
 
-        Set<AcmGroup> newGroups = insertAdHocGroupsWithStrippedUUID(groupsWithUUID);
+        Map<String, AcmGroup> newGroupsByName = getGroupsPerName(newGroups);
 
-        dataUpdateDao.updateUserMembershipForAdHocGroups();
+        updateGroupMembershipForAdHocGroups(groupsWithUUID, newGroupsByName);
 
-        dataUpdateDao.updateGroupMembershipForAdHocGroups();
-
-        setAscendantsList(newGroups);
+        updateUserMembershipForAdHocGroups(groupsWithUUID, newGroupsByName);
 
         invalidateGroups(groupsWithUUID);
+
+        setAscendantsList(newGroups);
     }
 
-    private Set<AcmGroup> insertAdHocGroupsWithStrippedUUID(List<AcmGroup> groups)
+    private Set<AcmGroup> insertAdHocGroupsWithRemovedUUID(List<AcmGroup> groups)
     {
         Set<AcmGroup> uniqueGroups = groups.stream()
                 .map(group -> {
-                    String name = StringUtils.substringBeforeLast(group.getName(), "-UUID-");
+                    String name = truncateUUID(group.getName());
                     AcmGroup newGroup = new AcmGroup();
                     newGroup.setName(name);
                     newGroup.setSupervisor(group.getSupervisor());
@@ -69,8 +75,6 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
                     newGroup.setDisplayName(name);
                     newGroup.setCreator(group.getCreator());
                     newGroup.setCreated(group.getCreated());
-                    newGroup.setModified(new Date());
-                    newGroup.setModifier(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
                     return newGroup;
                 })
                 .collect(Collectors.toSet());
@@ -80,15 +84,15 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
             log.debug("Insert [{}]", group.getName());
             groupDao.save(group);
         });
-
         return uniqueGroups;
     }
 
     private void setAscendantsList(Set<AcmGroup> newGroups)
     {
         newGroups.forEach(group -> {
-            group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group));
-            log.debug("Set ascendants list for group [{}]", group.getName());
+            String ascendantsListString = AcmGroupUtils.buildAncestorsStringForAcmGroup(group);
+            group.setAscendantsList(ascendantsListString);
+            log.debug("Set ascendants list string [{}] for group [{}]", ascendantsListString, group.getName());
             groupDao.save(group);
         });
     }
@@ -108,13 +112,77 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
         });
     }
 
+    private void updateGroupMembershipForAdHocGroups(List<AcmGroup> groupsWithUUID, Map<String, AcmGroup> newGroupsByName)
+    {
+        List<AcmGroup> groupsToUpdate = new ArrayList<>();
+
+        groupsWithUUID.forEach(group -> {
+            String name = truncateUUID(group.getName());
+            if (newGroupsByName.containsKey(name))
+            {
+                AcmGroup newGroup = newGroupsByName.get(name);
+                Set<AcmGroup> memberGroups = group.getMemberGroups();
+                memberGroups.forEach(memberGroup -> {
+                    String memberGroupName = truncateUUID(memberGroup.getName());
+                    if (newGroupsByName.containsKey(memberGroupName))
+                    {
+                        newGroup.addGroupMember(newGroupsByName.get(memberGroupName));
+                    }
+                });
+                groupsToUpdate.add(newGroup);
+            }
+        });
+
+        groupsToUpdate.stream()
+                .filter(group -> !group.getMemberGroups().isEmpty())
+                .forEach(group -> {
+                    log.debug("Save group membership for group [{}]", group.getName());
+                    groupDao.save(group);
+                });
+    }
+
+    @Transactional
+    public void updateUserMembershipForAdHocGroups(List<AcmGroup> groupsWithUUID, Map<String, AcmGroup> newGroupsByName)
+    {
+        groupsWithUUID.forEach(group -> {
+            String name = truncateUUID(group.getName());
+            if (newGroupsByName.containsKey(name))
+            {
+                AcmGroup newGroup = newGroupsByName.get(name);
+                Set<AcmUser> userMembers = group.getUserMembers();
+                if (!userMembers.isEmpty())
+                {
+                    newGroup.setUserMembers(userMembers);
+                    log.debug("Saving [{}] user members for group [{}]", newGroup.getUserMemberIds(), newGroup.getName());
+                    groupDao.save(newGroup);
+                }
+            }
+        });
+    }
+
+    private String truncateUUID(String name)
+    {
+        return StringUtils.substringBeforeLast(name, "-UUID-").toUpperCase();
+    }
+
+    private Map<String, AcmGroup> getGroupsPerName(Set<AcmGroup> groups)
+    {
+        return groups.stream()
+                .collect(Collectors.toMap(AcmGroup::getName, Function.identity()));
+    }
+
     public void setGroupDao(AcmGroupDao groupDao)
     {
         this.groupDao = groupDao;
     }
 
-    public void setDataUpdateDao(AcmDataUpdateDao dataUpdateDao)
+    public void setUuidUpdateDao(GroupUUIDUpdateDao uuidUpdateDao)
     {
-        this.dataUpdateDao = dataUpdateDao;
+        this.uuidUpdateDao = uuidUpdateDao;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
