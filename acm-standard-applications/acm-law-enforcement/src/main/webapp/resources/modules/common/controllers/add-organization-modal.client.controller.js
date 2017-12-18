@@ -131,7 +131,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     }
                 });
                 modalInstance.result.then(function (selected) {
-                    $scope.isInvalid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
@@ -149,13 +148,13 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     );
             };
 
-            $scope.isChanged = function (organizationType) {
-                $scope.isInvalid = false;
-                $scope.notifyOrganizationParent(organizationType);
+            $scope.isChanged = function (organizationAssociationType) {
+                $scope.isInvalid = !Util.isEmpty(organizationAssociationType.key) && !Util.isEmpty(params.type) && organizationAssociationType.key === params.type ? true : false;
+                $scope.notifyOrganizationParent(organizationAssociationType);
             };
 
-            $scope.notifyOrganizationParent = function (organizationType) {
-                $scope.hasSubCompany = !Util.isEmpty(organizationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationType.key === "subCompany";
+            $scope.notifyOrganizationParent = function (organizationAssociationType) {
+                $scope.hasSubCompany = !Util.isEmpty(organizationAssociationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationAssociationType.key === "subCompany";
             };
 
             $scope.addNewOrganization = function () {
@@ -178,7 +177,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.isInvalid = false;
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;
