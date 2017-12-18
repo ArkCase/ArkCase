@@ -42,6 +42,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup save(AcmGroup groupToSave)
     {
+        groupToSave.setName(MapperUtils.buildGroupName(groupToSave.getName(), Optional.empty()));
         return groupDao.save(groupToSave);
     }
 
