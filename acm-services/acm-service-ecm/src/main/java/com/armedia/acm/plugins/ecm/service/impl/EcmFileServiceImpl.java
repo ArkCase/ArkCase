@@ -1333,13 +1333,12 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                 cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.ALL_VERSIONS, false);
         
-        try {
-            getEcmFileDao().findByCmisFileId(cmisObject.getProperty("cmis:versionSeriesId").getFirstValue().toString());
+        List<EcmFile> listFiles = getEcmFileDao().findByCmisFileId(cmisObject.getProperty("cmis:versionSeriesId").getFirstValue().toString());
+        
+        if (listFiles != null && !listFiles.isEmpty()) {
             throw new Exception("File already exists in Arkcase, use another method for deleting Arkcase file!");
-        } catch (NoResultException e) {
-
-            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
         }
+        getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
 
     }
     
