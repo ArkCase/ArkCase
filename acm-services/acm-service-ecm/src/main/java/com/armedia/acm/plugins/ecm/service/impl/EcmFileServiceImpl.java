@@ -49,6 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import java.io.File;
 import java.io.IOException;
@@ -1331,8 +1332,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
                 cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.ALL_VERSIONS, false);
+        
+        try {
+            getEcmFileDao().findByCmisFileId(cmisRepositoryId);
+            throw new Exception("File already exists in Arkcase, use another method for deleting Arkcase file!");
+        } catch (NoResultException e) {
 
-        getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
+            getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
+        }
 
     }
     
