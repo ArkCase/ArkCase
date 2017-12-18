@@ -45,8 +45,8 @@
                     <label for="types" translate>common.addPerson.type.label</label>
                     <span class="required-asterisk">*</span>
                 </div>
-                <select class="input-md form-control" id="types" ng-model="$parent.type" ng-change="isChanged($parent.type)"
-                        ng-options="o.value | translate for o in types" ng-disabled="!$parent.pickerTypeEnabled"
+                <select class="input-md form-control" id="types" ng-model="$parent.type"
+                        ng-options="o.value | translate for o in types" ng-disabled="!pickerTypeEnabled"
                         required></select>
             </div>
         </div>
@@ -70,7 +70,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>common.addPerson.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addPersonForm.$invalid || isInvalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addPersonForm.$invalid || isInvalid()">
         <span translate>common.addPerson.btnOk.text</span>
     </button>
 </div>
