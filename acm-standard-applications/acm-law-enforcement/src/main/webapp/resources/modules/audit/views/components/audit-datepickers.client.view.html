@@ -1,11 +1,13 @@
 <div ng-controller="Audit.DatepickersController">
 
     <label for="dateFromAudit" translate>audit.navigation.label.dateFrom</label>
+    <span class="required-asterisk">*</span>
     <div>
 
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   ng-required="true"
                    id="dateFromAudit"
                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                    ng-model="dateFrom"
@@ -13,6 +15,7 @@
                    close-on-date-selection="true"
                    show-button-bar="true"
                    on-open-focus="false"
+                   ng-blur="dateFromChanged()"
                    close-text="{{'audit.datepicker.close' | translate}}"
                    current-text="{{'audit.datepicker.current' | translate}}"
                    clear-text="{{'audit.datepicker.clear' | translate}}"/>
@@ -27,10 +30,12 @@
 
 
     <label for="dateToAudit" translate>audit.navigation.label.dateTo</label>
+    <span class="required-asterisk">*</span>
     <div>
         <p class="input-group">
             <input type="text"
                    class="form-control"
+                   ng-required="true"
                    id="dateToAudit"
                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                    ng-model="dateTo"
@@ -38,6 +43,7 @@
                    close-on-date-selection="true"
                    show-button-bar="true"
                    on-open-focus="false"
+                   ng-blur="dateToChanged()"
                    close-text="{{'audit.datepicker.close' | translate}}"
                    current-text="{{'audit.datepicker.current' | translate}}"
                    clear-text="{{'audit.datepicker.clear' | translate}}"/>
