@@ -44,12 +44,12 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         var retrieveGridData = function () {
-            var exceptDeleteOnly = true;
+            var exceptDeletedOnly = true;
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
-                    , exceptDeleteOnly
+                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
@@ -91,11 +91,11 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             {
                 TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
                     function (complaintInfo) {
+                        gridHelper.deleteRow(rowEntity);
                         $scope.$emit("report-object-updated", complaintInfo);
                         return complaintInfo;
                     }
                 );
-                gridHelper.deleteRow(rowEntity);
             }
         };
 

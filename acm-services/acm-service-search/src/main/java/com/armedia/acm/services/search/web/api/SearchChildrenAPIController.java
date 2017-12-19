@@ -32,7 +32,6 @@ public class SearchChildrenAPIController
             @RequestParam(value = "childType", required = false, defaultValue = "") String childType,
             @RequestParam(value = "activeOnly", required = false, defaultValue = "false") boolean activeOnly,
             @RequestParam(value = "exceptDeletedOnly", required = false, defaultValue = "true") boolean exceptDeletedOnly,
-            @RequestParam(value = "exceptDeleteOnly", required = false, defaultValue = "true") boolean exceptDeleteOnly,
             @RequestParam(value = "extra", required = false) List<String> extra,
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
@@ -51,12 +50,7 @@ public class SearchChildrenAPIController
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
-            }
-        }
-        if (exceptDeleteOnly) {
-            if(!activeOnly){
-                query += " AND -status_s:DELETE";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
         if (extra != null && extra.size() > 0)

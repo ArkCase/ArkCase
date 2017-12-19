@@ -64,7 +64,6 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         String childType = "TASK";
         Boolean activeOnly = false;
         Boolean exceptDeletedOnly = true;
-        Boolean exceptDeleteOnly = true;
 
 
         String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
@@ -74,15 +73,9 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
-        if (exceptDeleteOnly) {
-            if(!activeOnly){
-                query += " AND -status_s:DELETE";
-            }
-        }
-
 
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
@@ -179,7 +172,6 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         String childType = "TASK";
         Boolean activeOnly = false;
         Boolean exceptDeletedOnly = true;
-        Boolean exceptDeleteOnly = true;
 
 
         String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
@@ -189,12 +181,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
-            }
-        }
-        if (exceptDeleteOnly) {
-            if(!activeOnly){
-                query += " AND -status_s:DELETE";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
         // MVC test classes must call getName() somehow

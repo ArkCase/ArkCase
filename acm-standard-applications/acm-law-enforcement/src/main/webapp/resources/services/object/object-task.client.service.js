@@ -25,6 +25,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
              * @param {String} params.parentType  Parent object type
              * @param {Number} params.parentId  Parent object ID
              * @param {Number} params.start Zero based start number of record
+             * @param {Boolean} params.exceptDeletedOnly except delete/deleted status of the childTasks
              * @param {Number} params.n Max Number of list to return
              * @param {String} params.sort  Sort value, with format 'sortBy sortDir', sortDir can be 'asc' or 'desc'
              * @param {Function} onSuccess (Optional)Callback function of success query
@@ -34,7 +35,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
              */
             _queryChildTasks: {
                 method: 'GET',
-                url: 'api/latest/plugin/search/children?parentType=:parentType&childType=TASK&parentId=:parentId&start=:start&exceptDeleteOnly=:exceptDeleteOnly&n=:n&s=:sort',
+                url: 'api/latest/plugin/search/children?parentType=:parentType&childType=TASK&parentId=:parentId&start=:start&exceptDeletedOnly=:exceptDeletedOnly&n=:n&s=:sort',
                 cache: false
             }
             /**
@@ -118,16 +119,16 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          * @param {String} parentType  Object type
          * @param {Number} parentId  Object ID
          * @param {Number} start Zero based start number of record
-         * @param {Boolean} exceptDeleteOnly show only non 'DELETE' tasks
+         * @param {Boolean} exceptDeletedOnly show only non 'DELETE' and 'DELETED' tasks
          * @param {Number} n Max Number of list to return
          * @param {String} sortBy  (Optional)Sort property
          * @param {String} sortDir  (Optional)Sort direction. Value can be 'asc' or 'desc'
          *
          * @returns {Object} Promise
          */
-        Service.queryChildTasks = function (parentType, parentId, start, exceptDeleteOnly, n, sortBy, sortDir) {
+        Service.queryChildTasks = function (parentType, parentId, start, exceptDeletedOnly, n, sortBy, sortDir) {
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
-            var cacheKey = parentType + "." + parentId + "." + start + "." + exceptDeleteOnly + "." + n + "." + sortBy + "." + sortDir;
+            var cacheKey = parentType + "." + parentId + "." + start + "." + exceptDeletedOnly + "." + n + "." + sortBy + "." + sortDir;
             var taskData = cacheChildTaskData.get(cacheKey);
             
             var sort = "";
@@ -141,7 +142,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
                     parentType: parentType
                     , parentId: parentId
                     , start: start
-                    , exceptDeleteOnly: exceptDeleteOnly
+                    , exceptDeletedOnly: exceptDeletedOnly
                     , n: n
                     , sort: sort
                 }
