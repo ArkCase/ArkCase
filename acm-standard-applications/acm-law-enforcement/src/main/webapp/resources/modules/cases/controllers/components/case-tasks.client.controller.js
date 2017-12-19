@@ -46,12 +46,12 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
-            var exceptDeleteOnly = true;
+            var exceptDeletedOnly = true;
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
-                    , exceptDeleteOnly
+                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
@@ -93,12 +93,12 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             {
                 TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
                     function (caseInfo) {
+                        gridHelper.deleteRow(rowEntity);
                         $scope.$emit("report-object-updated", caseInfo);
                         return caseInfo;
                     }
                 );
             }
-            gridHelper.deleteRow(rowEntity);
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {
