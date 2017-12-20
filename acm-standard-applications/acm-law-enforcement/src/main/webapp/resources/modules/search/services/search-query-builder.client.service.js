@@ -28,7 +28,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
              * @returns {HttpPromise} Future info about cancel status
              */
             buildFacetedSearchQuery: function (input, filters, n, start) {
-                return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
+                return (filters ? (encodeURIComponent(input) + "&filters=" + encodeURIComponent(filters) + "&n=" + n + "&start=" + start) : (encodeURIComponent(input) + "&n=" + n + "&start=" + start));
             },
 
             /**
@@ -48,7 +48,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
              * @returns {HttpPromise} Future info about cancel status
              */
             buildFacetedSearchQuerySorted: function (input, filters, join, n, start, sort) {
-                return (filters ? (input + "&filters=" + encodeURIComponent(filters) + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort));
+                return (filters ? (encodeURIComponent(input) + "&filters=" + encodeURIComponent(filters) + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort) : (encodeURIComponent(input) + "&join=" + encodeURIComponent(join) + "&n=" + n + "&start=" + start + "&s=" + sort));
             },
 
             /**
@@ -67,7 +67,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
              * @returns {HttpPromise} Future info about cancel status
              */
             buildSafeFqFacetedSearchQuery: function (input, filters, n, start) {
-                return (filters ? (input + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start) : (input + "&n=" + n + "&start=" + start));
+                return (filters ? (encodeURIComponent(input) + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start) : (encodeURIComponent(input) + "&n=" + n + "&start=" + start));
             },
 
             /**
@@ -87,7 +87,7 @@ angular.module('search').factory('Search.QueryBuilderService', [
              * @returns {HttpPromise} Future info about cancel status
              */
             buildSafeFqFacetedSearchQuerySorted: function (input, filters, n, start, sort) {
-                return (filters ? (input + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start + "&s=" + sort) : (input + "&n=" + n + "&start=" + start + "&s=" + sort));
+                return (filters ? (encodeURIComponent(input) + "&filters=" + filters.replace(/&fq=/gi, '%26fq%3D') + "&n=" + n + "&start=" + start + "&s=" + sort) : (encodeURIComponent(input) + "&n=" + n + "&start=" + start + "&s=" + sort));
             }
 
         }
