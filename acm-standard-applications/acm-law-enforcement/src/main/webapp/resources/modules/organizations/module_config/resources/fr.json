@@ -351,6 +351,7 @@
   },
   "organizations.comp.related": {
     "title": "Organisations associées",
+    "linkTitle": "fr_Rel Org",
     "table.columns": {
       "associationType": "fr_Relationship",
       "type": "fr_Type",

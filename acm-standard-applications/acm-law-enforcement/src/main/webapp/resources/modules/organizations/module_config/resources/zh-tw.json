@@ -351,6 +351,7 @@
   },
   "organizations.comp.related": {
     "title": "相關組織",
+    "linkTitle": "zh-tw_Rel Org",
     "table.columns": {
       "associationType": "zh-tw_Relationship",
       "type": "zh-tw_Type",

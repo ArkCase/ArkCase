@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Verwandte Menschen",
+    "linkTitle": "de_Rel People",
     "table.columns": {
       "firstName": "de_First Name",
       "lastName": "de_Last Name",

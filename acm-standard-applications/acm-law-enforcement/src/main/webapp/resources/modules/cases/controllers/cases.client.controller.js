@@ -2,18 +2,16 @@
 
 angular.module('cases').controller('CasesController', ['$scope', '$stateParams', '$state', '$translate'
     , 'UtilService', 'ConfigService', 'Case.InfoService', 'ObjectService', 'Helper.ObjectBrowserService'
-    , 'Dashboard.DashboardService', 'Admin.CalendarConfigurationService'
+    , 'Dashboard.DashboardService', 'Object.CalendarService'
     , function ($scope, $stateParams, $state, $translate
-        , Util, ConfigService, CaseInfoService, ObjectService, HelperObjectBrowserService, DashboardService, CalendarConfigurationService) {
+        , Util, ConfigService, CaseInfoService, ObjectService, HelperObjectBrowserService, DashboardService, CalendarService) {
 
         $scope.isNodeDisabled = function(node){
             return HelperObjectBrowserService.isNodeDisabled('cases', $translate.instant(node));
         }
 
-        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
-            if (!calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
-                HelperObjectBrowserService.toggleNodeDisabled('cases', 'Calendar', true);
-            }
+        CalendarService.getCalendarIntegration('CASE_FILE').then(function (calendarAdminConfigRes) {
+            HelperObjectBrowserService.toggleNodeDisabled('cases', 'Calendar', !calendarAdminConfigRes.data);
         });
 
         new HelperObjectBrowserService.Content({
