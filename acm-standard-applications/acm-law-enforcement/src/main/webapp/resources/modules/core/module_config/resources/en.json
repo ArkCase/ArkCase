@@ -10,6 +10,15 @@
         "no-access": "No Access",
         "case": "Case File"
       },
+      "endpoint": {
+        "atom": "ATOM",
+        "soap": "SOAP"
+      },
+      "versioningState": {
+        "none": "NONE",
+        "minor": "MINOR",
+        "major": "MAJOR"
+      },
       "addressTypes": {
         "business": "Business"
       },

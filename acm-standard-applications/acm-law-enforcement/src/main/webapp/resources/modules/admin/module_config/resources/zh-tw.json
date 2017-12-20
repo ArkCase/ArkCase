@@ -647,6 +647,7 @@
           "edit": "編輯CMIS配置"
         },
         "dialog": {
+          "testConnection": "zh-tw_Test Connection",
           "cancel": "取消",
           "ok": "確定"
         },

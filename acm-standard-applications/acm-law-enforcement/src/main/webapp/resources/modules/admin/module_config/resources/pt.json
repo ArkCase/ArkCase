@@ -647,6 +647,7 @@
           "edit": "Edite a Configuração do CMIS"
         },
         "dialog": {
+          "testConnection": "pt_Test Connection",
           "cancel": "Cancelar",
           "ok": "Está bem"
         },

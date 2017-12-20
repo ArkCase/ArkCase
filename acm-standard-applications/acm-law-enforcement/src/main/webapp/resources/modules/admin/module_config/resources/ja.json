@@ -647,6 +647,7 @@
           "edit": "CMIS構成の編集"
         },
         "dialog": {
+          "testConnection": "ja_Test Connection",
           "cancel": "キャンセル",
           "ok": "[OK]"
         },

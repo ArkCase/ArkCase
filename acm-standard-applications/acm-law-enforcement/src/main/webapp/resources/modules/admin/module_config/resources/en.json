@@ -647,6 +647,7 @@
           "edit": "Edit CMIS Configuration"
         },
         "dialog": {
+          "testConnection": "Test Connection",
           "cancel": "Cancel",
           "ok": "OK"
         },
@@ -728,7 +729,8 @@
         "insert.success": "Successfully created new configuration row.",
         "insert.error": "Error creating new configuration row.",
         "update.success": "Successfully updated configuration row.",
-        "update.error": "Error updating configuration row."
+        "update.error": "Error updating configuration row.",
+        "test.conection.success": "Successfully connected."
       }
     }
   },
