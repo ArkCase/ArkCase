@@ -53,10 +53,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes=[];
-                    for(var i = 0 ; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
                 });
@@ -77,6 +74,20 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
+
+            $scope.treeControl.addCommandHandler({
+                name: "declare"
+                , onAllowCmd: function (nodes) {
+                    return PermissionsService.getActionPermission('declareAsRecords', $scope.objectInfo, {objectType: $scope.objectType}).then(
+                        function success(enabled) {
+                            return enabled ? 'enable' : 'disable';
+                        }, function error() {
+                            $log.error('Can\'t get permission info for action declareAsRecords. The menu item will be disabled.');
+                            return 'disable';
+                        }
+                    );
+                }
+            });
         };
 
 

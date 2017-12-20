@@ -59,8 +59,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
         Service.findParticipantById = function (participantId) {
             // determine exact object type so that the validation passes in object-participant.client.service.js
             var df = $q.defer();
-            var filter = 'fq="id":(' + participantId + '-USER OR ' + participantId + '-GROUP)';
-            var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery(participantId + '*', filter, 10, 0);
+            var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery('* AND (id:"' + participantId + '-USER" OR (name:"' + participantId + '" AND object_type_s:GROUP))', "", 10, 0);
             SearchService.queryFilteredSearch({
                     query: query
                 },

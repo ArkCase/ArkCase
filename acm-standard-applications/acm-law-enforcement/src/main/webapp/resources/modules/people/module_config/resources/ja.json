@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "関連する人々",
+    "linkTitle": "ja_Rel People",
     "table.columns": {
       "firstName": "ja_First Name",
       "lastName": "ja_Last Name",

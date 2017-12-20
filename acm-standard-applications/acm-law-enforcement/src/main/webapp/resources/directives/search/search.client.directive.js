@@ -81,7 +81,7 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
 
             link: function (scope) {    //dom operations
                 scope.facets = [];
-                scope.currentFacetSelection = [];
+                scope.currentFacetSelection = {};
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
@@ -109,6 +109,12 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                 scope.onSelect = function ($item, $model, $label) {
                     isSelected = true;
                     searchObject.searchQuery = $model;
+                };
+
+                scope.search = function () {
+                    scope.filters = '';
+                    scope.clearAllFacets();
+                    scope.queryExistingItems();
                 };
 
                 scope.queryExistingItems = function (start) {
@@ -405,7 +411,7 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                     searchObject.searchQuery = scope.searchQuery;
 
                     if (event.keyCode == 13 && scope.searchQuery) {
-                        scope.queryExistingItems();
+                        scope.search();
                     }
                 };
 

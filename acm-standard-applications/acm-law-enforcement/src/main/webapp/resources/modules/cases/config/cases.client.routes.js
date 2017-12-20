@@ -16,7 +16,7 @@ angular.module('cases').config(['$stateProvider',
                         $translatePartialLoader.addPart('cases');
                         $translatePartialLoader.addPart('document-details');
                         $translate.resetDataDict()
-                            .addDataDictFromLabels(LocaleService.getLabelResources(["cases"], "en"))
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["cases", "common"], "en"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
                         ;
