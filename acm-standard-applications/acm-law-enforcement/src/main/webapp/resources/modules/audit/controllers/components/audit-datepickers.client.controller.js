@@ -1,15 +1,29 @@
 'use strict';
 
-angular.module('audit').controller('Audit.DatepickersController', ['$scope', function ($scope) {
+angular.module('audit').controller('Audit.DatepickersController', ['$scope', 'UtilService', 'Util.DateService', function ($scope, Util, UtilDateService) {
+    $scope.dateFrom = new Date();
+    $scope.dateTo = new Date();
 
-        $scope.dateFrom = new Date();
-        $scope.dateTo = new Date();
-        $scope.$watchGroup(['dateFrom','dateTo'], function(){
-            $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
-        });
+    $scope.dateFromChanged = function () {
+        var validateDate = UtilDateService.validateFromDate($scope.dateFrom, $scope.dateTo);
+        $scope.dateFrom = validateDate.from;
+        $scope.dateTo = validateDate.to;
 
-        $scope.opened = {};
-        $scope.opened.openedStart = false;
-        $scope.opened.openedEnd = false;
-    }
+        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
+    };
+
+    $scope.dateToChanged = function () {
+        var validateDate = UtilDateService.validateToDate($scope.dateFrom, $scope.dateTo);
+        $scope.dateFrom = validateDate.from;
+        $scope.dateTo = validateDate.to;
+
+        $scope.$emit('send-date', $scope.dateFrom, $scope.dateTo);
+    };
+
+    $scope.dateFromChanged();
+    $scope.dateToChanged();
+    $scope.opened = {};
+    $scope.opened.openedStart = false;
+    $scope.opened.openedEnd = false;
+}
 ]);

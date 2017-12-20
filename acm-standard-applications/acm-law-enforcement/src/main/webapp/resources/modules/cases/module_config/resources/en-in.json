@@ -89,8 +89,26 @@
     "title": "Documents",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
-
+    "searchInputPlaceholder": "Search",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Report of Investigation",
+        "ecomm%": "Electronic Communication"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Correspondence Invitation",
+        "approvalLetter%": "Approval Letter",
+        "medicalRelease%": "Medical Release",
+        "generalRelease%": "General Release",
+        "clearanceGranted%": "Clearance Granted",
+        "clearanceDenied%": "Clearance Denied",
+        "noticeInvestigation%": "Notice of Investigation",
+        "witnessInterview%": "Witness Interview Request",
+        "witnessInterview2%": "Witness Interview Request-2.0"
+      }
+    },
+    "newTask": "New Task"
   },
   "cases.comp.people": {
     "title": "People",
@@ -164,10 +182,10 @@
     "title": "References",
     "table.columns": {
       "targetName": "Number",
-      "parentName": "Parent",
       "targetTitle": "Title",
+      "targetType": "Type",
+      "assignee": "Assignee",
       "modified": "Modified",
-      "targetType": "Reference Type",
       "status": "Status"
     }
   },
@@ -245,6 +263,9 @@
       "modified": "Modified"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "cases.comp.split": {
     "title": "Split",
     "cancel": "Cancel",
@@ -285,21 +306,47 @@
     "searchGroupHeader": "Search Group"
   },
   "cases.comp.approvalRouting": {
-    "title": "Future Approvers",
+    "title": "Approvers",
     "addNewTooltip": "Add new approver",
     "noBuckslipMessage": "No Data",
+    "processInitialize.successfull": "Process Initialized",
+    "processInitialize.fail": "Process Not Initialized",
+    "processWithdraw.successfull": "Process Withdrawn",
+    "processWithdraw.fail": "Process Not Withdrawn",
+    "businessProcessUpdate.successfull": "Approval Routing Updated",
+    "businessProcessUpdate.fail": "Approval Routing Not Updated",
     "button": {
-      "save.tooltip": "Save Changes"
+      "save.tooltip": "Save Changes",
+      "initiate.tooltip": "Initiate Task",
+      "withdraw.tooltip": "Withdraw Task"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "Non-concur ends the approval cycle"
     },
     "table.columns": {
-      "fullName": "Full Name"
+      "assignee": "Assignee",
+      "group": "Owning Group",
+      "subject": "Subject",
+      "details": "Details",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "addedBy": "Added By"
     },
     "assignee.label": "Assignee",
     "owningGroup.label": "Owning Group",
     "priority.label": "Priority",
     "startDate.label": "Start Date",
     "dueDate.label": "Due Date",
-    "state.label": "State"
+    "state.label": "State",
+    "future.task.modal": {
+      "title": "New Future Task",
+      "assignee": "Assignee",
+      "subject.label": "Subject",
+      "subject.placeholder": "Enter future case subject",
+      "details.label": "Details",
+      "cancel.button": "Cancel",
+      "save.button": "Save"
+    }
   },
   "cases.comp.pastApprovals": {
     "title": "Past Approvers",
@@ -363,5 +410,4 @@
       "noSort": "(No Sort)"
     }
   }
-
 }

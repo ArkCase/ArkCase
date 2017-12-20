@@ -33,10 +33,6 @@ public class StandardLookupTest extends EasyMockSupport
         validEntries.add(new StandardLookupEntry("key1", "value1"));
         validEntries.add(new StandardLookupEntry("key2", "value2"));
 
-        List<StandardLookupEntry> emptyKeyEntries = new ArrayList<>();
-        emptyKeyEntries.add(new StandardLookupEntry("key1", "value1"));
-        emptyKeyEntries.add(new StandardLookupEntry("", "value2"));
-
         List<StandardLookupEntry> duplicateKeyEntries = new ArrayList<>();
         duplicateKeyEntries.add(new StandardLookupEntry("key1", "value1"));
         duplicateKeyEntries.add(new StandardLookupEntry("key1", "value2"));
@@ -54,10 +50,6 @@ public class StandardLookupTest extends EasyMockSupport
                         validEntries,
                         true,
                         null },
-                {
-                        emptyKeyEntries,
-                        false,
-                        "Empty key found in '" + testLookupName + "' lookup!" },
                 {
                         duplicateKeyEntries,
                         false,

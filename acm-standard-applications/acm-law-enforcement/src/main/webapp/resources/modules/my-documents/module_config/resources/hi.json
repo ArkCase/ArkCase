@@ -4,5 +4,8 @@
   },
   "my-documents.menus": {
     "leftnav.item": "मेरे दस्तावेज"
+  },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "संदर्भ खोज"
   }
 }

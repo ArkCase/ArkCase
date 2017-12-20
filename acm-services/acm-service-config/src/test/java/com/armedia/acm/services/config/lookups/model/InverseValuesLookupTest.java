@@ -33,17 +33,9 @@ public class InverseValuesLookupTest extends EasyMockSupport
         validEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
         validEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
 
-        List<InverseValuesLookupEntry> emptyKeyEntries = new ArrayList<>();
-        emptyKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        emptyKeyEntries.add(new InverseValuesLookupEntry("", "value2", "inverseKey2", "inverseValue2"));
-
         List<InverseValuesLookupEntry> emptyValueEntries = new ArrayList<>();
         emptyValueEntries.add(new InverseValuesLookupEntry("key1", "", "inverseKey1", "inverseValue1"));
         emptyValueEntries.add(new InverseValuesLookupEntry("key2", "value2", "inverseKey2", "inverseValue2"));
-
-        List<InverseValuesLookupEntry> emptyInverseKeyEntries = new ArrayList<>();
-        emptyInverseKeyEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", "inverseValue1"));
-        emptyInverseKeyEntries.add(new InverseValuesLookupEntry("key2", "value2", "", "inverseValue2"));
 
         List<InverseValuesLookupEntry> emptyInverseValueEntries = new ArrayList<>();
         emptyInverseValueEntries.add(new InverseValuesLookupEntry("key1", "value1", "inverseKey1", ""));
@@ -71,17 +63,9 @@ public class InverseValuesLookupTest extends EasyMockSupport
                         true,
                         null },
                 {
-                        emptyKeyEntries,
-                        false,
-                        "Empty key found in '" + testLookupName + "' lookup!" },
-                {
                         emptyValueEntries,
                         false,
                         "Empty value found in '" + testLookupName + "' lookup!" },
-                {
-                        emptyInverseKeyEntries,
-                        false,
-                        "Empty inverse key found in '" + testLookupName + "' lookup!" },
                 {
                         emptyInverseValueEntries,
                         false,
