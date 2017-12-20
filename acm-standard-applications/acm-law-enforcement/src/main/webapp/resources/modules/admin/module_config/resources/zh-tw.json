@@ -433,6 +433,7 @@
       "cancel": "取消",
       "activate": "激活"
     },
+    "workflows.config.noHistory": "zh-tw_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "業務流程",
       "description": "描述",
