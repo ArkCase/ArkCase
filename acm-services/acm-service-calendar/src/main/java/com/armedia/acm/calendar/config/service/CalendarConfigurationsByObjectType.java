@@ -1,11 +1,12 @@
 package com.armedia.acm.calendar.config.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
-
-import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 16, 2017
@@ -16,7 +17,7 @@ import java.util.Map;
 public class CalendarConfigurationsByObjectType
 {
 
-    private Map<String, CalendarConfiguration> configurationsByType;
+    private Map<String, CalendarConfiguration> configurationsByType = new HashMap<>();
 
     /**
      * @return the configurationsByType
@@ -41,7 +42,7 @@ public class CalendarConfigurationsByObjectType
      */
     public CalendarConfiguration getConfiguration(String objectType)
     {
-        return configurationsByType.get(objectType);
+        return configurationsByType.getOrDefault(objectType, new CalendarConfiguration());
     }
 
 }

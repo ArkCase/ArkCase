@@ -1,16 +1,16 @@
 {
   "timeTracking": {
     "title": "Suivi du temps",
-    "progressNoTimesheet": "[ Aucune feuille de temps n'est sélectionnée ]",
-    "progressLoading": "Feuille de temps de chargement",
-    "progressError": "Impossible de charger la feuille de temps"
+    "progressNoTimesheet": "[Aucune feuille de temps n'est sélectionnée]",
+    "progressLoading": "Chargement de la feuille de temps",
+    "progressError": "Échec du chargement de la feuille de temps"
   },
   "timeTracking.menus": {
     "leftnav.item": "Suivi du temps",
-    "topbar.item": "Feuille de temp"
+    "topbar.item": "Emploi du temps"
   },
   "timeTracking.comp.main": {
-    "title": "Vue d'ensemble"
+    "title": "Aperçu"
   },
   "timeTracking.comp.info": {
     "title": "Information",
@@ -18,73 +18,73 @@
   },
   "timeTracking.comp.actions": {
     "title": "Actes",
-    "new.button": "Nouvelle feuille",
-    "edit.button": "Modifier la feuille"
+    "new.button": "Nouvelle feuille de temps",
+    "edit.button": "Modifier la feuille de temps"
   },
   "timeTracking.comp.details": {
     "title": "Détails",
-    "informSaved": "fr_Timesheet details saved",
+    "informSaved": "Détails de la feuille de temps enregistrés",
     "table.columns": {
-      "title": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "timeTracking.comp.person": {
     "title": "Personnes",
     "table.columns": {
-      "fullName": "fr_Full Name",
-      "userId": "fr_Username"
+      "fullName": "Nom complet",
+      "userId": "Nom d'utilisateur"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "Résumé de l'heure",
+    "title": "Heures",
     "table.columns": {
-      "code": "fr_Parent ID",
-      "type": "fr_Parent Type",
-      "value": "fr_Total Hours",
-      "date": "fr_Date Charged",
-      "modified": "fr_Modified Date"
+      "code": "ID du parent",
+      "type": "Type de parent",
+      "value": "Heures totales",
+      "date": "Date de facturation",
+      "modified": "Date modifiée"
     }
   },
   "timeTracking.comp.tags": {
-    "title": "étiquettes",
+    "title": "Étiquettes",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Marque",
+      "created": "Créé",
+      "createdBy": "Créé par"
     },
     "modal": {
-      "title": "fr_Tag",
-      "search": "fr_Search for Tag",
+      "title": "Marque",
+      "search": "Recherche de tag",
       "buttons": {
-        "cancel": "fr_Cancel",
-        "ok": "fr_Add Tag"
+        "cancel": "Annuler",
+        "ok": "Ajouter une étiquette"
       }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression d'un tag"
       }
     }
   },
   "timeTracking.comp.approvers": {
-    "title": "fr_Approvers",
+    "title": "Approbateurs",
     "table.columns": {
-      "fullName": "fr_Full Name",
-      "userId": "fr_Username"
+      "fullName": "Nom complet",
+      "userId": "Nom d'utilisateur"
     }
   },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Détails",
       "person.label": "Personnes",
-      "summary.label": "Frais",
-      "tags.label": "étiquettes",
-      "approvers.label": "fr_Approvers"
+      "summary.label": "Heures",
+      "tags.label": "Étiquettes",
+      "approvers.label": "Approbateurs"
     },
     "sorters": {
       "dateAsc": "Trier Date Asc",
@@ -94,4 +94,5 @@
       "nameDesc": "Trier par nom Déc",
       "noSort": "(Non Trier)"
     }
+  }
 }

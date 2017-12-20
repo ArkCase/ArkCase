@@ -268,6 +268,28 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
 
         /**
          * @ngdoc method
+         * @name getCalendarIntegration
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         *
+         * Get the calendar integration status of an object type.
+         *
+         * @param {String} objectType
+         *
+         * @returns {Object} Promise
+         */
+        Service.getCalendarIntegration = function(objectType) {
+
+            return $http({
+                method: 'GET',
+                url: 'api/latest/service/calendar/' + objectType + '/integration'
+            });
+
+        };
+
+        /**
+         * @ngdoc method
          * @name getCalendar
          * @methodOf services:Object.CalendarService
          *

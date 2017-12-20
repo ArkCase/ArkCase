@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,6 +35,7 @@ public class RenameFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'renameFile')")
     @RequestMapping(value = "/file/{objectId}/{newName}/{extension}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile renameFile(
@@ -49,7 +51,7 @@ public class RenameFileAPIController
         return getEcmFile(objectId, authentication, session, newName);
     }
 
-
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'renameFile')")
     @RequestMapping(value = "/file/{objectId}/rename", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile renameFileWithoutExt(

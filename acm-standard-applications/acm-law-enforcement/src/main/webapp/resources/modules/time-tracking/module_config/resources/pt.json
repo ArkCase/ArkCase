@@ -1,13 +1,13 @@
 {
   "timeTracking": {
-    "title": "Rastreamento de tempo",
-    "progressNoTimesheet": "[ Nenhuma tabela de horário está selecionada ]",
+    "title": "Rastreamento de Tempo",
+    "progressNoTimesheet": "[Não é selecionada nenhuma tabela de horários]",
     "progressLoading": "Folha de tempo de carregamento",
-    "progressError": "Falha ao carregar a folha de tempo"
+    "progressError": "Falha ao carregar a folha de horas"
   },
   "timeTracking.menus": {
-    "leftnav.item": "Rastreamento de tempo",
-    "topbar.item": "Folha de Horário"
+    "leftnav.item": "Rastreamento de Tempo",
+    "topbar.item": "Planilha de horário"
   },
   "timeTracking.comp.main": {
     "title": "Visão geral"
@@ -23,68 +23,68 @@
   },
   "timeTracking.comp.details": {
     "title": "Detalhes",
-    "informSaved": "pt_Timesheet details saved",
+    "informSaved": "Detalhes da folha de horas guardados",
     "table.columns": {
-      "title": "pt_Details",
-      "modified": "pt_Date Last Modified",
-      "modifier": "pt_User Last Modified"
+      "title": "Detalhes",
+      "modified": "Data de última modificação",
+      "modifier": "Último usuário modificado"
     }
   },
   "timeTracking.comp.person": {
-    "title": "Pessoas",
+    "title": "Pessoa",
     "table.columns": {
-      "fullName": "pt_Full Name",
-      "userId": "pt_Username"
+      "fullName": "Nome completo",
+      "userId": "Nome de usuário"
     }
   },
   "timeTracking.comp.summary": {
-    "title": "pt_Hours Summary",
+    "title": "Horas",
     "table.columns": {
-      "code": "pt_Parent ID",
-      "type": "pt_Parent Type",
-      "value": "pt_Total Hours",
-      "date": "pt_Date Charged",
-      "modified": "pt_Modified Date"
+      "code": "ID do pai",
+      "type": "Tipo de pai",
+      "value": "Total de horas",
+      "date": "Data cobrada",
+      "modified": "Data modificada"
     }
   },
   "timeTracking.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "pt_Tag",
-      "created": "pt_Created",
-      "createdBy": "pt_Created By"
+      "tag": "Etiquetas",
+      "created": "Criada",
+      "createdBy": "Criado por"
     },
     "modal": {
-      "title": "pt_Tag",
-      "search": "pt_Search for Tag",
+      "title": "",
+      "search": "Pesquisar Tag",
       "buttons": {
-        "cancel": "pt_Cancel",
-        "ok": "pt_Add Tag"
+        "cancel": "Cancelar",
+        "ok": "Adicionar etiqueta"
       }
     },
     "message": {
-      "tagExists": "pt_Tag with that name or description or text already exists",
-      "tagAssociated": "pt_already associated",
+      "tagExists": "Tag com esse nome ou descrição ou texto já existe",
+      "tagAssociated": "Já associado",
       "delete": {
-        "success": "pt_Tag deleted successfully",
-        "error": "pt_Error deleting tag"
+        "success": "Tag excluído com sucesso",
+        "error": "Erro ao excluir a tag"
       }
     }
   },
   "timeTracking.comp.approvers": {
-    "title": "pt_Approvers",
+    "title": "Pessoal de aprovação",
     "table.columns": {
-      "fullName": "pt_Full Name",
-      "userId": "pt_Username"
+      "fullName": "Nome completo",
+      "userId": "Nome de usuário"
     }
   },
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "Detalhes",
-      "person.label": "Pessoas",
-      "summary.label": "Despesa",
+      "person.label": "Pessoa",
+      "summary.label": "Horas",
       "tags.label": "Etiquetas",
-      "approvers.label": "pt_Approvers"
+      "approvers.label": "Pessoal de aprovação"
     },
     "sorters": {
       "dateAsc": "Ordenar Data Asc",

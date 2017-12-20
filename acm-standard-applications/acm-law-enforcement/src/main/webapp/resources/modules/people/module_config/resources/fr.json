@@ -365,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "Personnes apparentées",
+    "linkTitle": "fr_Rel People",
     "table.columns": {
       "firstName": "fr_First Name",
       "lastName": "fr_Last Name",
