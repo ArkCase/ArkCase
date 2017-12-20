@@ -17,8 +17,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
             $scope.editMode = !!params.organizationId;
-            $scope.organizationId = Util.isEmpty(params.relatedToOrganizationId) ? params.organizationId : params.relatedToOrganizationId;
-            $scope.parentOrganizationId = params.parentOrganizationId;
+            $scope.organizationId = params.organizationId;
+            $scope.externalSearchParams = params.externalSearchParams;
             $scope.organizationValue = params.organizationValue;
             $scope.isInvalid = true;
             $scope.isDefault = params.isDefault;
@@ -105,8 +105,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
-                params.organizationId = $scope.organizationId;
-                params.parentOrganizationId = $scope.parentOrganizationId;
+                if (!Util.isEmpty($scope.externalSearchParams)) {
+                    params.organizationId = $scope.externalSearchParams.organizationId;
+                }
                 params.externalSearchServiceName = $scope.externalSearchServiceName;
 
                 var modalInstance = $modal.open({

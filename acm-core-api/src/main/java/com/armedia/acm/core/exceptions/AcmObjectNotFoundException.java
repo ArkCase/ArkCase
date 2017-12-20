@@ -62,4 +62,9 @@ public class AcmObjectNotFoundException extends Exception
 
         return message;
     }
+
+    public String getCauseMessage()
+    {
+        return super.getMessage();
+    }
 }

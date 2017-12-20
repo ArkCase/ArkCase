@@ -10,11 +10,15 @@ angular.module('document-repository').config(['$stateProvider',
                 url: '/document-repository',
                 templateUrl: 'modules/document-repository/views/document-repository.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                        , function ($translate, $translatePartialLoader, LocaleService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('document-repository');
                         $translatePartialLoader.addPart('document-details');
+                        $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["document-repository", "document-details", "common"], "en"))
+
                         return $translate.refresh();
                     }]
                 }

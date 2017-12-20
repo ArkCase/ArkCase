@@ -23,9 +23,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         $scope.objectId = null;
         $scope.dateFrom = null;
         $scope.dateTo = null;
+        $scope.isDateValid = false;
+        $scope.startDate = null;
+        $scope.dueDate = null;
 
 
-        /**
+            /**
          * This function is callback function which gets called when "send-type-id" event is emitted.
          * In this function values are being assigned for $scope.objectType and $scope.objectId from selected dropdown and input text
          *
@@ -33,9 +36,11 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {String} selectedObjectType String that represents value that is selected from dropdown
          * @param {String} inputObjectId String that represents value from text input(default is empty string "")
          */
-        function getObjectValues(e, selectedObjectType, inputObjectId) {
+        function getObjectValues(e, selectedObjectType, inputObjectId, validDate) {
             $scope.objectType = selectedObjectType;
             $scope.objectId = Util.goodValue(inputObjectId);
+
+            $scope.validDate = validDate;
         }
 
         /**
@@ -50,6 +55,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         function getDateValues(e, dateFrom, dateTo) {
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
+
         }
 
         // Retrieves the properties from the acm-reports-server-config.properties file

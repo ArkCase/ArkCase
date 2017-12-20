@@ -31,162 +31,165 @@
   },
   "document-repository.comp.details": {
     "title": "विवरण",
-    "informSaved": "hi_Document Repository details saved",
+    "informSaved": "दस्तावेज़ भंडार विवरण सहेजे गए",
     "table.columns": {
-      "title": "hi_Details",
-      "modified": "hi_Date Last Modified",
-      "modifier": "hi_User Last Modified"
+      "title": "विवरण",
+      "modified": "अंतिम संशोधित तारीख",
+      "modifier": "उपयोगकर्ता अंतिम संशोधित"
     }
   },
   "document-repository.comp.documents": {
     "title": "दस्तावेज़",
-    "sendEmail": "hi_Send Email",
-    "filterInputPlaceholder": "hi_Filter",
-    "searchInputPlaceholder": "hi_Search"
+    "sendEmail": "ईमेल भेजें",
+    "filterInputPlaceholder": "फ़िल्टर",
+    "searchInputPlaceholder": "खोज",
+    "newTask": "नया कार्य"
   },
   "document-repository.comp.participants": {
     "title": "प्रतिभागियों",
     "table.columns": {
-      "type": "hi_Type",
-      "name": "hi_Name"
+      "type": "प्रकार",
+      "name": "नाम"
     },
     "dialogUserPicker": {
-      "header": "hi_Choose User",
+      "header": "उपयोगकर्ता चुनें",
       "table.columns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "id": "hi_Username"
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "id": "उपयोगकर्ता नाम"
       }
     },
     "dialogGroupPicker": {
-      "header": "hi_Choose Group",
+      "header": "समूह चुनें",
       "table.columns": {
-        "name": "hi_Name"
+        "name": "नाम"
       }
     }
   },
   "document-repository.comp.notes": {
     "title": "नोट्स",
     "table.columns": {
-      "note": "hi_Note",
-      "created": "hi_Created",
-      "creator": "hi_Author"
+      "note": "ध्यान दें",
+      "created": "बनाया था",
+      "creator": "लेखक"
     }
   },
   "document-repository.comp.references": {
     "title": "संदर्भ",
     "table.columns": {
-      "targetName": "hi_Number",
-      "parentName": "hi_Parent",
-      "targetTitle": "hi_Title",
-      "modified": "hi_Modified",
-      "targetType": "hi_Reference Type",
-      "status": "hi_Status"
+      "targetName": "संख्या",
+      "parentName": "माता-पिता",
+      "targetTitle": "शीर्षक",
+      "modified": "संशोधित",
+      "targetType": "संदर्भ प्रकार",
+      "status": "स्थिति"
     }
   },
   "document-repository.comp.history": {
     "title": "इतिहास",
     "table.columns": {
-      "eventType": "hi_Event Name",
-      "eventDate": "hi_Date",
-      "userId": "hi_User"
+      "eventType": "कार्यक्रम नाम",
+      "eventDate": "तारीख",
+      "userId": "उपयोगकर्ता"
     }
   },
   "document-repository.comp.tags": {
     "title": "टैग",
     "table.columns": {
-      "tag": "hi_Tag",
-      "created": "hi_Created",
-      "createdBy": "hi_Created By"
+      "tag": "टैग",
+      "created": "बनाया था",
+      "createdBy": "के द्वारा बनाई गई"
     },
     "modal": {
-      "title": "hi_Tag",
-      "search": "hi_Search for Tag",
+      "title": "टैग",
+      "search": "टैग के लिए खोजें",
       "buttons": {
-        "cancel": "hi_Cancel",
-        "ok": "hi_Add Tag"
+        "cancel": "रद्द करना",
+        "ok": "टैग जोड़ो"
       }
     },
     "message": {
-      "tagExists": "hi_Tag with that name or description or text already exists",
-      "tagAssociated": "hi_already associated",
+      "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+      "tagAssociated": "पहले से जुड़े हुए हैं",
       "delete": {
-        "success": "hi_Tag deleted successfully",
-        "error": "hi_Error deleting tag"
+        "success": "टैग सफलतापूर्वक हटाया गया",
+        "error": "टैग हटाने में त्रुटि"
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "संदर्भ खोज"
+  },
   "document-repository.comp.addreference": {
-    "title": "hi_Add Reference",
-    "cancelButton": "hi_Cancel",
-    "confirmButton": "hi_Add",
+    "title": "संदर्भ जोड़ें",
+    "cancelButton": "रद्द करना",
+    "confirmButton": "जोड़ना",
     "search": {
-      "placeholder": "hi_Search for case, complaint, file, task",
-      "btn": "hi_Search"
+      "placeholder": "मामले, शिकायत, फ़ाइल, कार्य के लिए खोजें",
+      "btn": "खोज"
     },
     "grid": {
       "columns": {
-        "id": "hi_Id",
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "parent": "hi_Parent",
-        "assignee": "hi_Assignee",
-        "modified": "hi_Modified"
+        "id": "ईद",
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "parent": "माता-पिता",
+        "assignee": "संपत्ति-भागी",
+        "modified": "संशोधित"
       }
     }
   },
   "document-repository.comp.assigneePickerModal": {
-    "title": "hi_Change Assignee",
-    "assigneeNamelabel": "hi_Assignee Name",
-    "btnCancelText": "hi_Cancel",
-    "btnSaveText": "hi_Save",
-    "searchAssigneeHeader": "hi_Search Assignee"
+    "title": "नियुक्त करें बदलें",
+    "assigneeNamelabel": "असाइन का नाम",
+    "btnCancelText": "रद्द करना",
+    "btnSaveText": "बचाना",
+    "searchAssigneeHeader": "निदान खोजें"
   },
   "document-repository.comp.groupPickerModal": {
-    "title": "hi_Change Group",
-    "groupNamelabel": "hi_Group Name",
-    "btnCancelText": "hi_Cancel",
-    "btnSaveText": "hi_Save",
-    "searchGroupHeader": "hi_Search Group"
+    "title": "समूह बदलें",
+    "groupNamelabel": "समूह का नाम",
+    "btnCancelText": "रद्द करना",
+    "btnSaveText": "बचाना",
+    "searchGroupHeader": "खोज समूह"
   },
   "document-repository.userOrGroupSearch": {
-    "id": "hi_userSearch",
-    "title": "hi_User/Group Search",
+    "id": "userSearch",
+    "title": "उपयोगकर्ता / समूह खोज",
     "search": {
-      "btn": "hi_Search",
-      "placeholder": "hi_Search for the user or group."
+      "btn": "खोज",
+      "placeholder": "उपयोगकर्ता या समूह खोजें"
     },
-    "cancelButton": "hi_Cancel",
-    "confirmButton": "hi_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "रद्द करना",
+    "confirmButton": "की पुष्टि करें",
     "assigneeGridColumns": {
-      "name": "hi_Name",
-      "type": "hi_Type",
-      "title": "hi_Title",
-      "username": "hi_Username"
+      "name": "नाम",
+      "type": "प्रकार",
+      "title": "शीर्षक",
+      "username": "उपयोगकर्ता नाम"
     }
   },
   "document-repository.newRepository": {
-    "title": "hi_Create Repository",
-    "assigneeLabel": "hi_Assignee",
-    "owningGroupLabel": "hi_Owning Group",
-    "assignee.placeholder": "hi_Search Assignee",
-    "saveButton": "hi_Create Repository",
-    "cancelButton": "hi_Cancel",
-    "nameLabel": "hi_Name",
-    "name.placeholder": "hi_Enter Name",
-    "descriptionLabel": "hi_Description",
-    "description.placeholder": "hi_Enter Description",
-    "searchUser": "hi_Search User"
+    "title": "रिपॉजिटरी बनाएं",
+    "assigneeLabel": "संपत्ति-भागी",
+    "owningGroupLabel": "मालिकाना समूह",
+    "assignee.placeholder": "निदान खोजें",
+    "saveButton": "रिपॉजिटरी बनाएं",
+    "cancelButton": "रद्द करना",
+    "nameLabel": "नाम",
+    "name.placeholder": "नाम दर्ज",
+    "descriptionLabel": "विवरण",
+    "description.placeholder": "विवरण दर्ज करें",
+    "searchUser": "खोज उपयोगकर्ता",
+    "personalRepository": "मेरे दस्तावेज"
   },
-  "document-repository.dialogUserPicker":{
-    "table.columns.name": "hi_Name",
-    "table.columns.type": "hi_Type",
-    "table.columns.title": "hi_Title",
-    "table.columns.id": "hi_Username"
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "नाम",
+    "table.columns.type": "प्रकार",
+    "table.columns.title": "शीर्षक",
+    "table.columns.id": "उपयोगकर्ता नाम"
   },
   "document-repository.tree": {
     "nodeTypes": {
