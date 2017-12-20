@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -58,7 +57,7 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
 
             log.debug("Finished creating new folder with node id {}, ArkCase id {}", folderCreated.getNodeId(), created.getId());
         }
-        catch (PersistenceException | AcmAccessControlException pe)
+        catch (PersistenceException pe)
         {
             log.error("Cannot create new folder with CMIS ID {}: [{}]", folderCreated.getNodeId(), pe.getMessage(), pe);
         }

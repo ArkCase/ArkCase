@@ -1,7 +1,6 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -153,18 +152,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
 
             AcmFolder result = getFolderDao().save(newFolder);
 
-            try
-            {
-                getFileParticipantService().setFolderParticipantsFromParentFolder(result);
-                result = getFolderDao().save(result);
-            }
-            catch (AcmAccessControlException ace)
-            {
-                log.error("Folder not added under {} successfully {}", parentFolder.getName(), ace.getMessage(), ace);
-                throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
-                        parentFolder.getId(), "Folder was no added under " + parentFolder.getName() + " successfully", ace);
-
-            }
+            getFileParticipantService().setFolderParticipantsFromParentFolder(result);
+            result = getFolderDao().save(result);
 
             return result;
         }
@@ -381,7 +370,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | MuleException | AcmAccessControlException e)
+        catch (PersistenceException | MuleException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -444,7 +433,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
-        catch (PersistenceException | MuleException | AcmAccessControlException e)
+        catch (PersistenceException | MuleException e)
         {
             log.error("Folder {} not moved successfully {}", folderForMoving.getName(), e.getMessage(), e);
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
@@ -587,7 +576,7 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             copiedFolder = getFolderDao().save(copiedFolder);
 
         }
-        catch (PersistenceException | MuleException | AcmAccessControlException e)
+        catch (PersistenceException | MuleException e)
         {
             throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_ADD_NEW_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
                     null, "Folder was not created under " + toBeCopiedFolder.getName() + " successfully", e);
