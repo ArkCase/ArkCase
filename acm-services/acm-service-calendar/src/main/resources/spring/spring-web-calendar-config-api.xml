@@ -10,6 +10,7 @@
     
     <bean id="calendarAPIController" class="com.armedia.acm.calendar.web.api.AcmCalendarAPIController">
         <property name="calendarService" ref="calendarServiceProvider"/>
+        <property name="calendarAdminService" ref="propertyFileCalendarAdminService"/>
     </bean>
     
 </beans>

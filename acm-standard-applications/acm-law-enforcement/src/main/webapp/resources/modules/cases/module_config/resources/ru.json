@@ -90,6 +90,24 @@
     "sendEmail": "Отправить электронное письмо",
     "filterInputPlaceholder": "Фильтр",
     "searchInputPlaceholder": "Поиск",
+    "menu": {
+      "forms": {
+        "info%": "Информация",
+        "rptInvestigation%": "Отчет о расследовании",
+        "ecomm%": "Электронная связь"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Приглашение на переписку",
+        "approvalLetter%": "Подтверждающее письмо",
+        "medicalRelease%": "Медицинский релиз",
+        "generalRelease%": "Общий выпуск",
+        "clearanceGranted%": "Предоставлено разрешение",
+        "clearanceDenied%": "Отказ от ответственности",
+        "noticeInvestigation%": "Уведомление о расследовании",
+        "witnessInterview%": "Свидетельство о проведении собеседования",
+        "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
+      }
+    },
     "newTask": "Новое задание"
   },
   "cases.comp.people": {

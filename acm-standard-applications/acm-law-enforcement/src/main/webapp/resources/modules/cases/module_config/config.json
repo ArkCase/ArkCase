@@ -540,7 +540,11 @@
           "objectNumberRegexGroup": 2
         },
         "noteRequiredOnCheckin": false,
-        "allowParentOwnerToCancel": true
+        "allowParentOwnerToCancel": true,
+        "menu": {
+          "subMenuForms": "cases.comp.documents.menu.forms",
+          "subMenuCorrespondences": "cases.comp.documents.menu.correspondences"
+        }
       }
     },
     {
