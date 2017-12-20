@@ -30,7 +30,7 @@ public class ResetPasswordUIController
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView getResetPassword(@RequestParam String token)
     {
-        AcmUser acmUser = ldapUserService.findByToken(token);
+        AcmUser acmUser = ldapUserService.findByPasswordResetToken(token);
         ModelAndView model = new ModelAndView();
         boolean isTokenValid = false;
         if (acmUser != null)
@@ -59,7 +59,7 @@ public class ResetPasswordUIController
             return setError(modelAndView, "Passwords do not match!");
         }
 
-        AcmUser acmUser = ldapUserService.findByToken(token);
+        AcmUser acmUser = ldapUserService.findByPasswordResetToken(token);
         List<String> errorMessages = passwordValidationService.validate(acmUser.getUserId(), password);
         if (!errorMessages.isEmpty())
         {

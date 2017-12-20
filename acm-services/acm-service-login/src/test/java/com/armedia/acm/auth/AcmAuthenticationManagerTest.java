@@ -82,10 +82,11 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
 
         Set<AcmGrantedAuthority> authsFromMapper = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("INVESTIGATOR")));
 
-        AcmAuthentication successAuthentication = new AcmAuthentication(authsFromProvider, null, null, true, user.getUserId());
+        AcmAuthentication successAuthentication = new AcmAuthentication(authsFromProvider, null, null,
+                true, user.getUserId());
 
-        Set<AcmGrantedAuthority> authsGroups =
-                new HashSet<>(Arrays.asList(new AcmGrantedAuthority("ADHOC_ADMINISTRATOR"), new AcmGrantedAuthority("LDAP_ADMINISTRATOR")));
+        Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("ADHOC_ADMINISTRATOR"),
+                        new AcmGrantedAuthority("LDAP_ADMINISTRATOR")));
 
         AcmGroup ldapGroup = new AcmGroup();
         ldapGroup.setName("LDAP_ADMINISTRATOR");
@@ -93,7 +94,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         AcmGroup adhocGroup = new AcmGroup();
         adhocGroup.setName("ADHOC_ADMINISTRATOR");
 
-        List<AcmGroup> groups = new ArrayList<AcmGroup>();
+        List<AcmGroup> groups = new ArrayList<>();
         groups.add(ldapGroup);
         groups.add(adhocGroup);
 
@@ -113,7 +114,6 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         verifyAll();
 
         assertEquals(authsFromMapper, found.getAuthorities());
-
     }
 
     @Test
@@ -134,7 +134,8 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         {
             unit.authenticate(mockAuthentication);
             fail("should have gotten an exception");
-        } catch (AuthenticationException ae)
+        }
+        catch (AuthenticationException ae)
         {
             assertEquals(firstException, ae);
         }

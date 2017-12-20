@@ -351,6 +351,7 @@
   },
   "organizations.comp.related": {
     "title": "関連組織",
+    "linkTitle": "ja_Rel Org",
     "table.columns": {
       "associationType": "ja_Relationship",
       "type": "ja_Type",

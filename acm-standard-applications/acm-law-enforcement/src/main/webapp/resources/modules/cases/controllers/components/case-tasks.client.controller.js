@@ -31,6 +31,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.addButton(config, "delete");
 
             componentHelper.doneConfig(config);
 
@@ -45,10 +46,12 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
+            var exceptDeletedOnly = true;
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
+                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
@@ -76,10 +79,26 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 params: {
                     parentType: ObjectService.ObjectTypes.CASE_FILE,
                     parentObject: $scope.objectInfo.caseNumber,
-                    parentTitle: $scope.objectInfo.title
+                    parentId: $scope.objectInfo.id,
+                    parentTitle: $scope.objectInfo.title,
+                    taskType: 'ACM_TASK'
                 }
             };
             ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var caseInfo = Util.omitNg($scope.objectInfo);
+            if (CaseInfoService.validateCaseInfo(caseInfo))
+            {
+                TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
+                    function (caseInfo) {
+                        gridHelper.deleteRow(rowEntity);
+                        $scope.$emit("report-object-updated", caseInfo);
+                        return caseInfo;
+                    }
+                );
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

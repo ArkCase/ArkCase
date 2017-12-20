@@ -236,6 +236,60 @@ angular.module('services').factory('Object.CalendarService', ['$resource', 'Util
 
         /**
          * @ngdoc method
+         * @name getCalendarEventAttachment
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         *
+         * Get contents of specific calendar event attachment
+         *
+         * @param {String} objectType
+         * @param {String} objectId
+         * @param {String} eventId
+         * @param {Strin} attachmentId
+         *
+         * @returns {Object} Promise
+         */
+        Service.getCalendarEventAttachment = function(objectType, objectId, eventId, attachmentId) {
+
+            var params = {
+                eventId: eventId,
+                attachmentId: attachmentId
+            };
+
+            var urlArgs = $httpParamSerializer(params);
+
+            return $http({
+                method: 'GET',
+                responseType:'blob',
+                url: 'api/latest/service/calendar/calendarevents/attachment/' + objectType +'/' + objectId + '?' + urlArgs
+            });
+        };
+
+        /**
+         * @ngdoc method
+         * @name getCalendarIntegration
+         * @methodOf services:Object.CalendarService
+         *
+         * @description
+         *
+         * Get the calendar integration status of an object type.
+         *
+         * @param {String} objectType
+         *
+         * @returns {Object} Promise
+         */
+        Service.getCalendarIntegration = function(objectType) {
+
+            return $http({
+                method: 'GET',
+                url: 'api/latest/service/calendar/' + objectType + '/integration'
+            });
+
+        };
+
+        /**
+         * @ngdoc method
          * @name getCalendar
          * @methodOf services:Object.CalendarService
          *

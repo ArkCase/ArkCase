@@ -46,7 +46,9 @@
         "mr": "Medizinische Freigabe",
         "noi": "Beachtenuntersuchung",
         "sig": "SF86 Unterschrift",
-        "wir": "Witness Interview Anfrage"
+        "wir": "Witness Interview Anfrage",
+        "draw": "Ingenieur-Zeichnung",
+        "other": "Andere"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "Dokument abbrechen",
         "concur": "Samenvallen",
         "nonConcur": "Niet in overeenstemming"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

@@ -79,6 +79,9 @@
       "yes": "hi_Yes",
       "change": "hi_Change Picture",
       "save": "hi_Save changes"
+    },
+    "message.error": {
+      "uploadSamePicture": "hi_Picture with this name is already uploaded"
     }
   },
   "people.comp.addresses": {
@@ -362,6 +365,7 @@
   },
   "people.comp.related": {
     "title": "संबंधित लोग",
+    "linkTitle": "hi_Rel People",
     "table.columns": {
       "firstName": "hi_First Name",
       "lastName": "hi_Last Name",

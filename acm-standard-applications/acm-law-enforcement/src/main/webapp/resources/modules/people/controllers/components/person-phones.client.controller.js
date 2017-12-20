@@ -2,10 +2,10 @@
 
 angular.module('people').controller('People.PhonesController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
     , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService'
+    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
     , function ($scope, $q, $stateParams, $translate, $modal
         , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService) {
+        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
 
         Authentication.queryUserInfo().then(
@@ -165,15 +165,7 @@ angular.module('people').controller('People.PhonesController', ['$scope', '$q', 
         }
 
         $scope.isDefault = function (data) {
-            var id = 0;
-            if ($scope.objectInfo.defaultPhone) {
-                id = $scope.objectInfo.defaultPhone.id
-            }
-            var phones = _.filter($scope.objectInfo.contactMethods, {type: 'phone'});
-            if (phones && phones.length == 0) {
-                return true;
-            }
-            return data.id == id;
-        };
+            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultPhone");
+        }
     }
 ]);

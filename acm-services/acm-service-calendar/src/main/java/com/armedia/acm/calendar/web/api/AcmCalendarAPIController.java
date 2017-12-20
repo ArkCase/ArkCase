@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +24,14 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
+import com.armedia.acm.calendar.service.AcmEventAttachmentDTO;
 import com.armedia.acm.calendar.service.CalendarExceptionMapper;
 import com.armedia.acm.calendar.service.CalendarService;
 import com.armedia.acm.calendar.service.CalendarServiceConfigurationException;
@@ -43,6 +48,8 @@ public class AcmCalendarAPIController
 {
 
     private CalendarService calendarService;
+
+    private CalendarAdminService calendarAdminService;
 
     @RequestMapping(value = "/calendars", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -131,6 +138,24 @@ public class AcmCalendarAPIController
         return calendar.getEvent(eventId, retrieveMaster);
     }
 
+    @RequestMapping(value = "/calendarevents/attachment/{objectType}/{objectId}", method = RequestMethod.GET)
+    public ResponseEntity<InputStreamResource> getEventAttachment(HttpSession session, Authentication auth,
+            @PathVariable(value = "objectType") String objectType, @PathVariable(value = "objectId") String objectId,
+            @RequestParam(value = "eventId") String eventId, @RequestParam(value = "attachmentId") String attachmentId)
+            throws CalendarServiceException
+    {
+        AcmUser user = (AcmUser) session.getAttribute("acm_user");
+        AcmCalendar calendar = calendarService.retrieveCalendar(user, auth, objectType, objectId)
+                .orElseThrow(() -> new CalendarServiceConfigurationException(
+                        "Error while retrieving calendar configuration, most likely integration not enabled."));
+        AcmEventAttachmentDTO attachment = calendar.getEventAttachment(eventId, attachmentId);
+
+        ResponseEntity<InputStreamResource> response = ResponseEntity.ok().headers(attachment.getHttpHeaders())
+                .contentLength(attachment.getContentLength()).contentType(attachment.getMediaType())
+                .body(new InputStreamResource(attachment.getContent()));
+        return response;
+    }
+
     @RequestMapping(method = RequestMethod.POST, consumes = {"multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth, @RequestPart("data") AcmCalendarEvent calendarEvent,
             @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws CalendarServiceException
@@ -161,6 +186,14 @@ public class AcmCalendarAPIController
         AcmUser user = (AcmUser) session.getAttribute("acm_user");
         calendarService.deleteCalendarEvent(user, auth, objectType, objectId, calendarEventId, deleteRecurring);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{objectType}/integration", method = RequestMethod.GET)
+    public ResponseEntity<String> isIntegrationEnabled(@PathVariable(value = "objectType") String objectType)
+            throws CalendarConfigurationException
+    {
+        CalendarConfiguration configuration = calendarAdminService.readConfiguration(false).getConfiguration(objectType);
+        return ResponseEntity.status(HttpStatus.OK).body(Boolean.toString(configuration.isIntegrationEnabled()));
     }
 
     @ExceptionHandler(CalendarServiceException.class)
@@ -214,6 +247,15 @@ public class AcmCalendarAPIController
     public void setCalendarService(CalendarService calendarService)
     {
         this.calendarService = calendarService;
+    }
+
+    /**
+     * @param calendarAdminService
+     *            the calendarAdminService to set
+     */
+    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 
 }

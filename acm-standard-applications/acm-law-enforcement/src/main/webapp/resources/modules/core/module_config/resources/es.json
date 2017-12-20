@@ -46,7 +46,9 @@
         "mr": "Liberación médica",
         "noi": "Aviso de investigación",
         "sig": "Firma SF86",
-        "wir": "Solicitud de entrevista de testigos"
+        "wir": "Solicitud de entrevista de testigos",
+        "draw": "Dibujo de Ingeniero",
+        "other": "Otro"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -491,6 +493,16 @@
         "cancel": "Cancelar documento",
         "concur": "Concurrir",
         "nonConcur": "No concurra"
+      },
+      "auditReportNames": {
+        "all": "All",
+        "case_file": "Case",
+        "complaint": "Complaint",
+        "task": "Task",
+        "file": "File",
+        "document": "Document",
+        "person": "Person",
+        "organization": "Organization"
       }
     },
     "userInfo": {

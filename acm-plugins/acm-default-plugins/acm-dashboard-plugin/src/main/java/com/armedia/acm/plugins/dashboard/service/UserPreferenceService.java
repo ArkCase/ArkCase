@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.dashboard.service;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.dashboard.dao.ModuleDao;
 import com.armedia.acm.plugins.dashboard.dao.UserPreferenceDao;
@@ -9,15 +17,8 @@ import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDt
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 
 /**
  * Created by marjan.stefanoski on 18.01.2016.
@@ -30,10 +31,11 @@ public class UserPreferenceService
     private ModuleDao moduleDao;
     private UserPreferenceEventPublisher userPreferenceEventPublisher;
     private DashboardPropertyReader dashboardPropertyReader;
+    private AcmUserRoleService userRoleService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-
-    public PreferredWidgetsDto updateUserPreferenceWidgets(String userId, PreferredWidgetsDto preferredWidgets, String ipAddress) throws AcmObjectNotFoundException
+    public PreferredWidgetsDto updateUserPreferenceWidgets(String userId, PreferredWidgetsDto preferredWidgets, String ipAddress)
+            throws AcmObjectNotFoundException
     {
         List<Widget> widgetList = createWidgetList(preferredWidgets.getPreferredWidgets());
         List<UserPreference> upList = null;
@@ -42,7 +44,8 @@ public class UserPreferenceService
         try
         {
             module = getModule(preferredWidgets.getModuleName());
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.error("Module with module name [{}]  is not found! Error msg: [{}]", preferredWidgets.getModuleName(), e.getMessage(), e);
             throw e;
@@ -51,7 +54,8 @@ public class UserPreferenceService
         try
         {
             upList = getUserPreferenceListByUserAndModule(user, module);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.info("No User Preference found for user: [{}] and module name: [{}]  ", userId, module.getModuleName());
         }
@@ -66,7 +70,8 @@ public class UserPreferenceService
                     userPreferenceEventPublisher.publishUserPreferenceDeleted(userPreference, ipAddress, true);
                 });
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error occurred while deleting UserPreference records. Error msg: [{}] ", e.getMessage(), e);
             if (upList != null)
@@ -81,7 +86,6 @@ public class UserPreferenceService
 
         return preferredWidgets;
     }
-
 
     private int deleteOldUserPreferenceByUserAndModule(AcmUser user, Module module)
     {
@@ -102,7 +106,8 @@ public class UserPreferenceService
         try
         {
             widgetList = userPreferenceDao.getUserPreferredListOfWidgetsByUserAndModuleName(userId, moduleName);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
 
             log.info("No preferred widgets for user: [{}] and module: [{}]", userId, moduleName);
@@ -118,7 +123,7 @@ public class UserPreferenceService
     private List<Widget> getAllAllowedWidgetsForUser(String userId) throws AcmObjectNotFoundException
     {
         List<Widget> result;
-        List<AcmRole> roles = getUserDao().findAllRolesByUser(userId);
+        Set<String> roles = userRoleService.getUserRoles(userId);
         try
         {
             result = onlyUniqueValues(widgetDao.getAllWidgetsByRoles(roles));
@@ -126,7 +131,8 @@ public class UserPreferenceService
             {
                 log.info("All allowed widgets for the user: [{}] will be returned!", userId);
             }
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.error("No widgets are allowed for the user: [{}]. Error msg: [{}] ", userId, e.getMessage(), e);
             throw e;
@@ -161,7 +167,8 @@ public class UserPreferenceService
             {
                 userPreference = userPreferenceDao.save(userPreference);
                 userPreferenceEventPublisher.publishUserPreferenceCreated(userPreference, ipAddress, true);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 userPreferenceEventPublisher.publishUserPreferenceCreated(userPreference, ipAddress, false);
             }
@@ -170,21 +177,11 @@ public class UserPreferenceService
 
     private List<Widget> createWidgetList(List<String> widgetNamesList)
     {
-        List<Widget> widgets = new ArrayList<>();
-        widgetNamesList.stream().forEach(widgetName -> {
-            try
-            {
-                Widget w = widgetDao.getWidgetByWidgetName(widgetName);
-                widgets.add(w);
-            } catch (AcmObjectNotFoundException e)
-            {
-                log.warn("Widget with widget name: [{}] is not found!", widgetName);
-            }
-        });
-        return widgets;
+        return widgetDao.getWidgetsByWidgetNames(widgetNamesList);
     }
 
-    public void deleteByWidgetId(Long widgetId){
+    public void deleteByWidgetId(Long widgetId)
+    {
         userPreferenceDao.deleteByWidgetId(widgetId);
     }
 
@@ -256,5 +253,10 @@ public class UserPreferenceService
     public void setDashboardPropertyReader(DashboardPropertyReader dashboardPropertyReader)
     {
         this.dashboardPropertyReader = dashboardPropertyReader;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }

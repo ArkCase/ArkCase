@@ -295,6 +295,14 @@
           "id": "addresses",
           "type": "component",
           "columnDefs": [
+
+            {
+              "name": "type",
+              "displayName": "complaints.comp.addresses.table.columns.type",
+              "headerCellFilter": "translate",
+              "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.addressTypes, row.entity.type) | translate }}<span ng-if='grid.appScope.isDefault(row.entity)' translate>common.labels.primary</span></div>",
+              "width": "*"
+            },
             {
               "name": "streetAddress",
               "displayName": "complaints.comp.addresses.table.columns.streetAddress",
@@ -695,7 +703,7 @@
         },
         {
           "name": "organization",
-          "field": "person.defaultOrganization.organizationValue",
+          "field": "person.defaultOrganization.organization.organizationValue",
           "displayName": "complaints.comp.people.table.columns.organization",
           "headerCellFilter": "translate"
         },
@@ -790,7 +798,11 @@
           "objectNumberRegexGroup": 2
         },
         "noteRequiredOnCheckin": false,
-        "allowParentOwnerToCancel": true
+        "allowParentOwnerToCancel": true,
+        "menu": {
+          "subMenuForms": "complaints.comp.documents.menu.forms",
+          "subMenuCorrespondences": "complaints.comp.documents.menu.correspondences"
+        }
       }
     },
     {

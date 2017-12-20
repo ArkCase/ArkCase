@@ -33,7 +33,13 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                     if (entry.then) {
                         entry.then(success, error);
                     } else {
-                        success.apply(this, [entry]);
+                        //sync the local helper-objbrowser cache with the value from the main frontend cache
+                        entry = that.data[key] = dataLoadFunc.apply(this, args);
+                        entry.then(function (data) {
+                            entry = that.data[key] = data;
+                            success.apply(this, [entry]);
+                            return entry;
+                        });
                     }
                 } else {
                     entry = that.data[key] = dataLoadFunc.apply(this, args);
@@ -884,9 +890,16 @@ angular.module('services').factory('Helper.ObjectBrowserService', ['$q', '$resou
                 _.each(Util.goodMapValue(foundNodeType, "components", []), function (component) {
                     var foundComponent = _.find(componentsConfig, {id: component});
                     if (foundComponent) {
+                        var title = "";
+                        if(foundComponent.linkTitle){
+                            title = foundComponent.linkTitle;
+                        } else{
+                            title = foundComponent.title;
+                        }
+
                         componentLinks.push({
                             id: Util.goodValue(foundComponent.id)
-                            , title: Util.goodValue(foundComponent.title)
+                            , title: Util.goodValue(title)
                             , icon: Util.goodValue(foundComponent.icon)
                         });
                     }

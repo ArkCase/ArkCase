@@ -23,170 +23,173 @@
   },
   "document-repository.comp.actions": {
     "title": "Acciones",
-    "restrict": "Restringir?",
-    "subscribe.button": "Suscribirse",
+    "restrict": "¿Restringir?",
+    "subscribe.button": "Suscribir",
     "unsubscribe.button": "Anular suscripción",
     "delete.button": "Eliminar el repositorio",
     "confirm.delete.documentRepository.msg": "Esta acción eliminará todo el repositorio. ¿Está seguro de que desea continuar?"
   },
   "document-repository.comp.details": {
     "title": "Detalles",
-    "informSaved": "es_Document Repository details saved",
+    "informSaved": "Detalles del repositorio de documentos guardados",
     "table.columns": {
-      "title": "es_Details",
-      "modified": "es_Date Last Modified",
-      "modifier": "es_User Last Modified"
+      "title": "Detalles",
+      "modified": "Fecha de última modificación",
+      "modifier": "Última modificación del usuario"
     }
   },
   "document-repository.comp.documents": {
     "title": "Documentos",
-    "sendEmail": "es_Send Email",
-    "filterInputPlaceholder": "es_Filter",
-    "searchInputPlaceholder": "es_Search"
+    "sendEmail": "Enviar correo electrónico",
+    "filterInputPlaceholder": "Filtrar",
+    "searchInputPlaceholder": "Buscar",
+    "newTask": "Nueva tarea"
   },
   "document-repository.comp.participants": {
     "title": "Participantes",
     "table.columns": {
-      "type": "es_Type",
-      "name": "es_Name"
+      "type": "Tipo",
+      "name": "Nombre"
     },
     "dialogUserPicker": {
-      "header": "es_Choose User",
+      "header": "Elija usuario",
       "table.columns": {
-        "name": "es_Name",
-        "type": "es_Type",
-        "title": "es_Title",
-        "id": "es_Username"
+        "name": "Nombre",
+        "type": "Tipo",
+        "title": "Título",
+        "id": "Nombre de usuario"
       }
     },
     "dialogGroupPicker": {
-      "header": "es_Choose Group",
+      "header": "Elige Grupo",
       "table.columns": {
-        "name": "es_Name"
+        "name": "Nombre"
       }
     }
   },
   "document-repository.comp.notes": {
     "title": "Notas",
     "table.columns": {
-      "note": "es_Note",
-      "created": "es_Created",
-      "creator": "es_Author"
+      "note": "Nota",
+      "created": "Creado",
+      "creator": "Autor"
     }
   },
   "document-repository.comp.references": {
     "title": "Referencias",
     "table.columns": {
-      "targetName": "es_Number",
-      "parentName": "es_Parent",
-      "targetTitle": "es_Title",
-      "modified": "es_Modified",
-      "targetType": "es_Reference Type",
-      "status": "es_Status"
+      "targetName": "Número",
+      "parentName": "Padre",
+      "targetTitle": "Título",
+      "modified": "Modificado",
+      "targetType": "Tipo de referencia",
+      "status": "Estado"
     }
   },
   "document-repository.comp.history": {
     "title": "Historia",
     "table.columns": {
-      "eventType": "es_Event Name",
-      "eventDate": "es_Date",
-      "userId": "es_User"
+      "eventType": "Nombre del evento",
+      "eventDate": "Fecha",
+      "userId": "Usuario"
     }
   },
   "document-repository.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "es_Tag",
-      "created": "es_Created",
-      "createdBy": "es_Created By"
+      "tag": "Etiqueta",
+      "created": "Creado",
+      "createdBy": "Creado por"
     },
     "modal": {
-      "title": "es_Tag",
-      "search": "es_Search for Tag",
+      "title": "Etiqueta",
+      "search": "Buscar etiqueta",
       "buttons": {
-        "cancel": "es_Cancel",
-        "ok": "es_Add Tag"
+        "cancel": "Cancelar",
+        "ok": "Añadir etiqueta"
       }
     },
     "message": {
-      "tagExists": "es_Tag with that name or description or text already exists",
-      "tagAssociated": "es_already associated",
+      "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
+      "tagAssociated": "Ya asociado",
       "delete": {
-        "success": "es_Tag deleted successfully",
-        "error": "es_Error deleting tag"
+        "success": "Tag eliminado con éxito",
+        "error": "Error al eliminar la etiqueta"
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Búsqueda de referencia"
+  },
   "document-repository.comp.addreference": {
-    "title": "es_Add Reference",
-    "cancelButton": "es_Cancel",
-    "confirmButton": "es_Add",
+    "title": "Añadir referencia",
+    "cancelButton": "Cancelar",
+    "confirmButton": "Añadir",
     "search": {
-      "placeholder": "es_Search for case, complaint, file, task",
-      "btn": "es_Search"
+      "placeholder": "Buscar caso, queja, archivo, tarea",
+      "btn": "Buscar"
     },
     "grid": {
       "columns": {
-        "id": "es_Id",
-        "name": "es_Name",
-        "type": "es_Type",
-        "title": "es_Title",
-        "parent": "es_Parent",
-        "assignee": "es_Assignee",
-        "modified": "es_Modified"
+        "id": "Carné de identidad",
+        "name": "Nombre",
+        "type": "Tipo",
+        "title": "Título",
+        "parent": "Padre",
+        "assignee": "Cesionario",
+        "modified": "Modificado"
       }
     }
   },
   "document-repository.comp.assigneePickerModal": {
-    "title": "es_Change Assignee",
-    "assigneeNamelabel": "es_Assignee Name",
-    "btnCancelText": "es_Cancel",
-    "btnSaveText": "es_Save",
-    "searchAssigneeHeader": "es_Search Assignee"
+    "title": "Cambiar asignatario",
+    "assigneeNamelabel": "Nombre del asignado",
+    "btnCancelText": "Cancelar",
+    "btnSaveText": "Salvar",
+    "searchAssigneeHeader": "Buscar asignatario"
   },
   "document-repository.comp.groupPickerModal": {
-    "title": "es_Change Group",
-    "groupNamelabel": "es_Group Name",
-    "btnCancelText": "es_Cancel",
-    "btnSaveText": "es_Save",
-    "searchGroupHeader": "es_Search Group"
+    "title": "Cambiar grupo",
+    "groupNamelabel": "Nombre del grupo",
+    "btnCancelText": "Cancelar",
+    "btnSaveText": "Salvar",
+    "searchGroupHeader": "Grupo de búsqueda"
   },
   "document-repository.userOrGroupSearch": {
-    "id": "es_userSearch",
-    "title": "es_User/Group Search",
+    "id": "UserSearch",
+    "title": "Búsqueda de usuario / grupo",
     "search": {
-      "btn": "es_Search",
-      "placeholder": "es_Search for the user or group."
+      "btn": "Buscar",
+      "placeholder": "Busque el usuario o grupo."
     },
-    "cancelButton": "es_Cancel",
-    "confirmButton": "es_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Cancelar",
+    "confirmButton": "Confirmar",
     "assigneeGridColumns": {
-      "name": "es_Name",
-      "type": "es_Type",
-      "title": "es_Title",
-      "username": "es_Username"
+      "name": "Nombre",
+      "type": "Tipo",
+      "title": "Título",
+      "username": "Nombre de usuario"
     }
   },
   "document-repository.newRepository": {
-    "title": "es_Create Repository",
-    "assigneeLabel": "es_Assignee",
-    "owningGroupLabel": "es_Owning Group",
-    "assignee.placeholder": "es_Search Assignee",
-    "saveButton": "es_Create Repository",
-    "cancelButton": "es_Cancel",
-    "nameLabel": "es_Name",
-    "name.placeholder": "es_Enter Name",
-    "descriptionLabel": "es_Description",
-    "description.placeholder": "es_Enter Description",
-    "searchUser": "es_Search User"
+    "title": "Crear repositorio",
+    "assigneeLabel": "Cesionario",
+    "owningGroupLabel": "Poseer grupo",
+    "assignee.placeholder": "Buscar asignatario",
+    "saveButton": "Crear repositorio",
+    "cancelButton": "Cancelar",
+    "nameLabel": "Nombre",
+    "name.placeholder": "Ingrese su nombre",
+    "descriptionLabel": "Descripción",
+    "description.placeholder": "Ingrese la descripción",
+    "searchUser": "Usuario de búsqueda",
+    "personalRepository": "Mis documentos"
   },
-  "document-repository.dialogUserPicker":{
-    "table.columns.name": "es_Name",
-    "table.columns.type": "es_Type",
-    "table.columns.title": "es_Title",
-    "table.columns.id": "es_Username"
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "Nombre",
+    "table.columns.type": "Tipo",
+    "table.columns.title": "Título",
+    "table.columns.id": "Nombre de usuario"
   },
   "document-repository.tree": {
     "nodeTypes": {

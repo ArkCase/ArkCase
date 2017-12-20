@@ -350,6 +350,7 @@
   },
   "organizations.comp.related": {
     "title": "Related Organizations",
+    "linkTitle": "Rel Org",
     "table.columns": {
       "associationType": "Relationship",
       "type": "Type",

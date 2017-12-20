@@ -61,6 +61,21 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getAuditReportNames
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Returns a list of audit reports
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getAuditReportNames = function () {
+            return Service.getLookupByLookupName("auditReportNames");
+        };
+
+
+        /**
+         * @ngdoc method
          * @name getPriorities
          * @methodOf services:Object.LookupService
          *
@@ -608,6 +623,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
+         * @name getBusinessProcessTypes
+         * @methodOf services:Object.LookupService
+         *
+         * @description
+         * Query list of Business Process Types
+         *
+         * @returns {Object} An array returned by $resource
+         */
+        Service.getBusinessProcessTypes = function () {
+            return Service.getLookupByLookupName('businessProcessTypes');
+        };
+
+        /**
+         * @ngdoc method
          * @name getLookupsDefs
          * @methodOf services:Object.LookupService
          *
@@ -738,9 +767,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateStandardLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
@@ -764,18 +790,12 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateNestedLookup(lookup) {
             // Check empty keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
                 // check sublookup for empty keys or values
                 if (lookup[i].subLookup) {
                     for (var j = 0, lenSub = lookup[i].subLookup.length; j < lenSub; j++) {
-                        if (!lookup[i].subLookup[j].key) {
-                            return { isValid : false, errorMessage: "Empty key found!" };
-                        }
                         if (!lookup[i].subLookup[j].value) {
                             return { isValid : false, errorMessage: "Empty value found!" };
                         }
@@ -814,9 +834,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         function validateInverseValuesLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
-                if (!lookup[i].key) {
-                    return { isValid : false, errorMessage: "Empty key found!" };
-                }
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }

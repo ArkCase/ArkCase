@@ -1,21 +1,24 @@
 {
   "notifications": {
     "title": "Notifications",
-    "search.btn": "Recherche",
-    "export.btn": "fr_Export",
-    "search.placeholder": "fr_Search for notifications",
+    "search.btn": "Chercher",
+    "export.btn": "Exportation",
+    "search.placeholder": "Rechercher des notifications",
     "menus": {
       "leftnav.item": "Notifications"
     },
-    "comp":{
+    "comp": {
+      "notificationsFacetedSearch": {
+        "title": "Notifications à facettes"
+      },
       "grid": {
         "columns": {
-          "id": "fr_ID",
-          "description": "fr_Description",
-          "objNumber": "fr_Object Number",
-          "parentNumber": "fr_Parent Number",
-          "objType": "fr_Object Type",
-          "modified": "fr_Modified"
+          "id": "Identification",
+          "description": "La description",
+          "objNumber": "Numéro de l'objet",
+          "parentNumber": "Numéro de parent",
+          "objType": "Type d'objet",
+          "modified": "Date modifiée"
         }
       }
     }

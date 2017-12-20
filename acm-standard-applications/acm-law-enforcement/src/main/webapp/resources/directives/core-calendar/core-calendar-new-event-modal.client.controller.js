@@ -169,8 +169,8 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             $scope.attachmentModel.filesToAttach.splice(fileIndex, 1);
         };
 
-        $scope.removeAttachedFile = function(fileIndex, fileName) {
-            $scope.eventDataModel.fileNames.push(fileName);
+        $scope.removeAttachedFile = function(fileIndex, file) {
+            $scope.eventDataModel.files.push(file);
             $scope.attachmentModel.attachedFiles.splice(fileIndex, 1);
         };
 
@@ -195,8 +195,8 @@ angular.module('directives').controller('Directives.CoreCalendarNewEventModalCon
             setInitialStartEndTime();
         } else {
             $scope.eventDataModel = angular.copy($scope.existingEvent);
-            $scope.attachmentModel.attachedFiles = angular.copy($scope.eventDataModel.fileNames);
-            $scope.eventDataModel.fileNames = [];
+            $scope.attachmentModel.attachedFiles = angular.copy($scope.eventDataModel.files);
+            $scope.eventDataModel.files = [];
             $scope.eventDataModel.start = DateService.isoToDate($scope.eventDataModel.start);
             $scope.eventDataModel.end = DateService.isoToDate($scope.eventDataModel.end);
             if ($scope.eventDataModel.recurrenceDetails.recurrenceType !== 'ONLY_ONCE') {
