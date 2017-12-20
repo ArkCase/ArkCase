@@ -1,6 +1,6 @@
 <!-- downloadForm is added to later trigger the download popup-->
 <form class="hidden" id="downloadForm" action="#"></form>
-<button type="button" class="btn btn-default btn-xs" ng-click="downloadAllAsZip()"
+<button type="button" class="btn btn-default btn-xs" ng-click="downloadAllAsZip()" ng-disabled="tmpSelectedNodes.length <= 0"
         title="{{ 'common.directive.downloadAllAsZip.button' | translate}}">
     <i class="fa fa-circle-o-notch fa-spin" ng-if="downloadInProgress"></i>
     <i class="fa fa-lg fa-download" ng-if="!downloadInProgress"></i>

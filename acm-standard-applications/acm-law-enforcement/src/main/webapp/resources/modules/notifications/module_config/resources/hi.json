@@ -1,21 +1,24 @@
 {
   "notifications": {
     "title": "सूचनाएं",
-    "search.btn": "hi_Search",
-    "export.btn": "hi_Export",
-    "search.placeholder": "hi_Search for notifications",
+    "search.btn": "खोज",
+    "export.btn": "निर्यात",
+    "search.placeholder": "सूचनाओं के लिए खोजें",
     "menus": {
       "leftnav.item": "सूचनाएं"
     },
-    "comp":{
+    "comp": {
+      "notificationsFacetedSearch": {
+        "title": "अधिसूचनाएं फैक्टेड खोज"
+      },
       "grid": {
         "columns": {
-          "id": "hi_ID",
-          "description": "hi_Description",
-          "objNumber": "hi_Object Number",
-          "parentNumber": "hi_Parent Number",
-          "objType": "hi_Object Type",
-          "modified": "hi_Modified"
+          "id": "पहचान",
+          "description": "विवरण",
+          "objNumber": "ऑब्जेक्ट नंबर",
+          "parentNumber": "जनक संख्या",
+          "objType": "वस्तु प्रकार",
+          "modified": "संशोधित तिथि"
         }
       }
     }

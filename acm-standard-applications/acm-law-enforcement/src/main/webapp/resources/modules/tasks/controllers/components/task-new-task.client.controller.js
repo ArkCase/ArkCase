@@ -3,10 +3,10 @@
 angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state', '$sce', '$q', '$modal'
     , 'ConfigService', 'UtilService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'Task.NewTaskService'
     , 'Authentication', 'Util.DateService', 'Dialog.BootboxService', 'ObjectService', 'Object.LookupService', 'Admin.FunctionalAccessControlService'
-    , 'modalParams'
+    , 'modalParams', 'moment'
     , function ($scope, $state, $sce, $q, $modal, ConfigService, Util, TicketService, LookupService
         , FrevvoFormService, TaskNewTaskService, Authentication, UtilDateService, DialogService, ObjectService, ObjectLookupService
-        , AdminFunctionalAccessControlService, modalParams) {
+        , AdminFunctionalAccessControlService, modalParams, moment) {
 
         $scope.modalParams = modalParams;
         $scope.taskType = $scope.modalParams.taskType || 'ACM_TASK';
@@ -25,7 +25,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             //,height: 120
         };
 
-        if($scope.taskType === 'REVIEW_DOCUMENT') {
+        if ($scope.taskType === 'REVIEW_DOCUMENT') {
             $scope.documentsToReview = $scope.modalParams.documentsToReview;
             $scope.documentsToReviewIds = extractDocumentIds($scope.documentsToReview);
             $scope.selectedBusinessProcessType = null;
@@ -55,7 +55,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
         );
 
-
         ConfigService.getModuleConfig("tasks").then(function (moduleConfig) {
             $scope.config = _.find(moduleConfig.components, {id: "newTask"});
 
@@ -65,6 +64,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.userName = $scope.userFullName;
             $scope.config.data.assignee = "";
             $scope.config.data.taskStartDate = new Date();
+            $scope.config.data.dueDate = new Date();
             $scope.config.data.priority = $scope.config.priority[1].id;
             $scope.config.data.percentComplete = 0;
 
@@ -85,6 +85,39 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         $scope.opened.openedStart = false;
         $scope.opened.openedEnd = false;
         $scope.saved = false;
+        $scope.minStartDate = new Date();
+        $scope.minDueDate = new Date();
+
+        $scope.startDateChanged = function () {
+            var todayDate = new Date();
+            if (Util.isEmpty($scope.config.data.taskStartDate) || moment($scope.config.data.taskStartDate).isBefore(todayDate)) {
+                $scope.config.data.taskStartDate = todayDate;
+            } else {
+                $scope.config.data.taskStartDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
+            }
+
+            if (moment($scope.config.data.taskStartDate).isAfter($scope.config.data.dueDate)) {
+                $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
+            }
+
+            $scope.config.data.dueDate = UtilDateService.setSameTime($scope.config.data.dueDate, $scope.config.data.taskStartDate);
+            $scope.minDueDate = $scope.config.data.taskStartDate;
+        };
+
+        $scope.dueDateChanged = function () {
+            var todayDate = new Date();
+            if (Util.isEmpty($scope.config.data.dueDate)) {
+                $scope.config.data.dueDate = todayDate;
+            } else {
+                $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.dueDate);
+            }
+
+            if (moment($scope.config.data.dueDate).isBefore($scope.config.data.taskStartDate)) {
+                $scope.config.data.dueDate = UtilDateService.convertToCurrentTime($scope.config.data.taskStartDate);
+            }
+
+            $scope.config.data.taskStartDate = UtilDateService.setSameTime($scope.config.data.taskStartDate, $scope.config.data.dueDate);
+        };
 
         $scope.saveNewTask = function () {
             $scope.saved = true;
@@ -93,9 +126,13 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                 $scope.config.data.attachedToObjectName = "";
                 $scope.config.data.attachedToObjectId = "";
             }
+            if(Util.isEmpty($scope.config.data.assignee) && $scope.config.data.candidateGroups.length < 1){
+                $scope.config.data.assignee = $scope.userId;
+            }
             var taskData = angular.copy($scope.config.data);
             taskData.dueDate = moment.utc(UtilDateService.dateToIso($scope.config.data.dueDate));
-            if($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
+            taskData.taskStartDate = moment.utc(UtilDateService.dateToIso($scope.config.data.taskStartDate));
+            if ($scope.taskType === 'REVIEW_DOCUMENT' && $scope.documentsToReview) {
                 taskData.documentsToReview = processDocumentsUnderReview();
                 TaskNewTaskService.reviewDocuments(taskData, $scope.selectedBusinessProcessType).then(reviewDocumentTaskSuccessCallback, errorCallback);
             } else {
@@ -113,7 +150,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.saved = false;
             $scope.loading = false;
             if ($scope.modalParams.returnState != null && $scope.modalParams.returnState != ':returnState') {
-                $state.go($scope.modalParams.returnState, {type: $scope.modalParams.parentType, id: $scope.modalParams.parentId});
+                $state.go($scope.modalParams.returnState, {
+                    type: $scope.modalParams.parentType,
+                    id: $scope.modalParams.parentId
+                });
             } else {
                 ObjectService.showObject(ObjectService.ObjectTypes.ADHOC_TASK, data.data.taskId);
             }
@@ -133,7 +173,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             }
         }
 
-        $scope.updateBusinessProcessType = function(selectedBusinessProcessType) {
+        $scope.updateBusinessProcessType = function (selectedBusinessProcessType) {
             $scope.selectedBusinessProcessType = selectedBusinessProcessType;
         };
 
@@ -149,8 +189,10 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         function processDocumentsUnderReview() {
             var processedDocuments = [];
-            angular.forEach($scope.documentsToReviewIds, function(value) {
-                var doc = _.find($scope.documentsToReview, function(d) { return d.data.objectId === value; });
+            angular.forEach($scope.documentsToReviewIds, function (value) {
+                var doc = _.find($scope.documentsToReview, function (d) {
+                    return d.data.objectId === value;
+                });
                 processedDocuments.push({
                     fileId: doc.data.objectId,
                     fileName: doc.data.name
@@ -174,10 +216,9 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             $scope.isAssocType = $scope.config.data.attachedToObjectType !== '';
         };
 
-        $scope.inputClear = function(){
+        $scope.inputClear = function () {
             $scope.config.data.attachedToObjectName = "";
             $scope.config.data.attachedToObjectId = "";
-
         };
 
         //groupChange function
@@ -194,7 +235,6 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
         };
 
         $scope.userOrGroupSearch = function () {
-
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/tasks/views/components/task-user-search.client.view.html',
@@ -209,36 +249,35 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
                     },
                     $config: function () {
                         return $scope.userSearchConfig;
-                    },
+                    }
                 }
             });
-
 
 
             modalInstance.result.then(function (selection) {
 
                 if (selection) {
                     var selectedObjectType = selection.masterSelectedItem.object_type_s;
-                    if(selectedObjectType === 'USER'){  // Selected user
+                    if (selectedObjectType === 'USER') {  // Selected user
                         var selectedUser = selection.masterSelectedItem;
                         var selectedGroup = selection.detailSelectedItems;
 
                         $scope.config.data.assignee = selectedUser.object_id_s;
                         $scope.userOrGroupName = selectedUser.name;
-                        if(selectedGroup){
+                        if (selectedGroup) {
                             $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
                             $scope.groupName = selectedGroup.name;
                         }
 
-
                         return;
-                    } else if(selectedObjectType === 'GROUP') {  // Selected group
+                    } else if (selectedObjectType === 'GROUP') {  // Selected group
                         var selectedUser = selection.detailSelectedItems;
                         var selectedGroup = selection.masterSelectedItem;
-                        if(selectedUser){
+                        if (selectedUser) {
                             $scope.config.data.assignee = selectedUser.object_id_s;
                             $scope.userOrGroupName = selectedUser.name;
                         }
+
                         $scope.config.data.candidateGroups = [selectedGroup.object_id_s];
                         $scope.groupName = selectedGroup.name;
 
@@ -252,6 +291,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
             });
 
         };
+
         $scope.objectSearch = function () {
             var modalInstance = $modal.open({
                 animation: $scope.animationsEnabled,
@@ -283,7 +323,7 @@ angular.module('tasks').controller('Tasks.NewTaskController', ['$scope', '$state
 
         };
 
-        $scope.cancelModal = function() {
+        $scope.cancelModal = function () {
             $scope.onModalDismiss();
         };
     }
