@@ -1,17 +1,22 @@
 package com.armedia.acm.services.config.lookups.web.api;
 
+import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
+import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -39,6 +44,21 @@ public class LookupsApiController
         return lookupDao.getMergedLookups();
     }
 
+
+    /**
+     * Rest API method to delete a lookup.
+     */
+    @RequestMapping(value="/{name}", method = RequestMethod.DELETE, produces = {
+            MediaType.APPLICATION_JSON_UTF8_VALUE,
+            MediaType.TEXT_HTML_VALUE})
+    @ResponseBody
+    public String deleteLookup(@PathVariable String name)
+            throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException
+    {
+        log.debug("Deleting lookup:" + name);
+        return lookupDao.deleteLookup(name);
+    }
+
     /**
      * Rest API method to update the server side lookups. Returns all the lookups as json, with the updated lookup.
      *
@@ -54,7 +74,7 @@ public class LookupsApiController
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
-    public String updateLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
+    public String saveLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
         log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}", lookupDefinition.getLookupType(),
                 lookupDefinition.getName(), lookupDefinition.getReadonly(), lookupDefinition.getLookupEntriesAsJson());

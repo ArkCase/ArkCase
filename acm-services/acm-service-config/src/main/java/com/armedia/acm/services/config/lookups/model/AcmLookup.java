@@ -12,14 +12,6 @@ abstract public class AcmLookup<Entry>
 
     protected List<Entry> entries = new ArrayList<>();
 
-    public boolean isReadonly() {
-        return readonly;
-    }
-
-    public void setReadonly(boolean readonly) {
-        this.readonly = readonly;
-    }
-
     protected boolean readonly;
 
     abstract public LookupValidationResult validate();
@@ -42,5 +34,13 @@ abstract public class AcmLookup<Entry>
     public void setName(String name)
     {
         this.name = name;
+    }
+
+    public boolean isReadonly() {
+        return readonly;
+    }
+
+    public void setReadonly(boolean readonly) {
+        this.readonly = readonly;
     }
 }

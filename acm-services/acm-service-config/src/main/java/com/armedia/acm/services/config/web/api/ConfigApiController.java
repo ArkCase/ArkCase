@@ -40,6 +40,8 @@ public class ConfigApiController
         return configService.getInfo();
     }
 
+
+
     @RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_PLAIN_VALUE })

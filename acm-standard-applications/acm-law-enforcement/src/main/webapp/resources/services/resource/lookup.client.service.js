@@ -18,8 +18,8 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 url: "api/latest/service/config/:name"
                 , method: "GET"
                 , cache: false
-            },
-            _getLookups: {
+            }
+            , _getLookups: {
                 url: "api/latest/service/config/lookups"
                 , method: "GET"
                 , cache: false
@@ -36,6 +36,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , headers: {
                     "Content-Type": "application/json"
                 }
+            }
+            , _deleteLookup: {
+                url: "api/latest/service/config/lookups/:name"
+                , method: "DELETE"
+                , cache: false
             }
 
             /**
@@ -399,20 +404,31 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             var lookups = Util.goodMapValue(configMap, 'lookups', null);
             return Util.serviceCall({
                 service: Service._getLookups
-                ,, param
-        :
-            {
-            }
                 , result: lookups
-                , onSuccess: function (data) {
-                    lookups = Util.omitNg(data);
-                    if (Service.validateLookups(lookups)) {
-                        configMap = configMap || {};
-                        configMap['lookups'] = lookups;
-                        cacheConfigMap.set(configMap);
-                        return lookups;
-                    }
-                }
+                , onSuccess: handleSaveLookupSuccess
+            });
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name deleteLookup
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Delete lookup
+         *
+         * @returns {Object} Promise
+         */
+
+        Service.deleteLookup = function(lookupName){
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var lookups = Util.goodMapValue(configMap, 'lookups', null);
+            return Util.serviceCall({
+                service: Service._deleteLookup
+                , param: {name: lookupName}
+                , onSuccess: handleSaveLookupSuccess
             });
         };
 
