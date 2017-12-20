@@ -272,7 +272,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
         Stream<EmailTemplateConfiguration> filteredConfigurations = configurations.stream()
                 .filter(c -> c.getObjectTypes().contains(objectType))
-                .filter(c -> c.getActions().containsAll(actions))
+                .filter(c -> c.getActions().containsAll(actions) && actions.containsAll(c.getActions()))
                 .filter(c -> c.getSource().equals(source))
                 .filter(c -> matches(c.getEmailPattern(), email));
 
