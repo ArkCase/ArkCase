@@ -1,12 +1,12 @@
 <div class="modal-header">
     <h3>
-        <span translate>Add Lookup</span>
+        <span>{{'admin.application.lookups.config.addLookup' | translate}}</span>
     </h3>
 </div>
 <div class="modal-body">
     <div class="row">
         <div class="col-sm-6 form-group">
-            <label translate>Lookup Name</label><span class="required-asterisk">*</span>
+            <label>{{'admin.application.lookups.config.lookupName' | translate}}</label><span class="required-asterisk">*</span>
             <input id="lookupName" ng-model="entry.name" class="input-md form-control"
                    placeholder="{{ 'Enter lookup name' | translate }}">
         </div>
@@ -22,6 +22,6 @@
         <span translate>admin.application.lookups.config.modal.btnCancel.text</span>
     </button>
     <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="lookupEntryForm.$invalid">
-        <span translate>admin.application.lookups.config.modal.btnOk.text</span>
+        <span translate>admin.application.lookups.config.btnSave.text</span>
     </button>
 </div>

@@ -1,8 +1,11 @@
 package com.armedia.acm.services.config.lookups.service;
 
+import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
+import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.io.IOException;
 
@@ -36,4 +39,6 @@ public interface LookupDao
      *             when the underlying store cannot be accessed
      */
     String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
+
+    String deleteLookup(String name) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
 }

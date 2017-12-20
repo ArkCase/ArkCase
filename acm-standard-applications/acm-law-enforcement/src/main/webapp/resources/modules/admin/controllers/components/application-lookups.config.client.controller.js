@@ -1,9 +1,17 @@
 'use strict';
 
-angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '$q', '$templateCache', '$modal', '$http', 'Object.LookupService', 'MessageService',
-    function ($scope, $q, $templateCache, $modal, $http, ObjectLookupService, MessageService) {
+angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '$q', '$templateCache', '$modal', '$http', 'Object.LookupService', 'LookupService', 'MessageService', 'UtilService', '$translate',
+    function ($scope, $q, $templateCache, $modal, $http, ObjectLookupService, LookupService, MessageService, Util, $translate) {
 
         $scope.selectLookupDef = function (selectedLookupDef) {
+            if (Util.isEmpty(this.selectedLookupDef)) {
+                var found = _.find($scope.lookupsDefs, {name: $scope.selectedLookupDef.name});
+                if (Util.isEmpty(found)) {
+                    this.selectedLookupDef = $scope.lookupsDefs[0];
+                } else {
+                    this.selectedLookupDef = $scope.selectedLookupDef;
+                }
+            }
             $scope.selectedLookupDef = this.selectedLookupDef;
             switch(this.selectedLookupDef.lookupType) {
                 case 'standardLookup' :
@@ -23,11 +31,22 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
             $scope.$broadcast('lookup-def-selected', $scope.selectedLookupDef);
         };
 
-        ObjectLookupService.getLookupsDefs().then(function(data) {
-            $scope.lookupsDefs = data;
-            $scope.selectedLookupDef = $scope.lookupsDefs[0];
-            $scope.selectLookupDef($scope.selectedLookupDef);
-        });
+        $scope.getLookups = function () {
+            ObjectLookupService.getLookupsDefs().then(function (data) {
+                $scope.lookupsDefs = data;
+                var index = 0;
+                if (!Util.isEmpty($scope.selectedLookupDef)) {
+                    var _index = _.findIndex($scope.lookupsDefs, {name: $scope.selectedLookupDef.name})
+                    if (!Util.isEmpty(_index) && _index > -1) {
+                        index = _index;
+                    }
+                }
+                $scope.selectedLookupDef = $scope.lookupsDefs[index];
+                $scope.selectLookupDef($scope.selectedLookupDef);
+            });
+        }
+
+        $scope.getLookups();
 
         // workaround for the first load of child controllers
         $scope.$on('lookup-controller-loaded', function() {
@@ -50,8 +69,21 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
 
         };
 
-        $scope.deleteLookup = function () {
+        $scope.deleteLookupFromExtLookups = function () {
             //delete function
+            var promise = LookupService.deleteLookup($scope.selectedLookupDef.name);
+            promise.then(
+                function (success){
+                    MessageService.info($translate.instant('admin.application.lookups.config.delete.success'));
+                    $scope.getLookups();
+                    return success;
+                },
+                function (error){
+                    MessageService.error($translate.instant('admin.application.lookups.config.delete.error'));
+                    return error;
+                }
+            );
+            return promise;
         };
 
         function showModal(entry) {
@@ -74,7 +106,13 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
                 $scope.entry.name = data.entry.name;
                 $scope.entry.lookupType = data.entry.lookupType;
                 $scope.entry.readonly = data.entry.readonly;
-                saveLookup();
+
+                var found = _.find($scope.lookupsDefs, {name: $scope.entry.name});
+                if (!Util.isEmpty(found)) {
+                    MessageService.info("Lookup with this name already exists!");
+                } else {
+                    saveLookup();
+                }
             });
         }
 
@@ -83,6 +121,7 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
             promiseSaveInfo.then(
                 function (success) {
                     MessageService.succsessAction();
+                    $scope.getLookups();
                     return success;
                 }
                 , function (error) {
