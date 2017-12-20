@@ -15,11 +15,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.apache.solr</groupId>
-            <artifactId>solr-solrj</artifactId>
-            <version>6.6.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-files-property-file-manager</artifactId>
             <version>${acm.version}</version>
@@ -190,6 +185,12 @@
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-context-holder</artifactId>
             <version>${acm.version}</version>
+        </dependency>
+
+        <!-- SolrJ -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
         </dependency>
     </dependencies>
 
