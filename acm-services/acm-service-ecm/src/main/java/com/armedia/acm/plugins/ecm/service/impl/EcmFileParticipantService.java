@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
-import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
@@ -8,8 +7,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +43,14 @@ public class EcmFileParticipantService
     private static List<String> fileParticipantTypes = Arrays.asList("group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
 
+    /**
+     * Sets the file's participants from the parent folder's participants and persists the file instance with the
+     * assigned participants.
+     * 
+     * @param file
+     *            the file to set parent folder' participants
+     * @return update file instance with the participants saved
+     */
     @Transactional(rollbackFor = Exception.class)
     public EcmFile setFileParticipantsFromParentFolder(EcmFile file)
     {
@@ -59,38 +66,32 @@ public class EcmFileParticipantService
         return getFileDao().save(file);
     }
 
+    /**
+     * Sets the folder participants from the parent folder's participants. Also sets the participants recursively to
+     * files in the folder and subfolders. Does not persist the folder instance, including the subfolders instances.
+     * Persists the file's participants because the AcmFolder does not keep a list of files in the folder, so the
+     * clients would not get these changes.
+     * 
+     * @param folder
+     *            the folder to set parent folder' participants
+     */
     @Transactional(rollbackFor = Exception.class)
-    public void setFolderParticipantsFromParentFolder(AcmFolder folder) throws AcmAccessControlException
+    public void setFolderParticipantsFromParentFolder(AcmFolder folder)
     {
         if (folder.getParentFolder() == null)
         {
             throw new IllegalStateException("Folder doesn't have parent folder!");
         }
 
+        folder.getParentFolder().getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
         setFolderParticipants(folder, folder.getParentFolder().getParticipants());
-
-        // set participants to child folders
-        List<AcmFolder> subfolders = folder.getChildrenFolders();
-        if (subfolders != null)
-        {
-            for (AcmFolder subfolder : subfolders)
-            {
-                setFolderParticipantsFromParentFolder(subfolder);
-            }
-        }
-
-        if (folder.getId() != null)
-        {
-            // set participants to files in the folder
-            getFileDao().findByFolderId(folder.getId(), FlushModeType.COMMIT).forEach(file -> setFileParticipantsFromParentFolder(file));
-        }
 
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant) throws AcmAccessControlException
+    private void setParticipantToFolderChildren(AcmFolder folder, AcmParticipant participant)
     {
         if (StringUtils.isEmpty(participant.getParticipantLdapId()))
         {
@@ -156,8 +157,7 @@ public class EcmFileParticipantService
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
-            throws AcmAccessControlException
+    private void removeParticipantFromFolderAndChildren(AcmFolder folder, String participantLdapId, String participantType)
     {
         // remove participant from child folders
         List<AcmFolder> subfolders = folder.getChildrenFolders();
@@ -190,12 +190,34 @@ public class EcmFileParticipantService
         folder.setModified(new Date());
     }
 
+    /**
+     * Returns a list of folder participants inherited from {@link AcmAssignedObject}'s participants. The folder
+     * participants types are mapped to AcmAssignedObject's participant types in ecmFileService.properties file. If one
+     * participant LdapId has multiple participant roles for an AcmAssignedObject, then one random role is mapped to the
+     * unique file participant.
+     * 
+     * @param objectType
+     *            the {@link AcmAssignedObject#getObjectType(){
+     * @param objectId
+     *            the {@link AcmAssignedObject#getId()}
+     * @return a list of participants mapped as a folder participants
+     */
     public List<AcmParticipant> getFolderParticipantsFromParentAssignedObject(String objectType, Long objectId)
     {
         List<AcmParticipant> participants = getParticipantService().getParticipantsFromParentObject(objectType, objectId);
         return getFolderParticipantsFromAssignedObject(participants);
     }
 
+    /**
+     * Returns a list of folder participants inherited from {@link AcmAssignedObject}'s participants. The folder
+     * participants types are mapped to AcmAssignedObject's participant types in ecmFileService.properties file. If one
+     * participant LdapId has multiple participant roles for an AssignedObject, then one random role is mapped to the
+     * unique file participant.
+     * 
+     * @param assignedObjectParticipants
+     *            list of participants set on an AssignedObject
+     * @return a list of participants mapped as a folder participants
+     */
     public List<AcmParticipant> getFolderParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants)
     {
         List<AcmParticipant> participants = new ArrayList<>();
@@ -219,7 +241,7 @@ public class EcmFileParticipantService
 
     @Transactional(rollbackFor = Exception.class)
     public void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
-            List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer) throws AcmAccessControlException
+            List<AcmParticipant> originalAssignedObjectParticipants, AcmContainer acmContainer)
     {
         if (acmContainer == null)
         {
@@ -244,7 +266,7 @@ public class EcmFileParticipantService
     }
 
     private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
-            List<AcmParticipant> originalAssignedObjectParticipants, AcmFolder folder) throws AcmAccessControlException
+            List<AcmParticipant> originalAssignedObjectParticipants, AcmFolder folder)
     {
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
@@ -375,9 +397,25 @@ public class EcmFileParticipantService
         return documentParticipantType;
     }
 
+    /**
+     * Sets the given participants to a FILE or FOLDER. When setting participants to FOLDER, all participants that have
+     * replaceChildrenParticipant set to true are inherited to subfolder and files recursively. All changed files and
+     * folders are persisted in this method.
+     * 
+     * @param objectId
+     *            the {@link AcmAssignedObject#getId()} of the object to set participants on
+     * @param objectType
+     *            the {@link AcmAssignedObject#getObjectType()} of the object to set participants on
+     * @param participants
+     *            a list of participants to set on the object
+     * @return the participants set on the object including all participants added by Drools rules
+     * 
+     * @throws AcmParticipantsException
+     *             when the participants list is not valid
+     */
     @Transactional(rollbackFor = Exception.class)
-    public List<AcmParticipant> setFileParticipants(Long objectId, String objectType, List<AcmParticipant> participants)
-            throws AcmAccessControlException, AcmParticipantsException
+    public List<AcmParticipant> setFileFolderParticipants(Long objectId, String objectType, List<AcmParticipant> participants)
+            throws AcmParticipantsException
     {
         validateFileParticipants(participants);
 
@@ -393,7 +431,7 @@ public class EcmFileParticipantService
             getFileDao().getEm().flush();
             participantsToReturn = savedFolder.getParticipants();
         }
-        else
+        else if (objectType.equals(EcmFileConstants.OBJECT_FILE_TYPE))
         {
             EcmFile file = getFileDao().find(objectId);
             setFileParticipants(file, participants);
@@ -403,6 +441,11 @@ public class EcmFileParticipantService
             // make sure the session is flushed so that the Drools rules have been run
             getFileDao().getEm().flush();
             participantsToReturn = savedFile.getParticipants();
+        }
+        else
+        {
+            throw new AcmParticipantsException(Arrays.asList(""),
+                    "The called method cannot be executed on objectType {" + objectType + "}!");
         }
 
         return participantsToReturn;
@@ -472,7 +515,7 @@ public class EcmFileParticipantService
         }
     }
 
-    private void setFolderParticipants(AcmFolder folder, List<AcmParticipant> participants) throws AcmAccessControlException
+    private void setFolderParticipants(AcmFolder folder, List<AcmParticipant> participants)
     {
         for (AcmParticipant participant : participants)
         {
@@ -511,11 +554,11 @@ public class EcmFileParticipantService
      * @throws AcmParticipantsException
      *             when the {@link AcmParticipant}s are not valid.
      */
-    public void validateFileParticipants(List<AcmParticipant> participants) throws AcmParticipantsException
+    private void validateFileParticipants(List<AcmParticipant> participants) throws AcmParticipantsException
     {
         // missing participant id
-        List<AcmParticipant> missingParticipantLdapIds = participants.stream().filter(participant -> participant.getReceiverLdapId() == null
-                && !participant.getParticipantType().equals(ParticipantTypes.ASSIGNEE)).collect(Collectors.toList());
+        List<AcmParticipant> missingParticipantLdapIds = participants.stream()
+                .filter(participant -> participant.getReceiverLdapId() == null).collect(Collectors.toList());
 
         if (missingParticipantLdapIds.size() > 0)
         {
@@ -537,28 +580,6 @@ public class EcmFileParticipantService
             throw new AcmParticipantsException(errorList, errorMessage);
         }
 
-        // multiple assignees
-        List<AcmParticipant> assignees = participants.stream()
-                .filter(participant -> participant.getParticipantType() == ParticipantTypes.ASSIGNEE).collect(Collectors.toList());
-        if (assignees.size() > 1)
-        {
-            String errorMessage = "Multiple assignees found!";
-            List<String> errorList = assignees.stream().map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId())
-                    .collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
-        // multiple owning groups
-        List<AcmParticipant> owningGroups = participants.stream()
-                .filter(participant -> participant.getParticipantType() == ParticipantTypes.OWNING_GROUP).collect(Collectors.toList());
-        if (owningGroups.size() > 1)
-        {
-            String errorMessage = "Multiple owning groups found!";
-            List<String> errorList = owningGroups.stream().map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId())
-                    .collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
-        }
-
         // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
         Set<String> allLdapIds = new HashSet<>();
         Set<String> duplicateParticipantLdapIds = participants.stream().map(participant -> participant.getParticipantLdapId())
@@ -568,6 +589,19 @@ public class EcmFileParticipantService
             String errorMessage = "Participants in multiple roles found!";
             List<String> errorList = duplicateParticipantLdapIds.stream()
                     .map(participantLdapId -> "ParticipantLdapId: " + participantLdapId).collect(Collectors.toList());
+            throw new AcmParticipantsException(errorList, errorMessage);
+        }
+
+        // check participant types
+        List<AcmParticipant> invalidParticipantTypes = participants.stream()
+                .filter(participant -> !fileParticipantTypes.contains(participant.getParticipantType()))
+                .collect(Collectors.toList());
+
+        if (invalidParticipantTypes.size() > 0)
+        {
+            String errorMessage = "Invalid file participant type!";
+            List<String> errorList = invalidParticipantTypes.stream()
+                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId()).collect(Collectors.toList());
             throw new AcmParticipantsException(errorList, errorMessage);
         }
     }

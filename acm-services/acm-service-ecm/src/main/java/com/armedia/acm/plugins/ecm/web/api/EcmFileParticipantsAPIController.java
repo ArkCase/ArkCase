@@ -47,7 +47,7 @@ public class EcmFileParticipantsAPIController
                     "The called method cannot be executed on objectType {" + objectType + "}!");
         }
 
-        return getFileParticipantService().setFileParticipants(objectId, objectType, participants);
+        return getFileParticipantService().setFileFolderParticipants(objectId, objectType, participants);
     }
 
     public EcmFileParticipantService getFileParticipantService()
