@@ -647,6 +647,7 @@
           "edit": "Изменить конфигурацию CMIS"
         },
         "dialog": {
+          "testConnection": "ru_Test Connection",
           "cancel": "Отмена",
           "ok": "ОК"
         },

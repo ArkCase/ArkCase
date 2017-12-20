@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope', '$modal', 'Helper.UiGridService'
-    , 'Admin.CmisConfigService', 'UtilService', 'Admin.ModalDialogService', 'MessageService', '$translate'
-    , function ($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate) {
+    , 'Admin.CmisConfigService', 'UtilService', 'Admin.ModalDialogService', 'MessageService', '$translate', 'Object.LookupService', 'Dialog.BootboxService'
+    , function ($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate,  ObjectLookupService, DialogService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
@@ -30,10 +30,23 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             reloadGrid();
         });
 
+        ObjectLookupService.getAlfrescoExtension().then(function (alfrescoExtension) {
+            $scope.alfrescoExtension = alfrescoExtension;
+        });
+
+        ObjectLookupService.getEndpoint().then(function (endpoint) {
+            $scope.endpoint = endpoint;
+        });
+
+        ObjectLookupService.getVersioningState().then(function (versioningState) {
+            $scope.versioningState = versioningState;
+        });
+
         $scope.showModal = function (cmisConfig, isEdit, originalConfig) {
             var modalScope = $scope.$new();
             modalScope.cmisConfig = cmisConfig || {};
             modalScope.isEdit = isEdit || false;
+            modalScope.testConnection = testConnection;
 
             var modalInstance = $modal.open({
                 scope: modalScope,
@@ -59,6 +72,9 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
                         messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.update.error'));
                     })
                 } else {
+                    if(result.cmisConfig.useAlfrescoExtension != true){
+                        result.cmisConfig.useAlfrescoExtension = "false"
+                    }
                     CmisConfigService.createCmisConfiguration(result.cmisConfig).then(function () {
                         reloadGrid();
                         messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.success'));
@@ -66,7 +82,24 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
                         messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.insert.error'));
                     });
                 }
-            })
+            });
+
+            function testConnection() {
+
+
+
+                var cmisUrlTest = {
+                    baseUrl: modalScope.cmisConfig.baseUrl,
+                    username: modalScope.cmisConfig.username,
+                    password: modalScope.cmisConfig.password,
+                    repositoryId: ""
+                };
+                CmisConfigService.urlValidation(cmisUrlTest).then(function (response) {
+                    DialogService.alert($translate.instant('admin.documentManagement.cmisConfiguration.messages.test.conection.success'));
+                }, function (response) {
+                    DialogService.alert(response.data.message);
+                });
+            }
         };
 
         $scope.deleteRow = function (rowEntity) {
@@ -81,8 +114,9 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
                 CmisConfigService.deleteCmisConfiguration($scope.deleteDir.id).then(function () {
                     gridHelper.deleteRow($scope.deleteDir);
                     messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
-                }, function () {
-                    messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
+                }, function (response) {
+
+                    messageService.error(response.data.message);
                 });
             });
         };

@@ -4,13 +4,24 @@ import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
+import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
+import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import org.apache.chemistry.opencmis.client.api.Repository;
+import org.apache.chemistry.opencmis.client.api.SessionFactory;
+import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
+import org.apache.chemistry.opencmis.commons.SessionParameter;
+import org.apache.chemistry.opencmis.commons.enums.BindingType;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -248,13 +259,13 @@ public class CmisConfigurationService
         props.put("password", encryptablePropertyUtils.encryptPropertyValue(jsonObj.getString(CmisConfigurationConstants.CMIS_PASSWORD)));
         props.put("useAlfrescoExtension", jsonObj.getString(CmisConfigurationConstants.CMIS_USEALFRESCOEXTENSION));
         props.put("endpoint", jsonObj.getString(CmisConfigurationConstants.CMIS_ENDPOINT));
-        props.put("maxIdle", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXIDLE));
-        props.put("maxActive", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXACTIVE));
-        props.put("maxWait", jsonObj.getString(CmisConfigurationConstants.CMIS_MAXWAIT));
-        props.put("minEvictionMillis", jsonObj.getString(CmisConfigurationConstants.CMIS_MINEVICTIONMILLIS));
-        props.put("evictionCheckIntervalMillis", jsonObj.getString(CmisConfigurationConstants.CMIS_EVICTIONCHECKINTERVALMILLIS));
-        props.put("reconnectCount", jsonObj.getString(CmisConfigurationConstants.CMIS_RECONNECTCOUNT));
-        props.put("reconnectFrequency", jsonObj.getString(CmisConfigurationConstants.CMIS_RECONNECTFREQUENCY));
+        props.put("maxIdle", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXIDLE));
+        props.put("maxActive", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXACTIVE));
+        props.put("maxWait", jsonObj.getInt(CmisConfigurationConstants.CMIS_MAXWAIT));
+        props.put("minEvictionMillis", jsonObj.getInt(CmisConfigurationConstants.CMIS_MINEVICTIONMILLIS));
+        props.put("evictionCheckIntervalMillis", jsonObj.getInt(CmisConfigurationConstants.CMIS_EVICTIONCHECKINTERVALMILLIS));
+        props.put("reconnectCount", jsonObj.getInt(CmisConfigurationConstants.CMIS_RECONNECTCOUNT));
+        props.put("reconnectFrequency", jsonObj.getInt(CmisConfigurationConstants.CMIS_RECONNECTFREQUENCY));
         props.put("repositoryId", jsonObj.has(CmisConfigurationConstants.CMIS_REPOSITORYID)
                 ? jsonObj.getString(CmisConfigurationConstants.CMIS_REPOSITORYID) : "");
         props.put("versioningState", jsonObj.getString(CmisConfigurationConstants.CMIS_VERSIONINGSTATE));
@@ -355,6 +366,20 @@ public class CmisConfigurationService
         String fileName = getCmisFileName(cmisId);
         log.debug("Checking if CMIS Configuration file '{}' exists", fileName);
         return new File(fileName).exists();
+    }
+
+    public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException {
+
+        SessionFactory sessionFactory = SessionFactoryImpl.newInstance();
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put(SessionParameter.USER, cmisUrlConfig.getUsername());
+        parameters.put(SessionParameter.PASSWORD, encryptablePropertyUtils.decryptPropertyValue(cmisUrlConfig.getPassword()));
+        parameters.put(SessionParameter.ATOMPUB_URL, cmisUrlConfig.getBaseUrl());
+        parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
+        parameters.put(SessionParameter.REPOSITORY_ID, cmisUrlConfig.getRepositoryId());
+        parameters.put(SessionParameter.HEADER, HttpInvokerUtil.EXTERNAL_AUTH_KEY + ": " + HttpInvokerUtil.getExternalUserIdValue());
+
+        return SessionFactoryImpl.newInstance().getRepositories(parameters);
     }
 
     public void setCmisConfigurationLocation(String cmisConfigurationLocation)

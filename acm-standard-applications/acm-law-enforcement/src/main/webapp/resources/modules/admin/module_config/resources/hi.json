@@ -647,6 +647,7 @@
           "edit": "CMIS कॉन्फ़िगरेशन को संपादित करें"
         },
         "dialog": {
+          "testConnection": "hi_Test Connection",
           "cancel": "रद्द करना",
           "ok": "ठीक"
         },

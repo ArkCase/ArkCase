@@ -647,6 +647,7 @@
           "edit": "Edit CMIS Configuration"
         },
         "dialog": {
+          "testConnection": "en-in_Test Connection",
           "cancel": "Cancel",
           "ok": "OK"
         },

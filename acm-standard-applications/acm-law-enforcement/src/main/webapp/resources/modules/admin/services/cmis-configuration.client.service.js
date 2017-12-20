@@ -17,7 +17,8 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
         retrieveCmisConfigurations: retrieveCmisConfigurations,
         createCmisConfiguration: createCmisConfiguration,
         deleteCmisConfiguration: deleteCmisConfiguration,
-        updateCmisConfiguration: updateCmisConfiguration
+        updateCmisConfiguration: updateCmisConfiguration,
+        urlValidation: urlValidation
     });
 
     /**
@@ -37,6 +38,30 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
             method: "POST",
             url: "api/latest/plugin/admin/cmisconfiguration/config",
             data: cmisConfig,
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+    };
+
+
+    /**
+     * @ngdoc method
+     * @name urlValidation
+     * @methodOf admin.service:Admin.CmisConfigService
+     *
+     * @description
+     *
+     *
+     * @param {object} cmisConfig row data to send to the server
+     *
+     * @returns {HttpPromise} Future info about http post
+     */
+    function urlValidation(cmisUrlTest) {
+        return $http({
+            method: "POST",
+            url: "api/latest/plugin/admin/config/url-validation",
+            data: cmisUrlTest,
             headers: {
                 "Content-Type": "application/json"
             }

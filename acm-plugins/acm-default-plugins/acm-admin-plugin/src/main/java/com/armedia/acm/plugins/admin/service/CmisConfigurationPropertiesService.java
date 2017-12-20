@@ -42,7 +42,33 @@ public class CmisConfigurationPropertiesService
                     for (String proName : prop.stringPropertyNames())
                     {
                         log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
-                        cmisJsonObj.put(proName, prop.getProperty(proName));
+                        if(proName.equalsIgnoreCase("cmis.maxIdle")){
+                             Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.maxActive")){
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.maxWait")){
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.Count")){
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.reconnectFrequency")) {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.minEvictionMillis")) {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.reconnectCount")) {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else if(proName.equalsIgnoreCase("cmis.evictionCheckIntervalMillis")) {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        } else {
+                            cmisJsonObj.put(proName, prop.getProperty(proName));
+                        }
                     }
 
                     log.debug("Finished reading property file: [{}]", propertyFile.getName());

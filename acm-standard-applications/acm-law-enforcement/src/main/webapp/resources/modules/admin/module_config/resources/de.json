@@ -647,6 +647,7 @@
           "edit": "CMIS-Konfiguration bearbeiten"
         },
         "dialog": {
+          "testConnection": "de_Test Connection",
           "cancel": "Stornieren",
           "ok": "OK"
         },
