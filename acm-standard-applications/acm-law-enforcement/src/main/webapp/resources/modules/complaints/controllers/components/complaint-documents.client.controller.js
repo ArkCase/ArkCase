@@ -76,20 +76,52 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
 
             $scope.treeControl.addCommandHandler({
-                name: "declare"
-                , onAllowCmd: function (nodes) {
-                    return PermissionsService.getActionPermission('declareAsRecords', $scope.objectInfo, {objectType: $scope.objectType}).then(
-                        function success(enabled) {
-                            return enabled ? 'enable' : 'disable';
-                        }, function error() {
-                            $log.error('Can\'t get permission info for action declareAsRecords. The menu item will be disabled.');
+                    name: "declare"
+                    , onAllowCmd: function (nodes) {
+                        return $scope.getActionPermission('declareAsRecords', $scope.objectInfo, $scope.objectType);
+                    }
+                }
+            );
+
+            $scope.treeControl.addCommandHandler({
+                    name: "rename"
+                    , onAllowCmd: function (nodes) {
+                        // There are multiple node selected. Rename is not possible for multiple nodes
+                        if (Util.isArrayEmpty(nodes) || nodes.length > 1) {
                             return 'disable';
                         }
-                    );
+
+                        var node = nodes[0];
+                        var objectType = !Util.isEmpty(node.data) && !Util.isEmpty(node.data.objectType) ? node.data.objectType.toUpperCase() : '';
+                        var action = '';
+
+                        switch (objectType) {
+                            case 'FILE':
+                                action = 'renameFile';
+                                break;
+                            case 'FOLDER':
+                                action = 'renameFolder';
+                                break;
+                            default:
+                                return 'disable';
+                        }
+
+                        return $scope.getActionPermission(action, node.data, objectType);
+                    }
                 }
-            });
+            );
         };
 
+        $scope.getActionPermission = function (action, object, objectType) {
+            return PermissionsService.getActionPermission(action, object, {objectType: objectType}).then(
+                function success(enabled) {
+                    return enabled ? 'enable' : 'disable';
+                }, function error() {
+                    $log.error('Can\'t get permission info for action ' + action + '. The menu item will be disabled.');
+                    return 'disable';
+                }
+            );
+        };
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();
