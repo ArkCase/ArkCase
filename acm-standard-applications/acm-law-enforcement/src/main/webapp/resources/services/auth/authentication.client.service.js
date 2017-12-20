@@ -108,8 +108,10 @@ angular.module('services').factory('Authentication', ['$resource', 'Acm.StoreSer
                     if (Service.validateUpdateUserLang(data)) {
                         var cacheUserInfo = new Store.SessionData(Service.SessionCacheNames.USER_INFO);
                         var userInfo = cacheUserInfo.get();
-                        userInfo.langCode = lang;
-                        cacheUserInfo.set(userInfo);
+                        if (!Util.isEmpty(userInfo)) {
+                            userInfo.langCode = lang;
+                            cacheUserInfo.set(userInfo);
+                        }
                         return data;
                     }
                 }

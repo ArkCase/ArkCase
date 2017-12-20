@@ -798,7 +798,11 @@
           "objectNumberRegexGroup": 2
         },
         "noteRequiredOnCheckin": false,
-        "allowParentOwnerToCancel": true
+        "allowParentOwnerToCancel": true,
+        "menu": {
+          "subMenuForms": "complaints.comp.documents.menu.forms",
+          "subMenuCorrespondences": "complaints.comp.documents.menu.correspondences"
+        }
       }
     },
     {
