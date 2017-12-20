@@ -99,7 +99,7 @@ public class LdapGroupService
         acmGroup.setDistinguishedName(groupDN);
         acmGroup.setDirectoryName(directoryName);
 
-        Set<String> ancestors = parentGroup.getAscendants().collect(Collectors.toSet());
+        Set<String> ancestors = parentGroup.getAscendants();
         ancestors.add(parentGroupName);
         acmGroup.setAscendantsList(AcmGroupUtils.getAscendantsString(ancestors));
 
