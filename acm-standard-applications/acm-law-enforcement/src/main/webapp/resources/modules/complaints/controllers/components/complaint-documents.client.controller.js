@@ -86,7 +86,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $scope.treeControl.addCommandHandler({
                     name: "rename"
                     , onAllowCmd: function (nodes) {
-                        // There are multiple node selected. Rename is not possible for more nodes
+                        // There are multiple node selected. Rename is not possible for multiple nodes
                         if (Util.isArrayEmpty(nodes) || nodes.length > 1) {
                             return 'disable';
                         }
