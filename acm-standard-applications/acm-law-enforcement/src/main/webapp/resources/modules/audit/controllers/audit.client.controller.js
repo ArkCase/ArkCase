@@ -3,9 +3,9 @@
 //Comments are welcome. But do not use @ngdoc format in controllers.
 
 angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', 'ConfigService', 'LookupService',
-    'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService'
+    'AuditController.BuildUrl', 'UtilService', 'Util.DateService', '$window', 'Helper.LocaleService', 'Object.LookupService'
     , function ($scope, $sce, $q, ConfigService, LookupService
-        , BuildUrl, Util, UtilDateService, $window, LocaleHelper
+        , BuildUrl, Util, UtilDateService, $window, LocaleHelper, ObjectLookupService
     ) {
         new LocaleHelper.Locale({scope: $scope});
 
@@ -23,9 +23,12 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         $scope.objectId = null;
         $scope.dateFrom = null;
         $scope.dateTo = null;
+        $scope.isDateValid = false;
+        $scope.startDate = null;
+        $scope.dueDate = null;
 
 
-        /**
+            /**
          * This function is callback function which gets called when "send-type-id" event is emitted.
          * In this function values are being assigned for $scope.objectType and $scope.objectId from selected dropdown and input text
          *
@@ -33,9 +36,11 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {String} selectedObjectType String that represents value that is selected from dropdown
          * @param {String} inputObjectId String that represents value from text input(default is empty string "")
          */
-        function getObjectValues(e, selectedObjectType, inputObjectId) {
+        function getObjectValues(e, selectedObjectType, inputObjectId, validDate) {
             $scope.objectType = selectedObjectType;
             $scope.objectId = Util.goodValue(inputObjectId);
+
+            $scope.validDate = validDate;
         }
 
         /**
@@ -50,6 +55,7 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
         function getDateValues(e, dateFrom, dateTo) {
             $scope.dateFrom = dateFrom;
             $scope.dateTo = dateTo;
+
         }
 
         // Retrieves the properties from the acm-reports-server-config.properties file
@@ -57,8 +63,9 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
 
         // Retrieves the properties from the auditPlugin.properties file
         var promiseAuditConfig = LookupService.getConfig("audit");
+        var promiseLookupAuditDropdown = ObjectLookupService.getAuditReportNames();
 
-        $q.all([promiseServerConfig, promiseAuditConfig])
+        $q.all([promiseServerConfig, promiseAuditConfig, promiseLookupAuditDropdown])
             .then(function (data) {
                 $scope.acmReportsProperties = data[0];
                 $scope.auditPluginProperties = data[1];
@@ -68,19 +75,19 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
                 $scope.auditReportUri = $scope.auditPluginProperties['AUDIT_REPORT'];
                 $scope.pentahoUser = $scope.acmReportsProperties['PENTAHO_SERVER_USER'];
                 $scope.pentahoPassword = $scope.acmReportsProperties['PENTAHO_SERVER_PASSWORD'];
+                $scope.auditDropdown = data[2];
             });
 
         $scope.showIframe = function () {
             var reportUri = $scope.auditReportUri;
-            var dateFormat = $scope.locale.DATETIME_FORMATS.shortDate;
             if ($scope.showXmlReport) {
                 reportUri = reportUri.substring(0, reportUri.indexOf('viewer')) + 'report';
                 $window.open(BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, reportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport));
             } else {
                 $scope.auditReportUrl = BuildUrl.getUrl($scope.pentahoHost, $scope.pentahoPort, $scope.auditReportUri,
-                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId, dateFormat,
+                    $scope.dateFrom, $scope.dateTo, $scope.objectType, $scope.objectId,
                     true, $scope.pentahoUser, $scope.pentahoPassword, $scope.showXmlReport);
             }
         }

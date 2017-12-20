@@ -58,7 +58,12 @@ public class NotificationServiceImpl implements NotificationService
 
             SimpleDateFormat dateFormat = new SimpleDateFormat(NotificationConstants.DATE_FORMAT);
 
-            Date lastRun = getLastRunDate(lastRunDate, dateFormat);
+            // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last notification run date for one minute
+            // For now we will use date without correction, because we have problem if the run is set less than one minute, multiple emails are sent.
+            // Needed further investigation on DEV environments before removing commented line below. Locally works fine.
+
+            // Date lastRun = getLastRunDate(lastRunDate, dateFormat);
+            Date lastRun = dateFormat.parse(lastRunDate);
             setLastRunDate(dateFormat);
 
             Map<String, NotificationRule> rules = getSpringContextHolder().getAllBeansOfType(NotificationRule.class);

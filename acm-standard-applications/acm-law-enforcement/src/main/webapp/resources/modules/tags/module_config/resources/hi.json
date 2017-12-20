@@ -1,21 +1,25 @@
 {
   "tags": {
     "title": "टैग",
-    "search.btn": "hi_Search",
-    "search.placeholder": "hi_Search for tags",
+    "search.btn": "खोज",
+    "export.btn": "निर्यात",
+    "search.placeholder": "टैग खोजें",
     "menus": {
       "leftnav.item": "टैग"
     },
-    "comp":{
+    "comp": {
+      "tagsFacetedSearch": {
+        "title": "टैग faceted खोज"
+      },
       "grid": {
         "columns": {
-          "id": "hi_ID",
-          "name": "hi_Name",
-          "type": "hi_Type",
-          "title": "hi_Title",
-          "parent": "hi_Parent",
-          "assignee": "hi_Assignee",
-          "modified": "hi_Modified"
+          "id": "पहचान",
+          "name": "नाम",
+          "type": "प्रकार",
+          "title": "शीर्षक",
+          "parent": "माता-पिता",
+          "assignee": "संपत्ति-भागी",
+          "modified": "संशोधित तिथि"
         }
       }
     }

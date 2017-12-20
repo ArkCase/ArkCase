@@ -52,7 +52,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
                                 UserInfoService.getUserInfo().then(function (infoData) {
                                     infoData.ecmSignatureFileId = $scope.profileEcmSignatureFileID;
                                     UserInfoService.updateUserInfo(infoData);
-                                    $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nopic.png' :
+                                    $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nosignature.png' :
                                         'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmSignatureFileID + '&inline=true';
                                 });
                             })
@@ -83,7 +83,7 @@ angular.module('profile').controller('Profile.PicController', ['$scope', '$rootS
                 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&inline=true';
             // signature
             $scope.profileEcmSignatureFileID = data.ecmSignatureFileId;
-            $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nopic.png' :
+            $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nosignature.png' :
                 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmSignatureFileID + '&inline=true';
         });
     }

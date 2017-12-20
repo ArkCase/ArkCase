@@ -2,6 +2,8 @@ package com.armedia.acm.auth;
 
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -11,16 +13,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
-import java.util.Set;
-
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class AcmGrantedAuthoritiesMapper implements ApplicationListener<ConfigurationFileChangedEvent>
 {
@@ -40,7 +39,10 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
      * execution.
      */
     private Map<String, List<String>> activeMapping;
+
     private PropertyFileManager propertyFileManager;
+
+    private AcmRoleToGroupMapping roleToGroupMapping;
 
     /**
      * Read the role mapping file and set the group mapping properties.  The
@@ -49,12 +51,12 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
      */
     public void initBean()
     {
-        if (getApplicationRoleToUserGroupProperties() != null && !getApplicationRoleToUserGroupProperties().isEmpty())
+        if (applicationRoleToUserGroupProperties != null && !applicationRoleToUserGroupProperties.isEmpty())
         {
-            Map<String, List<String>> groupsToRoles = mapGroupsToRoles();
+            roleToGroupMapping.reloadRoleToGroupMap(applicationRoleToUserGroupProperties);
+            Map<String, List<String>> groupsToRoles = roleToGroupMapping.getGroupToRolesMap();
             setActiveMapping(groupsToRoles);
-
-            logProperties(getApplicationRoleToUserGroupProperties());
+            logProperties(applicationRoleToUserGroupProperties);
         } else
         {
             log.error("role to group mapping is not configured - no one "
@@ -74,16 +76,15 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
 
             try
             {
-                Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
-                applicationRoleToUserGroupProperties = reloaded;
+                applicationRoleToUserGroupProperties = propertyFileManager.readFromFile(eventFile);
                 initBean();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.info("Could not read new properties; keeping the old properties.");
             }
 
         }
-
 
     }
 
@@ -99,65 +100,17 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
 
     public Collection<AcmGrantedAuthority> mapAuthorities(Collection<? extends GrantedAuthority> grantedAuthorities)
     {
-        Set<AcmGrantedAuthority> roles = new HashSet<>();
+        Predicate<GrantedAuthority> authorityNotBlank = authority -> authority != null &&
+                StringUtils.isNotBlank(authority.getAuthority());
 
-        for (GrantedAuthority authority : grantedAuthorities)
-        {
-            if (authority == null || authority.getAuthority() == null ||
-                    authority.getAuthority().trim().isEmpty())
-            {
-                continue;
-            }
-
-            String groupName = authority.getAuthority().trim().toUpperCase();
-
-            log.debug(String.format("Incoming group: [%s]", groupName));
-
-            List<String> groupRoles = getActiveMapping().get(groupName);
-
-            if (groupRoles != null)
-            {
-                for (String groupRole : groupRoles)
-                {
-                    log.debug(String.format("role for group [%s] = [%s]",
-                            groupName, groupRole));
-
-                    AcmGrantedAuthority auth = new AcmGrantedAuthority(groupRole);
-                    roles.add(auth);
-                }
-            }
-
-        }
-
-        return roles;
-    }
-
-    public List<String> applicationGroupsFromLdapGroups(List<String> ldapGroups)
-    {
-
-        List<String> retval = new ArrayList<>();
-        for (String ldapGroup : ldapGroups)
-        {
-            if (ldapGroup == null || ldapGroup.trim().isEmpty())
-            {
-                continue;
-            }
-            ldapGroup = ldapGroup.trim().toUpperCase();
-            List<String> rolesForGroup = getActiveMapping().get(ldapGroup);
-            if (rolesForGroup != null && !rolesForGroup.isEmpty())
-            {
-                for (String role : rolesForGroup)
-                {
-                    String appRole = role.replaceFirst("ROLE_", "").toLowerCase();
-                    if (!retval.contains(appRole))
-                    {
-                        retval.add(appRole);
-                    }
-                }
-            }
-        }
-
-        return retval;
+        return grantedAuthorities.stream()
+                .filter(authorityNotBlank)
+                .map(authority -> authority.getAuthority().trim().toUpperCase())
+                .peek(groupName -> log.debug(String.format("Incoming group: [%s]", groupName)))
+                .filter(groupName -> activeMapping.containsKey(groupName))
+                .flatMap(groupName -> activeMapping.get(groupName).stream())
+                .map(AcmGrantedAuthority::new)
+                .collect(Collectors.toSet());
     }
 
     public Properties getApplicationRoleToUserGroupProperties()
@@ -180,59 +133,18 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
         this.activeMapping = activeMapping;
     }
 
-    private Map<String, List<String>> mapGroupsToRoles()
+    public PropertyFileManager getPropertyFileManager()
     {
-        Map<String, List<String>> groupsToRoles = new HashMap<>();
-        for (Entry<Object, Object> entry : getApplicationRoleToUserGroupProperties().entrySet())
-        {
-            String role = (String) entry.getKey();
-            String groups = (String) entry.getValue();
-
-            if (role == null || role.trim().isEmpty() ||
-                    groups == null || groups.trim().isEmpty())
-            {
-                continue;
-            }
-
-            role = role.trim().toUpperCase();
-            if (!role.startsWith("ROLE_"))
-            {
-                role = "ROLE_" + role;
-            }
-
-            // Groups for each role are comma separated in the property file. Go through all groups for each role
-            String[] groupsArray = groups.split(",");
-
-            if (groupsArray != null && groupsArray.length > 0)
-            {
-                for (String group : groupsArray)
-                {
-                    group = group.trim().toUpperCase();
-
-                    if (groupsToRoles.containsKey(group))
-                    {
-                        List<String> roles = groupsToRoles.get(group);
-                        roles.add(role);
-                    } else
-                    {
-                        List<String> roles = new ArrayList<>();
-                        roles.add(role);
-                        groupsToRoles.put(group, roles);
-                    }
-                }
-            }
-        }
-        return groupsToRoles;
+        return propertyFileManager;
     }
-
 
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
         this.propertyFileManager = propertyFileManager;
     }
 
-    public PropertyFileManager getPropertyFileManager()
+    public void setRoleToGroupMapping(AcmRoleToGroupMapping roleToGroupMapping)
     {
-        return propertyFileManager;
+        this.roleToGroupMapping = roleToGroupMapping;
     }
 }

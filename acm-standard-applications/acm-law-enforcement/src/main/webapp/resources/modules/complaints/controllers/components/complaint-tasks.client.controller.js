@@ -32,6 +32,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.addButton(config, "delete");
 
             componentHelper.doneConfig(config);
             return false;
@@ -43,19 +44,21 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         var retrieveGridData = function () {
+            var exceptDeletedOnly = true;
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
+                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
                 ).then(function (data) {
                     var tasks = data.response.docs;
                     angular.forEach(tasks,function (task) {
-                        //calculate to show alert icons if task is in overdue or deadline is approaching
-                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                            //calculate to show alert icons if task is in overdue or deadline is approaching
+                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
                     });
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = tasks;
@@ -74,10 +77,26 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 params: {
                     parentType: ObjectService.ObjectTypes.COMPLAINT,
                     parentObject: $scope.objectInfo.complaintNumber,
-                    parentTitle: $scope.objectInfo.title
+                    parentId: $scope.objectInfo.complaintId,
+                    parentTitle: $scope.objectInfo.title,
+                    taskType: 'ACM_TASK'
                 }
             };
             ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var complaintInfo = Util.omitNg($scope.objectInfo);
+            if (ComplaintInfoService.validateComplaintInfo(complaintInfo))
+            {
+                TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
+                    function (complaintInfo) {
+                        gridHelper.deleteRow(rowEntity);
+                        $scope.$emit("report-object-updated", complaintInfo);
+                        return complaintInfo;
+                    }
+                );
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

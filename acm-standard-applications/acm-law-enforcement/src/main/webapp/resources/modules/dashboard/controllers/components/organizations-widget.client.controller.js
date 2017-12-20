@@ -14,9 +14,9 @@ angular.module('dashboard.organizations', ['adf.provider'])
             );
     })
     .controller('Dashboard.OrganizationsController', ['$scope', '$stateParams', '$translate',
-        'UtilService', 'Person.InfoService', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $stateParams, $translate,
-                  Util, PersonInfoService, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'UtilService', 'Person.InfoService', 'Case.InfoService', 'Complaint.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.ModelService'
+        , function ($scope, $stateParams, $translate,
+                    Util, PersonInfoService, CaseInfoService, ComplaintInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectModelService) {
             var modules = [
                 {
                     name: "PERSON",
@@ -85,5 +85,9 @@ angular.module('dashboard.organizations', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+            $scope.isDefault = function (data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultOrganization");
+            }
+
         }
     ]);

@@ -27,53 +27,60 @@
   },
   "costTracking.comp.details": {
     "title": "विवरण",
-    "informSaved": "hi_Costsheet details saved",
+    "informSaved": "कॉस्टशीट विवरण सहेजे गए",
     "table.columns": {
-      "title": "hi_Details",
-      "modified": "hi_Date Last Modified",
-      "modifier": "hi_User Last Modified"
+      "title": "विवरण",
+      "modified": "अंतिम संशोधित तारीख",
+      "modifier": "उपयोगकर्ता अंतिम संशोधित"
     }
   },
   "costTracking.comp.person": {
-    "title": "लोग",
+    "title": "व्यक्ति",
     "table.columns": {
-      "fullName": "hi_Full Name",
-      "userId": "hi_Username"
+      "fullName": "पूरा नाम",
+      "userId": "उपयोगकर्ता नाम"
     }
   },
   "costTracking.comp.summary": {
-    "title": "लागत सारांश",
+    "title": "लागत",
     "table.columns": {
-      "parentId": "hi_ID",
-      "parentNumber": "hi_Parent ID",
-      "parentType": "hi_Parent Type",
-      "value": "hi_Total Cost",
-      "title": "hi_Title",
-      "description": "hi_Description"
+      "parentId": "पहचान",
+      "parentNumber": "मूल आईडी",
+      "parentType": "माता पिता का प्रकार",
+      "value": "कुल लागत",
+      "title": "शीर्षक",
+      "description": "विवरण"
     }
   },
   "costTracking.comp.tags": {
     "title": "टैग",
     "table.columns": {
-      "tag": "hi_Tag",
-      "created": "hi_Created",
-      "createdBy": "hi_Created By"
+      "tag": "टैग",
+      "created": "रचना तिथि",
+      "createdBy": "के द्वारा बनाई गई"
     },
     "modal": {
-    "title": "hi_Tag",
-    "search": "hi_Search for Tag",
-    "buttons": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add Tag"
-     }
+      "title": "टैग",
+      "search": "टैग के लिए खोजें",
+      "buttons": {
+        "cancel": "रद्द करना",
+        "ok": "टैग जोड़ो"
+      }
     },
     "message": {
-      "tagExists": "hi_Tag with that name or description or text already exists",
-      "tagAssociated": "hi_already associated",
+      "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+      "tagAssociated": "पहले से जुड़े हुए हैं",
       "delete": {
-        "success": "hi_Tag deleted successfully",
-        "error": "hi_Error deleting tag"
+        "success": "टैग सफलतापूर्वक हटाया गया",
+        "error": "टैग हटाने में त्रुटि"
       }
+    }
+  },
+  "costTracking.comp.approvers": {
+    "title": "अनुमोदन कर्मियों",
+    "table.columns": {
+      "fullName": "पूरा नाम",
+      "userId": "उपयोगकर्ता नाम"
     }
   },
   "costTracking.tree": {
@@ -81,7 +88,8 @@
       "details.label": "विवरण",
       "person.label": "लोग",
       "summary.label": "लागत",
-      "tags.label": "टैग"
+      "tags.label": "टैग",
+      "approvers.label": "अनुमोदन कर्मियों"
     },
     "sorters": {
       "dateAsc": "कक्रमबद्ध करें दिनांक ए एस सी",

@@ -351,6 +351,7 @@
   },
   "organizations.comp.related": {
     "title": "Связанные организации",
+    "linkTitle": "ru_Rel Org",
     "table.columns": {
       "associationType": "ru_Relationship",
       "type": "ru_Type",

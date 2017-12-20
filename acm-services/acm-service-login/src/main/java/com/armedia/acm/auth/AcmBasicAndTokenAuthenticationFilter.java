@@ -93,27 +93,28 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         AuthRequestType authRequestType = detectAuthRequestType(request);
         switch (authRequestType)
         {
-            case AUTH_REQUEST_TYPE_TOKEN:
-                tokenAuthentication(request, response);
-                break;
-            case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
-                emailTokenAuthentication(request);
-                break;
-            case AUTH_REQUEST_TYPE_CLIENT_CERT:
-                certificateAuthentication(request);
-                break;
-            case AUTH_REQUEST_TYPE_BASIC:
-                basicAuthentication(request, response, chain);
-                return; // need to return here, Spring filter forwards down the chain itself
-            case AUTH_REQUEST_TYPE_OTHER:
-            default:
-                break;
+        case AUTH_REQUEST_TYPE_TOKEN:
+            tokenAuthentication(request, response);
+            break;
+        case AUTH_REQUEST_TYPE_EMAIL_TOKEN:
+            emailTokenAuthentication(request);
+            break;
+        case AUTH_REQUEST_TYPE_CLIENT_CERT:
+            certificateAuthentication(request);
+            break;
+        case AUTH_REQUEST_TYPE_BASIC:
+            basicAuthentication(request, response, chain);
+            return; // need to return here, Spring filter forwards down the chain itself
+        case AUTH_REQUEST_TYPE_OTHER:
+        default:
+            break;
         }
         chain.doFilter(request, response);
     }
 
     @Override
-    public void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult) throws IOException
+    public void onSuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, Authentication authResult)
+            throws IOException
     {
         super.onSuccessfulAuthentication(request, response, authResult);
 
@@ -142,7 +143,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             SecurityContextHolder.getContext().setAuthentication(auth);
             onSuccessfulAuthentication(request, response, auth);
             log.trace("User [{}] successfully authenticated using acm_ticket [{}]", auth.getName(), token);
-        } catch (IllegalArgumentException | ServletRequestBindingException e)
+        }
+        catch (IllegalArgumentException | ServletRequestBindingException e)
         {
             SecurityContextHolder.clearContext();
             log.warn("Authentication request failed", e);
@@ -187,16 +189,20 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                                 authenticationToken.setModifier(authenticationToken.getCreator());
                                 authenticationToken.setModified(new Date());
                                 getAuthenticationTokenDao().save(authenticationToken);
-                                log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken, authenticationToken.getCreator());
+                                log.warn("Authentication token acm_email_ticket [{}] for user [{}] expired", emailToken,
+                                        authenticationToken.getCreator());
                                 return;
                             }
                             try
                             {
                                 authenticateUser(request, authenticationToken.getCreator());
-                                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]", authenticationToken.getCreator(), emailToken);
-                            } catch (MuleException e)
+                                log.trace("User [{}] successfully authenticated using acm_email_ticket [{}]",
+                                        authenticationToken.getCreator(), emailToken);
+                            }
+                            catch (MuleException e)
                             {
-                                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(), emailToken);
+                                log.warn("User [{}] failed authenticating using acm_email_ticket [{}]", authenticationToken.getCreator(),
+                                        emailToken);
                             }
                         }
                     }
@@ -215,7 +221,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         log.trace("Starting client certificate authentication");
         X509Certificate clientCert = extractX509ClientCertificate(request);
         // if using client certificate and not already authenticated
-        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication().isAuthenticated())
+        if (SecurityContextHolder.getContext().getAuthentication() != null && SecurityContextHolder.getContext().getAuthentication()
+                .isAuthenticated())
         {
             return;
         }
@@ -226,7 +233,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             authenticateUser(request, userId);
             log.trace("User [{}] successfully authenticated using client certificate", userId);
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.warn("User [{}] failed authenticating using client certificate", userId);
         }
@@ -239,7 +247,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
      * @param response HTTP servlet response
      * @param chain    Filter chain
      */
-    private void basicAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException
+    private void basicAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException
     {
         log.trace("Starting basic authentication");
         // let Spring Security's native basic authentication do the work.
@@ -266,10 +275,17 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
             {
                 for (int i = 0; i < docs.length(); i++)
                 {
-                    grantedAuthorities.add(new SimpleGrantedAuthority(searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME)));
+                    String groupName = searchResults.extractString(docs.getJSONObject(i), SearchConstants.PROPERTY_NAME);
+                    List<String> ascendants = searchResults.extractStringList(docs.getJSONObject(i), SearchConstants.PROPERTY_ASCENDANTS);
+                    GrantedAuthority authority = new SimpleGrantedAuthority(groupName);
+                    grantedAuthorities.add(authority);
+                    ascendants.stream()
+                            .map(SimpleGrantedAuthority::new)
+                            .forEach(grantedAuthorities::add);
                 }
             }
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId, acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId,
+                    acmGrantedAuthoritiesMapper.mapAuthorities(grantedAuthorities));
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             loginSuccessOperations.onSuccessfulAuthentication(request, authentication);
@@ -320,7 +336,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             log.trace("Client Certificate authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_CLIENT_CERT;
-        } else if (request.getParameter("Authorization") != null && request.getParameter("Authorization").startsWith("Basic "))
+        } else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Basic "))
         {
             log.trace("Basic authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_BASIC;

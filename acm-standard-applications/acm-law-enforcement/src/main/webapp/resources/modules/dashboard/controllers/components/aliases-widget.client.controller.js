@@ -14,9 +14,9 @@ angular.module('dashboard.aliases', ['adf.provider'])
             );
     })
     .controller('Dashboard.AliasesController', ['$scope', '$stateParams', '$translate',
-        'Person.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService',
-        function ($scope, $stateParams, $translate,
-                  PersonInfoService, HelperObjectBrowserService, HelperUiGridService) {
+        'Person.InfoService', 'Helper.ObjectBrowserService', 'Helper.UiGridService', 'Object.ModelService'
+        ,function ($scope, $stateParams, $translate,
+                  PersonInfoService, HelperObjectBrowserService, HelperUiGridService, ObjectModelService) {
 
             var modules = [
                 {
@@ -63,6 +63,10 @@ angular.module('dashboard.aliases', ['adf.provider'])
                 });
                 gridHelper.setColumnDefs(widgetInfo);
             };
+
+            $scope.isDefault = function (data) {
+                return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultAlias");
+            }
 
         }
     ]);

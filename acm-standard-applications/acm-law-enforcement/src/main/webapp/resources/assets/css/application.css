@@ -297,6 +297,10 @@ span.fancytree-title {
 
 /* Navigation List (Grouped)  */
 
+.list-group-item-inactive-icon {
+    color: orange;
+}
+
 .list-group-item {
     cursor: pointer;
     cursor: hand;
@@ -363,7 +367,21 @@ span.fancytree-title {
 }
 
 .ui-contextmenu {
-	z-index: 3001;
+    z-index: 3001;
+}
+
+
+.docTreeMenu {
+    font-size: 100%;
+}
+.docTreeMenu ul {
+    width: 240px;
+}
+.docTreeMenu ul li {
+    /* white-space: nowrap; */
+}
+.docTreeMenu kbd {
+    float: right;
 }
 
 .module-header .btn-group {
@@ -704,7 +722,7 @@ thead {
 }
 
 .ui-grid a.btn {
-    display: initial;
+    display: inline;
 }
 
 /* Dates Padding Issues */
@@ -734,6 +752,9 @@ thead {
 	text-overflow: ellipsis;
 	overflow: hidden;
 	position: relative;
+}
+.ui-grid-cell-anchor {
+    display: inline;
 }
 
 /*.ui-grid .ui-grid-cell div:hover {
