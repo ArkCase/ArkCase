@@ -433,6 +433,7 @@
       "cancel": "キャンセル",
       "activate": "アクティブにする"
     },
+    "workflows.config.noHistory": "ja_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "ビジネスプロセス",
       "description": "説明",
