@@ -27,7 +27,6 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
                     console.error("Unknown lookup type!");
                     break;
             }
-
             $scope.$broadcast('lookup-def-selected', $scope.selectedLookupDef);
         };
 
@@ -44,7 +43,7 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
                 $scope.selectedLookupDef = $scope.lookupsDefs[index];
                 $scope.selectLookupDef($scope.selectedLookupDef);
             });
-        }
+        };
 
         $scope.getLookups();
 
@@ -109,7 +108,7 @@ angular.module('admin').controller('Admin.LookupsConfigController', ['$scope', '
 
                 var found = _.find($scope.lookupsDefs, {name: $scope.entry.name});
                 if (!Util.isEmpty(found)) {
-                    MessageService.info("Lookup with this name already exists!");
+                    MessageService.error($translate.instant('admin.application.lookups.config.lookupExists.error'));
                 } else {
                     saveLookup();
                 }
