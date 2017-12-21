@@ -28,10 +28,18 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                 scope.downloadInProgress = false;
 
                 scope.tmpSelectedNodes = [];
-                scope.$bus.subscribe('docTreeNodeChecked', function () {
+                var updateSelectedNodesList = function(){
                     $timeout(function(){
                         scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
                     }, 500);
+                };
+                
+                scope.$bus.subscribe('docTreeNodeChecked', function () {
+                    updateSelectedNodesList();
+                });
+
+                scope.$bus.subscribe('toggleAllNodesChecked', function () {
+                    updateSelectedNodesList();
                 });
 
                 var downloadFile = function(data){
