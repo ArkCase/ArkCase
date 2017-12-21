@@ -433,6 +433,7 @@
       "cancel": "Отмена",
       "activate": "Сделать активным"
     },
+    "workflows.config.noHistory": "ru_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Бизнес-процесс",
       "description": "Описание",
