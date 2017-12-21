@@ -31,7 +31,7 @@ angular.module('directives').directive('downloadAllAsZip', ['MessageService', 'U
                 var updateSelectedNodesList = function(){
                     $timeout(function(){
                         scope.tmpSelectedNodes = scope.treeControl.getSelectedNodes();
-                    }, 500);
+                    }, 0);
                 };
                 
                 scope.$bus.subscribe('docTreeNodeChecked', function () {
