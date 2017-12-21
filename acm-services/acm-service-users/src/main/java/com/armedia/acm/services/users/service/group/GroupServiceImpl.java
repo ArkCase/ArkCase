@@ -434,7 +434,7 @@ public class GroupServiceImpl implements GroupService
         AcmGroup parent = groupDao.findByName(parentId);
         if (parent == null)
         {
-            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found", null);
+            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found.", null);
         }
 
         // If supervisor for the subgroup is empty, get from the parent group
