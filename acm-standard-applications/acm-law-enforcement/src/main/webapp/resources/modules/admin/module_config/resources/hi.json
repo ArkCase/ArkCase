@@ -433,6 +433,7 @@
       "cancel": "रद्द करना",
       "activate": "सक्रिय बनाना"
     },
+    "workflows.config.noHistory": "hi_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "व्यापार प्रक्रिया",
       "description": "विवरण",
