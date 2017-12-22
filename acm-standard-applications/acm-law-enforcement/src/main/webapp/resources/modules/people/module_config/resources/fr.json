@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Rel Les gens",
+    "title": "Personnes apparentées",
+    "linkTitle": "Personnes apparentées",
     "table.columns": {
       "firstName": "Prénom",
       "lastName": "Nom de famille",

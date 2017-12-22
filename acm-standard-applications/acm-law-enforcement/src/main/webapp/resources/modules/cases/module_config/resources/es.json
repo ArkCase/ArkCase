@@ -64,7 +64,7 @@
   },
   "cases.comp.actions": {
     "title": "Acciones",
-    "restrict": "Restringir?",
+    "restrict": "¿Restringir?",
     "new.button": "Nuevo",
     "edit.button": "Editar",
     "status.button": "Cambiar estado del caso",
@@ -78,205 +78,168 @@
   },
   "cases.comp.details": {
     "title": "Detalles",
-    "informSaved": "es_Case details saved",
+    "informSaved": "Detalles del caso guardados",
     "table.columns": {
-      "title": "es_Details",
-      "modified": "es_Date Last Modified",
-      "modifier": "es_User Last Modified"
+      "title": "Detalles",
+      "modified": "Fecha de última modificación",
+      "modifier": "Última modificación del usuario"
     }
   },
   "cases.comp.documents": {
     "title": "Documentos",
-    "sendEmail": "es_Send Email",
-    "filterInputPlaceholder": "es_Filter",
-    "searchInputPlaceholder": "es_Search"
+    "sendEmail": "Enviar correo electrónico",
+    "filterInputPlaceholder": "Filtrar",
+    "searchInputPlaceholder": "Buscar",
+    "menu": {
+      "forms": {
+        "info%": "Información",
+        "rptInvestigation%": "Informe de investigación",
+        "ecomm%": "Comunicación electrónica"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitación por correspondencia",
+        "approvalLetter%": "Carta de aprobación",
+        "medicalRelease%": "Lanzamiento medico",
+        "generalRelease%": "Liberación General",
+        "clearanceGranted%": "Autorización otorgada",
+        "clearanceDenied%": "Autorización denegada",
+        "noticeInvestigation%": "Aviso de investigación",
+        "witnessInterview%": "Solicitud de entrevista de testigos",
+        "witnessInterview2%": "Solicitud de entrevista de testigo-2.0"
+      }
+    },
+    "newTask": "Nueva tarea"
   },
   "cases.comp.people": {
     "title": "Personas",
     "table.columns": {
-      "entity": "es_Entity",
-      "type": "es_Type",
-      "firstName": "es_FirstName",
-      "lastName": "es_LastName"
-    },
-    "contactMethods": {
-      "title": "es_ContactMethods",
-      "table.columns": {
-        "type": "es_Type",
-        "value": "es_Value",
-        "created": "es_Date Added",
-        "creator": "es_Added By",
-        "modified": "es_Last Modified",
-        "modifier": "es_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organizaciones",
-      "table.columns": {
-        "type": "es_Type",
-        "value": "es_Value",
-        "created": "es_Date Added",
-        "creator": "es_Added By",
-        "modified": "es_Last Modified",
-        "modifier": "es_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "es_Locations",
-      "table.columns": {
-        "type": "es_Type",
-        "streetAddress": "es_Address",
-        "city": "es_City",
-        "state": "es_State",
-        "zip": "es_Zip",
-        "country": "es_Country",
-        "created": "es_Date Added",
-        "creator": "es_Added By",
-        "modified": "es_Last Modified",
-        "modifier": "es_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "es_Aliases",
-      "table.columns": {
-        "type": "es_Type",
-        "value": "es_Value",
-        "created": "es_Date Added",
-        "creator": "es_Added By",
-        "modified": "es_Last Modified",
-        "modifier": "es_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "es_Security Tags",
-      "table.columns": {
-        "type": "es_Type",
-        "value": "es_Value",
-        "created": "es_Date Added",
-        "creator": "es_Added By",
-        "modified": "es_Last Modified",
-        "modifier": "es_Modified By"
-      }
+      "entity": "Entidad",
+      "type": "Papel",
+      "firstName": "Nombre de pila",
+      "lastName": "Apellido",
+      "organization": "Organización",
+      "phone": "Teléfono",
+      "location": "Ubicación"
     }
   },
   "cases.comp.organizations": {
     "title": "Organizaciones",
     "table.columns": {
-      "name": "es_Organization Name",
-      "associationType": "es_Role",
-      "type": "es_Organization Type",
-      "identification": "es_ID",
-      "value": "es_Organization",
-      "contact": "es_Primary Contact",
-      "phone": "es_Phone",
-      "location": "es_Location"
+      "name": "Nombre de la Organización",
+      "associationType": "Papel",
+      "type": "Tipo de organización",
+      "identification": "CARNÉ DE IDENTIDAD",
+      "value": "Organización",
+      "contact": "Contacto primario",
+      "phone": "Teléfono",
+      "location": "Ubicación"
     }
   },
   "cases.comp.participants": {
     "title": "Participantes",
     "table.columns": {
-      "type": "es_Type",
-      "name": "es_Name"
+      "type": "Tipo",
+      "name": "Nombre"
     },
     "dialogUserPicker": {
-      "header": "es_Choose User",
+      "header": "Elija usuario",
       "table.columns": {
-        "name": "es_Name",
-        "type": "es_Type",
-        "title": "es_Title",
-        "id": "es_Username"
+        "name": "Nombre",
+        "type": "Tipo",
+        "title": "Título",
+        "id": "Nombre de usuario"
       }
     },
     "dialogGroupPicker": {
-      "header": "es_Choose Group",
+      "header": "Elige Grupo",
       "table.columns": {
-        "name": "es_Name"
+        "name": "Nombre"
       }
     }
   },
   "cases.comp.notes": {
     "title": "Notas",
     "table.columns": {
-      "note": "es_Note",
-      "created": "es_Created",
-      "creator": "es_Author"
+      "note": "Nota",
+      "created": "Creado",
+      "creator": "Autor"
     }
   },
   "cases.comp.tasks": {
     "title": "Tareas",
     "table.columns": {
-      "title": "es_Title",
-      "assignee": "es_Assignee",
-      "created": "es_Created",
-      "priority": "es_Priority",
-      "due": "es_Due",
-      "status": "es_Status"
+      "title": "Título",
+      "assignee": "Cesionario",
+      "created": "Creado",
+      "priority": "Prioridad",
+      "due": "Debido",
+      "status": "Estado"
     },
-    "table.overdue.tooltip": "es_Task is Overdue",
-    "table.deadline.tooltip": "es_Deadline is Approaching"
+    "table.overdue.tooltip": "La tarea está vencida",
+    "table.deadline.tooltip": "La fecha límite se acerca"
   },
   "cases.comp.references": {
     "title": "Referencias",
     "table.columns": {
-      "targetName": "es_Number",
-      "parentName": "es_Parent",
-      "targetTitle": "es_Title",
-      "modified": "es_Modified",
-      "targetType": "es_Reference Type",
-      "status": "es_Status"
+      "targetName": "Número",
+      "targetTitle": "Título",
+      "targetType": "Tipo",
+      "assignee": "Cesionario",
+      "modified": "Modificado",
+      "status": "Estado"
     }
   },
   "cases.comp.history": {
     "title": "Historia",
     "table.columns": {
-      "eventType": "es_Event Name",
-      "eventDate": "es_Date",
-      "userId": "es_User"
+      "eventType": "Nombre del evento",
+      "eventDate": "Fecha",
+      "userId": "Usuario"
     }
   },
   "cases.comp.time": {
     "title": "Tiempo",
     "table.columns": {
-      "name": "es_Form Name",
-      "user": "es_User",
-      "tally": "es_Total Hours",
-      "modified": "es_Modified Date",
-      "status": "es_Status"
+      "name": "Nombre del formulario",
+      "user": "Usuario",
+      "tally": "Horas totales",
+      "modified": "Fecha modificada",
+      "status": "Estado"
     },
-    "formNamePrefix": "es_Timesheet"
+    "formNamePrefix": "Parte de horas"
   },
   "cases.comp.cost": {
     "title": "Costo",
     "table.columns": {
-      "name": "es_Form Name",
-      "user": "es_User",
-      "tally": "es_Total Cost",
-      "modified": "es_Modified Date",
-      "status": "es_Status"
+      "name": "Nombre del formulario",
+      "user": "Usuario",
+      "tally": "Coste total",
+      "modified": "Fecha modificada",
+      "status": "Estado"
     },
-    "formNamePrefix": "es_Costsheet"
+    "formNamePrefix": "Hoja de coste"
   },
   "cases.comp.tags": {
     "title": "Etiquetas",
     "table.columns": {
-      "tag": "es_Tag",
-      "created": "es_Created",
-      "createdBy": "es_Created By"
+      "tag": "Etiqueta",
+      "created": "Creado",
+      "createdBy": "Creado por"
     },
     "modal": {
-      "title": "es_Tag",
-      "search": "es_Search for Tag",
+      "title": "Etiqueta",
+      "search": "Buscar etiqueta",
       "buttons": {
-        "cancel": "es_Cancel",
-        "ok": "es_Add Tag"
+        "cancel": "Cancelar",
+        "ok": "Añadir etiqueta"
       }
     },
     "message": {
-      "tagExists": "es_Tag with that name or description or text already exists",
-      "tagAssociated": "es_already associated",
+      "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
+      "tagAssociated": "Ya asociado",
       "delete": {
-        "success": "es_Tag deleted successfully",
-        "error": "es_Error deleting tag"
+        "success": "Tag eliminado con éxito",
+        "error": "Error al eliminar la etiqueta"
       }
     }
   },
@@ -284,104 +247,130 @@
     "title": "Calendario"
   },
   "cases.comp.merge": {
-    "id": "es_merge",
-    "title": "es_Merge",
-    "cancel.btn": "es_Cancel",
-    "merge.btn": "es_Merge",
-    "search.placeholder": "es_Search for case file.",
-    "search.btn": "es_Search",
-    "enabled": true,
+    "id": "Unir",
+    "title": "Unir",
+    "cancel.btn": "Cancelar",
+    "merge.btn": "Unir",
+    "search.placeholder": "Busque el archivo de caso.",
+    "search.btn": "Buscar",
     "table.columns": {
-      "incident": "es_Type",
-      "name": "es_Name",
-      "assignee": "es_Assignee",
-      "title": "es_Title",
-      "parent": "es_Parent",
-      "modified": "es_Modified"
+      "incident": "Tipo",
+      "name": "Nombre",
+      "assignee": "Cesionario",
+      "title": "Título",
+      "parent": "Padre",
+      "modified": "Modificado"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Búsqueda de referencia"
+  },
   "cases.comp.split": {
-    "title": "es_Split",
-    "cancel": "es_Cancel",
-    "split": "es_Split"
+    "title": "División",
+    "cancel": "Cancelar",
+    "split": "División"
   },
   "cases.comp.addreference": {
-    "title": "es_Add Reference",
-    "cancelButton": "es_Cancel",
-    "confirmButton": "es_Add",
+    "title": "Añadir referencia",
+    "cancelButton": "Cancelar",
+    "confirmButton": "Añadir",
     "search": {
-      "placeholder": "es_Search for case, complaint, file, task",
-      "btn": "es_Search"
+      "placeholder": "Buscar caso, queja, archivo, tarea",
+      "btn": "Buscar"
     },
     "grid": {
       "columns": {
-        "id": "es_Id",
-        "name": "es_Name",
-        "type": "es_Type",
-        "title": "es_Title",
-        "parent": "es_Parent",
-        "assignee": "es_Assignee",
-        "modified": "es_Modified"
+        "id": "Carné de identidad",
+        "name": "Nombre",
+        "type": "Tipo",
+        "title": "Título",
+        "parent": "Padre",
+        "assignee": "Cesionario",
+        "modified": "Modificado"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "es_Change Assignee",
-    "assigneeNamelabel": "es_Assignee Name",
-    "btnCancelText": "es_Cancel",
-    "btnSaveText": "es_Save",
-    "searchAssigneeHeader": "es_Search Assignee"
+    "title": "Cambiar asignatario",
+    "assigneeNamelabel": "Nombre del asignado",
+    "btnCancelText": "Cancelar",
+    "btnSaveText": "Salvar",
+    "searchAssigneeHeader": "Buscar asignatario"
   },
   "cases.comp.groupPickerModal": {
-    "title": "es_Change Group",
-    "groupNamelabel": "es_Group Name",
-    "btnCancelText": "es_Cancel",
-    "btnSaveText": "es_Save",
-    "searchGroupHeader": "es_Search Group"
+    "title": "Cambiar grupo",
+    "groupNamelabel": "Nombre del grupo",
+    "btnCancelText": "Cancelar",
+    "btnSaveText": "Salvar",
+    "searchGroupHeader": "Grupo de búsqueda"
   },
   "cases.comp.approvalRouting": {
-    "title": "Ruta de Aprobación",
-    "addNewTooltip": "es_Add new approver",
-    "noBuckslipMessage": "es_No Data",
+    "title": "Aprobadores",
+    "addNewTooltip": "Agregar nuevo aprobador",
+    "noBuckslipMessage": "Sin datos",
+    "processInitialize.successfull": "Proceso Inicializado",
+    "processInitialize.fail": "Proceso no inicializado",
+    "processWithdraw.successfull": "Proceso retirado",
+    "processWithdraw.fail": "Proceso no retirado",
+    "businessProcessUpdate.successfull": "Aprobación del enrutamiento actualizado",
+    "businessProcessUpdate.fail": "Aprobación del enrutamiento no actualizado",
     "button": {
-      "save.tooltip": "es_Save Changes"
+      "save.tooltip": "Guardar cambios",
+      "initiate.tooltip": "Iniciar tarea",
+      "withdraw.tooltip": "Retirar Tarea"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "No concurrente finaliza el ciclo de aprobación"
     },
     "table.columns": {
-      "fullName": "es_Full Name"
+      "assignee": "Cesionario",
+      "group": "Poseer grupo",
+      "subject": "Tema",
+      "details": "Detalles",
+      "dueDate": "Fecha de vencimiento",
+      "status": "Estado",
+      "addedBy": "Añadido por"
     },
-    "assignee.label": "es_Assignee",
-    "owningGroup.label": "es_Owning Group",
-    "priority.label": "es_Priority",
-    "startDate.label": "es_Start Date",
-    "dueDate.label": "es_Due Date",
-    "state.label": "es_State"
+    "assignee.label": "Cesionario",
+    "owningGroup.label": "Poseer grupo",
+    "priority.label": "Prioridad",
+    "startDate.label": "Fecha de inicio",
+    "dueDate.label": "Fecha de vencimiento",
+    "state.label": "Estado",
+    "future.task.modal": {
+      "title": "Nueva tarea futura",
+      "assignee": "Cesionario",
+      "subject.label": "Tema",
+      "subject.placeholder": "Ingrese el asunto futuro del caso",
+      "details.label": "Detalles",
+      "cancel.button": "Cancelar",
+      "save.button": "Salvar"
+    }
   },
   "cases.comp.pastApprovals": {
-    "title": "Aprobaciones anteriores",
-    "noBuckslipMessage": "es_No Data",
+    "title": "Aprobadores anteriores",
+    "noBuckslipMessage": "Sin datos",
     "table.columns": {
-      "approvalDate": "es_Approval Date",
-      "approverId": "es_Approver",
-      "approverFullName": "es_Approver",
-      "approverDecision": "es_Approver Decision"
+      "approvalDate": "Fecha de aprobación",
+      "approverId": "Aprobador",
+      "approverFullName": "Aprobador",
+      "approverDecision": "Aprobación de la decisión"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "es_userSearch",
-    "title": "es_User/Group Search",
+    "id": "UserSearch",
+    "title": "Búsqueda de usuario / grupo",
     "search": {
-      "btn": "es_Search",
-      "placeholder": "es_Search for the user or group."
+      "btn": "Buscar",
+      "placeholder": "Busque el usuario o grupo."
     },
-    "cancelButton": "es_Cancel",
-    "confirmButton": "es_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "es_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Cancelar",
+    "confirmButton": "Confirmar",
     "assigneeGridColumns": {
-      "name": "es_Name",
-      "type": "es_Type",
-      "title": "es_Title",
-      "username": "es_Username"
+      "name": "Nombre",
+      "type": "Tipo",
+      "title": "Título",
+      "username": "Nombre de usuario"
     }
   },
   "cases.tree": {

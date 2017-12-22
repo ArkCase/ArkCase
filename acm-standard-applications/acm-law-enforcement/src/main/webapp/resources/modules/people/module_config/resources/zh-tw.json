@@ -371,6 +371,7 @@
   },
   "people.comp.related": {
     "title": "相關人士",
+    "linkTitle": "相關人士",
     "table.columns": {
       "firstName": "名字",
       "lastName": "姓",

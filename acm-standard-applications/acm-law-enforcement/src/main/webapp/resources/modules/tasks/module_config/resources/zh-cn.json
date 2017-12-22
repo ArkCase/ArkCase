@@ -47,7 +47,8 @@
     },
     "timesheet": {
       "approver.label": "审批者"
-    }
+    },
+    "_xxx_courtRoomName": "法院房间名称："
   },
   "tasks.comp.actions": {
     "title": "行动",
@@ -70,264 +71,285 @@
     }
   },
   "tasks.comp.details": {
-    "title": "详情",
-    "informSaved": "zh-cn_Task details saved",
+    "title": "任务详情",
+    "informSaved": "任务详情保存",
     "table.columns": {
-      "details": "zh-cn_Details",
-      "modified": "zh-cn_Date Last Modified",
-      "modifier": "zh-cn_User Last Modified"
+      "details": "详情",
+      "modified": "上次修改日期",
+      "modifier": "上次修改用户"
     }
   },
   "tasks.comp.reworkdetails": {
     "title": "重做详情",
-    "informSaved": "zh-cn_Rework details saved",
+    "informSaved": "返工细节保存",
     "table.columns": {
-      "title": "zh-cn_Rework Details",
-      "modified": "zh-cn_Date Last Modified",
-      "modifier": "zh-cn_User Last Modified"
+      "title": "返工细节",
+      "modified": "上次修改日期",
+      "modifier": "用户上次修改"
     }
   },
   "tasks.comp.parentdocs": {
     "title": "原属文件",
-    "noParentDataMessage": "zh-cn_No parent documents for standalone task",
-    "sendEmail": "zh-cn_Send Email",
-    "filterInputPlaceholder": "zh-cn_Filter",
-    "searchInputPlaceholder": "zh-cn_Search"
+    "noParentDataMessage": "独立任务没有父文档",
+    "sendEmail": "发电子邮件",
+    "filterInputPlaceholder": "过滤",
+    "searchInputPlaceholder": "搜索",
+    "folderName": "文件夹名称"
   },
   "tasks.comp.attachments": {
     "title": "附件",
-    "sendEmail": "zh-cn_Send Email",
-    "filterInputPlaceholder": "zh_cn_Filter",
-    "searchInputPlaceholder": "zh-cn_Search"
+    "sendEmail": "发电子邮件",
+    "filterInputPlaceholder": "过滤",
+    "searchInputPlaceholder": "搜索"
   },
   "tasks.comp.notes": {
     "title": "注释",
     "table.columns": {
-      "note": "zh-cn_Note",
-      "created": "zh-cn_Created",
-      "creator": "zh-cn_Author"
+      "note": "注释",
+      "created": "创建",
+      "creator": "作者"
     }
   },
   "tasks.comp.references": {
     "title": "参考",
     "table.columns": {
-      "targetName": "zh-cn_Number",
-      "targetTitle": "zh-cn_Title",
-      "modified": "zh-cn_Modified",
-      "targetType": "zh-cn_Reference Type",
-      "status": "zh-cn_Status"
+      "targetName": "数据",
+      "targetTitle": "标题",
+      "targetType": "类型",
+      "assignee": "指定人员",
+      "modified": "更改日期",
+      "status": "状态"
     }
   },
   "tasks.comp.rejcomments": {
     "title": "回绝说明",
     "table.columns": {
-      "note": "zh-cn_Comment",
-      "created": "zh-cn_Created",
-      "creator": "zh-cn_Author"
+      "note": "评论",
+      "created": "创建",
+      "creator": "作者"
     }
   },
   "tasks.comp.workflow": {
     "title": "流程概述",
     "table.columns": {
-      "participant": "zh-cn_Participant",
-      "role": "zh-cn_Role",
-      "status": "zh-cn_Status",
-      "startDateTime": "zh-cn_Start",
-      "endDateTime": "zh-cn_End"
+      "participant": "参加者",
+      "role": "角色",
+      "status": "状态",
+      "startDateTime": "开始",
+      "endDateTime": "结束"
     }
   },
   "tasks.comp.diagram": {
-    "title": "zh-cn_Process Diagram",
-    "error.loading": "zh-cn_Diagram can't be loaded"
+    "title": "流程图",
+    "error.loading": "无法加载流程图"
   },
   "tasks.comp.signatures": {
     "title": "电子签名",
     "table.columns": {
-      "signedDate": "zh-cn_Date",
-      "signedBy": "zh-cn_Signed By"
+      "signedDate": "签字日期",
+      "signedBy": "签字人"
     }
   },
   "tasks.comp.docsreview": {
     "title": "审查文件",
     "table.columns": {
-      "fileId": "zh-cn_ID",
-      "fileName": "zh-cn_Title",
-      "created": "zh-cn_Created",
-      "creator": "zh-cn_Author",
-      "status": "zh-cn_Status"
+      "fileId": "识别号",
+      "fileName": "标题",
+      "created": "创建",
+      "creator": "作者",
+      "status": "状态"
     }
   },
   "tasks.comp.history": {
     "title": "历史",
     "table.columns": {
-      "eventType": "zh-cn_Event Name",
-      "eventDate": "zh-cn_Date",
-      "userId": "zh-cn_User"
+      "eventType": "事件名称",
+      "eventDate": "事件日期",
+      "userId": "用户"
     }
   },
   "tasks.comp.tags": {
     "title": "标签",
     "table.columns": {
-      "tag": "zh-cn_Tag",
-      "created": "zh-cn_Created",
-      "createdBy": "zh-cn_Created By"
+      "tag": "标签",
+      "created": "创建日期",
+      "createdBy": "创建人"
     },
     "modal": {
       "title": "标签",
-      "search": "zh-cn_Search for Tag",
+      "search": "搜索标签",
       "buttons": {
-        "cancel": "zh-cn_Cancel",
-        "ok": "zh-cn_Add Tag"
+        "cancel": "取消",
+        "ok": "添加标签"
       }
     },
     "message": {
-      "tagExists": "zh-cn_Tag with that name or description or text already exists",
-      "tagAssociated": "zh-cn_already associated",
+      "tagExists": "具有该名称或说明或文字的标签已经存在",
+      "tagAssociated": "已经关联",
       "delete": {
-        "success": "zh-cn_Tag deleted successfully",
-        "error": "zh-cn_Error deleting tag"
+        "success": "标记已成功删除",
+        "error": "删除标签时出错"
       }
     }
   },
   "tasks.newTask": {
-    "title": "zh-cn_New Task",
-    "assignee.button": "zh-cn_Choose Assignee",
-    "assignee.label": "zh-cn_Assign To",
-    "assignee.placeholder": "zh-cn_Please choose assignee",
-    "assigneeOrGroup.placeholder": "zh-cn_Please choose assignee or group",
-    "candidateGroups.label": "zh-cn_Owning group",
-    "priority.placeholder": "zh-cn_Select Priority",
-    "priority.label": "zh-cn_Priority",
-    "status.placeholder": "zh-cn_Select Status",
-    "status.label": "zh-cn_Status",
-    "associateNumber.label": "zh-cn_Associate with Complaint or Case",
-    "associateNumber.placeholder": "zh-cn_Complaint or Case #",
-    "associateType.label": "zh-cn_Parent Type",
-    "subject.label": "zh-cn_Subject",
-    "taskStartDate.label": "zh-cn_Start Date",
-    "dueDate.label": "zh-cn_Due Date",
-    "datepicker.close": "zh-cn_Done",
-    "percentComplete.label": "zh-cn_% Complete",
-    "notes.label": "zh-cn_Notes",
-    "saveButton": "zh-cn_Save",
-    "overdue.tooltip": "zh-cn_Task is Overdue",
-    "deadline.tooltip": "zh-cn_Deadline is Approaching",
-    "groupToggle.label": "zh-cn_Group Task?",
-    "group.placeholder": "zh-cn_Please select a group."
+    "title": "新任务",
+    "assignee.button": "选择指定人员",
+    "assignee.label": "指定人员",
+    "assignee.placeholder": "请选择指定人",
+    "assigneeOrGroup.placeholder": "请选择指定人或群组",
+    "candidateGroups.label": "拥有群组",
+    "priority.placeholder": "选择优先级别",
+    "priority.label": "优先级别",
+    "status.placeholder": "选择状态",
+    "status.label": "状态",
+    "associateNumber.label": "与投诉或案件相关联",
+    "associateNumber.placeholder": "投诉或案件＃",
+    "associateType.label": "原属类型",
+    "subject.label": "主题",
+    "taskStartDate.label": "开始日期",
+    "dueDate.label": "截止日期",
+    "datepicker.close": "完成",
+    "percentComplete.label": "完成百分比",
+    "notes.label": "注释",
+    "saveButton": "保存任务",
+    "cancelButton": "取消",
+    "overdue.tooltip": "任务已过期",
+    "deadline.tooltip": "截止日期即将到来",
+    "groupToggle.label": "群组任务？",
+    "group.placeholder": "请选择一个群组。",
+    "documentsToReview.label": "要审查的文件",
+    "businessProcessTypes.label": "业务流程类型",
+    "noSelectedDocsErrorMsg": "请至少选择一个文件进行审查。"
   },
   "tasks.userOrGroupSearch": {
-    "id": "zh-cn_userSearch",
-    "title": "zh-cn_User/Group Search",
+    "id": "userSearch",
+    "title": "用户/群组搜索",
     "search": {
-      "btn": "zh-cn_Search",
-      "placeholder": "zh-cn_Search for the user or group to assign to this task."
+      "btn": "搜索",
+      "placeholder": "搜索要分配给此任务的用户或群组。"
     },
-    "pickUserLabel": "zh-cn_Pick Associated User",
-    "pickGroupLabel": "zh-cn_Pick Associated Group",
-    "cancelButton": "zh-cn_Cancel",
-    "confirmButton": "zh-cn_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "zh-cn_\"object_type_s\":(GROUP OR USER)",
+    "pickUserLabel": "选择关联用户",
+    "pickGroupLabel": "选择关联群组",
+    "cancelButton": "取消",
+    "confirmButton": "确认",
     "assigneeGridColumns": {
-      "name": "zh-cn_Name",
-      "type": "zh-cn_Type",
-      "title": "zh-cn_Title",
-      "username": "zh-cn_Username"
+      "name": "名称",
+      "type": "类型",
+      "title": "标题",
+      "username": "用户名"
+    }
+  },
+  "tasks.owningGroupSearch": {
+    "id": "owningGroupSearch",
+    "title": "搜索此用户的群组",
+    "search": {
+      "btn": "搜索",
+      "placeholder": "搜索该用户是其成员的群组。"
+    },
+    "cancelButton": "取消",
+    "confirmButton": "确认",
+    "assigneeGridColumns": {
+      "name": "名称",
+      "type": "类型",
+      "title": "标题",
+      "username": "用户名"
     }
   },
   "tasks.objectSearch": {
-    "id": "zh-cn_objectSearch",
-    "title": "zh-cn_Object Search",
+    "id": "objectSearch",
+    "title": "对象搜索",
     "search": {
-      "btn": "zh-cn_Search",
-      "placeholder": "zh-cn_Search for the case or complaint to this task."
+      "btn": "搜索",
+      "placeholder": "搜索该任务的案件或投诉。"
     },
-    "cancelButton": "zh-cn_Cancel",
-    "confirmButton": "zh-cn_Confirm",
-    "enabled": true,
-    "userFacetFilter": "zh-cn_\"Object Type\": ",
+    "cancelButton": "取消",
+    "confirmButton": "确认",
     "objectGridColumns": {
-      "name": "zh-cn_Number",
-      "type": "zh-cn_Type",
-      "title": "zh-cn_Title",
-      "username": "zh-cn_Assignee"
+      "name": "数据",
+      "type": "类型",
+      "title": "标题",
+      "username": "指定人员"
     }
   },
+  "tasks.referenceSearchGrid": {
+    "title": "参考搜索"
+  },
   "tasks.comp.addreference": {
-    "title": "zh-cn_Add Reference",
-    "cancelButton": "zh-cn_Cancel",
-    "confirmButton": "zh-cn_Add",
+    "title": "添加参考",
+    "cancelButton": "取消",
+    "confirmButton": "添加",
     "search": {
-      "placeholder": "zh-cn_Search for case, complaint, file, task",
-      "btn": "zh-cn_Search"
+      "placeholder": "搜索案件，投诉，文件，任务",
+      "btn": "搜索"
     },
     "grid": {
       "columns": {
-        "id": "zh-cn_Id",
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "parent": "zh-cn_Parent",
-        "assignee": "zh-cn_Assignee",
-        "modified": "zh-cn_Modified"
+        "id": "识别号",
+        "name": "名称",
+        "type": "类型",
+        "title": "标题",
+        "parent": "原属",
+        "assignee": "指定人员",
+        "modified": "更改日期"
       }
     }
   },
   "tasks.comp.participants": {
-    "title": "zh-cn_Participants",
+    "title": "参与者",
     "table.columns": {
-      "type": "zh-cn_Type",
-      "name": "zh-cn_Name"
+      "type": "类型",
+      "name": "名称"
     },
     "dialogUserPicker": {
-      "header": "zh-cn_Choose User",
+      "header": "选择用户",
       "table.columns": {
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type",
-        "title": "zh-cn_Title",
-        "id": "zh-cn_Username"
+        "name": "名称",
+        "type": "类型",
+        "title": "标题",
+        "id": "用户名"
       }
     },
     "dialogGroupPicker": {
-      "header": "zh-cn_Choose Group",
+      "header": "选择群组",
       "table.columns": {
-        "name": "zh-cn_Name"
+        "name": "名称"
       }
     }
   },
   "tasks.comp.assigneePickerModal": {
-    "title": "zh-cn_Change Assignee",
-    "assigneeNamelabel": "zh-cn_Assignee Name",
-    "btnCancelText": "zh-cn_Cancel",
-    "btnSaveText": "zh-cn_Save",
-    "searchAssigneeHeader": "zh-cn_Search Assignee"
+    "title": "更改指定人员",
+    "assigneeNamelabel": "指定人姓名",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchAssigneeHeader": "搜索指定人"
   },
   "tasks.comp.groupPickerModal": {
-    "title": "zh-cn_Change Group",
-    "groupNamelabel": "zh-cn_Group Name",
-    "btnCancelText": "zh-cn_Cancel",
-    "btnSaveText": "zh-cn_Save",
-    "searchGroupHeader": "zh-cn_Search Group"
+    "title": "更改群组",
+    "groupNamelabel": "群组名字",
+    "btnCancelText": "取消",
+    "btnSaveText": "保存",
+    "searchGroupHeader": "搜索群组"
   },
   "tasks.comp.approvalRouting": {
-    "title": "批准流程",
-    "addNewTooltip": "zh-cn_Add new approver",
-    "noBuckslipMessage": "No Data",
+    "title": "未来批准人",
+    "addNewTooltip": "添加新的批准者人",
+    "noBuckslipMessage": "没有数据",
     "button": {
-      "save.tooltip": "zh-cn_Save Changes"
+      "save.tooltip": "保存更改"
     },
     "table.columns": {
-      "fullName": "zh-cn_Full Name"
+      "fullName": "全名"
     }
   },
   "tasks.comp.pastApprovals": {
-    "title": "过去批准",
-    "noBuckslipMessage": "No Data",
+    "title": "过去批准人",
+    "noBuckslipMessage": "没有数据",
     "table.columns": {
-      "approvalDate": "zh-cn_Approval Date",
-      "approverId": "zh-cn_Approver",
-      "approverFullName": "zh-cn_Full Name",
-      "approverDecision": "zh-cn_Approver Decision"
+      "approvalDate": "批准日期",
+      "approverId": "批准人",
+      "approverFullName": "全名",
+      "approverDecision": "批准人决定"
     }
   },
   "tasks.tree": {
