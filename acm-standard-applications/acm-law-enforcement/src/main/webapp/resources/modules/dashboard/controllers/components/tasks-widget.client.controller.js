@@ -17,27 +17,11 @@ angular.module('dashboard.tasks', ['adf.provider'])
         function ($scope, $translate, $stateParams, $q,
                   Util, CaseInfoService, ComplaintInfoService, Authentication, DashboardService, ObjectService, ObjectTaskService, ConfigService, HelperObjectBrowserService, HelperUiGridService) {
 
-            var getChildTasks =  function (parentId){
-                var currentObjectId = parentId;
-                return ObjectTaskService.queryChildTasks(module.objectType, currentObjectId).then(function (data) {
-                    var tasks = data.response.docs;
-                    gridHelper.setWidgetsGridData(tasks);
-                });
-            };
-
+            var promiseConfig;
+            var promiseInfo;
             var modules = [
-                {
-                    name: "CASE_FILE",
-                    configName: "cases",
-                    getInfo: getChildTasks,
-                    objectType: ObjectService.ObjectTypes.CASE_FILE
-                },
-                {
-                    name: "COMPLAINT",
-                    configName: "complaints",
-                    getInfo: getChildTasks,
-                    objectType: ObjectService.ObjectTypes.COMPLAINT
-                }
+                {name: "CASE_FILE", configName: "cases", getInfo: ObjectTaskService.queryChildTasks, objectType: ObjectService.ObjectTypes.CASE_FILE}
+                , {name: "COMPLAINT", configName: "complaints", getInfo: ObjectTaskService.queryChildTasks, objectType: ObjectService.ObjectTypes.COMPLAINT}
             ];
 
             var module = _.find(modules, function (module) {
@@ -51,43 +35,28 @@ angular.module('dashboard.tasks', ['adf.provider'])
 
             var gridHelper = new HelperUiGridService.Grid({scope: $scope});
 
-            new HelperObjectBrowserService.Component({
-                scope: $scope
-                , stateParams: $stateParams
-                , moduleId: module.configName
-                , componentId: "main"
-                , retrieveObjectInfo: module.getInfo
-                , onObjectInfoRetrieved: function (objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
-                }
-                , onConfigRetrieved: function (componentConfig) {
-                    onConfigRetrieved(componentConfig);
-                }
-            });
+            var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
+            if (module && Util.goodPositive(currentObjectId, false)) {
+                promiseConfig = ConfigService.getModuleConfig(module.configName);
+                promiseInfo = module.getInfo(module.objectType, currentObjectId, 0, 5);
+                var promiseUsers = gridHelper.getUsers();
 
-            var onObjectInfoRetrieved = function (objectInfo) {
-                $scope.objectInfo = objectInfo;
-                if (module.objectType == ObjectService.ObjectTypes.CASE_FILE) {
-                    var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
-                    ObjectTaskService.queryChildTasks(module.objectType, currentObjectId).then(function (data) {
-                        var tasks = data.response.docs;
-                        gridHelper.setWidgetsGridData(tasks);
-                    });
-                }
-                else {
-                    var currentObjectId = Util.goodMapValue($scope.objectInfo, "complaintId");
-                    ObjectTaskService.queryChildTasks(module.objectType, currentObjectId).then(function (data) {
-                        var tasks = data.response.docs;
-                        gridHelper.setWidgetsGridData(tasks);
-                    });
-                }
-            };
+                $q.all([promiseConfig, promiseInfo, promiseUsers]).then(function (data) {
+                        var config = _.find(data[0].components, {id: "main"});
+                        var info = data[1];
+                        var widgetInfo = _.find(config.widgets, function (widget) {
+                            return widget.id === "tasks";
+                        });
+                        var tasks = info.response.docs;
 
-            var onConfigRetrieved = function (componentConfig) {
-                var widgetInfo = _.find(componentConfig.widgets, function (widget) {
-                    return widget.id === "tasks";
-                });
-                gridHelper.setColumnDefs(widgetInfo);
-            };
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
+                        gridHelper.setColumnDefs(widgetInfo);
+                        gridHelper.setWidgetsGridData(tasks);
+                    },
+                    function (err) {
+
+                    }
+                );
+            }
         }
     ]);
