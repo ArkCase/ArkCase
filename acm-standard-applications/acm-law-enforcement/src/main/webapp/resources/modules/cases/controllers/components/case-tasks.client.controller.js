@@ -46,12 +46,10 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
 
         var retrieveGridData = function () {
             var currentObjectId = Util.goodMapValue($scope.objectInfo, "id");
-            var exceptDeletedOnly = true;
             if (Util.goodPositive(currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE
                     , currentObjectId
                     , Util.goodValue($scope.start, 0)
-                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)
