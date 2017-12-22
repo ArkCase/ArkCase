@@ -31,7 +31,7 @@ angular.module('complaints').controller('Complaints.ApprovalRoutingController', 
             var currentObjectId = Util.goodMapValue(objectInfo, "complaintId");
             if (Util.goodPositive(currentObjectId, false)) {
                 //we can change this code with making backend service to return the task and make only one call to server
-                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT, currentObjectId).then(function (data) {
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT, currentObjectId, 0, 100, '', '').then(function (data) {
                     var tasks = data.response.docs;
                     var objectId = _.result(_.find(tasks, function (task) {
                         return task.status_s === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
