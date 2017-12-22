@@ -239,7 +239,7 @@ public class AcmGroupAPIController
 
     @RequestMapping(value = "/group/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveGroup(@RequestBody AcmGroup group) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
+    public AcmGroup saveGroup(@RequestBody AcmGroup group) throws AcmAppErrorJsonMsg
     {
         LOG.info("Saving ad-hoc group [{}]", group.getName());
         try
