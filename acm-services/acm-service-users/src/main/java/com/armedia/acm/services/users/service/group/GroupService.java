@@ -24,7 +24,7 @@ public interface GroupService
 
     AcmGroup saveAndFlush(AcmGroup group);
 
-    AcmGroup createGroup(AcmGroup group) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
+    AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to
