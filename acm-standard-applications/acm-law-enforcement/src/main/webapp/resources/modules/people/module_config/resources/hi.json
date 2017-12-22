@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "रील लोग",
+    "title": "संबंधित लोग",
+    "linkTitle": "संबंधित लोग",
     "table.columns": {
       "firstName": "पहला नाम",
       "lastName": "अंतिम नाम",

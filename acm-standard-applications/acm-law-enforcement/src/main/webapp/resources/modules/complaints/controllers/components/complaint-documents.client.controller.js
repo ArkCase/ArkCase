@@ -53,13 +53,9 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes=[];
-                    for(var i = 0 ; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
-                    $scope.treeControl.refreshTree();
                 });
         };
 
@@ -78,8 +74,54 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
             DocTreeExtCheckin.handleCheckin(treeControl, $scope);
             DocTreeExtCheckin.handleCancelEditing(treeControl, $scope);
             DocTreeExtWebDAV.handleEditWithWebDAV(treeControl, $scope);
+
+            $scope.treeControl.addCommandHandler({
+                    name: "declare"
+                    , onAllowCmd: function (nodes) {
+                        return $scope.getActionPermission('declareAsRecords', $scope.objectInfo, $scope.objectType);
+                    }
+                }
+            );
+
+            $scope.treeControl.addCommandHandler({
+                    name: "rename"
+                    , onAllowCmd: function (nodes) {
+                        // There are multiple node selected. Rename is not possible for multiple nodes
+                        if (Util.isArrayEmpty(nodes) || nodes.length > 1) {
+                            return 'disable';
+                        }
+
+                        var node = nodes[0];
+                        var objectType = !Util.isEmpty(node.data) && !Util.isEmpty(node.data.objectType) ? node.data.objectType.toUpperCase() : '';
+                        var action = '';
+
+                        switch (objectType) {
+                            case 'FILE':
+                                action = 'renameFile';
+                                break;
+                            case 'FOLDER':
+                                action = 'renameFolder';
+                                break;
+                            default:
+                                return 'disable';
+                        }
+
+                        return $scope.getActionPermission(action, node.data, objectType);
+                    }
+                }
+            );
         };
 
+        $scope.getActionPermission = function (action, object, objectType) {
+            return PermissionsService.getActionPermission(action, object, {objectType: objectType}).then(
+                function success(enabled) {
+                    return enabled ? 'enable' : 'disable';
+                }, function error() {
+                    $log.error('Can\'t get permission info for action ' + action + '. The menu item will be disabled.');
+                    return 'disable';
+                }
+            );
+        };
 
         $scope.onClickRefresh = function () {
             $scope.treeControl.refreshTree();

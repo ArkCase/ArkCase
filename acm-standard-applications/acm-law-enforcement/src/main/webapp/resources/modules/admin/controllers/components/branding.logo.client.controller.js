@@ -7,6 +7,20 @@ angular.module('admin').controller('Admin.BrandingLogoController', ['$scope', 'A
         $scope.selectedHeaderFile = null;
         $scope.selectedLoginFile = null;
 
+        $scope.isFileTypeValid = function(){
+            var headerLogoType, loginLogoType;
+            if(!Util.isEmpty($scope.selectedLoginFile)){
+                loginLogoType = $scope.selectedLoginFile.name.match(/\.png$/i);
+            }
+            if(!Util.isEmpty($scope.selectedHeaderFile)){
+                headerLogoType =  $scope.selectedHeaderFile.name.match(/\.png$/i);
+            }
+            if(headerLogoType === null || loginLogoType === null || (typeof(headerLogoType) == 'undefined' && typeof(loginLogoType) == 'undefined')){
+                return null;
+            }else{
+                return true;
+            }
+        }
         $scope.saveFiles = function () {
             $scope.uploadingInProgress = true;
             //we need to have and form names for files upload

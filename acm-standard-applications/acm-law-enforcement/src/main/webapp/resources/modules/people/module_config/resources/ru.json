@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Rel Люди",
+    "title": "Связанные люди",
+    "linkTitle": "Связанные люди",
     "table.columns": {
       "firstName": "Имя",
       "lastName": "Фамилия",

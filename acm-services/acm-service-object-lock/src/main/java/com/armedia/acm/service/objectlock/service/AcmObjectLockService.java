@@ -4,6 +4,8 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
+import java.util.List;
+
 /**
  * Created by nebojsha on 25.08.2015.
  */
@@ -63,7 +65,8 @@ public interface AcmObjectLockService
      *
      * @param parentObjectType parent document object type. Can be null, than returns every document.
      * @param auth             Authentication
-     * @param lockHeldByUser   filter locks by lock held by user. Can be null.
+     * @param objectId         filter locks by object id.
+     * @param creator          filter locks by lock held by user. Can be null.
      * @param firstRow         start row
      * @param maxRows          max rows
      * @param sort             name of the fields with (asc|desc) separated by semicolon. Can be empty.
@@ -71,6 +74,7 @@ public interface AcmObjectLockService
      * @return return response from solr as String
      * @throws MuleException
      */
-    String getObjectLocks(String parentObjectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows, String sort,
+    String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows, String sort,
                           String fqParams) throws MuleException;
+
 }

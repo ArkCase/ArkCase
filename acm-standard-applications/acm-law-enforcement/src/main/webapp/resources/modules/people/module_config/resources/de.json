@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Rel Leute",
+    "title": "Verwandte Menschen",
+    "linkTitle": "Verwandte Menschen",
     "table.columns": {
       "firstName": "Vorname",
       "lastName": "Familienname, Nachname",

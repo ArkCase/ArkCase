@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Gente rel",
+    "title": "Personas relacionadas",
+    "linkTitle": "Personas relacionadas",
     "table.columns": {
       "firstName": "Nombre de pila",
       "lastName": "Apellido",

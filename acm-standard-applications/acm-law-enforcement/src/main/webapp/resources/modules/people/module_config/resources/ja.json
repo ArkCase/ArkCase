@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "関係者",
+    "title": "関連する人々",
+    "linkTitle": "関連する人々",
     "table.columns": {
       "firstName": "名前",
       "lastName": "苗字",
