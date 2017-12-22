@@ -39,7 +39,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
             }
             if (Util.goodPositive(currentObjectId, false)) {
                 //we can change this code with making backend service to return the task and make only one call to server
-                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId, 0, 100, '', '').then(function (data) {
+                ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.CASE_FILE, currentObjectId).then(function (data) {
                     var tasks = data.response.docs;
                     var objectId = _.result(_.find(tasks, function (task) {
                         return task.status_s === 'ACTIVE' && task.business_process_name_lcs === 'ArkCase Buckslip Process';
