@@ -62,12 +62,7 @@ public class ConfigLookupDao implements LookupDao
 
             String lookupAsJson = jsonArray.get(0).toString();
 
-            AcmLookup<?> acmLookup = getObjectConverter().getJsonUnmarshaller().unmarshall(lookupAsJson, lookupType.getLookupClass());
-
-            if (acmLookup != null)
-            {
-                return acmLookup;
-            }
+            return getObjectConverter().getJsonUnmarshaller().unmarshall(lookupAsJson, lookupType.getLookupClass());
         }
 
         return null;
@@ -196,8 +191,6 @@ public class ConfigLookupDao implements LookupDao
                     lookupValidationResult.getErrorMessage(), lookupDefinition.getName(), lookupDefinition.getLookupEntriesAsJson());
             throw new InvalidLookupException(lookupValidationResult.getErrorMessage());
         }
-
-        // load lookups json from file
 
         // replace the json content of the lookup to update
         String updatedLookupsAsJson = null;
