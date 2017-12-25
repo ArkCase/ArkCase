@@ -377,6 +377,46 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
+    public AcmGroup saveAdHocSubGroup(String subGroupId, String parentId) throws AcmCreateObjectFailedException
+
+    {
+        AcmGroup parent = groupDao.findByName(parentId);
+        AcmGroup subGroup = groupDao.findByName(subGroupId);
+
+        if (parent == null || subGroup == null)
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            if (parent == null)
+            {
+                errorMessage.append("Parent group with id [").append(parentId).append("] not found.");
+            }
+            if (subGroup == null)
+            {
+                if (errorMessage.length() > 0)
+                {
+                    errorMessage.append(" ");
+                }
+                errorMessage.append("Subgroup with id [").append(subGroupId).append("] not found.");
+            }
+
+            throw new AcmCreateObjectFailedException("GROUP", errorMessage.toString(), null);
+        }
+
+        // If supervisor for the subgroup is empty, get from the parent group
+        if (subGroup.getSupervisor() == null)
+        {
+            subGroup.setSupervisor(parent.getSupervisor());
+        }
+
+        subGroup.setAscendantsList(parent.getAscendantsList());
+        subGroup.addAscendant(parentId);
+        parent.addGroupMember(subGroup);
+
+        return subGroup;
+    }
+
+    @Override
+    @Transactional
     public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
             throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
     {
@@ -392,8 +432,6 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
-        subGroup.setAscendantsList(parent.getAscendantsList());
-        subGroup.addAscendant(parentId);
         String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
         subGroup.setName(groupName);
         subGroup.setDisplayName(groupName);

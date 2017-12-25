@@ -174,7 +174,6 @@ public class GroupServiceTest
 
         List<AcmUser> users = Arrays.asList(userGroup1, userGroup2, userSubGroup1, userSubGroup2);
         Set<AcmGroup> groups = new HashSet<>(Arrays.asList(group));
-        users.forEach(user -> verify(mockedUserRoleService).saveInvalidUserRolesPerRemovedUserGroups(eq(user), eq(groups)));
 
         assertThat(deletedGroup, is(group));
     }
@@ -220,7 +219,6 @@ public class GroupServiceTest
         when(mockedGroupDao.findByName(GROUP)).thenReturn(group);
         when(group.getSupervisor()).thenReturn(userGroup);
         Stream<String> parentAscendants = Stream.empty();
-        when(group.getAscendants()).thenReturn(parentAscendants);
         when(mockedGroupDao.findByName(GROUP_1)).thenReturn(mockedMemeberGroup1);
         when(mockedMemeberGroup1.getSupervisor()).thenReturn(null);
         when(mockedMemeberGroup1.getMemberGroups()).thenReturn(new HashSet<>(Arrays.asList(mockedMemeberSubGroup2)));
@@ -232,9 +230,7 @@ public class GroupServiceTest
 
         // then
         verify(mockedMemeberGroup1).setSupervisor(userGroup);
-        verify(mockedMemeberGroup1).addAscendants(parentAscendants);
         verify(group).addGroupMember(mockedMemeberGroup1);
-        verify(mockedUserRoleService).saveValidUserRolesPerAddedUserGroups(USER_SUB_GROUP_2_ID, new HashSet<>(Arrays.asList(group)));
 
         assertThat(resultGroup, is(mockedMemeberGroup1));
     }
