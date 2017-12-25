@@ -8,7 +8,7 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
-            var componentConfig = _.find(config.components, {id: 'cmisConfiguration'});
+            var componentConfig = angular.copy(_.find(config.components, {id: 'cmisConfiguration'}));
             $scope.config = config;
 
             gridHelper.addButton(componentConfig, 'edit');

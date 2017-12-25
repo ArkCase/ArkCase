@@ -48,6 +48,21 @@
     "sendEmail": "Отправить e-mail",
     "filterInputPlaceholder": "Фильтр",
     "searchInputPlaceholder": "Поиск",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Отчет о расследовании"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Приглашение на переписку",
+        "approvalLetter%": "Письмо с подтверждением жалобы",
+        "generalRelease%": "Общий выпуск",
+        "medicalRelease%": "Медицинский релиз",
+        "clearanceGranted%": "Предоставлено разрешение",
+        "clearanceDenied%": "Отказ от ответственности",
+        "witnessInterview%": "Свидетельство о проведении собеседования",
+        "witnessInterview2%": "Свидетельство о проведении собеседований-2.0"
+      }
+    },
     "newTask": "Новое задание"
   },
   "complaints.comp.people": {

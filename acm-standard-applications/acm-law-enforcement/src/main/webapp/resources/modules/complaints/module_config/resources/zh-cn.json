@@ -48,6 +48,21 @@
     "sendEmail": "发电子邮件",
     "filterInputPlaceholder": "过滤",
     "searchInputPlaceholder": "搜索",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "调查报告"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "函授邀请",
+        "approvalLetter%": "投诉批准书",
+        "generalRelease%": "标准发布",
+        "medicalRelease%": "医疗发布",
+        "clearanceGranted%": "已授予清关",
+        "clearanceDenied%": "已否认清关",
+        "witnessInterview%": "证人面试请求",
+        "witnessInterview2%": "证人面试请求2.0"
+      }
+    },
     "newTask": "新任务"
   },
   "complaints.comp.people": {

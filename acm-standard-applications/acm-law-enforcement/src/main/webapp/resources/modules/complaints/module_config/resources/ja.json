@@ -48,6 +48,21 @@
     "sendEmail": "メールを送る",
     "filterInputPlaceholder": "フィルタ",
     "searchInputPlaceholder": "サーチ",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "調査報告"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "通信招待状",
+        "approvalLetter%": "訴状の承認書",
+        "generalRelease%": "標準リリース",
+        "medicalRelease%": "医療リリース",
+        "clearanceGranted%": "許可されたクリアランス",
+        "clearanceDenied%": "クリアランスを拒否した",
+        "witnessInterview%": "目撃者のインタビュー要求",
+        "witnessInterview2%": "目撃者のインタビュー要求2.0"
+      }
+    },
     "newTask": "新しい仕事"
   },
   "complaints.comp.people": {

@@ -50,7 +50,7 @@ public class SearchChildrenAPIController
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
         if (extra != null && extra.size() > 0)
