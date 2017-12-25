@@ -1,26 +1,10 @@
 'use strict';
 
-angular.module('people').controller('People.HistoryController', ['$scope', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService', 'Person.InfoService'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Acm.StoreService', '$modal'
+angular.module('common').controller('Common.HistoryController', ['$scope', '$stateParams', '$q'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.AuditService'
+    , 'Helper.UiGridService', '$modal'
     , function ($scope, $stateParams, $q
-        , Util, ConfigService, ObjectService, ObjectAuditService, PersonInfoService, HelperUiGridService
-        , HelperObjectBrowserService, Store, $modal) {
-
-        var componentHelper = new HelperObjectBrowserService.Component({
-            scope: $scope
-            , stateParams: $stateParams
-            , moduleId: "people"
-            , componentId: "history"
-            , retrieveObjectInfo: PersonInfoService.getPersonInfo
-            , validateObjectInfo: PersonInfoService.validatePersonInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
-        });
-
-        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
-        var promiseUsers = gridHelper.getUsers();
+        , Util, ConfigService, ObjectService, ObjectAuditService, HelperUiGridService, $modal) {
 
         var onConfigRetrieved = function (config) {
             gridHelper.setColumnDefs(config);
@@ -31,9 +15,27 @@ angular.module('people').controller('People.HistoryController', ['$scope', '$sta
             retrieveGridData();
         };
 
+        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
+            $scope.config = moduleConfig;
+            onConfigRetrieved(moduleConfig.objectHistoryClientGrid);
+            return moduleConfig;
+        });
+
+        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+        var promiseUsers = gridHelper.getUsers();
+
         function retrieveGridData() {
-            gridHelper.retrieveAuditData(ObjectService.ObjectTypes.PERSON, $stateParams.id);
+            gridHelper.retrieveAuditData($stateParams.type, $stateParams.id);
         }
+
+        $scope.onClickObjLink = function (event, rowEntity) {
+            event.preventDefault();
+
+            var targetType = Util.goodMapValue(rowEntity, "objectType");
+            var targetId = Util.goodMapValue(rowEntity, "objectId");
+
+            gridHelper.showObject(targetType, targetId);
+        };
 
         $scope.showDetails = function (objectHistoryDetails) {
             var params = {};
@@ -55,7 +57,7 @@ angular.module('people').controller('People.HistoryController', ['$scope', '$sta
             modalInstance.result.then(function (data) {
 
             });
-        }
+        };
 
     }
 ]);

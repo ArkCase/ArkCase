@@ -60,7 +60,10 @@ angular.module('complaints').config(['$stateProvider',
 
             .state('complaints.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/complaints/views/components/complaint-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "COMPLAINT"
+                }
             })
 
             .state('complaints.notes', {
