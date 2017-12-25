@@ -43,17 +43,16 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
         $scope.objectType = ObjectService.ObjectTypes.TASK;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
 
+        var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        var promiseFileLanguages = LocaleService.getSettings();
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
             $scope.objectId = objectInfo.taskId;
             $scope.parentObjectId = objectInfo.parentObjectId;
             $scope.parentObjectType = objectInfo.parentObjectType;
 
-            var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
-            var promiseFileTypes = ObjectLookupService.getFileTypes();
-            var promiseFileLanguages = LocaleService.getSettings();
             var promiseCorrespondenceForms;
-
             switch ($scope.parentObjectType) {
                 case ObjectService.ObjectTypes.COMPLAINT:
                     ComplaintInfoService.getComplaintInfo($scope.objectInfo.parentObjectId).then(
@@ -93,10 +92,7 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
             $q.all([promiseFormTypes, promiseFileTypes, promiseCorrespondenceForms, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes = [];
-                    for(var i = 0; i < data[1].length; i++ ){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)});
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
                 });

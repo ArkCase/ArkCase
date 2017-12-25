@@ -12,7 +12,6 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -50,7 +49,6 @@ public class LdapSyncService
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
-    @Transactional
     public void ldapSync()
     {
         if (!isSyncEnabled())
@@ -71,7 +69,7 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig);
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
 
     // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
@@ -92,11 +90,11 @@ public class LdapSyncService
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
-        // only changed users and groups are retrieved
+        // only changed users are retrieved
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig());
+        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
 
         writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
     }
@@ -118,7 +116,7 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = Arrays.asList(user);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
         return user;
     }
 
@@ -138,7 +136,7 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = Arrays.asList(user);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig());
+        ldapSyncProcessor.sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
         return user;
     }
 

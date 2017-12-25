@@ -1,20 +1,23 @@
 {
   "subscriptions": {
     "title": "Suscripciones",
-    "search.btn": "Búsqueda",
-    "export.btn": "es_Export",
-    "search.placeholder": "es_Search for subscriptions",
+    "search.btn": "Buscar",
+    "export.btn": "Exportar",
+    "search.placeholder": "Buscar suscripciones",
     "menus": {
       "leftnav.item": "Suscripciones"
     },
-    "comp":{
+    "comp": {
+      "subscriptionsFacetedSearch": {
+        "title": "Suscripciones Búsqueda facetada"
+      },
       "grid": {
         "columns": {
-          "id": "es_ID",
-          "event": "es_Event",
-          "parentName": "es_Parent Name",
-          "parentType": "es_Parent Type",
-          "modified": "es_Modified"
+          "id": "Identificación",
+          "event": "Evento",
+          "parentName": "Nombre del padre",
+          "parentType": "Tipo de padre",
+          "modified": "Fecha modificada"
         }
       }
     }

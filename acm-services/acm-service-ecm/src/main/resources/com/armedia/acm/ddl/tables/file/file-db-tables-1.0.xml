@@ -658,6 +658,9 @@
             </column>
         </addColumn>
     </changeSet>
+    <changeSet id="59-acm_file_change_description_type" author="wazir.shpoon">
+        <modifyDataType tableName="acm_file" columnName="cm_file_description" newDataType="CLOB"/>
+    </changeSet>
 
 </databaseChangeLog>
 

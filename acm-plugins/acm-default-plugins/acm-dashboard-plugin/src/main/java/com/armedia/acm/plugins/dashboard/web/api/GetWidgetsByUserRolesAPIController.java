@@ -9,7 +9,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmRole;
+import com.armedia.acm.services.users.service.AcmUserRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets"})
+@RequestMapping({ "/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets" })
 public class GetWidgetsByUserRolesAPIController
 {
 
@@ -39,6 +40,7 @@ public class GetWidgetsByUserRolesAPIController
     private DashboardPropertyReader dashboardPropertyReader;
     private WidgetEventPublisher eventPublisher;
     private DashboardService dashboardService;
+    private AcmUserRoleService userRoleService;
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -51,8 +53,8 @@ public class GetWidgetsByUserRolesAPIController
 
         log.info("Finding widgets for user: [{}]  based on the user roles'", userId);
 
-        List<AcmRole> roles = getUserDao().findAllRolesByUser(userId);
-        if (roles == null)
+        Set<String> roles = userRoleService.getUserRoles(userId);
+        if (roles.isEmpty())
         {
             throw new AcmObjectNotFoundException("user", null, "Object not found", null);
         }
@@ -64,12 +66,14 @@ public class GetWidgetsByUserRolesAPIController
             List<Widget> dashboardWidgetsOnly = dashboardPropertyReader.getDashboardWidgetsOnly();
             List<Widget> result = retval.stream().filter(w -> dashboardWidgetsOnly.contains(w)).collect(Collectors.toList());
             return result;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.error("Widgets by roles associated to user: [{}] not found! ", userId, e, e.getMessage());
             raiseGetEvent(authentication, session, retval, true);
             return new ArrayList<>();
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             log.error("Exception occurred while raising an event or while reading widgets values");
             throw new AcmWidgetException("Get widgets by user roles exception", e1);
@@ -140,5 +144,10 @@ public class GetWidgetsByUserRolesAPIController
     public void setDashboardService(DashboardService dashboardService)
     {
         this.dashboardService = dashboardService;
+    }
+
+    public void setUserRoleService(AcmUserRoleService userRoleService)
+    {
+        this.userRoleService = userRoleService;
     }
 }

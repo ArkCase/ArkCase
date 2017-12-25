@@ -1,24 +1,27 @@
 {
   "tags": {
-    "title": "Знаки опасности",
-    "search.btn": "ru_Search",
-    "search.placeholder": "ru_Search for tags",
+    "title": "Теги",
+    "search.btn": "Поиск",
+    "export.btn": "Экспорт",
+    "search.placeholder": "Поиск тегов",
     "menus": {
-      "leftnav.item": "Знаки опасности"
+      "leftnav.item": "Теги"
     },
-    "comp":{
+    "comp": {
+      "tagsFacetedSearch": {
+        "title": "Теги Грановитой поиск"
+      },
       "grid": {
         "columns": {
-          "id": "ru_ID",
-          "name": "ru_Name",
-          "type": "ru_Type",
-          "title": "ru_Title",
-          "parent": "ru_Parent",
-          "assignee": "ru_Assignee",
-          "modified": "ru_Modified"
+          "id": "Идентификация",
+          "name": "Имя",
+          "type": "Тип",
+          "title": "Заглавие",
+          "parent": "Родитель",
+          "assignee": "Правопреемник",
+          "modified": "Измененная дата"
         }
       }
     }
   }
 }
-

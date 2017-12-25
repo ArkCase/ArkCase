@@ -1,20 +1,23 @@
 {
   "subscriptions": {
     "title": "Abonnements",
-    "search.btn": "Recherche",
-    "export.btn": "fr_Export",
-    "search.placeholder": "fr_Search for subscriptions",
+    "search.btn": "Chercher",
+    "export.btn": "Exportation",
+    "search.placeholder": "Rechercher des abonnements",
     "menus": {
       "leftnav.item": "Abonnements"
     },
-    "comp":{
+    "comp": {
+      "subscriptionsFacetedSearch": {
+        "title": "Recherche facettée des abonnements"
+      },
       "grid": {
         "columns": {
-          "id": "fr_ID",
-          "event": "fr_Event",
-          "parentName": "fr_Parent Name",
-          "parentType": "fr_Parent Type",
-          "modified": "fr_Modified"
+          "id": "Identification",
+          "event": "Un événement",
+          "parentName": "Nom du parent",
+          "parentType": "Type de parent",
+          "modified": "Date modifiée"
         }
       }
     }

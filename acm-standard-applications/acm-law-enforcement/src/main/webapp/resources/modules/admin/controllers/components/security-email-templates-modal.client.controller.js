@@ -3,7 +3,7 @@ angular.module('admin').controller('Admin.EmailTemplatesModalController', ['$sco
 
         $scope.templateFile = null;
         $scope.isEdit = params.isEdit;
-        $scope.template = params.template;
+        $scope.template = angular.copy(params.template);
         $scope.objectTypeList = params.objectTypeList;
         $scope.actionList = params.actionList;
         $scope.sourceList = params.sourceList;
