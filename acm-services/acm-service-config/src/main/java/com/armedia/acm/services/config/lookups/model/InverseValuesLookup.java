@@ -16,17 +16,17 @@ public class InverseValuesLookup extends AcmLookup<InverseValuesLookupEntry>
         // Check empty keys or values
         for (InverseValuesLookupEntry entry : entries)
         {
-            if (entry.getKey() == null || entry.getKey().isEmpty())
+            if (entry.getKey() == null)
             {
-                return new LookupValidationResult(false, "Empty key found in '" + getName() + "' lookup!");
+                return new LookupValidationResult(false, "Key not found or have [null] value in '" + getName() + "' lookup!");
             }
             if (entry.getValue() == null || entry.getValue().isEmpty())
             {
                 return new LookupValidationResult(false, "Empty value found in '" + getName() + "' lookup!");
             }
-            if (entry.getInverseKey() == null || entry.getInverseKey().isEmpty())
+            if (entry.getInverseKey() == null)
             {
-                return new LookupValidationResult(false, "Empty inverse key found in '" + getName() + "' lookup!");
+                return new LookupValidationResult(false, "Inverse key not found or have [null] value in '" + getName() + "' lookup!");
             }
             if (entry.getInverseValue() == null || entry.getInverseValue().isEmpty())
             {

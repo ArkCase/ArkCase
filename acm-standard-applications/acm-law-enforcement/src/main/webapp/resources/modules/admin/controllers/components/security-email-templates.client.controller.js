@@ -8,7 +8,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$
 
         //get config and init grid settings
         $scope.config.$promise.then(function (config) {
-            var config = _.find(config.components, {id: 'emailTemplates'});
+            var config = angular.copy(_.find(config.components, {id: 'emailTemplates'}));
             $scope.objectTypeList = config.objectTypes;
             $scope.actionList = config.actions;
             $scope.sourceList = config.sources;

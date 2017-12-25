@@ -32,7 +32,9 @@ angular.module('organizations').controller('Organizations.InfoController', ['$ro
                 return relationshipTypes;
             });
 
+        $scope.organizationId = null;
         var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.organizationId = objectInfo.organizationId;
             $scope.objectInfo = objectInfo;
         };
 
@@ -40,13 +42,17 @@ angular.module('organizations').controller('Organizations.InfoController', ['$ro
             if (Util.isEmpty(association)) {
                 association = {};
             }
+
+            var externalSearchParams = {};
+            externalSearchParams.organizationId = $scope.organizationId;
+
             var params = {
                 showSetPrimary: false,
                 types: $scope.relationshipTypes,
                 showDescription: true,
                 infoType: true,
                 externalSearchServiceName: "Organization.SearchService",
-                parentOrganizationId: Util.isEmpty($scope.objectInfo.parentOrganization) ? null : $scope.objectInfo.parentOrganization.organizationId
+                externalSearchParams: externalSearchParams
             };
             if (!!isSelectedParent) {
                 params.organization = $scope.objectInfo;

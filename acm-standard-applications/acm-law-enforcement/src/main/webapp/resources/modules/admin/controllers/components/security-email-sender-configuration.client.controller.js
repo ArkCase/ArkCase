@@ -49,7 +49,7 @@ angular.module('admin').controller('Admin.SecurityEmailSenderConfigurationContro
         
         $scope.validateSmtpConfiguration = function(smtpConfiguration) {
             EmailSenderConfigurationService.validateSmtpConfiguration(smtpConfiguration).then(function(res) {
-                if (res.data) {
+                if (res.data && $scope.emailSenderConfigDataModel.host) {
                     $scope.isSmtpValid = true;
                 } else {
                     $scope.isSmtpValid = false;

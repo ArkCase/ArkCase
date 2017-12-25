@@ -6,24 +6,32 @@
     },
     "navigation": {
       "label": {
-        "reportName": "zh-cn_Report Name",
-        "inputID": "zh-cn_ID",
-        "dateFrom": "zh-cn_From",
-        "dateTo": "zh-cn_To"
+        "reportName": "报告名称",
+        "inputID": "识别号",
+        "dateFrom": "从",
+        "dateTo": "至"
       },
       "placeholder": {
-        "selectAudit": "zh-cn_ALL",
-        "inputId": "zh-cn_#"
+        "selectAudit": "所有",
+        "inputId": "＃"
+      },
+      "checkBox": {
+        "xmlReport": "显示为XML"
       },
       "button": {
-        "generateAuditReport.btn": "zh-cn_Generate Audit Report"
+        "generateAuditReport.btn": "生成审计报告"
       }
     },
-    "datepicker":{
-      "close": "zh-cn_Done",
-      "clear": "zh-cn_Clear",
-      "current": "zh-cn_Today"
+    "datepicker": {
+      "close": "完毕",
+      "clear": "清除",
+      "current": "今天"
     }
+  },
+  "audit.comp.auditselection": {
+    "title": "审计"
+  },
+  "audit.comp.datepickers": {
+    "title": "审计"
   }
 }
-

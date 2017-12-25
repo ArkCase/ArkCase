@@ -48,6 +48,11 @@ angular.module('time-tracking').config(['$stateProvider',
                 templateUrl: 'modules/time-tracking/views/components/time-tracking-tags.client.view.html'
             })
 
+            .state('time-tracking.approvers', {
+                url: '/:id/approvers',
+                templateUrl: 'modules/time-tracking/views/components/time-tracking-approvers.client.view.html'
+            })
+
 	}
 ]).run(['Helper.DashboardService', function (DashboardHelper) {
     DashboardHelper.addLocales();

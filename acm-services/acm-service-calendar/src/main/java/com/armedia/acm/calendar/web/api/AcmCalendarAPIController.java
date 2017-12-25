@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
@@ -45,6 +48,8 @@ public class AcmCalendarAPIController
 {
 
     private CalendarService calendarService;
+
+    private CalendarAdminService calendarAdminService;
 
     @RequestMapping(value = "/calendars", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -183,6 +188,14 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/{objectType}/integration", method = RequestMethod.GET)
+    public ResponseEntity<String> isIntegrationEnabled(@PathVariable(value = "objectType") String objectType)
+            throws CalendarConfigurationException
+    {
+        CalendarConfiguration configuration = calendarAdminService.readConfiguration(false).getConfiguration(objectType);
+        return ResponseEntity.status(HttpStatus.OK).body(Boolean.toString(configuration.isIntegrationEnabled()));
+    }
+
     @ExceptionHandler(CalendarServiceException.class)
     @ResponseBody
     public ResponseEntity<?> handleConfigurationException(CalendarServiceException ce)
@@ -234,6 +247,15 @@ public class AcmCalendarAPIController
     public void setCalendarService(CalendarService calendarService)
     {
         this.calendarService = calendarService;
+    }
+
+    /**
+     * @param calendarAdminService
+     *            the calendarAdminService to set
+     */
+    public void setCalendarAdminService(CalendarAdminService calendarAdminService)
+    {
+        this.calendarAdminService = calendarAdminService;
     }
 
 }

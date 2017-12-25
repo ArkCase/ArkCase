@@ -9,6 +9,16 @@ import org.springframework.http.HttpStatus;
 public interface CalendarConfigurationExceptionMapper<CCE extends CalendarConfigurationException>
 {
 
+    String INPUT_DATA_EXCEPTION = "INPUT_DATA_EXCEPTION";
+
+    String ENCRYPT_EXCEPTION = "ENCRYPT_EXCEPTION";
+
+    String UPDATE_CONFIGURATION_EXCEPTION = "UPDATE_CONFIGURATION_EXCEPTION.";
+
+    String ERROR_MESSAGE = "error_message";
+
+    String ERROR_CAUSE = "error_cause";
+
     /**
      * @param ce
      * @return
