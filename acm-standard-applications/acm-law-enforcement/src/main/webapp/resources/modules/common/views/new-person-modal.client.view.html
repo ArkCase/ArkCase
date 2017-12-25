@@ -563,7 +563,7 @@
         <button type="submit" ng-disabled="personForm.$invalid || saved"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
-            <i class="fa fa-floppy-o"></i>
+            <i class="{{loadingIcon}}"></i>
             <span translate> common.newPerson.saveButton</span>
         </button>
     </div>
