@@ -16,8 +16,6 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
-import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -36,8 +34,6 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.activiti.engine.ActivitiException;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -53,7 +49,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -169,7 +164,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
         {
             List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
-            if (buckslipFutureTasks == null) {
+            if (buckslipFutureTasks == null)
+            {
                 throw new AcmTaskException(String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
             }
             return buckslipFutureTasks;
@@ -181,7 +177,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setBuckslipFutureTasks(String businessProcessId, List<BuckslipFutureTask> buckslipFutureTasks) throws AcmTaskException
     {
         String futureTasksJson = getObjectConverter().getJsonMarshaller().marshal(buckslipFutureTasks);
-        if (futureTasksJson == null) {
+        if (futureTasksJson == null)
+        {
             throw new AcmTaskException("Could not set future tasks");
         }
         taskDao.writeProcessVariable(businessProcessId,
@@ -294,8 +291,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             try
             {
                 BeanUtils.copyProperties(task, taskFromOriginal);
-            }
-            catch (InvocationTargetException | IllegalAccessException e)
+            } catch (InvocationTargetException | IllegalAccessException e)
             {
                 log.error("couldn't copy bean.", e);
                 continue;
@@ -326,8 +322,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 AcmContainer originalTaskContainer = acmContainerDao.findFolderByObjectTypeAndId(taskFromOriginal.getObjectType(), taskFromOriginal.getId());
                 if (originalTaskContainer != null && originalTaskContainer.getFolder() != null)
                     acmFolderService.copyFolderStructure(originalTaskContainer.getFolder().getId(), task.getContainer(), task.getContainer().getFolder());
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 log.error("Error copying attachments for task id = {} into task id = {}", taskFromOriginal.getId(), task.getId());
             }
@@ -356,8 +351,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 newNote.setAuthor(note.getCreator());
                 noteDao.save(newNote);
             }
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             log.error("Error copying notes!", e);
         }
@@ -392,8 +386,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
             log.debug("Acm Task ids was retrieved. count({}).", tasksIds.size());
-        }
-        catch (MuleException e)
+        } catch (MuleException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }
@@ -432,57 +425,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 }
             }
 
-        }
-        catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
+        } catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
         {
             log.error("Could not copy folder for task id = {}", task.getId(), e);
-        }
-    }
-
-    @Override
-    public ObjectAssociation saveReferenceToTask(Reference reference, Authentication authentication)
-            throws AcmCreateObjectFailedException
-    {
-        ObjectAssociation objectAssociation = new ObjectAssociation();
-        objectAssociation.setTargetId(reference.getReferenceId());
-        objectAssociation.setTargetType(reference.getReferenceType());
-        objectAssociation.setTargetName(reference.getReferenceNumber());
-        objectAssociation.setTargetTitle(reference.getReferenceTitle());
-        objectAssociation.setStatus(reference.getReferenceStatus());
-        objectAssociation.setAssociationType(ObjectAssociationConstants.REFFERENCE_TYPE);
-
-        Long parentId = reference.getParentId();
-
-        if (reference.getReferenceId().equals(parentId) && reference.getReferenceType().equals(reference.getParentType()))
-        {
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE, "Cannot reference the task itself.", null);
-        }
-        if (findChildObjects(parentId).stream().filter(o -> (o.getTargetId().equals(reference.getReferenceId()) && o.getTargetType().equals(reference.getReferenceType()))).findAny().isPresent())
-        {
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE, "Selected object is already referenced.", null);
-        }
-
-        log.info("Saving reference to Task with id=[{}]", reference.getParentId());
-        try
-        {
-            AcmTask parentObject = taskDao.findById(parentId);
-            String referenceParentType = parentObject.getBusinessProcessId() == null ? TaskConstants.OBJECT_TYPE :
-                    TaskConstants.SYSTEM_OBJECT_TYPE;
-            Long referenceParentId = parentObject.getBusinessProcessId() == null ? parentObject.getTaskId() :
-                    parentObject.getBusinessProcessId();
-
-            objectAssociation.setParentType(referenceParentType);
-            objectAssociation.setParentId(referenceParentId);
-            objectAssociation = objectAssociationService.saveObjectAssociation(objectAssociation);
-            objectAssociationEventPublisher.publishAddReferenceEvent(reference, authentication, true);
-            return objectAssociation;
-        }
-        catch (AcmTaskException e)
-        {
-            log.error("Task with id=[{}] not found!", parentId, e);
-            objectAssociationEventPublisher.publishAddReferenceEvent(reference, authentication, false);
-            throw new AcmCreateObjectFailedException(ObjectAssociationConstants.REFFERENCE_TYPE,
-                    String.format("Reference for task with id:[%d] was not added", parentId), e);
         }
     }
 
@@ -497,8 +442,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             Long parentId = parentObject.getBusinessProcessId() == null ? parentObject.getTaskId() :
                     parentObject.getBusinessProcessId();
             return objectAssociationService.findByParentTypeAndId(parentType, parentId);
-        }
-        catch (AcmTaskException e)
+        } catch (AcmTaskException e)
         {
             log.error("Task with id=[{}] not found!", taskId, e);
         }
@@ -520,8 +464,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
             List<ObjectAssociation> childObjects = findChildObjects(id);
             retval.setChildObjects(childObjects);
             return retval;
-        }
-        catch (AcmTaskException | ActivitiException e)
+        } catch (AcmTaskException | ActivitiException e)
         {
             log.error("Task with id=[{}] not found!", id, e);
         }
@@ -537,9 +480,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
         Long parentObjectId = task.getAttachedToObjectId();
         String parentObjectType = (task.getAttachedToObjectType().equals("")) ? null : task.getAttachedToObjectType();
 
-        if(task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty()) {
+        if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
+        {
             throw new AcmTaskException("You must select at least one document to be reviewed.");
-        } else {
+        } else
+        {
             // Iterate through the list of documentsToReview and start business process for each of them
             for (EcmFile documentToReview : task.getDocumentsToReview())
             {

@@ -858,6 +858,15 @@
         "newValue": "New Value",
         "oldValue": "Old Value"
       }
+    },
+    "client": {
+      "title": "History",
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Date",
+        "userId": "User",
+        "details.btn.text": "View {{count}} Changes"
+      }
     }
   }
 }
