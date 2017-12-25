@@ -80,7 +80,11 @@ angular.module('common').controller('Common.AddPersonModalController', ['$scope'
             };
 
             $scope.isInvalid = function () {
-                return $scope.type.key === params.type;
+                if(!Util.isEmpty(params.isEditPerson) && !Util.isEmpty($scope.type) && !Util.isEmpty(params.type)){
+                    return $scope.type.key === params.type;
+                } else {
+                    return false;
+                }
             };
 
             $scope.pickPerson = function () {
