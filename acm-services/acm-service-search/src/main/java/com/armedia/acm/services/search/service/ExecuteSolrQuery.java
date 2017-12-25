@@ -109,10 +109,11 @@ public class ExecuteSolrQuery
      * This method executes delete of documents in solr using search query
      * (Beware) it could easily delete all documents if query is not specific
      *
-     * @param query Solr Search query for removing found documents
-     * @throws MuleException
+     * @param toSolrFlow Which solr flow (quick search or advanced search to solr flow)
+     * @param query      Solr Search query for removing found documents
+     * @throws MuleExceptions
      */
-    public void sendSolrAdvancedSearchDeleteQuery(String query) throws MuleException
+    public void sendSolrDeleteQuery(String toSolrFlow, String query) throws MuleException
     {
         log.debug("Received query [{}] for deletion.", query);
 
@@ -122,7 +123,7 @@ public class ExecuteSolrQuery
             documentsQuery.setQuery(query);
             SolrDeleteDocumentsByQueryRequest deleteQueryRequest = new SolrDeleteDocumentsByQueryRequest(documentsQuery);
             String json = objectConverter.getJsonMarshaller().marshal(deleteQueryRequest);
-            getMuleContextManager().dispatch("jms://solrAdvancedSearch.in", json, new HashMap<>());
+            getMuleContextManager().dispatch(toSolrFlow, json, new HashMap<>());
         } else
         {
             throw new IllegalArgumentException("query must not be empty or null.");
