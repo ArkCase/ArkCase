@@ -5,10 +5,8 @@ import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
 import com.armedia.acm.services.config.lookups.service.LookupDao;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.io.IOException;
 
@@ -47,6 +44,15 @@ public class LookupsApiController
 
     /**
      * Rest API method to delete a lookup.
+     * @param name
+     *            the {@link name} for the lookup to be deleted
+     * @return all the updated lookups as json
+     * @throws AcmResourceNotFoundException
+     *             when the lookup cannot be found
+     * @throws AcmResourceNotModifiableException
+     *             when the lookup cannot be modified
+     * @throws IOException
+     *             when the underlying store cannot be accessed
      */
     @RequestMapping(value="/{name}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
@@ -76,8 +82,8 @@ public class LookupsApiController
     @ResponseBody
     public String saveLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
     {
-        log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}", lookupDefinition.getLookupType(),
-                lookupDefinition.getName(), lookupDefinition.getReadonly(), lookupDefinition.getLookupEntriesAsJson());
+        log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}, readonly: {}", lookupDefinition.getLookupType(),
+                lookupDefinition.getName(), lookupDefinition.getReadonly(), lookupDefinition.getLookupEntriesAsJson(), lookupDefinition.getReadonly());
         return lookupDao.saveLookup(lookupDefinition);
     }
 

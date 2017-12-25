@@ -5,7 +5,6 @@ import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
 
 import java.io.IOException;
 
@@ -40,5 +39,18 @@ public interface LookupDao
      */
     String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
 
+    /**
+     * Delete lookup with given name.
+     *
+     * @param name
+     *            the {@link name} for the lookup to be deleted
+     * @return all the updated lookups as json
+     * @throws AcmResourceNotFoundException
+     *             when the lookup cannot be found
+     * @throws AcmResourceNotModifiableException
+     *             when the lookup cannot be modified
+     * @throws IOException
+     *             when the underlying store cannot be accessed
+     */
     String deleteLookup(String name) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
 }
