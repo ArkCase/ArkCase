@@ -85,9 +85,6 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             });
 
             function testConnection() {
-
-
-
                 var cmisUrlTest = {
                     baseUrl: modalScope.cmisConfig.baseUrl,
                     username: modalScope.cmisConfig.username,
@@ -116,7 +113,7 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
                     messageService.info($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
                 }, function (response) {
 
-                    messageService.error(response.data.message);
+                    messageService.error($translate.instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
                 });
             });
         };
