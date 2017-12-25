@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.mule.api.MuleException;
 import org.mule.util.UUID;
@@ -186,11 +185,7 @@ public class GroupServiceImpl implements GroupService
         acmGroup.removeAsMemberOf();
         Assert.isTrue(acmGroup.isNotMemeberOfGroups());
 
-        // acmGroup.getUserMembers().stream().collect(Collectors.toMap(Function.identity(), acmUser ->
-        // Collections.singleton(acmGroup)));
         Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
-        Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
-        users.addAll(acmGroup.getUserMembers());
 
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
@@ -252,10 +247,6 @@ public class GroupServiceImpl implements GroupService
             save(acmGroup);
 
             Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
-            Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
-            users.addAll(acmGroup.getUserMembers());
-
-            log.debug("Remove roles for user members from the parent group [{}]", parentGroupName);
 
             descendantGroups.forEach(group -> {
                 log.debug("Build ancestors string for descendants group: [{}]", groupName);
