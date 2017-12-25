@@ -186,6 +186,12 @@
             <artifactId>acm-spring-context-holder</artifactId>
             <version>${acm.version}</version>
         </dependency>
+
+        <!-- SolrJ -->
+        <dependency>
+            <groupId>org.apache.solr</groupId>
+            <artifactId>solr-solrj</artifactId>
+        </dependency>
     </dependencies>
 
 

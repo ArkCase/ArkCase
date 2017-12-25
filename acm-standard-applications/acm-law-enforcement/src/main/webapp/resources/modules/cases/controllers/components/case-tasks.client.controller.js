@@ -31,6 +31,7 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.addButton(config, "delete");
 
             componentHelper.doneConfig(config);
 
@@ -82,6 +83,20 @@ angular.module('cases').controller('Cases.TasksController', ['$scope', '$state',
                 }
             };
             ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var caseInfo = Util.omitNg($scope.objectInfo);
+            if (CaseInfoService.validateCaseInfo(caseInfo))
+            {
+                TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
+                    function (caseInfo) {
+                        gridHelper.deleteRow(rowEntity);
+                        $scope.$emit("report-object-updated", caseInfo);
+                        return caseInfo;
+                    }
+                );
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

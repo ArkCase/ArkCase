@@ -99,21 +99,23 @@
       }
     ],
     "menu": {
+      "subMenuForms0": "common.directive.docTree.menu.forms",
+      "subMenuCorrespondences0": "common.directive.docTree.menu.correspondences",
       "basic": {
         "root": [
           {
             "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "title": "New Folder",
+            "titleKey": "common.directive.docTree.menu.newFolder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
           {
-            "title": "New Document",
+            "titleKey": "common.directive.docTree.menu.newDocument",
             "cmd": "subMenuFileTypes",
             "___children": "fileTypes"
           },
           {
-            "title": "New Correspondence",
+            "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
           },
           {
@@ -121,7 +123,7 @@
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "title": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -130,16 +132,16 @@
         "folder": [
           {
             "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "title": "New Folder",
+            "titleKey": "common.directive.docTree.menu.newFolder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
           {
-            "title": "New Document",
+            "titleKey": "common.directive.docTree.menu.newDocument",
             "cmd": "subMenuFileTypes"
           },
           {
-            "title": "New Correspondence",
+            "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
           },
           {
@@ -147,19 +149,19 @@
           },
           {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "title": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -169,25 +171,25 @@
           },
           {
             "___title": "Rename <kbd>[F2]</kbd>",
-            "title": "Rename",
+            "titleKey": "common.directive.docTree.menu.rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
             "___title": "Delete <kbd>Ctrl+D</kbd>",
-            "title": "Delete",
+            "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
         ],
         "file": [
           {
-            "title": "Open",
+            "titleKey": "common.directive.docTree.menu.open",
             "cmd": "open",
             "uiIcon": "ui-icon-folder-open",
             "data": {
@@ -195,13 +197,13 @@
             }
           },
           {
-            "title": "Edit",
+            "titleKey": "common.directive.docTree.menu.editWithWebDAV",
             "cmd": "editWithWebDAV",
             "uiIcon": "ui-icon-pencil",
             "disabledExpression": "!(new RegExp(Util.goodMapValue(DocTree.treeConfig, 'fileExtensionRegex', '\\.(doc|docx|pdf|xlsx|xls|ppt)$'), 'i').test(nodes[0].data.ext))"
           },
           {
-            "title": "Email",
+            "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
             "data": {
@@ -220,12 +222,12 @@
             "title": "----"
           },
           {
-            "title": "Checkout",
+            "titleKey": "common.directive.docTree.menu.checkout",
             "cmd": "checkout",
             "uiIcon": "ui-icon-check"
           },
           {
-            "title": "Checkin",
+            "titleKey": "common.directive.docTree.menu.checkin",
             "cmd": "checkin",
             "uiIcon": "ui-icon-check",
             "data": {
@@ -233,7 +235,7 @@
             }
           },
           {
-            "title": "Cancel Editing",
+            "titleKey": "common.directive.docTree.menu.cancelEditing",
             "cmd": "cancelEditing",
             "uiIcon": "ui-icon-close",
             "disabled": true
@@ -243,19 +245,19 @@
           },
           {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "title": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -265,13 +267,13 @@
           },
           {
             "___title": "Rename <kbd>[F2]</kbd>",
-            "title": "Rename",
+            "titleKey": "common.directive.docTree.menu.rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
             "___title": "Delete <kbd>Ctrl+D</kbd>",
-            "title": "Delete",
+            "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
@@ -279,7 +281,7 @@
             "title": "----"
           },
           {
-            "title": "Download",
+            "titleKey": "common.directive.docTree.menu.download",
             "cmd": "download",
             "uiIcon": "ui-icon-arrowthickstop-1-s",
             "data": {
@@ -287,7 +289,7 @@
             }
           },
           {
-            "title": "Replace",
+            "titleKey": "common.directive.docTree.menu.replace",
             "cmd": "replace",
             "uiIcon": "",
             "data": {
@@ -295,7 +297,7 @@
             }
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
@@ -305,16 +307,16 @@
         "root": [
           {
             "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "title": "New Folder",
+            "titleKey": "common.directive.docTree.menu.newFolder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
           {
-            "title": "New Document",
+            "titleKey": "common.directive.docTree.menu.newDocument",
             "cmd": "subMenuFileTypes"
           },
           {
-            "title": "New Correspondence",
+            "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
           },
           {
@@ -322,7 +324,7 @@
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "title": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -331,16 +333,16 @@
         "folder": [
           {
             "___title": "New Folder <kbd>Ctrl+N</kbd>",
-            "title": "New Folder",
+            "titleKey": "common.directive.docTree.menu.newFolder",
             "cmd": "newFolder",
             "uiIcon": "ui-icon-plus"
           },
           {
-            "title": "New Document",
+            "titleKey": "common.directive.docTree.menu.newDocument",
             "cmd": "subMenuFileTypes"
           },
           {
-            "title": "New Correspondence",
+            "titleKey": "common.directive.docTree.menu.newCorrespondence",
             "cmd": "subMenuCorrespondenceForms"
           },
           {
@@ -348,19 +350,19 @@
           },
           {
             "___title": "Rename <kbd>[F2]</kbd>",
-            "title": "Rename",
+            "titleKey": "common.directive.docTree.menu.rename",
             "cmd": "rename",
             "uiIcon": "ui-icon-pencil"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
             "___title": "Paste <kbd>Ctrl+V</kbd>",
-            "title": "Paste",
+            "titleKey": "common.directive.docTree.menu.paste",
             "cmd": "paste",
             "uiIcon": "ui-icon-clipboard",
             "disabled": true
@@ -371,12 +373,12 @@
         ],
         "file": [
           {
-            "title": "Open",
+            "titleKey": "common.directive.docTree.menu.open",
             "cmd": "open",
             "uiIcon": "ui-icon-folder-open"
           },
           {
-            "title": "Email",
+            "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
             "data": {
@@ -396,7 +398,7 @@
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
@@ -404,7 +406,7 @@
             "title": "----"
           },
           {
-            "title": "Download",
+            "titleKey": "common.directive.docTree.menu.download",
             "cmd": "download",
             "uiIcon": "ui-icon-arrowthickstop-1-s",
             "data": {
@@ -416,7 +418,7 @@
       "batch": {
         "files": [
           {
-            "title": "Email",
+            "titleKey": "common.directive.docTree.menu.email",
             "cmd": "email",
             "uiIcon": "ui-icon-mail-closed",
             "data": {
@@ -435,22 +437,22 @@
             "title": "----"
           },
           {
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Delete",
+            "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
@@ -458,24 +460,24 @@
         "folders": [
           {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
             "___title": "Delete <kbd>Ctrl+D</kbd>",
-            "title": "Delete",
+            "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
@@ -483,24 +485,24 @@
         "filesAndFolders": [
           {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
             "___title": "Delete <kbd>Ctrl+D</kbd>",
-            "title": "Delete",
+            "titleKey": "common.directive.docTree.menu.delete",
             "cmd": "remove",
             "uiIcon": "ui-icon-trash"
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
@@ -508,41 +510,27 @@
         "filesOrFoldersRecord": [
           {
             "___title": "Cut <kbd>Ctrl+X</kbd>",
-            "title": "Cut",
+            "titleKey": "common.directive.docTree.menu.cut",
             "cmd": "cut",
             "uiIcon": "ui-icon-scissors"
           },
           {
             "___title": "Copy <kbd>Ctrl+C</kbd>",
-            "title": "Copy",
+            "titleKey": "common.directive.docTree.menu.copy",
             "cmd": "copy",
             "uiIcon": "ui-icon-copy"
           },
           {
-            "title": "Declare as Record(s)",
+            "titleKey": "common.directive.docTree.menu.declareRecord",
             "cmd": "declare",
             "uiIcon": "ui-icon-locked"
           }
         ]
       },
       "noop": {
-        "title": "(Select Item)",
+        "titleKey": "common.directive.docTree.menu.noop",
         "cmd": "noop",
         "uiIcon": ""
-      },
-      "___menu_item_to_be_implemented_print": {
-        "___title": "Print <kbd>Ctrl+P</kbd>",
-        "title": "Print",
-        "cmd": "print",
-        "uiIcon": "ui-icon-print",
-        "data": {
-          "readOnly": true
-        }
-      },
-      "___menu_item_to_be_implemented_edit": {
-        "title": "Edit",
-        "cmd": "edit",
-        "uiIcon": "ui-icon-pencil"
       }
     },
     "emailDialog": {

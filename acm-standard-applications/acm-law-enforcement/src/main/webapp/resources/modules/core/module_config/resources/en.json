@@ -55,7 +55,9 @@
         "mr": "Medical Release",
         "noi": "Notice of Investigation",
         "sig": "SF86 Signature",
-        "wir": "Witness Interview Request"
+        "wir": "Witness Interview Request",
+        "draw": "Engineer Drawing",
+        "other": "Other"
       },
       "identificationTypes": {
         "ssn": "SSN",

@@ -48,7 +48,7 @@
             <div class="col-sm-6 form-group" ng-if="!hideAssociationTypes">
                 <label translate>common.addOrganization.type.label</label><span
                     class="required-asterisk">*</span>
-                <select ng-show="!isSelectedParent" ng-change="isChanged($parent.type)" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in $parent.types"
+                <select ng-show="!isSelectedParent" ng-change="notifyOrganizationParent($parent.type)" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in $parent.types"
                         required></select>
 
                 <ng-switch ng-show="isSelectedParent" on="!!organizationValue">
@@ -78,7 +78,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         <span translate>common.addOrganization.btnCancel.text</span>
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isInvalid">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="addOrganizationForm.$invalid || isInvalid()">
         <span translate>common.addOrganization.btnOk.text</span>
     </button>
 </div>

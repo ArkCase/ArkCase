@@ -433,6 +433,7 @@
       "cancel": "Cancelar",
       "activate": "Tornar ativa"
     },
+    "workflows.config.noHistory": "pt_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Processo de negócio",
       "description": "Descrição",

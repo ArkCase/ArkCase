@@ -73,10 +73,9 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
-
 
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
@@ -182,7 +181,7 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         }
         if (exceptDeletedOnly) {
             if(!activeOnly){
-                query += " AND -status_s:DELETED";
+                query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
         // MVC test classes must call getName() somehow
