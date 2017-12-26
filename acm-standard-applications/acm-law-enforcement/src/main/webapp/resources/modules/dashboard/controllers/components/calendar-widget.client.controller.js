@@ -23,7 +23,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
 
             var vm = this;
 
-            var displayInnerCalendarTitle = true;
+            $scope.displayInnerCalendarTitle = true;
 
             var modules = [
                 {
