@@ -29,11 +29,6 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
 
             reloadGrid();
         });
-
-        ObjectLookupService.getAlfrescoExtension().then(function (alfrescoExtension) {
-            $scope.alfrescoExtension = alfrescoExtension;
-        });
-
         ObjectLookupService.getEndpoint().then(function (endpoint) {
             $scope.endpoint = endpoint;
         });
