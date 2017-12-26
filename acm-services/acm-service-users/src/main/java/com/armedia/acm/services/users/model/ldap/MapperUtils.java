@@ -72,11 +72,13 @@ public class MapperUtils
         return distinguishedName.toString();
     }
 
-    public static String appendBaseToDn(String dn, String base)
+    public static String appendToDn(String dn, String... suffixes)
     {
         DistinguishedName distinguishedName = new DistinguishedName(dn);
-        DistinguishedName baseDn = new DistinguishedName(base);
-        distinguishedName.prepend(baseDn);
+        Arrays.stream(suffixes).forEach(suffix -> {
+            DistinguishedName suffixDn = new DistinguishedName(suffix);
+            distinguishedName.prepend(suffixDn);
+        });
         return distinguishedName.toString();
     }
 

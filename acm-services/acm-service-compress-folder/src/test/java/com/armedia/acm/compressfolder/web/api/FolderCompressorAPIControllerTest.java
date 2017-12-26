@@ -3,6 +3,8 @@ package com.armedia.acm.compressfolder.web.api;
 import com.armedia.acm.compressfolder.DefaultFolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
+import com.armedia.acm.compressfolder.model.CompressNode;
+import com.armedia.acm.compressfolder.model.FileFolderNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -22,10 +24,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 16, 2016
@@ -145,5 +152,50 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
         assertEquals(response.getResponse().getHeader("Content-Disposition"), "attachment; filename=\"acm-101-ROOT.zip\"");
 
 
+    }
+
+    @Test
+    public void testDownloadSelectedFolderFiles() throws Exception
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        Long rootFolderId = 101L;
+        FileFolderNode file1 = new FileFolderNode();
+        FileFolderNode file2 = new FileFolderNode();
+        FileFolderNode rootFolder = new FileFolderNode();
+
+        file1.setFolder(false);
+        file1.setObjectId(111L);
+
+        file2.setFolder(false);
+        file2.setObjectId(222L);
+
+        rootFolder.setFolder(true);
+        rootFolder.setObjectId(rootFolderId);
+
+        List<FileFolderNode> selectedFoldersFiles = new ArrayList<>(Arrays.asList(file1, file2, rootFolder));
+
+        CompressNode compressNode = new CompressNode();
+        compressNode.setRootFolderId(rootFolderId);
+        compressNode.setSelectedNodes(selectedFoldersFiles);
+
+        String fileName = mockZipFile.getPath();
+
+        expect(mockedFolderCompressor.compressFolder(isA(CompressNode.class))).andReturn(fileName);
+
+        replayAll();
+
+        MvcResult response = mockMvc.perform(
+                post("/api/v1/service/compressor/download")
+                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .content(objectMapper.writeValueAsString(compressNode))
+                    .accept("application/zip")
+                    .session(mockHttpSession))
+                    .andReturn();
+        verifyAll();
+
+        assertEquals(response.getResponse().getStatus(), HttpStatus.OK.value());
+        assertEquals(response.getResponse().getContentType(), "application/zip");
+        assertEquals(response.getResponse().getHeader("Content-Disposition"), "attachment; filename=\"acm-101-ROOT.zip\"");
     }
 }

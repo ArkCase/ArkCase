@@ -67,17 +67,17 @@
       "allUsersFilter": "すべてのユーザーの検索フィルタを入力してください（例：（objectClass = person））",
       "allUsersPageFilter": "sort属性を含むフィルタを入力してください（例：（＆（objectClass = person）（uidNumber> =％s）））",
       "allUsersSortingAttribute": "ユーザーの並べ替え属性を入力します（例： 'uidNumber'）。",
+      "allChangedUsersFilter": "変更されたすべてのユーザーのフィルタを入力します",
+      "allChangedUsersPageFilter": "変更されたすべてのユーザーのsort-attributeを含むフィルターを入力してください",
       "groupSearchBase": "グループの検索ベースを入力します（例：ou = groups）",
       "groupSearchFilterForUser": "グループ内のユーザーの検索フィルタを入力してください（例：（＆（objectClass = group）（member =％s）））",
       "userIdAttributeName": "ユーザーIDに使用する属性を入力します（例： 'uid'）。",
       "userDomain": "ユーザードメインを入力してください",
       "syncPageSize": "ページングサイズを入力してください",
       "groupSearchFilter": "グループの検索フィルターを入力してください（例：（objectClass = group））",
-      "allChangedUsersFilter": "ja_Enter the filter for all changed users",
-      "allChangedUsersPageFilter": "ja_Enter the filter including sort-attribute for all changed users",
-      "changedGroupSearchFilter": "ja_Enter search filter for all changed groups",
-      "changedGroupSearchPageFilter": "ja_Enter filter including sort-attribute for all changed groups",
       "groupsSortingAttribute": "グループをソートするための属性を入力します（例： 'gidNumber'）。",
+      "changedGroupSearchFilter": "変更されたすべてのグループの検索フィルターを入力してください",
+      "changedGroupSearchPageFilter": "変更されたすべてのグループのsort-attributeを含むフィルタを入力",
       "groupSearchPageFilter": "ソート属性を含むフィルタを入力します（例：（＆（objectClass = group）（gidNumber> =％s）））",
       "enableEditingLdapUsers": "DSを管理するユーザーとグループが許可されているかどうかを確認する"
     },
@@ -157,7 +157,7 @@
           "lastName": "姓を入力",
           "email": "電子メールを入力してください",
           "password": "パスワードを入力してください",
-          "confirmation": "ja_Enter your password again",
+          "confirmation": "もう一度パスワードを入力してください",
           "minLengthForPassword": "7"
         },
         "editLdapMember": {
@@ -172,7 +172,7 @@
         "lastName": "姓",
         "email": "Eメール",
         "password": "パスワード",
-        "confirmation": "ja_Confirm Password"
+        "confirmation": "パスワードを認証する"
       },
       "addMembersGridColumns": {
         "name": "名前",
@@ -258,8 +258,8 @@
         "email.label": "システムの電子メールアドレス",
         "password.label": "システムパスワード",
         "purgeDays.label": "日々",
-        "emailValid": "システム電子メールアドレスが有効です",
-        "emailNotValid": "システム電子メールアドレスが無効です",
+        "emailValid": "システム電子メールアドレスとパスワードは有効です",
+        "emailNotValid": "システムの電子メールアドレスまたはパスワードが無効です",
         "enableCalendarIntegration.checkbox": "カレンダー統合を有効にする",
         "purgeOptions": {
           "retainIndefinitely": "無期限に保持する",
@@ -433,6 +433,7 @@
       "cancel": "キャンセル",
       "activate": "アクティブにする"
     },
+    "workflows.config.noHistory": "ja_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "ビジネスプロセス",
       "description": "説明",

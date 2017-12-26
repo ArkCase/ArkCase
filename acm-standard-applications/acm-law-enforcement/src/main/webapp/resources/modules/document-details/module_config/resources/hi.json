@@ -1,104 +1,104 @@
 {
   "documentDetails": {
-    "title": "hi_Document details",
-    "creator": "hi_Creator",
-    "created": "hi_Created",
-    "assignee": "hi_Assignee",
-    "fileType": "hi_File type",
-    "status": "hi_Status",
-    "name": "hi_Name",
+    "title": "दस्तावेज़ विवरण",
+    "creator": "बनाने वाला",
+    "created": "बनाया था",
+    "assignee": "संपत्ति-भागी",
+    "fileType": "फाइल का प्रकार",
+    "status": "स्थिति",
+    "name": "नाम",
     "comp.eventHistory": {
-      "title": "hi_Event History",
+      "title": "इवेंट इतिहास",
       "table.columns": {
-        "eventType": "hi_Event Name",
-        "eventDate": "hi_Created",
-        "userId": "hi_User"
+        "eventType": "कार्यक्रम नाम",
+        "eventDate": "बनाया था",
+        "userId": "उपयोगकर्ता"
       }
     },
     "comp.tags": {
-      "title": "hi_Tags",
+      "title": "टैग",
       "table.columns": {
-        "tag": "hi_Tag",
-        "created": "hi_Created",
-        "createdBy": "hi_Created By"
+        "tag": "टैग",
+        "created": "बनाया था",
+        "createdBy": "के द्वारा बनाई गई"
       },
       "modal": {
-        "title": "hi_Tag",
-        "search": "hi_Search for Tag",
+        "title": "टैग",
+        "search": "टैग के लिए खोजें",
         "buttons": {
-          "cancel": "hi_Cancel",
-          "ok": "hi_Add Tag"
+          "cancel": "रद्द करना",
+          "ok": "टैग जोड़ो"
         }
       },
-      "message.tagExists": "hi_Tag with that name or description or text already exists",
-      "message.tagAssociated": "hi_already associated",
-      "message.delete.success": "hi_Tag deleted successfully",
-      "message.delete.error": "hi_Error deleting tag"
+      "message.tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+      "message.tagAssociated": "पहले से जुड़े हुए हैं",
+      "message.delete.success": "टैग सफलतापूर्वक हटाया गया",
+      "message.delete.error": "टैग हटाने में त्रुटि"
     },
     "comp.participants": {
-      "title": "hi_Participants",
+      "title": "प्रतिभागियों",
       "table.columns": {
-        "name": "hi_Name",
-        "type": "hi_Type"
+        "name": "नाम",
+        "type": "प्रकार"
       },
       "dialogUserPicker": {
-        "header": "hi_Choose User",
+        "header": "उपयोगकर्ता चुनें",
         "table.columns": {
-          "name": "hi_Name",
-          "type": "hi_Type",
-          "title": "hi_Title",
-          "id": "hi_Username"
+          "name": "नाम",
+          "type": "प्रकार",
+          "title": "शीर्षक",
+          "id": "उपयोगकर्ता नाम"
         }
       },
       "dialogGroupPicker": {
-        "header": "hi_Choose Group",
+        "header": "समूह चुनें",
         "table.columns": {
-          "name": "hi_Name"
+          "name": "नाम"
         }
       }
     },
     "comp.notes": {
-      "title": "hi_Notes",
+      "title": "टिप्पणियाँ",
       "table.columns": {
-        "note": "hi_Note",
-        "tag": "hi_Document Version",
-        "created": "hi_Created",
-        "creator": "hi_Author"
+        "note": "ध्यान दें",
+        "tag": "दस्तावेज़ संस्करण",
+        "created": "बनाया था",
+        "creator": "लेखक"
       }
     },
     "comp.versionHistory": {
-      "title": "hi_Version History",
+      "title": "संस्करण इतिहास",
       "table.columns": {
-        "creator": "hi_User",
-        "created": "hi_Created",
-        "versionTag": "hi_Version"
+        "creator": "उपयोगकर्ता",
+        "created": "बनाया था",
+        "versionTag": "संस्करण"
       }
     },
     "comp.details": {
-      "title": "hi_Details",
+      "title": "विवरण",
       "label": {
-        "creator": "hi_Owner",
-        "modifier": "hi_Author",
-        "created": "hi_Creation Date",
-        "modified": "hi_Modified Date",
-        "description": "hi_Description",
-        "type": "hi_Type",
-        "organization": "hi_Source Organization",
-        "person": "hi_Source Entity",
-        "format": "hi_Format",
-        "size": "hi_Size",
-        "gps": "hi_Location",
-        "duration": "hi_Duration (seconds)",
-        "width": "hi_Width (pixels)",
-        "height": "hi_Height (pixels)",
-        "camera.type": "hi_Camera Type",
-        "camera.version": "hi_Camera Version",
-        "button.save": "hi_Save",
-        "button.wait": "hi_Please Wait"
+        "creator": "मालिक",
+        "modifier": "लेखक",
+        "created": "रचना तिथि",
+        "modified": "संशोधित तिथि",
+        "description": "विवरण",
+        "type": "प्रकार",
+        "organization": "स्रोत संगठन",
+        "person": "स्रोत इकाई",
+        "format": "स्वरूप",
+        "size": "आकार",
+        "gps": "स्थान",
+        "duration": "अवधि (सेकंड)",
+        "width": "चौड़ाई (पिक्सेल)",
+        "height": "ऊँचाई (पिक्सेल)",
+        "camera.type": "कैमरा प्रकार",
+        "camera.version": "कैमरा संस्करण",
+        "button.save": "बचाना",
+        "button.wait": "कृपया प्रतीक्षा करें"
       },
       "message": {
-        "save.success": "hi_File metadata are successfully updated",
-        "save.error": "hi_Unable to update file metadata"
+        "save.success": "फ़ाइल मेटाडेटा को सफलतापूर्वक अपडेट किया गया है",
+        "save.error": "फ़ाइल मेटाडेटा को अपडेट करने में असमर्थ"
       }
     }
   }
