@@ -14,7 +14,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -122,21 +121,17 @@ public class GroupServiceTest
         when(group.getName()).thenReturn(GROUP);
 
         when(mockedMemeberGroup1.getName()).thenReturn(GROUP_1);
-        when(mockedMemeberGroup1.getUserMembers()).thenReturn(new HashSet<>(Arrays.asList(userGroup1)));
         when(mockedMemeberGroup1.getMemberGroups()).thenReturn(new HashSet<>(Arrays.asList(mockedMemeberSubGroup1)));
         when(mockedMemeberGroup1.getMemberOfGroups()).thenReturn(new HashSet<>(Arrays.asList(group)));
 
         when(mockedMemeberGroup2.getName()).thenReturn(GROUP_2);
-        when(mockedMemeberGroup2.getUserMembers()).thenReturn(new HashSet<>(Arrays.asList(userGroup2)));
         when(mockedMemeberGroup2.getMemberGroups()).thenReturn(new HashSet<>(Arrays.asList(mockedMemeberSubGroup2)));
         when(mockedMemeberGroup2.getMemberOfGroups()).thenReturn(new HashSet<>(Arrays.asList(group)));
 
         when(mockedMemeberSubGroup1.getName()).thenReturn(SUBGROUP_1);
-        when(mockedMemeberSubGroup1.getUserMembers()).thenReturn(new HashSet<>(Arrays.asList(userSubGroup1)));
         when(mockedMemeberSubGroup1.getMemberOfGroups()).thenReturn(new HashSet<>(Arrays.asList(mockedMemeberGroup1)));
 
         when(mockedMemeberSubGroup2.getName()).thenReturn(SUBGROUP_2);
-        when(mockedMemeberSubGroup2.getUserMembers()).thenReturn(new HashSet<>(Arrays.asList(userSubGroup2)));
         when(mockedMemeberSubGroup2.getMemberOfGroups()).thenReturn(new HashSet<>(Arrays.asList(mockedMemeberGroup2)));
 
         Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(group);
@@ -208,8 +203,7 @@ public class GroupServiceTest
         // given
         when(mockedGroupDao.findByName(GROUP)).thenReturn(group);
         when(group.getSupervisor()).thenReturn(userGroup);
-        Stream<String> parentAscendants = Stream.empty();
-        when(group.getAscendants()).thenReturn(parentAscendants);
+        when(group.getAscendantsList()).thenReturn("");
         when(mockedMemeberGroup1.getSupervisor()).thenReturn(null);
 
         // when
@@ -217,7 +211,7 @@ public class GroupServiceTest
 
         // then
         verify(mockedMemeberGroup1).setSupervisor(userGroup);
-        verify(mockedMemeberGroup1).addAscendants(parentAscendants);
+        verify(mockedMemeberGroup1).setAscendantsList("");
         verify(group).addGroupMember(mockedMemeberGroup1);
 
         assertThat(resultGroup, is(mockedMemeberGroup1));
