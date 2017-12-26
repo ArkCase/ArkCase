@@ -247,7 +247,6 @@
     "title": "Календарь"
   },
   "cases.comp.merge": {
-    "id": "Сливаться",
     "title": "Сливаться",
     "cancel.btn": "Отмена",
     "merge.btn": "Сливаться",

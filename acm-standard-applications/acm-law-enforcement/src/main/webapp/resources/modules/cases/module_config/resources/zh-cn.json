@@ -247,7 +247,6 @@
     "title": "日历"
   },
   "cases.comp.merge": {
-    "id": "合并",
     "title": "合并",
     "cancel.btn": "取消",
     "merge.btn": "合并",

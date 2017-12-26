@@ -14,7 +14,7 @@
     "_10": "'shortTime' - equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)",
     "_11": " ",
     "_12": "Following date formats are phased out. If customers request to have customize format, we need ",
-    "_13": "to educate them to avoid doing so, because of i18n conerns",
+    "_13": "to educate them to avoid doing so, because of i18n concerns",
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
