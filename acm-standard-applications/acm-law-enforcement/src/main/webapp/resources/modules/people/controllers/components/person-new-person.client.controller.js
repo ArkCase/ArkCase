@@ -6,6 +6,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.modalParams = modalParams;
         $scope.loading = false;
+        $scope.loadingIcon = "fa fa-floppy-o";
 
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
@@ -142,6 +143,7 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
 
         $scope.save = function () {
             $scope.loading = true;
+            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
             var clearedPersonInfo = clearNotFilledElements(_.cloneDeep($scope.person));
             var promiseSavePerson = PersonInfoService.savePersonInfoWithPictures(clearedPersonInfo, $scope.userPictures);
             promiseSavePerson.then(
@@ -156,9 +158,11 @@ angular.module('people').controller('People.NewPersonController', ['$scope', '$s
                     ObjectService.showObject(ObjectService.ObjectTypes.PERSON, objectInfo.data.id);
                     $scope.onModalClose();
                     $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
                 },
                 function (error) {
                     $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
                     if (error.data && error.data.message) {
                         $scope.error = error.data.message;
                     } else {
