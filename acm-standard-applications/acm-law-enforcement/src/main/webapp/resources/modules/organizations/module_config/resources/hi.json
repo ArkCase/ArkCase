@@ -351,6 +351,7 @@
   },
   "organizations.comp.related": {
     "title": "संबंधित संगठनों",
+    "linkTitle": "hi_Rel Org",
     "table.columns": {
       "associationType": "hi_Relationship",
       "type": "hi_Type",

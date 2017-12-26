@@ -102,7 +102,8 @@ module.exports = {
                 'lib/videogular-controls/vg-controls.js',
                 'lib/videogular-overlay-play/vg-overlay-play.js',
                 'lib/videogular-poster/vg-poster.js',
-                'lib/videogular-buffering/vg-buffering.js'
+                'lib/videogular-buffering/vg-buffering.js',
+                'lib/angular-utf8-base64/angular-utf8-base64.js'
             ]
         },
         css: [

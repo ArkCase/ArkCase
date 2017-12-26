@@ -35,6 +35,11 @@
                     <property name="url" value="/api/{version}/plugin/locks/{objectType}"/>
                     <property name="requiredPrivilege" ref="listLocksDetailsPrivilege"/>
                 </bean>
+                <bean id="releaseMultipleOrdersLockUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                    <property name="httpMethod" value="DELETE"/>
+                    <property name="url" value="/api/{version}/plugin/locks/{objectType}/lock"/>
+                    <property name="requiredPrivilege" ref="objectUnLockPrivilege"/>
+                </bean>
             </list>
         </property>
     </bean>

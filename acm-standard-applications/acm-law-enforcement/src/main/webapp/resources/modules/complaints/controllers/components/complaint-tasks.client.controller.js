@@ -32,6 +32,7 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
             gridHelper.disableGridScrolling(config);
             gridHelper.setExternalPaging(config, $scope.retrieveGridData);
             gridHelper.setUserNameFilter(promiseUsers);
+            gridHelper.addButton(config, "delete");
 
             componentHelper.doneConfig(config);
             return false;
@@ -53,9 +54,9 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 ).then(function (data) {
                     var tasks = data.response.docs;
                     angular.forEach(tasks,function (task) {
-                        //calculate to show alert icons if task is in overdue or deadline is approaching
-                        task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
-                        task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
+                            //calculate to show alert icons if task is in overdue or deadline is approaching
+                            task.isOverdue = TaskAlertsService.calculateOverdue(new Date(task.due_tdt));
+                            task.isDeadline = TaskAlertsService.calculateDeadline(new Date(task.due_tdt));
                     });
                     $scope.gridOptions = $scope.gridOptions || {};
                     $scope.gridOptions.data = tasks;
@@ -80,6 +81,20 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
                 }
             };
             ModalDialogService.showModal(modalMetadata);
+        };
+
+        $scope.deleteRow = function (rowEntity) {
+            var complaintInfo = Util.omitNg($scope.objectInfo);
+            if (ComplaintInfoService.validateComplaintInfo(complaintInfo))
+            {
+                TaskWorkflowService.deleteTask(rowEntity.object_id_s).then(
+                    function (complaintInfo) {
+                        gridHelper.deleteRow(rowEntity);
+                        $scope.$emit("report-object-updated", complaintInfo);
+                        return complaintInfo;
+                    }
+                );
+            }
         };
 
         $scope.onClickObjLink = function (event, rowEntity) {

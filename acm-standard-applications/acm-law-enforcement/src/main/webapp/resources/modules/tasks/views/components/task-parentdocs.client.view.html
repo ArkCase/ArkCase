@@ -23,13 +23,14 @@
                     </div>
                     <div class="col-md-6">
                         <div class="pull-right">
-                            <button class="btn btn-default btn-xs" ng-click="sendEmail()" ng-show="sendEmailEnabled">
+                            <button class="btn btn-default btn-xs" ng-click="sendEmail()" ng-show="sendEmailEnabled
+                            && parentObjectType">
                                     <span translate>
                                          tasks.comp.parentdocs.sendEmail
                                     </span>
                             </button>
                             <folder-actions></folder-actions>
-                            <button type="button" class="btn btn-default btn-xs" ng-click="onClickRefresh()">
+                            <button type="button" class="btn btn-default btn-xs" ng-click="onClickRefresh()" ng-show="parentObjectType">
                                 <i class="fa fa-lg fa-refresh"></i>
                             </button>
                         </div>

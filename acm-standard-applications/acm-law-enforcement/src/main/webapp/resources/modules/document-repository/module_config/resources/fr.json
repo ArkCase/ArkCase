@@ -15,185 +15,188 @@
   "document-repository.comp.info": {
     "title": "Information",
     "docRepoId": "Identificateur du Référentiel:",
-    "docRepoName": "prénom du Référentiel:",
+    "docRepoName": "Prénom du Référentiel:",
     "modified.label": "Date modifiée",
     "assignee.label": "Assigné à",
     "owningGroup.label": "Appartenant au groupe",
     "description.label": "La description"
   },
   "document-repository.comp.actions": {
-    "title": "Actions",
+    "title": "Actes",
     "restrict": "Restreindre?",
     "subscribe.button": "S'abonner",
-    "unsubscribe.button": "Désabonner",
+    "unsubscribe.button": "Se désabonner",
     "delete.button": "Supprimer le référentiel",
     "confirm.delete.documentRepository.msg": "Cette action supprime tout le dépôt. Êtes-vous sûr de vouloir continuer?"
   },
   "document-repository.comp.details": {
     "title": "Détails",
-    "informSaved": "fr_Document Repository details saved",
+    "informSaved": "Détails du référentiel de documents enregistrés",
     "table.columns": {
-      "title": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "document-repository.comp.documents": {
     "title": "Documents",
-    "sendEmail": "fr_Send Email",
-    "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "sendEmail": "Envoyer un email",
+    "filterInputPlaceholder": "Filtre",
+    "searchInputPlaceholder": "Chercher",
+    "newTask": "Nouvelle tâche"
   },
   "document-repository.comp.participants": {
     "title": "Participants",
     "table.columns": {
-      "type": "fr_Type",
-      "name": "fr_Name"
+      "type": "Type",
+      "name": "Prénom"
     },
     "dialogUserPicker": {
-      "header": "fr_Choose User",
+      "header": "Choisissez l'utilisateur",
       "table.columns": {
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "id": "fr_Username"
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "id": "Nom d'utilisateur"
       }
     },
     "dialogGroupPicker": {
-      "header": "fr_Choose Group",
+      "header": "Choisissez un groupe",
       "table.columns": {
-        "name": "fr_Name"
+        "name": "Prénom"
       }
     }
   },
   "document-repository.comp.notes": {
-    "title": "Notes",
+    "title": "Remarques",
     "table.columns": {
-      "note": "fr_Note",
-      "created": "fr_Created",
-      "creator": "fr_Author"
+      "note": "Remarque",
+      "created": "Créé",
+      "creator": "Auteur"
     }
   },
   "document-repository.comp.references": {
-    "title": "Références",
+    "title": "Les références",
     "table.columns": {
-      "targetName": "fr_Number",
-      "parentName": "fr_Parent",
-      "targetTitle": "fr_Title",
-      "modified": "fr_Modified",
-      "targetType": "fr_Reference Type",
-      "status": "fr_Status"
+      "targetName": "Nombre",
+      "parentName": "Parent",
+      "targetTitle": "Titre",
+      "modified": "Modifié",
+      "targetType": "Type de référence",
+      "status": "Statut"
     }
   },
   "document-repository.comp.history": {
-    "title": "Historique",
+    "title": "Histoire",
     "table.columns": {
-      "eventType": "fr_Event Name",
-      "eventDate": "fr_Date",
-      "userId": "fr_User"
+      "eventType": "Nom de l'événement",
+      "eventDate": "Rendez-vous amoureux",
+      "userId": "Utilisateur"
     }
   },
   "document-repository.comp.tags": {
-    "title": "étiquettes",
+    "title": "Mots clés",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Marque",
+      "created": "Créé",
+      "createdBy": "Créé par"
     },
     "modal": {
-      "title": "fr_Tag",
-      "search": "fr_Search for Tag",
+      "title": "Marque",
+      "search": "Recherche de tag",
       "buttons": {
-        "cancel": "fr_Cancel",
-        "ok": "fr_Add Tag"
+        "cancel": "Annuler",
+        "ok": "Ajouter une étiquette"
       }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression d'un tag"
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Recherche de référence"
+  },
   "document-repository.comp.addreference": {
-    "title": "fr_Add Reference",
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Add",
+    "title": "Ajouter une référence",
+    "cancelButton": "Annuler",
+    "confirmButton": "Ajouter",
     "search": {
-      "placeholder": "fr_Search for case, complaint, file, task",
-      "btn": "fr_Search"
+      "placeholder": "Recherche de cas, plainte, fichier, tâche",
+      "btn": "Chercher"
     },
     "grid": {
       "columns": {
-        "id": "fr_Id",
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "parent": "fr_Parent",
-        "assignee": "fr_Assignee",
-        "modified": "fr_Modified"
+        "id": "Id",
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "parent": "Parent",
+        "assignee": "Cessionnaire",
+        "modified": "Modifié"
       }
     }
   },
   "document-repository.comp.assigneePickerModal": {
-    "title": "fr_Change Assignee",
-    "assigneeNamelabel": "fr_Assignee Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchAssigneeHeader": "fr_Search Assignee"
+    "title": "Changer le cessionnaire",
+    "assigneeNamelabel": "Nom du cessionnaire",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchAssigneeHeader": "Rechercher cessionnaire"
   },
   "document-repository.comp.groupPickerModal": {
-    "title": "fr_Change Group",
-    "groupNamelabel": "fr_Group Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchGroupHeader": "fr_Search Group"
+    "title": "Changer de groupe",
+    "groupNamelabel": "Nom de groupe",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchGroupHeader": "Groupe de recherche"
   },
   "document-repository.userOrGroupSearch": {
-    "id": "fr_userSearch",
-    "title": "fr_User/Group Search",
+    "id": "UserSearch",
+    "title": "Recherche d'utilisateur / groupe",
     "search": {
-      "btn": "fr_Search",
-      "placeholder": "fr_Search for the user or group."
+      "btn": "Chercher",
+      "placeholder": "Recherchez l'utilisateur ou le groupe."
     },
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
     "assigneeGridColumns": {
-      "name": "fr_Name",
-      "type": "fr_Type",
-      "title": "fr_Title",
-      "username": "fr_Username"
+      "name": "Prénom",
+      "type": "Type",
+      "title": "Titre",
+      "username": "Nom d'utilisateur"
     }
   },
   "document-repository.newRepository": {
-    "title": "fr_Create Repository",
-    "assigneeLabel": "fr_Assignee",
-    "owningGroupLabel": "fr_Owning Group",
-    "assignee.placeholder": "fr_Search Assignee",
-    "saveButton": "fr_Create Repository",
-    "cancelButton": "fr_Cancel",
-    "nameLabel": "fr_Name",
-    "name.placeholder": "fr_Enter Name",
-    "descriptionLabel": "fr_Description",
-    "description.placeholder": "fr_Enter Description",
-    "searchUser": "fr_Search User"
+    "title": "Créer un référentiel",
+    "assigneeLabel": "Cessionnaire",
+    "owningGroupLabel": "Groupe propriétaire",
+    "assignee.placeholder": "Rechercher cessionnaire",
+    "saveButton": "Créer un référentiel",
+    "cancelButton": "Annuler",
+    "nameLabel": "Prénom",
+    "name.placeholder": "Entrez le nom",
+    "descriptionLabel": "La description",
+    "description.placeholder": "Entrez la description",
+    "searchUser": "Rechercher un utilisateur",
+    "personalRepository": "Mes documents"
   },
-  "document-repository.dialogUserPicker":{
-    "table.columns.name": "fr_Name",
-    "table.columns.type": "fr_Type",
-    "table.columns.title": "fr_Title",
-    "table.columns.id": "fr_Username"
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "Prénom",
+    "table.columns.type": "Type",
+    "table.columns.title": "Titre",
+    "table.columns.id": "Nom d'utilisateur"
   },
   "document-repository.tree": {
     "nodeTypes": {
       "details.label": "Détails",
       "documents.label": "Documents",
       "participants.label": "Participants",
-      "tags.label": "étiquettes",
+      "tags.label": "Étiquettes",
       "references.label": "Références",
       "notes.label": "Notes",
       "history.label": "Histoire"

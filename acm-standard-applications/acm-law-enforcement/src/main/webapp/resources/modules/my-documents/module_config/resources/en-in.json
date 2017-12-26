@@ -4,5 +4,8 @@
   },
   "my-documents.menus": {
     "leftnav.item": "My Documents"
+  },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Reference Search"
   }
 }

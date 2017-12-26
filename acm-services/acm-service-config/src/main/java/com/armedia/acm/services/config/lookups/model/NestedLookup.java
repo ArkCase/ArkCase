@@ -16,9 +16,9 @@ public class NestedLookup extends AcmLookup<NestedLookupEntry>
         // Check empty key or value
         for (NestedLookupEntry entry : entries)
         {
-            if (entry.getKey() == null || entry.getKey().isEmpty())
+            if (entry.getKey() == null)
             {
-                return new LookupValidationResult(false, "Empty key found in '" + getName() + "' lookup!");
+                return new LookupValidationResult(false, "Key not found or have [null] value in '" + getName() + "' lookup!");
             }
             if (entry.getValue() == null || entry.getValue().isEmpty())
             {

@@ -7,29 +7,31 @@
                     <span translate>audit.title</span>
                 </h3>
             </div>
-            <div class="well panel">
-                <div class="panel-body">
+            <form name="auditForm">
+                <div class="well panel">
+                    <div class="panel-body">
 
-                    <div ng-include="'modules/audit/views/components/audit-selection.client.view.html'"></div>
+                        <div ng-include="'modules/audit/views/components/audit-selection.client.view.html'"></div>
 
-                    <div ng-include="'modules/audit/views/components/audit-datepickers.client.view.html'"></div>
+                        <div ng-include="'modules/audit/views/components/audit-datepickers.client.view.html'"></div>
 
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="showXmlReport">
-                            <span translate>
-                                audit.navigation.checkBox.xmlReport
-                            </span>
-                        </label>
-                    </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" ng-model="showXmlReport">
+                                <span translate>
+                                    audit.navigation.checkBox.xmlReport
+                                </span>
+                            </label>
+                        </div>
 
-                    <div>
-                        <button class="btn btn-sm btn-primary" type="button" ng-click="showIframe()">
-                            <span translate>audit.navigation.button.generateAuditReport.btn</span>
-                        </button>
+                        <div>
+                            <button class="btn btn-sm btn-primary" type="button" ng-disabled="auditForm.$invalid" ng-click="showIframe()">
+                                <span translate>audit.navigation.button.generateAuditReport.btn</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="content-body">
             <div ng-switch on="showXmlReport">
