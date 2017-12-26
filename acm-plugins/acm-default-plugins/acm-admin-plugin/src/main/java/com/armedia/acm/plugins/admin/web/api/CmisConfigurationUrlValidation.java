@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
@@ -37,7 +38,7 @@ public class CmisConfigurationUrlValidation
 
     @RequestMapping(value = "", method = RequestMethod.POST)
     @ResponseBody
-    public ResponseEntity validateUrl(@RequestBody CmisUrlConfig cmsiUrlConfig) throws AcmEncryptionException {
+    public ResponseEntity validateUrl(@RequestBody CmisUrlConfig cmsiUrlConfig) throws AcmEncryptionException, AcmAppErrorJsonMsg {
         try
         {
             List<Repository> repositories = cmisConfigurationService.getRepositories(cmsiUrlConfig);
@@ -50,9 +51,8 @@ public class CmisConfigurationUrlValidation
         }
         catch (Exception ex)
         {
-            HashMap<String, String> urlError = new HashMap<>();
-            urlError.put("message", ex.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(urlError);
+            throw  new AcmAppErrorJsonMsg(ex.getMessage(), "CmisUrlConfig", ex );
+
         }
 
         return ResponseEntity.status(HttpStatus.OK).build();
@@ -66,29 +66,5 @@ public class CmisConfigurationUrlValidation
         this.cmisConfigurationService = cmisConfigurationService;
     }
 
-    public class UrlError
-    {
-        private BigInteger code;
-        private String message;
 
-        public BigInteger getCode()
-        {
-            return code;
-        }
-
-        public void setCode(BigInteger code)
-        {
-            this.code = code;
-        }
-
-        public String getMessage()
-        {
-            return message;
-        }
-
-        public void setMessage(String message)
-        {
-            this.message = message;
-        }
-    }
 }
