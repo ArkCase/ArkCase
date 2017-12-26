@@ -233,8 +233,6 @@
     "pickGroupLabel": "Pick Associated Group",
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -251,7 +249,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -268,8 +265,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userFacetFilter": "\"Object Type\": ",
     "objectGridColumns": {
       "name": "Number",
       "type": "Type",

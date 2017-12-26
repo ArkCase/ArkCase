@@ -157,8 +157,7 @@
           "lastName": "姓を入力",
           "email": "電子メールを入力してください",
           "password": "パスワードを入力してください",
-          "confirmation": "もう一度パスワードを入力してください",
-          "minLengthForPassword": "7"
+          "confirmation": "もう一度パスワードを入力してください"
         },
         "editLdapMember": {
           "title": "Ldapメンバーを編集",
@@ -442,7 +441,6 @@
     },
     "workflows.config.btn": {
       "createNew": "新しいモデルを作成する",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "新しいBPMNをアップロードする"
     },
     "workflows.config.links": {
