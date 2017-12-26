@@ -17,11 +17,13 @@ angular.module('dashboard.calendar', ['adf.provider'])
             });
     })
     .controller('Dashboard.CalendarController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService'
-        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Util.DateService',
+        , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Admin.CalendarConfigurationService',
         function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
-            , HelperObjectBrowserService, CalendarService, ObjectService, DateService) {
+            , HelperObjectBrowserService, CalendarService, ObjectService, CalendarConfigurationService) {
 
             var vm = this;
+
+            var displayInnerCalendarTitle = true;
 
             var modules = [
                 {
@@ -46,111 +48,31 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 return module.name == $stateParams.type;
             });
 
-            new HelperObjectBrowserService.Component({
+            var componentHelper = new HelperObjectBrowserService.Component({
                 scope: $scope
                 , stateParams: $stateParams
                 , moduleId: module.configName
                 , componentId: "main"
                 , retrieveObjectInfo: module.getInfo
                 , validateObjectInfo: module.validateInfo
-                , onObjectInfoRetrieved: function (objectInfo) {
-                    onObjectInfoRetrieved(objectInfo);
+                , onObjectInfoRetrieved: function () {
+                    onObjectInfoRetrieved();
                 }
             });
 
-            var onObjectInfoRetrieved = function (objectInfo) {
-                var chartData = [];
-                var labels = [];
-                var today = moment();
-                var endDate = moment().add(7, 'days');
-                CalendarService.getCalendarEvents(DateService.dateToIso(today.toDate()), DateService.dateToIso(endDate.toDate()), module.objectType, objectInfo[module.objectIdPropertyName])
-                    .then(function (res) {
-                        var events = [];
-                        _.forEach(res.data, function(event) {
-                            events.push({
-                                id: event.eventId,
-                                title: event.subject,
-                                start: event.start,
-                                end: event.end
-                            });
-                        });
-                          
-                        if (events) {
-                            /**
-                             * create initial data
-                             */
-                            var calendarChartData = [];
-                            var targetDays = getRange(today.toDate(), endDate.toDate());
-                            _.forEach(targetDays, function (day) {
-                                calendarChartData.push({day: day, count: 0})
-                            });
-
-                            /**
-                             * For each of the days we want to look at:
-                             * 1. Check if any of the dates of the event are our target dates
-                             * 2. If they are, add to count for that day
-                             *
-                             * TODO: Woefully inefficient, should invert the logic to be:
-                             * TODO: 1. Get range of days for calendar event
-                             * TODO: 2. Loop through range and add to our target date if the days are the same
-                             * TODO: This would make it so you only have to loop through range for every event once,
-                             * TODO: but for short events it doesn't matter. This was just
-                             * TODO: the quick and dirty way to do it with the amount of time I had.
-                             */
-                            _.forEach(calendarChartData, function (dataPoint, index) {
-                                var dayTime = dataPoint.day.getTime();
-                                var count = dataPoint.count;
-                                _.forEach(events, function (event) {
-                                    var rangeOfEvent = getRange(event.start, event.end);
-                                    _.forEach(rangeOfEvent, function (day) {
-                                        if (dayTime === day.getTime()) {
-                                            count++;
-                                        }
-                                    });
-                                });
-
-                                calendarChartData[index].count = count;
-                            });
-                        }
-                        return calendarChartData ? calendarChartData : null;
-                    })
-                    .then(function (calendarChartData) {
-                        if (calendarChartData) {
-                            //TODO: Populate chart data with 'calendarChartData'
-                            /** Structure of end data will be:
-                             * [
-                             *  {day: $day1, count:  $count},
-                             *  ...
-                             *  {day: $day7, count: $count}
-                             * ]
-                             **/
-                        }
-                    });
-                vm.showChart = chartData.length > 0;
-                vm.data = [chartData];
-                vm.labels = labels;
+            var onObjectInfoRetrieved = function () {
+                CalendarConfigurationService.getCurrentCalendarConfiguration().then(function (calendarAdminConfigRes) {
+                    $scope.objectType = HelperObjectBrowserService.getCurrentObjectType();
+                    $scope.objectId = componentHelper.currentObjectId;
+                    $scope.eventSources = [];
+                    if(calendarAdminConfigRes.data.configurationsByType[module.name].integrationEnabled)
+                    {
+                        $scope.objectInfoRetrieved = true;
+                    } else {
+                        MessageService.info('Calendar Integration Configuration Not Enabled');
+                        $scope.objectInfoRetrieved = false;
+                    }
+                });
             };
-
-            /**
-             * credit: http://stackoverflow.com/a/4413991
-             */
-            var getRange = function (startDate, endDate, daysInterval) {
-
-                daysInterval = daysInterval || 1;
-
-                var retVal = [];
-                var current = new Date(startDate);
-
-                while (current <= endDate) {
-                    retVal.push(new Date(current));
-                    current.setTime(current.getTime() + daysInterval * 86400000 );
-                }
-
-                return retVal;
-            };
-            
-            CalendarService.getCalendarIntegration(module.name).then(function (calendarAdminConfigRes) {
-                vm.isCalendarIntegrationEnabled = calendarAdminConfigRes.data === true;
-            });
         }
     ]);
