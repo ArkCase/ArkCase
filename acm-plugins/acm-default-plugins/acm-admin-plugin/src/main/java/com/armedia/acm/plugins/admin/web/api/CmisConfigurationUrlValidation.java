@@ -27,16 +27,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/admin/config/url-validation", "/api/latest/plugin/admin/config/url-validation" })
+@RequestMapping({ "/api/v1/plugin/admin/config/cmis/validate-url", "/api/latest/plugin/admin/config/cmis/validate-url " })
 public class CmisConfigurationUrlValidation
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CmisConfigurationService cmisConfigurationService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
     public ResponseEntity validateUrl(@RequestBody CmisUrlConfig cmsiUrlConfig) throws AcmEncryptionException, AcmAppErrorJsonMsg {
         try
@@ -44,12 +45,11 @@ public class CmisConfigurationUrlValidation
             List<Repository> repositories = cmisConfigurationService.getRepositories(cmsiUrlConfig);
             log.info("Found repository with ID: " + repositories.get(0).getId());
         }
-        catch (CmisConnectionException | CmisUnauthorizedException cmisException) {
-            HashMap<String, String> urlError = new HashMap<>();
+        catch (CmisConnectionException | CmisUnauthorizedException | NumberFormatException cmisException) {
+            Map<String, String> urlError = new HashMap<>();
             urlError.put("message", cmisException.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(urlError);
-        }
-        catch (Exception ex)
+        } catch (Exception ex)
         {
             throw  new AcmAppErrorJsonMsg(ex.getMessage(), "CmisUrlConfig", ex );
 
