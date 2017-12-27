@@ -66,7 +66,7 @@ angular.module('organizations').config(['$stateProvider',
                 url: '/:id/participants',
                 templateUrl: 'modules/organizations/views/components/organization-participants.client.view.html'
             })
-            
+
             .state('organizations.dbas', {
                 url: '/:id/dbas',
                 templateUrl: 'modules/organizations/views/components/organization-dbas.client.view.html'
@@ -99,7 +99,10 @@ angular.module('organizations').config(['$stateProvider',
 
             .state('organizations.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/organizations/views/components/organization-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "ORGANIZATION"
+                }
             })
 
             .state('newOrganization', {

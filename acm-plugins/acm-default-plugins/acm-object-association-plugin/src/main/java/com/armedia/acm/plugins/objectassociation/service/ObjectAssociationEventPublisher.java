@@ -23,19 +23,19 @@ public class ObjectAssociationEventPublisher implements ApplicationEventPublishe
         eventPublisher = applicationEventPublisher;
     }
 
-    public void publishAddReferenceEvent(Reference source, Authentication authentication, boolean succeeded)
+    public void publishAddReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
         AddReferenceEvent event = new AddReferenceEvent(source);
         publishEvent(event, authentication, succeeded);
     }
 
-    public void publishUpdateReferenceEvent(Reference source, Authentication authentication, boolean succeeded)
+    public void publishUpdateReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
         UpdateReferenceEvent event = new UpdateReferenceEvent(source);
         publishEvent(event, authentication, succeeded);
     }
 
-    public void publishDeleteReferenceEvent(Reference source, Authentication authentication, boolean succeeded)
+    public void publishDeleteReferenceEvent(ObjectAssociation source, Authentication authentication, boolean succeeded)
     {
         DeleteReferenceEvent event = new DeleteReferenceEvent(source);
         publishEvent(event, authentication, succeeded);
