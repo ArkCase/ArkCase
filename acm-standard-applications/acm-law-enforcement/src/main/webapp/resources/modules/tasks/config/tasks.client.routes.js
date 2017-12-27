@@ -115,7 +115,10 @@ angular.module('tasks').config(['$stateProvider',
 
             .state('tasks.history', {
                 url: '/:type/:id/history',
-                templateUrl: 'modules/tasks/views/components/task-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "TASK"
+                }
             })
 
             .state('tasks.signatures', {
