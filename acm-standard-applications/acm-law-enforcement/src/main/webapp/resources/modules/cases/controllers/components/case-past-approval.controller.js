@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Case.PastApprovalService'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService) {
+        , PermissionsService, UserInfoService, CasePastApprovalService) {
 
         $scope.pastApprovers = {};
         $scope.gridOptions = $scope.gridOptions || {};
@@ -44,7 +44,16 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
             $scope.taskInfo = objectInfo;
 
             //set past approvers info
-            if (objectInfo.buckslipPastApprovers) {
+            if(!Util.isEmpty(objectInfo.id)) {
+                CasePastApprovalService.getBuckslipHistoryForCase(objectInfo.id)
+                    .then(function (result){
+                        if(!Util.isArrayEmpty(result.data.pastTasks)){
+                            $scope.gridOptions.data = angular.fromJson(result.data.pastTasks);
+                            $scope.gridOptions.noData = false;
+                        }
+                    });
+            }
+            else if (objectInfo.buckslipPastApprovers) {
                 $scope.gridOptions.data = angular.fromJson(objectInfo.buckslipPastApprovers);
                 $scope.gridOptions.noData = false;
             } else {

@@ -6,7 +6,9 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.BuckslipHistory;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -149,4 +151,6 @@ public interface AcmTaskService
     BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException;
 
     List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
+
+    BuckslipHistory getBuckslipHistoryForCase(String caseId, Authentication authentication);
 }
