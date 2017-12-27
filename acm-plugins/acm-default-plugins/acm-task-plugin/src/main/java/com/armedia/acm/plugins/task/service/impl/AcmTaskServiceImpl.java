@@ -21,10 +21,7 @@ import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.BuckslipProcess;
-import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.plugins.task.model.*;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -36,10 +33,10 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
@@ -53,17 +50,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -84,6 +74,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
+    private HistoryService activitiHistoryService;
 
     private ObjectConverter objectConverter;
 
@@ -568,6 +559,62 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
     }
 
+    @Override
+    public BuckslipHistory getBuckslipHistoryForCase(String caseId, Authentication authentication) {
+
+        Long processId = getBusinessProcessIdFromSolrByCaseId(caseId, authentication);
+        BuckslipHistory buckslipHistory = new BuckslipHistory();
+
+        if(!processId.equals(-1L))
+        {
+            List<HistoricTaskInstance> historyTasks = getActivitiHistoryService()
+                    .createHistoricTaskInstanceQuery()
+                    .processInstanceId(String.valueOf(processId))
+                    .includeProcessVariables()
+                    .includeTaskLocalVariables()
+                    .list();
+
+            List<PastTask> pastTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection((String) historyTasks.get(0).getProcessVariables().get("pastTasks"), List.class, PastTask.class);
+            buckslipHistory.setPastTasks(pastTasks);
+            buckslipHistory.setNonConcurEndsApprovalProcess((Boolean) historyTasks.get(0).getProcessVariables().get("nonConcurEndsApprovals"));
+        }
+        return buckslipHistory;
+    }
+
+    private Long getBusinessProcessIdFromSolrByCaseId(String caseId, Authentication authentication)
+    {
+        Long businessProcessId = -1L;
+        String query = "object_type_s:TASK AND parent_object_type_s:CASE_FILE AND parent_object_id_i:" + Integer.valueOf(caseId) + " AND outcome_name_s:buckslipOutcome";
+        String retval = null;
+
+        try
+        {
+            retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
+                    SolrCore.QUICK_SEARCH,
+                    query, 0, 1000, "");
+
+            if (retval != null && searchResults.getNumFound(retval) > 0)
+            {
+                JSONArray results = searchResults.getDocuments(retval);
+                for (int index = 0; index < results.length(); index++)
+                {
+                    JSONObject result = results.getJSONObject(index);
+                    if (result.has("business_process_id_i"))
+                    {
+                        businessProcessId = result.getLong("business_process_id_i");
+                        break;
+                    }
+                }
+            }
+        }
+        catch (MuleException e)
+        {
+            e.printStackTrace();
+        }
+
+        return businessProcessId;
+    }
+
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
     {
         this.taskEventPublisher = taskEventPublisher;
@@ -652,5 +699,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public HistoryService getActivitiHistoryService() {
+        return activitiHistoryService;
+    }
+
+    public void setActivitiHistoryService(HistoryService activitiHistoryService) {
+        this.activitiHistoryService = activitiHistoryService;
     }
 }

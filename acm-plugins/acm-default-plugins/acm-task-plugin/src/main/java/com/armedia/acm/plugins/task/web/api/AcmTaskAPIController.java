@@ -5,11 +5,13 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -143,6 +145,13 @@ public class AcmTaskAPIController
         {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping(value = "/case/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> getClosedTasksFromActivityHistoryByCaseId(@PathVariable("caseId") String caseId, Authentication authentication)
+    {
+        return new ResponseEntity<>(getAcmTaskService().getBuckslipHistoryForCase(caseId, authentication), HttpStatus.OK);
     }
 
     public AcmTaskService getAcmTaskService()
