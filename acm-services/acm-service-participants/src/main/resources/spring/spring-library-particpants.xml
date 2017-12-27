@@ -5,7 +5,7 @@
 
     <bean id="acmParticipantDao" class="com.armedia.acm.services.participants.dao.AcmParticipantDao"/>
 
-    <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService">
+    <bean id="acmParticipantService" class="com.armedia.acm.services.participants.service.AcmParticipantService" init-method="init">
         <property name="participantDao" ref="acmParticipantDao"/>
         <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
         <property name="acmParticipantEventPublisher" ref="acmParticipantEventPublisher"/>

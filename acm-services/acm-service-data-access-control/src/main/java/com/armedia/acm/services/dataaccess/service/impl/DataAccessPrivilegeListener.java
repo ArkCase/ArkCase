@@ -34,14 +34,14 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
     @Override
     public void beforeInsert(Object object) throws AcmAccessControlException
     {
-        log.trace("inserted: " + object);
+        log.trace("inserted: {}", object);
         applyAssignmentAndAccessRules(object);
     }
 
     @Override
     public void beforeUpdate(Object object) throws AcmAccessControlException
     {
-        log.trace("updated: " + object);
+        log.trace("updated: {}", object);
         applyAssignmentAndAccessRules(object);
     }
 

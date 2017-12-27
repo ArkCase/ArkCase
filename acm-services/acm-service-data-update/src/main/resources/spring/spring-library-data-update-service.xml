@@ -15,9 +15,17 @@
     <bean id="acmDataUpdateManager" class="com.armedia.acm.services.dataupdate.service.AcmDataUpdateManager">
         <property name="dataUpdateExecutors">
             <list>
+                <ref bean="fileFolderParticipantsUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
+    </bean>
+    
+    <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
 </beans>
