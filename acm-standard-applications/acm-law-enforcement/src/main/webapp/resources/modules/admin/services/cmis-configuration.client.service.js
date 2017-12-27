@@ -60,7 +60,7 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
     function urlValidation(cmisUrlTest) {
         return $http({
             method: "POST",
-            url: "api/latest/plugin/admin/config/url-validation",
+            url: "api/latest/plugin/admin/config/cmis/validate-url",
             data: cmisUrlTest,
             headers: {
                 "Content-Type": "application/json"
