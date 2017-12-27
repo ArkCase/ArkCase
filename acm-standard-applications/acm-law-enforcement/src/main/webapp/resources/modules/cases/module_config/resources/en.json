@@ -327,7 +327,7 @@
     },
     "table.columns": {
       "assignee": "Assignee",
-      "group": "Owning Group",
+      "owningGroup": "Owning Group",
       "subject": "Subject",
       "details": "Details",
       "dueDate": "Due Date",
