@@ -169,8 +169,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
-    "pagerCountMiddleLabel": " of ",
-    "pagerCountLabel": " items"
+    "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
