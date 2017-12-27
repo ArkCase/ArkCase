@@ -44,7 +44,7 @@ public class AcmPrivilegeService
      */
     public void setPrivileges(AcmAssignedObject obj, String accessSpec)
     {
-        log.debug("Set privilege '" + accessSpec + "'");
+        log.debug("Set privilege '{}' to object: {}[{}]", accessSpec, obj.getObjectType(), obj.getId());
 
         String[] parts = accessSpec.split(" ");
         // grant, deny, mandatory deny
@@ -82,7 +82,7 @@ public class AcmPrivilegeService
         // now we have the desired access, so we can grant it to every participant of the given participant type
         for (AcmParticipant ap : obj.getParticipants())
         {
-            log.debug("checking type '" + ap.getParticipantType() + "', user '" + ap.getParticipantLdapId() + "'");
+            log.debug("checking type '{}', user '{}'", ap.getParticipantType(), ap.getParticipantLdapId());
             if (participantTypes.contains((ap.getParticipantType().toLowerCase())))
             {
                 ap.setModified(new Date());
@@ -90,13 +90,13 @@ public class AcmPrivilegeService
                 boolean found = false;
                 for (AcmParticipantPrivilege priv : ap.getPrivileges())
                 {
-                    log.debug("object action: '" + priv.getObjectAction() + "', rule action: '" + action + "'");
+                    log.debug("object action: '{}', rule action: '{}'", priv.getObjectAction(), action);
                     if (action.equals(priv.getObjectAction()))
                     {
                         found = true;
                         priv.setAccessType(mode);
                         priv.setAccessReason(DataAccessControlConstants.ACCESS_REASON_POLICY);
-                        log.info("updated existing privilege [{} '{}' to '{}'='{}']", mode, action, ap.getParticipantType(),
+                        log.debug("updated existing privilege [{} '{}' to '{}'='{}']", mode, action, ap.getParticipantType(),
                                 ap.getParticipantLdapId());
                         break;
                     }
@@ -110,7 +110,7 @@ public class AcmPrivilegeService
                     priv.setObjectAction(action);
                     ap.getPrivileges().add(priv);
 
-                    log.debug("added privilege '" + action + "' to '" + ap.getParticipantLdapId() + "'");
+                    log.debug("added privilege '{}' to '{}'", action, ap.getParticipantLdapId());
                 }
             }
         }

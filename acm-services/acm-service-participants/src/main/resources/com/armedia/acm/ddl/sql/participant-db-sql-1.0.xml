@@ -1,0 +1,62 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm_paticipant-delete-multiple-owner-participants" author="bojan.milenkoski">
+        <sql>
+            CREATE TABLE DuplicateParticipantIds (cm_participant_id bigint);
+
+            INSERT INTO DuplicateParticipantIds (cm_participant_id)
+            SELECT cm_participant_id FROM acm_participant
+            WHERE cm_participant_type='owner' 
+            GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
+
+            DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM DuplicateParticipantIds);
+            DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM DuplicateParticipantIds);
+
+            DROP TABLE DuplicateParticipantIds;
+        </sql>
+    </changeSet>
+
+    <changeSet id="02-acm_paticipant-delete-owner-with-no-access" author="bojan.milenkoski">
+        <sql>
+            CREATE TABLE ParticipantsOwnerWithNoAccess (cm_participant_id bigint);
+
+            INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
+            SELECT cm_participant_id FROM acm_participant
+            WHERE cm_participant_type='owner' || cm_participant_type='No Access'
+            GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
+
+            DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
+            DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
+
+            DROP TABLE ParticipantsOwnerWithNoAccess;
+        </sql>
+    </changeSet>
+
+    <changeSet id="03-acm_paticipant-delete-assignee-with-no-access" author="bojan.milenkoski">
+        <sql>
+            CREATE TABLE ParticipantsAssigneeWithNoAccess (cm_participant_id bigint);
+
+            INSERT INTO ParticipantsAssigneeWithNoAccess (cm_participant_id)
+            SELECT cm_participant_id FROM acm_participant
+            WHERE cm_participant_type='assignee' || cm_participant_type='No Access'
+            GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
+
+            DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
+            DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
+
+            DROP TABLE ParticipantsAssigneeWithNoAccess;
+        </sql>
+    </changeSet>
+    
+    <changeSet id="04-acm_paticipant-fix-no-access-type" author="bojan.milenkoski">
+        <sql>
+            UPDATE acm_participant
+            SET cm_participant_type='No Access'
+            WHERE cm_participant_type='no access'
+        </sql>
+    </changeSet>
+</databaseChangeLog>

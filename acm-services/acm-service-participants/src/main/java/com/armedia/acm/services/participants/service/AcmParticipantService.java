@@ -6,15 +6,16 @@ import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 
-import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.FlushModeType;
+import javax.persistence.metamodel.EntityType;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Created by marjan.stefanoski on 01.04.2015.
@@ -25,6 +26,16 @@ public class AcmParticipantService
     private AcmParticipantDao participantDao;
     private ParticipantsBusinessRule participantsBusinessRule;
     private AcmParticipantEventPublisher acmParticipantEventPublisher;
+
+    private Set<Class<?>> assignedObjectClasses;
+
+    public void init()
+    {
+        Set<EntityType<?>> entityTypes = participantDao.getEm().getMetamodel().getEntities();
+        assignedObjectClasses = entityTypes.stream()
+                .filter(entityType -> AcmAssignedObject.class.isAssignableFrom(entityType.getJavaType()))
+                .map(entityType -> entityType.getJavaType()).collect(Collectors.toSet());
+    }
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -151,15 +162,12 @@ public class AcmParticipantService
 
     public List<AcmParticipant> getParticipantsFromParentObject(String objectType, Long objectId)
     {
-        Reflections reflections = new Reflections("com.armedia");
-        Set<Class<? extends AcmAssignedObject>> classes = reflections.getSubTypesOf(AcmAssignedObject.class);
-
-        for (Class<? extends AcmAssignedObject> class1 : classes)
+        for (Class<?> class1 : assignedObjectClasses)
         {
             AcmAssignedObject assignedObject = null;
             try
             {
-                assignedObject = class1.newInstance();
+                assignedObject = (AcmAssignedObject) class1.newInstance();
             }
             catch (Exception e)
             {

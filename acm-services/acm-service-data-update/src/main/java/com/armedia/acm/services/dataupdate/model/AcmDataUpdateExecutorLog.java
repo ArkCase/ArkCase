@@ -1,13 +1,14 @@
 package com.armedia.acm.services.dataupdate.model;
 
-import com.armedia.acm.data.converter.LocalDateTimeConverter;
+import com.armedia.acm.data.converter.LocalDateConverter;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -19,8 +20,8 @@ public class AcmDataUpdateExecutorLog
     private String executorId;
 
     @Column(name = "cm_executed_on")
-    @Convert(converter = LocalDateTimeConverter.class)
-    private LocalDateTime executedOn;
+    @Convert(converter = LocalDateConverter.class)
+    private LocalDate executedOn;
 
     public String getExecutorId()
     {
@@ -32,12 +33,12 @@ public class AcmDataUpdateExecutorLog
         this.executorId = executorId;
     }
 
-    public LocalDateTime getExecutedOn()
+    public LocalDate getExecutedOn()
     {
         return executedOn;
     }
 
-    public void setExecutedOn(LocalDateTime executedOn)
+    public void setExecutedOn(LocalDate executedOn)
     {
         this.executedOn = executedOn;
     }
@@ -45,8 +46,10 @@ public class AcmDataUpdateExecutorLog
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmDataUpdateExecutorLog that = (AcmDataUpdateExecutorLog) o;
         return Objects.equals(executorId, that.executorId);
     }
