@@ -2,10 +2,10 @@
 
 angular.module('complaints').controller('Complaints.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Complaint.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService'
+    , 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, ComplaintInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService) {
+        , ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService) {
 
         var componentHelper = new HelperObjectBrowserService.Component({
             scope: $scope

@@ -189,14 +189,6 @@
       "status": "Status"
     }
   },
-  "cases.comp.history": {
-    "title": "History",
-    "table.columns": {
-      "eventType": "Event Name",
-      "eventDate": "Date",
-      "userId": "User"
-    }
-  },
   "cases.comp.time": {
     "title": "Time",
     "table.columns": {
@@ -327,7 +319,7 @@
     },
     "table.columns": {
       "assignee": "Assignee",
-      "group": "Owning Group",
+      "owningGroup": "Owning Group",
       "subject": "Subject",
       "details": "Details",
       "dueDate": "Due Date",
@@ -343,6 +335,7 @@
     "future.task.modal": {
       "title": "New Future Task",
       "assignee": "Assignee",
+      "owningGroup": "Owning Group",
       "subject.label": "Subject",
       "subject.placeholder": "Enter future case subject",
       "details.label": "Details",
