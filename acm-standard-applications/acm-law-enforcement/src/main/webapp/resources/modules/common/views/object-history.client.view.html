@@ -1,0 +1,34 @@
+<div ng-controller="Common.HistoryController">
+    <div class="panel panel-success panel-grid">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span translate>common.objectHistory.client.title</span>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div ui-grid="gridOptions"
+                 ui-grid-resize-columns
+                 ui-grid-auto-resize
+                 ui-grid-pagination
+                 adjust-table-height="gridOptions.data.length"
+                 class="grid"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/ng-template" id="historyEventNameCellTemplateId">
+    <div>
+        <span ng-if='row.entity.parentObjectType'>
+            <span>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} {{'common.objectHistory.client.label.updated' | translate}} - {{row.entity.eventDescription|| row.entity.eventType}}</span>
+            <span><a href ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.objectId}}({{('common.objectTypes.' + row.entity.objectType) | translate}})</a></span>
+        </span>
+        <span ng-if='!row.entity.parentObjectType'>{{row.entity.eventDescription || row.entity.eventType}}</span>
+    </div>
+</script>
+<script type="text/ng-template" id="historyEventDetailsCellTemplateId">
+    <button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1'
+            ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)'
+            translate="common.objectHistory.client.table.columns.details.btn.text"
+            translate-values="{count:row.entity.diffDetailsAsJson.length}">
+    </button>
+</script>

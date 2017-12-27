@@ -61,10 +61,6 @@ angular.module('services').factory('Object.AuditService', ['$resource', 'Acm.Sto
          * @returns {Object} Promise
          */
         Service.queryAudit = function (objectType, objectId, start, n, sortBy, sortDir) {
-            var cacheCaseAuditData = new Store.CacheFifo(Service.CacheNames.AUDIT_DATA);
-            var cacheKey = objectType + "." + objectId + "." + start + "." + n + "." + sortBy + "." + sortDir;
-            var auditData = cacheCaseAuditData.get(cacheKey);
-
             var sort = "";
             if (!Util.isEmpty(sortBy)) {
                 sort = sortBy + " " + Util.goodValue(sortDir, "asc");
@@ -82,13 +78,9 @@ angular.module('services').factory('Object.AuditService', ['$resource', 'Acm.Sto
                     , n: n
                     , sort: sort
                 }
-                , result: auditData
                 , onSuccess: function (data) {
                     if (Service.validateAuditData(data)) {
-                        auditData = data;
-                        cacheCaseAuditData.put(cacheKey, auditData);
-                        return auditData;
-
+                        return data;
                     }
                 }
             });

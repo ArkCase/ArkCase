@@ -11,16 +11,16 @@ angular.module('cases').config(['$stateProvider',
                 resolve: {
                     translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService', 'Object.LookupService'
                         , function ($translate, $translatePartialLoader, LocaleService, ObjectLookupService) {
-                        $translatePartialLoader.addPart('common');
-                        $translatePartialLoader.addPart('dashboard');
-                        $translatePartialLoader.addPart('cases');
-                        $translate.resetDataDict()
-                            .addDataDictFromLabels(LocaleService.getLabelResources(["cases", "common"], "en"))
-                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
-                            .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
-                        ;
-                        return $translate.refresh();
-                    }]
+                            $translatePartialLoader.addPart('common');
+                            $translatePartialLoader.addPart('dashboard');
+                            $translatePartialLoader.addPart('cases');
+                            $translate.resetDataDict()
+                                .addDataDictFromLabels(LocaleService.getLabelResources(["cases", "common"], "en"))
+                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
+                                .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
+                            ;
+                            return $translate.refresh();
+                        }]
                 }
             })
 
@@ -59,7 +59,10 @@ angular.module('cases').config(['$stateProvider',
 
             .state('cases.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/cases/views/components/case-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "CASE_FILE"
+                }
             })
 
             .state('cases.notes', {

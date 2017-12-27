@@ -189,14 +189,6 @@
       "status": "Status"
     }
   },
-  "cases.comp.history": {
-    "title": "History",
-    "table.columns": {
-      "eventType": "Event Name",
-      "eventDate": "Date",
-      "userId": "User"
-    }
-  },
   "cases.comp.time": {
     "title": "Time",
     "table.columns": {

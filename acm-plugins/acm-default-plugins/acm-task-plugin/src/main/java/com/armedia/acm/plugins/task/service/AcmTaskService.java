@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.model.Reference;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipHistory;
@@ -28,9 +27,6 @@ public interface AcmTaskService
                    String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException;
 
     void copyTaskFilesAndFoldersToParent(AcmTask task);
-
-    ObjectAssociation saveReferenceToTask(Reference reference, Authentication authentication)
-            throws AcmCreateObjectFailedException;
 
     List<ObjectAssociation> findChildObjects(Long taskId);
 
