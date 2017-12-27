@@ -1,7 +1,7 @@
 'use strict';
 angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$scope', '$translate', '$modal'
-    , 'Admin.EmailTemplatesService', 'Helper.UiGridService', 'MessageService',
-    function ($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService) {
+    , 'Admin.EmailTemplatesService', 'Helper.UiGridService', 'MessageService','Dialog.BootboxService',
+    function ($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService, DialogService) {
 
         var gridHelper = new HelperUiGridService.Grid({scope: $scope});
         var promiseUsers = gridHelper.getUsers();
@@ -81,12 +81,21 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$
             });
 
             modalInstance.result.then(function (data) {
-
-                emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function () {
-                    MessageService.succsessAction();
-                    ReloadGrid();
-                }, function () {
-                    MessageService.errorAction();
+                emailTemplatesService.validateEmailTemplate(data.template).then(function (response) {
+                    if (response.data.validTemplate) {
+                        emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function () {
+                            MessageService.succsessAction();
+                            ReloadGrid();
+                        }, function () {
+                            MessageService.errorAction();
+                        });
+                    } else {
+                        DialogService.alert($translate.instant("admin.security.emailTemplates.modal.validationResponse") +
+                                ' [' + response.data.objectType + ', ' + response.data.action +
+                                ', "' + response.data.emailPattern + '"]');
+                    }
+                }, function (error) {
+                    MessageService.errorAction(error);
                 });
 
             });
