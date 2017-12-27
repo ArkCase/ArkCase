@@ -6,5 +6,6 @@ angular.module('cases').controller('Cases.UserSearchController', ['$scope', '$mo
         $scope.extraFilter = $extraFilter;
         $scope.modalInstance = $modalInstance;
         $scope.config = $config;
+        $scope.secondGrid = 'true';
     }
 ]);
