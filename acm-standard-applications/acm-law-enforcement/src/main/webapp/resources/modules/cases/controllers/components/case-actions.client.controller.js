@@ -9,6 +9,10 @@ angular.module('cases').controller('Cases.ActionsController', ['$scope', '$state
         , ObjectSubscriptionService, ObjectModelService, CaseInfoService, MergeSplitService
         , HelperObjectBrowserService, UserInfoService) {
 
+        scope.showingLow = 10;
+        scope.showingHigh = 3;
+        scope.totalPages = 29;
+
         new HelperObjectBrowserService.Component({
             scope: $scope
             , stateParams: $stateParams
