@@ -923,42 +923,6 @@
       ]
     },
     {
-      "id": "history",
-      "title": "cases.comp.history.title",
-      "icon": "fa fa-bell-o",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 10,
-      "columnDefs": [
-        {
-          "name": "eventType",
-          "displayName": "cases.comp.history.table.columns.eventType",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div> <span ng-if='row.entity.parentObjectType'>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - </span> {{row.entity.eventDescription || row.entity.eventType}}</div>"
-        },
-        {
-          "name": "eventDate",
-          "displayName": "cases.comp.history.table.columns.eventDate",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'shortDate' }}</div>"
-        },
-        {
-          "name": "userId",
-          "displayName": "cases.comp.history.table.columns.userId",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
       "id": "time",
       "title": "cases.comp.time.title",
       "icon": "fa fa-clock-o",
