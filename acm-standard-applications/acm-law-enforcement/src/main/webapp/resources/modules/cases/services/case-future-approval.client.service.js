@@ -18,10 +18,13 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
         });
     };
 
-    var _getBuckslipPastTasks = function (businessProcessId) {
+    var _getBuckslipPastTasks = function (businessProcessId, readFromHistory) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/pastTasks'
+            url: 'api/latest/plugin/task/businessProcess/' + businessProcessId + '/pastTasks',
+            params: {
+                readFromHistory: readFromHistory
+            }
         });
     };
 

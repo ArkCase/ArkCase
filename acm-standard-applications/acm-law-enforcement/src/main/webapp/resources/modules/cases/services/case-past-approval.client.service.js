@@ -11,15 +11,15 @@
  */
 angular.module('services').factory('Case.PastApprovalService', ['$http', function ($http) {
 
-    var _getBuckslipHistoryForCase = function (caseId) {
+    var _getCompletedBuckslipProcessIdForObject = function (objectType, objectId) {
         return $http({
             method: 'GET',
-            url: 'api/latest/plugin/task/case/'+ caseId
+            url: 'api/latest/plugin/task/objectType/'+objectType+'/objectId/'+objectId+'/completedBuckslipProcessIdForObject'
         });
     };
 
     return {
-        getBuckslipHistoryForCase: _getBuckslipHistoryForCase
+        getCompletedBuckslipProcessIdForObject: _getCompletedBuckslipProcessIdForObject
     }
   }
 ]);
