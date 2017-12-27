@@ -2,7 +2,7 @@
     <div class="panel panel-success panel-grid">
         <div class="panel-heading">
             <div class="panel-title">
-                <span translate>commons.objectHistory.client.title</span>
+                <span translate>common.objectHistory.client.title</span>
             </div>
         </div>
         <div class="panel-body">
@@ -19,8 +19,8 @@
 <script type="text/ng-template" id="historyEventNameCellTemplateId">
     <div>
         <span ng-if='row.entity.parentObjectType'>
-            <span>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} Updated - {{row.entity.eventDescription|| row.entity.eventType}}</span>
-            <span><a href ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.objectId + '(' + row.entity.objectType + ')'}}</a></span>
+            <span>{{('common.objectTypes.'+row.entity.parentObjectType) | translate}} {{'common.objectHistory.client.label.updated' | translate}} - {{row.entity.eventDescription|| row.entity.eventType}}</span>
+            <span><a href ng-click='grid.appScope.onClickObjLink($event, row.entity)'>{{row.entity.objectId}}({{('common.objectTypes.' + row.entity.objectType) | translate}})</a></span>
         </span>
         <span ng-if='!row.entity.parentObjectType'>{{row.entity.eventDescription || row.entity.eventType}}</span>
     </div>
