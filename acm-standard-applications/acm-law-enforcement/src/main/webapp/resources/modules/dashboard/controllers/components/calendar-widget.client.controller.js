@@ -16,14 +16,14 @@ angular.module('dashboard.calendar', ['adf.provider'])
                 commonName: 'calendar'
             });
     })
-    .controller('Dashboard.CalendarController', ['$scope', '$stateParams', 'Case.InfoService', 'Complaint.InfoService'
+    .controller('Dashboard.CalendarController', ['$scope', '$stateParams', '$translate', 'Case.InfoService', 'Complaint.InfoService'
         , 'Helper.ObjectBrowserService', 'Object.CalendarService', 'ObjectService', 'Admin.CalendarConfigurationService',
-        function ($scope, $stateParams, CaseInfoService, ComplaintInfoService
+        function ($scope, $stateParams, $translate, CaseInfoService, ComplaintInfoService
             , HelperObjectBrowserService, CalendarService, ObjectService, CalendarConfigurationService) {
 
             var vm = this;
 
-            $scope.displayInnerCalendarTitle = true;
+            $scope.hideInnerCalendarTitle = true;
 
             var modules = [
                 {
@@ -69,7 +69,7 @@ angular.module('dashboard.calendar', ['adf.provider'])
                     {
                         $scope.objectInfoRetrieved = true;
                     } else {
-                        MessageService.info('Calendar Integration Configuration Not Enabled');
+                        MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
                         $scope.objectInfoRetrieved = false;
                     }
                 });

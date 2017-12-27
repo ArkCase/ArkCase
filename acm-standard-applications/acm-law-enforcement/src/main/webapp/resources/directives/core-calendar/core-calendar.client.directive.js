@@ -27,7 +27,7 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                 objectId: '=',
                 objectType: '=',
                 eventSources: '=',
-                displayInnerCalendarTitle: '@?'  //two way binding with optional property, the "?" is added there for scenario: when the parent scope property doesn't exist then the application will continue to run without console errors.
+                hideInnerCalendarTitle: '@?'  //two way binding with optional property, the "?" is added there for scenario: when the parent scope property doesn't exist then the application will continue to run without console errors.
             },
             link: function(scope) {
 
