@@ -1,11 +1,5 @@
 <div ng-controller="Cases.ActionsController">
     <div class="col-xs-4">
-        <span>
-            {{'common.directive.simplePager.pagerCountLabel2' | translate: {pageCount: showingLow-showingHigh, pageTotal: totalPages} }}
-        </span>
-    </div>
-
-    <div class="col-xs-4">
         <div class="checkbox">
             <label>
                 <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
