@@ -1230,7 +1230,7 @@
         },
         {
           "name": "groupName",
-          "displayName": "cases.comp.approvalRouting.table.columns.group",
+          "displayName": "cases.comp.approvalRouting.table.columns.owningGroup",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
