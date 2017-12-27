@@ -72,7 +72,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
-    private HistoryService activitiHistoryService;
 
     private ObjectConverter objectConverter;
 
@@ -100,6 +99,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
         List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
 
         return buckslipProcesses;
+    }
+
+    @Override
+    public Long getCompletedBuckslipProcessIdForObject(String objectType, Long objectId, Authentication authentication)
+    {
+        return getBusinessProcessIdFromSolr(objectType, objectId, authentication);
     }
 
     protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
@@ -154,7 +159,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException
     {
-        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, false);
         if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
         {
             List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
@@ -181,9 +186,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException
+    public String getBuckslipPastTasks(String businessProcessId, boolean readFromHistory) throws AcmTaskException
     {
-        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS);
+        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS, readFromHistory);
         return pastTasks;
     }
 
@@ -507,51 +512,25 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
     }
 
-    @Override
-    public BuckslipHistory getBuckslipHistoryForCase(String caseId, Authentication authentication) {
-
-        Long processId = getBusinessProcessIdFromSolrByCaseId(caseId, authentication);
-        BuckslipHistory buckslipHistory = new BuckslipHistory();
-
-        if(!processId.equals(-1L))
-        {
-            List<HistoricTaskInstance> historyTasks = getActivitiHistoryService()
-                    .createHistoricTaskInstanceQuery()
-                    .processInstanceId(String.valueOf(processId))
-                    .includeProcessVariables()
-                    .includeTaskLocalVariables()
-                    .list();
-
-            List<PastTask> pastTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection((String) historyTasks.get(0).getProcessVariables().get("pastTasks"), List.class, PastTask.class);
-            buckslipHistory.setPastTasks(pastTasks);
-            buckslipHistory.setNonConcurEndsApprovalProcess((Boolean) historyTasks.get(0).getProcessVariables().get("nonConcurEndsApprovals"));
-        }
-        return buckslipHistory;
-    }
-
-    private Long getBusinessProcessIdFromSolrByCaseId(String caseId, Authentication authentication)
+    private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         Long businessProcessId = -1L;
-        String query = "object_type_s:TASK AND parent_object_type_s:CASE_FILE AND parent_object_id_i:" + Integer.valueOf(caseId) + " AND outcome_name_s:buckslipOutcome";
+        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
         String retval = null;
 
         try
         {
             retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
                     SolrCore.QUICK_SEARCH,
-                    query, 0, 1000, "");
+                    query, 0, 10, "business_process_id_i ASC");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)
             {
                 JSONArray results = searchResults.getDocuments(retval);
-                for (int index = 0; index < results.length(); index++)
+                JSONObject result = results.getJSONObject(0);
+                if (result.has("business_process_id_i"))
                 {
-                    JSONObject result = results.getJSONObject(index);
-                    if (result.has("business_process_id_i"))
-                    {
-                        businessProcessId = result.getLong("business_process_id_i");
-                        break;
-                    }
+                    businessProcessId = result.getLong("business_process_id_i");
                 }
             }
         }
@@ -647,13 +626,5 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
-    }
-
-    public HistoryService getActivitiHistoryService() {
-        return activitiHistoryService;
-    }
-
-    public void setActivitiHistoryService(HistoryService activitiHistoryService) {
-        this.activitiHistoryService = activitiHistoryService;
     }
 }

@@ -5,9 +5,7 @@ import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.BuckslipHistory;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -111,10 +109,11 @@ public interface AcmTaskService
      * Retrieves the set of completed tasks for a business process.  Designed for the ArkCase buckslip / routing workflow.
      *
      * @param businessProcessId
+     * @param readFromHistory
      * @return
      * @throws AcmTaskException
      */
-    String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException;
+    String getBuckslipPastTasks(String businessProcessId, boolean readFromHistory) throws AcmTaskException;
 
     /**
      * Retrieves a list of buckslip processes for a given object type and id; any particular object may have zero to
@@ -135,6 +134,13 @@ public interface AcmTaskService
      */
     List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException;
 
+    /**
+     * Retrieves the ID of the completed business process for some Object ex.CASE_FILE
+     *
+     * @param objectType CASE_FILE, COMPLAINT, ...
+     * @param objectId   Id of the desired object
+     */
+    Long getCompletedBuckslipProcessIdForObject(String objectType, Long objectId, Authentication authentication);
 
     /**
      * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>
@@ -147,6 +153,4 @@ public interface AcmTaskService
     BuckslipProcess updateBuckslipProcess(BuckslipProcess in) throws AcmTaskException;
 
     List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException;
-
-    BuckslipHistory getBuckslipHistoryForCase(String caseId, Authentication authentication);
 }

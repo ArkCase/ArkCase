@@ -143,7 +143,6 @@
         <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
-        <property name="activitiHistoryService" ref="activitiHistoryService"/>
     </bean>
 
     <bean id="acmApplicationTaskEventHandler"

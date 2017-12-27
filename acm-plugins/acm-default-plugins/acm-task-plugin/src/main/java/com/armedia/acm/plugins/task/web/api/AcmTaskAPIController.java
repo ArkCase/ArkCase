@@ -42,12 +42,12 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/businessProcess/{id}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId)
+    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory)
     {
         try
         {
             log.info("Trying to fetch the Past Tasks from Business Process {}", businessProcessId);
-            return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(businessProcessId), HttpStatus.OK);
+            return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(businessProcessId, readFromHistory), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
@@ -68,6 +68,13 @@ public class AcmTaskAPIController
         {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @RequestMapping(value = "/objectType/{type}/objectId/{id}/completedBuckslipProcessIdForObject", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId, Authentication authentication)
+    {
+        return new ResponseEntity<Long>(getAcmTaskService().getCompletedBuckslipProcessIdForObject(objectType, objectId, authentication), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/businessProcess/{id}/initiatable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -145,13 +152,6 @@ public class AcmTaskAPIController
         {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @RequestMapping(value = "/case/{caseId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public ResponseEntity<?> getClosedTasksFromActivityHistoryByCaseId(@PathVariable("caseId") String caseId, Authentication authentication)
-    {
-        return new ResponseEntity<>(getAcmTaskService().getBuckslipHistoryForCase(caseId, authentication), HttpStatus.OK);
     }
 
     public AcmTaskService getAcmTaskService()
