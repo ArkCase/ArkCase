@@ -861,6 +861,9 @@
     },
     "client": {
       "title": "History",
+      "label": {
+        "updated": "Updated"
+      },
       "table.columns": {
         "eventType": "Event Name",
         "eventDate": "Date",
