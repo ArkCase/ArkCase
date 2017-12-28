@@ -74,6 +74,7 @@ public class AcmTaskAPIController
     @ResponseBody
     public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId, Authentication authentication)
     {
+        log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
         return new ResponseEntity<Long>(getAcmTaskService().getCompletedBuckslipProcessIdForObject(objectType, objectId, authentication), HttpStatus.OK);
     }
 
