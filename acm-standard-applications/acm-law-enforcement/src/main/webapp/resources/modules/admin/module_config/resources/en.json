@@ -351,7 +351,7 @@
         "templateName.label": "Template Name",
         "templateName.placeholder": "Enter Template Name",
         "emailPattern.label": "Email Pattern",
-        "emailPattern.description": "Use '.*' for all recipients, use 'armedia.com' for armedia recipients or use custom pattern.",
+        "emailPattern.description": "Use '.*' for all recipients, use '.+@armedia.com' for armedia recipients or some other regex pattern.",
         "emailPattern.placeholder": "Enter Email Pattern",
         "source.label": "Source",
         "objectTypes.label": "Object Types",

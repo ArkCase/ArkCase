@@ -144,11 +144,12 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             throws AcmEmailConfigurationException
     {
         EmailTemplateValidationResponse response = new EmailTemplateValidationResponse();
+        List<EmailTemplateConfiguration> readConfigurationList = new ArrayList<EmailTemplateConfiguration>();
         Lock readLock = lock.readLock();
         readLock.lock();
         try (InputStream is = templateConfigurations.getInputStream())
         {
-            List<EmailTemplateConfiguration> readConfigurationList = getObjectConverter().getJsonUnmarshaller()
+            readConfigurationList = getObjectConverter().getJsonUnmarshaller()
                     .unmarshallCollection(IOUtils.toString(is, StandardCharsets.UTF_8), List.class, EmailTemplateConfiguration.class);
             if (readConfigurationList == null)
             {
@@ -160,71 +161,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                         null);
 
             }
-
-            // Map<objectType, Map<action, List<emailPattern>>>
-            Map<String, Map<String, List<String>>> templateConfigurations = new HashMap<String, Map<String, List<String>>>();
-            for (EmailTemplateConfiguration configuration : readConfigurationList)
-            {
-                if (templateData.getTemplateName() != null && !templateData.getTemplateName().equals(configuration.getTemplateName()))
-                {
-                    for (String objectType : configuration.getObjectTypes())
-                    {
-                        if (!templateConfigurations.containsKey(objectType))
-                        {
-                            for (String action : configuration.getActions())
-                            {
-                                List<String> patternList = new ArrayList<String>();
-                                patternList.add(configuration.getEmailPattern());
-                                Map<String, List<String>> actionMap = new HashMap<String, List<String>>();
-                                actionMap.put(action, patternList);
-                                templateConfigurations.put(objectType, actionMap);
-                            }
-                        } else
-                        {
-                            Map<String, List<String>> actionMap = templateConfigurations.get(objectType);
-                            for (String action : configuration.getActions())
-                            {
-                                if (!actionMap.containsKey(action))
-                                {
-                                    List<String> patternList = new ArrayList<String>();
-                                    patternList.add(configuration.getEmailPattern());
-                                    actionMap.put(action, patternList);
-                                } else
-                                {
-                                    List<String> patternList = actionMap.get(action);
-                                    if (!patternList.contains(configuration.getEmailPattern()))
-                                    {
-                                        patternList.add(configuration.getEmailPattern());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            for (String objectType : templateData.getObjectTypes())
-            {
-                boolean found = false;
-                for (String action : templateData.getActions())
-                {
-                    if (templateConfigurations.containsKey(objectType) && templateConfigurations.get(objectType).containsKey(action)
-                            && templateConfigurations.get(objectType).get(action).contains(templateData.getEmailPattern()))
-                    {
-                        response.setObjectType(objectType);
-                        response.setAction(action);
-                        response.setEmailPattern(templateData.getEmailPattern());
-                        response.setValidTemplate(false);
-                        found = true;
-                        break;
-                    }
-                }
-                if (found)
-                {
-                    break;
-                }
-            }
-
         } catch (IOException e)
         {
             log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
@@ -233,6 +169,43 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         } finally
         {
             readLock.unlock();
+        }
+
+        // Map<objectType, Map<action, List<emailPattern>>>
+        Map<String, Map<String, List<String>>> templateConfigurations = new HashMap<String, Map<String, List<String>>>();
+        for (EmailTemplateConfiguration configuration : readConfigurationList)
+        {
+            if (templateData.getTemplateName() != null && !templateData.getTemplateName().equals(configuration.getTemplateName()))
+            {
+                for (String objectType : configuration.getObjectTypes())
+                {
+                    Map<String, List<String>> actionMap = templateConfigurations.computeIfAbsent(objectType, (key) -> new HashMap<>());
+                    for (String action : configuration.getActions())
+                    {
+                        List<String> patternList = actionMap.computeIfAbsent(action, (key) -> new ArrayList<>());
+                        if (!patternList.contains(configuration.getEmailPattern()))
+                        {
+                            patternList.add(configuration.getEmailPattern());
+                        }
+                    }
+                }
+            }
+        }
+
+        existingTemplate: for (String objectType : templateData.getObjectTypes())
+        {
+            for (String action : templateData.getActions())
+            {
+                if (templateConfigurations.containsKey(objectType) && templateConfigurations.get(objectType).containsKey(action)
+                        && templateConfigurations.get(objectType).get(action).contains(templateData.getEmailPattern()))
+                {
+                    response.setObjectType(objectType);
+                    response.setAction(action);
+                    response.setEmailPattern(templateData.getEmailPattern());
+                    response.setValidTemplate(false);
+                    break existingTemplate;
+                }
+            }
         }
 
         return response;
@@ -365,8 +338,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     {
         List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
         Stream<EmailTemplateConfiguration> filteredConfigurations = configurations.stream()
-                .filter(c -> c.getObjectTypes().contains(objectType))
-                .filter(c -> c.getActions().containsAll(actions) && actions.containsAll(c.getActions()))
+                .filter(c -> c.getObjectTypes().contains(objectType)).filter(c -> c.getActions().containsAll(actions))
                 .filter(c -> c.getSource().equals(source)).filter(c -> matches(c.getEmailPattern(), email));
 
         return filteredConfigurations.collect(Collectors.toList());
