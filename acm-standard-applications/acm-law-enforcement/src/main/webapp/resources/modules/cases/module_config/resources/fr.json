@@ -247,7 +247,6 @@
     "title": "Calendrier"
   },
   "cases.comp.merge": {
-    "id": "Fusionner",
     "title": "Fusionner",
     "cancel.btn": "Annuler",
     "merge.btn": "Fusionner",

@@ -1,7 +1,10 @@
 'use strict';
 
-angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', 'Admin.WorkflowsConfigService', '$modal', '$translate', 'MessageService', '$window', 'Helper.UiGridService',
-    function ($scope, workflowsConfigService, $modal, $translate, messageService, $window, HelperUiGridService) {
+angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope', '$modal', '$translate', '$window'
+    , 'Admin.WorkflowsConfigService', 'MessageService', 'Helper.UiGridService', 'ConfigService'
+    , function ($scope, $modal, $translate, $window
+        , workflowsConfigService, messageService, HelperUiGridService, ConfigService
+    ) {
         $scope.uploadingInProgress = false;
         $scope.loadingProgress = 0;
         $scope.selectedBPMNFile = null;
@@ -17,27 +20,23 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             gridHelper.setUserNameFilter(promiseUsers);            
         };
 
-        //get config and init grid settings
-        $scope.config.$promise.then(function (config) {
-            $scope.workflowsHistoryDialogConfig = _.find(config.components, {id: 'workflowsHistoryDialogConfig'});
-
-            var componentConfig = _.find(config.components, {id: 'workflowsConfig'});
+        ConfigService.getComponentConfig("admin", "workflowsHistoryDialogConfig").then(function (componentConfig) {
             var columnDefs = componentConfig.columnDefs;
-
             columnDefs.push(getActionsColumn());
-
             $scope.gridOptions.columnDefs = columnDefs;
-
             onConfigRetrieved(componentConfig);
-            
             reloadGrid();
+            return componentConfig;
         });
 
-        $scope.openProcessModeler = function()
-        {
-            var goToUrl = $translate.instant('admin.workflows.config.btn.createNewUrl');
-            $window.open(goToUrl);
-        }
+        var createNewUrl = null;
+        ConfigService.getComponentConfig("admin", "workflowsConfig").then(function (componentConfig) {
+            createNewUrl = componentConfig.createNewUrl;
+            return componentConfig;
+        });
+        $scope.openProcessModeler = function(){
+            $window.open(createNewUrl);
+        };
 
         $scope.replaceFile = function (file, entity) {
             //TODO add logic for replace file, now only uploads the file as new.

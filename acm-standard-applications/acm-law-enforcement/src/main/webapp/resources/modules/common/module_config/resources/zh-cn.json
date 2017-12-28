@@ -156,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "每页项目数",
-    "pagerCountMiddleLabel": " 的",
-    "pagerCountLabel": " 项目"
+    "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}项"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "选择",
