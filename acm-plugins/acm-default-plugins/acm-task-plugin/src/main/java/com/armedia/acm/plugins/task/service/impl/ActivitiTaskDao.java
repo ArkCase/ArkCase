@@ -130,7 +130,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 return (T) getProcessVariableFromHistory(businessProcessId, processVariableKey);
             }
             else {
-                throw new AcmTaskException(String.format("Process with id %s does not exist or is already closed", businessProcessId));
+                throw new AcmTaskException(String.format("Can't get process variable %s for business process id %s", processVariableKey, businessProcessId));
             }
         }
         return (T) pi.getProcessVariables().get(processVariableKey);
