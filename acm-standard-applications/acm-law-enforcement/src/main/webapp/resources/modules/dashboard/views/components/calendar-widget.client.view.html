@@ -1,24 +1,3 @@
-<div>
-    <div ng-if="calendar.showChart && calendar.isCalendarIntegrationEnabled">
-        <div class="panel-body">
-            </br>
-            <div class="chart-container">
-                <canvas id="bar" class="chart chart-bar" chart-data="calendar.data"
-                        chart-labels="calendar.labels"
-                        chart-series="calendar.series"
-                        chart-responsive="true"
-                        chart-legend="true"></canvas>
-            </div>
-        </div>
-    </div>
-    <div class="alert" ng-if="!calendar.showChart && calendar.isCalendarIntegrationEnabled">
-        <p class="text-center">
-            <span translate>dashboard.widgets.calendar.noDataMessage</span>
-        </p>
-    </div>
-    <div class="alert" ng-if="!calendar.isCalendarIntegrationEnabled">
-        <p class="text-center">
-            <span translate>dashboard.widgets.calendar.calendarIntegrationDisabledMessage</span>
-        </p>
-    </div>
+<div ng-controller="Dashboard.CalendarController">
+    <core-calendar ng-if="objectInfoRetrieved" object-id="objectId" object-type="objectType" event-sources="eventSources" hide-inner-calendar-title="{{hideInnerCalendarTitle}}"/>
 </div>
