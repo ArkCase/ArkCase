@@ -319,7 +319,7 @@
     },
     "table.columns": {
       "assignee": "Assignee",
-      "group": "Owning Group",
+      "owningGroup": "Owning Group",
       "subject": "Subject",
       "details": "Details",
       "dueDate": "Due Date",
@@ -335,6 +335,7 @@
     "future.task.modal": {
       "title": "New Future Task",
       "assignee": "Assignee",
+      "owningGroup": "Owning Group",
       "subject.label": "Subject",
       "subject.placeholder": "Enter future case subject",
       "details.label": "Details",
