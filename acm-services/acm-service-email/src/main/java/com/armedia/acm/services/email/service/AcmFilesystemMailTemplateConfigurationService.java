@@ -63,13 +63,16 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             if (me instanceof AcmEmailConfigurationIOException)
             {
                 errorDetails.put("error_cause", "READ_WRITE_ERROR.");
-            } else if (me instanceof AcmEmailConfigurationJsonException)
+            }
+            else if (me instanceof AcmEmailConfigurationJsonException)
             {
                 errorDetails.put("error_cause", "JSON_PARSING_ERROR.");
-            } else if (me instanceof AcmEmailConfigurationException)
+            }
+            else if (me instanceof AcmEmailConfigurationException)
             {
                 errorDetails.put("error_cause", "INTERENAL_SERVER_ERROR.");
-            } else
+            }
+            else
             {
                 errorDetails.put("error_cause", "UNKOWN_ERROR.");
             }
@@ -123,12 +126,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
             }
             return readConfigurationList;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
             throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
                     templateConfigurations.getDescription()), e);
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -161,12 +166,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                         null);
 
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
             throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
                     templateConfigurations.getDescription()), e);
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -246,7 +253,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                 File templateFile = new File(templateFolder, templateData.getTemplateName());
                 template.transferTo(templateFile);
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
                     templateData.getTemplateName(), e);
@@ -254,7 +262,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                     String.format("Error while updating email template configuration for configuration with %s value for templateName.",
                             templateData.getTemplateName()),
                     e);
-        } finally
+        }
+        finally
         {
             writeLock.unlock();
         }
@@ -273,12 +282,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         try
         {
             configurations = getTemplateConfigurations();
-        } catch (AcmEmailConfigurationException e)
+        }
+        catch (AcmEmailConfigurationException e)
         {
             if (isTemplateConfigurationFileEmpty())
             {
                 configurations = new ArrayList<>();
-            } else
+            }
+            else
             {
                 // just re-throw here, if the error was during reading of the configuration it is already logged in
                 // the 'getTemplateConfigurations()' method.
@@ -293,7 +304,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
             try
             {
                 BeanUtils.copyProperties(existingConfiguration.get(), templateData);
-            } catch (IllegalAccessException | InvocationTargetException e)
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
             {
                 log.warn("Error while updating email template configuration for configuration with {} value for templateName.",
                         templateData.getTemplateName(), e);
@@ -302,7 +314,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                                 templateData.getTemplateName()),
                         e);
             }
-        } else
+        }
+        else
         {
             configurations.add(templateData);
         }
@@ -318,7 +331,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         try
         {
             return templateConfigurations.contentLength() == 0;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
             throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
@@ -364,12 +378,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                 throw new AcmEmailConfigurationIOException(String.format("Email template %s does not exist.", templateName));
             }
             return FileUtils.readFileToString(templateFile, "UTF-8");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while reading contents of {} email template.", templateName, e);
             throw new AcmEmailConfigurationIOException(String.format("Error while reading contents of %s email template.", templateName),
                     e);
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -404,12 +420,14 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                 }
                 os.write(configurationsString.getBytes(StandardCharsets.UTF_8));
                 Files.deleteIfExists(templateFile.toPath());
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.warn("Error while deleting {} email template from the file system.", templateName, e);
                 throw new AcmEmailConfigurationIOException(
                         String.format("Error while deleting %s email template from the file system.", templateName), e);
-            } finally
+            }
+            finally
             {
                 writeLock.unlock();
             }
@@ -445,7 +463,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
         try
         {
             return Files.newOutputStream(templateConfigurations.getFile().toPath(), StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Error while opening configuration {} file.", templateConfigurations.getDescription(), e);
             throw new AcmEmailConfigurationIOException(
