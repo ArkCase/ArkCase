@@ -145,7 +145,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                 .map(AcmGrantedAuthority::new);
 
         Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
-                .flatMap(AcmGroup::getAscendants)
+                .flatMap(AcmGroup::getAscendantsStream)
                 .map(AcmGrantedAuthority::new);
 
         return Stream.concat(authorityGroups, authorityAscendantsGroups)

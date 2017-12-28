@@ -94,74 +94,97 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 });
         };
 
+        var adHocGroupController = function (group, errorMessage, parentGroup, onOK) {
+            return function ($scope, $modalInstance) {
+                $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
+                $scope.group = group;
+                $scope.error = errorMessage;
+                $scope.ok = onOK($scope, $modalInstance);
+                $scope.cancel = function () {
+                    $modalInstance.dismiss('cancel');
+                };
+            };
+        };
+
+        function openAdHocGroupModal(group, parentGroup, errorMessage) {
+            return groupModal(adHocGroupController(group, errorMessage, parentGroup, function (scope, modal) {
+                return function () {
+                    scope.data = {
+                        "group": scope.group,
+                        "parent": parentGroup
+                    };
+                    modal.close(scope.data);
+                };
+            }))
+        }
+
         $scope.onAddSubGroup = function (parent) {
             var deferred = $q.defer();
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
-                controller: function ($scope, $modalInstance) {
-                    $scope.inputValid = true;
-                    $scope.group = {};
-                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
-                    $scope.ok = function () {
-                        $modalInstance.close($scope.group);
-                    };
-                    $scope.cancel = function () {
-                        $modalInstance.dismiss('cancel');
-                    };
-                },
-                size: 'sm'
-            });
-
+            var modalInstance = openAdHocGroupModal({}, parent);
             //handle the result
-            modalInstance.result.then(function (adHocGroup) {
-                //button ok
-                organizationalHierarchyService.addAdHocGroup(adHocGroup, parent).then(function (payload) {
-                    //added successfully
-                    var newGroup = payload.data;
-                    newGroup.object_sub_type_s = 'ADHOC_GROUP';
-                    newGroup.object_id_s = newGroup.name;
-                    newGroup.parent_id_s = parent.object_id_s;
-                    if (newGroup.supervisor) {
-                        newGroup.supervisor = newGroup.supervisor.fullName;
-                    }
 
-                    groupsMap[newGroup.object_id_s] = newGroup;
-
-                    newGroup.ascendants_id_ss = [newGroup.parent_id_s];
-                    addToTree(newGroup, true);
-                    deferred.resolve(newGroup);
-                }, function () {
-                    //error adding group
-                    messageService.error("Group name already exists.");
-                    deferred.reject();
-                });
-            }, function (result) {
+            var onAdd = function (data) {
+                onAddAdHocSubGroup(deferred, data.group, data.parent);
+            };
+            //handle the result
+            modalInstance.result.then(onAdd, function () {
                 //button cancel, nothing to do.
             });
             return deferred.promise;
         };
 
-        $scope.onDeleteGroup = function (group, parentGroup) {
+        function onAddAdHocSubGroup(deferred, adHocGroup, parent) {
+            organizationalHierarchyService.addAdHocGroup(adHocGroup, parent).then(function (payload) {
+                //added successfully
+                var newGroup = payload.data;
+                newGroup.object_sub_type_s = 'ADHOC_GROUP';
+                newGroup.object_id_s = newGroup.name;
+                newGroup.parent_id_s = parent.object_id_s;
+                if (newGroup.supervisor) {
+                    newGroup.supervisor = newGroup.supervisor.fullName;
+                }
+                newGroup.ascendants_id_ss = newGroup.ascendants;
+                groupsMap[newGroup.object_id_s] = newGroup;
+                addToTree(newGroup);
+                deferred.resolve(newGroup);
+                messageService.succsessAction();
+            }, function (error) {
+                //error adding group
+                if (error.data.extra && error.data.field === 'name') {
+                    var onAdd = function (data) {
+                        onAddAdHocSubGroup(deferred, data.group, data.parent);
+                    };
+                    openAdHocGroupModal(error.data.extra.subGroup, parent, error.data.message)
+                        .result.then(onAdd, function () {
+                        //cancel button clicked
+                        deferred.reject('cancel');
+                    });
+                } else {
+                    messageService.error(error.data.message);
+                }
+            });
+        }
+
+        $scope.onDeleteGroup = function (groupNode, parentNode) {
             var deferred = $q.defer();
             var modalOptions = {
                 closeButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.cancelBtn'),
                 actionButtonText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.deleteBtn'),
-                headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + group.name,
+                headerText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.headerText') + groupNode.name,
                 bodyText: $translate.instant('admin.security.organizationalHierarchy.dialog.group.confirm.delete.bodyText')
             };
             ModalDialogService.showModal({}, modalOptions).then(function () {
                 //ok btn
-                if (!_.isEmpty(parentGroup)) {
-                    organizationalHierarchyService.removeGroupMembership(group.object_id_s, parentGroup.object_id_s)
+                if (!_.isEmpty(parentNode)) {
+                    organizationalHierarchyService.removeGroupMembership(groupNode.object_id_s, parentNode.object_id_s)
                         .then(function (group) {
-                            removeFromGroupsMap(group);
+                            refreshPageData();
                             deferred.resolve(group);
                         }, function (errorData) {
                             deferred.reject(errorData);
                         });
                 } else {
-                    organizationalHierarchyService.removeGroup(group)
+                    organizationalHierarchyService.removeGroup(groupNode)
                         .then(function (payload) {
                             refreshPageData();
                             deferred.resolve(payload);
@@ -452,10 +475,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     memberUsers[i].isMember = true;
                     children.push(memberUsers[i]);
                 }
+                group.children = children;
                 dfd.resolve(children);
             });
-
-            group.children = children;
             return dfd.promise;
         };
 
@@ -490,45 +512,49 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         $scope.createGroup = function () {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/admin/views/components/security.organizational-hierarchy.create-group.dialog.html',
-                controller: function ($scope, $modalInstance) {
-                    $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.adHocGroup.title";
-                    $scope.group = {};
-                    $scope.addLdapGroupModal = false;
-                    $scope.ok = function () {
-                        $modalInstance.close($scope.group);
-                    };
-                    $scope.cancel = function () {
-                        $modalInstance.dismiss('cancel');
-                    };
-                },
-                size: 'sm'
-            });
+            var deferred = $q.defer();
+            var modalInstance = openAdHocGroupModal({});
 
+            var onAdd = function (data) {
+                onAddAdHocGroup(deferred, data.group);
+            };
             //handle the result
-            modalInstance.result.then(function (adHocGroup) {
-                //button ok
-                organizationalHierarchyService.addAdHocGroup(adHocGroup).then(function (payload) {
-                    //added successfully
-                    var newGroup = payload.data;
-                    newGroup.object_sub_type_s = 'ADHOC_GROUP';
-                    newGroup.object_id_s = payload.data.name;
-                    if (payload.data.supervisor)
-                        newGroup.supervisor = payload.data.supervisor.fullName;
-
-                    groupsMap[payload.data.object_id_s] = newGroup;
-                    addToTree(newGroup, true);
-                    messageService.succsessAction();
-                }, function () {
-                    //error adding group
-                    messageService.errorAction();
-                });
-            }, function (result) {
+            modalInstance.result.then(onAdd, function () {
                 //button cancel, nothing to do.
             });
+            return deferred.promise;
         };
+
+        function onAddAdHocGroup(deferred, adHocGroup) {
+            organizationalHierarchyService.addAdHocGroup(adHocGroup).then(function (payload) {
+                //added successfully
+                var newGroup = payload.data;
+                newGroup.object_sub_type_s = 'ADHOC_GROUP';
+                newGroup.object_id_s = payload.data.name;
+                if (payload.data.supervisor)
+                    newGroup.supervisor = payload.data.supervisor.fullName;
+
+                groupsMap[payload.data.object_id_s] = newGroup;
+                addToTree(newGroup, true);
+                deferred.resolve(newGroup);
+                messageService.succsessAction();
+            }, function (error) {
+                //error adding group
+                if (error.data.extra && error.data.field === 'name') {
+                    var onAdd = function (data) {
+                        onAddAdHocGroup(deferred, data.group);
+                    };
+                    openAdHocGroupModal(error.data.extra.group, null, error.data.message)
+                        .result.then(onAdd, function () {
+                        //cancel button clicked
+                        deferred.reject('cancel');
+                    });
+                } else {
+                    messageService.error(error.data.message);
+                }
+                deferred.reject();
+            });
+        }
 
         $scope.addLdapSubgroup = function (parentGroup) {
             var deferred = $q.defer();
@@ -566,7 +592,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     messageService.succsessAction();
                 }, function (error) {
                     //error adding group
-                    if (error.data.extra) {
+                    if (error.data.extra && error.data.field === 'name') {
                         var onAdd = function (data) {
                             onAddLdapSubGroup(deferred, data);
                         };
@@ -579,8 +605,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                             //cancel button clicked
                             deferred.reject('cancel');
                         });
+                    } else {
+                        messageService.error(error.data.message);
                     }
-                    messageService.errorAction();
                 });
         }
 
@@ -596,7 +623,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                 //ok btn
                 if (!_.isEmpty(parent)) {
                     organizationalHierarchyService.removeLdapGroupMembership(group, parent).then(function (payload) {
-                        removeFromGroupsMap(group);
+                        refreshPageData();
                         deferred.resolve(payload);
                     }, function (payload) {
                         deferred.reject(payload);
@@ -679,7 +706,7 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     addToTree(newGroup, true);
                     messageService.succsessAction();
                 }, function (error) {
-                    if (error.data.extra) {
+                    if (error.data.extra && error.data.field === 'name') {
                         var onAdd = function (data) {
                             onLdapGroupAdd(data, deferred);
                         };
@@ -688,8 +715,9 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                             deferred.reject("cancel");
                             return [];
                         });
+                    } else {
+                        messageService.error(error.data.message);
                     }
-                    messageService.errorAction();
                 });
         }
 
