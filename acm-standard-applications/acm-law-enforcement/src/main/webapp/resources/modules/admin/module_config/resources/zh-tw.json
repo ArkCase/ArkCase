@@ -157,8 +157,7 @@
           "lastName": "輸入姓氏",
           "email": "輸入電子郵件",
           "password": "輸入密碼",
-          "confirmation": "再次鍵入您的密碼",
-          "minLengthForPassword": "7"
+          "confirmation": "再次鍵入您的密碼"
         },
         "editLdapMember": {
           "title": "編輯Ldap成員",
@@ -443,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "創建新模型",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "上傳新的BPMN"
     },
     "workflows.config.links": {

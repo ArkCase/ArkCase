@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "Itens por página",
-    "pagerCountMiddleLabel": " do",
-    "pagerCountLabel": " Unid"
+    "pagerCountLabel": "{{pageCount}}  {{pageTotal}} itens"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Escolher",
