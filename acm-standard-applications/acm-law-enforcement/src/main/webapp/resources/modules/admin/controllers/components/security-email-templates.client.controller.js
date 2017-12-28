@@ -30,7 +30,7 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$
             var item = {
                 emailPattern: "",
                 objectTypes: [],
-                source: "",
+                source: "MANUAL",
                 templateName: "",
                 actions: []
             };
