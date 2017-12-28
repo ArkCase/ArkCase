@@ -69,6 +69,7 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
         log.debug("Execute updates from: [{}]", service.getUpdateId());
         service.execute();
         dataUpdateService.save(service.getUpdateId());
+        log.debug("Updates from:[{}] finished", service.getUpdateId());
     };
 
     public void setDataUpdateService(AcmDataUpdateService dataUpdateService)

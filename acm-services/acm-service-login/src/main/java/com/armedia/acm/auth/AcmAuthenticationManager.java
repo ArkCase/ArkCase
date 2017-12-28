@@ -39,6 +39,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
+        String principal = authentication.getName();
+
         Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
         Exception lastException = null;
@@ -46,7 +48,19 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             try
             {
-                providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
+                {
+                    AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
+                    String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                    if (principal.endsWith(userDomain))
+                    {
+                        providerAuthentication = provider.authenticate(authentication);
+                    }
+                } else
+                {
+                    providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                }
+
                 if (providerAuthentication != null)
                 {
                     break;
@@ -104,7 +118,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
     protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
-
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
