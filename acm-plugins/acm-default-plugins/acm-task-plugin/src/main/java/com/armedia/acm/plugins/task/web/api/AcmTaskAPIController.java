@@ -5,7 +5,6 @@ import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -15,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.QueryParam;
 import java.util.List;
 
 @Controller
@@ -70,12 +70,23 @@ public class AcmTaskAPIController
         }
     }
 
-    @RequestMapping(value = "/objectType/{type}/objectId/{id}/completedBuckslipProcessIdForObject", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId, Authentication authentication)
+    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory, Authentication authentication)
     {
         log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
-        return new ResponseEntity<Long>(getAcmTaskService().getCompletedBuckslipProcessIdForObject(objectType, objectId, authentication), HttpStatus.OK);
+        Long businessProcessId = getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
+
+        try
+        {
+            log.info("Trying to fetch the Past Tasks from Business Process {}", businessProcessId);
+            return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(String.valueOf(businessProcessId), readFromHistory), HttpStatus.OK);
+        }
+        catch (AcmTaskException e)
+        {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 
     @RequestMapping(value = "/businessProcess/{id}/initiatable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

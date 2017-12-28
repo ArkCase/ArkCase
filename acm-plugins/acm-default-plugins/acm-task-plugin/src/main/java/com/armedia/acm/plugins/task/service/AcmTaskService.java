@@ -140,7 +140,7 @@ public interface AcmTaskService
      * @param objectType CASE_FILE, COMPLAINT, ...
      * @param objectId   Id of the desired object
      */
-    Long getCompletedBuckslipProcessIdForObject(String objectType, Long objectId, Authentication authentication);
+    Long getCompletedBuckslipProcessIdForObjectFromSolr(String objectType, Long objectId, Authentication authentication);
 
     /**
      * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>
