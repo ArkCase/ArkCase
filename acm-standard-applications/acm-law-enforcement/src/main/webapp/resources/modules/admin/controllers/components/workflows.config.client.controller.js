@@ -35,10 +35,7 @@ angular.module('admin').controller('Admin.WorkflowsConfigController', ['$scope',
             return componentConfig;
         });
         $scope.openProcessModeler = function(){
-            if (createNewUrl) {
-                $window.open(createNewUrl);
-            }
-
+            $window.open(createNewUrl);
         };
 
         $scope.replaceFile = function (file, entity) {
