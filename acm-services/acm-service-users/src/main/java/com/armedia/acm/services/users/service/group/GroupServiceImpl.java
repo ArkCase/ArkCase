@@ -10,11 +10,9 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import org.mule.api.MuleException;
-import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -36,8 +33,6 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
 
-    private Pattern pattern = Pattern.compile(AcmGroupConstants.UUID_REGEX_STRING);
-
     @Override
     public AcmGroup findByName(String name)
     {
@@ -45,14 +40,9 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup findByMatchingName(String name)
-    {
-        return groupDao.findByMatchingName(name);
-    }
-
-    @Override
     public AcmGroup save(AcmGroup groupToSave)
     {
+        groupToSave.setName(MapperUtils.buildGroupName(groupToSave.getName(), Optional.empty()));
         return groupDao.save(groupToSave);
     }
 
@@ -77,22 +67,6 @@ public class GroupServiceImpl implements GroupService
 
         return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
                 0, 1000, "name asc");
-    }
-
-    @Override
-    @Transactional
-    public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
-    {
-        String groupName = MapperUtils.buildGroupName(group.getName() + "-UUID-" + UUID.getUUID(), Optional.empty());
-        group.setDisplayName(groupName);
-        group.setName(groupName);
-        return groupDao.save(group);
-    }
-
-    @Override
-    public boolean isUUIDPresentInTheGroupName(String str)
-    {
-        return pattern.matcher(str).matches();
     }
 
     @Override
@@ -128,33 +102,6 @@ public class GroupServiceImpl implements GroupService
         groupName = groupName.replace("&", "%26"); // instead of URL encoding
         groupName = groupName.replace("?", "%3F"); // instead of URL encoding
         return groupName;
-    }
-
-    /**
-     * Creates or updates ad-hoc group based on the client info coming in from CRM
-     *
-     * @param //acmGroup group we want to rename
-     * @param //         newName group new name
-     */
-    @Override
-    @Transactional
-    public void renameGroup(AcmGroup acmGroup, String newName) throws AcmObjectNotFoundException
-    {
-        AcmGroup newGroup = new AcmGroup();
-        newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
-        newGroup.setDisplayName(newName);
-        // copy the properties from the original found group.
-        newGroup.setSupervisor(acmGroup.getSupervisor());
-        newGroup.setType(acmGroup.getType());
-        newGroup.setStatus(acmGroup.getStatus());
-        newGroup.setDescription(acmGroup.getDescription());
-        newGroup.setMemberGroups(acmGroup.getMemberGroups());
-        newGroup.setMemberOfGroups(acmGroup.getMemberOfGroups());
-        newGroup.setCreator(acmGroup.getCreator());
-        newGroup.setUserMembers(acmGroup.getUserMembers());
-        groupDao.save(newGroup);
-
-        markGroupDeleted(acmGroup.getName());
     }
 
     @Override
@@ -312,10 +259,6 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup group = groupDao.findByName(groupId);
 
-        if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-        {
-            group = findByMatchingName(groupId);
-        }
         if (group == null)
         {
             log.warn("Group [{}] was not found.", groupId);
@@ -375,11 +318,6 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup group = groupDao.findByName(groupId);
 
-        if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-        {
-            group = groupDao.findByMatchingName(groupId);
-        }
-
         if (group == null)
         {
             log.warn("Group [{}] was not found.", groupId);
@@ -436,7 +374,7 @@ public class GroupServiceImpl implements GroupService
 
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        String groupName = MapperUtils.buildGroupName(subGroup.getName() + "-UUID-" + UUID.getUUID(), Optional.empty());
+        String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
         subGroup.setName(groupName);
         subGroup.setDisplayName(groupName);
         parent.addGroupMember(subGroup);

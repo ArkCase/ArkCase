@@ -241,7 +241,7 @@ public class AcmGroupAPIController
     public AcmGroup saveGroup(@RequestBody AcmGroup group)
     {
         LOG.info("Saving ad-hoc group [{}]", group.getName());
-        return groupService.checkAndSaveAdHocGroup(group);
+        return groupService.save(group);
     }
 
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
