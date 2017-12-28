@@ -12,6 +12,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import org.mule.api.MuleException;
 import org.mule.util.UUID;
 import org.slf4j.Logger;
@@ -82,8 +83,9 @@ public class GroupServiceImpl implements GroupService
     @Transactional
     public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
     {
-        group.setDisplayName(group.getName());
-        group.setName(group.getName() + "-UUID-" + UUID.getUUID());
+        String groupName = MapperUtils.buildGroupName(group.getName() + "-UUID-" + UUID.getUUID(), Optional.empty());
+        group.setDisplayName(groupName);
+        group.setName(groupName);
         return groupDao.save(group);
     }
 
@@ -434,7 +436,9 @@ public class GroupServiceImpl implements GroupService
 
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
+        String groupName = MapperUtils.buildGroupName(subGroup.getName() + "-UUID-" + UUID.getUUID(), Optional.empty());
+        subGroup.setName(groupName);
+        subGroup.setDisplayName(groupName);
         parent.addGroupMember(subGroup);
         return subGroup;
     }
