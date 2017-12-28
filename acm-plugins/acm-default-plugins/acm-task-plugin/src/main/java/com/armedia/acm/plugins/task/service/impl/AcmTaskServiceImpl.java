@@ -19,10 +19,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
-import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.model.BuckslipProcess;
-import com.armedia.acm.plugins.task.model.TaskConstants;
+import com.armedia.acm.plugins.task.model.*;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -36,6 +33,8 @@ import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
@@ -52,13 +51,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -106,6 +99,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
         List<BuckslipProcess> buckslipProcesses = buckslipProcessesForProcessInstances(processInstances);
 
         return buckslipProcesses;
+    }
+
+    @Override
+    public Long getCompletedBuckslipProcessIdForObjectFromSolr(String objectType, Long objectId, Authentication authentication)
+    {
+        return getBusinessProcessIdFromSolr(objectType, objectId, authentication);
     }
 
     protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
@@ -160,7 +159,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public List<BuckslipFutureTask> getBuckslipFutureTasks(String businessProcessId) throws AcmTaskException
     {
-        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
+        String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, false);
         if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
         {
             List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
@@ -187,10 +186,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException
+    public String getBuckslipPastTasks(String businessProcessId, boolean readFromHistory) throws AcmTaskException
     {
-        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS);
-        return pastTasks;
+        return taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS, readFromHistory);
     }
 
     @Override
@@ -511,6 +509,36 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             return createdAcmTasks;
         }
+    }
+
+    private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
+    {
+        Long businessProcessId = null;
+        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
+        String retval = null;
+
+        try
+        {
+            retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
+                    SolrCore.QUICK_SEARCH,
+                    query, 0, 1, "business_process_id_i DESC");
+
+            if (retval != null && searchResults.getNumFound(retval) > 0)
+            {
+                JSONArray results = searchResults.getDocuments(retval);
+                JSONObject result = results.getJSONObject(0);
+                if (result.has("business_process_id_i"))
+                {
+                    businessProcessId = result.getLong("business_process_id_i");
+                }
+            }
+        }
+        catch (MuleException e)
+        {
+            log.warn(e.getMessage());
+        }
+
+        return businessProcessId;
     }
 
     public void setTaskEventPublisher(TaskEventPublisher taskEventPublisher)
