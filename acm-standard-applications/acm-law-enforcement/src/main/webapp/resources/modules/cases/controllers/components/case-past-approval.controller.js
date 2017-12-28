@@ -47,7 +47,7 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
             if(!Util.isEmpty(objectInfo.id)) {
                 CasePastApprovalService.getCompletedBuckslipProcessIdForObject('CASE_FILE', objectInfo.id)
                     .then(function (result){
-                         if(result.data != -1){
+                         if(result.data != null){
                             var businessProcessId = result.data;
                             CaseFutureApprovalService.getBuckslipPastTasks(businessProcessId, true)
                                 .then(function (result){

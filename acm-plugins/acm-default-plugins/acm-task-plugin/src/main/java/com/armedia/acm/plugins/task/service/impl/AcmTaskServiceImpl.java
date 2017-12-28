@@ -514,7 +514,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
-        Long businessProcessId = -1L;
+        Long businessProcessId = null;
         String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
         String retval = null;
 
