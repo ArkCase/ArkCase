@@ -60,7 +60,7 @@ angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '
                         $scope.pickedUserName = selectedUser.name;
                         if(selectedGroup){
                             $scope.pickedGroupId = selectedGroup.object_id_s;
-                            $scope.pickedUserName =  selectedGroup.name;
+                            $scope.pickedGroupName =  selectedGroup.name;
                         }
                     }
                     else if(selectedObjectType === 'GROUP'){ //Selected Group
