@@ -458,7 +458,7 @@
               "name": "organization.organizationToPersonAssociationType",
               "displayName": "people.comp.related.table.columns.type",
               "headerCellFilter": "translate",
-              "cellTemplate": "<span ng-bind=\"(row.entity.organization.personAssociations | filter :{person : {id : grid.appScope.currentObjectId}})[0].organizationToPersonAssociationType\"></span>"
+              "cellTemplate": "<span ng-bind=\"grid.appScope.utils.getLookupValue(grid.appScope.organizationTypes, row.entity.organizationToPersonAssociationType) | translate\"></span>"
             },
             {
               "name": "organizationType",
@@ -1343,6 +1343,7 @@
     {
       "id": "related",
       "title": "people.comp.related.title",
+      "linkTitle": "people.comp.related.linkTitle",
       "icon": "fa fa-exchange",
       "enabled": true,
       "configurable": true,

@@ -1,9 +1,9 @@
 {
   "cases": {
     "title": "Cas",
-    "progressNoCase": "fr_[ No case file data ]",
-    "progressLoading": "fr_Loading case file ",
-    "progressError": "fr_Failed to load case file"
+    "progressNoCase": "[Aucune donnée de dossier de cas]",
+    "progressLoading": "Chargement du fichier de cas",
+    "progressError": "Impossible de charger le fichier de cas"
   },
   "cases.menus": {
     "leftnav.item": "Dossiers de Cas",
@@ -23,7 +23,7 @@
     "type.label": "Type",
     "created.label": "Date créée",
     "priority.label": "Priorité",
-    "assignee.label": "Assigné à",
+    "assignee.label": "Cessionnaire",
     "owningGroup.label": "Appartenant au groupe",
     "dueDate.label": "Date d'échéance",
     "priorities": {
@@ -68,7 +68,7 @@
     "new.button": "Nouveau",
     "edit.button": "Edit",
     "status.button": "Changer l'état du cas",
-    "reinvestigate.button": "fr_Reinvestigate",
+    "reinvestigate.button": "Fr_Reinvestigate",
     "subscribe.button": "S'abonner",
     "unsubscribe.button": "Désabonner",
     "merge.button": "Fusionner",
@@ -78,205 +78,168 @@
   },
   "cases.comp.details": {
     "title": "Détails",
-    "informSaved": "fr_Case details saved",
+    "informSaved": "Détails du cas enregistrés",
     "table.columns": {
-      "title": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails",
+      "modified": "Date de la dernière modification",
+      "modifier": "Utilisateur modifié en dernier"
     }
   },
   "cases.comp.documents": {
     "title": "Documents",
-    "sendEmail": "fr_Send Email",
-    "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "sendEmail": "Envoyer un email",
+    "filterInputPlaceholder": "Filtre",
+    "searchInputPlaceholder": "Chercher",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Rapport d'enquête",
+        "ecomm%": "Communication électronique"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitation par correspondance",
+        "approvalLetter%": "Lettre d'approbation",
+        "medicalRelease%": "Libération médicale",
+        "generalRelease%": "Publication générale",
+        "clearanceGranted%": "Autorisation accordée",
+        "clearanceDenied%": "Autorisation refusée",
+        "noticeInvestigation%": "Avis d'enquête",
+        "witnessInterview%": "Demander une entrevue",
+        "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
+      }
+    },
+    "newTask": "Nouvelle tâche"
   },
   "cases.comp.people": {
     "title": "Personnes",
     "table.columns": {
-      "entity": "fr_Entity",
-      "type": "fr_Type",
-      "firstName": "fr_FirstName",
-      "lastName": "fr_LastName"
-    },
-    "contactMethods": {
-      "title": "fr_ContactMethods",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "fr_Organizations",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "fr_Locations",
-      "table.columns": {
-        "type": "fr_Type",
-        "streetAddress": "fr_Address",
-        "city": "fr_City",
-        "state": "fr_State",
-        "zip": "fr_Zip",
-        "country": "fr_Country",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "fr_Aliases",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "fr_Security Tags",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
+      "entity": "Entité",
+      "type": "Rôle",
+      "firstName": "Prénom",
+      "lastName": "Nom de famille",
+      "organization": "Organisation",
+      "phone": "Téléphone",
+      "location": "Emplacement"
     }
   },
   "cases.comp.organizations": {
     "title": "Organisations",
     "table.columns": {
-      "name": "Organization Name",
-      "associationType": "Role",
-      "type": "Organization Type",
+      "name": "Nom de l'organisation",
+      "associationType": "Rôle",
+      "type": "Type d'Organisation",
       "identification": "ID",
-      "value": "Organization",
-      "contact": "Primary Contact",
-      "phone": "Phone",
-      "location": "Location"
+      "value": "Organisation",
+      "contact": "Premier contact",
+      "phone": "Téléphone",
+      "location": "Emplacement"
     }
   },
   "cases.comp.participants": {
     "title": "Participants",
     "table.columns": {
-      "type": "fr_Type",
-      "name": "fr_Name"
+      "type": "Type",
+      "name": "Prénom"
     },
     "dialogUserPicker": {
-      "header": "fr_Choose User",
+      "header": "Choisissez l'utilisateur",
       "table.columns": {
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "id": "fr_Username"
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "id": "Nom d'utilisateur"
       }
     },
     "dialogGroupPicker": {
-      "header": "fr_Choose Group",
+      "header": "Choisissez un groupe",
       "table.columns": {
-        "name": "fr_Name"
+        "name": "Prénom"
       }
     }
   },
   "cases.comp.notes": {
-    "title": "Notes",
+    "title": "Remarques",
     "table.columns": {
-      "note": "fr_Note",
-      "created": "fr_Created",
-      "creator": "fr_Author"
+      "note": "Remarque",
+      "created": "Créé",
+      "creator": "Auteur"
     }
   },
   "cases.comp.tasks": {
-    "title": "Tâches",
+    "title": "Les tâches",
     "table.columns": {
-      "title": "fr_Title",
-      "assignee": "fr_Assignee",
-      "created": "fr_Created",
-      "priority": "fr_Priority",
-      "due": "fr_Due",
-      "status": "fr_Status"
+      "title": "Titre",
+      "assignee": "Cessionnaire",
+      "created": "Créé",
+      "priority": "Priorité",
+      "due": "Dû",
+      "status": "Statut"
     },
-    "table.overdue.tooltip": "fr_Task is Overdue",
-    "table.deadline.tooltip": "fr_Deadline is Approaching"
+    "table.overdue.tooltip": "La tâche est en retard",
+    "table.deadline.tooltip": "La date limite approche"
   },
   "cases.comp.references": {
-    "title": "Références",
+    "title": "Les références",
     "table.columns": {
-      "targetName": "fr_Number",
-      "parentName": "fr_Parent",
-      "targetTitle": "fr_Title",
-      "modified": "fr_Modified",
-      "targetType": "fr_Reference Type",
-      "status": "fr_Status"
+      "targetName": "Nombre",
+      "targetTitle": "Titre",
+      "targetType": "Type",
+      "assignee": "Cessionnaire",
+      "modified": "Modifié",
+      "status": "Statut"
     }
   },
   "cases.comp.history": {
-    "title": "Historique",
+    "title": "Histoire",
     "table.columns": {
-      "eventType": "fr_Event Name",
-      "eventDate": "fr_Date",
-      "userId": "fr_User"
+      "eventType": "Nom de l'événement",
+      "eventDate": "Rendez-vous amoureux",
+      "userId": "Utilisateur"
     }
   },
   "cases.comp.time": {
     "title": "Heure",
     "table.columns": {
-      "name": "fr_Form Name",
-      "user": "fr_User",
-      "tally": "fr_Total Hours",
-      "modified": "fr_Modified Date",
-      "status": "fr_Status"
+      "name": "Nom de forme",
+      "user": "Utilisateur",
+      "tally": "Heures totales",
+      "modified": "Date modifiée",
+      "status": "Statut"
     },
-    "formNamePrefix": "fr_Timesheet"
+    "formNamePrefix": "Emploi du temps"
   },
   "cases.comp.cost": {
     "title": "Coût",
     "table.columns": {
-      "name": "fr_Form Name",
-      "user": "fr_User",
-      "tally": "fr_Total Cost",
-      "modified": "fr_Modified Date",
-      "status": "fr_Status"
+      "name": "Nom de forme",
+      "user": "Utilisateur",
+      "tally": "Coût total",
+      "modified": "Date modifiée",
+      "status": "Statut"
     },
-    "formNamePrefix": "fr_Costsheet"
+    "formNamePrefix": "Feuille de coût"
   },
   "cases.comp.tags": {
-    "title": "étiquettes",
+    "title": "Étiquettes",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Étiquette",
+      "created": "Créé",
+      "createdBy": "Créé par"
     },
     "modal": {
-      "title": "fr_Tag",
-      "search": "fr_Search for Tag",
+      "title": "Étiquette",
+      "search": "Recherche de étiquette",
       "buttons": {
-        "cancel": "fr_Cancel",
-        "ok": "fr_Add Tag"
+        "cancel": "Annuler",
+        "ok": "Ajouter une étiquette"
       }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression d'un tag"
       }
     }
   },
@@ -284,138 +247,164 @@
     "title": "Calendrier"
   },
   "cases.comp.merge": {
-    "id": "fr_merge",
-    "title": "fr_Merge",
-    "cancel.btn": "fr_Cancel",
-    "merge.btn": "fr_Merge",
-    "search.placeholder": "fr_Search for case file.",
-    "search.btn": "fr_Search",
-    "enabled": true,
+    "id": "Fusionner",
+    "title": "Fusionner",
+    "cancel.btn": "Annuler",
+    "merge.btn": "Fusionner",
+    "search.placeholder": "Rechercher un fichier de cas.",
+    "search.btn": "Chercher",
     "table.columns": {
-      "incident": "fr_Type",
-      "name": "fr_Name",
-      "assignee": "fr_Assignee",
-      "title": "fr_Title",
-      "parent": "fr_Parent",
-      "modified": "fr_Modified"
+      "incident": "Type",
+      "name": "Prénom",
+      "assignee": "Cessionnaire",
+      "title": "Titre",
+      "parent": "Parent",
+      "modified": "Modifié"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "Recherche de référence"
+  },
   "cases.comp.split": {
-    "title": "fr_Split",
-    "cancel": "fr_Cancel",
-    "split": "fr_Split"
+    "title": "Divisé",
+    "cancel": "Annuler",
+    "split": "Divisé"
   },
   "cases.comp.addreference": {
-    "title": "fr_Add Reference",
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Add",
+    "title": "Ajouter une référence",
+    "cancelButton": "Annuler",
+    "confirmButton": "Ajouter",
     "search": {
-      "placeholder": "fr_Search for case, complaint, file, task",
-      "btn": "fr_Search"
+      "placeholder": "Recherche de cas, plainte, fichier, tâche",
+      "btn": "Chercher"
     },
     "grid": {
       "columns": {
-        "id": "fr_Id",
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "parent": "fr_Parent",
-        "assignee": "fr_Assignee",
-        "modified": "fr_Modified"
+        "id": "Id",
+        "name": "Prénom",
+        "type": "Type",
+        "title": "Titre",
+        "parent": "Parent",
+        "assignee": "Cessionnaire",
+        "modified": "Modifié"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "fr_Change Assignee",
-    "assigneeNamelabel": "fr_Assignee Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchAssigneeHeader": "fr_Search Assignee"
+    "title": "Changer le cessionnaire",
+    "assigneeNamelabel": "Nom du cessionnaire",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchAssigneeHeader": "Rechercher cessionnaire"
   },
   "cases.comp.groupPickerModal": {
-    "title": "fr_Change Group",
-    "groupNamelabel": "fr_Group Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchGroupHeader": "fr_Search Group"
+    "title": "Changer de groupe",
+    "groupNamelabel": "Nom de groupe",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Sauvegarder",
+    "searchGroupHeader": "Groupe de recherche"
   },
   "cases.comp.approvalRouting": {
-    "title": "Routage d'approbation",
-    "addNewTooltip": "fr_Add new approver",
-    "noBuckslipMessage": "fr_No Data",
+    "title": "Approbateurs",
+    "addNewTooltip": "Ajouter un nouvel approbateur",
+    "noBuckslipMessage": "Pas de données",
+    "processInitialize.successfull": "Processus initialisé",
+    "processInitialize.fail": "Processus non initialisé",
+    "processWithdraw.successfull": "Processus retiré",
+    "processWithdraw.fail": "Processus non retiré",
+    "businessProcessUpdate.successfull": "Routage d'approbation mis à jour",
+    "businessProcessUpdate.fail": "Routage d'approbation non mis à jour",
     "button": {
-      "save.tooltip": "fr_Save Changes"
+      "save.tooltip": "Sauvegarder les modifications",
+      "initiate.tooltip": "Lancer la tâche",
+      "withdraw.tooltip": "Retirer la tâche"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "Le non-accord met fin au cycle d'approbation"
     },
     "table.columns": {
-      "fullName": "fr_Full Name"
+      "assignee": "Cessionnaire",
+      "group": "Groupe propriétaire",
+      "subject": "Assujettir",
+      "details": "Détails",
+      "dueDate": "Date d'échéance",
+      "status": "Statut",
+      "addedBy": "Ajouté par"
     },
-    "assignee.label": "fr_Assignee",
-    "owningGroup.label": "fr_Owning Group",
-    "priority.label": "fr_Priority",
-    "startDate.label": "fr_Start Date",
-    "dueDate.label": "fr_Due Date",
-    "state.label": "fr_State"
+    "assignee.label": "Cessionnaire",
+    "owningGroup.label": "Groupe propriétaire",
+    "priority.label": "Priorité",
+    "startDate.label": "Date de début",
+    "dueDate.label": "Date d'échéance",
+    "state.label": "Etat",
+    "future.task.modal": {
+      "title": "Nouvelle tâche future",
+      "assignee": "Cessionnaire",
+      "subject.label": "Assujettir",
+      "subject.placeholder": "Entrez le sujet du futur cas",
+      "details.label": "Détails",
+      "cancel.button": "Annuler",
+      "save.button": "Sauvegarder"
+    }
   },
   "cases.comp.pastApprovals": {
     "title": "Approbations passées",
-    "noBuckslipMessage": "fr_No Data",
+    "noBuckslipMessage": "Pas de données",
     "table.columns": {
-      "approvalDate": "fr_Approval Date",
-      "approverId": "fr_Approver",
-      "approverFullName": "fr_Approver",
-      "approverDecision": "fr_Approver Decision"
+      "approvalDate": "Date d'approbation",
+      "approverId": "Approbateur",
+      "approverFullName": "Approbateur",
+      "approverDecision": "Décision d'approbation"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "fr_userSearch",
-    "title": "fr_User/Group Search",
+    "id": "UserSearch",
+    "title": "Recherche d'utilisateur / groupe",
     "search": {
-      "btn": "fr_Search",
-      "placeholder": "fr_Search for the user or group."
+      "btn": "Chercher",
+      "placeholder": "Recherchez l'utilisateur ou le groupe."
     },
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
     "assigneeGridColumns": {
-      "name": "fr_Name",
-      "type": "fr_Type",
-      "title": "fr_Title",
-      "username": "fr_Username"
+      "name": "Nom",
+      "type": "Type",
+      "title": "Titre",
+      "username": "Nom d'utilisateur"
     }
   },
   "cases.tree": {
     "nodeTypes": {
       "details.label": "Détails",
-      "people.label": "Personnes",
+      "people.label": "Gens",
       "organizations.label": "Organisations",
       "documents.label": "Documents",
       "participants.label": "Participants",
-      "notes.label": "Notes",
-      "tasks.label": "Tâches",
-      "references.label": "Références",
+      "notes.label": "Remarques",
+      "tasks.label": "Les tâches",
+      "references.label": "Les références",
       "history.label": "Histoire",
-      "time.label": "Heure",
+      "time.label": "Temps",
       "cost.label": "Coût",
-      "tags.label": "étiquettes",
+      "tags.label": "Mots clés",
       "calendar.label": "Calendrier",
       "approvalRouting.label": "Routage d'approbation"
     },
     "filters": {
-      "opened": "Toutes les plaintes ouvertes",
+      "opened": "Tous les cas ouverts",
       "iHaveCreated": "Tout ce que j'ai créé",
       "iAmAssigned": "Tout ce que je suis assigné",
       "iAmFollowing": "Tout ce que je suis",
-      "closed": "Tout fermé",
+      "closed": "Tous fermés",
       "noFilter": "(Pas de filtre)"
     },
     "sorters": {
-      "dateAsc": "Trier Date Asc",
-      "dateDesc": "Trier Date Déc",
-      "idAsc": "Trier cas ID Asc",
-      "idDesc": "Trier cas ID Déc",
-      "nameAsc": "Trier par nom Asc",
-      "noSort": "(Non Trier)"
+      "dateAsc": "Date de tri Asc",
+      "dateDesc": "Date de tri",
+      "idAsc": "Trier l'ID de cas Asc",
+      "idDesc": "Trier l'ID de cas Desc",
+      "nameAsc": "Trier par nom de cas Asc",
+      "noSort": "(Pas de tri)"
     }
   }
 }

@@ -2,7 +2,6 @@ package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
-import com.armedia.acm.plugins.objectassociation.model.Reference;
 import org.springframework.context.ApplicationListener;
 
 public class ReferenceEventListener implements ApplicationListener<ObjectAssociationEvent>
@@ -10,49 +9,39 @@ public class ReferenceEventListener implements ApplicationListener<ObjectAssocia
 
     private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
-    @Override public void onApplicationEvent(ObjectAssociationEvent objectAssociationEvent)
+    @Override
+    public void onApplicationEvent(ObjectAssociationEvent objectAssociationEvent)
     {
-        if(isObjectAssociationCreatedEvent(objectAssociationEvent))
+        if (isObjectAssociationCreatedEvent(objectAssociationEvent))
         {
-            ObjectAssociation objectAssociation = (ObjectAssociation)objectAssociationEvent.getSource();
+            ObjectAssociation objectAssociation = (ObjectAssociation) objectAssociationEvent.getSource();
             ObjectAssociation inverseObjectAssociation = objectAssociation.getInverseAssociation();
 
-            if(checkExecution(objectAssociation))
+            if (checkExecution(objectAssociation))
             {
-                publishReferenceEvent(objectAssociationEvent ,objectAssociation);
+                publishReferenceEvent(objectAssociationEvent, objectAssociation);
             }
 
-            if(checkExecution(inverseObjectAssociation))
+            if (checkExecution(inverseObjectAssociation))
             {
-                publishReferenceEvent(objectAssociationEvent ,inverseObjectAssociation);
+                publishReferenceEvent(objectAssociationEvent, inverseObjectAssociation);
             }
         }
     }
 
     private void publishReferenceEvent(ObjectAssociationEvent objectAssociationEvent, ObjectAssociation objectAssociation)
     {
-        Reference reference = new Reference(){
-            {
-                setReferenceId(objectAssociation.getTargetId());
-                setReferenceNumber(objectAssociation.getTargetName());
-                setReferenceType(objectAssociation.getTargetType());
-                setReferenceTitle(objectAssociation.getTargetTitle());
-                setParentId(objectAssociation.getParentId());
-                setParentType(objectAssociation.getParentType());
-            }
-        };
-
         switch (objectAssociationEvent.getObjectAssociationState())
         {
             case NEW:
-                    getObjectAssociationEventPublisher().publishAddReferenceEvent(reference, objectAssociationEvent.getAuthentication(), true);
+                getObjectAssociationEventPublisher().publishAddReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
                 break;
             case UPDATE:
-                    getObjectAssociationEventPublisher().publishUpdateReferenceEvent(reference, objectAssociationEvent.getAuthentication(), true);
+                getObjectAssociationEventPublisher().publishUpdateReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
                 break;
 
             case DELETE:
-                getObjectAssociationEventPublisher().publishDeleteReferenceEvent(reference, objectAssociationEvent.getAuthentication(), true);
+                getObjectAssociationEventPublisher().publishDeleteReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
                 break;
         }
     }

@@ -10,10 +10,14 @@ angular.module('document-repository').config(['$stateProvider',
                 url: '/document-repository',
                 templateUrl: 'modules/document-repository/views/document-repository.client.view.html',
                 resolve: {
-                    translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    translatePartialLoader: ['$translate', '$translatePartialLoader', 'Config.LocaleService'
+                        , function ($translate, $translatePartialLoader, LocaleService) {
                         $translatePartialLoader.addPart('common');
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('document-repository');
+                        $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["document-repository", "common"], "en"))
+                        ;
                         return $translate.refresh();
                     }]
                 }
@@ -56,7 +60,10 @@ angular.module('document-repository').config(['$stateProvider',
 
             .state('document-repository.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/document-repository/views/components/document-repository-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "DOC_REPO"
+                }
             })
 
             .state('document-repository.notes', {

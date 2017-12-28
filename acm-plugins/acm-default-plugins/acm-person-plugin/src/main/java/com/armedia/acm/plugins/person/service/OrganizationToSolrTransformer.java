@@ -74,7 +74,6 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
         String participantsListJson = ParticipantUtils.createParticipantsListJson(org.getParticipants());
         orgDoc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
-        orgDoc.setAdditionalProperty("status_s", org.getStatus());
 
         return orgDoc;
     }
@@ -181,6 +180,7 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         orgDoc.setName(in.getOrganizationValue());
         orgDoc.setTitle_parseable(in.getOrganizationValue());
         orgDoc.setTitle_parseable_lcs(in.getOrganizationValue());
+        orgDoc.setStatus_s(in.getStatus());
 
         /** Additional properties for full names instead of ID's */
         AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
@@ -194,7 +194,6 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         {
             orgDoc.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
-        orgDoc.setAdditionalProperty("status_s", in.getStatus());
 
         return orgDoc;
     }

@@ -26,6 +26,8 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             , stateParams: $stateParams
             , moduleId: "cases"
             , componentId: "approvalRouting"
+            , retrieveObjectInfo: CaseInfoService.getCaseInfo
+            , validateObjectInfo: CaseInfoService.validateCaseInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
@@ -85,7 +87,9 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
             if(!Util.isEmpty(objectInfo.id)){
                 CaseFutureApprovalService.getBuckslipProcessesForChildren("CASE_FILE", objectInfo.id)
                     .then(function (response){
-                        fetchBuckslipProcess(response.data[0]);
+                        if(!Util.isArrayEmpty(response.data)) {
+                            fetchBuckslipProcess(response.data[0]);
+                        }
                     });
             }
             else if(!Util.isEmpty(objectInfo.buckslipFutureTasks)){
@@ -115,7 +119,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 .then(function (result){
                     var futureTask = {
                         approverId: result.pickedUserId,
-                        groupName: result.pickedUserGroup,
+                        groupName: result.pickedGroupName,
                         taskName: result.futureTaskTitle,
                         details: result.futureTaskDetails,
                         addedBy: currentUser

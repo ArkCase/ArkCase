@@ -19,17 +19,22 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
             }
         });
 
+        var activationMode = false;
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
-            if ($scope.active != "fa fa-circle-o-notch fa-spin"){
-                $scope.active = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
-            }
 
             $scope.$bus.subscribe("object.changed/PERSON/" + $stateParams.id, function () {
-                $scope.$emit("report-tree-updated");
-                $scope.active = "fa fa-stop";
+                if (activationMode) {
+                    $scope.$emit("report-tree-updated");
+                    $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                }
             });
+            if ($scope.activationIcon != "fa fa-circle-o-notch fa-spin"){
+                $scope.activationIcon = !Util.isEmpty(objectInfo.status) && objectInfo.status == "ACTIVE" ? "fa fa-stop" : "fa fa-play-circle";
+                activationMode = false;
+            }
         };
 
         $scope.onClickRestrict = function ($event) {
@@ -55,13 +60,13 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
 
         $scope.activate = function () {
             $scope.objectInfo.status = 'ACTIVE';
-            $scope.active = "fa fa-circle-o-notch fa-spin";
+            $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
         $scope.deactivate = function () {
             $scope.objectInfo.status = 'INACTIVE';
-            $scope.active = "fa fa-circle-o-notch fa-spin";
+            $scope.activationIcon = "fa fa-circle-o-notch fa-spin";
             saveObjectInfoAndRefresh();
         };
 
@@ -81,11 +86,12 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
+                        $scope.activationMode = true;
                         return objectInfo;
                     }
                     , function (error) {
                         $scope.$emit("report-object-update-failed", error);
-                        $scope.active = "fa fa-stop";
+                        $scope.activationIcon = "fa fa-stop";
                         return error;
                     }
                 );

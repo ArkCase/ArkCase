@@ -10,12 +10,14 @@ public class UpdateReferenceEvent extends AcmEvent
 
     private static final String EVENT_TYPE = "com.armedia.acm.objectassociation.reference.updated";
 
-    public UpdateReferenceEvent(Reference source)
+    public UpdateReferenceEvent(ObjectAssociation source)
     {
         super(source);
-        setObjectId(source.getParentId());
-        setObjectType(source.getParentType());
         setEventDate(new Date());
+        setObjectId(source.getTargetId());
+        setObjectType(source.getTargetType());
+        setParentObjectType(source.getParentType());
+        setParentObjectId(source.getParentId());
     }
 
     @Override

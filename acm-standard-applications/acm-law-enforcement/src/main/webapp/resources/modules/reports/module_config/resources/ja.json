@@ -4,38 +4,45 @@
     "menus": {
       "leftnav.item": "報告"
     },
-    "selectReport" : {
-      "label": "ja_Report",
-      "placeholder": "ja_Select Report"
+    "selectReport": {
+      "label": "報告する",
+      "placeholder": "報告の選択"
     },
-    "selectState" : {
-      "label": "ja_State",
-      "placeholder": "ja_Select State"
+    "selectState": {
+      "label": "状態",
+      "placeholder": "状態を選択"
     },
     "startDate": {
-      "label": "ja_From"
+      "label": "から"
     },
-    "endDate" : {
-      "label": "ja_To"
+    "endDate": {
+      "label": "に"
     },
-
     "dropdown": {
-      "turnaround": "ja_Turnaround Time by Requester",
-      "requester": "ja_Requester Type Summary",
-      "pending": "ja_Pending Orders Report",
-      "associate": "ja_Associate Productivity Report",
-      "origination": "ja_Origination Count",
-      "transfers": "ja_Transfers Report",
-      "exceptions": "ja_Exceptions Report (Non-Compliance)"
+      "turnaround": "リクエスタによる納期",
+      "requester": "リクエスタタイプの概要",
+      "pending": "保留中の注文レポート",
+      "associate": "准生産性レポート",
+      "origination": "起源数",
+      "transfers": "転送レポート",
+      "exceptions": "例外レポート（不適合）"
     },
-    "datepicker":{
-      "close": "ja_Done"
+    "datepicker": {
+      "close": "完成した",
+      "clear": "クリア",
+      "current": "今日"
     },
     "btn": {
-      "generateReport": "ja_Generate report"
+      "generateReport": "報告を生成する"
     },
     "checkBox": {
       "xmlReport": "XMLとして表示"
     }
+  },
+  "reports.comp.datepickers": {
+    "title": "日付ピッカー"
+  },
+  "reports.comp.reportselection": {
+    "title": "報告"
   }
 }

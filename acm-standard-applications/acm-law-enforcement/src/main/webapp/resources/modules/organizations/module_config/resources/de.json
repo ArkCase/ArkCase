@@ -350,6 +350,7 @@
   },
   "organizations.comp.related": {
     "title": "Verwandte Organisationen",
+    "linkTitle": "de_Rel Org",
     "table.columns": {
       "associationType": "de_Relationship",
       "type": "de_Type",
