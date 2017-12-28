@@ -1511,7 +1511,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         return new ArrayList<>();
     }
 
-    private <T> T getProcessVariableFromHistory(String processId, String processVariable) {
+    private <T> T getProcessVariableFromHistory(String processId, String processVariable) throws AcmTaskException {
         List<HistoricTaskInstance> historyTasks = getActivitiHistoryService()
                 .createHistoricTaskInstanceQuery()
                 .processInstanceId(processId)
@@ -1519,7 +1519,12 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .includeTaskLocalVariables()
                 .list();
 
-        return (T) historyTasks.get(0).getProcessVariables().get(processVariable);
+        if(historyTasks != null && historyTasks.size() > 0)
+        {
+            return (T) historyTasks.get(0).getProcessVariables().get(processVariable);
+        }
+
+        throw new AcmTaskException(String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
     }
 
     public RuntimeService getActivitiRuntimeService()

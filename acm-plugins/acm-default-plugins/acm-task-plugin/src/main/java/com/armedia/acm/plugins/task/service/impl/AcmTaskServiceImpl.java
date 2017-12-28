@@ -102,7 +102,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public Long getCompletedBuckslipProcessIdForObject(String objectType, Long objectId, Authentication authentication)
+    public Long getCompletedBuckslipProcessIdForObjectFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         return getBusinessProcessIdFromSolr(objectType, objectId, authentication);
     }
@@ -188,8 +188,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public String getBuckslipPastTasks(String businessProcessId, boolean readFromHistory) throws AcmTaskException
     {
-        String pastTasks = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS, readFromHistory);
-        return pastTasks;
+        return taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_PAST_TASKS, readFromHistory);
     }
 
     @Override
@@ -522,7 +521,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         {
             retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
                     SolrCore.QUICK_SEARCH,
-                    query, 0, 10, "business_process_id_i ASC");
+                    query, 0, 1, "business_process_id_i DESC");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)
             {
@@ -536,7 +535,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
         }
         catch (MuleException e)
         {
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
 
         return businessProcessId;

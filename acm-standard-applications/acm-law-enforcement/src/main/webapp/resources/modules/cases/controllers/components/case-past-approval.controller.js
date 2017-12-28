@@ -3,11 +3,11 @@
 angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
     , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
     , 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService', 'Case.PastApprovalService', 'Case.FutureApprovalService'
+    , 'PermissionsService', 'Profile.UserInfoService', 'Case.FutureApprovalService'
     , function ($scope, $stateParams, $q, $translate, $modal
         , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
         , CaseInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService, CasePastApprovalService, CaseFutureApprovalService) {
+        , PermissionsService, UserInfoService, CaseFutureApprovalService) {
 
         $scope.pastApprovers = {};
         $scope.gridOptions = $scope.gridOptions || {};
@@ -45,18 +45,12 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
 
             //set past approvers info
             if(!Util.isEmpty(objectInfo.id)) {
-                CasePastApprovalService.getCompletedBuckslipProcessIdForObject('CASE_FILE', objectInfo.id)
+                CaseFutureApprovalService.getBuckslipPastTasksForObject('CASE_FILE', objectInfo.id, true)
                     .then(function (result){
-                         if(result.data != null){
-                            var businessProcessId = result.data;
-                            CaseFutureApprovalService.getBuckslipPastTasks(businessProcessId, true)
-                                .then(function (result){
-                                    if(!Util.isArrayEmpty(result.data)){
-                                        $scope.gridOptions.data = angular.fromJson(result.data);
-                                        $scope.gridOptions.noData = false;
-                                    }
-                                });
-                         }
+                        if(!Util.isArrayEmpty(result.data)){
+                            $scope.gridOptions.data = angular.fromJson(result.data);
+                            $scope.gridOptions.noData = false;
+                        }
                     });
             }
             else if (objectInfo.buckslipPastApprovers) {
