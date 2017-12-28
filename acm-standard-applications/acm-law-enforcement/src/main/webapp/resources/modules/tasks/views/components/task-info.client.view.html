@@ -62,10 +62,12 @@
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
                        e-init-date="dateInfo.taskStartDate"
                        e-on-open-focus="false"
+                       e-min-date="minStartDate"
                        onaftersave="updateStartDate(dateInfo.taskStartDate)"
+                       e-ng-change="test($data)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable">
-                        {{ (dateInfo.taskStartDate | date: 'shortDate' ) || ('common.value.unknown' | translate) }}</a>
+                        {{dateInfo.taskStartDate | date: 'shortDate'}}</a>
                 </div>
                 <small class="text-muted"><span translate>tasks.comp.info.startDate.label</span></small>
             </div>
@@ -76,10 +78,11 @@
                        e-ng-click="onPickerClick()" e-is-open="picker.opened"
                        e-init-date="dateInfo.dueDate"
                        e-on-open-focus="false"
+                       e-min-date="dateInfo.taskStartDate"
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable" e-required>
-                        {{ (dateInfo.dueDate | date: 'shortDate' ) || ('common.value.unknown' | translate) }}</a>
+                        {{ dateInfo.dueDate | date: 'shortDate' }}</a>
                     <a ng-if="dateInfo.isOverdue" tooltip="{{'tasks.comp.info.overdue.tooltip' | translate}}"
                        tooltip-append-to-body="true" tooltip-class="tooltip-overdue">
                         <i class="fa fa-exclamation-circle icon-overdue"></i>
