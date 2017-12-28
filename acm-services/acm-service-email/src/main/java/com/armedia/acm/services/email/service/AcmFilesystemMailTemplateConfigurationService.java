@@ -205,6 +205,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
             for (String objectType : templateData.getObjectTypes())
             {
+                boolean found = false;
                 for (String action : templateData.getActions())
                 {
                     if (templateConfigurations.containsKey(objectType) && templateConfigurations.get(objectType).containsKey(action)
@@ -214,8 +215,13 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                         response.setAction(action);
                         response.setEmailPattern(templateData.getEmailPattern());
                         response.setValidTemplate(false);
+                        found = true;
                         break;
                     }
+                }
+                if (found)
+                {
+                    break;
                 }
             }
 
