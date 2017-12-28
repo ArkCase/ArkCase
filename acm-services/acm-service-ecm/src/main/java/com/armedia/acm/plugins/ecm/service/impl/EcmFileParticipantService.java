@@ -255,7 +255,8 @@ public class EcmFileParticipantService
                     originalAssignedObjectParticipants, acmContainer.getFolder());
 
         }
-        if (acmContainer.getAttachmentFolder() != null && !acmContainer.getAttachmentFolder().equals(acmContainer.getFolder()))
+        if (acmContainer.getAttachmentFolder() != null
+                && !acmContainer.getAttachmentFolder().getId().equals(acmContainer.getFolder().getId()))
         {
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
                     originalAssignedObjectParticipants, acmContainer.getAttachmentFolder());
@@ -272,13 +273,8 @@ public class EcmFileParticipantService
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
         // inherit participants where needed
-        for (AcmParticipant participant : assignedObjectParticipants)
-        {
-            if (participant.isReplaceChildrenParticipant())
-            {
-                setParticipantToFolderChildren(folder, getDocumentParticipantFromAssignedObjectParticipant(participant));
-            }
-        }
+        assignedObjectParticipants.stream().filter(participant -> participant.isReplaceChildrenParticipant()).forEach(
+                participant -> setParticipantToFolderChildren(folder, getDocumentParticipantFromAssignedObjectParticipant(participant)));
 
         // remove deleted parent participants from folder and children
 
@@ -333,6 +329,10 @@ public class EcmFileParticipantService
 
     private void setRestrictedFlagRecursively(Boolean restricted, AcmFolder folder)
     {
+        // usually this method is called after inheritParticipantsFromAssignedObject
+        // we'll make sure that any changes done are flushed to the database
+        getFileDao().getEm().flush();
+
         folder.setRestricted(restricted);
 
         // set restricted flag to child folders
@@ -477,15 +477,20 @@ public class EcmFileParticipantService
         // remove deleted participants
         for (AcmParticipant existingParticipant : fileParticipants)
         {
-            if (participants.stream()
-                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
-                    .count() == 0)
+            if (containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
             {
                 file.getParticipants()
                         .removeIf(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId())
                                 && participant.getParticipantType().equals(existingParticipant.getParticipantType()));
             }
         }
+    }
+
+    private boolean containsParticipantWithLdapId(List<AcmParticipant> participants, String ldapId)
+    {
+        return participants.stream()
+                .filter(participant -> participant.getParticipantLdapId().equals(ldapId))
+                .count() == 0;
     }
 
     private void setParticipantToFile(EcmFile file, AcmParticipant participant)
@@ -536,9 +541,7 @@ public class EcmFileParticipantService
         // remove deleted participants
         for (AcmParticipant existingParticipant : folderParticipants)
         {
-            if (participants.stream()
-                    .filter(participant -> participant.getParticipantLdapId().equals(existingParticipant.getParticipantLdapId()))
-                    .count() == 0)
+            if (containsParticipantWithLdapId(participants, existingParticipant.getParticipantLdapId()))
             {
                 removeParticipantFromFolderAndChildren(folder,
                         existingParticipant.getParticipantLdapId(), existingParticipant.getParticipantType());
@@ -557,52 +560,48 @@ public class EcmFileParticipantService
     private void validateFileParticipants(List<AcmParticipant> participants) throws AcmParticipantsException
     {
         // missing participant id
-        List<AcmParticipant> missingParticipantLdapIds = participants.stream()
-                .filter(participant -> participant.getReceiverLdapId() == null).collect(Collectors.toList());
+        List<String> missingParticipantLdapIdsErrors = participants.stream()
+                .filter(participant -> participant.getReceiverLdapId() == null)
+                .map(participant -> "No LDAP id for participant type: " + participant.getParticipantType()).collect(Collectors.toList());
 
-        if (missingParticipantLdapIds.size() > 0)
+        if (missingParticipantLdapIdsErrors.size() > 0)
         {
             String errorMessage = "Missing participant LDAP id!";
-            List<String> errorList = missingParticipantLdapIds.stream()
-                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantType()).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
+            throw new AcmParticipantsException(missingParticipantLdapIdsErrors, errorMessage);
         }
 
         // missing participantTypes
-        List<AcmParticipant> missingParticipantTypes = participants.stream().filter(participant -> participant.getParticipantType() == null)
-                .collect(Collectors.toList());
+        List<String> missingParticipantTypesErrors = participants.stream().filter(participant -> participant.getParticipantType() == null)
+                .map(participant -> "No participant type for LDAP id: " + participant.getParticipantLdapId()).collect(Collectors.toList());
 
-        if (missingParticipantTypes.size() > 0)
+        if (missingParticipantTypesErrors.size() > 0)
         {
             String errorMessage = "Missing participant type!";
-            List<String> errorList = missingParticipantTypes.stream()
-                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId()).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
+            throw new AcmParticipantsException(missingParticipantTypesErrors, errorMessage);
         }
 
         // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
         Set<String> allLdapIds = new HashSet<>();
-        Set<String> duplicateParticipantLdapIds = participants.stream().map(participant -> participant.getParticipantLdapId())
-                .filter(participantLdapId -> !allLdapIds.add(participantLdapId)).collect(Collectors.toSet());
-        if (duplicateParticipantLdapIds.size() > 0)
+        List<String> duplicateParticipantLdapIdsErrors = participants.stream().map(participant -> participant.getParticipantLdapId())
+                .filter(participantLdapId -> !allLdapIds.add(participantLdapId))
+                .map(participantLdapId -> "Participant LDAP Id in multiple roles: " + participantLdapId).collect(Collectors.toList());
+        if (duplicateParticipantLdapIdsErrors.size() > 0)
         {
             String errorMessage = "Participants in multiple roles found!";
-            List<String> errorList = duplicateParticipantLdapIds.stream()
-                    .map(participantLdapId -> "ParticipantLdapId: " + participantLdapId).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
+            throw new AcmParticipantsException(duplicateParticipantLdapIdsErrors, errorMessage);
         }
 
         // check participant types
-        List<AcmParticipant> invalidParticipantTypes = participants.stream()
+        List<String> invalidParticipantTypesErrors = participants.stream()
                 .filter(participant -> !fileParticipantTypes.contains(participant.getParticipantType()))
+                .map(participant -> "Invalid participant type: '" + participant.getParticipantLdapId() + "' for LDAP id: "
+                        + participant.getParticipantLdapId())
                 .collect(Collectors.toList());
 
-        if (invalidParticipantTypes.size() > 0)
+        if (invalidParticipantTypesErrors.size() > 0)
         {
             String errorMessage = "Invalid file participant type!";
-            List<String> errorList = invalidParticipantTypes.stream()
-                    .map(participant -> "ParticipantLdapId: " + participant.getParticipantLdapId()).collect(Collectors.toList());
-            throw new AcmParticipantsException(errorList, errorMessage);
+            throw new AcmParticipantsException(invalidParticipantTypesErrors, errorMessage);
         }
     }
 

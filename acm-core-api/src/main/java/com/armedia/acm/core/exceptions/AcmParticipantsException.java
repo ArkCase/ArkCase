@@ -1,6 +1,7 @@
 package com.armedia.acm.core.exceptions;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AcmParticipantsException extends Exception
 {
@@ -25,10 +26,6 @@ public class AcmParticipantsException extends Exception
     @Override
     public String getMessage()
     {
-        StringBuilder errorMessage = new StringBuilder();
-        errorMessage.append(super.getMessage());
-        getListOfErrors().stream().forEach(error -> errorMessage.append("\n[" + error + "]"));
-        return errorMessage.toString();
+        return getListOfErrors().stream().map(error -> "[" + error + "]").collect(Collectors.joining("\n", super.getMessage() + "\n", ""));
     }
-
 }
