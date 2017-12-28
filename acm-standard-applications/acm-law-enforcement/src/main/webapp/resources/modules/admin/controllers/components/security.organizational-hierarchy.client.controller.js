@@ -6,10 +6,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
     function ($scope, $timeout, organizationalHierarchyService, $q, $modal, messageService, $translate, ModalDialogService, Util
         , LdapConfigService) {
 
-        var UUIDRegExString = ".*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}";
-
-        var UUIDRegEx = new RegExp(UUIDRegExString);
-
         $scope.data = [];
         var groupsMap = {};
         var gridCurrentPage;
@@ -129,11 +125,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     if (newGroup.supervisor) {
                         newGroup.supervisor = newGroup.supervisor.fullName;
                     }
-
-                    //name that should be displayed in UI should not be unique across different tree levels,
-                    // so the UUID part is removed!
-                    newGroup.name = UUIDRegEx.test(newGroup.name) ?
-                        newGroup.name.substring(0, newGroup.name.lastIndexOf("-UUID-")) : newGroup.name;
 
                     groupsMap[newGroup.object_id_s] = newGroup;
 
@@ -526,12 +517,6 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
                     newGroup.object_id_s = payload.data.name;
                     if (payload.data.supervisor)
                         newGroup.supervisor = payload.data.supervisor.fullName;
-
-                    //name that should be displayed in UI should not be unique across different tree levels,
-                    // so the UUID part is removed!
-
-                    newGroup.name = UUIDRegEx.test(payload.data.name) ?
-                        payload.data.name.substring(0, payload.data.name.lastIndexOf("-UUID-")) : payload.data.name;
 
                     groupsMap[payload.data.object_id_s] = newGroup;
                     addToTree(newGroup, true);

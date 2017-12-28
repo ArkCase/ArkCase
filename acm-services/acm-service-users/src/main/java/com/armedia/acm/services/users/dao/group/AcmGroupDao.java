@@ -3,7 +3,6 @@ package com.armedia.acm.services.users.dao.group;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
@@ -15,7 +14,6 @@ import javax.persistence.NonUniqueResultException;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Set;
@@ -91,58 +89,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return query.getResultList();
     }
 
-    public AcmGroup groupByUIName(AcmGroup group)
-    {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
-                "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
-
-        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
-        query.setParameter("status", AcmGroupStatus.DELETE);
-        List<AcmGroup> result = query.getResultList();
-
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    /**
-     * Find ad-hoc group by matching name.
-     * <p>
-     * We need this since UI names and internal names of ad-hoc groups differ
-     * (ArkCase is adding `-UUID-...` suffix internally)
-     *
-     * @param name group name
-     * @return ad-hoc group if found, null otherwise
-     */
-    @Transactional
-    public AcmGroup findByMatchingName(String name)
-    {
-        CriteriaBuilder builder = this.getEm().getCriteriaBuilder();
-        CriteriaQuery query = builder.createQuery(AcmGroup.class);
-        Root group = query.from(AcmGroup.class);
-        query.select(group);
-        query.where(builder.and(new Predicate[] { builder.like(group.<String>get("name"), name + "-UUID-%") }));
-
-        TypedQuery dbQuery = this.getEm().createQuery(query);
-        AcmGroup acmGroup = null;
-
-        try
-        {
-            acmGroup = (AcmGroup) dbQuery.getSingleResult();
-        }
-        catch (NoResultException e)
-        {
-            LOG.warn("There is no group with name [{}]", name);
-        }
-        catch (NonUniqueResultException e)
-        {
-            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Error while retrieving group by group name [{}]", name, e);
-        }
-        return acmGroup;
-    }
-
     public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
         TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
@@ -166,10 +112,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public List<AcmGroup> findByStatusAndType(AcmGroupStatus status, AcmGroupType type)
     {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT acmGroup "
-                + "FROM AcmGroup acmGroup "
-                + "WHERE acmGroup.status = :status "
-                + "AND acmGroup.type = :groupType", AcmGroup.class);
+        TypedQuery<AcmGroup> query = getEm()
+                .createQuery("SELECT acmGroup "
+                        + "FROM AcmGroup acmGroup "
+                        + "WHERE acmGroup.status = :status "
+                        + "AND acmGroup.type = :groupType", AcmGroup.class);
         query.setParameter("status", status);
         query.setParameter("groupType", type);
         return query.getResultList();

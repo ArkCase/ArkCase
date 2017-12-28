@@ -20,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -141,17 +140,13 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
-        Function<String, AcmGrantedAuthority> groupToAuthority = groupName -> new AcmGrantedAuthority(
-                groupService.isUUIDPresentInTheGroupName(groupName) ?
-                        groupName.substring(0, groupName.lastIndexOf("-UUID-")) : groupName);
-
         Stream<AcmGrantedAuthority> authorityGroups = groups.stream()
                 .map(AcmGroup::getName)
-                .map(groupToAuthority);
+                .map(AcmGrantedAuthority::new);
 
         Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
                 .flatMap(AcmGroup::getAscendants)
-                .map(groupToAuthority);
+                .map(AcmGrantedAuthority::new);
 
         return Stream.concat(authorityGroups, authorityAscendantsGroups)
                 .collect(Collectors.toSet());
