@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -40,10 +41,22 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup save(AcmGroup groupToSave)
+    public AcmGroup save(AcmGroup group)
     {
-        groupToSave.setName(MapperUtils.buildGroupName(groupToSave.getName(), Optional.empty()));
-        return groupDao.save(groupToSave);
+        return groupDao.save(group);
+    }
+
+    @Override
+    public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
+    {
+        String groupName = group.getName();
+        AcmGroup acmGroup = groupDao.findByName(groupName);
+        if (acmGroup != null)
+        {
+            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+        }
+        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+        return groupDao.save(group);
     }
 
     @Override
@@ -358,7 +371,8 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException
+    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
+            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
     {
         AcmGroup parent = groupDao.findByName(parentId);
         if (parent == null)
@@ -377,8 +391,9 @@ public class GroupServiceImpl implements GroupService
         String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
         subGroup.setName(groupName);
         subGroup.setDisplayName(groupName);
-        parent.addGroupMember(subGroup);
-        return subGroup;
+        AcmGroup acmGroup = createGroup(subGroup);
+        parent.addGroupMember(acmGroup);
+        return acmGroup;
     }
 
     public void setUserDao(UserDao userDao)

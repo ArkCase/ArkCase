@@ -36,7 +36,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         query.where(
                 builder.and(
-                        builder.equal(group.<String>get("name"), name)
+                        builder.equal(group.<String>get("name"), name.toUpperCase())
                 )
         );
 
