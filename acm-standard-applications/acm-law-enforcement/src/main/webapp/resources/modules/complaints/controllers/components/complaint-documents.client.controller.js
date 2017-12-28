@@ -56,6 +56,7 @@ angular.module('complaints').controller('Complaints.DocumentsController', ['$sco
                     $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.correspondenceForms = data[2];
                     $scope.treeConfig.fileLanguages = data[3];
+                    $scope.treeControl.refreshTree();
                 });
         };
 

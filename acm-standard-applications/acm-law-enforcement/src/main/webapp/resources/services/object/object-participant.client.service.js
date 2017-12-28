@@ -10,8 +10,8 @@
 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
-angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', '$q', 'UtilService', 'MessageService', 'SearchService', 'Search.QueryBuilderService',
-    function ($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder) {
+angular.module('services').factory('Object.ParticipantService', ['$resource', '$translate', '$q', 'UtilService', 'MessageService', 'SearchService', 'Search.QueryBuilderService', 'ObjectService',
+    function ($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder, ObjectService) {
         var Service = $resource('api/v1/service', {}, {
 
             /**
@@ -275,11 +275,11 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
         };
 
         Service.getFileParticipantsAsObjectInfo = function(fileId) {
-            return Service.getObjectParticipantsAsObjectInfo("FILE", fileId);
+            return Service.getObjectParticipantsAsObjectInfo(ObjectService.ObjectTypes.FILE, fileId);
         };
         
         Service.getFolderParticipantsAsObjectInfo = function(folderId) {
-            return Service.getObjectParticipantsAsObjectInfo("FOLDER", folderId);
+            return Service.getObjectParticipantsAsObjectInfo(ObjectService.ObjectTypes.FOLDER, folderId);
         };
 
         Service.getObjectParticipantsAsObjectInfo = function(objectType, objectId) {
@@ -316,7 +316,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          * @param {Object} data  Object with 'participants' array property to be saved and 'objectId' property as the fileId
          */
         Service.saveFileParticipants = function (data) {
-            return Service.saveEcmObjectParticipants("FILE", data);
+            return Service.saveEcmObjectParticipants(ObjectService.ObjectTypes.FILE, data);
         };
         
         /**
@@ -330,7 +330,7 @@ angular.module('services').factory('Object.ParticipantService', ['$resource', '$
          * @param {Object} data  Object with 'participants' array property to be saved and 'objectId' property as the folderId
          */
         Service.saveFolderParticipants = function (data) {
-            return Service.saveEcmObjectParticipants("FOLDER", data);
+            return Service.saveEcmObjectParticipants(ObjectService.ObjectTypes.FOLDER, data);
         };
         
         /**
