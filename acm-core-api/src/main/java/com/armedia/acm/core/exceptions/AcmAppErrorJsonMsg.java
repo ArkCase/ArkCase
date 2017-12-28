@@ -10,6 +10,13 @@ public class AcmAppErrorJsonMsg extends Exception
     private String field;
     private Map<String, Object> extra;
 
+    public AcmAppErrorJsonMsg(String message, String objectType, Throwable cause)
+    {
+        super(message, cause);
+        this.objectType = objectType;
+        this.extra = new HashMap<>();
+    }
+
     public AcmAppErrorJsonMsg(String message, String objectType, String field, Throwable cause)
     {
         super(message, cause);

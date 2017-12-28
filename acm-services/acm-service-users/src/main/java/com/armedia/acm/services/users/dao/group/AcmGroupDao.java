@@ -70,42 +70,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return acmGroup;
     }
 
-    @Transactional
-    public boolean deleteAcmGroupByName(String name)
-    {
-        AcmGroup groupToBeDeleted = findByName(name);
-        if (groupToBeDeleted != null)
-        {
-            getEm().remove(groupToBeDeleted);
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-
-    @Transactional
-    public AcmGroup markGroupDeleted(String groupName)
-    {
-        AcmGroup acmGroup = findByName(groupName);
-        if (acmGroup == null) return null;
-
-        acmGroup.setAscendantsList(null);
-        acmGroup.setStatus(AcmGroupStatus.DELETE);
-
-        acmGroup.getUserMembers()
-                .forEach(user -> user.getGroups().remove(acmGroup));
-        acmGroup.getMemberOfGroups()
-                .forEach(it -> it.getMemberGroups().remove(acmGroup));
-        acmGroup.getMemberGroups()
-                .forEach(it -> acmGroup.getMemberOfGroups().remove(acmGroup));
-
-        acmGroup.setUserMembers(new HashSet<>());
-        acmGroup.setMemberOfGroups(new HashSet<>());
-        acmGroup.setMemberGroups(new HashSet<>());
-        return acmGroup;
-    }
-
     public void markRolesByGroupInvalid(String groupName)
     {
         Query markInvalid = getEm().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state "
@@ -113,21 +77,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("groupName", groupName);
         markInvalid.executeUpdate();
-    }
-
-    @Transactional
-    public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
-    {
-        AcmGroup group = findByName(name);
-
-        if (group != null)
-        {
-            membersToRemove.forEach(member -> member.getGroups().remove(group));
-
-            Set<AcmUser> userMembers = group.getUserMembers();
-            userMembers.removeAll(membersToRemove);
-        }
-        return group;
     }
 
     /**
@@ -171,18 +120,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user");
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group "
+                + "WHERE group.userMembers = :user", AcmGroup.class);
         query.setParameter("user", user);
 
-        return (List<AcmGroup>) query.getResultList();
-    }
-
-    private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
-    {
-        @SuppressWarnings("unchecked")
-        Set<AcmUser> clonedMembers = (HashSet) new HashSet<>(members).clone();
-
-        return clonedMembers;
+        return query.getResultList();
     }
 
     public AcmGroup groupByUIName(AcmGroup group)

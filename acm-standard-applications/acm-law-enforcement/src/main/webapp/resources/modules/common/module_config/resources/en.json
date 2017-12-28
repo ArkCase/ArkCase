@@ -58,7 +58,23 @@
     },
     "menu": {
       "noop": "(Select Item)",
-      "editWithWebDAV": "Edit"
+      "editWithWebDAV": "Edit",
+      "cancelEditing": "Cancel Editing",
+      "newFolder": "New Folder",
+      "newDocument": "New Document",
+      "newCorrespondence": "New Correspondence",
+      "open": "Open",
+      "email": "Email",
+      "download": "Download",
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "rename": "Rename",
+      "delete": "Delete",
+      "replace": "Replace",
+      "checkout": "Check Out",
+      "checkin": "Check In",
+      "declareRecord": "Declare As Record(s)"
     },
     "table.columns": {
       "title": "Title",
@@ -841,6 +857,18 @@
         "action": "Action",
         "newValue": "New Value",
         "oldValue": "Old Value"
+      }
+    },
+    "client": {
+      "title": "History",
+      "label": {
+        "updated": "Updated"
+      },
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Date",
+        "userId": "User",
+        "details.btn.text": "View {{count}} Changes"
       }
     }
   }

@@ -1,17 +1,16 @@
 package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
+import org.json.JSONArray;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +27,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.Base64;
+import java.util.stream.Collectors;
 
 import static org.easymock.EasyMock.expect;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.core.Every.everyItem;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,25 +62,9 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(this).build();
     }
 
-    private String loadFile(String fileName)
-    {
-        ClassLoader classLoader = getClass().getClassLoader();
-        try
-        {
-            return IOUtils.toString(classLoader.getResourceAsStream(fileName));
-        }
-        catch (IOException e)
-        {
-            log.error("Can not load file [{}]", fileName, e);
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
     public void saveMembersToAdHocGroupTest() throws Exception
     {
-        String content = loadFile("data/userMembers.json");
-
         AcmGroup group = new AcmGroup();
         group.setName("A");
         group.setType(AcmGroupType.ADHOC_GROUP);
@@ -86,23 +72,23 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
 
         AcmUser user = new AcmUser();
         user.setUserId("ann-acm");
-        user.setUserDirectoryName("armedia");
-        user.setUserState(AcmUserState.VALID);
-        user.setFirstName("Ann");
-        user.setLastName("Administrator");
-        user.setFullName("Ann Administrator");
+
+        AcmUser user1 = new AcmUser();
+        user1.setUserId("sally-acm");
 
         group.addUserMember(user);
+        group.addUserMember(user1);
 
-        expect(groupService.addMembersToAdHocGroup(new HashSet<>(Arrays.asList(user)), "A")).andReturn(group);
+        expect(groupService.addUserMembersToGroup(Arrays.asList("ann-acm", "sally-acm"), "A"))
+                .andReturn(group);
         expect(mockAuthentication.getName()).andReturn("ann-acm");
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{group}/members/save", group.getName())
+                post("/api/latest/users/group/{groupId}/members/save", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(content)
+                        .content(new JSONArray(Arrays.asList("ann-acm", "sally-acm")).toString())
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -114,15 +100,14 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         AcmGroup acmGroup = om.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        String[] members = { "ann-acm" };
-        assertArrayEquals(acmGroup.getUserMemberIds().toArray(), members);
+
+        assertThat(acmGroup.getUserMemberIds().collect(Collectors.toList()),
+                everyItem(isIn(Arrays.asList("ann-acm", "sally-acm"))));
     }
 
     @Test
     public void removeMembersFromAdHocGroupTest() throws Exception
     {
-        String content = loadFile("data/userMembers.json");
-
         AcmGroup group = new AcmGroup();
         group.setName("A");
         group.setType(AcmGroupType.ADHOC_GROUP);
@@ -130,28 +115,24 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
 
         AcmUser user1 = new AcmUser();
         user1.setUserId("ann-acm");
-        user1.setUserDirectoryName("armedia");
-        user1.setUserState(AcmUserState.VALID);
 
         AcmUser user2 = new AcmUser();
         user2.setUserId("sally-acm");
-        user2.setUserDirectoryName("armedia");
-        user2.setUserState(AcmUserState.VALID);
 
         group.addUserMember(user2);
 
         expect(mockAuthentication.getName()).andReturn("ann-acm");
-        expect(groupService.removeMembersFromAdHocGroup(new HashSet<>(Arrays.asList(user1)), "A"))
+        expect(groupService.removeUserMembersFromGroup(Arrays.asList(user1.getUserId()), "A"))
                 .andReturn(group);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{groupId}/members/remove/", group.getName())
+                post("/api/latest/users/group/{groupId}/members/remove/", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .principal(mockAuthentication)
-                        .content(content))
+                        .content(new JSONArray(Arrays.asList("ann-acm")).toString()))
                 .andReturn();
 
         verifyAll();
@@ -161,7 +142,7 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         AcmGroup acmGroup = om.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        String[] members = { "sally-acm" };
+        String[] members = {"sally-acm"};
         assertArrayEquals(acmGroup.getUserMemberIds().toArray(), members);
     }
 

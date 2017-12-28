@@ -81,7 +81,7 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
 
             link: function (scope) {    //dom operations
                 scope.facets = [];
-                scope.currentFacetSelection = [];
+                scope.currentFacetSelection = {};
                 scope.selectedItem = null;
                 scope.emptySearch = true;
                 scope.exportUrl = "";
@@ -108,6 +108,13 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                 scope.searchQuery = searchObject.searchQuery;
                 scope.onSelect = function ($item, $model, $label) {
                     isSelected = true;
+                    searchObject.searchQuery = $model;
+                };
+
+                scope.search = function () {
+                    scope.filters = '';
+                    scope.clearAllFacets();
+                    scope.queryExistingItems();
                 };
 
                 scope.queryExistingItems = function (start) {
@@ -234,11 +241,11 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                     return deferred.promise;
                 };
 
-                var setExportQuery = function(query) {
+                var setExportQuery = function (query) {
                     scope.query = query;
                 };
 
-                scope.export = function() {
+                scope.export = function () {
                     if (Util.isEmpty(scope.query)) {
                         return;
                     }
@@ -324,9 +331,9 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                 });
 
                 var _translateFacets = function (facets) {
-                    _.each(facets, function(facet){
+                    _.each(facets, function (facet) {
                         facet.nameTranslated = $translate.data(facet.name, "common.directive.search.facet.names");
-                        _.each(facet.fields, function(field) {
+                        _.each(facet.fields, function (field) {
                             field.name.nameTranslated = $translate.data(field.name.nameFiltered,
                                 "common.directive.search.facet.fields." + facet.fieldCategory);
                         });
@@ -404,7 +411,7 @@ angular.module('directives').directive('search', ['SearchService', '$window', '$
                     searchObject.searchQuery = scope.searchQuery;
 
                     if (event.keyCode == 13 && scope.searchQuery) {
-                        scope.queryExistingItems();
+                        scope.search();
                     }
                 };
 

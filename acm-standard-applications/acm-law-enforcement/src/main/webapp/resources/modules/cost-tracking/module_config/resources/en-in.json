@@ -42,7 +42,7 @@
     }
   },
   "costTracking.comp.summary": {
-    "title": "Cost Summary",
+    "title": "Cost",
     "table.columns": {
       "parentId": "ID",
       "parentNumber": "Parent ID",
@@ -59,13 +59,14 @@
       "created": "Created",
       "createdBy": "Created By"
     },
+
     "modal": {
-      "title": "Tag",
-      "search": "Search for Tag",
-      "buttons": {
-        "cancel": "Cancel",
-        "ok": "Add Tag"
-      }
+    "title": "Tag",
+    "search": "Search for Tag",
+    "buttons": {
+          "cancel": "Cancel",
+          "ok": "Add Tag"
+     }
     },
     "message": {
       "tagExists": "Tag with that name or description or text already exists",

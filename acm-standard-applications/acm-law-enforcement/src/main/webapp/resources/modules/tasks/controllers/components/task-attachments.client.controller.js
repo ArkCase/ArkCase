@@ -43,10 +43,7 @@ angular.module('tasks').controller('Tasks.AttachmentsController', ['$scope', '$s
             $q.all([promiseFormTypes, promiseFileTypes, promiseFileLanguages]).then(
                 function (data) {
                     $scope.treeConfig.formTypes = data[0];
-                    $scope.treeConfig.fileTypes = [];
-                    for(var i = 0; i < data[1].length; i++){
-                        $scope.treeConfig.fileTypes.push({"key": data[1][i].key, "value": $translate.instant(data[1][i].value)})
-                    }
+                    $scope.treeConfig.fileTypes = data[1];
                     $scope.treeConfig.fileLanguages = data[2];
                 });
         };

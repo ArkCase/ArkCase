@@ -29,8 +29,8 @@
                         <li ng-repeat="field in facet.fields | limitTo : facet.limit">
                             <div class="checkbox" ng-if="field.count > 0">
                                 <label><input type="checkbox"
-                                              ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
-                                              ng-click="selectFacet($event.target.checked, facet.name, field.name.nameValue)"/>
+                                        ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
+                                        ng-click="selectFacet($event.target.checked, facet.name, field.name.nameValue)"/>
                                     {{field.name.nameTranslated | mapKeyValue: customization.labels}}
                                     <span class="pull-right label label-info">{{field.count}}</span></label>
                             </div>
@@ -41,7 +41,7 @@
                                 <i class="fa fa-lg fa-plus"></i>
                             </button>
                             <label for="showMoreButton-{{$index}}"
-                                   translate>common.directive.search.showMore.button.text</label>
+                                    translate>common.directive.search.showMore.button.text</label>
                         </div>
                         <div ng-show="facet.fields.length >= facet.limit && facet.limit > facetLimit">
                             <button id="showLessButton-{{$index}}" class="btn btn-default btn-xs"
@@ -49,7 +49,7 @@
                                 <i class="fa fa-lg fa-minus"></i>
                             </button>
                             <label for="showLessButton-{{$index}}"
-                                   translate>common.directive.search.showLess.button.text</label>
+                                    translate>common.directive.search.showLess.button.text</label>
                         </div>
                     </ul>
                 </li>
@@ -76,7 +76,7 @@
                 >
                 <span class="input-group-btn">
                     <button class="btn btn-md btn-primary" type="button"
-                            ng-click="queryExistingItems()">{{searchBtn}}</button>
+                            ng-click="search()">{{searchBtn}}</button>
                 </span>
             </div>
         </div>
@@ -91,14 +91,14 @@
                     </div>
                 </div>
                 <div ui-grid="gridOptions"
-                     ng-if="gridOptions.data.length"
-                     adjust-table-height="gridOptions.data.length"
-                     ui-grid-resize-columns
-                     ui-grid-pagination
-                     ui-grid-selection
-                     ui-grid-auto-resize
-                     ui-grid-exporter
-                     class="grid">
+                        ng-if="gridOptions.data.length"
+                        adjust-table-height="gridOptions.data.length"
+                        ui-grid-resize-columns
+                        ui-grid-pagination
+                        ui-grid-selection
+                        ui-grid-auto-resize
+                        ui-grid-exporter
+                        class="grid">
                 </div>
             </div>
         </div>

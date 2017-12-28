@@ -36,234 +36,213 @@
   },
   "complaints.comp.details": {
     "title": "Détails",
-    "informSaved": "fr_Complaint details saved",
+    "informSaved": "Détails de la réclamation enregistrés",
     "table.columns": {
-      "title": "fr_Details",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "title": "Détails",
+      "modified": "Date du dernier changement",
+      "modifier": "Dernière modification de l'utilisateur"
     }
   },
   "complaints.comp.documents": {
-    "title": "Documents",
-    "sendEmail": "fr_Send Email",
-    "filterInputPlaceholder": "fr_Filter",
-    "searchInputPlaceholder": "fr_Search"
+    "title": "Des documents",
+    "sendEmail": "Envoyer un e-mail",
+    "filterInputPlaceholder": "Filtre",
+    "searchInputPlaceholder": "Chercher",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "Rapport d'enquête"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitation par correspondance",
+        "approvalLetter%": "Lettre d'approbation de plainte",
+        "generalRelease%": "Publication générale",
+        "medicalRelease%": "Libération médicale",
+        "clearanceGranted%": "Autorisation accordée",
+        "clearanceDenied%": "Autorisation refusée",
+        "witnessInterview%": "Demander une entrevue",
+        "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
+      }
+    },
+    "newTask": "Nouvelle tâche"
   },
   "complaints.comp.people": {
     "title": "Personnes",
     "table.columns": {
-      "entity": "fr_Entity",
-      "type": "fr_Type",
-      "firstName": "fr_FirstName",
-      "lastName": "fr_LastName"
-    },
-    "contactMethods": {
-      "title": "fr_ContactMethods",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "Organisations",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "Emplacements",
-      "table.columns": {
-        "type": "fr_Type",
-        "streetAddress": "fr_Address",
-        "city": "fr_City",
-        "state": "fr_State",
-        "zip": "fr_Zip",
-        "country": "fr_Country",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "fr_Aliases",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "fr_Security Tags",
-      "table.columns": {
-        "type": "fr_Type",
-        "value": "fr_Value",
-        "created": "fr_Date Added",
-        "creator": "fr_Added By",
-        "modified": "fr_Last Modified",
-        "modifier": "fr_Modified By"
-      }
+      "type": "Rôle",
+      "firstName": "Prénom",
+      "lastName": "Prénom Nom",
+      "organization": "Organisation",
+      "phone": "Téléphone",
+      "location": "Endroit"
     }
   },
   "complaints.comp.organizations": {
     "title": "Organisations",
     "table.columns": {
-      "name": "fr_Organization Name",
-      "associationType": "fr_Role",
-      "type": "fr_Organization Type",
-      "identification": "fr_ID",
-      "value": "fr_Organization",
-      "contact": "fr_Primary Contact",
-      "phone": "fr_Phone",
-      "location": "fr_Location"
+      "name": "Nom de l'organisation",
+      "associationType": "Rôle",
+      "type": "Type d'organisation",
+      "identification": "JE VOUDRAIS",
+      "value": "Organisation",
+      "contact": "Premier contact",
+      "phone": "Téléphone",
+      "location": "Endroit"
     },
     "actions": {
-      "delete": "fr_Delete",
-      "setPrimary": "fr_Set as Primary",
-      "addNew": "fr_Add New",
-      "addExisting": "fr_Add New"
+      "delete": "Clair",
+      "setPrimary": "Définir comme principale",
+      "addNew": "Ajouter un nouveau",
+      "addExisting": "Ajouter un nouveau"
     }
   },
   "complaints.comp.participants": {
-    "title": "Participants",
+    "title": "Membre",
     "table.columns": {
-      "type": "fr_Type",
-      "name": "fr_Name"
+      "type": "Gentil",
+      "name": "Nom de famille"
     },
     "dialogUserPicker": {
-      "header": "fr_Choose User",
+      "header": "Choisir les utilisateurs",
       "table.columns": {
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "id": "fr_Username"
+        "name": "Nom de famille",
+        "type": "Gentil",
+        "title": "Titre",
+        "id": "Nom d'utilisateur"
       }
     },
     "dialogGroupPicker": {
-      "header": "fr_Choose Group",
+      "header": "Sélectionner un groupe",
       "table.columns": {
-        "name": "fr_Name"
+        "name": "Nom de famille"
       }
     }
   },
-  "complaints.comp.locations": {
+  "complaints.comp.addresses": {
     "title": "Emplacements",
     "table.columns": {
-      "address": "fr_Address",
-      "type": "fr_Type",
-      "city": "fr_City",
-      "state": "fr_State",
-      "zip": "fr_Zip",
-      "modified": "fr_Date Last Modified",
-      "modifier": "fr_User Last Modified"
+      "type": "Gentil",
+      "streetAddress": "Adresse 1",
+      "streetAddress2": "Adresse 2",
+      "city": "Ville",
+      "state": "Etat",
+      "zip": "Code postal",
+      "country": "Pays",
+      "created": "Date ajoutée",
+      "creator": "Ajouté par",
+      "modified": "Dernière édition",
+      "modifier": "Adapté de"
+    },
+    "actions": {
+      "addNew": "Ajouter un nouveau",
+      "map": "Carte"
     },
     "modal": {
-      "addLocation": "fr_Add Location",
-      "editLocation": "fr_Edit Record",
-      "type.label": "fr_Type",
-      "street.label": "fr_Street",
-      "city.label": "fr_City",
-      "state.label": "fr_State",
-      "zip.label": "fr_Zip",
-      "btnOk.text": "fr_Save",
-      "btnCancel.text": "fr_Cancel"
+      "addAddress": "Ajouter un emplacement",
+      "editAddress": "Modifier l'enregistrement",
+      "type.label": "Type d'adresse",
+      "type.placeholder": "Entrez le type d'adresse",
+      "streetAddress.label": "Adresse 1",
+      "streetAddress.placeholder": "Entrez l'adresse 1",
+      "streetAddress2.label": "Adresse 2",
+      "streetAddress2.placeholder": "Entrez l'adresse 2",
+      "city.label": "Ville",
+      "city.placeholder": "Entrez la ville",
+      "zip.label": "Code postal",
+      "zip.placeholder": "Entrer ZIP",
+      "state.label": "Etat",
+      "state.placeholder": "Entrer le statut",
+      "country.label": "Pays",
+      "country.placeholder": "Entrez le pays",
+      "btnCancel.text": "Annuler",
+      "btnOk.text": "Endroit sûr",
+      "setPrimary": "Définir comme principale?",
+      "yes": "Oui",
+      "no": "Non"
     }
   },
   "complaints.comp.notes": {
     "title": "Notes",
     "table.columns": {
-      "note": "fr_Note",
-      "created": "fr_Created",
-      "creator": "fr_Author"
+      "note": "Note",
+      "created": "Créé",
+      "creator": "Auteur"
     }
   },
   "complaints.comp.tasks": {
-    "title": "Tâches",
+    "title": "Les tâches",
     "table.columns": {
-      "title": "fr_Title",
-      "assignee": "fr_Assignee",
-      "created": "fr_Created",
-      "priority": "fr_Priority",
-      "due": "fr_Due",
-      "status": "fr_Status"
+      "title": "Titre",
+      "assignee": "Destinataire",
+      "created": "Créé",
+      "priority": "Priorité",
+      "due": "Dû",
+      "status": "Statut"
     },
-    "table.overdue.tooltip": "fr_Task is Overdue",
-    "table.deadline.tooltip": "fr_Deadline is Approaching"
+    "table.overdue.tooltip": "La tâche est en retard",
+    "table.deadline.tooltip": "La date limite approche"
   },
   "complaints.comp.references": {
-    "title": "Références",
+    "title": "Les références",
     "table.columns": {
-      "targetName": "fr_Number",
-      "targetTitle": "fr_Title",
-      "parentName": "fr_Parent",
-      "modified": "fr_Modified",
-      "targetType": "fr_Reference Type",
-      "status": "fr_Status"
+      "targetName": "Nombre",
+      "targetTitle": "Titre",
+      "targetType": "Gentil",
+      "assignee": "Destinataire",
+      "modified": "Modifié",
+      "status": "Statut"
     }
   },
   "complaints.comp.history": {
-    "title": "Historique",
+    "title": "Récit",
     "table.columns": {
-      "eventType": "fr_Event Name",
-      "eventDate": "fr_Date",
-      "userId": "fr_User"
+      "eventType": "Nom de l'événement",
+      "eventDate": "Rendez-vous amoureux",
+      "userId": "Utilisateur"
     }
   },
   "complaints.comp.time": {
-    "title": "Heure",
+    "title": "Temps",
     "table.columns": {
-      "name": "fr_Form Name",
-      "user": "fr_User",
-      "tally": "fr_Total Hours",
-      "modified": "fr_Modified Date",
-      "status": "fr_Status"
+      "name": "Nom de forme",
+      "user": "Utilisateur",
+      "tally": "Heures totales",
+      "modified": "Date de modification",
+      "status": "Statut"
     },
-    "formNamePrefix": "fr_Timesheet"
+    "formNamePrefix": "Emploi du temps"
   },
   "complaints.comp.cost": {
     "title": "Coût",
     "table.columns": {
-      "name": "fr_Form Name",
-      "user": "fr_User",
-      "tally": "fr_Total Cost",
-      "modified": "fr_Modified Date",
-      "status": "fr_Status"
+      "name": "Nom de forme",
+      "user": "Utilisateur",
+      "tally": "Coût total",
+      "modified": "Date de modification",
+      "status": "Statut"
     },
-    "formNamePrefix": "fr_Costsheet"
+    "formNamePrefix": "Frais"
   },
   "complaints.comp.tags": {
-    "title": "étiquettes",
+    "title": "Étiquettes",
     "table.columns": {
-      "tag": "fr_Tag",
-      "created": "fr_Created",
-      "createdBy": "fr_Created By"
+      "tag": "Étiquette",
+      "created": "Créé",
+      "createdBy": "Créé par"
     },
     "modal": {
-      "title": "fr_Tag",
-      "search": "fr_Search for Tag",
+      "title": "Étiquette",
+      "search": "Vous cherchez un jour",
       "buttons": {
-        "cancel": "fr_Cancel",
-        "ok": "fr_Add Tag"
+        "cancel": "Annuler",
+        "ok": "Ajouter un tag"
       }
     },
     "message": {
-      "tagExists": "fr_Tag with that name or description or text already exists",
-      "tagAssociated": "fr_already associated",
+      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "tagAssociated": "Déjà associé",
       "delete": {
-        "success": "fr_Tag deleted successfully",
-        "error": "fr_Error deleting tag"
+        "success": "Tag supprimé avec succès",
+        "error": "Erreur lors de la suppression du tag"
       }
     }
   },
@@ -274,82 +253,80 @@
     "title": "Recherche de référence"
   },
   "complaints.comp.addreference": {
-    "title": "fr_Add Reference",
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Add",
+    "title": "Ajouter une référence",
+    "cancelButton": "Annuler",
+    "confirmButton": "Ajouter",
     "search": {
-      "placeholder": "fr_Search for case, complaint, file, task",
-      "btn": "fr_Search"
+      "placeholder": "Recherche de cas, plainte, fichier, tâche",
+      "btn": "Chercher"
     },
     "grid": {
       "columns": {
-        "id": "fr_Id",
-        "name": "fr_Name",
-        "type": "fr_Type",
-        "title": "fr_Title",
-        "parent": "fr_Parent",
-        "assignee": "fr_Assignee",
-        "modified": "fr_Modified"
+        "id": "Je voudrais",
+        "name": "Nom de famille",
+        "type": "Gentil",
+        "title": "Titre",
+        "parent": "Parent",
+        "assignee": "Destinataire",
+        "modified": "Modifié"
       }
     }
   },
   "complaints.comp.assigneePickerModal": {
-    "title": "fr_Change Assignee",
-    "assigneeNamelabel": "fr_Assignee Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchAssigneeHeader": "fr_Search Assignee"
+    "title": "Commis au changement",
+    "assigneeNamelabel": "Nom du destinataire",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Économiser",
+    "searchAssigneeHeader": "Rechercher un destinataire"
   },
   "complaints.comp.groupPickerModal": {
-    "title": "fr_Change Group",
-    "groupNamelabel": "fr_Group Name",
-    "btnCancelText": "fr_Cancel",
-    "btnSaveText": "fr_Save",
-    "searchGroupHeader": "fr_Search Group"
+    "title": "Changer de groupe",
+    "groupNamelabel": "Nom de groupe",
+    "btnCancelText": "Annuler",
+    "btnSaveText": "Économiser",
+    "searchGroupHeader": "Groupe de recherche"
   },
   "complaints.comp.approvalRouting": {
     "title": "Routage d'approbation",
-    "addNewTooltip": "fr_Add new approver",
-    "noBuckslipMessage": "fr_No Data",
+    "addNewTooltip": "Ajouter un nouvel approbateur",
+    "noBuckslipMessage": "Pas de données",
     "button": {
-      "save.tooltip": "fr_Save Changes"
+      "save.tooltip": "Sauvegarder les modifications"
     },
     "table.columns": {
-      "fullName": "fr_Full Name"
+      "fullName": "Nom complet"
     },
-    "assignee.label": "fr_Assignee",
-    "owningGroup.label": "fr_Owning Group",
-    "priority.label": "fr_Priority",
-    "startDate.label": "fr_Start Date",
-    "dueDate.label": "fr_Due Date",
-    "state.label": "fr_State"
+    "assignee.label": "Destinataire",
+    "owningGroup.label": "Groupe de propriétaires",
+    "priority.label": "Priorité",
+    "startDate.label": "Date de début",
+    "dueDate.label": "Date de naissance",
+    "state.label": "Etat"
   },
   "complaints.comp.pastApprovals": {
     "title": "Approbations passées",
-    "noBuckslipMessage": "fr_No Data",
+    "noBuckslipMessage": "Pas de données",
     "table.columns": {
-      "approvalDate": "fr_Approval Date",
-      "approverId": "fr_Approver",
-      "approverFullName": "fr_Approver",
-      "approverDecision": "fr_Approver Decision"
+      "approvalDate": "Date d'approbation",
+      "approverId": "Approbateur",
+      "approverFullName": "Approbateur",
+      "approverDecision": "Décision d'approbation"
     }
   },
   "complaints.userOrGroupSearch": {
-    "id": "fr_userSearch",
-    "title": "fr_User/Group Search",
+    "id": "Recherche d'utilisateur",
+    "title": "Recherche d'utilisateur / groupe",
     "search": {
-      "btn": "fr_Search",
-      "placeholder": "fr_Search for the user or group."
+      "btn": "Chercher",
+      "placeholder": "Recherchez l'utilisateur ou le groupe."
     },
-    "cancelButton": "fr_Cancel",
-    "confirmButton": "fr_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "fr_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "Annuler",
+    "confirmButton": "Confirmer",
     "assigneeGridColumns": {
-      "name": "fr_Name",
-      "type": "fr_Type",
-      "title": "fr_Title",
-      "username": "fr_Username"
+      "name": "Nom de famille",
+      "type": "Gentil",
+      "title": "Titre",
+      "username": "Nom d'utilisateur"
     }
   },
   "complaints.tree": {
@@ -366,7 +343,7 @@
       "history.label": "Histoire",
       "time.label": "Heure",
       "cost.label": "Coût",
-      "tags.label": "étiquettes",
+      "tags.label": "Étiquettes",
       "calendar.label": "Calendrier",
       "approvalRouting.label": "Routage d'approbation"
     },
@@ -376,7 +353,7 @@
       "iAmAssigned": "Tout ce que je suis assigné",
       "iAmFollowing": "Tout ce que je suis",
       "closedNoFurtherAction": "Tout fermé sans autre action",
-      "closedReferExternal": "ous les références externes fermées",
+      "closedReferExternal": "Ous les références externes fermées",
       "closedOpenInvestigation": "Toutes les enquêtes ouvertes fermées",
       "noFilter": "(Pas de filtre)"
     },

@@ -22,7 +22,7 @@
     "description.label": "説明"
   },
   "document-repository.comp.actions": {
-    "title": "操作",
+    "title": "行動",
     "restrict": "制限する?",
     "subscribe.button": "購読",
     "unsubscribe.button": "購読中止",
@@ -31,162 +31,165 @@
   },
   "document-repository.comp.details": {
     "title": "詳細",
-    "informSaved": "ja_Document Repository details saved",
+    "informSaved": "ドキュメントリポジトリの詳細が保存されました",
     "table.columns": {
-      "title": "ja_Details",
-      "modified": "ja_Date Last Modified",
-      "modifier": "ja_User Last Modified"
+      "title": "詳細",
+      "modified": "最終変更日",
+      "modifier": "ユーザー最終更新日"
     }
   },
   "document-repository.comp.documents": {
     "title": "文書",
-    "sendEmail": "ja_Send Email",
-    "filterInputPlaceholder": "ja_Filter",
-    "searchInputPlaceholder": "ja_Search"
+    "sendEmail": "メールを送る",
+    "filterInputPlaceholder": "フィルタ",
+    "searchInputPlaceholder": "サーチ",
+    "newTask": "新しい仕事"
   },
   "document-repository.comp.participants": {
     "title": "参加者",
     "table.columns": {
-      "type": "ja_Type",
-      "name": "ja_Name"
+      "type": "タイプ",
+      "name": "名"
     },
     "dialogUserPicker": {
-      "header": "ja_Choose User",
+      "header": "ユーザーを選択",
       "table.columns": {
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "id": "ja_Username"
+        "name": "名",
+        "type": "タイプ",
+        "title": "タイトル",
+        "id": "ユーザー名"
       }
     },
     "dialogGroupPicker": {
-      "header": "ja_Choose Group",
+      "header": "グループを選択",
       "table.columns": {
-        "name": "ja_Name"
+        "name": "名"
       }
     }
   },
   "document-repository.comp.notes": {
     "title": "注解",
     "table.columns": {
-      "note": "ja_Note",
-      "created": "ja_Created",
-      "creator": "ja_Author"
+      "note": "注意",
+      "created": "作成した",
+      "creator": "著者"
     }
   },
   "document-repository.comp.references": {
     "title": "参照",
     "table.columns": {
-      "targetName": "ja_Number",
-      "parentName": "ja_Parent",
-      "targetTitle": "ja_Title",
-      "modified": "ja_Modified",
-      "targetType": "ja_Reference Type",
-      "status": "ja_Status"
+      "targetName": "数",
+      "parentName": "親",
+      "targetTitle": "タイトル",
+      "modified": "変更された",
+      "targetType": "参照型",
+      "status": "状態"
     }
   },
   "document-repository.comp.history": {
-    "title": "歷史",
+    "title": "歴史",
     "table.columns": {
-      "eventType": "ja_Event Name",
-      "eventDate": "ja_Date",
-      "userId": "ja_User"
+      "eventType": "イベント名",
+      "eventDate": "日付",
+      "userId": "ユーザー"
     }
   },
   "document-repository.comp.tags": {
     "title": "タグ",
     "table.columns": {
-      "tag": "ja_Tag",
-      "created": "ja_Created",
-      "createdBy": "ja_Created By"
+      "tag": "タグ",
+      "created": "作成日",
+      "createdBy": "によって作成された"
     },
     "modal": {
-      "title": "ja_Tag",
-      "search": "ja_Search for Tag",
+      "title": "タグ",
+      "search": "タグを検索する",
       "buttons": {
-        "cancel": "ja_Cancel",
-        "ok": "ja_Add Tag"
+        "cancel": "キャンセル",
+        "ok": "タグを追加する"
       }
     },
     "message": {
-      "tagExists": "ja_Tag with that name or description or text already exists",
-      "tagAssociated": "ja_already associated",
+      "tagExists": "その名前または説明またはテキストのタグは既に存在します",
+      "tagAssociated": "すでに関連付けられている",
       "delete": {
-        "success": "ja_Tag deleted successfully",
-        "error": "ja_Error deleting tag"
+        "success": "タグを削除しました",
+        "error": "タグ削除中にエラーが発生しました"
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "リファレンス検索"
+  },
   "document-repository.comp.addreference": {
-    "title": "ja_Add Reference",
-    "cancelButton": "ja_Cancel",
-    "confirmButton": "ja_Add",
+    "title": "参照を追加する",
+    "cancelButton": "キャンセル",
+    "confirmButton": "追加",
     "search": {
-      "placeholder": "ja_Search for case, complaint, file, task",
-      "btn": "ja_Search"
+      "placeholder": "案件、訴状、文書、タスクを検索する",
+      "btn": "検索"
     },
     "grid": {
       "columns": {
-        "id": "ja_Id",
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "parent": "ja_Parent",
-        "assignee": "ja_Assignee",
-        "modified": "ja_Modified"
+        "id": "ID番号",
+        "name": "名前",
+        "type": "タイプ",
+        "title": "タイトル",
+        "parent": "親",
+        "assignee": "譲受人",
+        "modified": "変更された"
       }
     }
   },
   "document-repository.comp.assigneePickerModal": {
-    "title": "ja_Change Assignee",
-    "assigneeNamelabel": "ja_Assignee Name",
-    "btnCancelText": "ja_Cancel",
-    "btnSaveText": "ja_Save",
-    "searchAssigneeHeader": "ja_Search Assignee"
+    "title": "譲受人の変更",
+    "assigneeNamelabel": "譲受人名",
+    "btnCancelText": "キャンセル",
+    "btnSaveText": "セーブ",
+    "searchAssigneeHeader": "譲受人を検索"
   },
   "document-repository.comp.groupPickerModal": {
-    "title": "ja_Change Group",
-    "groupNamelabel": "ja_Group Name",
-    "btnCancelText": "ja_Cancel",
-    "btnSaveText": "ja_Save",
-    "searchGroupHeader": "ja_Search Group"
+    "title": "グループの変更",
+    "groupNamelabel": "グループ名",
+    "btnCancelText": "キャンセル",
+    "btnSaveText": "セーブ",
+    "searchGroupHeader": "検索グループ"
   },
   "document-repository.userOrGroupSearch": {
-    "id": "ja_userSearch",
-    "title": "ja_User/Group Search",
+    "id": "userSearch",
+    "title": "ユーザー/グループ検索",
     "search": {
-      "btn": "ja_Search",
-      "placeholder": "ja_Search for the user or group."
+      "btn": "サーチ",
+      "placeholder": "ユーザーまたはグループを検索します。"
     },
-    "cancelButton": "ja_Cancel",
-    "confirmButton": "ja_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "キャンセル",
+    "confirmButton": "確認",
     "assigneeGridColumns": {
-      "name": "ja_Name",
-      "type": "ja_Type",
-      "title": "ja_Title",
-      "username": "ja_Username"
+      "name": "名",
+      "type": "タイプ",
+      "title": "タイトル",
+      "username": "ユーザー名"
     }
   },
   "document-repository.newRepository": {
-    "title": "ja_Create Repository",
-    "assigneeLabel": "ja_Assignee",
-    "owningGroupLabel": "ja_Owning Group",
-    "assignee.placeholder": "ja_Search Assignee",
-    "saveButton": "ja_Create Repository",
-    "cancelButton": "ja_Cancel",
-    "nameLabel": "ja_Name",
-    "name.placeholder": "ja_Enter Name",
-    "descriptionLabel": "ja_Description",
-    "description.placeholder": "ja_Enter Description",
-    "searchUser": "ja_Search User"
+    "title": "リポジトリの作成",
+    "assigneeLabel": "譲受人",
+    "owningGroupLabel": "所有グループ",
+    "assignee.placeholder": "譲受人を検索",
+    "saveButton": "リポジトリの作成",
+    "cancelButton": "キャンセル",
+    "nameLabel": "名",
+    "name.placeholder": "名前を入力",
+    "descriptionLabel": "説明",
+    "description.placeholder": "説明を入力",
+    "searchUser": "ユーザーを検索",
+    "personalRepository": "私の文書"
   },
-  "document-repository.dialogUserPicker":{
-    "table.columns.name": "ja_Name",
-    "table.columns.type": "ja_Type",
-    "table.columns.title": "ja_Title",
-    "table.columns.id": "ja_Username"
+  "document-repository.dialogUserPicker": {
+    "table.columns.name": "名",
+    "table.columns.type": "タイプ",
+    "table.columns.title": "タイトル",
+    "table.columns.id": "ユーザー名"
   },
   "document-repository.tree": {
     "nodeTypes": {
