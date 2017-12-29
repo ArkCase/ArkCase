@@ -3,7 +3,7 @@ package com.armedia.acm.services.dataupdate.service;
 import com.armedia.acm.services.dataupdate.dao.AcmDataUpdateDao;
 import com.armedia.acm.services.dataupdate.model.AcmDataUpdateExecutorLog;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class AcmDataUpdateService
@@ -20,7 +20,7 @@ public class AcmDataUpdateService
     public AcmDataUpdateExecutorLog save(String executorId)
     {
         AcmDataUpdateExecutorLog dataUpdateLog = new AcmDataUpdateExecutorLog();
-        dataUpdateLog.setExecutedOn(LocalDateTime.now());
+        dataUpdateLog.setExecutedOn(LocalDate.now());
         dataUpdateLog.setExecutorId(executorId);
         return dataUpdateDao.save(dataUpdateLog);
     }

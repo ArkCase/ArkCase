@@ -99,7 +99,10 @@ angular.module('people').config(['$stateProvider',
 
             .state('people.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/people/views/components/person-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "PERSON"
+                }
             })
 
             .state('newPerson', {

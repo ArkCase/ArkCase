@@ -117,7 +117,8 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
                     personId: rowEntity.target_object.object_id_s,
                     personName: rowEntity.target_object.full_name_lcs,
                     type: rowEntity.association_type_s,
-                    description: rowEntity.description_s
+                    description: rowEntity.description_s,
+                    isEditPerson: true
                 });
             }
 

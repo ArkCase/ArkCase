@@ -153,7 +153,9 @@
           "enterLocation": "Введите местоположение",
           "description": "Отобразить текущую температуру города",
           "location": "Местоположение",
-          "insertLocationInConfiguration": "Пожалуйста, вставьте местоположение в конфигурацию виджета"
+          "insertLocationInConfiguration": "Пожалуйста, вставьте местоположение в конфигурацию виджета",
+          "zip": "ru_Zip Code",
+          "enterZip": "ru_Enter Zip Code"
         },
         "title": "Погода",
         "noDataMessage": "В настоящее время нет информации о погоде",

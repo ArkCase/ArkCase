@@ -2,9 +2,9 @@
 
 angular.module('tasks').controller('Tasks.ReferencesController', ['$scope', '$stateParams'
     , 'UtilService', 'ConfigService', 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , '$modal', 'Object.ReferenceService', 'ObjectService', 'ObjectAssociation.Service', 'MessageService'
+    , '$modal', 'ObjectService', 'ObjectAssociation.Service', 'MessageService'
     , function ($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService
-        , HelperObjectBrowserService, $modal, referenceService, ObjectService, ObjectAssociationService, MessageService) {
+        , HelperObjectBrowserService, $modal, ObjectService, ObjectAssociationService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope

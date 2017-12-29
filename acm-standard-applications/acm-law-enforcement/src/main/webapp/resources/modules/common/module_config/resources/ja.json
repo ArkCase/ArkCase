@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "ページあたりのアイテム数",
-    "pagerCountMiddleLabel": " の",
-    "pagerCountLabel": " アイテム"
+    "pagerCountLabel": "{{pageCount}}番目の{{pageTotal}}の項目"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "選択する",

@@ -157,8 +157,7 @@
           "lastName": "अंतिम नाम दर्ज करो",
           "email": "ईमेल दर्ज करें",
           "password": "पास वर्ड दर्ज करें",
-          "confirmation": "अपना पासवर्ड दोबारा दर्ज करें",
-          "minLengthForPassword": "7"
+          "confirmation": "अपना पासवर्ड दोबारा दर्ज करें"
         },
         "editLdapMember": {
           "title": "Ldap सदस्य को संपादित करें",
@@ -433,6 +432,7 @@
       "cancel": "रद्द करना",
       "activate": "सक्रिय बनाना"
     },
+    "workflows.config.noHistory": "hi_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "व्यापार प्रक्रिया",
       "description": "विवरण",
@@ -442,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "नया मॉडल बनाएं",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "नई बीपीएमएन अपलोड करें"
     },
     "workflows.config.links": {

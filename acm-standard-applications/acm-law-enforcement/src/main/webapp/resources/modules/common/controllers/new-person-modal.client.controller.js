@@ -10,6 +10,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
             'phone': 0,
             'email': 0
         };
+        $scope.loadingIcon = "fa fa-floppy-o";
 
         ConfigService.getModuleConfig("common").then(function (moduleConfig) {
             $scope.config = moduleConfig;
@@ -143,6 +144,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
         };
 
         $scope.save = function () {
+            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
             $modalInstance.close({
                 person: clearNotFilledElements(_.cloneDeep($scope.person)),
                 images: $scope.userPictures
@@ -312,6 +314,7 @@ angular.module('common').controller('Common.NewPersonModalController', ['$scope'
                 }
             }
 
+            $scope.loadingIcon = "fa fa-floppy-o";
             return person;
         }
 

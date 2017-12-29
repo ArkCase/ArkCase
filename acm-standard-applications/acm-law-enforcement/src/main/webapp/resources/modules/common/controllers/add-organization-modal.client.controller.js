@@ -149,8 +149,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     );
             };
 
-            $scope.isInvalid = function (organizationAssociationType) {
-                return $scope.type.key === params.type;
+            $scope.isInvalid = function () {
+                return !Util.isEmpty(params.isEditOrganization) && !Util.isEmpty($scope.type) && !Util.isEmpty(params.type) && $scope.type.key === params.type;
             };
 
             $scope.notifyOrganizationParent = function (organizationAssociationType) {

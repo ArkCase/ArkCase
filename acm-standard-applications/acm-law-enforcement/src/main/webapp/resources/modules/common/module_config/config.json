@@ -787,5 +787,49 @@
         "field": "newValue"
       }
     ]
+  },
+  "objectHistoryClientGrid": {
+    "id": "objectHistoryClientGrid",
+    "title": "common.objectHistory.client.title",
+    "icon": "fa fa-bell-o",
+    "enabled": true,
+    "configurable": true,
+    "type": "grid",
+    "enableFiltering": true,
+    "paginationPageSizes": [
+      5,
+      10,
+      20,
+      50
+    ],
+    "paginationPageSize": 10,
+    "columnDefs": [
+      {
+        "name": "eventType",
+        "displayName": "common.objectHistory.client.table.columns.eventType",
+        "headerCellFilter": "translate",
+        "cellTemplate": "historyEventNameCellTemplateId"
+      },
+      {
+        "name": "eventDate",
+        "displayName": "common.objectHistory.client.table.columns.eventDate",
+        "headerCellFilter": "translate",
+        "width": 150,
+        "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+      },
+      {
+        "name": "userId",
+        "displayName": "common.objectHistory.client.table.columns.userId",
+        "headerCellFilter": "translate",
+        "width": 200,
+        "lookup": "userFullNames"
+      },
+      {
+        "name": "details",
+        "width": 150,
+        "displayName": "",
+        "cellTemplate": "historyEventDetailsCellTemplateId"
+      }
+    ]
   }
 }

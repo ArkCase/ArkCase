@@ -169,8 +169,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
-    "pagerCountMiddleLabel": " of ",
-    "pagerCountLabel": " items"
+    "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
@@ -474,7 +473,9 @@
       "day.label": "Day",
       "week.label": "Week",
       "month.label": "Month",
-      "on.label": "On",
+      "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+      "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+      "_on.label": "On",
       "day.placeholder": "Day",
       "year.placeholder": "Year",
       "dailyRecurrence": {
@@ -857,6 +858,18 @@
         "action": "Action",
         "newValue": "New Value",
         "oldValue": "Old Value"
+      }
+    },
+    "client": {
+      "title": "History",
+      "label": {
+        "updated": "Updated"
+      },
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Date",
+        "userId": "User",
+        "details.btn.text": "View {{count}} Changes"
       }
     }
   }
