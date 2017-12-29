@@ -3645,7 +3645,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     documentType = documentType.trim().toLowerCase();
                     for (var i = 0; i < labelMappings.length; i++) {
                         if (labelMappings[i]["key"] && labelMappings[i]["key"].trim().toLowerCase() == documentType) {
-                            return labelMappings[i]["value"];
+                            return $translate.instant(labelMappings[i]["value"]);
                         }
                     }
                 }
