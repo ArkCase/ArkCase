@@ -6,6 +6,7 @@ import com.armedia.acm.services.search.model.AcmObjectTypeOne;
 import com.armedia.acm.services.search.model.AcmObjectTypeOneSolrConverter;
 import com.armedia.acm.services.search.model.AcmObjectTypeTwo;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -70,7 +71,7 @@ public class JpaObjectsToSearchServiceTest extends EasyMockSupport
 
         Capture<SolrAdvancedSearchDocument> capturedAdvancedSearch = new Capture<>();
         Capture<SolrDocument> capturedQuickSearch = new Capture<>();
-        Capture<SolrAdvancedSearchDocument> capturedContentFileIndex = new Capture<>();
+        Capture<SolrContentDocument> capturedContentFileIndex = new Capture<>();
         Capture<SolrDeleteDocumentByIdRequest> capturedAdvancedDeleteRequest = new Capture<>();
         Capture<SolrDeleteDocumentByIdRequest> capturedQuickDeleteRequest = new Capture<>();
         Capture<SolrDeleteDocumentByIdRequest> capturedContentFileIndexDeleteRequest = new Capture<>();
