@@ -6,6 +6,7 @@ public class CmisUrlConfig {
     private String username;
     private String password;
     private String repositoryId;
+    private String endpoint;
 
     public String getBaseUrl() {
         return baseUrl;
@@ -37,5 +38,13 @@ public class CmisUrlConfig {
 
     public void setRepositoryId(String repositoryId) {
         this.repositoryId = repositoryId;
+    }
+
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
     }
 }
