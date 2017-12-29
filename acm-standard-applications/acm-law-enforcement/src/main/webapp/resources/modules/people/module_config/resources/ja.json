@@ -482,8 +482,8 @@
     "sorters": {
       "createdDateAsc": "作成日で並べ替え",
       "createdDateDesc": "作成日で並べ替え降順",
-      "idAsc": "人員番号で並べ替え",
-      "idDesc": "人員番号で並べ替え降順",
+      "idAsc": "人物番号で並べ替え",
+      "idDesc": "人物番号で並べ替え降順",
       "nameAsc": "名で並べ替え",
       "nameDesc": "名で並べ替え降順",
       "noSort": "(注文しません)"
