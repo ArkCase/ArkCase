@@ -247,8 +247,13 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
         $scope.taskStartDateBeforeChange = null;
         $scope.dueDateBeforeChange = null;
 
-        $scope.onPickerClick = function () {
-            $scope.picker.opened = true;
+        $scope.onPickerClick = function (data, form) {
+            if(!Util.isEmpty(data)){
+                $scope.picker.opened = true;
+                form.$setError(name, "");
+            } else {
+                form.$setError(name, "Format: M/d/yy");
+            }
         };
 
         $scope.validatePercentComplete = function (value) {
@@ -294,6 +299,15 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                 correctedDate = UtilDateService.convertToCurrentTime(from);
             }
             return moment.utc(UtilDateService.dateToIso(correctedDate)).format();
+        };
+
+        $scope.onChange = function (data, form) {
+            if (Util.isEmpty(data)){
+                $scope.picker.opened = false;
+                form.$setError(name, "Format: M/d/yy");
+            } else {
+                form.$setError(name, "");
+            }
         };
 
         $scope.validateStartDueDate = function () {

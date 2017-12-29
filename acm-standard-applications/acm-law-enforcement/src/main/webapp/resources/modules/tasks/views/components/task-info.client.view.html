@@ -59,12 +59,12 @@
                 <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.taskStartDate"
                        e-datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
+                       e-ng-click="onPickerClick($data, $form)" e-is-open="picker.opened"
                        e-init-date="dateInfo.taskStartDate"
                        e-on-open-focus="false"
                        e-min-date="minStartDate"
+                       e-ng-change="onChange($data, $form)"
                        onaftersave="updateStartDate(dateInfo.taskStartDate)"
-                       e-ng-change="test($data)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable">
                         {{dateInfo.taskStartDate | date: 'shortDate'}}</a>
@@ -75,10 +75,11 @@
                 <div class="h4 font-bold no-margin">
                     <a href="#" editable-bsdate="dateInfo.dueDate"
                        e-datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
+                       e-ng-click="onPickerClick($data, $form)" e-is-open="picker.opened"
                        e-init-date="dateInfo.dueDate"
                        e-on-open-focus="false"
                        e-min-date="dateInfo.taskStartDate"
+                       e-ng-change="onChange($data, $form)"
                        onaftersave="updateDueDate(dateInfo.dueDate)"
                        permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
                        permission-action="disable" e-required>
