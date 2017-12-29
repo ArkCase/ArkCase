@@ -20,7 +20,6 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -82,17 +81,19 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public AcmUser createLdapUser(UserDTO userDto, String directoryName)
             throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        AcmUser user = checkExistingUser(userDto.getUserId());
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain());
+
+        AcmUser user = checkExistingUser(userId);
 
         if (user == null)
         {
-            user = userDto.toAcmUser(userDto.getUserId(), userDao.getDefaultUserLang());
+            user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
         } else
         {
             user = userDto.updateAcmUser(user);
         }
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
         String dn = buildDnForUser(user.getFullName(), userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
@@ -100,15 +101,10 @@ public class LdapUserService implements ApplicationEventPublisherAware
         user.setUserState(AcmUserState.VALID);
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setUid(user.getUserId());
+            user.setUid(userDto.getUserId());
         } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setsAMAccountName(user.getUserId());
-        }
-        //set the domain defined in the config to the userId
-        if (StringUtils.isNotEmpty(ldapSyncConfig.getUserDomain()))
-        {
-            user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
+            user.setsAMAccountName(userDto.getUserId());
         }
 
         Set<AcmGroup> groups = new HashSet<>();
@@ -120,8 +116,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
             {
                 groups.add(group);
                 group.addUserMember(user);
+                log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group.getName());
             }
-            log.debug("Set User [{}] as member of Group [{}]", user.getUserId(), group);
         }
 
         log.debug("Saving new User [{}] with DN [{}] in database", user.getUserId(), user.getDistinguishedName());
@@ -313,6 +309,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
      * we need to remove that user's group membership
      *
      * @param userId user identifier
+     * @throws NameAlreadyBoundException if a user exists and its status is "VALID"
      */
     private AcmUser checkExistingUser(String userId)
     {

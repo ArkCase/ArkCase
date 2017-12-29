@@ -2,10 +2,10 @@
 
 angular.module('cases').controller('Cases.ReferencesController', ['$scope', '$stateParams', '$modal'
     , 'UtilService', 'ConfigService', 'Case.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService'
+    , 'ObjectService', 'SearchService', 'Search.QueryBuilderService', 'ObjectAssociation.Service', 'MessageService'
     , function ($scope, $stateParams, $modal
         , Util, ConfigService, CaseInfoService, HelperUiGridService, HelperObjectBrowserService
-        , referenceService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService) {
+        , ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService, MessageService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope

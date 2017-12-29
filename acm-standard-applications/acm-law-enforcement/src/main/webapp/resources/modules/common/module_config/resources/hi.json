@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "आइटम प्रति पेज",
-    "pagerCountMiddleLabel": " का",
-    "pagerCountLabel": " आइटम"
+    "pagerCountLabel": "{{pageTotal}} में से {{pageCount}} आइटम"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "चुनें",

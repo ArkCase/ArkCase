@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "Objets par page",
-    "pagerCountMiddleLabel": " de",
-    "pagerCountLabel": " articles"
+    "pagerCountLabel": "{{pageCount}} sur {{pageTotal}} articles"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choisir",

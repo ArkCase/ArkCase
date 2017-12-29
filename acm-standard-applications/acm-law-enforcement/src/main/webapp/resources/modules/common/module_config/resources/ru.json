@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "Пункты на странице",
-    "pagerCountMiddleLabel": " из",
-    "pagerCountLabel": " Предметы"
+    "pagerCountLabel": "{{pageCount}} из {{pageTotal}} пунктов"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Выберите",

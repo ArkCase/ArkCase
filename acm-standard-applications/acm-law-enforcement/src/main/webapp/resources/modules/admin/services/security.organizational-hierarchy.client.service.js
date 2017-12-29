@@ -558,8 +558,8 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 service: Service._removeLdapGroupMembership
                 , param: {
                     directoryName: group.directory_name_s,
-                    groupName: group.name,
-                    parentName: parenGroup.name
+                    groupName: base64.urlencode(group.name),
+                    parentName: base64.urlencode(parenGroup.name)
                 }
                 , onSuccess: function (data) {
                     return data;
@@ -571,8 +571,8 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             return Util.serviceCall({
                 service: Service._removeGroupMembership
                 , param: {
-                    groupName: groupName,
-                    parentName: parentName
+                    groupName: base64.urlencode(groupName),
+                    parentName: base64.urlencode(parentName)
                 }
                 , onSuccess: function (data) {
                     return data;

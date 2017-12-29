@@ -24,7 +24,7 @@ public interface TaskDao
     @Transactional
     AcmTask createAdHocTask(AcmTask in) throws AcmTaskException;
 
-    <T> T readProcessVariable(String businessProcessId, String processVariableKey) throws AcmTaskException;
+    <T> T readProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory) throws AcmTaskException;
 
     void writeProcessVariable(String businessProcessId, String processVariableKey, Object processVariableValue)
             throws AcmTaskException;
