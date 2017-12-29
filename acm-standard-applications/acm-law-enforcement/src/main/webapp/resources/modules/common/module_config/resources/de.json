@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(Menüpunkt wählen)",
-      "editWithWebDAV": "Bearbeiten"
+      "editWithWebDAV": "Bearbeiten",
+      "cancelEditing": "Bearbeitung abbrechen",
+      "newFolder": "Neuer Ordner",
+      "newDocument": "Neues Dokument",
+      "newCorrespondence": "Neue Korrespondenz",
+      "open": "Öffnen",
+      "email": "Email",
+      "download": "Herunterladen",
+      "copy": "Kopieren",
+      "cut": "Schnitt",
+      "paste": "Einfügen",
+      "rename": "Umbenennen",
+      "delete": "Löschen",
+      "replace": "Ersetzen",
+      "checkout": "Auschecken",
+      "checkin": "Einchecken",
+      "declareRecord": "Als Datensatz(e) deklarieren"
     },
     "table.columns": {
       "title": "Titel",
