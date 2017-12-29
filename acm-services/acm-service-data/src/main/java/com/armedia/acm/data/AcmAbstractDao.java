@@ -19,7 +19,6 @@ public abstract class AcmAbstractDao<T>
     public T save(T toSave)
     {
         T saved = em.merge(toSave);
-        // em.persist(saved);
         return saved;
     }
 
@@ -27,11 +26,6 @@ public abstract class AcmAbstractDao<T>
     public T find(Long id)
     {
         T found = em.find(getPersistenceClass(), id);
-        if (found != null)
-        {
-            // em.refresh(found);
-            em.detach(found);
-        }
         return found;
     }
 
@@ -40,21 +34,14 @@ public abstract class AcmAbstractDao<T>
     {
         TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e", getPersistenceClass());
         List<T> retval = allRecords.getResultList();
-        if (retval != null)
-        {
-            for (T value : retval)
-            {
-                em.refresh(value);
-                em.detach(value);
-            }
-        }
         return retval;
     }
 
     /**
      * Retrieve all entities of a given type, sorted by particular column
      *
-     * @param column column name (entity field name) to sort by
+     * @param column
+     *            column name (entity field name) to sort by
      * @return list of entities, sorted
      */
     @Transactional(propagation = Propagation.REQUIRED)
@@ -63,14 +50,6 @@ public abstract class AcmAbstractDao<T>
         TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column,
                 getPersistenceClass());
         List<T> retval = allRecords.getResultList();
-        if (retval != null)
-        {
-            for (T value : retval)
-            {
-                em.refresh(value);
-                em.detach(value);
-            }
-        }
         return retval;
     }
 
