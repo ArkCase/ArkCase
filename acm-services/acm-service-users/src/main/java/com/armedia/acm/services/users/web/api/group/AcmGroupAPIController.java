@@ -268,6 +268,9 @@ public class AcmGroupAPIController
             throws AcmCreateObjectFailedException
     {
 
+        // we need to decode base64 encoded group id because can contain characters which can interfere with url
+        subGroupId = new String(Base64.getUrlDecoder().decode(subGroupId.getBytes()));
+        parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
         LOG.info("Saving ad-hoc subgroup with id [{}]", subGroupId);
         return groupService.saveAdHocSubGroup(subGroupId, parentId);
     }

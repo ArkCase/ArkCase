@@ -408,9 +408,10 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
-        subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
         parent.addGroupMember(subGroup);
+        String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
+        subGroup.setAscendantsList(ancestorsStringList);
 
         return subGroup;
     }
