@@ -1,13 +1,13 @@
 {
   "cases": {
-    "title": "ケース",
-    "progressNoCase": "[ファイルデータなし]",
-    "progressLoading": "ケースファイルの読み込み",
-    "progressError": "ケースファイルの読み込みに失敗しました"
+    "title": "案件",
+    "progressNoComplaint": "[ 案件のデータはありません ]",
+    "progressLoading": "案件の読み込み",
+    "progressError": "案件の読み込みに失敗しました"
   },
   "cases.menus": {
-    "leftnav.item": "ケースファイル",
-    "topbar.item": "場合"
+    "leftnav.item": "案件文書",
+    "topbar.item": "案件"
   },
   "cases.error": {
     "invalidData": ""
@@ -17,15 +17,15 @@
   },
   "cases.comp.info": {
     "title": "情報",
-    "caseId": "ケースID：",
-    "caseNumber": "ケース番号：",
-    "courtRoomName": "コートルーム名：",
-    "type.label": "タイプ",
+    "caseId": "案件識別番号:",
+    "caseNumber": "案件番号:",
+    "courtRoomName": "裁判所名:",
+    "type.label": "種類",
     "created.label": "作成日",
     "priority.label": "優先",
-    "assignee.label": "に割り当てられた",
-    "owningGroup.label": "所有グループ",
-    "dueDate.label": "期日",
+    "assignee.label": "割り当て先",
+    "owningGroup.label": "群に所属",
+    "dueDate.label": "期限日",
     "priorities": {
       "low%": "低い",
       "medium%": "中",
@@ -37,7 +37,7 @@
       "agricultural%": "農業",
       "arson%": "放火",
       "backgroundInvestigation%": "背景調査",
-      "benefitsAppeal%": "メリットアピール",
+      "benefitsAppeal%": "福祉上訴",
       "businessDispute%": "ビジネス紛争の改善",
       "clinicalFraud%": "臨床検査官の詐欺",
       "congressional%": "議会の対応",
@@ -45,7 +45,7 @@
       "domesticDispute%": "国内紛争",
       "drugTrafficking%": "麻薬密売",
       "educationWaiver%": "教育免除リクエスト",
-      "eeoHarassment%": "EEO /ハラスメント",
+      "eeoHarassment%": "EEO/嫌がらせ",
       "embezzlement%": "横領",
       "extortion%": "堕胎",
       "fraud%": "詐欺",
@@ -55,8 +55,8 @@
       "local%": "地元",
       "murder%": "殺人",
       "newDrugFraud%": "新薬申請の詐欺",
-      "payoff%": "精算",
-      "pensionWaiver%": "年金放棄要求",
+      "payoff%": "賄賂",
+      "pensionWaiver%": "年金免除申請",
       "pollution%": "汚染",
       "productTampering%": "製品改ざん",
       "assetTheftMisuse%": "資産の盗難または誤用"
@@ -67,18 +67,18 @@
     "restrict": "制限するか？",
     "new.button": "新しい",
     "edit.button": "編集",
-    "status.button": "ケースのステータスを変更する",
+    "status.button": "状態の変更",
     "reinvestigate.button": "再検討",
-    "subscribe.button": "申し込む",
-    "unsubscribe.button": "退会する",
-    "merge.button": "マージ",
-    "claim.button": "請求",
-    "unclaim.button": "申し立て",
-    "split.button": "スプリット"
+    "subscribe.button": "購読",
+    "unsubscribe.button": "購読中止",
+    "merge.button": "合併",
+    "claim.button": "申し立て",
+    "unclaim.button": "申し立て中止",
+    "split.button": "分开"
   },
   "cases.comp.details": {
     "title": "詳細",
-    "informSaved": "ケースの詳細を保存しました",
+    "informSaved": "案件の詳細を保存しました",
     "table.columns": {
       "title": "詳細",
       "modified": "最終変更日",
@@ -111,7 +111,7 @@
     "newTask": "新しい仕事"
   },
   "cases.comp.people": {
-    "title": "人",
+    "title": "人物",
     "table.columns": {
       "entity": "エンティティ",
       "type": "役割",
@@ -250,7 +250,7 @@
     "title": "マージ",
     "cancel.btn": "キャンセル",
     "merge.btn": "マージ",
-    "search.placeholder": "ケースファイルを検索します。",
+    "search.placeholder": "案件ファイルを検索します。",
     "search.btn": "サーチ",
     "table.columns": {
       "incident": "タイプ",
@@ -274,8 +274,8 @@
     "cancelButton": "キャンセル",
     "confirmButton": "追加",
     "search": {
-      "placeholder": "ケース、苦情、ファイル、タスクを検索する",
-      "btn": "サーチ"
+      "placeholder": "案件、訴状、ファイル、任務を検索する",
+      "btn": "検索"
     },
     "grid": {
       "columns": {
@@ -340,7 +340,7 @@
       "title": "新しい未来の仕事",
       "assignee": "譲受人",
       "subject.label": "件名",
-      "subject.placeholder": "将来のケースの件名を入力",
+      "subject.placeholder": "将来の案件の件名を入力",
       "details.label": "詳細",
       "cancel.button": "キャンセル",
       "save.button": "セーブ"
@@ -360,7 +360,7 @@
     "id": "userSearch",
     "title": "ユーザー/グループ検索",
     "search": {
-      "btn": "サーチ",
+      "btn": "検索",
       "placeholder": "ユーザーまたはグループを検索します。"
     },
     "cancelButton": "キャンセル",
@@ -375,35 +375,35 @@
   "cases.tree": {
     "nodeTypes": {
       "details.label": "詳細",
-      "people.label": "人",
+      "people.label": "人物",
       "organizations.label": "組織",
-      "documents.label": "ドキュメント",
+      "documents.label": "文書",
       "participants.label": "参加者",
-      "notes.label": "ノート",
-      "tasks.label": "タスク",
-      "references.label": "参考文献",
+      "notes.label": "注解",
+      "tasks.label": "任務",
+      "references.label": "参照",
       "history.label": "歴史",
       "time.label": "時間",
-      "cost.label": "コスト",
+      "cost.label": "支出",
       "tags.label": "タグ",
-      "calendar.label": "カレンダー",
+      "calendar.label": "日報",
       "approvalRouting.label": "承認ルーティング"
     },
     "filters": {
-      "opened": "すべてのオープンケース",
+      "opened": "開いているすべての",
       "iHaveCreated": "私が作成したすべて",
       "iAmAssigned": "私は割り当てられたすべて",
       "iAmFollowing": "私がフォローしているすべて",
-      "closed": "すべて閉鎖",
-      "noFilter": "（フィルターなし）"
+      "closed": "閉じています",
+      "noFilter": "(無制限)"
     },
     "sorters": {
-      "dateAsc": "ソート日付Asc",
-      "dateDesc": "ソート日付Desc",
-      "idAsc": "ケースIDをソートする",
-      "idDesc": "ケースIDの並べ替え",
-      "nameAsc": "ケース名Ascでソート",
-      "noSort": "（ソートなし）"
+      "dateAsc": "日付で並べ替え",
+      "dateDesc": "日付で並べ替え降順",
+      "idAsc": "案件番号で並べ替え",
+      "idDesc": "案件番号で並べ替え降順",
+      "nameAsc": "案件名で並べ替え",
+      "noSort": "(注文しません)"
     }
   }
 }
