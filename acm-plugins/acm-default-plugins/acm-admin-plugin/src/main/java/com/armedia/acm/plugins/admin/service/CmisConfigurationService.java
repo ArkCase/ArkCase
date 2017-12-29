@@ -374,10 +374,24 @@ public class CmisConfigurationService
         HashMap<String, String> parameters = new HashMap<>();
         parameters.put(SessionParameter.USER, cmisUrlConfig.getUsername());
         parameters.put(SessionParameter.PASSWORD, encryptablePropertyUtils.decryptPropertyValue(cmisUrlConfig.getPassword()));
-        parameters.put(SessionParameter.ATOMPUB_URL, cmisUrlConfig.getBaseUrl());
-        parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
         parameters.put(SessionParameter.REPOSITORY_ID, cmisUrlConfig.getRepositoryId());
         parameters.put(SessionParameter.HEADER, HttpInvokerUtil.EXTERNAL_AUTH_KEY + ": " + HttpInvokerUtil.getExternalUserIdValue());
+        if(cmisUrlConfig.getEndpoint().equals("ATOM")){
+            parameters.put(SessionParameter.ATOMPUB_URL, cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.BINDING_TYPE, BindingType.ATOMPUB.value());
+        }else if(cmisUrlConfig.getEndpoint().equals("SOAP")){
+            parameters.put(SessionParameter.WEBSERVICES_REPOSITORY_SERVICE, cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_NAVIGATION_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_OBJECT_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_VERSIONING_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_DISCOVERY_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_RELATIONSHIP_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_MULTIFILING_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_POLICY_SERVICE,  cmisUrlConfig.getBaseUrl());
+            parameters.put(SessionParameter.WEBSERVICES_ACL_SERVICE,  cmisUrlConfig.getBaseUrl());
+
+            parameters.put(SessionParameter.BINDING_TYPE, BindingType.WEBSERVICES.value());
+        }
 
         return SessionFactoryImpl.newInstance().getRepositories(parameters);
     }
