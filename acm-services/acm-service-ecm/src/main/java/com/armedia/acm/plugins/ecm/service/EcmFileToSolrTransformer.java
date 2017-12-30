@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import com.armedia.acm.objectonverter.ArkCaseBeanUtils;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
@@ -14,6 +15,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +30,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private EcmFileDao ecmFileDao;
     private UserDao userDao;
     private SearchAccessControlFields searchAccessControlFields;
+    private ArkCaseBeanUtils arkCaseBeanUtils = new ArkCaseBeanUtils();
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -117,73 +120,29 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     private SolrContentDocument mapContentDocumentProperties(EcmFile in)
     {
         SolrContentDocument solr = new SolrContentDocument();
+        SolrAdvancedSearchDocument solrAdvancedSearchDocument = mapDocumentProperties(in);
 
-        getSearchAccessControlFields().setAccessControlFields(solr, in);
-
-        solr.setId(in.getId() + "-" + in.getObjectType());
-        solr.setObject_id_s(in.getId() + "");
-        solr.setObject_type_s(in.getObjectType());
-
-        solr.setCreate_date_tdt(in.getCreated());
-        solr.setCreator_lcs(in.getCreator());
-        solr.setModified_date_tdt(in.getModified());
-        solr.setModifier_lcs(in.getModifier());
-
-        solr.setName(in.getFileName());
-        solr.setExt_s(in.getFileActiveVersionNameExtension());
-        solr.setMime_type_s(in.getFileActiveVersionMimeType());
-        solr.setContent_type(in.getFileActiveVersionMimeType());
-        solr.setStatus_lcs(in.getStatus());
-        solr.setTitle_parseable(in.getFileName());
-        solr.setTitle_parseable_lcs(in.getFileName());
-
-        solr.setParent_id_s(Long.toString(in.getContainer().getId()));
-        solr.setParent_type_s(in.getContainer().getObjectType());
-        solr.setParent_number_lcs(in.getContainer().getContainerObjectTitle());
-
-        solr.setParent_ref_s(in.getContainer().getContainerObjectId() + "-" + in.getContainer().getContainerObjectType());
-
-        solr.setEcmFileId(in.getVersionSeriesId());
-
-        solr.setType_lcs(in.getFileType());
-
-        solr.setHidden_b(isHidden(in));
-
-        mapAdditionalProperties(in, solr.getAdditionalProperties());
-
-        /** Additional properties for full names instead of ID's */
-        AcmUser creator = getUserDao().quietFindByUserId(in.getCreator());
-        if (creator != null)
+        if (solrAdvancedSearchDocument != null)
         {
-            solr.setAdditionalProperty("creator_full_name_lcs", creator.getFullName());
+            try
+            {
+                getArkCaseBeanUtils().copyProperties(solr, solrAdvancedSearchDocument);
+            }
+            catch (IllegalAccessException | InvocationTargetException e)
+            {
+                log.error("Could not copy properties from SolrAdvancedSearchDocument to SolrContentDocument");
+            }
+
+            // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
+            // "additionalProperties" property. Copy them explicitly here.
+            if (solrAdvancedSearchDocument.getAdditionalProperties() != null)
+            {
+                for (Map.Entry<String, Object> entry : solrAdvancedSearchDocument.getAdditionalProperties().entrySet())
+                {
+                    solr.setAdditionalProperty(entry.getKey(), entry.getValue());
+                }
+            }
         }
-        else
-        {
-            solr.setAdditionalProperty("creator_full_name_lcs", in.getCreator());
-        }
-
-        AcmUser assignee = getUserDao().quietFindByUserId(ParticipantUtils.getAssigneeIdFromParticipants(in.getParticipants()));
-        if (assignee != null)
-        {
-            solr.setAssignee_full_name_lcs(assignee.getFullName());
-        } else
-        {
-            solr.setAssignee_full_name_lcs("");
-        }
-
-        AcmUser modifier = getUserDao().quietFindByUserId(in.getModifier());
-        if (modifier != null)
-        {
-            solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFullName());
-        }
-        else
-        {
-            solr.setAdditionalProperty("modifier_full_name_lcs", in.getModifier());
-        }
-
-        solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
-
-        solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
         skipAdditionalPropertiesInURL.add("file_source_s");
@@ -196,10 +155,6 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
     private SolrAdvancedSearchDocument mapDocumentProperties(EcmFile in)
     {
-
-        // NOTE!!!! For EcmFile, if you need to add a field to the Solr content model, you must take an extra
-        // step!!! Update the contentFileToSolrFlow.xml to also include the new field!!!
-
         SolrAdvancedSearchDocument solr = new SolrAdvancedSearchDocument();
 
         getSearchAccessControlFields().setAccessControlFields(solr, in);
@@ -359,5 +314,10 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
     public void setSearchAccessControlFields(SearchAccessControlFields searchAccessControlFields)
     {
         this.searchAccessControlFields = searchAccessControlFields;
+    }
+
+    public ArkCaseBeanUtils getArkCaseBeanUtils()
+    {
+        return arkCaseBeanUtils;
     }
 }
