@@ -16,6 +16,7 @@ angular.module('complaints').config(['$stateProvider',
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('complaints');
                         $translate.resetDataDict()
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["complaints", "common"], "en"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("complaintTypes"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
                             ;
@@ -59,7 +60,10 @@ angular.module('complaints').config(['$stateProvider',
 
             .state('complaints.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/complaints/views/components/complaint-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "COMPLAINT"
+                }
             })
 
             .state('complaints.notes', {

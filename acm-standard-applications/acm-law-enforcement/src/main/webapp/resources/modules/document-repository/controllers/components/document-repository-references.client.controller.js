@@ -2,9 +2,9 @@
 
 angular.module('document-repository').controller('DocumentRepository.ReferencesController', ['$scope', '$stateParams'
     , '$modal', 'UtilService', 'DocumentRepository.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService'
-    , 'Object.ReferenceService', 'ObjectService', 'ConfigService'
+    , 'ObjectAssociation.Service', 'ObjectService', 'ConfigService'
     , function ($scope, $stateParams, $modal, Util, DocumentRepositoryInfoService, HelperUiGridService
-        , HelperObjectBrowserService, ReferenceService, ObjectService, ConfigService) {
+        , HelperObjectBrowserService, ObjectAssociationService, ObjectService, ConfigService) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -90,24 +90,29 @@ angular.module('document-repository').controller('DocumentRepository.ReferencesC
 
             modalInstance.result.then(function (chosenReference) {
                 if (chosenReference) {
-                    var reference = {};
-                    reference.referenceId = chosenReference.object_id_s;
-                    reference.referenceTitle = chosenReference.title_parseable;
-                    reference.referenceType = chosenReference.object_type_s;
-                    reference.referenceNumber = chosenReference.name;
-                    reference.referenceStatus = chosenReference.status_lcs;
-                    reference.parentId = $stateParams.id;
-                    reference.parentType = ObjectService.ObjectTypes.DOC_REPO;
-                    ReferenceService.addReference(reference).then(
-                        function (objectSaved) {
-                            $scope.refresh();
-                            return objectSaved;
-                        },
-                        function (error) {
-                            return error;
-                        }
-                    );
-                    return;
+
+                    var parent = $scope.objectInfo;
+                    var target = chosenReference;
+                    if (target) {
+                        var association = ObjectAssociationService.createAssociationInfo(
+                            parent.id,
+                            ObjectService.ObjectTypes.DOC_REPO,
+                            parent.title,
+                            parent.caseNumber,
+                            target.object_id_s,
+                            target.object_type_s,
+                            target.title_parseable,
+                            target.name,
+                            'REFERENCE',
+                            'REFERENCE');
+                    }
+
+                    ObjectAssociationService.saveObjectAssociation(association).then(function (payload) {
+                        $scope.refresh();
+                        return payload;
+                    }, function (errorResponse) {
+                        MessageService.error(errorResponse.data);
+                    });
                 }
             }, function () {
                 // Cancel button was clicked.

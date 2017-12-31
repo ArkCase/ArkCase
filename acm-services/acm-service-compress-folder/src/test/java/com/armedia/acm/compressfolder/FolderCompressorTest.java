@@ -112,8 +112,8 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(101l).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(101l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1Folder, mockedLevel1File)));
-        expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(2);
-        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
+        expect(mockedLevel1Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(3);
+        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
         File folder_level_1 = null;
         for (File child : responseFolder.listFiles())
         {
@@ -134,8 +134,8 @@ public class FolderCompressorTest extends EasyMockSupport
         }
         expect(mockedLevel1Folder.getId()).andReturn(102l);
         expect(mockedFolderService.getFolderChildren(102l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel2Folder, mockedLevel2File)));
-        expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(2);
-        expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
+        expect(mockedLevel2Folder.getObjectType()).andReturn(EcmFileConstants.OBJECT_FOLDER_TYPE).times(3);
+        expect(mockedLevel2File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
         File folder_level_2 = null;
         for (File child : folder_level_1.listFiles())
         {
@@ -156,7 +156,7 @@ public class FolderCompressorTest extends EasyMockSupport
         }
         expect(mockedLevel2Folder.getId()).andReturn(103l);
         expect(mockedFolderService.getFolderChildren(103l)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel3File)));
-        expect(mockedLevel3File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
+        expect(mockedLevel3File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
         for (File child : folder_level_2.listFiles())
         {
             if (!child.isDirectory())
@@ -269,7 +269,7 @@ public class FolderCompressorTest extends EasyMockSupport
         expect(mockedResponseFolder.getName()).andReturn("Response").atLeastOnce();
         expect(mockedResponseFolder.getId()).andReturn(folderId).atLeastOnce();
         expect(mockedFolderService.getFolderChildren(folderId)).andReturn(new ArrayList<>(Arrays.asList(mockedLevel1File)));
-        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(2);
+        expect(mockedLevel1File.getObjectType()).andReturn(EcmFileConstants.OBJECT_FILE_TYPE).times(3);
         expect(mockedLevel1File.getFileName()).andReturn(bigFile.getName());
         expect(mockedLevel1File.getFileActiveVersionNameExtension()).andReturn("." + FilenameUtils.getExtension(bigFile.getName()));
         expect(mockedLevel1File.getId()).andReturn(folderId);

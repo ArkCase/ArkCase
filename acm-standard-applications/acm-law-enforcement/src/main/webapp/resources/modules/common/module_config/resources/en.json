@@ -58,7 +58,23 @@
     },
     "menu": {
       "noop": "(Select Item)",
-      "editWithWebDAV": "Edit"
+      "editWithWebDAV": "Edit",
+      "cancelEditing": "Cancel Editing",
+      "newFolder": "New Folder",
+      "newDocument": "New Document",
+      "newCorrespondence": "New Correspondence",
+      "open": "Open",
+      "email": "Email",
+      "download": "Download",
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "rename": "Rename",
+      "delete": "Delete",
+      "replace": "Replace",
+      "checkout": "Check Out",
+      "checkin": "Check In",
+      "declareRecord": "Declare As Record(s)"
     },
     "table.columns": {
       "title": "Title",
@@ -153,8 +169,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
-    "pagerCountMiddleLabel": " of ",
-    "pagerCountLabel": " items"
+    "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
@@ -169,7 +184,9 @@
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
     "edtPlaceholder": "Type in to search",
-    "noData.text": "No Results"
+    "noData.text": "No Results",
+    "pickUserLabel": "Pick Associated User",
+    "pickGroupLabel": "Pick Associated Group"
   },
   "common.directive.search": {
     "showMore.button.text": "Show More Values",
@@ -458,7 +475,9 @@
       "day.label": "Day",
       "week.label": "Week",
       "month.label": "Month",
-      "on.label": "On",
+      "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+      "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+      "_on.label": "On",
       "day.placeholder": "Day",
       "year.placeholder": "Year",
       "dailyRecurrence": {
@@ -841,6 +860,18 @@
         "action": "Action",
         "newValue": "New Value",
         "oldValue": "Old Value"
+      }
+    },
+    "client": {
+      "title": "History",
+      "label": {
+        "updated": "Updated"
+      },
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Date",
+        "userId": "User",
+        "details.btn.text": "View {{count}} Changes"
       }
     }
   }

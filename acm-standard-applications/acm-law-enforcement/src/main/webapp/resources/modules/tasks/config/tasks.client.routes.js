@@ -16,7 +16,7 @@ angular.module('tasks').config(['$stateProvider',
                         $translatePartialLoader.addPart('dashboard');
                         $translatePartialLoader.addPart('tasks');
                         $translate.resetDataDict()
-                            .addDataDictFromLabels(LocaleService.getLabelResources(["tasks"], "en"))
+                            .addDataDictFromLabels(LocaleService.getLabelResources(["tasks", "common"], "en"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("caseFileTypes"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("priorities"))
                             .addDataDictFromLookup(ObjectLookupService.getLookupByLookupName("taskOutcomes"))
@@ -115,7 +115,10 @@ angular.module('tasks').config(['$stateProvider',
 
             .state('tasks.history', {
                 url: '/:type/:id/history',
-                templateUrl: 'modules/tasks/views/components/task-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "TASK"
+                }
             })
 
             .state('tasks.signatures', {

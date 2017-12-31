@@ -90,6 +90,24 @@
     "sendEmail": "Enviar email",
     "filterInputPlaceholder": "Filtro",
     "searchInputPlaceholder": "Pesquisa",
+    "menu": {
+      "forms": {
+        "info%": "Em formação",
+        "rptInvestigation%": "Relatório de Investigação",
+        "ecomm%": "Comunicação eletrônica"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Convite para correspondência",
+        "approvalLetter%": "Carta de aprovação",
+        "medicalRelease%": "Alta médica",
+        "generalRelease%": "Liberação geral",
+        "clearanceGranted%": "Liquidação concedida",
+        "clearanceDenied%": "Liquidação negada",
+        "noticeInvestigation%": "Aviso de Investigação",
+        "witnessInterview%": "Pedido de entrevista de testemunha",
+        "witnessInterview2%": "Witness Interview Request-2.0"
+      }
+    },
     "newTask": "Nova tarefa"
   },
   "cases.comp.people": {
@@ -229,7 +247,6 @@
     "title": "Calendário"
   },
   "cases.comp.merge": {
-    "id": "Fundir",
     "title": "Mesclar",
     "cancel.btn": "Cancelar",
     "merge.btn": "Mesclar",

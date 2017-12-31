@@ -12,6 +12,8 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
             'email': 0,
             'fax': 0
         };
+        $scope.loadingIcon = "fa fa-floppy-o";
+
         ConfigService.getModuleConfig("common").then(function (moduleConfig) {
             $scope.config = moduleConfig;
             return moduleConfig;
@@ -272,6 +274,8 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
         };
 
         $scope.save = function () {
+            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
+
             $modalInstance.close({
                 organization: clearNotFilledElements(_.cloneDeep($scope.organization))
             });
@@ -341,6 +345,7 @@ angular.module('common').controller('Common.NewOrganizationModalController', ['$
                 }
             });
 
+            $scope.loadingIcon = "fa fa-floppy-o";
             return organization;
         }
 

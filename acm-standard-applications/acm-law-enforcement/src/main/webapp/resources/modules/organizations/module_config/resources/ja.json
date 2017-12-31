@@ -461,10 +461,10 @@
       "participants.label": "参加者",
       "dbas.label": "DBA",
       "people.label": "人物",
-      "ids.label": "識別",
-      "complaints.label": "苦情",
-      "cases.label": "ケース",
-      "related.label": "関連団体",
+      "ids.label": "組織識別番号",
+      "complaints.label": "訴状",
+      "cases.label": "案件",
+      "related.label": "関連組織",
       "history.label": "歴史"
     },
     "filters": {

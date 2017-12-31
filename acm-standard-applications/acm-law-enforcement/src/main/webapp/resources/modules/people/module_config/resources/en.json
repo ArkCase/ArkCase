@@ -371,7 +371,7 @@
   },
   "people.comp.related": {
     "title": "Related People",
-    "linkTitle": "Rel People",
+    "linkTitle": "Related People",
     "table.columns": {
       "firstName": "First Name",
       "lastName": "Last Name",
