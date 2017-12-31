@@ -90,6 +90,24 @@
     "sendEmail": "发电子邮件",
     "filterInputPlaceholder": "过滤",
     "searchInputPlaceholder": "搜索",
+    "menu": {
+      "forms": {
+        "info%": "信息",
+        "rptInvestigation%": "调查报告",
+        "ecomm%": "电子通讯"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "函授邀请",
+        "approvalLetter%": "批准书",
+        "medicalRelease%": "医疗发布",
+        "generalRelease%": "标准发布",
+        "clearanceGranted%": "已授予清关",
+        "clearanceDenied%": "已否认清关",
+        "noticeInvestigation%": "调查通知",
+        "witnessInterview%": "证人面试请求",
+        "witnessInterview2%": "证人面试请求2.0"
+      }
+    },
     "newTask": "新任务"
   },
   "cases.comp.people": {
@@ -229,7 +247,6 @@
     "title": "日历"
   },
   "cases.comp.merge": {
-    "id": "合并",
     "title": "合并",
     "cancel.btn": "取消",
     "merge.btn": "合并",

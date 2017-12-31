@@ -1,7 +1,7 @@
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
@@ -760,7 +760,8 @@
         <sql>
             UPDATE acm_file
             SET cm_file_active_version_name_extension =
-            SUBSTRING(cm_file_name, LEN(cm_file_name) - CHARINDEX('.', REVERSE(cm_file_name)) + 1, CHARINDEX('.', REVERSE(cm_file_name)) + 1)
+            SUBSTRING(cm_file_name, LEN(cm_file_name) - CHARINDEX('.', REVERSE(cm_file_name)) + 1, CHARINDEX('.', REVERSE(cm_file_name)) +
+            1)
             WHERE cm_file_active_version_name_extension IS NULL;
         </sql>
     </changeSet>
@@ -811,7 +812,7 @@
         <dropUniqueConstraint tableName="acm_container" constraintName="acm_container_folder_cm_object_id_cm_object_type_key"/>
         <addUniqueConstraint tableName="acm_container" columnNames="cm_object_id, cm_object_type, cm_cmis_repository_id"/>
     </changeSet>
-    
+
     <changeSet id="files-43-add-container-discriminator" author="ilinpetar" dbms="mysql">
         <addColumn tableName="acm_container">
             <column name="cm_cmis_repository_id" type="VARCHAR(255)" defaultValue="alfresco">
@@ -820,6 +821,14 @@
         </addColumn>
         <dropUniqueConstraint tableName="acm_container" constraintName="cm_object_id"/>
         <addUniqueConstraint tableName="acm_container" columnNames="cm_object_id, cm_object_type, cm_cmis_repository_id"/>
+    </changeSet>
+
+    <changeSet id="files-4819-update-other-file-type" author="dmiller">
+        <update tableName="acm_file">
+            <column name="cm_file_type" value="other"/>
+            <column name="cm_file_modified" valueComputed="${timestampFunction}"/>
+            <where>cm_file_type = 'Other'</where>
+        </update>
     </changeSet>
 
 </databaseChangeLog>

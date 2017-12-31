@@ -48,10 +48,25 @@
     "sendEmail": "メールを送る",
     "filterInputPlaceholder": "フィルタ",
     "searchInputPlaceholder": "サーチ",
+    "menu": {
+      "forms": {
+        "rptInvestigation%": "調査報告"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "通信招待状",
+        "approvalLetter%": "訴状の承認書",
+        "generalRelease%": "標準リリース",
+        "medicalRelease%": "医療リリース",
+        "clearanceGranted%": "許可されたクリアランス",
+        "clearanceDenied%": "クリアランスを拒否した",
+        "witnessInterview%": "目撃者のインタビュー要求",
+        "witnessInterview2%": "目撃者のインタビュー要求2.0"
+      }
+    },
     "newTask": "新しい仕事"
   },
   "complaints.comp.people": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
       "type": "役割",
       "firstName": "最初に与えられた名前",
@@ -318,7 +333,7 @@
     "nodeTypes": {
       "details.label": "詳細",
       "locations.label": "場所",
-      "people.label": "人員",
+      "people.label": "人物",
       "organizations.label": "組織",
       "documents.label": "文書",
       "participants.label": "参加者",

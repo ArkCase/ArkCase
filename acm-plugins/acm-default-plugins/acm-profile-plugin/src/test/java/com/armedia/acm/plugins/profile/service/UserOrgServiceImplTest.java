@@ -8,10 +8,8 @@ import com.armedia.acm.plugins.profile.dao.UserOrgDao;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
 import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupService;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -28,8 +26,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static junit.framework.TestCase.*;
-import static org.easymock.EasyMock.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertNull;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 
 public class UserOrgServiceImplTest extends EasyMockSupport
 {
@@ -48,8 +51,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
     private MuleContext mockMuleContext;
     private MuleRegistry mockMuleRegistry;
     private Map<String, Object> muleMessageProps;
-    private AcmGroupDao mockGroupDao;
-    private GroupService mockGroupService;
     private CMISCloudConnectorConnectionManager cmisConfig;
 
     @Before
@@ -63,8 +64,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         mockMuleContextManager = createMock(MuleContextManager.class);
         mockMuleContext = createMock(MuleContext.class);
         mockMuleRegistry = createMock(MuleRegistry.class);
-        mockGroupDao = createMock(AcmGroupDao.class);
-        mockGroupService = createMock(GroupService.class);
 
         userOrgService = new UserOrgServiceImpl();
         userOrgService.setUserDao(mockUserDao);
@@ -72,8 +71,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         userOrgService.setOrganizationService(mockOrganizationService);
         userOrgService.setEventPublisher(mockEventPublisher);
         userOrgService.setMuleContextManager(mockMuleContextManager);
-        userOrgService.setGroupDao(mockGroupDao);
-        userOrgService.setGroupService(mockGroupService);
         userOrgService.setDefaultCmisId(DEFAULT_CMIS_ID);
 
         muleMessageProps = new LinkedHashMap<>();
@@ -277,7 +274,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
 
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(expectedUserOrg);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         replayAll();
 
@@ -310,7 +306,6 @@ public class UserOrgServiceImplTest extends EasyMockSupport
         expect(mockUserOrgDao.findByUserId(USER_ID)).andReturn(null);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
         expect(mockUserDao.findByUserId(USER_ID)).andReturn(user);
-        expect(mockGroupService.isUUIDPresentInTheGroupName(group.getName())).andReturn(false);
 
         MuleMessage mockMuleMessage = createMock(MuleMessage.class);
         MuleException mockMuleException = null;

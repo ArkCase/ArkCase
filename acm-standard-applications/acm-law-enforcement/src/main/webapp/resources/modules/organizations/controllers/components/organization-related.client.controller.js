@@ -106,7 +106,8 @@ angular.module('organizations').controller('Organizations.RelatedController', ['
                     organizationId: rowEntity.target_object.object_id_s,
                     organizationValue: rowEntity.target_object.title_parseable,
                     type: rowEntity.association_type_s,
-                    description: rowEntity.description_s
+                    description: rowEntity.description_s,
+                    isEditOrganization: true
                 });
             }
 

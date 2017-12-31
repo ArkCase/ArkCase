@@ -61,8 +61,8 @@
                         &nbsp;
                     </div>
                 </div>
-                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && selectedItems.length > 0" translate>tasks.userOrGroupSearch.pickUserLabel</label>
-                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && selectedItems.length > 0" translate>tasks.userOrGroupSearch.pickGroupLabel</label>
+                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && selectedItems.length > 0" translate>{{pickUserLabel}}</label>
+                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && selectedItems.length > 0" translate>{{pickGroupLabel}}</label>
                 <div ui-grid="gridOptionsDetail"
                      ui-grid-resize-columns
                      ui-grid-pagination

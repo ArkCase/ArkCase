@@ -5,16 +5,14 @@ package com.armedia.acm.compressfolder.web.api;
 
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
+import com.armedia.acm.compressfolder.model.CompressNode;
 import org.apache.tika.io.FilenameUtils;
 import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -57,6 +55,17 @@ public class FolderCompressorAPIController
         String fileName = FilenameUtils.getName(filePath);
         log.debug("Compressed file File Name is '{}'", fileName);
 
+        downloadCompressedFolder(filePath, fileName, response);
+    }
+
+    @RequestMapping(value = "/download", method = RequestMethod.POST)
+    @ResponseBody
+    public void getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode
+            ,HttpServletResponse response)
+            throws FolderCompressorException, IOException
+    {
+        String filePath = folderCompressor.compressFolder(compressNode);
+        String fileName = FilenameUtils.getName(filePath);
         downloadCompressedFolder(filePath, fileName, response);
     }
 

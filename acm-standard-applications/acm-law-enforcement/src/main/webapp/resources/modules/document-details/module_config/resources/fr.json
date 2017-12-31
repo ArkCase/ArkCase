@@ -1,104 +1,104 @@
 {
   "documentDetails": {
-    "title": "fr_Document details",
-    "creator": "fr_Creator",
-    "created": "fr_Created",
-    "assignee": "fr_Assignee",
-    "fileType": "fr_File type",
-    "status": "fr_Status",
-    "name": "fr_Name",
+    "title": "Détails du document",
+    "creator": "Créateur",
+    "created": "Créé",
+    "assignee": "Cessionnaire",
+    "fileType": "Type de fichier",
+    "status": "Statut",
+    "name": "Prénom",
     "comp.eventHistory": {
-      "title": "fr_Event History",
+      "title": "Histoire de l'événement",
       "table.columns": {
-        "eventType": "fr_Event Name",
-        "eventDate": "fr_Created",
-        "userId": "fr_User"
+        "eventType": "Nom de l'événement",
+        "eventDate": "Créé",
+        "userId": "Utilisateur"
       }
     },
     "comp.tags": {
-      "title": "fr_Tags",
+      "title": "Mots clés",
       "table.columns": {
-        "tag": "fr_Tag",
-        "created": "fr_Created",
-        "createdBy": "fr_Created By"
+        "tag": "Marque",
+        "created": "Créé",
+        "createdBy": "Créé par"
       },
       "modal": {
-        "title": "fr_Tag",
-        "search": "fr_Search for Tag",
+        "title": "Marque",
+        "search": "Recherche de tag",
         "buttons": {
-          "cancel": "fr_Cancel",
-          "ok": "fr_Add Tag"
+          "cancel": "Annuler",
+          "ok": "Ajouter une étiquette"
         }
       },
-      "message.tagExists": "fr_Tag with that name or description or text already exists",
-      "message.tagAssociated": "fr_already associated",
-      "message.delete.success": "fr_Tag deleted successfully",
-      "message.delete.error": "fr_Error deleting tag"
+      "message.tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+      "message.tagAssociated": "Déjà associé",
+      "message.delete.success": "Tag supprimé avec succès",
+      "message.delete.error": "Erreur lors de la suppression d'un tag"
     },
     "comp.participants": {
-      "title": "fr_Participants",
+      "title": "Participants",
       "table.columns": {
-        "name": "fr_Name",
-        "type": "fr_Type"
+        "name": "Prénom",
+        "type": "Type"
       },
       "dialogUserPicker": {
-        "header": "fr_Choose User",
+        "header": "Choisissez l'utilisateur",
         "table.columns": {
-          "name": "fr_Name",
-          "type": "fr_Type",
-          "title": "fr_Title",
-          "id": "fr_Username"
+          "name": "Prénom",
+          "type": "Type",
+          "title": "Titre",
+          "id": "Nom d'utilisateur"
         }
       },
       "dialogGroupPicker": {
-        "header": "fr_Choose Group",
+        "header": "Choisissez un groupe",
         "table.columns": {
-          "name": "fr_Name"
+          "name": "Prénom"
         }
       }
     },
     "comp.notes": {
-      "title": "fr_Notes",
+      "title": "Remarques",
       "table.columns": {
-        "note": "fr_Note",
-        "tag": "fr_Document Version",
-        "created": "fr_Created",
-        "creator": "fr_Author"
+        "note": "Remarque",
+        "tag": "Version du document",
+        "created": "Créé",
+        "creator": "Auteur"
       }
     },
     "comp.versionHistory": {
-      "title": "fr_Version History",
+      "title": "Historique des versions",
       "table.columns": {
-        "creator": "fr_User",
-        "created": "fr_Created",
-        "versionTag": "fr_Version"
+        "creator": "Utilisateur",
+        "created": "Créé",
+        "versionTag": "Version"
       }
     },
     "comp.details": {
-      "title": "fr_Details",
+      "title": "Détails",
       "label": {
-        "creator": "fr_Owner",
-        "modifier": "fr_Author",
-        "created": "fr_Creation Date",
-        "modified": "fr_Modified Date",
-        "description": "fr_Description",
-        "type": "fr_Type",
-        "organization": "fr_Source Organization",
-        "person": "fr_Source Entity",
-        "format": "fr_Format",
-        "size": "fr_Size",
-        "gps": "fr_Location",
-        "duration": "fr_Duration (seconds)",
-        "width": "fr_Width (pixels)",
-        "height": "fr_Height (pixels)",
-        "camera.type": "fr_Camera Type",
-        "camera.version": "fr_Camera Version",
-        "button.save": "fr_Save",
-        "button.wait": "fr_Please Wait"
+        "creator": "Propriétaire",
+        "modifier": "Auteur",
+        "created": "Date de création",
+        "modified": "Date modifiée",
+        "description": "La description",
+        "type": "Type",
+        "organization": "Organisation de la source",
+        "person": "Entité source",
+        "format": "Format",
+        "size": "Taille",
+        "gps": "Emplacement",
+        "duration": "Durée (secondes)",
+        "width": "Largeur (pixels)",
+        "height": "Hauteur (pixels)",
+        "camera.type": "Type de caméra",
+        "camera.version": "Version de la caméra",
+        "button.save": "Sauvegarder",
+        "button.wait": "S'il vous plaît, attendez"
       },
       "message": {
-        "save.success": "fr_File metadata are successfully updated",
-        "save.error": "fr_Unable to update file metadata"
+        "save.success": "Les métadonnées de fichier sont mises à jour avec succès",
+        "save.error": "Impossible de mettre à jour les métadonnées de fichier"
       }
     }
   }

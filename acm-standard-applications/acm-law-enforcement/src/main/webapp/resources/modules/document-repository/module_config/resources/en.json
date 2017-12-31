@@ -164,8 +164,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",

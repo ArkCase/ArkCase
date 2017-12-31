@@ -42,7 +42,8 @@
     "title": "Documents",
     "sendEmail": "Send Email",
     "filterInputPlaceholder": "Filter",
-    "searchInputPlaceholder": "Search"
+    "searchInputPlaceholder": "Search",
+    "newTask": "New Task"
   },
   "document-repository.comp.participants": {
     "title": "Participants",
@@ -117,6 +118,9 @@
       }
     }
   },
+  "document-repository.comp.referenceSearchGrid": {
+    "title": "Reference Search"
+  },
   "document-repository.comp.addreference": {
     "title": "Add Reference",
     "cancelButton": "Cancel",
@@ -160,8 +164,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",

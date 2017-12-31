@@ -90,6 +90,24 @@
     "sendEmail": "Envoyer un email",
     "filterInputPlaceholder": "Filtre",
     "searchInputPlaceholder": "Chercher",
+    "menu": {
+      "forms": {
+        "info%": "Information",
+        "rptInvestigation%": "Rapport d'enquête",
+        "ecomm%": "Communication électronique"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "Invitation par correspondance",
+        "approvalLetter%": "Lettre d'approbation",
+        "medicalRelease%": "Libération médicale",
+        "generalRelease%": "Publication générale",
+        "clearanceGranted%": "Autorisation accordée",
+        "clearanceDenied%": "Autorisation refusée",
+        "noticeInvestigation%": "Avis d'enquête",
+        "witnessInterview%": "Demander une entrevue",
+        "witnessInterview2%": "Demande d'entrevue de témoin-2.0"
+      }
+    },
     "newTask": "Nouvelle tâche"
   },
   "cases.comp.people": {
@@ -229,7 +247,6 @@
     "title": "Calendrier"
   },
   "cases.comp.merge": {
-    "id": "Fusionner",
     "title": "Fusionner",
     "cancel.btn": "Annuler",
     "merge.btn": "Fusionner",

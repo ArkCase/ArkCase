@@ -1,104 +1,104 @@
 {
   "documentDetails": {
-    "title": "zh-cn_Document details",
-    "creator": "zh-cn_Creator",
-    "created": "zh-cn_Created",
-    "assignee": "zh-cn_Assignee",
-    "fileType": "zh-cn_File type",
-    "status": "zh-cn_Status",
-    "name": "zh-cn_Name",
+    "title": "文档详情",
+    "creator": "创建人",
+    "created": "创建日期",
+    "assignee": "指定人员",
+    "fileType": "文件类型",
+    "status": "状态",
+    "name": "名称",
     "comp.eventHistory": {
-      "title": "zh-cn_Event History",
+      "title": "事件历史",
       "table.columns": {
-        "eventType": "zh-cn_Event Name",
-        "eventDate": "zh-cn_Created",
-        "userId": "zh-cn_User"
+        "eventType": "事件名称",
+        "eventDate": "创建人",
+        "userId": "用户"
       }
     },
     "comp.tags": {
-      "title": "zh-cn_Tags",
+      "title": "标签",
       "table.columns": {
-        "tag": "zh-cn_Tag",
-        "created": "zh-cn_Created",
-        "createdBy": "zh-cn_Created By"
+        "tag": "标签",
+        "created": "创建日期",
+        "createdBy": "创建人"
       },
       "modal": {
-        "title": "zh-cn_Tag",
-        "search": "zh-cn_Search for Tag",
+        "title": "标签",
+        "search": "搜索标签",
         "buttons": {
-          "cancel": "zh-cn_Cancel",
-          "ok": "zh-cn_Add Tag"
+          "cancel": "取消",
+          "ok": "添加标签"
         }
       },
-      "message.tagExists": "zh-cn_Tag with that name or description or text already exists",
-      "message.tagAssociated": "zh-cn_already associated",
-      "message.delete.success": "zh-cn_Tag deleted successfully",
-      "message.delete.error": "zh-cn_Error deleting tag"
+      "message.tagExists": "具有该名称或说明或文字的标签已经存在",
+      "message.tagAssociated": "已经关联",
+      "message.delete.success": "标签已成功删除",
+      "message.delete.error": "删除标签时出错"
     },
     "comp.participants": {
-      "title": "zh-cn_Participants",
+      "title": "参与用户",
       "table.columns": {
-        "name": "zh-cn_Name",
-        "type": "zh-cn_Type"
+        "name": "名称",
+        "type": "类型"
       },
       "dialogUserPicker": {
-        "header": "zh-cn_Choose User",
+        "header": "选择用户",
         "table.columns": {
-          "name": "zh-cn_Name",
-          "type": "zh-cn_Type",
-          "title": "zh-cn_Title",
-          "id": "zh-cn_Username"
+          "name": "名称",
+          "type": "类型",
+          "title": "标题",
+          "id": "用户名"
         }
       },
       "dialogGroupPicker": {
-        "header": "zh-cn_Choose Group",
+        "header": "选择群组",
         "table.columns": {
-          "name": "zh-cn_Name"
+          "name": "名称"
         }
       }
     },
     "comp.notes": {
-      "title": "zh-cn_Notes",
+      "title": "笔记",
       "table.columns": {
-        "note": "zh-cn_Note",
-        "tag": "zh-cn_Document Version",
-        "created": "zh-cn_Created",
-        "creator": "zh-cn_Author"
+        "note": "注释",
+        "tag": "文档版本",
+        "created": "创建日期",
+        "creator": "作者"
       }
     },
     "comp.versionHistory": {
-      "title": "zh-cn_Version History",
+      "title": "版本历史",
       "table.columns": {
-        "creator": "zh-cn_User",
-        "created": "zh-cn_Created",
-        "versionTag": "zh-cn_Version"
+        "creator": "用户",
+        "created": "创建",
+        "versionTag": "版本"
       }
     },
     "comp.details": {
-      "title": "zh-cn_Details",
+      "title": "详情",
       "label": {
-        "creator": "zh-cn_Owner",
-        "modifier": "zh-cn_Author",
-        "created": "zh-cn_Creation Date",
-        "modified": "zh-cn_Modified Date",
-        "description": "zh-cn_Description",
-        "type": "zh-cn_Type",
-        "organization": "zh-cn_Source Organization",
-        "person": "zh-cn_Source Entity",
-        "format": "zh-cn_Format",
-        "size": "zh-cn_Size",
-        "gps": "zh-cn_Location",
-        "duration": "zh-cn_Duration (seconds)",
-        "width": "zh-cn_Width (pixels)",
-        "height": "zh-cn_Height (pixels)",
-        "camera.type": "zh-cn_Camera Type",
-        "camera.version": "zh-cn_Camera Version",
-        "button.save": "zh-cn_Save",
-        "button.wait": "zh-cn_Please Wait"
+        "creator": "拥有人",
+        "modifier": "作者",
+        "created": "创建日期",
+        "modified": "修改日期",
+        "description": "描述",
+        "type": "类型",
+        "organization": "来源组织",
+        "person": "来源实体",
+        "format": "格式",
+        "size": "大小",
+        "gps": "位置",
+        "duration": "持续时间（秒）",
+        "width": "宽度（像素）",
+        "height": "高度（像素）",
+        "camera.type": "相机类型",
+        "camera.version": "相机版本",
+        "button.save": "保存",
+        "button.wait": "请稍候"
       },
       "message": {
-        "save.success": "zh-cn_File metadata are successfully updated",
-        "save.error": "zh-cn_Unable to update file metadata"
+        "save.success": "文件元数据已成功更新",
+        "save.error": "无法更新文件元数据"
       }
     }
   }
