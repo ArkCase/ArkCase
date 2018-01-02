@@ -8,6 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -25,6 +26,8 @@ public interface GroupService
     AcmGroup save(AcmGroup groupToSave);
 
     AcmGroup saveAndFlush(AcmGroup group);
+
+    AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to
@@ -151,5 +154,5 @@ public interface GroupService
 
     AcmGroup saveAdHocSubGroup(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
 
-    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException;
+    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
 }

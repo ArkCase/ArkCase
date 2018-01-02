@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -27,6 +28,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -54,6 +56,19 @@ public class GroupServiceImpl implements GroupService
     public AcmGroup save(AcmGroup groupToSave)
     {
         return groupDao.save(groupToSave);
+    }
+
+    @Override
+    public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
+    {
+        String groupName = group.getName();
+        AcmGroup acmGroup = groupDao.findByName(groupName);
+        if (acmGroup != null)
+        {
+            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+        }
+        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+        return groupDao.save(group);
     }
 
     @Override

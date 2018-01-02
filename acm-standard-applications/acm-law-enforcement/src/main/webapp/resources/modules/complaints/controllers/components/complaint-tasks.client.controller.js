@@ -44,12 +44,10 @@ angular.module('complaints').controller('Complaints.TasksController', ['$scope',
         };
 
         var retrieveGridData = function () {
-            var exceptDeletedOnly = true;
             if (Util.goodPositive(componentHelper.currentObjectId, false)) {
                 ObjectTaskService.queryChildTasks(ObjectService.ObjectTypes.COMPLAINT
                     , componentHelper.currentObjectId
                     , Util.goodValue($scope.start, 0)
-                    , exceptDeletedOnly
                     , Util.goodValue($scope.pageSize, 10)
                     , Util.goodValue($scope.sort.by)
                     , Util.goodValue($scope.sort.dir)

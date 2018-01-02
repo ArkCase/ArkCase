@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.dao.group;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
@@ -40,7 +41,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         query.select(group);
 
-        query.where(builder.and(builder.equal(group.<String> get("name"), name)));
+        query.where(
+                builder.and(
+                        builder.equal(group.<String>get("name"), name.toUpperCase())
+                )
+        );
 
         TypedQuery<AcmGroup> dbQuery = getEm().createQuery(query);
 
@@ -64,6 +69,21 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         }
 
         return acmGroup;
+    }
+
+    @Transactional
+    public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
+    {
+        AcmGroup group = findByName(name);
+
+        if (group != null)
+        {
+            membersToRemove.forEach(member -> member.getGroups().remove(group));
+
+            Set<AcmUser> userMembers = group.getUserMembers();
+            userMembers.removeAll(membersToRemove);
+        }
+        return group;
     }
 
     public void markRolesByGroupInvalid(String groupName)
@@ -181,6 +201,28 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
+    }
+
+    public List<AcmGroup> findByTypeWithUsers(AcmGroupType type)
+    {
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT DISTINCT acmGroup "
+                + "FROM AcmGroup acmGroup "
+                + "LEFT JOIN FETCH acmGroup.userMembers "
+                + "WHERE acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("groupType", type);
+        return query.getResultList();
+    }
+
+    public List<AcmGroup> findByStatusAndType(AcmGroupStatus status, AcmGroupType type)
+    {
+        TypedQuery<AcmGroup> query = getEm()
+                .createQuery("SELECT acmGroup "
+                        + "FROM AcmGroup acmGroup "
+                        + "WHERE acmGroup.status = :status "
+                        + "AND acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("status", status);
+        query.setParameter("groupType", type);
+        return query.getResultList();
     }
 
     @Override

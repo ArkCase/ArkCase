@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.service.RetryExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.NoPermissionException;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.ldap.core.LdapTemplate;
@@ -84,6 +85,10 @@ class LdapCrudDao
         try
         {
             return function.apply(ldapTemplate);
+        }
+        catch (NoPermissionException e)
+        {
+            throw new AcmLdapActionFailedException("Insufficient access rights for this LDAP action", e);
         }
         catch (Exception e)
         {

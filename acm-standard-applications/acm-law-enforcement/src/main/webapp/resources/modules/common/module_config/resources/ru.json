@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(Выберите предмет)",
-      "editWithWebDAV": "Редактировать"
+      "editWithWebDAV": "Редактировать",
+      "cancelEditing": "Отменить редактирование",
+      "newFolder": "Новая папка",
+      "newDocument": "Новый документ",
+      "newCorrespondence": "Новая переписка",
+      "open": "Открыто",
+      "email": "Эл. адрес",
+      "download": "Скачать",
+      "copy": "Копирование",
+      "cut": "Порез",
+      "paste": "Вставить",
+      "rename": "Переименовать",
+      "delete": "Удалить",
+      "replace": "Заменить",
+      "checkout": "Проверять выписываться",
+      "checkin": "Регистрироваться",
+      "declareRecord": "Объявить как запись"
     },
     "table.columns": {
       "title": "Заглавие",
@@ -140,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "Пункты на странице",
-    "pagerCountMiddleLabel": " из",
-    "pagerCountLabel": " Предметы"
+    "pagerCountLabel": "{{pageCount}} из {{pageTotal}} пунктов"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Выберите",

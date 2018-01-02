@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -230,10 +231,19 @@ public class AcmGroupAPIController
 
     @RequestMapping(value = "/group/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveGroup(@RequestBody AcmGroup group)
+    public AcmGroup saveGroup(@RequestBody AcmGroup group) throws AcmAppErrorJsonMsg
     {
         LOG.info("Saving ad-hoc group [{}]", group.getName());
-        return groupService.checkAndSaveAdHocGroup(group);
+        try
+        {
+            return groupService.createGroup(group);
+        }
+        catch (AcmObjectAlreadyExistsException e)
+        {
+            AcmAppErrorJsonMsg errorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!", "GROUP", "name", e);
+            errorJsonMsg.putExtra("group", group);
+            throw errorJsonMsg;
+        }
     }
 
     @RequestMapping(value = "/group/save/{subGroupId:.+}/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -252,13 +262,22 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup, @PathVariable("parentId") String parentId)
-            throws AcmCreateObjectFailedException
+            throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
     {
 
         // we need to decode base64 encoded group id because can contain characters which can interfere with url
         parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
         LOG.info("Saving ad-hoc subgroup [{}]", subGroup.getName());
-        return groupService.saveAdHocSubGroup(subGroup, parentId);
+        try
+        {
+            return groupService.saveAdHocSubGroup(subGroup, parentId);
+        }
+        catch (AcmObjectAlreadyExistsException e)
+        {
+            AcmAppErrorJsonMsg errorJsonMsg = new AcmAppErrorJsonMsg("Group name already exists!", "GROUP", "name", e);
+            errorJsonMsg.putExtra("subGroup", subGroup);
+            throw errorJsonMsg;
+        }
     }
 
     @RequestMapping(value = "/group/{groupId:.+}/remove", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -285,6 +304,10 @@ public class AcmGroupAPIController
     {
         try
         {
+            // we need to decode base64 encoded group id because can contain characters which can interfere with url
+            groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+            parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
+
             return getGroupService().removeGroupMembership(groupId, parentId);
         }
         catch (AcmObjectNotFoundException e)

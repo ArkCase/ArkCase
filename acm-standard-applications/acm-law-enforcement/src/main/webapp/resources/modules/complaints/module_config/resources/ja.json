@@ -66,7 +66,7 @@
     "newTask": "新しい仕事"
   },
   "complaints.comp.people": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
       "type": "役割",
       "firstName": "最初に与えられた名前",
@@ -333,7 +333,7 @@
     "nodeTypes": {
       "details.label": "詳細",
       "locations.label": "場所",
-      "people.label": "人員",
+      "people.label": "人物",
       "organizations.label": "組織",
       "documents.label": "文書",
       "participants.label": "参加者",

@@ -550,8 +550,7 @@
         <button type="submit" ng-disabled="personForm.$invalid || loading"
                 class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
-            <i class="fa fa-floppy-o" ng-hide="loading"></i>
-            <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
+            <i class="{{loadingIcon}}"></i>
             <span translate> people.comp.editPerson.saveButton</span>
         </button>
     </div>

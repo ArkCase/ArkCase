@@ -5,6 +5,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,7 @@ public class AcmGroupContextMapper implements ContextMapper
         LdapGroup group = new LdapGroup();
         String groupName = MapperUtils.getAttribute(adapter, "cn");
         // Throughout the application we use the group names in upper case only, so converting here at mapping level
-        if (groupName != null)
-        {
-            group.setName(groupName.toUpperCase());
-        }
+        group.setName(MapperUtils.buildGroupName(groupName, Optional.of(acmLdapSyncConfig.getUserDomain())));
 
         group.setDistinguishedName(MapperUtils.appendToDn(adapter.getDn().toString(), acmLdapSyncConfig.getBaseDC()));
         group.setSortableValue(MapperUtils.getAttribute(adapter, acmLdapSyncConfig.getGroupsSortingAttribute()));

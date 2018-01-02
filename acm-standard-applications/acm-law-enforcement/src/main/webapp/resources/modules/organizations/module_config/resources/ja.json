@@ -311,7 +311,7 @@
     }
   },
   "organizations.comp.people": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
       "type": "ja_Role",
       "firstName": "ja_FirstName",
@@ -454,7 +454,7 @@
       "urls.label": "URL",
       "participants.label": "参加者",
       "dbas.label": "DBA",
-      "people.label": "人員",
+      "people.label": "人物",
       "ids.label": "組織識別番号",
       "complaints.label": "訴状",
       "cases.label": "案件",

@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "（選擇項目）",
-      "editWithWebDAV": "編輯"
+      "editWithWebDAV": "編輯",
+      "cancelEditing": "取消編輯",
+      "newFolder": "創建新文件夾",
+      "newDocument": "創建新文件",
+      "newCorrespondence": "創建新信件",
+      "open": "打開",
+      "email": "電子郵件",
+      "download": "下載",
+      "copy": "複製",
+      "cut": "切割",
+      "paste": "黏貼",
+      "rename": "改名",
+      "delete": "刪除",
+      "replace": "更換",
+      "checkout": "登記出",
+      "checkin": "登記回",
+      "declareRecord": "聲明為記錄"
     },
     "table.columns": {
       "title": "標題",
@@ -140,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "每頁項目數",
-    "pagerCountMiddleLabel": " 的",
-    "pagerCountLabel": " 項目"
+    "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}項"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "選擇",

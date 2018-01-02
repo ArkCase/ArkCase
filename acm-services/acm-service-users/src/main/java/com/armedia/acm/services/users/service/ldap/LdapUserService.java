@@ -83,18 +83,20 @@ public class LdapUserService implements ApplicationEventPublisherAware
     @Transactional(rollbackFor = Exception.class)
     public AcmUser createLdapUser(UserDTO userDto, String directoryName) throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
-        AcmUser user = checkExistingUser(userDto.getUserId());
+        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
+
+        String userId = MapperUtils.buildUserId(userDto.getUserId(), ldapSyncConfig.getUserDomain());
+
+        AcmUser user = checkExistingUser(userId);
 
         if (user == null)
         {
-            user = userDto.toAcmUser(userDto.getUserId(), userDao.getDefaultUserLang());
+            user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
         }
         else
         {
             user = userDto.updateAcmUser(user);
         }
-
-        AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
         String dn = buildDnForUser(user.getFullName(), userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
@@ -102,16 +104,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
         user.setUserState(AcmUserState.VALID);
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setUid(user.getUserId());
+            user.setUid(userDto.getUserId());
         }
         else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
-            user.setsAMAccountName(user.getUserId());
-        }
-        // set the domain defined in the config to the userId
-        if (StringUtils.isNotEmpty(ldapSyncConfig.getUserDomain()))
-        {
-            user.setUserId(user.getUserId() + "@" + ldapSyncConfig.getUserDomain());
+            user.setsAMAccountName(userDto.getUserId());
         }
 
         Set<AcmGroup> groups = new HashSet<>();

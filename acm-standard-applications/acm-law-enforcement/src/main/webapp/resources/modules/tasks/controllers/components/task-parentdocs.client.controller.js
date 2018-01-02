@@ -43,7 +43,6 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
         $scope.objectType = ObjectService.ObjectTypes.TASK;
         $scope.objectId = componentHelper.currentObjectId; //$stateParams.id;
 
-        var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
         var promiseFileTypes = ObjectLookupService.getFileTypes();
         var promiseFileLanguages = LocaleService.getSettings();
         var onObjectInfoRetrieved = function (objectInfo) {
@@ -52,6 +51,9 @@ angular.module('tasks').controller('Tasks.ParentDocsController', ['$scope', '$st
             $scope.parentObjectId = objectInfo.parentObjectId;
             $scope.parentObjectType = objectInfo.parentObjectType;
 
+            if($scope.parentObjectType){
+                var promiseFormTypes = ObjectLookupService.getFormTypes($scope.parentObjectType);
+            }
             var promiseCorrespondenceForms;
             switch ($scope.parentObjectType) {
                 case ObjectService.ObjectTypes.COMPLAINT:
