@@ -21,6 +21,15 @@ public class UserIdGroupNameDomainUpdateDao
 
     private static final Logger log = LoggerFactory.getLogger(UserIdGroupNameDomainUpdateDao.class);
 
+    public int setUserIdAsDn(String userDomain)
+    {
+        Query update = em.createQuery("UPDATE AcmUser user "
+                + "set user.distinguishedName = user.userId "
+                + "WHERE user.userDirectoryName = :directoryName");
+        update.setParameter("directoryName", userDomain);
+        return update.executeUpdate();
+    }
+
     public int updateModifier(Class persistenceClass, String oldModifier, String modifier)
     {
         Query update = em.createQuery("UPDATE " + persistenceClass.getSimpleName()
