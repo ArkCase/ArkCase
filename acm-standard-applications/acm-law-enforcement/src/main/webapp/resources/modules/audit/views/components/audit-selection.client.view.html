@@ -3,9 +3,8 @@
     <div class="form-group">
 
         <label for="reportNameAudit" translate>audit.navigation.label.reportName</label>
-        <span class="required-asterisk">*</span>
 
-        <select class="form-control" id="reportNameAudit" ng-model="auditReportName" ng-required="true"
+        <select class="form-control" id="reportNameAudit" ng-model="auditReportName"
                 ng-options="item.key as item.value | translate for item in auditReportNames" class="form-control input-sm">
         </select>
 

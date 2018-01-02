@@ -1534,3 +1534,7 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 a.primary {
     display: inline;
 }
+
+.table > thead > tr > th {
+	vertical-align: top !important;
+}

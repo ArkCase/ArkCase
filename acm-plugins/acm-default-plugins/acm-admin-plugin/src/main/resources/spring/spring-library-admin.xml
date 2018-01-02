@@ -111,6 +111,7 @@
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
         <property name="auditDao" ref="auditDao"/>
         <property name="notificationDao" ref="notificationDao"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
 
     <bean id="ldapDirectoryConfig" class="com.armedia.acm.plugins.admin.model.LdapDirectoryConfig">

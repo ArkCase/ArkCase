@@ -21,7 +21,7 @@ public class UserDTO
     public AcmUser toAcmUser(String userId, String defaultLang)
     {
         AcmUser acmUser = new AcmUser();
-        acmUser.setUserId(userId.toLowerCase());
+        acmUser.setUserId(userId);
         acmUser.setLang(defaultLang);
         updateAcmUser(acmUser);
         return acmUser;
@@ -96,11 +96,13 @@ public class UserDTO
         this.groupNames = groupNames;
     }
 
-    public String getCurrentPassword() {
+    public String getCurrentPassword()
+    {
         return currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword) {
+    public void setCurrentPassword(String currentPassword)
+    {
         this.currentPassword = currentPassword;
     }
 }

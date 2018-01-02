@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
@@ -10,10 +11,9 @@ import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import org.mule.api.MuleException;
-import org.mule.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -35,8 +34,6 @@ public class GroupServiceImpl implements GroupService
     private AcmGroupDao groupDao;
     private ExecuteSolrQuery executeSolrQuery;
 
-    private Pattern pattern = Pattern.compile(AcmGroupConstants.UUID_REGEX_STRING);
-
     @Override
     public AcmGroup findByName(String name)
     {
@@ -44,15 +41,22 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup findByMatchingName(String name)
+    public AcmGroup save(AcmGroup group)
     {
-        return groupDao.findByMatchingName(name);
+        return groupDao.save(group);
     }
 
     @Override
-    public AcmGroup save(AcmGroup groupToSave)
+    public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        return groupDao.save(groupToSave);
+        String groupName = group.getName();
+        AcmGroup acmGroup = groupDao.findByName(groupName);
+        if (acmGroup != null)
+        {
+            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+        }
+        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+        return groupDao.save(group);
     }
 
     @Override
@@ -76,21 +80,6 @@ public class GroupServiceImpl implements GroupService
 
         return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
                 0, 1000, "name asc");
-    }
-
-    @Override
-    @Transactional
-    public AcmGroup checkAndSaveAdHocGroup(AcmGroup group)
-    {
-        group.setDisplayName(group.getName());
-        group.setName(group.getName() + "-UUID-" + UUID.getUUID());
-        return groupDao.save(group);
-    }
-
-    @Override
-    public boolean isUUIDPresentInTheGroupName(String str)
-    {
-        return pattern.matcher(str).matches();
     }
 
     @Override
@@ -126,33 +115,6 @@ public class GroupServiceImpl implements GroupService
         groupName = groupName.replace("&", "%26"); // instead of URL encoding
         groupName = groupName.replace("?", "%3F"); // instead of URL encoding
         return groupName;
-    }
-
-    /**
-     * Creates or updates ad-hoc group based on the client info coming in from CRM
-     *
-     * @param //acmGroup group we want to rename
-     * @param //         newName group new name
-     */
-    @Override
-    @Transactional
-    public void renameGroup(AcmGroup acmGroup, String newName) throws AcmObjectNotFoundException
-    {
-        AcmGroup newGroup = new AcmGroup();
-        newGroup.setName(String.format("%s-UUID-%s", newName, UUID.getUUID()));
-        newGroup.setDisplayName(newName);
-        // copy the properties from the original found group.
-        newGroup.setSupervisor(acmGroup.getSupervisor());
-        newGroup.setType(acmGroup.getType());
-        newGroup.setStatus(acmGroup.getStatus());
-        newGroup.setDescription(acmGroup.getDescription());
-        newGroup.setMemberGroups(acmGroup.getMemberGroups());
-        newGroup.setMemberOfGroups(acmGroup.getMemberOfGroups());
-        newGroup.setCreator(acmGroup.getCreator());
-        newGroup.setUserMembers(acmGroup.getUserMembers());
-        groupDao.save(newGroup);
-
-        markGroupDeleted(acmGroup.getName());
     }
 
     @Override
@@ -310,10 +272,6 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup group = groupDao.findByName(groupId);
 
-        if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-        {
-            group = findByMatchingName(groupId);
-        }
         if (group == null)
         {
             log.warn("Group [{}] was not found.", groupId);
@@ -373,11 +331,6 @@ public class GroupServiceImpl implements GroupService
     {
         AcmGroup group = groupDao.findByName(groupId);
 
-        if (group == null) // probably an ad-hoc group, where internal name contains UUID suffix
-        {
-            group = groupDao.findByMatchingName(groupId);
-        }
-
         if (group == null)
         {
             log.warn("Group [{}] was not found.", groupId);
@@ -418,7 +371,8 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException
+    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
+            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
     {
         AcmGroup parent = groupDao.findByName(parentId);
         if (parent == null)
@@ -434,9 +388,12 @@ public class GroupServiceImpl implements GroupService
 
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        subGroup.setName(subGroup.getName() + "-UUID-" + UUID.getUUID());
-        parent.addGroupMember(subGroup);
-        return subGroup;
+        String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
+        subGroup.setName(groupName);
+        subGroup.setDisplayName(groupName);
+        AcmGroup acmGroup = createGroup(subGroup);
+        parent.addGroupMember(acmGroup);
+        return acmGroup;
     }
 
     public void setUserDao(UserDao userDao)

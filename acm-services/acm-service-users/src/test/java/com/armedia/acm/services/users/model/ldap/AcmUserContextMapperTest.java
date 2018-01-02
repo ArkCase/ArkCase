@@ -20,6 +20,7 @@ public class AcmUserContextMapperTest extends EasyMockSupport
         acmLdapSyncConfig.setBaseDC("dc=armedia");
         acmLdapSyncConfig.setAllUsersSortingAttribute("cn");
         acmLdapSyncConfig.setDirectoryType("openldap");
+        acmLdapSyncConfig.setUserDomain("armedia.com");
         unit = new AcmUserContextMapper(acmLdapSyncConfig);
 
         DirContextAdapter dirContextAdapter = new DirContextAdapter();
@@ -41,7 +42,7 @@ public class AcmUserContextMapperTest extends EasyMockSupport
 
         assertNotNull(user);
         assertNotNull(user.getUserId());
-        assertEquals(user.getUserId(), "ann-acm");
+        assertEquals(user.getUserId(), "***REMOVED***");
         assertNotNull(user.getMail());
         assertEquals(user.getMail(), "***REMOVED***");
         assertNotNull(user.getCountry());
