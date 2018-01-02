@@ -157,8 +157,7 @@
           "lastName": "Введите фамилию",
           "email": "Введите адрес электронной почты",
           "password": "Введите пароль",
-          "confirmation": "Введите пароль еще раз",
-          "minLengthForPassword": "7"
+          "confirmation": "Введите пароль еще раз"
         },
         "editLdapMember": {
           "title": "Изменить участника Ldap",
@@ -443,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Создать новую модель",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Загрузить новый BPMN"
     },
     "workflows.config.links": {

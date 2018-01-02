@@ -166,7 +166,7 @@ public class SpringLdapUserDao
         try
         {
             context = ldapEntryTransformer.createContextForNewUserEntry(ldapSyncConfig.getDirectoryName(),
-                    acmUser, password, ldapSyncConfig.getBaseDC(), ldapSyncConfig.getUserDomain());
+                    acmUser, password, ldapSyncConfig.getBaseDC());
         }
         catch (Exception e)
         {

@@ -46,22 +46,22 @@
     "menu": {
       "noop": "（选择物品）",
       "editWithWebDAV": "编辑",
-      "cancelEditing": "cn_Cancel Editing",
-      "newFolder": "cn_New Folder",
-      "newDocument": "cn_New Document",
-      "newCorrespondence": "cn_New Correspondence",
-      "open": "cn_Open",
-      "email": "cn_Email",
-      "download": "cn_Download",
-      "copy": "cn_Copy",
-      "cut": "cn_Cut",
-      "paste": "cn_Paste",
-      "rename": "cn_Rename",
-      "delete": "cn_Delete",
-      "replace": "cn_Replace",
-      "checkout": "cn_Check Out",
-      "checkin": "cn_Check In",
-      "declareRecord": "cn_Declare As Record(s)"
+      "cancelEditing": "取消编辑",
+      "newFolder": "创建新文件夹",
+      "newDocument": "创建新文件",
+      "newCorrespondence": "创建新信件",
+      "open": "打开",
+      "email": "电子邮件",
+      "download": "下载",
+      "copy": "复制",
+      "cut": "切割",
+      "paste": "黏贴",
+      "rename": "改名",
+      "delete": "删除",
+      "replace": "更换",
+      "checkout": "登记出",
+      "checkin": "登记回",
+      "declareRecord": "声明为记录"
     },
     "table.columns": {
       "title": "标题",
@@ -156,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "每页项目数",
-    "pagerCountMiddleLabel": " 的",
-    "pagerCountLabel": " 项目"
+    "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}项"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "选择",

@@ -153,7 +153,9 @@
           "enterLocation": "輸入位置",
           "description": "顯示城市的當前溫度",
           "location": "位置",
-          "insertLocationInConfiguration": "請在窗口小部件配置中插入位置"
+          "insertLocationInConfiguration": "請在窗口小部件配置中插入位置",
+          "zip": "zh-tw_Zip Code",
+          "enterZip": "zh-tw_Enter Zip Code"
         },
         "title": "天氣",
         "noDataMessage": "目前沒有天氣信息",
@@ -179,7 +181,7 @@
         "noDataMessage": "目前沒有細節"
       },
       "people": {
-        "title": "人",
+        "title": "人員",
         "description": "顯示人物細節",
         "noDataMessage": "目前沒有人信息可以顯示"
       },

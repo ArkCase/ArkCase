@@ -157,8 +157,7 @@
           "lastName": "Enter last name",
           "email": "Enter email",
           "password": "Enter password",
-          "confirmation": "Enter your password again",
-          "minLengthForPassword": "7"
+          "confirmation": "Enter your password again"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -443,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {

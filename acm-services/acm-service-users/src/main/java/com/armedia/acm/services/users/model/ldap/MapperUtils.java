@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -80,6 +81,17 @@ public class MapperUtils
             distinguishedName.prepend(suffixDn);
         });
         return distinguishedName.toString();
+    }
+
+    public static String buildGroupName(String name, Optional<String> domain)
+    {
+        return String.format("%s%s", name, domain.map(it -> String.format("@%s", it)).orElse("")).toUpperCase();
+    }
+
+    public static String buildUserId(String userId, String domain)
+    {
+
+        return String.format("%s@%s", userId, domain).toLowerCase();
     }
 
     public static byte[] encodeUTF16LE(String str) throws UnsupportedEncodingException
