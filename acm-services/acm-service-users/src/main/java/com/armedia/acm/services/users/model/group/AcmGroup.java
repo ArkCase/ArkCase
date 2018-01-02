@@ -398,7 +398,7 @@ public class AcmGroup implements Serializable, AcmEntity
      * @return `,` separated list of all ascendants of group
      */
     @JsonIgnore
-    public Stream<String> getAscendants()
+    public Stream<String> getAscendantsStream()
     {
         if (StringUtils.isBlank(ascendantsList))
         {
@@ -409,21 +409,30 @@ public class AcmGroup implements Serializable, AcmEntity
 
     public void addAscendants(Stream<String> newAscendants)
     {
-        Set<String> ascendants = getAscendants().collect(Collectors.toSet());
+        Set<String> ascendants = getAscendantsStream().collect(Collectors.toSet());
         newAscendants.forEach(asc -> ascendants.add(asc));
         ascendantsList = ascendants.stream().collect(Collectors.joining(","));
     }
 
+    public Set<String> getAscendants()
+    {
+        if (StringUtils.isBlank(ascendantsList))
+        {
+            return new HashSet<>();
+        }
+        return Arrays.stream(ascendantsList.split(",")).sorted().collect(Collectors.toSet());
+    }
+
     public void addAscendant(String ascendantGroup)
     {
-        Set<String> ascendants = getAscendants().collect(Collectors.toSet());
+        Set<String> ascendants = getAscendants();
         ascendants.add(ascendantGroup);
         ascendantsList = ascendants.stream().sorted().collect(Collectors.joining(","));
     }
 
     public void removeAscendant(String ascendantGroup)
     {
-        ascendantsList = getAscendants().filter(it -> !it.equals(ascendantGroup)).collect(Collectors.joining(","));
+        ascendantsList = getAscendantsStream().filter(it -> !it.equals(ascendantGroup)).collect(Collectors.joining(","));
     }
 
     public void setAscendantsList(String ascendantsList)

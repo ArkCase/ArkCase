@@ -79,7 +79,7 @@ public class EcmFileCreatedEventHandlerTest
         container.setContainerObjectId(700L);
 
         String mimeType = "mime/type";
-        String fileType = "Other";
+        String fileType = "other";
         String category = "Document";
 
         Capture<Authentication> actualAuthentication = Capture.newInstance();

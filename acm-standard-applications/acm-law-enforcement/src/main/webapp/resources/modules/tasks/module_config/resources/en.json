@@ -233,10 +233,6 @@
     "pickGroupLabel": "Pick Associated Group",
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "_1_": "'enabled' and 'userOrGroupFacetFilter' appear not in use. _TO_BE_REMOVED_",
-    "_2_": "If do need them, please move them to config file. Resource file is only for STRING values of labels",
-    "_enabled": true,
-    "_userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -253,8 +249,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "_1_": "'enabled' appears not in use. boolean value should not be in resource. _TO_BE_REMOVED_",
-    "_enabled": true,
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",
@@ -271,10 +265,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "_1_": "'enabled' and 'userFacetFilter' appear not in use. _TO_BE_REMOVED_",
-    "_2_": "If do need them, please move them to config file. Resource file is only for STRING values of labels",
-    "_enabled": true,
-    "_userFacetFilter": "\"Object Type\": ",
     "objectGridColumns": {
       "name": "Number",
       "type": "Type",

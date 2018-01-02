@@ -28,8 +28,7 @@ public class LdapEntryTransformer
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword,
-                                                          String baseDC, String userDomain)
+    public DirContextAdapter createContextForNewUserEntry(String directoryName, AcmUser user, String userPassword, String baseDC)
             throws UnsupportedEncodingException
     {
         DirContextAdapter context = new DirContextAdapter(MapperUtils.stripBaseFromDn(user.getDistinguishedName(), baseDC));
@@ -39,11 +38,7 @@ public class LdapEntryTransformer
 
         Map<String, String> userAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
-        String userId = user.getUserId();
-        if (StringUtils.isNotEmpty(userDomain) && userId.endsWith("@" + userDomain))
-        {
-            userId = userId.substring(0, userId.indexOf(userDomain) - 1);
-        }
+        String userId = StringUtils.substringBeforeLast(user.getUserId(), "@");
 
         for (Map.Entry<String, String> attributeEntry : userAttributes.entrySet())
         {
@@ -140,6 +135,8 @@ public class LdapEntryTransformer
         Map<String, String> groupAttributes = config.getAttributes();
         long timestamp = System.currentTimeMillis();
 
+        String groupName = StringUtils.substringBeforeLast(group.getName(), "@");
+
         groupAttributes.forEach((attr, value) ->
         {
             String key = ldapAddGroupPropertiesFile.getProperty(attr);
@@ -152,7 +149,7 @@ public class LdapEntryTransformer
                 context.setAttributeValue(attr, Long.toString(timestamp));
             } else if (key.equals(AcmLdapConstants.LDAP_FULL_NAME_ATTR))
             {
-                context.setAttributeValue(attr, group.getName());
+                context.setAttributeValue(attr, groupName);
             } else if (key.equals(AcmLdapConstants.LDAP_MEMBER_ATTR))
             {
                 // set member attribute which is required to create a group entry

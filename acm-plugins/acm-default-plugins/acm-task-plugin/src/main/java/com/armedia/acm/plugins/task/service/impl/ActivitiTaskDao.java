@@ -120,13 +120,18 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public <T> T readProcessVariable(String businessProcessId, String processVariableKey) throws AcmTaskException
+    public <T> T readProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory) throws AcmTaskException
     {
         ProcessInstance pi = getActivitiRuntimeService().createProcessInstanceQuery().
                 processInstanceId(businessProcessId).includeProcessVariables().singleResult();
         if (pi == null)
         {
-            throw new AcmTaskException(String.format("Process with id %s does not exist or is already closed", businessProcessId));
+            if(readFromHistory == true) {
+                return (T) getProcessVariableFromHistory(businessProcessId, processVariableKey);
+            }
+            else {
+                throw new AcmTaskException(String.format("Can't get process variable %s for business process id %s", processVariableKey, businessProcessId));
+            }
         }
         return (T) pi.getProcessVariables().get(processVariableKey);
     }
@@ -1504,6 +1509,22 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         }
 
         return new ArrayList<>();
+    }
+
+    private <T> T getProcessVariableFromHistory(String processId, String processVariable) throws AcmTaskException {
+        List<HistoricTaskInstance> historyTasks = getActivitiHistoryService()
+                .createHistoricTaskInstanceQuery()
+                .processInstanceId(processId)
+                .includeProcessVariables()
+                .includeTaskLocalVariables()
+                .list();
+
+        if(historyTasks != null && historyTasks.size() > 0)
+        {
+            return (T) historyTasks.get(0).getProcessVariables().get(processVariable);
+        }
+
+        throw new AcmTaskException(String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
     }
 
     public RuntimeService getActivitiRuntimeService()
