@@ -98,6 +98,7 @@
 
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
         <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <!-- event publishers -->

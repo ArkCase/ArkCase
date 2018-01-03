@@ -58,6 +58,8 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         ldapSyncServices.forEach((beanId, service) -> {
             if (beanId.endsWith("_ldapSyncJob"))
             {
+                int n = userIdGroupNameDomainUpdateDao.setUserIdAsDn(service.getLdapSyncConfig().getDirectoryName());
+                log.debug("User dn changed in [{}] rows", n);
                 service.ldapSync();
             }
         });

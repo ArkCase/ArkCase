@@ -51,6 +51,11 @@ angular.module('cases').controller('Cases.InfoController', ['$scope', '$statePar
             return caseTypes;
         });
 
+        ObjectLookupService.getLookupByLookupName("changeCaseStatuses").then(function (caseStatuses) {
+                    $scope.caseStatuses = caseStatuses;
+                    return caseStatuses;
+                });
+
         $scope.openAssigneePickerModal = function () {
             var participant = {
                         id: '',

@@ -1,12 +1,17 @@
+import groovy.transform.Field
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
 import java.nio.charset.StandardCharsets
 
-SPACE_REPLACE = "_0020_";
-COMMA_REPLACE = "_002C_";
-OPENING_PARENTHESIS_REPLACE = "_0028_";
-CLOSING_PARENTHESIS_REPLACE = "_0029_";
+@Field
+def SPACE_REPLACE = "_0020_";
+@Field
+def COMMA_REPLACE = "_002C_";
+@Field
+def OPENING_PARENTHESIS_REPLACE = "_0028_";
+@Field
+def CLOSING_PARENTHESIS_REPLACE = "_0029_";
 
 // include records with no protected object field
 // include records where protected_object_b is false

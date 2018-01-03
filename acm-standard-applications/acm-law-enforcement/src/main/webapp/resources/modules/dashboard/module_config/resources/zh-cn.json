@@ -181,7 +181,7 @@
         "noDataMessage": "目前没有细节"
       },
       "people": {
-        "title": "人",
+        "title": "人员",
         "description": "显示人物细节",
         "noDataMessage": "目前没有人信息可以显示"
       },

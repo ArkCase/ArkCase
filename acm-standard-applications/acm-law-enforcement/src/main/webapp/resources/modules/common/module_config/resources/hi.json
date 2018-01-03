@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(वस्तु चुनें)",
-      "editWithWebDAV": "संपादित करें"
+      "editWithWebDAV": "संपादित करें",
+      "cancelEditing": "संपादन रद्द करें",
+      "newFolder": "नया फोल्डर",
+      "newDocument": "नया दस्तावेज़",
+      "newCorrespondence": "न्यू पत्राचार",
+      "open": "खुला",
+      "email": "ईमेल",
+      "download": "डाउनलोड",
+      "copy": "कॉपी",
+      "cut": "कट गया",
+      "paste": "पेस्ट",
+      "rename": "नाम बदलें",
+      "delete": "हटाएँ",
+      "replace": "बदलने के",
+      "checkout": "चेक आउट",
+      "checkin": "चेक इन",
+      "declareRecord": "रिकार्ड के रूप में घोषित करें"
     },
     "table.columns": {
       "title": "शीर्षक",
