@@ -153,7 +153,9 @@
           "enterLocation": "場所を入力",
           "description": "都市の現在の温度を表示する",
           "location": "場所",
-          "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください"
+          "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください",
+          "zip": "ja_Zip Code",
+          "enterZip": "ja_Enter Zip Code"
         },
         "title": "天気",
         "noDataMessage": "現在、天気情報はありません",

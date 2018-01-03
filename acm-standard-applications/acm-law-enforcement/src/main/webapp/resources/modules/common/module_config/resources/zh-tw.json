@@ -140,8 +140,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "每頁項目數",
-    "pagerCountMiddleLabel": " 的",
-    "pagerCountLabel": " 項目"
+    "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}項"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "選擇",

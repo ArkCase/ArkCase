@@ -158,7 +158,9 @@
           "email": "Enter email",
           "password": "Enter password",
           "confirmation": "Enter your password again",
-          "minLengthForPassword": "7"
+          "_1_": "Numeric values are not valid in resource file. _TO_BE_REMOVED_",
+          "_2_": "If 'minLengthForPassword' is needed, please move it to config.json",
+          "_minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -445,7 +447,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {

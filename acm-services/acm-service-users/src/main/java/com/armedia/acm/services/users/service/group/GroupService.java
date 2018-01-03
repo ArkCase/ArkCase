@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service.group;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectAlreadyExistsException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -19,11 +20,11 @@ public interface GroupService
 {
     AcmGroup findByName(String name);
 
-    AcmGroup findByMatchingName(String name);
-
-    AcmGroup save(AcmGroup groupToSave);
+    AcmGroup save(AcmGroup group);
 
     AcmGroup saveAndFlush(AcmGroup group);
+
+    AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to
@@ -34,36 +35,12 @@ public interface GroupService
     String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
-     * Checks if group with same name exists in the DB on the same tree level
-     *
-     * @param group
-     * @return The new saved group or null if group with given name already exists in the same tree level
-     */
-    AcmGroup checkAndSaveAdHocGroup(AcmGroup group);
-
-    /**
-     * Checks if given string matches the regex .*-UUID-[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}
-     *
-     * @param str
-     * @return true or false
-     */
-    boolean isUUIDPresentInTheGroupName(String str);
-
-    /**
      * @param groupName  list users for this specific group
      * @param userStatus optional value for "status_lcs" field to be included in the solr query
      * @return solr results for user members in specific group
      * @throws MuleException
      */
     String getUserMembersForGroup(String groupName, Optional<String> userStatus, Authentication auth) throws MuleException;
-
-    /**
-     * Creates or updates ad-hoc group based on the client info coming in from CRM
-     *
-     * @param acmGroup group we want to rename
-     * @param newName  group new name
-     */
-    void renameGroup(AcmGroup acmGroup, String newName) throws AcmObjectNotFoundException;
 
     List<AcmGroup> findByUserMember(AcmUser user);
 
@@ -131,5 +108,5 @@ public interface GroupService
 
     AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
-    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException;
+    AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
 }
