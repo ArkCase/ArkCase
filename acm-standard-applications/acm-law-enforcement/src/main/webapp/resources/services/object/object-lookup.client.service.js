@@ -552,21 +552,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
-         * @name getEndpoint
-         * @methodOf services:Object.LookupService
-         *
-         * @description
-         * Query list of identification types
-         *
-         * @returns {Object} An array returned by $resource
-         */
-        Service.getEndpoint = function () {
-            return Service.getLookupByLookupName("endpoint");
-        };
-
-
-        /**
-         * @ngdoc method
          * @name getVersioningState
          * @methodOf services:Object.LookupService
          *
