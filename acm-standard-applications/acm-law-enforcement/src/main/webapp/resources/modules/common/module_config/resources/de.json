@@ -139,9 +139,8 @@
     "noAccessNode.toolTip": "(Kein Zugriff)"
   },
   "common.directive.simplePager": {
-    "rowCountLabel": "Objekte pro Seite",
-    "pagerCountMiddleLabel": " von",
-    "pagerCountLabel": " Artikel"
+    "rowCountLabel": "Artikel pro Seite",
+    "pagerCountLabel": "{{pageCount}} von {{pageTotal}} Artikeln"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Wählen",

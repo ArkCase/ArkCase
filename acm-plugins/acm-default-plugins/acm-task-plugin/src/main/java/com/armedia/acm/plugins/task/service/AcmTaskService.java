@@ -109,10 +109,11 @@ public interface AcmTaskService
      * Retrieves the set of completed tasks for a business process.  Designed for the ArkCase buckslip / routing workflow.
      *
      * @param businessProcessId
+     * @param readFromHistory
      * @return
      * @throws AcmTaskException
      */
-    String getBuckslipPastTasks(String businessProcessId) throws AcmTaskException;
+    String getBuckslipPastTasks(String businessProcessId, boolean readFromHistory) throws AcmTaskException;
 
     /**
      * Retrieves a list of buckslip processes for a given object type and id; any particular object may have zero to
@@ -133,6 +134,13 @@ public interface AcmTaskService
      */
     List<BuckslipProcess> getBuckslipProcessesForChildren(String parentObjectType, Long parentObjectId) throws AcmTaskException;
 
+    /**
+     * Retrieves the ID of the completed business process for some Object ex.CASE_FILE
+     *
+     * @param objectType CASE_FILE, COMPLAINT, ...
+     * @param objectId   Id of the desired object
+     */
+    Long getCompletedBuckslipProcessIdForObjectFromSolr(String objectType, Long objectId, Authentication authentication);
 
     /**
      * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>

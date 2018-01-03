@@ -153,7 +153,9 @@
           "enterLocation": "Ort eingeben",
           "description": "Anzeige der aktuellen Temperatur einer Stadt",
           "location": "Ort",
-          "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen"
+          "insertLocationInConfiguration": "Bitte einen Ort in die Widget-Konfiguration einfügen",
+          "zip": "de_Zip Code",
+          "enterZip": "de_Enter Zip Code"
         },
         "title": "Wetter",
         "noDataMessage": "Derzeit gibt es keine Wetterinfo",

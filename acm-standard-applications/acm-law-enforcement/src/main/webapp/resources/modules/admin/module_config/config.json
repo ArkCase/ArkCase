@@ -521,7 +521,8 @@
           "displayName": "modifier",
           "visible": false
         }
-      ]
+      ],
+      "createNewUrl": "https://activiti.alfresco.com"
     },
     {
       "id": "workflowsHistoryDialogConfig",

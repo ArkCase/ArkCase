@@ -392,7 +392,7 @@ public class BuckslipArkcaseIT
         assertFalse(acmTaskService.isWithdrawable(buckslipProcess.getBusinessProcessId()));
         List<BuckslipFutureTask> buckslipFutureTasks = acmTaskService.getBuckslipFutureTasks(buckslipProcess.getBusinessProcessId());
         assertEquals(3, buckslipFutureTasks.size());
-        assertTrue(acmTaskService.getBuckslipPastTasks(buckslipProcess.getBusinessProcessId()).contains("ann-acm"));
+        assertTrue(acmTaskService.getBuckslipPastTasks(buckslipProcess.getBusinessProcessId(), false).contains("ann-acm"));
 
         // add the approver 'albert-acm'
         BuckslipFutureTask forAlbert = new BuckslipFutureTask();
