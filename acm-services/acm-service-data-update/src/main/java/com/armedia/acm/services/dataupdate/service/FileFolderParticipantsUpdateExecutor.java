@@ -81,18 +81,14 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
             // if there are files or folders without participants (should not happen, but extensions might have files
             // and folders not connected to a AcmContainerEntity), we'll let the Drools rules add some default
             // participants
-            List<AcmFolder> folders = getFolderDao().findAll();
-            folders.stream().filter(folder -> {
-                return folder.getParticipants().size() == 0;
-            }).forEach(folder -> {
+            List<AcmFolder> folders = getFolderDao().getFoldersWithoutParticipants();
+            folders.forEach(folder -> {
                 folder.setModified(new Date());
                 getFolderDao().save(folder);
             });
 
-            List<EcmFile> files = getFileDao().findAll();
-            files.stream().filter(file -> {
-                return file.getParticipants().size() == 0;
-            }).forEach(file -> {
+            List<EcmFile> files = getFileDao().getFilesWithoutParticipants();
+            files.forEach(file -> {
                 file.setModified(new Date());
                 getFileDao().save(file);
             });

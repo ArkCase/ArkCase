@@ -22,7 +22,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.FlushModeType;
 import javax.persistence.PersistenceContext;
 
 import java.util.ArrayList;
@@ -128,7 +127,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> found = dao.findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
+        List<AcmParticipant> found = dao.findParticipantsForObject(objectType, objectId);
 
         assertNotNull(found);
         assertEquals(participantList.size(), found.size());
@@ -160,7 +159,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> secondRound = dao.findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
+        List<AcmParticipant> secondRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 
@@ -210,7 +209,7 @@ public class ParticipantDaoIT
 
         entityManager.flush();
 
-        List<AcmParticipant> thirdRound = dao.findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
+        List<AcmParticipant> thirdRound = dao.findParticipantsForObject(objectType, objectId);
 
         entityManager.flush();
 

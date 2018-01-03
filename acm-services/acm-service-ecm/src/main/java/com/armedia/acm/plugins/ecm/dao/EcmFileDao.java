@@ -100,8 +100,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         }
         catch (NonUniqueResultException e1)
         {
-            LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType
-                    + ". Multiple files found ...", e1);
+            LOG.error("Cannot find unique EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]. Multiple files found ...",
+                    containerId, folderId, fileType, e1);
         }
 
         return result;
@@ -140,6 +140,11 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         getEm().remove(file);
     }
 
+    public List<EcmFile> findByFolderId(Long folderId)
+    {
+        return findByFolderId(folderId, FlushModeType.AUTO);
+    }
+
     public List<EcmFile> findByFolderId(Long folderId, FlushModeType flushModeType)
     {
         String jpql = "SELECT e FROM EcmFile e WHERE e.folder.id=:folderId";
@@ -152,5 +157,15 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         return query.getResultList();
 
+    }
+
+    public List<EcmFile> getFilesWithoutParticipants()
+    {
+        String jpql = "SELECT e FROM EcmFile e WHERE e.fileId  NOT IN " +
+                "(SELECT p.objectId FROM AcmParticipant p WHERE p.objectType ='FILE')";
+
+        TypedQuery<EcmFile> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        return query.getResultList();
     }
 }

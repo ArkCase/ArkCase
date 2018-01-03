@@ -32,10 +32,7 @@ public class SaveTaskAPIController
     public AcmTask createAdHocTask(@PathVariable("taskId") Long taskId, @RequestBody AcmTask in, Authentication authentication,
             HttpSession httpSession) throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Saving task id'" + taskId + "'");
-        }
+        log.info("Saving task id={}", taskId);
 
         try
         {

@@ -9,7 +9,7 @@
             CREATE TABLE DuplicateParticipantIds (cm_participant_id bigint);
 
             INSERT INTO DuplicateParticipantIds (cm_participant_id)
-            SELECT cm_participant_id FROM acm_participant
+            SELECT MAX(cm_participant_id) FROM acm_participant
             WHERE cm_participant_type='owner' 
             GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
 
@@ -25,8 +25,8 @@
             CREATE TABLE ParticipantsOwnerWithNoAccess (cm_participant_id bigint);
 
             INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
-            SELECT cm_participant_id FROM acm_participant
-            WHERE cm_participant_type='owner' || cm_participant_type='No Access'
+            SELECT MAX(cm_participant_id) FROM acm_participant
+            WHERE cm_participant_type='owner' OR cm_participant_type='No Access'
             GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
@@ -41,8 +41,8 @@
             CREATE TABLE ParticipantsAssigneeWithNoAccess (cm_participant_id bigint);
 
             INSERT INTO ParticipantsAssigneeWithNoAccess (cm_participant_id)
-            SELECT cm_participant_id FROM acm_participant
-            WHERE cm_participant_type='assignee' || cm_participant_type='No Access'
+            SELECT MAX(cm_participant_id) FROM acm_participant
+            WHERE cm_participant_type='assignee' OR cm_participant_type='No Access'
             GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);

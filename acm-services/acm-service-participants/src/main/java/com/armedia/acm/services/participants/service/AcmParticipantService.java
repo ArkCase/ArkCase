@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import javax.persistence.FlushModeType;
 import javax.persistence.metamodel.EntityType;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -42,8 +43,13 @@ public class AcmParticipantService
     public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
             throws AcmAccessControlException
     {
+        if (objectType.equals("FILE") || objectType.equals("FOLDER"))
+        {
+            throw new InvalidParameterException("Use EcmFileParticipantService methods to change file and folder participants!");
+        }
+
         AcmParticipant returnedParticipant = getParticipantByLdapIdParticipantTypeObjectTypeObjectId(userId, participantType, objectType,
-                objectId, FlushModeType.AUTO);
+                objectId);
 
         if (returnedParticipant != null)
         {
@@ -79,7 +85,7 @@ public class AcmParticipantService
     private List<String> applyParticipantRules(AcmParticipant participant, CheckParticipantListModel model)
     {
         List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(),
-                participant.getObjectId(), FlushModeType.AUTO);
+                participant.getObjectId());
         if (allParticipantsFromParentObject != null)
         {
             allParticipantsFromParentObject
@@ -98,6 +104,14 @@ public class AcmParticipantService
             return listOfErrors;
         }
         return null;
+    }
+
+    public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String participantLdapId, String participantType,
+            String objectType,
+            Long objectId)
+    {
+        return getParticipantByLdapIdParticipantTypeObjectTypeObjectId(participantLdapId, participantType, objectType, objectId,
+                FlushModeType.AUTO);
     }
 
     public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String participantLdapId, String participantType,
