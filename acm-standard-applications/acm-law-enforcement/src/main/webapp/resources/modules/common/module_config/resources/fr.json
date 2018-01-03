@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(Sélectionner un article)",
-      "editWithWebDAV": "Modifier"
+      "editWithWebDAV": "Modifier",
+      "cancelEditing": "Annuler l'édition",
+      "newFolder": "Nouveau dossier",
+      "newDocument": "Nouveau document",
+      "newCorrespondence": "Nouvelle correspondance",
+      "open": "Ouvrir",
+      "email": "Email",
+      "download": "Télécharger",
+      "copy": "Copie",
+      "cut": "Couper",
+      "paste": "Coller",
+      "rename": "Renommer",
+      "delete": "Effacer",
+      "replace": "Remplacer",
+      "checkout": "registre",
+      "checkin": "Enregistrement",
+      "declareRecord": "Déclarer comme enregistrement(s)"
     },
     "table.columns": {
       "title": "Titre",
