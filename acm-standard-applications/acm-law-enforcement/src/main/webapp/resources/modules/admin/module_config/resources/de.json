@@ -675,10 +675,6 @@
           "label": "Alfresco-Erweiterung verwenden",
           "placeholder": "Alfresco-Erweiterung verwenden"
         },
-        "endpoint": {
-          "label": "Endpunkt",
-          "placeholder": "Endpunkt"
-        },
         "maxIdle": {
           "label": "Maximaler Leerlauf",
           "placeholder": "Maximaler Leerlauf"

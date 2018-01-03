@@ -29,9 +29,6 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
 
             reloadGrid();
         });
-        ObjectLookupService.getEndpoint().then(function (endpoint) {
-            $scope.endpoint = endpoint;
-        });
 
         ObjectLookupService.getVersioningState().then(function (versioningState) {
             $scope.versioningState = versioningState;
@@ -84,8 +81,7 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
                     baseUrl: modalScope.cmisConfig.baseUrl,
                     username: modalScope.cmisConfig.username,
                     password: modalScope.cmisConfig.password,
-                    repositoryId: "",
-                    endpoint: modalScope.cmisConfig.endpoint
+                    repositoryId: ""
                 };
                 CmisConfigService.urlValidation(cmisUrlTest).then(function (response) {
                     DialogService.alert($translate.instant('admin.documentManagement.cmisConfiguration.messages.test.conection.success'));

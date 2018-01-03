@@ -675,10 +675,6 @@
           "label": "Использовать расширение Alfresco",
           "placeholder": "Использовать расширение Alfresco"
         },
-        "endpoint": {
-          "label": "Конечная точка",
-          "placeholder": "Конечная точка"
-        },
         "maxIdle": {
           "label": "Максимальный холостой ход",
           "placeholder": "Максимальный холостой ход"

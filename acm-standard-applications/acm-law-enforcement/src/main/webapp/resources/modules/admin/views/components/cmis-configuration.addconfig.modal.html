@@ -42,15 +42,6 @@
             </label>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.endpoint.label' | translate }}</label>
-            <select class="form-control" type="text" ng-model="cmisConfig.endpoint"
-                    placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.endpoint.placeholder' | translate }}"
-                    required >
-                <option ng-repeat="option in endpoint" value="{{option.key}}">
-                    {{option.value | translate}}</option>
-            </select>
-        </div>
-        <div class="form-group">
             <label>{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.label' | translate }}</label>
             <input class="form-control" type="number" id="number" min="1" ng-model="cmisConfig.maxIdle"
                     placeholder="{{ 'admin.documentManagement.cmisConfiguration.data.maxIdle.placeholder' | translate }}"

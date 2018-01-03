@@ -675,10 +675,6 @@
           "label": "使用Alfresco擴展",
           "placeholder": "使用Alfresco擴展"
         },
-        "endpoint": {
-          "label": "端點",
-          "placeholder": "端點"
-        },
         "maxIdle": {
           "label": "最大空閒",
           "placeholder": "最大空閒"

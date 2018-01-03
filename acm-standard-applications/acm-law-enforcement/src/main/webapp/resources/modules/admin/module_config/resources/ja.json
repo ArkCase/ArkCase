@@ -675,10 +675,6 @@
           "label": "Alfresco Extensionを使用する",
           "placeholder": "Alfresco Extensionを使用する"
         },
-        "endpoint": {
-          "label": "終点",
-          "placeholder": "終点"
-        },
         "maxIdle": {
           "label": "最大アイドル",
           "placeholder": "最大アイドル"

@@ -675,10 +675,6 @@
           "label": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें",
           "placeholder": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें"
         },
-        "endpoint": {
-          "label": "endpoint",
-          "placeholder": "endpoint"
-        },
         "maxIdle": {
           "label": "अधिकतम बेकार",
           "placeholder": "अधिकतम बेकार"

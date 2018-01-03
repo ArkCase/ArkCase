@@ -675,10 +675,6 @@
           "label": "Utiliser Alfresco Extension",
           "placeholder": "Utiliser Alfresco Extension"
         },
-        "endpoint": {
-          "label": "Endpoint",
-          "placeholder": "Endpoint"
-        },
         "maxIdle": {
           "label": "Maximum inactif",
           "placeholder": "Maximum inactif"
