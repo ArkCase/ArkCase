@@ -113,7 +113,7 @@ public class ConfigLookupDao implements LookupDao
                         for (int i = 0; i < jsonArray.size(); i++)
                         {
                             JsonNode lookup = jsonArray.get(i);
-                            if (lookup.get("name").equals(lookupExt.get("name")))
+                            if (lookup.has("name") && lookup.get("name").equals(lookupExt.get("name")))
                             {
                                 jsonArray.set(i, lookupExt);
                                 break;

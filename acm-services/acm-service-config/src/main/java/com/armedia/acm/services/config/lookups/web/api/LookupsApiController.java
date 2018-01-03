@@ -54,7 +54,7 @@ public class LookupsApiController
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    @RequestMapping(value="/{name}", method = RequestMethod.DELETE, produces = {
+    @RequestMapping(value="/{name:.+}", method = RequestMethod.DELETE, produces = {
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_HTML_VALUE})
     @ResponseBody
