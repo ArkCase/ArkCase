@@ -59,6 +59,11 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
         getEm().remove(folder);
     }
 
+    public List<AcmFolder> findSubFolders(Long parentFolderId)
+    {
+        return findSubFolders(parentFolderId, FlushModeType.AUTO);
+    }
+
     public List<AcmFolder> findSubFolders(Long parentFolderId, FlushModeType flushModeType)
     {
         String jpql = "SELECT e FROM AcmFolder e WHERE e.parentFolder.id = :parentFolderId";
@@ -70,5 +75,15 @@ public class AcmFolderDao extends AcmAbstractDao<AcmFolder>
 
         return query.getResultList();
 
+    }
+
+    public List<AcmFolder> getFoldersWithoutParticipants()
+    {
+        String jpql = "SELECT f FROM AcmFolder e WHERE e.id  NOT IN " +
+                "(SELECT p.objectId FROM AcmParticipant p WHERE p.objectType ='FOLDER')";
+
+        TypedQuery<AcmFolder> query = getEm().createQuery(jpql, getPersistenceClass());
+
+        return query.getResultList();
     }
 }

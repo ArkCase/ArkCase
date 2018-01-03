@@ -5,27 +5,27 @@ import java.util.stream.Collectors;
 
 public class AcmParticipantsException extends Exception
 {
-    private List<String> listOfErrors;
+    private List<String> errors;
 
-    public AcmParticipantsException(List<String> listOfErrors, String message)
+    public AcmParticipantsException(List<String> errors, String message)
     {
         super(message);
-        this.listOfErrors = listOfErrors;
+        this.errors = errors;
     }
 
-    public List<String> getListOfErrors()
+    public List<String> getErrors()
     {
-        return listOfErrors;
+        return errors;
     }
 
-    public void setListOfErrors(List<String> listOfErrors)
+    public void setErrors(List<String> listOfErrors)
     {
-        this.listOfErrors = listOfErrors;
+        this.errors = listOfErrors;
     }
 
     @Override
     public String getMessage()
     {
-        return getListOfErrors().stream().map(error -> "[" + error + "]").collect(Collectors.joining("\n", super.getMessage() + "\n", ""));
+        return getErrors().stream().map(error -> "[" + error + "]").collect(Collectors.joining("\n", super.getMessage() + "\n", ""));
     }
 }

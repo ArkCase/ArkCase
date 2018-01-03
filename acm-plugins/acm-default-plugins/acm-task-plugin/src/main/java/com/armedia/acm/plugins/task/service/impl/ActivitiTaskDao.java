@@ -30,7 +30,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.service.AcmUserService;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
@@ -58,18 +57,20 @@ import org.activiti.engine.task.Task;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang.time.DateUtils;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.FlushModeType;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.Principal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
@@ -90,7 +91,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private AcmContainerDao containerFolderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
-    private AcmUserService acmUserService;
     private EcmFileParticipantService fileParticipantService;
 
     private ObjectConverter objectConverter;
@@ -276,7 +276,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                         in.getTaskOutcome().getName());
             }
 
-            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE, in.getWorkflowRequestType());
+            getActivitiTaskService().setVariable(activitiTask.getId(), TaskConstants.VARIABLE_NAME_REQUEST_TYPE,
+                    in.getWorkflowRequestType());
 
             if (in.isBuckslipTask())
             {
@@ -1074,7 +1075,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             retval.setAdhocTask(true);
         }
 
-        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId(), FlushModeType.AUTO);
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", retval.getTaskId());
         retval.setParticipants(participants);
 
         log.trace("Activiti task id '{}' for object type '{}', object id '{}' found for user '{}'", retval.getTaskId(),
@@ -1348,7 +1349,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 acmTask.getAttachedToObjectType(), acmTask.getAttachedToObjectId(), acmTask.getAttachedToObjectName(),
                 acmTask.getAssignee());
 
-        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId(), FlushModeType.AUTO);
+        List<AcmParticipant> participants = getParticipantDao().findParticipantsForObject("TASK", acmTask.getTaskId());
         acmTask.setParticipants(participants);
 
         return acmTask;
@@ -1418,13 +1419,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws  AcmTaskException
+    public AcmTask startBusinessProcess(Map<String, Object> pVars, String businessProcessName) throws AcmTaskException
     {
-            ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
-            Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
-            AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(), activitiTask.getTaskLocalVariables());
+        ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(businessProcessName, pVars);
+        Task activitiTask = getActivitiTaskService().createTaskQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
+        AcmTask createdAcmTask = acmTaskFromActivitiTask(activitiTask, activitiTask.getProcessVariables(),
+                activitiTask.getTaskLocalVariables());
 
-            return createdAcmTask;
+        return createdAcmTask;
     }
 
     private List<String> findCandidateGroups(String taskId)
@@ -1722,11 +1724,6 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     public String getSupportedNotifiableObjectType()
     {
         return TaskConstants.OBJECT_TYPE;
-    }
-
-    public void setAcmUserService(AcmUserService acmUserService)
-    {
-        this.acmUserService = acmUserService;
     }
 
     public EcmFileParticipantService getFileParticipantService()

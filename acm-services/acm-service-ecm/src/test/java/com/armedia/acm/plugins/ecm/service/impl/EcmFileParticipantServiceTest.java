@@ -615,11 +615,10 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testSetFileFolderParticipantsSetsParticipantsCorrectlyOnFile() throws AcmParticipantsException
+    public void testSetFileParticipantsSetsParticipantsCorrectlyOnFile() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "FILE";
         final String participantLdapId1 = "userId1";
         final String participantType1 = "write";
         final String participantLdapId2 = "userId2";
@@ -648,7 +647,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
 
         // when
         replayAll();
-        List<AcmParticipant> returnedParticipants = fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        List<AcmParticipant> returnedParticipants = fileParticipantService.setFileParticipants(objectId, participants);
 
         // then
         verifyAll();
@@ -671,11 +670,10 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     }
 
     @Test
-    public void testSetFileFolderParticipantsSetsParticipantsCorrectlyOnFolder() throws AcmParticipantsException
+    public void testSetFolderParticipantsSetsParticipantsCorrectlyOnFolder() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "FOLDER";
         final String participantLdapId1 = "userId1";
         final String participantType1 = "write";
         final String participantLdapId2 = "userId2";
@@ -709,7 +707,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
 
         // when
         replayAll();
-        List<AcmParticipant> returnedParticipants = fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        List<AcmParticipant> returnedParticipants = fileParticipantService.setFolderParticipants(objectId, participants);
 
         // then
         verifyAll();
@@ -739,27 +737,10 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
     }
 
     @Test(expected = AcmParticipantsException.class)
-    public void testSetFileFolderParticipantsThrowsAcmParticipantsExceptionOnOtherObjectType() throws AcmParticipantsException
+    public void testSetFolderParticipantsThrowsAcmParticipantsExceptionOnDuplicateParticipantsLdapIds() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "OTHER";
-
-        List<AcmParticipant> participants = new ArrayList<>();
-
-        // when
-        fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
-
-        // then
-        fail("AcmParticipantsException should have been thrown!");
-    }
-
-    @Test(expected = AcmParticipantsException.class)
-    public void testSetFileFolderParticipantsThrowsAcmParticipantsExceptionOnDuplicateParticipantsLdapIds() throws AcmParticipantsException
-    {
-        // given
-        final Long objectId = 1L;
-        final String objectType = "FOLDER";
         final String participantLdapId = "userId";
         final String participantType1 = "write";
         final String participantType2 = "read";
@@ -778,18 +759,17 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participants.add(participant2);
 
         // when
-        fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        fileParticipantService.setFolderParticipants(objectId, participants);
 
         // then
         fail("AcmParticipantsException should have been thrown!");
     }
 
     @Test(expected = AcmParticipantsException.class)
-    public void testSetFileFolderParticipantsThrowsAcmParticipantsExceptionOnNullParticipantLdapId() throws AcmParticipantsException
+    public void testSetFolderParticipantsThrowsAcmParticipantsExceptionOnNullParticipantLdapId() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "FOLDER";
         final String participantLdapId = null;
         final String participantType1 = "write";
 
@@ -802,18 +782,17 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participants.add(participant1);
 
         // when
-        fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        fileParticipantService.setFolderParticipants(objectId, participants);
 
         // then
         fail("AcmParticipantsException should have been thrown!");
     }
 
     @Test(expected = AcmParticipantsException.class)
-    public void testSetFileFolderParticipantsThrowsAcmParticipantsExceptionOnNullParticipantType() throws AcmParticipantsException
+    public void testSetFileParticipantsThrowsAcmParticipantsExceptionOnNullParticipantType() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "FOLDER";
         final String participantLdapId = "userId";
         final String participantType1 = null;
 
@@ -826,18 +805,17 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participants.add(participant1);
 
         // when
-        fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        fileParticipantService.setFileParticipants(objectId, participants);
 
         // then
         fail("AcmParticipantsException should have been thrown!");
     }
 
     @Test(expected = AcmParticipantsException.class)
-    public void testSetFileFolderParticipantsThrowsAcmParticipantsExceptionOnInvalidParticipantType() throws AcmParticipantsException
+    public void testSetFileParticipantsThrowsAcmParticipantsExceptionOnInvalidParticipantType() throws AcmParticipantsException
     {
         // given
         final Long objectId = 1L;
-        final String objectType = "FOLDER";
         final String participantLdapId = "userId";
         final String participantType1 = "invalidFileParticipantType";
 
@@ -850,7 +828,7 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         participants.add(participant1);
 
         // when
-        fileParticipantService.setFileFolderParticipants(objectId, objectType, participants);
+        fileParticipantService.setFileParticipants(objectId, participants);
 
         // then
         fail("AcmParticipantsException should have been thrown!");

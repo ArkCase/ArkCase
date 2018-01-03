@@ -60,16 +60,15 @@ public class EcmFileParticipantsAPIControllerTest extends EasyMockSupport
     {
         // given
         Long objectId = 1L;
-        String objectType = "FILE";
         List<AcmParticipant> participants = new ArrayList<>(0);
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockFileParticipantService.setFileFolderParticipants(objectId, objectType, participants)).andReturn(participants);
+        expect(mockFileParticipantService.setFileParticipants(objectId, participants)).andReturn(participants);
         String participantsJson = "[]";
 
         // when
         replayAll();
         MvcResult result = mockMvc.perform(
-                post("/api/latest/service/ecm/participants/{objectType}/{objectId}", objectType, objectId)
+                post("/api/latest/service/ecm/participants/FILE/{objectId}", objectId)
                         .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
@@ -89,16 +88,15 @@ public class EcmFileParticipantsAPIControllerTest extends EasyMockSupport
     {
         // given
         Long objectId = 1L;
-        String objectType = "FOLDER";
         List<AcmParticipant> participants = new ArrayList<>(0);
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockFileParticipantService.setFileFolderParticipants(objectId, objectType, participants)).andReturn(participants);
+        expect(mockFileParticipantService.setFolderParticipants(objectId, participants)).andReturn(participants);
         String participantsJson = "[]";
 
         // when
         replayAll();
         MvcResult result = mockMvc.perform(
-                post("/api/latest/service/ecm/participants/{objectType}/{objectId}", objectType, objectId)
+                post("/api/latest/service/ecm/participants/FOLDER/{objectId}", objectId)
                         .principal(mockAuthentication)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)

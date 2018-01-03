@@ -398,14 +398,10 @@ public class EcmFileParticipantService
     }
 
     /**
-     * Sets the given participants to a FILE or FOLDER. When setting participants to FOLDER, all participants that have
-     * replaceChildrenParticipant set to true are inherited to subfolder and files recursively. All changed files and
-     * folders are persisted in this method.
+     * Sets the given participants to a FILE. The changed file is persisted in this method.
      * 
      * @param objectId
      *            the {@link AcmAssignedObject#getId()} of the object to set participants on
-     * @param objectType
-     *            the {@link AcmAssignedObject#getObjectType()} of the object to set participants on
      * @param participants
      *            a list of participants to set on the object
      * @return the participants set on the object including all participants added by Drools rules
@@ -414,41 +410,52 @@ public class EcmFileParticipantService
      *             when the participants list is not valid
      */
     @Transactional(rollbackFor = Exception.class)
-    public List<AcmParticipant> setFileFolderParticipants(Long objectId, String objectType, List<AcmParticipant> participants)
+    public List<AcmParticipant> setFileParticipants(Long objectId, List<AcmParticipant> participants)
             throws AcmParticipantsException
     {
         validateFileParticipants(participants);
 
-        List<AcmParticipant> participantsToReturn = new ArrayList<>();
-        if (objectType.equals(EcmFileConstants.OBJECT_FOLDER_TYPE))
-        {
-            AcmFolder folder = getFolderService().findById(objectId);
-            setFolderParticipants(folder, participants);
-            // modify the instance to trigger the Solr transformers
-            folder.setModified(new Date());
-            AcmFolder savedFolder = getFolderService().saveFolder(folder);
-            // make sure the session is flushed so that the Drools rules have been run
-            getFileDao().getEm().flush();
-            participantsToReturn = savedFolder.getParticipants();
-        }
-        else if (objectType.equals(EcmFileConstants.OBJECT_FILE_TYPE))
-        {
-            EcmFile file = getFileDao().find(objectId);
-            setFileParticipants(file, participants);
-            // modify the instance to trigger the Solr transformers
-            file.setModified(new Date());
-            EcmFile savedFile = getFileDao().save(file);
-            // make sure the session is flushed so that the Drools rules have been run
-            getFileDao().getEm().flush();
-            participantsToReturn = savedFile.getParticipants();
-        }
-        else
-        {
-            throw new AcmParticipantsException(Arrays.asList(""),
-                    "The called method cannot be executed on objectType {" + objectType + "}!");
-        }
+        EcmFile file = getFileDao().find(objectId);
+        setFileParticipants(file, participants);
+        // modify the instance to trigger the Solr transformers
+        file.setModified(new Date());
+        EcmFile savedFile = getFileDao().save(file);
+        // make sure the session is flushed so that the Drools rules have been run
+        getFileDao().getEm().flush();
 
-        return participantsToReturn;
+        return savedFile.getParticipants();
+    }
+
+    /**
+     * Sets the given participants to a FOLDER. When setting participants to the FOLDER, all participants that have
+     * replaceChildrenParticipant set to true are inherited to subfolder and files recursively. All changed files and
+     * folders are persisted in this method. The changed folder and any subfolder and file changed are persisted in this
+     * method.
+     * 
+     * @param objectId
+     *            the {@link AcmAssignedObject#getId()} of the object to set participants on
+     * @param participants
+     *            a list of participants to set on the object
+     * @return the participants set on the object including all participants added by Drools rules
+     * 
+     * @throws AcmParticipantsException
+     *             when the participants list is not valid
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public List<AcmParticipant> setFolderParticipants(Long objectId, List<AcmParticipant> participants)
+            throws AcmParticipantsException
+    {
+        validateFileParticipants(participants);
+
+        AcmFolder folder = getFolderService().findById(objectId);
+        setFolderParticipants(folder, participants);
+        // modify the instance to trigger the Solr transformers
+        folder.setModified(new Date());
+        AcmFolder savedFolder = getFolderService().saveFolder(folder);
+        // make sure the session is flushed so that the Drools rules have been run
+        getFileDao().getEm().flush();
+
+        return savedFolder.getParticipants();
     }
 
     private void setFileParticipants(EcmFile file, List<AcmParticipant> participants)

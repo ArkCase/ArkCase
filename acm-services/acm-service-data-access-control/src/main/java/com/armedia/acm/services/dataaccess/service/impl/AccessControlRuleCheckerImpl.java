@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -81,14 +82,19 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      *            the identifier for the object instance
      * @param targetType
      *            target type
-     * @param permissions
+     * @param permission
      *            required permissions, separated with "|"
      * @param solrDocument
      *            Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
     @Override
-    public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions,
+    public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument)
+    {
+        return isAccessGranted(authentication, targetId, targetType, Arrays.asList(permission.split("\\|")), solrDocument);
+    }
+
+    private boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions,
             String solrDocument)
     {
         if (accessControlRules == null || accessControlRules.getAccessControlRuleList() == null)

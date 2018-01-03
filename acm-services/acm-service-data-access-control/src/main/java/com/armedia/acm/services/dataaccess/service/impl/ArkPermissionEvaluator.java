@@ -124,15 +124,13 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return false;
         }
 
-        List<String> permissions = Arrays.asList(((String) permission).split("\\|"));
-
         // break here and return true if any of AC rules match (see SBI-956)
-        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, permissions, solrDocument))
+        if (accessControlRuleChecker.isAccessGranted(authentication, id, targetType, (String) permission, solrDocument))
         {
             return true;
         }
 
-        return evaluateAccess(authentication, id, targetType, permissions);
+        return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
     }
 
     @Override

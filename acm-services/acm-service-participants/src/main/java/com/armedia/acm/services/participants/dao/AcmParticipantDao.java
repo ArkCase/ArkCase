@@ -106,6 +106,11 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
                 .anyMatch(participant -> userGroups.contains(participant.getParticipantLdapId()));
     }
 
+    public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId)
+    {
+        return findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
+    }
+
     public List<AcmParticipant> findParticipantsForObject(String objectType, Long objectId, FlushModeType flushModeType)
     {
 
@@ -134,7 +139,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
             keepTheseIds.add(keep.getId());
         }
 
-        List<AcmParticipant> current = findParticipantsForObject(objectType, objectId, FlushModeType.AUTO);
+        List<AcmParticipant> current = findParticipantsForObject(objectType, objectId);
 
         int deleted = 0;
 

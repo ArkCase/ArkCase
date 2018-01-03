@@ -155,11 +155,15 @@
           <property name="url" value="/api/{version}/plugin/ecm/temp/delete"/>
           <property name="requiredPrivilege" ref="filePrivilege"/>
         </bean>        
-        <bean id="saveParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
-            <property name="httpMethod" value="POST"/>
-            <property name="url"
-                      value="/api/{version}/service/ecm/participants/{objectType}/{objectId}"/>
-            <property name="requiredPrivilege" ref="participantPrivilege"/>
+        <bean id="saveFileParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+          <property name="httpMethod" value="POST"/>
+          <property name="url" value="/api/{version}/service/ecm/participants/FILE/{objectId}"/>
+          <property name="requiredPrivilege" ref="participantPrivilege"/>
+        </bean>
+        <bean id="saveFolderParticipants" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+          <property name="httpMethod" value="POST"/>
+          <property name="url" value="/api/{version}/service/ecm/participants/FOLDER/{objectId}"/>
+          <property name="requiredPrivilege" ref="participantPrivilege"/>
         </bean>
       </list>
     </property>

@@ -4,8 +4,6 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 
 import org.springframework.security.core.Authentication;
 
-import java.util.List;
-
 /**
  * Check if particular user is granted access to a given object.
  * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
@@ -22,12 +20,12 @@ public interface AccessControlRuleChecker
      * @param targetType
      *            target type
      * @param permission
-     *            required permission
+     *            required permissions, separated with "|"
      * @param solrDocument
      *            Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
-    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions, String solrDocument);
+    boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument);
 
     /**
      * Getter method.

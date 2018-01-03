@@ -29,7 +29,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +90,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("completeTask"), solrDocument);
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -106,7 +105,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("completeTask"), solrDocument);
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -126,7 +125,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("completeTask"), solrDocument);
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -146,7 +145,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "COMPLAINT",
-                Collections.singletonList("completeTask"), solrDocument);
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -175,7 +174,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("editAttachments"), solrDocument);
+                "editAttachments", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -201,7 +200,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -227,7 +226,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -253,7 +252,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -278,7 +277,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -304,7 +303,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -330,7 +329,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -356,7 +355,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -381,7 +380,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("createTask"), solrDocument);
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -398,7 +397,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         mockExpectsWhenParticipantTypesTest(accessControlRule, grantedAuthorities);
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocument);
+                "restrictCase", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -421,7 +420,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ann-acm\", \"type\":\"supervisor\"},{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocument);
+                "restrictCase", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -442,7 +441,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_ADMINISTRATOR\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocument);
+                "restrictCase", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -463,7 +462,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         solrResultJson.put("acm_participants_lcs", "[{\"ldapId\":\"ACM_INVESTIGATOR_DEV\", \"type\":\"owning group\"}," +
                 "{\"ldapId\":\"ian-acm\", \"type\":\"assignee\"}]");
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocumentJson.toString());
+                "restrictCase", solrDocumentJson.toString());
         assertFalse(granted);
         verifyAll();
     }
@@ -479,7 +478,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         mockExpectsWhenParticipantTypesTest(accessControlRule, grantedAuthorities);
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocument);
+                "restrictCase", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -495,7 +494,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         mockExpectsWhenParticipantTypesTest(accessControlRule, grantedAuthorities);
 
         boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
-                Collections.singletonList("restrictCase"), solrDocument);
+                "restrictCase", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
