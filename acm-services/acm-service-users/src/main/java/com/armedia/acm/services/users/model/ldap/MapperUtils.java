@@ -1,5 +1,14 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.ldap.BadLdapGrammarException;
+import org.springframework.ldap.core.DirContextAdapter;
+import org.springframework.ldap.core.DistinguishedName;
+
+import javax.naming.directory.BasicAttribute;
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,16 +18,6 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
-import javax.naming.directory.BasicAttribute;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.ldap.BadLdapGrammarException;
-import org.springframework.ldap.core.DirContextAdapter;
-import org.springframework.ldap.core.DistinguishedName;
 
 /**
  * Common operations in mapping LDAP attributes
@@ -50,12 +49,17 @@ public class MapperUtils
 
     public static Stream<String> mapAttributes(String[] elements, Function<String, String> mapper)
     {
-        return Arrays.stream(elements).map(mapper);
+        return Arrays.stream(elements)
+                .map(mapper);
     }
 
     public static String getAttribute(DirContextAdapter adapter, String... names)
     {
-        return Arrays.stream(names).filter(adapter::attributeExists).map(adapter::getStringAttribute).findFirst().orElse(null);
+        return Arrays.stream(names)
+                .filter(adapter::attributeExists)
+                .map(adapter::getStringAttribute)
+                .findFirst()
+                .orElse(null);
     }
 
     public static String stripBaseFromDn(String dn, String base)
@@ -95,7 +99,8 @@ public class MapperUtils
         return String.format("\"%s\"", str).getBytes("UTF-16LE");
     }
 
-    public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter -> {
+    public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter ->
+    {
         String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
         if (expirationTimePasswordAttr != null)
         {
@@ -117,7 +122,8 @@ public class MapperUtils
         return null;
     };
 
-    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter -> {
+    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter ->
+    {
         String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
         String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");
         if (shadowLastChangeAttr != null && shadowMaxAttr != null)
@@ -149,8 +155,8 @@ public class MapperUtils
         }
     };
 
-    public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password -> new BasicAttribute("userPassword",
-            password.getBytes());
+    public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password ->
+            new BasicAttribute("userPassword", password.getBytes());
 
     public static String generatePassword(int minLength)
     {
