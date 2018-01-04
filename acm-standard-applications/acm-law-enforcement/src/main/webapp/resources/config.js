@@ -41,7 +41,8 @@ var ApplicationConfiguration = (function () {
         "com.2fdevs.videogular.plugins.poster",
         "com.2fdevs.videogular.plugins.buffering",
         "tmh.dynamicLocale",
-        "ab-base64"
+        "ab-base64",
+        "angular-cache"
     ];
 
     // Init list of errors that should not be shown to the end user

@@ -22,6 +22,7 @@ angular
                 $httpProvider.interceptors.push(httpInterceptor);
 
                 $httpProvider.interceptors.push(noCacheInterceptor);
+                //$httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
 
                 $httpProvider.defaults.transformResponse.splice(0, 0, function (data, headersGetter) {
                     var contentType = headersGetter()['content-type'] || '';
@@ -31,6 +32,7 @@ angular
                     return data;
                 });
 
+                //TODO delete below method noCacheInterceptor, if Cache-Control: no-cache works on every browser.
                 function noCacheInterceptor() {
                     return {
                         request: function (config) {
@@ -187,12 +189,20 @@ angular
                     AnalyticsProvider.setPageEvent('$stateChangeSuccess');
                 }
             }
-        ]).run(['$translate', '$translatePartialLoader', '$rootScope',
-    function ($translate, $translatePartialLoader, $rootScope) {
+        ]).run(['$translate', '$translatePartialLoader', '$rootScope', '$http', 'CacheFactory',
+    function ($translate, $translatePartialLoader, $rootScope, $http, CacheFactory) {
         $translatePartialLoader.addPart('core');
         $translatePartialLoader.addPart('welcome');
         $translate.refresh();
         $rootScope.utils = utils;
+        /*
+         *this is cache for all $http calls if cache is enabled
+         */
+        $http.defaults.cache = CacheFactory('defaultCache', {
+            maxAge: 10 * 1000, // Items added to this cache expire after 10 seconds
+            cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+            deleteOnExpire: 'aggressive' // Items will be deleted from this cache when they expire
+        });
     }
 ]);
 
