@@ -55,12 +55,6 @@ public class DispositionToSolrTransformer implements AcmObjectToSolrDocTransform
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Disposition in)
-    {
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Disposition.class.equals(acmObjectType);
