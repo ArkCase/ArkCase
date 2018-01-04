@@ -189,7 +189,6 @@ angular.module('directives').controller('directives.DocTreeEmailDialogController
             $scope.emailSendConfiguration = angular.copy(params.emailSendConfiguration);
             $scope.summernoteOptions = {
                 focus: true,
-                dialogsInBody: true,
                 height: 300
             };
             $scope.nodes = _.filter(params.nodes, function (node) {
