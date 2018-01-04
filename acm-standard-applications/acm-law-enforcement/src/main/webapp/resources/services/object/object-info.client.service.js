@@ -33,7 +33,7 @@ angular.module('services').factory('Object.InfoService', ['$resource', 'UtilServ
                 method: 'GET',
                 //url: 'api/latest/plugin/casefile/byId/:id',
                 url: 'api/latest/plugin/:type/byId/:id',
-                cache: false,
+                cache: true,
                 isArray: false
             }
 
