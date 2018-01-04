@@ -135,13 +135,7 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
             // Somehow "org.apache.commons.beanutils.BeanUtilBean.copyProperties(..)" is not finding
             // "additionalProperties" property. Copy them explicitly here.
-            if (solrAdvancedSearchDocument.getAdditionalProperties() != null)
-            {
-                for (Map.Entry<String, Object> entry : solrAdvancedSearchDocument.getAdditionalProperties().entrySet())
-                {
-                    solr.setAdditionalProperty(entry.getKey(), entry.getValue());
-                }
-            }
+            solr.getAdditionalProperties().putAll(solrAdvancedSearchDocument.getAdditionalProperties());
         }
 
         List<String> skipAdditionalPropertiesInURL = new ArrayList<>();
