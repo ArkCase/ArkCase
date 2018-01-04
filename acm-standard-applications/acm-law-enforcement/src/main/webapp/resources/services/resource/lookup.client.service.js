@@ -19,6 +19,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , method: "GET"
                 , cache: false
             }
+            , _getLookups: {
+                url: "api/latest/service/config/lookups"
+                , method: "GET"
+                , cache: false
+            }
             , _getLookup: {
                 url: "api/latest/service/config/:name"
                 , method: "GET"
@@ -31,6 +36,11 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
                 , headers: {
                     "Content-Type": "application/json"
                 }
+            }
+            , _deleteLookup: {
+                url: "api/latest/service/config/lookups/:name"
+                , method: "DELETE"
+                , cache: false
             }
 
             /**
@@ -393,18 +403,32 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             var configMap = cacheConfigMap.get();
             var lookups = Util.goodMapValue(configMap, 'lookups', null);
             return Util.serviceCall({
-                service: Service._getConfig
-                , param: {name: 'lookups'}
+                service: Service._getLookups
                 , result: lookups
-                , onSuccess: function (data) {
-                    lookups = Util.omitNg(data);
-                    if (Service.validateLookups(lookups)) {
-                        configMap = configMap || {};
-                        configMap['lookups'] = lookups;
-                        cacheConfigMap.set(configMap);
-                        return lookups;
-                    }
-                }
+                , onSuccess: handleSaveLookupSuccess
+            });
+        };
+
+
+        /**
+         * @ngdoc method
+         * @name deleteLookup
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Delete lookup
+         *
+         * @returns {Object} Promise
+         */
+
+        Service.deleteLookup = function(lookupName){
+            var cacheConfigMap = new Store.SessionData(Service.SessionCacheNames.CONFIG_MAP);
+            var configMap = cacheConfigMap.get();
+            var lookups = Util.goodMapValue(configMap, 'lookups', null);
+            return Util.serviceCall({
+                service: Service._deleteLookup
+                , param: {name: lookupName}
+                , onSuccess: handleSaveLookupSuccess
             });
         };
 
@@ -450,25 +474,25 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
 
             // check if the lookups are array objects
             if (data.standardLookup) {
-                for (var i = 0; i < data.standardLookup.length; i++) {
-                    if (!Util.isArray(data.standardLookup[i][Object.keys(data.standardLookup[i])[0]])) {
+                angular.forEach(data.standardLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             if (data.nestedLookup) {
-                for (var i = 0; i < data.nestedLookup.length; i++) {
-                    if (!Util.isArray(data.nestedLookup[i][Object.keys(data.nestedLookup[i])[0]])) {
+                angular.forEach(data.nestedLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             if (data.inverseValuesLookup) {
-                for (var i = 0; i < data.inverseValuesLookup.length; i++) {
-                    if (!Util.isArray(data.inverseValuesLookup[i][Object.keys(data.inverseValuesLookup[i])[0]])) {
+                angular.forEach(data.inverseValuesLookup, function (value, key) {
+                    if (!Util.isArray(value.entries)) {
                         return false;
                     }
-                }
+                });
             }
             return true;
         };
