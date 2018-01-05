@@ -1038,8 +1038,9 @@ public class ProxyServlet extends HttpServlet
         {
             case MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY: // "MDC_USER_ID"
                 return getMDCUserIdValue();
-            case MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY: // "MDC_USER_ID"
-                return getMDCUserIdValue();
+            case MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY: // "MDC_USER_ID
+                String userId = StringUtils.substringBeforeLast(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), "@");
+                return userId;
             default:
                 throw new RuntimeException("Header variable name '" + headerVariableName + "' unknown!");
         }
@@ -1052,7 +1053,7 @@ public class ProxyServlet extends HttpServlet
      */
     public String getMDCUserIdValue()
     {
-        String userId = StringUtils.substringBeforeLast(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), "@");
+        String userId = MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY);
         if ((userId == null) || MDCConstants.ANONYMOUS_USER.equals(userId))
         {
             // should not happen
