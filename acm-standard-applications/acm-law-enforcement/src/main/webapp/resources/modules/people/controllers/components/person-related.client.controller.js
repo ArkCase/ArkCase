@@ -199,6 +199,7 @@ angular.module('people').controller('People.RelatedController', ['$scope', '$q',
 
                 rowEntity.target_object.first_name_lcs = target.givenName;
                 rowEntity.target_object.last_name_lcs = target.familyName;
+                rowEntity.target_object.full_name_lcs = target.familyName + " " + target.givenName;
                 rowEntity.target_object.default_organization_s = target.defaultOrganization ? target.defaultOrganization.organization.organizationValue : "";
                 rowEntity.target_object.default_phone_s = formatPhone(target.defaultPhone);
                 rowEntity.target_object.default_location_s = formatAddress(target.defaultAddress);
