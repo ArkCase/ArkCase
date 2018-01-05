@@ -494,22 +494,25 @@
         "concur": "同意",
         "nonConcur": "不同意"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "ACM文档工作流程"
+      },
       "reportStates": {
-        "draft": "cn_Draft",
-        "inApproval": "cn_In Approval",
-        "active": "cn_Active",
-        "inActive": "cn_Inactive",
-        "closed": "cn_Closed"
+        "draft": "草案",
+        "inApproval": "在审批中",
+        "active": "在使用",
+        "inActive": "待用",
+        "closed": "关闭"
       },
       "auditReportNames": {
-        "all": "All",
-        "case_file": "Case",
-        "complaint": "Complaint",
-        "task": "Task",
-        "file": "File",
-        "document": "Document",
-        "person": "Person",
-        "organization": "Organization"
+        "all": "全部",
+        "case_file": "案件",
+        "complaint": "投诉",
+        "task": "任务",
+        "file": "文件",
+        "document": "文档",
+        "person": "人员",
+        "organization": "组织"
       }
     },
     "userInfo": {

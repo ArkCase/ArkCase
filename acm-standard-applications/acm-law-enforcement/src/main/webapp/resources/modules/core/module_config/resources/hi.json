@@ -494,15 +494,25 @@
         "concur": "एक मत होना",
         "nonConcur": "सहमत न करें"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "एसीएम दस्तावेज़ वर्कफ़्लो"
+      },
+      "reportStates": {
+        "draft": "प्रारूप",
+        "inApproval": "अनुमोदन में",
+        "active": "सक्रिय",
+        "inActive": "निष्क्रिय",
+        "closed": "बन्द है"
+      },
       "auditReportNames": {
-        "all": "All",
-        "case_file": "Case",
-        "complaint": "Complaint",
-        "task": "Task",
-        "file": "File",
-        "document": "Document",
-        "person": "Person",
-        "organization": "Organization"
+        "all": "सब",
+        "case_file": "मामला",
+        "complaint": "शिकायत",
+        "task": "कार्य",
+        "file": "फ़ाइल",
+        "document": "दस्तावेज़",
+        "person": "व्यक्ति",
+        "organization": "संगठन"
       }
     },
     "userInfo": {

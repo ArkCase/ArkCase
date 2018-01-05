@@ -494,15 +494,25 @@
         "concur": "Concordo",
         "nonConcur": "Não concordo"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Fluxo de trabalho do documento ACM"
+      },
+      "reportStates": {
+        "draft": "Esboço",
+        "inApproval": "Em Aprovação",
+        "active": "Ativo",
+        "inActive": "Inativo",
+        "closed": "Fechadas"
+      },
       "auditReportNames": {
-        "all": "All",
-        "case_file": "Case",
-        "complaint": "Complaint",
-        "task": "Task",
-        "file": "File",
-        "document": "Document",
-        "person": "Person",
-        "organization": "Organization"
+        "all": "Todos",
+        "case_file": "Caso",
+        "complaint": "Queixa",
+        "task": "Tarefa",
+        "file": "Arquivo",
+        "document": "Documento",
+        "person": "Pessoa",
+        "organization": "Organização"
       }
     },
     "userInfo": {
