@@ -495,7 +495,7 @@
         "nonConcur": "Non-Concur"
       },
       "businessProcessTypes": {
-        "acmDocumentWorkflow": "Acm Document Workflow"
+        "acmDocumentWorkflow": "ACM Document Workflow"
       },
       "reportStates": {
         "draft": "Draft",

@@ -475,7 +475,7 @@
       },
       "changeCase": {
         "statuses": {
-          "active": "Активный",
+          "active": "ктивный",
           "inactive": "Неактивный",
           "closed": "Закрыто",
           "deleted": "Удаленный"
@@ -494,15 +494,25 @@
         "concur": "Совпадать",
         "nonConcur": "Отклонять"
       },
+      "businessProcessTypes": {
+        "acmDocumentWorkflow": "Рабочий процесс документа ACM"
+      },
+      "reportStates": {
+        "draft": "Проект",
+        "inApproval": "В утверждении",
+        "active": "Активный",
+        "inActive": "Неактивный",
+        "closed": "Закрыто"
+      },
       "auditReportNames": {
-        "all": "All",
-        "case_file": "Case",
-        "complaint": "Complaint",
-        "task": "Task",
-        "file": "File",
-        "document": "Document",
-        "person": "Person",
-        "organization": "Organization"
+        "all": "Все",
+        "case_file": "случай",
+        "complaint": "жалоба",
+        "task": "задача",
+        "file": "файл",
+        "document": "Документ",
+        "person": "Человек",
+        "organization": "организация"
       }
     },
     "userInfo": {
