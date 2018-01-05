@@ -1,7 +1,14 @@
 'use strict';
 
-angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', '$modal', 'Directives.CalendarUtilService', 'params',
-    function($scope, $modalInstance, CalendarService, MessageService, DateService, coreCalendarConfig, $modal, CalendarUtilService, params) {
+angular.module('directives').controller('Directives.CoreCalendarNewEventModalController', ['$scope', '$modal', '$modalInstance'
+    , 'Object.CalendarService', 'MessageService', 'Util.DateService', 'coreCalendarConfig', 'Directives.CalendarUtilService'
+    , 'params', 'Helper.LocaleService'
+    , function($scope, $modal, $modalInstance
+        , CalendarService, MessageService, DateService, coreCalendarConfig, CalendarUtilService
+        , params, LocaleHelper
+    ) {
+        new LocaleHelper.Locale({scope: $scope});
+
         $scope.objectId = params.objectId;
         $scope.objectType = params.objectType;
         $scope.updateMaster = params.updateMaster;
