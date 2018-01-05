@@ -1184,7 +1184,7 @@
     {
       "id": "newFutureTask",
       "userOrGroupSearch": {
-        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
         "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       },
       "groupSearch": {
@@ -1267,7 +1267,7 @@
         }
       ],
       "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
         "userFacetExtraFilter": "&fq=\"name\": "
       }
     },
