@@ -82,16 +82,16 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware
 
                 if (result.getBody().isSuccess())
                 {
-                    syncResult.setMessage("Solr sync with LDAP server succeeded.");
-                    log.debug("Solr sync with LDAP server succeeded.");
+                    syncResult.setMessage("Alfresco sync with LDAP server succeeded.");
+                    log.debug("Alfresco sync with LDAP server succeeded.");
                 }
                 else
                 {
-                    syncResult.setMessage("Solr sync with LDAP server failed.");
-                    log.warn("Solr sync with LDAP server failed.");
+                    syncResult.setMessage("Alfresco sync with LDAP server failed.");
+                    log.warn("Alfresco sync with LDAP server failed.");
                 }
 
-                syncResult.setService("Solr");
+                syncResult.setService("Alfresco");
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String userName = authentication.getName();
                 syncResult.setUser(userName);
@@ -103,15 +103,15 @@ public class AlfrescoLdapSyncer implements ApplicationEventPublisherAware
             @Override
             public void onFailure(Throwable ex)
             {
-                log.error("Could no t initiate Solr sync with LDAP server due to: [{}].", ex.getMessage());
+                log.error("Could no t initiate Alfresco sync with LDAP server due to: [{}].", ex.getMessage());
 
                 AcmServiceLdapSyncResult syncResult = new AcmServiceLdapSyncResult();
-                syncResult.setService("Solr");
+                syncResult.setService("Alfresco");
                 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
                 String userName = authentication.getName();
                 syncResult.setUser(userName);
                 syncResult.setResult(false);
-                syncResult.setMessage("Sync with Solr failed due to: [" + ex.getMessage() + "]");
+                syncResult.setMessage("Sync with Alfresco failed due to: [" + ex.getMessage() + "]");
 
                 applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(syncResult));
             }
