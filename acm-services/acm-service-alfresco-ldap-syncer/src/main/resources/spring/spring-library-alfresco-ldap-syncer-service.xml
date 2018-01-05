@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+
+    <task:scheduler id="taskScheduler" pool-size="1"/>
+    <task:executor id="taskExecutor" pool-size="20"/>
+
+    <bean id="alfrescoLdapSyncer" class="com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer">
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="alfrescoPropertiesResource" value="file:${user.home}/.arkcase/acm/alfrescoLdapSyncerService.properties"/>
+    </bean>
+
+</beans>
