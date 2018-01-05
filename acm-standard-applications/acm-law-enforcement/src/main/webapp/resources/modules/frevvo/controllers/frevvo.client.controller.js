@@ -122,7 +122,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             }
 
             params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-            params.filter = '"Object Type": USER' + owningGroup;
+            params.filter = '"Object Type": USER' + '&fq="status_lcs": "VALID"' + owningGroup;
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
