@@ -138,6 +138,7 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapGroupDao" ref="springLdapGroupDao"/>
         <property name="groupService" ref="groupService"/>
+        <property name="alfrescoLdapSyncer" ref="alfrescoLdapSyncer"/>
     </bean>
 
     <bean id="ldapGroupService" class="com.armedia.acm.services.users.service.group.LdapGroupService">

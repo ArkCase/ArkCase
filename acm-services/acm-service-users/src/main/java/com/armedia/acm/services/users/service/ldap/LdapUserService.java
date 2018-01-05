@@ -1,7 +1,26 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
@@ -20,22 +39,6 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LdapUserService implements ApplicationEventPublisherAware
 {
@@ -54,6 +57,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
 
     private ApplicationEventPublisher eventPublisher;
+
+    private AlfrescoLdapSyncer alfrescoLdapSyncer;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
@@ -78,8 +83,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser createLdapUser(UserDTO userDto, String directoryName)
-            throws AcmUserActionFailedException, AcmLdapActionFailedException
+    public AcmUser createLdapUser(UserDTO userDto, String directoryName) throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
@@ -90,7 +94,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if (user == null)
         {
             user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
-        } else
+        }
+        else
         {
             user = userDto.updateAcmUser(user);
         }
@@ -102,7 +107,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setUid(userDto.getUserId());
-        } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
+        }
+        else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setsAMAccountName(userDto.getUserId());
         }
@@ -137,9 +143,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             userDao.save(acmUser);
             userDao.getEntityManager().flush();
 
-            Set<String> groupDns = groups.stream()
-                    .filter(AcmGroup::isLdapGroup)
-                    .map(AcmGroup::getDistinguishedName)
+            Set<String> groupDns = groups.stream().filter(AcmGroup::isLdapGroup).map(AcmGroup::getDistinguishedName)
                     .collect(Collectors.toSet());
 
             ldapGroupDao.addMemberToGroups(acmUser.getDistinguishedName(), groupDns, ldapSyncConfig);
@@ -151,6 +155,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
             ldapUserDao.deleteUserEntry(acmUser.getDistinguishedName(), ldapSyncConfig);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
+
+        alfrescoLdapSyncer.initiateSync();
+
         return acmUser;
     }
 
@@ -243,8 +250,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private AcmLdapSyncConfig getLdapSyncConfig(String directoryName)
     {
-        return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
+        return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(String.format("%s_sync", directoryName));
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -304,29 +310,33 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     /**
-     * Check if user already exists with the same user identifier.
-     * If the user exists and its status is either "INVALID" or "DELETED",
-     * we need to remove that user's group membership
+     * Check if user already exists with the same user identifier. If the user exists and its status is either "INVALID"
+     * or "DELETED", we need to remove that user's group membership
      *
-     * @param userId user identifier
-     * @throws NameAlreadyBoundException if a user exists and its status is "VALID"
+     * @param userId
+     *            user identifier
+     * @throws NameAlreadyBoundException
+     *             if a user exists and its status is "VALID"
      */
     private AcmUser checkExistingUser(String userId)
     {
         AcmUser existing = userDao.findByUserId(userId);
-        if (existing == null) return null;
+        if (existing == null)
+        {
+            return null;
+        }
 
         if (AcmUserState.VALID == existing.getUserState())
         {
             throw new NameAlreadyBoundException(null);
-        } else
+        }
+        else
         {
             // INVALID or DELETED user, remove current group membership
             // we have to do this, otherwise new user will be associated with new groups,
             // but also existing ones (which we do not want)
             // TODO: AcmUser.setGroups() should take care of that
-            existing.getGroups().forEach(group ->
-            {
+            existing.getGroups().forEach(group -> {
                 group.removeUserMember(existing);
                 groupService.save(group);
             });
@@ -373,5 +383,14 @@ public class LdapUserService implements ApplicationEventPublisherAware
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
     {
         eventPublisher = applicationEventPublisher;
+    }
+
+    /**
+     * @param alfrescoLdapSyncer
+     *            the alfrescoLdapSyncer to set
+     */
+    public void setAlfrescoLdapSyncer(AlfrescoLdapSyncer alfrescoLdapSyncer)
+    {
+        this.alfrescoLdapSyncer = alfrescoLdapSyncer;
     }
 }
