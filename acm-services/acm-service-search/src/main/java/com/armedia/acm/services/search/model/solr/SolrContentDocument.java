@@ -48,7 +48,7 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
                 if (getSkipAdditionalPropertiesInURL() != null && !getSkipAdditionalPropertiesInURL().contains(entry.getKey()))
                 {
 
-                    url += "&literal." + entry.getKey() + "=" + entry.getValue() instanceof String ? encode((String) entry.getValue()) : entry.getValue();
+                    url += "&literal." + entry.getKey() + "=" + (entry.getValue() instanceof String ? encode((String) entry.getValue()) : entry.getValue());
                 }
             }
         }
@@ -59,6 +59,12 @@ public class SolrContentDocument extends SolrAdvancedSearchDocument
     private String encode(String str)
     {
         String encodedStr = "";
+
+        if (str == null)
+        {
+            return  encodedStr;
+        }
+
         try
         {
             encodedStr = URLEncoder.encode(str,"UTF-8");

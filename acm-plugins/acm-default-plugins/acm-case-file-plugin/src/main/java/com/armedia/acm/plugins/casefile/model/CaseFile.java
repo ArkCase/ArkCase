@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstants;
+import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.milestone.model.AcmMilestone;
@@ -256,6 +257,12 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         for (PersonAssociation persAssoc : personAssociations)
         {
             personAssociationResolver(persAssoc);
+        }
+        for (OrganizationAssociation orgAssoc : organizationAssociations)
+        {
+            orgAssoc.setParentId(getId());
+            orgAssoc.setParentType(getObjectType());
+            orgAssoc.setParentTitle(getCaseNumber());
         }
         for (AcmParticipant ap : getParticipants())
         {
