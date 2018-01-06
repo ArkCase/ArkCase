@@ -50,7 +50,7 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             return complaintTypes;
         });
 
-        ObjectLookupService.getLookupByLookupName("complaintsStatuses").then(function (complaintStatuses) {
+        ObjectLookupService.getLookupByLookupName("complaintStatuses").then(function (complaintStatuses) {
             $scope.complaintStatuses = complaintStatuses;
             return complaintStatuses;
         });
