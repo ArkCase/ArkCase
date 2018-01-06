@@ -20,6 +20,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
@@ -139,6 +140,7 @@ public class CloseComplaintRequestService
         existingCaseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), existingCaseFile);
+        addOrganizationsToCaseFile(updatedComplaint.getOrganizationAssociations(), existingCaseFile);
 
         // here we need a full Authentication object
         Authentication auth = new UsernamePasswordAuthenticationToken(userId, userId);
@@ -216,6 +218,32 @@ public class CloseComplaintRequestService
         }
     }
 
+    private void addOrganizationsToCaseFile(List<OrganizationAssociation> organizationAssociations, CaseFile caseFile)
+    {
+        if (organizationAssociations == null)
+        {
+            return;
+        }
+
+        for (OrganizationAssociation oa : organizationAssociations)
+        {
+            OrganizationAssociation oaCopy = new OrganizationAssociation();
+            oaCopy.setAssociationType(oa.getAssociationType());
+            oaCopy.setOrganization(oa.getOrganization());
+            oaCopy.setParentId(caseFile.getId());
+            oaCopy.setParentType(caseFile.getObjectType());
+            oaCopy.setParentTitle(caseFile.getCaseNumber());
+            oaCopy.setDescription(oa.getDescription());
+
+            if (caseFile.getOrganizationAssociations() == null)
+            {
+                caseFile.setOrganizationAssociations(new ArrayList<>());
+            }
+
+            caseFile.getOrganizationAssociations().add(oaCopy);
+        }
+    }
+
     private boolean shallWeAddComplaintToExistingCase(CloseComplaintRequest updatedRequest)
     {
         if (updatedRequest.getDisposition() == null)
@@ -251,6 +279,7 @@ public class CloseComplaintRequestService
         caseFile.addChildObject(originalComplaint);
 
         addPersonsToCaseFile(updatedComplaint.getPersonAssociations(), caseFile);
+        addOrganizationsToCaseFile(updatedComplaint.getOrganizationAssociations(), caseFile);
 
         log.debug("About to save case file");
 
