@@ -46,7 +46,14 @@ public class GetGroupMembersAPIController
                                   Authentication auth) throws Exception
     {
 
-        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+        try
+        {
+            groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+        }
+        catch (IllegalArgumentException e)
+        {
+            LOG.debug("Group ID [{}] is not URL encoded string or it contains not allowed characters. Proceed with original string", groupId);
+        }
 
         LOG.info("Taking group members from Solr for group ID = {}", groupId);
 

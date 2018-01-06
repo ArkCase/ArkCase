@@ -50,6 +50,11 @@ angular.module('complaints').controller('Complaints.InfoController', ['$scope', 
             return complaintTypes;
         });
 
+        ObjectLookupService.getLookupByLookupName("complaintsStatuses").then(function (complaintStatuses) {
+            $scope.complaintStatuses = complaintStatuses;
+            return complaintStatuses;
+        });
+
         $scope.picker = {opened: false};
         $scope.onPickerClick = function () {
             $scope.picker.opened = true;
