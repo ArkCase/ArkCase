@@ -49,6 +49,6 @@ angular.module('complaints').controller('Complaints.NotesController', ['$scope',
             if ($scope.notesInit) {
                 $scope.notesInit.noteTitle = $translate.instant("complaints.comp.notes.title");
             }
-        }
+        };
     }
 ]);
