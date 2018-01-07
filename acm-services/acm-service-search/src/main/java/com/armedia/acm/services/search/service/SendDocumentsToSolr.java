@@ -2,10 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
+import com.armedia.acm.services.search.model.solr.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.mule.api.MuleException;
@@ -46,13 +43,12 @@ public class SendDocumentsToSolr
         sendToJmsQueue(solrDocuments, "jms://solrQuickSearch.in");
     }
 
-    public void sendSolrContentFileIndexDocuments(List<SolrAdvancedSearchDocument> solrDocuments)
+    public void sendSolrContentFileIndexDocuments(List<SolrContentDocument> solrDocuments)
     {
         if (solrDocuments != null)
         {
-            for (SolrAdvancedSearchDocument doc : solrDocuments)
+            for (SolrContentDocument doc : solrDocuments)
             {
-
                 sendToJmsQueue(doc, "jms://solrContentFile.in");
             }
 
@@ -119,7 +115,7 @@ public class SendDocumentsToSolr
         }
     }
 
-    private void sendToJmsQueue(SolrAdvancedSearchDocument solrDocument, String queueName)
+    private void sendToJmsQueue(SolrContentDocument solrDocument, String queueName)
     {
         try
         {
@@ -127,6 +123,7 @@ public class SendDocumentsToSolr
 
             Map<String, Object> messageProperties = new HashMap<>();
             messageProperties.put("additionalProperties", solrDocument.getAdditionalProperties());
+            messageProperties.put("url", solrDocument.getUrl());
 
             log.debug("Sending a doc to Solr with hash {}", solrDocument.hashCode());
             getMuleContextManager().dispatch(queueName, solrDocument, messageProperties);

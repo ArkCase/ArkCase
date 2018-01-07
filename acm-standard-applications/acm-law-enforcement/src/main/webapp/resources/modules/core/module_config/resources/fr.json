@@ -200,6 +200,12 @@
         "priority": "Priorité",
         "complaintTitle": "PlainteTitle"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "Afghanistan",
         "AX": "Iles Aland",

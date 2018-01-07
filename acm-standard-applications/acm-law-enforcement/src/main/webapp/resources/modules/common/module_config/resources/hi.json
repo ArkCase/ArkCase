@@ -316,6 +316,12 @@
     "start.label": "प्रारंभ:",
     "end.label": "समाप्त:",
     "newEvent.button": "नयी घटना",
+    "agenda.button" : {
+      "today": "आज",
+      "month": "महीना",
+      "week": "सप्ताह",
+      "day": "दिन"
+    },
     "addNewEventDialog": {
       "title": "नयी घटना",
       "cancel.button": "रद्द करना",
@@ -353,6 +359,8 @@
         "reminder.label": "अनुस्मारक",
         "reminder.placeholder": "रिमाइंडर विंडो चुनें",
         "datePickerClose.button": "बंद करे",
+        "datePickerCurrent.button": "वर्तमान",
+        "datePickerClear.button": "स्पष्ट",
         "otherOptions.label": "अन्य विकल्प",
         "allDayEvent.checkbox": "पूरे दिन की घटना",
         "privateEvent.checkbox": "निजी ईवेंट",
