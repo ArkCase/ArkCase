@@ -1,9 +1,10 @@
 'use strict';
 
 angular.module('complaints').controller('Complaints.CalendarController', ['$scope', '$stateParams', 'Complaint.InfoService'
-    , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService'
-    , function ($scope, $stateParams, ComplaintInfoService, HelperObjectBrowserService, ObjectService, CalendarConfigurationService) {
-
+    , 'Helper.ObjectBrowserService', 'ObjectService', 'Admin.CalendarConfigurationService', 'MessageService'
+    , function ($scope, $stateParams, ComplaintInfoService
+        , HelperObjectBrowserService, ObjectService, CalendarConfigurationService, MessageService
+    ) {
         $scope.objectInfoRetrieved = false;
 
         new HelperObjectBrowserService.Component({

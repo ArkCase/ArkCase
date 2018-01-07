@@ -200,6 +200,12 @@
         "priority": "priority",
         "complaintTitle": "complaintTitle"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "Afghanistan",
         "AX": "Åland Islands",
@@ -495,7 +501,7 @@
         "nonConcur": "Non-Concur"
       },
       "businessProcessTypes": {
-        "acmDocumentWorkflow": "Acm Document Workflow"
+        "acmDocumentWorkflow": "ACM Document Workflow"
       },
       "reportStates": {
         "draft": "Draft",

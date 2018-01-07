@@ -200,6 +200,12 @@
         "priority": "प्राथमिकता",
         "complaintTitle": "शिकायत शीर्षक"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "अफ़ग़ानिस्तान",
         "AX": "एलैंड द्वीप समूह",

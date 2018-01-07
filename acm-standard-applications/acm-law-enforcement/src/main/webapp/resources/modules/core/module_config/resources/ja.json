@@ -200,6 +200,12 @@
         "priority": "優先度",
         "complaintTitle": "訴状の表題"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "アフガニスタン",
         "AX": "オーランド諸島",

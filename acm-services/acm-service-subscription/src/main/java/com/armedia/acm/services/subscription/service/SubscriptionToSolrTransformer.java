@@ -69,13 +69,6 @@ public class SubscriptionToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmSubscription in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmSubscription.class.equals(acmObjectType);

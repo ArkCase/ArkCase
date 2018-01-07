@@ -316,6 +316,12 @@
     "start.label": "Comienzo:",
     "end.label": "Fin:",
     "newEvent.button": "Nuevo evento",
+    "agenda.button" : {
+      "today": "Hoy",
+      "month": "Mes",
+      "week": "Semana",
+      "day": "Día"
+    },
     "addNewEventDialog": {
       "title": "Nuevo evento",
       "cancel.button": "Cancelar",
@@ -353,6 +359,8 @@
         "reminder.label": "Recordatorio",
         "reminder.placeholder": "Elija la ventana de recordatorio",
         "datePickerClose.button": "Cerca",
+        "datePickerCurrent.button": "Presente",
+        "datePickerClear.button": "Claro",
         "otherOptions.label": "Otras opciones",
         "allDayEvent.checkbox": "Evento todo el día",
         "privateEvent.checkbox": "Evento privado",

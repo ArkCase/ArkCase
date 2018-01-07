@@ -200,6 +200,12 @@
         "priority": "優先",
         "complaintTitle": "投訴標題"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "阿富汗",
         "AX": "奧蘭群島",
