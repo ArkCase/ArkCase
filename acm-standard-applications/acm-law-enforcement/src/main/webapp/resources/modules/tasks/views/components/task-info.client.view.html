@@ -35,14 +35,8 @@
                 </div>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">
-                    <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
-                       permission-action="disable">
-                        {{owningGroup || 'common.value.unknown' | translate}}
-                    </a>
-                </div>
-                <small class="text-muted"><span translate>tasks.comp.info.owningGroup.label</span></small>
+                <div class="h4 font-bold no-margin">{{objectInfo.status || ('common.value.unknown' | translate)}}</div>
+                <small class="text-muted"><span translate>tasks.comp.info.state.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
                 <div class="h4 font-bold no-margin">
@@ -96,8 +90,14 @@
                 <small class="text-muted"><span translate>tasks.comp.info.dueDate.label</span></small>
             </div>
             <div class="col-xs-9 col-md-3">
-                <div class="h4 font-bold no-margin">{{objectInfo.status || ('common.value.unknown' | translate)}}</div>
-                <small class="text-muted"><span translate>tasks.comp.info.state.label</span></small>
+                <div class="h4 font-bold no-margin">
+                    <a href="" class="editable-click no-outline" ng-click="openGroupPickerModal()"
+                       permission="editTask" permission-object-type="TASK" permission-properties="objectInfo"
+                       permission-action="disable">
+                        {{owningGroup || 'common.value.unknown' | translate}}
+                    </a>
+                </div>
+                <small class="text-muted"><span translate>tasks.comp.info.owningGroup.label</span></small>
             </div>
 
         </div>
