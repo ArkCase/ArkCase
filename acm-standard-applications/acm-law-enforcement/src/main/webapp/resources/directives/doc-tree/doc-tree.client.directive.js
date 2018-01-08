@@ -1987,7 +1987,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.title = $translate.data(subTypes[i].label, correspondenceCategory);
                                     }
                                     item.cmd = "template/" + subTypes[i].templateFilename;
-                                    //item.data.label = subTypes[i].label;
+				    // AFDP-5105 the below line "item.data.label = ..." is needed, since the
+				    // correspondence upload code looks for this label to update the doc tree
+				    // after the upload is done.  Without "item.data.label" the doc tree will
+				    // not be updated after the upload is finished.
+                                    item.data.label = subTypes[i].label;
                                 } else if(!Util.isEmpty(subTypes[i].form)){
                                     if (Util.isEmpty(formsCategory)) {
                                         item.title = subTypes[i].value;
