@@ -13,12 +13,14 @@
                 </label>
                 <div class="input-group" name="startDate">
                     <input type="text" class="form-control"
-                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                            ng-model="recurrenceTmpModel.start"
                            is-open="openedStartDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
                            on-open-focus="false"
                            ng-change="onDateChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"
-                           close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                           close-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate}}"
+                           current-text ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerCurrent.button' | translate}}"
+                           clear-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClear.button' | translate}}"
                            min-date="recurrenceTmpModel.minStartDate"
                            placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.startDate.placeholder' | translate}}"
                            required/>
@@ -46,12 +48,14 @@
                 </label>
                 <div class="input-group" name="endDate">
                     <input type="text" class="form-control"
-                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                           datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                            ng-model="recurrenceTmpModel.end"
                            is-open="openedEndDate.openedEnd" close-on-date-selection="true" show-button-bar="true"
                            on-open-focus="false"
                            ng-change="onDateChanged(recurrenceTmpModel.start, recurrenceTmpModel.end)"
-                           close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                           close-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate}}"
+                           current-text ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerCurrent.button' | translate}}"
+                           clear-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClear.button' | translate}}"
                            min-date="recurrenceTmpModel.minEndDate"
                            placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.endDate.placeholder' | translate}}"/>
                     <span class="input-group-btn">
@@ -254,11 +258,13 @@
                         </label>
                         <div class="input-group" name="endDate">
                             <input type="text" class="form-control"
-                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                   datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
                                    ng-model="recurrenceTmpModel.recurrenceEndBy"
                                    is-open="openedEndDate.openedEndBy" close-on-date-selection="true" show-button-bar="true"
                                    on-open-focus="false"
-                                   close-text="{{ 'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate }}"
+                                   close-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClose.button' | translate}}"
+                                   current-text ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerCurrent.button' | translate}}"
+                                   clear-text   ="{{'common.directive.coreCalendar.addNewEventDialog.form.datePickerClear.button' | translate}}"
                                    min-date="recurrenceTmpModel.minEndDate"
                                    placeholder="{{'common.directive.coreCalendar.addNewEventDialog.form.endDate.placeholder' | translate}}"/>
                             <span class="input-group-btn">

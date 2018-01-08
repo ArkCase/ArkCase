@@ -17,9 +17,14 @@
  * @param {int} objectId the id of the object
  *
  */
-angular.module('directives').directive('coreCalendar', ['$compile', '$translate', 'uiCalendarConfig',
-    'Object.CalendarService', '$modal', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService', 'Util.DateService', 'UtilService',
-    function($compile, $translate, uiCalendarConfig, CalendarService, $modal, ConfigService, MessageService, CalendarUtilService, DateService, Util) {
+
+angular.module('directives').directive('coreCalendar', ['$compile', '$translate', '$modal'
+    , 'uiCalendarConfig', 'Object.CalendarService', 'ConfigService', 'MessageService', 'Directives.CalendarUtilService'
+    , 'Util.DateService', 'UtilService', 'Helper.LocaleService'
+    , function($compile, $translate, $modal
+        , uiCalendarConfig , CalendarService, ConfigService, MessageService, CalendarUtilService
+        , DateService, Util, LocaleHelper
+    ) {
         return {
             restrict: 'E',
             templateUrl: 'directives/core-calendar/core-calendar.client.view.html',
@@ -126,10 +131,10 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                             right: 'today prev,next'
                         },
                         buttonText: {
-                            today: 'Today',
-                            month: 'Month',
-                            week: 'Week',
-                            day: 'Day'
+                            today: $translate.instant("common.directive.coreCalendar.agenda.button.today"),
+                            month: $translate.instant("common.directive.coreCalendar.agenda.button.month"),
+                            week:  $translate.instant("common.directive.coreCalendar.agenda.button.week"),
+                            day:   $translate.instant("common.directive.coreCalendar.agenda.button.day")
                         },
                         eventRender: scope.eventRender,
                         eventClick: scope.eventClick,
@@ -138,6 +143,28 @@ angular.module('directives').directive('coreCalendar', ['$compile', '$translate'
                         ignoreTimezone: false
                     }
                 };
+
+
+                new LocaleHelper.Locale({scope: scope
+                    , onTranslateChangeSuccess: function(data) {
+                        var todayText = $translate.instant("common.directive.coreCalendar.agenda.button.today");
+                        var monthText = $translate.instant("common.directive.coreCalendar.agenda.button.month");
+                        var weekText  = $translate.instant("common.directive.coreCalendar.agenda.button.week");
+                        var dayText   = $translate.instant("common.directive.coreCalendar.agenda.button.day");
+
+                        scope.uiConfig.buttonText = {
+                            today: todayText,
+                            month: monthText,
+                            week:  weekText,
+                            day:   dayText
+                        };
+
+                        $(".fc-today-button").text(todayText);
+                        $(".fc-month-button").text(monthText);
+                        $(".fc-agendaWeek-button").text(weekText);
+                        $(".fc-agendaDay-button").text(dayText);
+                    }
+                });
 
                 scope.uiConfig.calendar.events = function(start, end, timezone, callback) {
                     CalendarService.getCalendarEvents(DateService.dateToIso(start.toDate()), DateService.dateToIso(end.toDate()), scope.objectType, scope.objectId)

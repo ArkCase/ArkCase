@@ -88,13 +88,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmTag in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmTag.class.equals(acmObjectType);

@@ -67,6 +67,18 @@
         </property>
     </bean>
 
+    <bean id="complaintFolderNameFormat" class="java.lang.String">
+        <constructor-arg value="Complaint (%s)"/>
+    </bean>
+
+    <bean id="caseFileDetailsFormat" class="java.lang.String">
+        <constructor-arg value="This case file is based on Complaint '%s'.%s"/>
+    </bean>
+
+    <bean id="complaintDetailsFormat" class="java.lang.String">
+        <constructor-arg value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
+    </bean>
+
     <bean id="closeComplaintRequestService"
           class="com.armedia.acm.plugins.complaint.service.CloseComplaintRequestService">
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
@@ -76,9 +88,9 @@
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
-        <property name="complaintFolderNameFormat" value="Complaint (%s)"/>
-        <property name="caseFileDetailsFormat" value="This case file is based on Complaint '%s'.%s"/>
-        <property name="complaintDetailsFormat" value="&lt;p/&gt;Complaint '%s' had these details:&lt;p/&gt;%s"/>
+        <property name="complaintFolderNameFormat" ref="complaintFolderNameFormat"/>
+        <property name="caseFileDetailsFormat" ref="caseFileDetailsFormat"/>
+        <property name="complaintDetailsFormat" ref="complaintDetailsFormat"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 

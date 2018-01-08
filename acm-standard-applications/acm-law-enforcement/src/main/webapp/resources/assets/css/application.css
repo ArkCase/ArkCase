@@ -91,14 +91,32 @@ iframe {
     width: 100%;
 }
 
-span.fancytree-title {
+/*span.fancytree-title {
 	width: 100%;
 	padding-right: 30px;
 	overflow: hidden;
 	-ms-text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
+}*/
+
+span.fancytree-title {
+	margin-left: 0px  !important;
+	padding-right: 0px  !important;
 }
+
+.fancytree-container {
+	font-size:13px;
+}
+
+.fancytree-node {
+	margin-left: 0px !important;
+}
+
+.fancytree-folder .fancytree-node {
+	white-space: inherit !important;
+}
+
 
 
 .form-group.well-sm {
