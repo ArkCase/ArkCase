@@ -14,7 +14,7 @@
     "_10": "'shortTime' - equivalent to 'h:mm a' for en_US locale (e.g. 12:05 PM)",
     "_11": " ",
     "_12": "Following date formats are phased out. If customers request to have customize format, we need ",
-    "_13": "to educate them to avoid doing so, because of i18n conerns",
+    "_13": "to educate them to avoid doing so, because of i18n concerns",
     "defaultDateFormat": "MM/DD/YYYY",
     "defaultTimeFormat": "hh:mm:ss",
     "defaultDateTimeFormat": "MM/DD/YYYY hh:mm",
@@ -58,7 +58,23 @@
     },
     "menu": {
       "noop": "(Select Item)",
-      "editWithWebDAV": "Edit"
+      "editWithWebDAV": "Edit",
+      "cancelEditing": "Cancel Editing",
+      "newFolder": "New Folder",
+      "newDocument": "New Document",
+      "newCorrespondence": "New Correspondence",
+      "open": "Open",
+      "email": "Email",
+      "download": "Download",
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "rename": "Rename",
+      "delete": "Delete",
+      "replace": "Replace",
+      "checkout": "Check Out",
+      "checkin": "Check In",
+      "declareRecord": "Declare As Record(s)"
     },
     "table.columns": {
       "title": "Title",
@@ -153,8 +169,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
-    "pagerCountMiddleLabel": " of ",
-    "pagerCountLabel": " items"
+    "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
@@ -314,6 +329,12 @@
     "start.label": "Start: ",
     "end.label": "End: ",
     "newEvent.button": "New Event",
+    "agenda.button" : {
+      "today": "Today",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    },
     "addNewEventDialog": {
       "title": "New Event",
       "cancel.button": "Cancel",
@@ -351,6 +372,8 @@
         "reminder.label": "Reminder",
         "reminder.placeholder": "Choose Reminder Window",
         "datePickerClose.button": "Close",
+        "datePickerCurrent.button": "Current",
+        "datePickerClear.button": "Clear",
         "otherOptions.label": "Other Options",
         "allDayEvent.checkbox": "All Day Event",
         "privateEvent.checkbox": "Private Event",

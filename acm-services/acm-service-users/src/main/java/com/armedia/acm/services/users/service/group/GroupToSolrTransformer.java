@@ -23,7 +23,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
     private AcmGroupDao groupDao;
     private UserDao userDao;
-    private GroupService groupService;
 
     @Override
     public List<AcmGroup> getObjectsModifiedSince(Date lastModified, int start, int pageSize)
@@ -42,13 +41,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_display_name_s(in.getDisplayName());
         solr.setObject_type_s("GROUP");
         solr.setTitle_parseable(in.getName());
-        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
-        {
-            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
-        } else
-        {
-            solr.setName(in.getName());
-        }
+        solr.setName(in.getName());
         solr.setDescription_parseable(in.getDescription());
         solr.setObject_sub_type_s(in.getType().name());
 
@@ -59,7 +52,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
         solr.setStatus_lcs(in.getStatus().name());
 
-        solr.getAdditionalProperties().put("ascendants_id_ss", in.getAscendants().collect(Collectors.toList()));
+        solr.getAdditionalProperties().put("ascendants_id_ss", in.getAscendantsStream().collect(Collectors.toList()));
 
         if (in.getSupervisor() != null)
         {
@@ -101,14 +94,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setObject_id_s(in.getName());
         solr.setObject_display_name_s(in.getDisplayName());
         solr.setObject_type_s("GROUP");
-        if (groupService.isUUIDPresentInTheGroupName(in.getName()))
-        {
-            solr.setName(in.getName().substring(0, in.getName().lastIndexOf("-UUID-")));
-        } else
-        {
-            solr.setName(in.getName());
-        }
-
+        solr.setName(in.getName());
         solr.setAuthor(in.getCreator());
         solr.setCreate_tdt(in.getCreated());
         solr.setModifier_s(in.getModifier());
@@ -118,13 +104,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setStatus_s(in.getStatus().name());
 
         return solr;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmGroup in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override
@@ -151,16 +130,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
-    }
-
-    public GroupService getGroupService()
-    {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService)
-    {
-        this.groupService = groupService;
     }
 
     @Override

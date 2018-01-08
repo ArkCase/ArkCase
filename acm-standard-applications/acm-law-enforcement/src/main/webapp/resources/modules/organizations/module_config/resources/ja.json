@@ -1,28 +1,27 @@
 {
   "organizations": {
     "title": "組織",
-    "progressNoComplaint": "[ 組織のデータはありません ]",
+    "progressNoComplaint": "[組織データなし]",
     "progressLoading": "組織の読み込み",
     "progressError": "組織の読み込みに失敗しました",
-    "noDataMessage": "データはありません"
+    "noDataMessage": "データなし"
   },
   "organizations.menus": {
     "leftnav.item": "組織",
     "topbar.item": "組織"
   },
   "organizations.comp.main": {
-    "title": "概観"
+    "title": "概要"
   },
   "organizations.comp.info": {
     "title": "情報",
-    "phone.label": "電話",
+    "phone.label": "電話番号",
     "email.label": "電子メール",
     "status.label": "状態",
-    "organization.label": "組織",
     "identification.label": "識別番号",
-    "primary.label": "プライマリ連絡先",
-    "parent.label": "トップの組織",
-    "parent.placeholder": "トップの組織を入力"
+    "primary.label": "一次連絡先",
+    "parent.label": "親組織",
+    "parent.placeholder": "親組織を入力"
   },
   "organizations.comp.actions": {
     "title": "操作",
@@ -30,419 +29,426 @@
     "import.button": "入力",
     "delete.button": "削除",
     "activate.button": "アクティブ化",
-    "deactivate.button": "無効化",
-    "merge.button": "結合"
+    "deactivate.button": "無効化する",
+    "merge.button": "合併",
+    "restrict": "制限するか？"
   },
   "organizations.comp.details": {
     "title": "詳細",
-    "informSaved": "ja_Organization details saved",
+    "informSaved": "組織の詳細を保存しました",
     "table.columns": {
-      "title": "ja_Details",
-      "modified": "ja_Date Last Modified",
-      "modifier": "ja_User Last Modified"
+      "title": "詳細",
+      "modified": "最終変更日",
+      "modifier": "最終変更ユーザ"
     }
   },
   "organizations.comp.addresses": {
     "title": "場所",
     "table.columns": {
-      "type": "ja_Type",
-      "streetAddress": "ja_Address 1",
-      "streetAddress2": "ja_Address 2",
-      "city": "ja_City",
-      "state": "ja_State",
-      "zip": "ja_Zip",
-      "country": "ja_Country",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No"
+      "type": "タイプ",
+      "streetAddress": "アドレス1",
+      "streetAddress2": "住所2",
+      "city": "都市",
+      "state": "州",
+      "zip": "郵便番号",
+      "country": "国",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ"
     },
     "actions": {
-      "addNew": "ja_Add New",
-      "map": "ja_Map"
+      "addNew": "新規追加",
+      "map": "地図"
     },
     "modal": {
-      "addAddress": "ja_Add Location",
-      "editAddress": "ja_Edit Record",
-      "type.label": "ja_Address Type",
-      "type.placeholder": "ja_Enter Address Type",
-      "streetAddress.label": "ja_Address 1",
-      "streetAddress.placeholder": "ja_Enter Address 1",
-      "streetAddress2.label": "ja_Address 2",
-      "streetAddress2.placeholder": "ja_Enter Address 2",
-      "city.label": "ja_City",
-      "city.placeholder": "ja_Enter City",
-      "zip.label": "ja_Zip",
-      "zip.placeholder": "ja_Enter Zip",
-      "state.label": "ja_State",
-      "state.placeholder": "ja_Enter State",
-      "country.label": "ja_Country",
-      "country.placeholder": "ja_Enter Country",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Location",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No"
+      "addAddress": "場所を追加",
+      "editAddress": "レコードの編集",
+      "type.label": "住所タイプ",
+      "type.placeholder": "アドレスの種類を入力",
+      "streetAddress.label": "アドレス1",
+      "streetAddress.placeholder": "アドレス1を入力",
+      "streetAddress2.label": "住所2",
+      "streetAddress2.placeholder": "アドレス2を入力",
+      "city.label": "都市",
+      "city.placeholder": "都市を入力",
+      "zip.label": "郵便番号",
+      "zip.placeholder": "郵便番号を入力してください",
+      "state.label": "州",
+      "state.placeholder": "州に入る",
+      "country.label": "国",
+      "country.placeholder": "国を入力",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "場所を保存",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ"
     }
   },
   "organizations.comp.phones": {
     "title": "電話番号",
     "table.columns": {
-      "type": "ja_Phone Type",
-      "value": "ja_Phone Number",
-      "description": "ja_Description",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "type": "電話の種類",
+      "value": "電話番号",
+      "description": "説明",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New"
+      "delete": "削除",
+      "setPrimary": "主要な設定",
+      "addNew": "新規追加"
     },
     "modal": {
-      "addPhone": "ja_Add New Phone Number",
-      "editPhone": "ja_Edit Phone Number",
-      "title": "ja_Add New Phone Number",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "description": "ja_Description",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Phone Number",
-      "type.label": "ja_Phone Type",
-      "type.placeholder": "ja_Enter Phone Type",
-      "value.label": "ja_Phone Number",
-      "value.placeholder": "ja_Enter Phone Number"
+      "addPhone": "新しい電話番号を追加する",
+      "editPhone": "電話番号の編集",
+      "title": "新しい電話番号を追加する",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ",
+      "description": "説明",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "電話番号を保存する",
+      "type.label": "電話の種類",
+      "type.placeholder": "電話の種類を入力",
+      "value.label": "電話番号",
+      "value.placeholder": "電話番号を入力"
     }
   },
   "organizations.comp.faxes": {
     "title": "ファックス番号",
     "table.columns": {
-      "type": "ja_Fax Type",
-      "value": "ja_Fax Number",
-      "description": "ja_Description",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "type": "ファックスの種類",
+      "value": "ファックス番号",
+      "description": "説明",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "最終変更ユーザ"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New"
+      "delete": "削除",
+      "setPrimary": "プライマリとして設定",
+      "addNew": "新規追加"
     },
     "modal": {
-      "addFax": "ja_Add New Fax Number",
-      "editFax": "ja_Edit Fax Number",
-      "title": "ja_Add New Fax Number",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "description": "ja_Description",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Fax Number",
-      "type.label": "ja_Fax Type",
-      "type.placeholder": "ja_Enter Fax Type",
-      "value.label": "ja_Fax Number",
-      "value.placeholder": "ja_Enter Fax Number"
+      "addFax": "新しいFAX番号を追加する",
+      "editFax": "ファックス番号の編集",
+      "title": "新しいFAX番号を追加する",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ",
+      "description": "説明",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "ファックス番号を保存する",
+      "type.label": "ファックスの種類",
+      "type.placeholder": "FAXタイプを入力",
+      "value.label": "ファックス番号",
+      "value.placeholder": "ファックス番号を入力"
     }
   },
   "organizations.comp.emails": {
-    "title": "電子メール",
+    "title": "メールアドレス",
     "table.columns": {
-      "type": "ja_Email Address Type",
-      "value": "ja_Email Address",
-      "description": "ja_Description",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "type": "メールアドレスの種類",
+      "value": "メールアドレス",
+      "description": "説明",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New"
+      "delete": "削除",
+      "setPrimary": "プライマリとして設定",
+      "addNew": "新規追加"
     },
     "modal": {
-      "title": "ja_Add New Email Address",
-      "addEmail": "ja_Add New Email Address",
-      "editEmail": "ja_Edit Email Address",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "description": "ja_Description",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Email Address",
-      "type.label": "ja_Email Type",
-      "type.placeholder": "ja_Enter Email Type",
-      "value.label": "ja_Email Address",
-      "value.placeholder": "ja_Enter Email Address"
+      "title": "新しいメールアドレスを追加",
+      "addEmail": "新しいメールアドレスを追加",
+      "editEmail": "電子メールアドレスを編集",
+      "setPrimary": "プライマリとして設定しますか？",
+      "yes": "はい",
+      "no": "いいえ",
+      "description": "説明",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "電子メールアドレスを保存",
+      "type.label": "メールの種類",
+      "type.placeholder": "メールタイプを入力",
+      "value.label": "メールアドレス",
+      "value.placeholder": "メールアドレスを入力してください"
     }
   },
   "organizations.comp.urls": {
     "title": "URL",
     "table.columns": {
-      "type": "ja_Type",
-      "value": "ja_Url",
-      "description": "ja_Description",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "type": "タイプ",
+      "value": "URL",
+      "description": "説明",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New"
+      "delete": "削除",
+      "setPrimary": "主要な設定は？",
+      "addNew": "新規追加"
     },
     "modal": {
-      "title": "ja_Add New URL",
-      "addUrl": "ja_Add New URL",
-      "editUrl": "ja_Edit URL",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "description": "ja_Description",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save URL",
-      "type.label": "ja_Type",
-      "type.placeholder": "ja_Enter Type",
-      "value.label": "ja_URL",
-      "value.placeholder": "ja_Enter URL"
+      "title": "新しいURLを追加",
+      "addUrl": "新しいURLを追加",
+      "editUrl": "URLを編集",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ",
+      "description": "説明",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "URLを保存",
+      "type.label": "タイプ",
+      "type.placeholder": "タイプ入力",
+      "value.label": "URL",
+      "value.placeholder": "URLを入力"
     }
   },
   "organizations.comp.participants": {
     "title": "参加者",
     "table.columns": {
-      "type": "ja_Type",
-      "name": "ja_Name"
+      "type": "タイプ",
+      "name": "名前"
     },
     "dialogUserPicker": {
-      "header": "ja_Choose User",
+      "header": "ユーザーを選択",
       "table.columns": {
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "id": "ja_Username"
+        "name": "名前",
+        "type": "タイプ",
+        "title": "タイトル",
+        "id": "ユーザー名"
       }
     },
     "dialogGroupPicker": {
-      "header": "ja_Choose Group",
+      "header": "グループを選択",
       "table.columns": {
-        "name": "ja_Name"
+        "name": "名前"
       }
     }
   },
   "organizations.comp.dbas": {
     "title": "DBA",
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "upload": "ja_New DBA"
+      "delete": "削除",
+      "setPrimary": "主要な設定は？",
+      "upload": "新しいDBA"
     },
     "table.columns": {
-      "value": "ja_DBA",
-      "type": "ja_Type",
-      "description": "ja_Description",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "value": "DBA",
+      "type": "タイプ",
+      "description": "説明",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー"
     },
     "modal": {
-      "addDBA": "ja_Add New DBA",
-      "editDBA": "ja_Edit DBA",
-      "title": "ja_Insert New DBA",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save DBA",
-      "value.label": "ja_DBA",
-      "value.placeholder": "ja_Enter DBA",
-      "description": "ja_Description",
-      "aliasType.label": "ja_DBA Type",
-      "aliasType.placeholder": "ja_Enter DBA Type"
+      "addDBA": "新しいDBAを追加する",
+      "editDBA": "DBAの編集",
+      "title": "新しいDBAを挿入する",
+      "setPrimary": "主要な設定は？",
+      "yes": "はい",
+      "no": "いいえ",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "DBAを保存",
+      "value.label": "DBA",
+      "value.placeholder": "DBAを入力",
+      "description": "説明",
+      "aliasType.label": "DBAタイプ",
+      "aliasType.placeholder": "DBAタイプを入力"
     }
   },
   "organizations.comp.ids": {
-    "title": "組織識別番号",
+    "title": "識別",
     "table.columns": {
-      "type": "ja_Type",
-      "id": "ja_ID",
-      "number": "ja_Number",
-      "issuer": "ja_Issuer",
-      "yearIssued": "ja_Year Issued",
-      "created": "ja_Date Added",
-      "creator": "ja_Added By",
-      "modified": "ja_Last Modified",
-      "modifier": "ja_Modified By"
+      "type": "タイプ",
+      "id": "識別",
+      "number": "番号",
+      "issuer": "発行者",
+      "yearIssued": "発行年",
+      "created": "追加された日付",
+      "creator": "追加者",
+      "modified": "最終変更日",
+      "modifier": "変更されたユーザー"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New"
+      "delete": "削除",
+      "setPrimary": "プライマリとして設定",
+      "addNew": "新規追加"
     },
     "modal": {
-      "addID": "ja_Add New Identification",
-      "editID": "ja_Edit Identification",
-      "title": "ja_Add New Identification",
-      "setPrimary": "ja_Set as Primary?",
-      "yes": "ja_Yes",
-      "no": "ja_No",
-      "type.label": "ja_Type",
-      "type.placeholder": "ja_Enter Type",
-      "id.label": "ja_ID",
-      "id.placeholder": "ja_Enter ID",
-      "number.label": "ja_Number",
-      "number.placeholder": "ja_Enter Number",
-      "issuer.label": "ja_Issuer",
-      "issuer.placeholder": "ja_Enter Issuer",
-      "yearIssued.label": "ja_Year Issued",
-      "yearIssued.placeholder": "ja_Enter Year Issued",
-      "yearIssued.close.button": "ja_Close",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save ID"
+      "addID": "新しい識別情報を追加する",
+      "editID": "識別情報の編集",
+      "title": "新しい識別情報を追加する",
+      "setPrimary": "初期設定？",
+      "yes": "はい",
+      "no": "いいえ",
+      "type.label": "タイプ",
+      "type.placeholder": "タイプ入力",
+      "id.label": "識別",
+      "id.placeholder": "識別情報を入力",
+      "number.label": "数",
+      "number.placeholder": "番号を入力",
+      "issuer.label": "発行者",
+      "issuer.placeholder": "発行者を入力",
+      "yearIssued.label": "発行年",
+      "yearIssued.placeholder": "年を入力してください",
+      "yearIssued.close.button": "閉じる",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "識別番号を保存する"
     }
   },
   "organizations.comp.people": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
-      "type": "ja_Role",
-      "firstName": "ja_FirstName",
-      "lastName": "ja_LastName",
-      "organization": "ja_Organization",
-      "phone": "ja_Phone",
-      "location": "ja_Location"
+      "type": "役割",
+      "firstName": "ファーストネーム",
+      "lastName": "苗字",
+      "organization": "組織",
+      "phone": "電話",
+      "location": "ロケーション"
     },
     "actions": {
-      "delete": "ja_Delete",
-      "setPrimary": "ja_Set as Primary",
-      "addNew": "ja_Add New",
-      "addExisting": "ja_Add Existing"
+      "delete": "削除",
+      "setPrimary": "主な設定として設定",
+      "addNew": "新しく追加する",
+      "addExisting": "既存の追加"
     }
   },
   "organizations.comp.cases": {
     "title": "案件",
+    "objectType.label": "ケースファイル",
     "table.columns": {
-      "priority": "ja_Priority",
-      "id": "ja_ID",
-      "title": "ja_Title",
-      "status": "ja_Status",
-      "assignee": "ja_Assignee",
-      "modified": "ja_Modified"
+      "role": "役割",
+      "priority": "優先",
+      "id": "識別",
+      "title": "タイトル",
+      "status": "状態",
+      "assignee": "譲受人",
+      "modified": "変更日"
     }
   },
   "organizations.comp.complaints": {
     "title": "訴状",
+    "objectType.label": "苦情",
     "table.columns": {
-      "priority": "ja_Priority",
-      "id": "ja_ID",
-      "title": "ja_Title",
-      "status": "ja_Status",
-      "assignee": "ja_Assignee",
-      "modified": "ja_Modified"
+      "role": "役割",
+      "priority": "優先",
+      "id": "識別",
+      "title": "タイトル",
+      "status": "状態",
+      "assignee": "譲受人",
+      "modified": "変更日"
     }
   },
   "organizations.comp.related": {
-    "title": "関連組織",
-    "linkTitle": "ja_Rel Org",
+    "title": "関連機関",
+    "linkTitle": "Rel Org",
     "table.columns": {
-      "associationType": "ja_Relationship",
-      "type": "ja_Type",
-      "identification": "ja_ID",
-      "value": "ja_Organization",
-      "contact": "ja_Primary Contact",
-      "phone": "ja_Phone",
-      "location": "ja_Location"
+      "associationType": "関係",
+      "type": "タイプ",
+      "identification": "識別",
+      "value": "組織",
+      "contact": "一次連絡先",
+      "phone": "電話",
+      "location": "ロケーション"
     },
     "modal": {
-      "title": "ja_Add Related Organization",
-      "type.label": "ja_Relationship",
-      "type.placeholder": "ja_Enter Relationship",
-      "organization.label": "ja_Organization",
-      "organization.placeholder": "ja_Search Organizations",
-      "btnCancel.text": "ja_Cancel",
-      "btnOk.text": "ja_Save Related Organization"
+      "title": "関連組織を追加する",
+      "type.label": "関係",
+      "type.placeholder": "関係を入力してください",
+      "organization.label": "組織",
+      "organization.placeholder": "検索組織",
+      "btnCancel.text": "キャンセル",
+      "btnOk.text": "関連組織を保存する"
     }
   },
   "organizations.comp.history": {
     "title": "歴史",
     "table.columns": {
-      "eventType": "ja_Event Name",
-      "eventDate": "ja_Date",
-      "userId": "ja_User"
+      "eventType": "イベント名",
+      "eventDate": "日付",
+      "details.btn.text": "詳細",
+      "userId": "ユーザー"
     }
   },
   "organizations.comp.newOrganization": {
-    "title": "ja_Organization",
-    "addAnother": "ja_Add Another",
-    "remove": "ja_Remove",
-    "name": "ja_Organization Name",
-    "name.placeholder": "ja_Enter Organization Name",
-    "type": "ja_Organization Type",
-    "type.placeholder": "ja_Select Organization Type",
-    "saveButton": "ja_Save Organization",
-    "parentOrganization": "ja_Parent organization",
-    "searchParentOrganization.placeholder": "ja_Search Parent Organization",
+    "title": "組織",
+    "addAnother": "追加する",
+    "remove": "削除する",
+    "name": "組織名",
+    "name.placeholder": "組織名を入力",
+    "type": "組織の種類",
+    "type.placeholder": "組織タイプを選択",
+    "saveButton": "組織を保存する",
+    "cancelButton": "キャンセル",
+    "parentOrganization": "親組織",
+    "searchParentOrganization.placeholder": "検索親組織",
     "communicationAccounts": {
-      "title": "ja_Communication Accounts",
-      "phone": "ja_Phone",
-      "phone.placeholder": "ja_Enter Phone",
-      "phoneType": "ja_Phone Type",
-      "email": "ja_Email",
-      "email.placeholder": "ja_Enter Email",
-      "emailType": "ja_Email Type",
-      "fax": "ja_Fax",
-      "fax.placeholder": "ja_Enter Fax",
-      "faxType": "ja_Fax Type",
-      "url": "ja_URL",
-      "url.placeholder": "ja_Enter URL",
-      "removeContactMethod": "ja_Remove",
-      "urlType": "ja_URL Type"
+      "title": "通信アカウント",
+      "phone": "電話",
+      "phone.placeholder": "電話をかける",
+      "phoneType": "電話の種類",
+      "email": "Eメール",
+      "email.placeholder": "メールアドレスを入力して",
+      "emailType": "メールの種類",
+      "fax": "ファックス",
+      "fax.placeholder": "ファックスを入力",
+      "faxType": "ファックスの種類",
+      "url": "URL",
+      "url.placeholder": "URLを入力",
+      "removeContactMethod": "削除する",
+      "urlType": "URLの種類"
     },
     "people": {
-      "title": "ja_People",
-      "searchExisting.placeholder": "ja_Search Existing Person",
-      "personType": "ja_Person Type"
+      "title": "人物",
+      "searchExisting.placeholder": "既存の人を検索する",
+      "personType": "人物タイプ"
     },
     "locations": {
-      "title": "ja_Locations",
-      "country": "ja_Country",
-      "country.placeholder": "ja_Select Country",
-      "state": "ja_State",
-      "state.placeholder": "ja_Enter State",
-      "zip": "ja_Zip",
-      "zip.placeholder": "ja_Enter Zip",
-      "city": "ja_City",
-      "city.placeholder": "ja_Enter City",
-      "type": "ja_Address Type",
-      "type.placeholder": "ja_Select Address Type",
-      "streetAddress": "ja_Street Address",
-      "streetAddress.placeholder": "ja_Enter Street Address",
-      "streetAddress2": "ja_Street Address2",
-      "streetAddress2.placeholder": "ja_Enter Street Address2"
+      "title": "場所",
+      "country": "国",
+      "country.placeholder": "国を選択",
+      "state": "状態",
+      "state.placeholder": "州に入る",
+      "zip": "ジップ",
+      "zip.placeholder": "郵便番号を入力",
+      "city": "シティ",
+      "city.placeholder": "都市を入力",
+      "type": "住所タイプ",
+      "type.placeholder": "アドレスタイプを選択",
+      "streetAddress": "住所",
+      "streetAddress.placeholder": "住所を入力してください",
+      "streetAddress2": "住所2",
+      "streetAddress2.placeholder": "住所2を入力してください"
     },
     "identification": {
-      "title": "ja_Identifications",
-      "identificationID": "ja_Identification ID",
-      "identificationID.placeholder": "ja_Enter Identification ID",
-      "identificationType": "ja_Identification Type",
-      "identificationType.placeholder": "ja_Select Identification Type",
-      "identificationNumber": "ja_Identification Number",
-      "identificationNumber.placeholder": "ja_Enter Identification Number",
-      "identificationIssuer": "ja_Identification Issuer",
-      "identificationIssuer.placeholder": "ja_Enter Identification Issuer",
-      "identificationYearIssued": "ja_Identification Issued Date",
-      "identificationYearIssued.placeholder": "ja_Select Identification Issued",
-      "identificationYearIssued.close.button": "ja_Close"
+      "title": "識別",
+      "identificationID": "識別ID",
+      "identificationID.placeholder": "ID番号を入力",
+      "identificationType": "識別タイプ",
+      "identificationType.placeholder": "識別タイプの選択",
+      "identificationNumber": "識別番号",
+      "identificationNumber.placeholder": "識別番号を入力",
+      "identificationIssuer": "身分証明書発行者",
+      "identificationIssuer.placeholder": "身分証明書発行者を入力",
+      "identificationYearIssued": "身分証明書発行日",
+      "identificationYearIssued.placeholder": "選択されたIDを選択",
+      "identificationYearIssued.close.button": "閉じる"
     },
-    "informCreated": "ja_{{objectType}} {{organizationValue}} was created."
+    "informCreated": "{{objectType}} {{organizationValue}}が作成されました。"
   },
   "organizations.tree": {
     "nodeTypes": {
@@ -450,11 +456,11 @@
       "addresses.label": "場所",
       "phones.label": "電話番号",
       "faxes.label": "ファックス番号",
-      "emails.label": "電子メール",
+      "emails.label": "メールアドレス",
       "urls.label": "URL",
       "participants.label": "参加者",
       "dbas.label": "DBA",
-      "people.label": "人員",
+      "people.label": "人物",
       "ids.label": "組織識別番号",
       "complaints.label": "訴状",
       "cases.label": "案件",
@@ -473,6 +479,106 @@
       "nameAsc": "名で並べ替え",
       "nameDesc": "名で並べ替え降順",
       "noSort": "(注文しません)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "organization": {
+        "defaultPhone": "既定の電話機が変更されました",
+        "defaultEmail": "既定のメールが変更されました",
+        "defaultAddress": "既定のアドレスが変更されました",
+        "defaultUrl": "既定のURLが変更されました",
+        "defaultAlias": "既定のエイリアスが変更されました",
+        "defaultIdentification": "既定のIDが変更されました",
+        "defaultPicture": "既定の画像が変更されました"
+      }
+    },
+    "value_changed": {
+      "organization": {
+        "details": "組織 - 詳細が変更されました",
+        "status": "組織 - ステータスが変更されました",
+        "organizationType": "組織 - タイプが変更されました",
+        "organizationValue": "組織 - 名前が変更されました",
+        "contactMethods.contactMethod": {
+          "subType": "連絡方法- タイプが変更されました",
+          "value": "連絡方法 - 値が変更されました"
+        },
+        "defaultPhone": {
+          "subType": "既定の電話機 - 変更されたタイプ",
+          "value": "既定の電話 - 値の変更"
+        },
+        "defaultEmail": {
+          "subType": "既定の電子メール - 変更されたタイプ",
+          "value": "既定のメール - 値が変更されました"
+        },
+        "defaultUrl": {
+          "subType": "既定のURL - タイプの変更",
+          "value": "既定のURL - 値が変更されました"
+        },
+        "defaultFax": {
+          "subType": "既定のFAX - 種類の変更されました",
+          "value": "既定のFAX - 値の変更されました"
+        },
+        "addresses.address": {
+          "city": "住所 - 都市が変更されました",
+          "zip": "住所 - 郵便番号が変更されました",
+          "streetAddress": "住所 - 通りが変わった",
+          "streetAddress2": "住所 - 通り2が変わった",
+          "type": "住所 - タイプが変更されました",
+          "country": "住所 - 国が変更されました",
+          "state": "住所 - 状態名が変更されました"
+        },
+        "defaultAddress": {
+          "city": "住所 - 都市が変更されました",
+          "zip": "住所 - 郵便番号が変更されました",
+          "streetAddress": "住所 - 通りが変わった",
+          "streetAddress2": "住所 - ストリート2が変更されました",
+          "type": "住所 - タイプが変更されました",
+          "country": "住所 - 国が変更されました",
+          "state": "住所 - 状態名が変更されました"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "身分証明書 - タイプの変更されました",
+          "identificationNumber": "身分証明書 - 番号の変更されました",
+          "identificationIssuer": "身分証明書 - 発行者の変更されました",
+          "identificationYearIssued": "身分証明書 - 発行年変更"
+        },
+        "defaultIdentification": {
+          "identificationType": "身分証明書 - タイプの変更されました",
+          "identificationNumber": "身分証明書 - 番号の変更されました",
+          "identificationIssuer": "身分証明書 - 発行者の変更されました",
+          "identificationYearIssued": "身分証明書 - 発行年変更されました"
+        }
+      }
+    },
+    "collection_element_added": {
+      "organization": {
+        "identifications.identification": "身分証明書が追加されました",
+        "contactMethods.contactMethod": "連絡先が追加されました",
+        "personAliases.alias": "別名が追加されました",
+        "addresses.address": "アドレスが追加されました",
+        "organizations.organization": "組織が追加されました",
+        "associationsToObjects": "関連が追加されました",
+        "associationsFromObjects": "関連が追加されました",
+        "organizationAssociations": "組織が追加されました"
+      }
+    },
+    "collection_element_removed": {
+      "organization": {
+        "identifications.identification": "識別情報が削除されました",
+        "contactMethods.contactMethod": "接触方法が削除されました",
+        "personAliases.alias": "別名が削除されました",
+        "addresses.address": "住所を削除しました",
+        "organizations.organization": "組織が削除されました",
+        "associationsToObjects": "関連が削除されました",
+        "associationsFromObjects": "関連が削除されました",
+        "organizationAssociations": "組織が削除されました"
+      },
+      "personAliases.alias": {
+        "aliasType": "別名 - タイプが変更されました",
+        "aliasValue": "別名 - 値が変更されました",
+        "description": "別名 - 説明が変更されました"
+      }
     }
   }
 }

@@ -157,8 +157,7 @@
           "lastName": "键入姓氏",
           "email": "键入电子邮件",
           "password": "键入密码",
-          "confirmation": "再次键入您的密码",
-          "minLengthForPassword": "7"
+          "confirmation": "再次键入您的密码"
         },
         "editLdapMember": {
           "title": "编辑Ldap成员",
@@ -433,6 +432,7 @@
       "cancel": "取消",
       "activate": "激活"
     },
+    "workflows.config.noHistory": "zh-cn_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "业务流程",
       "description": "描述",
@@ -442,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "创建新模型",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "上传新的BPMN"
     },
     "workflows.config.links": {

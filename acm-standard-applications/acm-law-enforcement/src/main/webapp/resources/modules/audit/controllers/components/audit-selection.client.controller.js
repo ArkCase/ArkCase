@@ -10,11 +10,7 @@ angular.module('audit').controller('Audit.SelectionController', ['$scope', 'Util
 
         $scope.auditReportName = "";
         $scope.$watchGroup(['selectId','auditReportName'], function(){
-            if(!Util.isEmpty($scope.auditReportName)){
-                $scope.$emit('send-type-id', $scope.auditReportName, $scope.selectId, true);
-            } else {
-                $scope.$emit('send-type-id', $scope.auditReportName, $scope.selectId, false);
-            }
+            $scope.$emit('send-type-id', $scope.auditReportName, $scope.selectId);
         });
 
     }

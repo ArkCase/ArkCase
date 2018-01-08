@@ -2,10 +2,19 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.title" onaftersave="saveCase()"
+                <h4>
+                    <a href="#" editable-text="objectInfo.title" onaftersave="saveCase()"
                        permission="editCase" permission-object-type="CASE_FILE" permission-properties="objectInfo"
                        permission-action="disable" e-required>
-                    {{objectInfo.title || "Unknown"}}</a> ({{objectInfo.status}})</h4></div>
+                        {{objectInfo.title || "Unknown"}}
+                    </a>
+                    <a ng-href="#" editable-select="objectInfo.status" onaftersave="saveCase()"
+                       permission="editCaseStatus" permission-object-type="CASE_FILE" permission-properties="objectInfo"
+                       permission-action="disable" e-ng-options="c.key as (c.value | translate) for c in caseStatuses">
+                        ({{ (objectInfo.status | translateData: 'core.lookups.changeCase.statuses' : lang) || ('common.value.unknown' | translate) }})
+                    </a>
+                </h4>
+            </div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.caseNumber}}</h4>
             </div>

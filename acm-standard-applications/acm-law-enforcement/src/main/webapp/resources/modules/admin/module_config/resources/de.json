@@ -157,8 +157,7 @@
           "lastName": "Nachnamen eingeben",
           "email": "Email eingeben",
           "password": "Passwort eingeben",
-          "confirmation": "Gib dein Passwort erneut ein",
-          "minLengthForPassword": "7"
+          "confirmation": "Gib dein Passwort erneut ein"
         },
         "editLdapMember": {
           "title": "Ldap-Mitglied bearbeiten",
@@ -433,6 +432,7 @@
       "cancel": "Stornieren",
       "activate": "Aktivieren"
     },
+    "workflows.config.noHistory": "de_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Geschäftsprozess",
       "description": "Beschreibung",
@@ -442,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Neues Modell erstellen",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Neues BPMN hochladen"
     },
     "workflows.config.links": {

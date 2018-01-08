@@ -169,8 +169,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "items per page",
-    "pagerCountMiddleLabel": " of ",
-    "pagerCountLabel": " items"
+    "pagerCountLabel": "{{pageCount}} of {{pageTotal}} items"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choose",
@@ -185,7 +184,9 @@
     "btnOk.text": "OK",
     "btnCancel.text": "Cancel",
     "edtPlaceholder": "Type in to search",
-    "noData.text": "No Results"
+    "noData.text": "No Results",
+    "pickUserLabel": "Pick Associated User",
+    "pickGroupLabel": "Pick Associated Group"
   },
   "common.directive.search": {
     "showMore.button.text": "Show More Values",
@@ -330,6 +331,12 @@
     "start.label": "Start: ",
     "end.label": "End: ",
     "newEvent.button": "New Event",
+    "agenda.button" : {
+      "today": "Today",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    },
     "addNewEventDialog": {
       "title": "New Event",
       "cancel.button": "Cancel",
@@ -367,6 +374,8 @@
         "reminder.label": "Reminder",
         "reminder.placeholder": "Choose Reminder Window",
         "datePickerClose.button": "Close",
+        "datePickerCurrent.button": "Current",
+        "datePickerClear.button": "Clear",
         "otherOptions.label": "Other Options",
         "allDayEvent.checkbox": "All Day Event",
         "privateEvent.checkbox": "Private Event",
@@ -474,7 +483,9 @@
       "day.label": "Day",
       "week.label": "Week",
       "month.label": "Month",
-      "on.label": "On",
+      "_1_": "'on.label' appears not in use. _TO_BE_REMOVED_",
+      "_2_": "If needed it, rephrase message to avoid English centric grammar in message",
+      "_on.label": "On",
       "day.placeholder": "Day",
       "year.placeholder": "Year",
       "dailyRecurrence": {
@@ -857,6 +868,18 @@
         "action": "Action",
         "newValue": "New Value",
         "oldValue": "Old Value"
+      }
+    },
+    "client": {
+      "title": "History",
+      "label": {
+        "updated": "Updated"
+      },
+      "table.columns": {
+        "eventType": "Event Name",
+        "eventDate": "Date",
+        "userId": "User",
+        "details.btn.text": "View {{count}} Changes"
       }
     }
   }

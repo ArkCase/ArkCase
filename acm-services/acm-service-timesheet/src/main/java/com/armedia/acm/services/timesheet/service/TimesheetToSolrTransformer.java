@@ -79,13 +79,6 @@ public class TimesheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmTimesheet in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmTimesheet.class.equals(acmObjectType);
