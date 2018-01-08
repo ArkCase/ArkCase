@@ -76,13 +76,6 @@ public class PersonAliasToSolrTransformer implements AcmObjectToSolrDocTransform
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonAlias in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return PersonAlias.class.equals(acmObjectType);

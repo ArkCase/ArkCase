@@ -12,6 +12,12 @@
                            placeholder="{{ 'cases.userOrGroupSearch.search.placeholder' | translate }}" id="assignee"
                            style="background-color: white;" ng-click="userOrGroupSearch()" ng-required="true" readonly >
                 </div>
+                <div class="col-sm-6 form-group">
+                    <label for="owningGroup" translate> cases.comp.approvalRouting.future.task.modal.owningGroup </label>
+                    <input type="text" id="owningGroup" ng-model="pickedGroupName" class="input-md form-control ng-pristine ng-untouched ng-valid"
+                           placeholder="{{ 'cases.userOrGroupSearch.search.placeholder' | translate }}" id="owningGroup"
+                           ng-required="false" ng-disabled="true" readonly >
+                </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 form-group">

@@ -97,7 +97,7 @@
         "ecomm%": "Electronic Communication"
       },
       "correspondences": {
-        "correspondenceInvitation%": "Correspondence Invitation",
+        "correspondenceInvitation%": "Correspondence - Invitation",
         "approvalLetter%": "Approval Letter",
         "medicalRelease%": "Medical Release",
         "generalRelease%": "General Release",
@@ -247,13 +247,11 @@
     "title": "Calendar"
   },
   "cases.comp.merge": {
-    "id": "merge",
     "title": "Merge",
     "cancel.btn": "Cancel",
     "merge.btn": "Merge",
     "search.placeholder": "Search for case file.",
     "search.btn": "Search",
-    "enabled": true,
     "table.columns": {
       "incident": "Type",
       "name": "Name",
@@ -367,8 +365,6 @@
     },
     "cancelButton": "Cancel",
     "confirmButton": "Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "\"object_type_s\":(GROUP OR USER)",
     "assigneeGridColumns": {
       "name": "Name",
       "type": "Type",

@@ -37,8 +37,7 @@
     <div class="ui-grid-pager-count-container">
         <div class="ui-grid-pager-count">
                 <span ng-show="pagerData.totalItems > 0">
-                    {{showingLow}} - {{showingHigh}}  {{'common.directive.simplePager.pagerCountMiddleLabel' | translate}}
-                    {{pagerData.totalItems}} {{'common.directive.simplePager.pagerCountLabel' | translate}}
+                    {{'common.directive.simplePager.pagerCountLabel' | translate: {pageCount: showingLow - showingHigh, pageTotal: pagerData.totalItems} }}
                 </span>
         </div>
     </div>

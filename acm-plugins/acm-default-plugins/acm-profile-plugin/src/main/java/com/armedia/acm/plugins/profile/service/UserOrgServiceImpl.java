@@ -89,8 +89,7 @@ public class UserOrgServiceImpl implements UserOrgService
         ProfileDTO profileDTO = new ProfileDTO();
 
         List<String> groupsNames = groups.stream()
-                .map(group -> groupService.isUUIDPresentInTheGroupName(group.getName())
-                        ? group.getName().substring(0, group.getName().lastIndexOf("-UUID-")) : group.getName())
+                .map(AcmGroup::getName)
                 .collect(Collectors.toList());
 
         profileDTO.setUserOrgId(userOrgInfo.getUserOrgId());

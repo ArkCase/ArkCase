@@ -158,7 +158,9 @@
           "email": "Enter email",
           "password": "Enter password",
           "confirmation": "Enter your password again",
-          "minLengthForPassword": "7"
+          "_1_": "Numeric values are not valid in resource file. _TO_BE_REMOVED_",
+          "_2_": "If 'minLengthForPassword' is needed, please move it to config.json",
+          "_minLengthForPassword": "7"
         },
         "editLdapMember": {
           "title": "Edit Ldap Member",
@@ -433,6 +435,7 @@
       "cancel": "Cancel",
       "activate": "Make Active"
     },
+    "workflows.config.noHistory": "There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Business Process",
       "description": "Description",
@@ -442,7 +445,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Create New Model",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Upload New BPMN"
     },
     "workflows.config.links": {
@@ -518,7 +520,14 @@
           "inversevalue.placeholder": "Enter entry inverse value as label key",
           "btnCancel.text": "Cancel",
           "btnOk.text": "Save entry"
-        }
+        },
+        "addLookup": "Add Lookup",
+        "lookupName": "Lookup Name",
+        "btnSave.text": "Save",
+        "deleteLookupMsg": "Are you sure you want to delete this lookup?",
+        "delete.success": "Lookup is successfully deleted",
+        "delete.error": "Lookup can't be deleted",
+        "lookupExists.error": "Lookup with this name already exists"
       },
       "module.config": {
         "title": "Module Configuration"

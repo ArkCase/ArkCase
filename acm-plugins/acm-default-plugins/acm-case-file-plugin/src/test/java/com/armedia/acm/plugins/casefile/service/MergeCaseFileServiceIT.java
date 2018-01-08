@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
@@ -20,6 +24,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,13 +44,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(name = "spring", locations = {
@@ -89,7 +93,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-service-data.xml",
         "/spring/spring-library-task.xml",
         "/spring/spring-library-user-service.xml",
-        "/spring/spring-library-object-converter.xml"})
+        "/spring/spring-library-object-converter.xml" })
 @TransactionConfiguration(defaultRollback = true)
 public class MergeCaseFileServiceIT
 {
@@ -114,7 +118,6 @@ public class MergeCaseFileServiceIT
 
     @Autowired
     private AuditPropertyEntityAdapter auditAdapter;
-
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -141,7 +144,7 @@ public class MergeCaseFileServiceIT
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
@@ -238,7 +241,7 @@ public class MergeCaseFileServiceIT
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
@@ -295,7 +298,7 @@ public class MergeCaseFileServiceIT
             }
         }
 
-        assertEquals(5, targetCase.getParticipants().size());
+        assertEquals(4, targetCase.getParticipants().size());
 
         assertNotNull(foundAssignee);
         assertEquals(auth.getName(), foundAssignee.getParticipantLdapId());
@@ -305,13 +308,14 @@ public class MergeCaseFileServiceIT
     @Test
     @Transactional
     public void mergeCaseFilesParticipantDifferentAssigneeTest() throws MergeCaseFilesException, MuleException,
-            AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException, AcmAccessControlException
+            AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, AcmObjectNotFoundException, PipelineProcessException,
+            AcmAccessControlException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
         AcmGrantedAuthority authority = new AcmGrantedAuthority(roleAdd);
 
-        auth = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm", Arrays.asList(authority));
+        auth = new UsernamePasswordAuthenticationToken("***REMOVED***", "ann-acm", Arrays.asList(authority));
         ipAddress = "127.0.0.1";
 
         assertNotNull(caseFileDao);
@@ -333,7 +337,7 @@ public class MergeCaseFileServiceIT
         targetCaseFile.setTitle("title");
 
         AcmParticipant assigneeParticipant = new AcmParticipant();
-        assigneeParticipant.setParticipantLdapId("ian-acm");
+        assigneeParticipant.setParticipantLdapId("***REMOVED***");
         assigneeParticipant.setParticipantType(ParticipantTypes.ASSIGNEE);
         if (targetCaseFile.getParticipants() == null)
             targetCaseFile.setParticipants(new ArrayList<>());
@@ -361,7 +365,7 @@ public class MergeCaseFileServiceIT
             }
         }
         assertNotNull(foundAssignee);
-        assertEquals("ian-acm", foundAssignee.getParticipantLdapId());
+        assertEquals("***REMOVED***", foundAssignee.getParticipantLdapId());
 
         // merge case files
         MergeCaseOptions mergeCaseOptions = new MergeCaseOptions();
@@ -374,7 +378,7 @@ public class MergeCaseFileServiceIT
 
         CaseFile targetCase = caseFileDao.find(targetId);
 
-        assertEquals(6, targetCase.getParticipants().size());
+        assertEquals(5, targetCase.getParticipants().size());
 
         foundAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
@@ -391,7 +395,7 @@ public class MergeCaseFileServiceIT
         AcmParticipant foundPreviousAssignee = null;
         for (AcmParticipant ap : targetCase.getParticipants())
         {
-            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "ian-acm".equals(ap.getParticipantLdapId()))
+            if (ParticipantTypes.FOLLOWER.equals(ap.getParticipantType()) && "***REMOVED***".equals(ap.getParticipantLdapId()))
             {
                 foundPreviousAssignee = ap;
                 break;

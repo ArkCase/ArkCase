@@ -200,6 +200,12 @@
         "priority": "Priorität",
         "complaintTitle": "BeschwerdeTitel"
       },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
+      },
       "countries": {
         "AF": "Afghanistan",
         "AX": "Ålandinseln",
