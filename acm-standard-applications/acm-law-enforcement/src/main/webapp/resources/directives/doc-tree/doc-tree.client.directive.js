@@ -1987,7 +1987,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.title = $translate.data(subTypes[i].label, correspondenceCategory);
                                     }
                                     item.cmd = "template/" + subTypes[i].templateFilename;
-                                    //item.data.label = subTypes[i].label;
+                                    item.data.label = subTypes[i].label;
                                 } else if(!Util.isEmpty(subTypes[i].form)){
                                     if (Util.isEmpty(formsCategory)) {
                                         item.title = subTypes[i].value;
