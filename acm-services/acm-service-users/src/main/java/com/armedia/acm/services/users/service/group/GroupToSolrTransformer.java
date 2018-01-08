@@ -107,13 +107,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmGroup in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmGroup.class.equals(acmObjectType);
