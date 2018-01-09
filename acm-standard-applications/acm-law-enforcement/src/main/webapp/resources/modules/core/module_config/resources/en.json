@@ -10,11 +10,7 @@
         "no-access": "No Access",
         "case": "Case File"
       },
-      "endpoint": {
-        "atom": "ATOM",
-        "soap": "SOAP"
-      },
-      "versioningState": {
+      "cmisVersioningState": {
         "none": "NONE",
         "minor": "MINOR",
         "major": "MAJOR"
