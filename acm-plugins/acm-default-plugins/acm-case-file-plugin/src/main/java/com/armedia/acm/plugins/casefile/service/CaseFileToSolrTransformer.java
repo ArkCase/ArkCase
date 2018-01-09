@@ -127,13 +127,6 @@ public class CaseFileToSolrTransformer implements AcmObjectToSolrDocTransformer<
         return solr;
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(CaseFile in)
-    {
-        // No implementation needed
-        return null;
-    }
-
     private String findAssigneeUserId(CaseFile in)
     {
         if (in.getParticipants() != null)

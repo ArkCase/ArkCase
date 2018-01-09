@@ -78,205 +78,168 @@
   },
   "cases.comp.details": {
     "title": "विवरण",
-    "informSaved": "hi_Case details saved",
+    "informSaved": "केस विवरण सहेजे गए",
     "table.columns": {
-      "title": "hi_Details",
-      "modified": "hi_Date Last Modified",
-      "modifier": "hi_User Last Modified"
+      "title": "विवरण",
+      "modified": "अंतिम संशोधित तारीख",
+      "modifier": "उपयोगकर्ता अंतिम संशोधित"
     }
   },
   "cases.comp.documents": {
     "title": "दस्तावेज़",
-    "sendEmail": "hi_Send Email",
-    "filterInputPlaceholder": "hi_Filter",
-    "searchInputPlaceholder": "hi_Search"
+    "sendEmail": "ईमेल भेजें",
+    "filterInputPlaceholder": "फ़िल्टर",
+    "searchInputPlaceholder": "खोज",
+    "menu": {
+      "forms": {
+        "info%": "जानकारी",
+        "rptInvestigation%": "जांच की रिपोर्ट",
+        "ecomm%": "इलेक्ट्रॉनिक संचार"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "पत्राचार निमंत्रण",
+        "approvalLetter%": "अनुमोदन पत्र",
+        "medicalRelease%": "मेडिकल रिलीज",
+        "generalRelease%": "सामान्य रिलीज़",
+        "clearanceGranted%": "मंजूरी दी",
+        "clearanceDenied%": "मंजूरी अस्वीकृत",
+        "noticeInvestigation%": "जांच की सूचना",
+        "witnessInterview%": "गवाह साक्षात्कार अनुरोध",
+        "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
+      }
+    },
+    "newTask": "नया कार्य"
   },
   "cases.comp.people": {
     "title": "लोग",
     "table.columns": {
-      "entity": "hi_Entity",
-      "type": "hi_Type",
-      "firstName": "hi_FirstName",
-      "lastName": "hi_LastName"
-    },
-    "contactMethods": {
-      "title": "hi_ContactMethods",
-      "table.columns": {
-        "type": "hi_Type",
-        "value": "hi_Value",
-        "created": "hi_Date Added",
-        "creator": "hi_Added By",
-        "modified": "hi_Last Modified",
-        "modifier": "hi_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "संगठन",
-      "table.columns": {
-        "type": "hi_Type",
-        "value": "hi_Value",
-        "created": "hi_Date Added",
-        "creator": "hi_Added By",
-        "modified": "hi_Last Modified",
-        "modifier": "hi_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "hi_Locations",
-      "table.columns": {
-        "type": "hi_Type",
-        "streetAddress": "hi_Address",
-        "city": "hi_City",
-        "state": "hi_State",
-        "zip": "hi_Zip",
-        "country": "hi_Country",
-        "created": "hi_Date Added",
-        "creator": "hi_Added By",
-        "modified": "hi_Last Modified",
-        "modifier": "hi_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "hi_Aliases",
-      "table.columns": {
-        "type": "hi_Type",
-        "value": "hi_Value",
-        "created": "hi_Date Added",
-        "creator": "hi_Added By",
-        "modified": "hi_Last Modified",
-        "modifier": "hi_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "hi_Security Tags",
-      "table.columns": {
-        "type": "hi_Type",
-        "value": "hi_Value",
-        "created": "hi_Date Added",
-        "creator": "hi_Added By",
-        "modified": "hi_Last Modified",
-        "modifier": "hi_Modified By"
-      }
+      "entity": "सत्ता",
+      "type": "भूमिका",
+      "firstName": "पहला नाम",
+      "lastName": "अंतिम नाम",
+      "organization": "संगठन",
+      "phone": "फ़ोन",
+      "location": "स्थान"
     }
   },
   "cases.comp.organizations": {
     "title": "संगठन",
     "table.columns": {
-      "name": "hi_Organization Name",
-      "associationType": "hi_Role",
-      "type": "hi_Organization Type",
-      "identification": "hi_ID",
-      "value": "hi_Organization",
-      "contact": "hi_Primary Contact",
-      "phone": "hi_Phone",
-      "location": "hi_Location"
+      "name": "संस्था का नाम",
+      "associationType": "भूमिका",
+      "type": "संगठन का प्रकार",
+      "identification": "आईडी",
+      "value": "संगठन",
+      "contact": "प्राथमिक सम्पर्क",
+      "phone": "फ़ोन",
+      "location": "स्थान"
     }
   },
   "cases.comp.participants": {
     "title": "प्रतिभागियों",
     "table.columns": {
-      "type": "hi_Type",
-      "name": "hi_Name"
+      "type": "प्रकार",
+      "name": "नाम"
     },
     "dialogUserPicker": {
-      "header": "hi_Choose User",
+      "header": "उपयोगकर्ता चुनें",
       "table.columns": {
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "id": "hi_Username"
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "id": "उपयोगकर्ता नाम"
       }
     },
     "dialogGroupPicker": {
-      "header": "hi_Choose Group",
+      "header": "समूह चुनें",
       "table.columns": {
-        "name": "hi_Name"
+        "name": "नाम"
       }
     }
   },
   "cases.comp.notes": {
     "title": "नोट्स",
     "table.columns": {
-      "note": "hi_Note",
-      "created": "hi_Created",
-      "creator": "hi_Author"
+      "note": "ध्यान दें",
+      "created": "बनाया था",
+      "creator": "लेखक"
     }
   },
   "cases.comp.tasks": {
     "title": "कार्य",
     "table.columns": {
-      "title": "hi_Title",
-      "assignee": "hi_Assignee",
-      "created": "hi_Created",
-      "priority": "hi_Priority",
-      "due": "hi_Due",
-      "status": "hi_Status"
+      "title": "शीर्षक",
+      "assignee": "संपत्ति-भागी",
+      "created": "बनाया था",
+      "priority": "प्राथमिकता",
+      "due": "देय",
+      "status": "स्थिति"
     },
-    "table.overdue.tooltip": "hi_Task is Overdue",
-    "table.deadline.tooltip": "hi_Deadline is Approaching"
+    "table.overdue.tooltip": "कार्य अतिदेय है",
+    "table.deadline.tooltip": "समय सीमा निकट है"
   },
   "cases.comp.references": {
     "title": "संदर्भ",
     "table.columns": {
-      "targetName": "hi_Number",
-      "parentName": "hi_Parent",
-      "targetTitle": "hi_Title",
-      "modified": "hi_Modified",
-      "targetType": "hi_Reference Type",
-      "status": "hi_Status"
+      "targetName": "संख्या",
+      "targetTitle": "शीर्षक",
+      "targetType": "प्रकार",
+      "assignee": "संपत्ति-भागी",
+      "modified": "संशोधित",
+      "status": "स्थिति"
     }
   },
   "cases.comp.history": {
     "title": "इतिहास",
     "table.columns": {
-      "eventType": "hi_Event Name",
-      "eventDate": "hi_Date",
-      "userId": "hi_User"
+      "eventType": "कार्यक्रम नाम",
+      "eventDate": "तारीख",
+      "userId": "उपयोगकर्ता"
     }
   },
   "cases.comp.time": {
     "title": "पहर",
     "table.columns": {
-      "name": "hi_Form Name",
-      "user": "hi_User",
-      "tally": "hi_Total Hours",
-      "modified": "hi_Modified Date",
-      "status": "hi_Status"
+      "name": "फ़ार्म का नाम",
+      "user": "उपयोगकर्ता",
+      "tally": "कुल घंटे",
+      "modified": "संशोधित तिथि",
+      "status": "स्थिति"
     },
-    "formNamePrefix": "hi_Timesheet"
+    "formNamePrefix": "समय पत्र"
   },
   "cases.comp.cost": {
     "title": "लागत",
     "table.columns": {
-      "name": "hi_Form Name",
-      "user": "hi_User",
-      "tally": "hi_Total Cost",
-      "modified": "hi_Modified Date",
-      "status": "hi_Status"
+      "name": "फ़ार्म का नाम",
+      "user": "उपयोगकर्ता",
+      "tally": "कुल लागत",
+      "modified": "संशोधित तिथि",
+      "status": "स्थिति"
     },
-    "formNamePrefix": "hi_Costsheet"
+    "formNamePrefix": "लागत शीट"
   },
   "cases.comp.tags": {
     "title": "टैग",
     "table.columns": {
-      "tag": "hi_Tag",
-      "created": "hi_Created",
-      "createdBy": "hi_Created By"
+      "tag": "टैग",
+      "created": "बनाया था",
+      "createdBy": "के द्वारा बनाई गई"
     },
     "modal": {
-      "title": "hi_Tag",
-      "search": "hi_Search for Tag",
+      "title": "टैग",
+      "search": "टैग के लिए खोजें",
       "buttons": {
-        "cancel": "hi_Cancel",
-        "ok": "hi_Add Tag"
+        "cancel": "रद्द करना",
+        "ok": "टैग जोड़ो"
       }
     },
     "message": {
-      "tagExists": "hi_Tag with that name or description or text already exists",
-      "tagAssociated": "hi_already associated",
+      "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+      "tagAssociated": "पहले से जुड़े हुए हैं",
       "delete": {
-        "success": "hi_Tag deleted successfully",
-        "error": "hi_Error deleting tag"
+        "success": "टैग सफलतापूर्वक हटाया गया",
+        "error": "टैग हटाने में त्रुटि"
       }
     }
   },
@@ -284,104 +247,129 @@
     "title": "कैलेंडर"
   },
   "cases.comp.merge": {
-    "id": "hi_merge",
-    "title": "hi_Merge",
-    "cancel.btn": "hi_Cancel",
-    "merge.btn": "hi_Merge",
-    "search.placeholder": "hi_Search for case file.",
-    "search.btn": "hi_Search",
-    "enabled": true,
+    "title": "मर्ज",
+    "cancel.btn": "रद्द करना",
+    "merge.btn": "मर्ज",
+    "search.placeholder": "मामले की फाइल खोजें",
+    "search.btn": "खोज",
     "table.columns": {
-      "incident": "hi_Type",
-      "name": "hi_Name",
-      "assignee": "hi_Assignee",
-      "title": "hi_Title",
-      "parent": "hi_Parent",
-      "modified": "hi_Modified"
+      "incident": "प्रकार",
+      "name": "नाम",
+      "assignee": "संपत्ति-भागी",
+      "title": "शीर्षक",
+      "parent": "माता-पिता",
+      "modified": "संशोधित"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "संदर्भ खोज"
+  },
   "cases.comp.split": {
-    "title": "hi_Split",
-    "cancel": "hi_Cancel",
-    "split": "hi_Split"
+    "title": "विभाजित करें",
+    "cancel": "रद्द करना",
+    "split": "विभाजित करें"
   },
   "cases.comp.addreference": {
-    "title": "hi_Add Reference",
-    "cancelButton": "hi_Cancel",
-    "confirmButton": "hi_Add",
+    "title": "संदर्भ जोड़ें",
+    "cancelButton": "रद्द करना",
+    "confirmButton": "जोड़ना",
     "search": {
-      "placeholder": "hi_Search for case, complaint, file, task",
-      "btn": "hi_Search"
+      "placeholder": "मामले, शिकायत, फ़ाइल, कार्य के लिए खोजें",
+      "btn": "खोज"
     },
     "grid": {
       "columns": {
-        "id": "hi_Id",
-        "name": "hi_Name",
-        "type": "hi_Type",
-        "title": "hi_Title",
-        "parent": "hi_Parent",
-        "assignee": "hi_Assignee",
-        "modified": "hi_Modified"
+        "id": "ईद",
+        "name": "नाम",
+        "type": "प्रकार",
+        "title": "शीर्षक",
+        "parent": "माता-पिता",
+        "assignee": "संपत्ति-भागी",
+        "modified": "संशोधित"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "hi_Change Assignee",
-    "assigneeNamelabel": "hi_Assignee Name",
-    "btnCancelText": "hi_Cancel",
-    "btnSaveText": "hi_Save",
-    "searchAssigneeHeader": "hi_Search Assignee"
+    "title": "नियुक्त करें बदलें",
+    "assigneeNamelabel": "असाइन का नाम",
+    "btnCancelText": "रद्द करना",
+    "btnSaveText": "बचाना",
+    "searchAssigneeHeader": "निदान खोजें"
   },
   "cases.comp.groupPickerModal": {
-    "title": "hi_Change Group",
-    "groupNamelabel": "hi_Group Name",
-    "btnCancelText": "hi_Cancel",
-    "btnSaveText": "hi_Save",
-    "searchGroupHeader": "hi_Search Group"
+    "title": "समूह बदलें",
+    "groupNamelabel": "समूह का नाम",
+    "btnCancelText": "रद्द करना",
+    "btnSaveText": "बचाना",
+    "searchGroupHeader": "खोज समूह"
   },
   "cases.comp.approvalRouting": {
     "title": "अनुमोदन रूटिंग",
-    "addNewTooltip": "hi_Add new approver",
-    "noBuckslipMessage": "hi_No Data",
+    "addNewTooltip": "नया अपवादक जोड़ें",
+    "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
+    "processInitialize.successfull": "प्रक्रिया आरंभ की गई",
+    "processInitialize.fail": "प्रक्रिया आरंभ नहीं हुई",
+    "processWithdraw.successfull": "प्रक्रिया वापस ले ली गई",
+    "processWithdraw.fail": "प्रक्रिया वापस नहीं ली गई",
+    "businessProcessUpdate.successfull": "अनुमोदन रूटिंग नवीनीकृत",
+    "businessProcessUpdate.fail": "अनुमोदन रूटिंग को अद्यतन नहीं किया गया",
     "button": {
-      "save.tooltip": "hi_Save Changes"
+      "save.tooltip": "परिवर्तनों को सुरक्षित करें",
+      "initiate.tooltip": "कार्य शुरू करें",
+      "withdraw.tooltip": "वापस लेना कार्य"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "गैर-सहमति अनुमोदन चक्र समाप्त हो जाती है"
     },
     "table.columns": {
-      "fullName": "hi_Full Name"
+      "assignee": "संपत्ति-भागी",
+      "group": "मालिकाना समूह",
+      "subject": "विषय",
+      "details": "विवरण",
+      "dueDate": "नियत तारीख",
+      "status": "स्थिति",
+      "addedBy": "द्वारा जोड़ा"
     },
-    "assignee.label": "hi_Assignee",
-    "owningGroup.label": "hi_Owning Group",
-    "priority.label": "hi_Priority",
-    "startDate.label": "hi_Start Date",
-    "dueDate.label": "hi_Due Date",
-    "state.label": "hi_State"
+    "assignee.label": "संपत्ति-भागी",
+    "owningGroup.label": "मालिकाना समूह",
+    "priority.label": "प्राथमिकता",
+    "startDate.label": "आरंभ करने की तिथि",
+    "dueDate.label": "नियत तारीख",
+    "state.label": "राज्य",
+    "future.task.modal": {
+      "title": "नया भविष्य कार्य",
+      "assignee": "संपत्ति-भागी",
+      "subject.label": "विषय",
+      "subject.placeholder": "भविष्य के मामले विषय दर्ज करें",
+      "details.label": "विवरण",
+      "cancel.button": "रद्द करना",
+      "save.button": "बचाना"
+    }
   },
   "cases.comp.pastApprovals": {
     "title": "पिछली अनुमोदन",
-    "noBuckslipMessage": "hi_No Data",
+    "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
     "table.columns": {
-      "approvalDate": "hi_Approval Date",
-      "approverId": "hi_Approver",
-      "approverFullName": "hi_Approver",
-      "approverDecision": "hi_Approver Decision"
+      "approvalDate": "स्वीकृति तिथि",
+      "approverId": "स्वीकृति प्रदान करने वाले",
+      "approverFullName": "स्वीकृति प्रदान करने वाले",
+      "approverDecision": "अपॉइवर डिसिसन"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "hi_userSearch",
-    "title": "hi_User/Group Search",
+    "id": "userSearch",
+    "title": "उपयोगकर्ता / समूह खोज",
     "search": {
-      "btn": "hi_Search",
-      "placeholder": "hi_Search for the user or group."
+      "btn": "खोज",
+      "placeholder": "उपयोगकर्ता या समूह खोजें"
     },
-    "cancelButton": "hi_Cancel",
-    "confirmButton": "hi_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "hi_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "रद्द करना",
+    "confirmButton": "की पुष्टि करें",
     "assigneeGridColumns": {
-      "name": "hi_Name",
-      "type": "hi_Type",
-      "title": "hi_Title",
-      "username": "hi_Username"
+      "name": "नाम",
+      "type": "प्रकार",
+      "title": "शीर्षक",
+      "username": "उपयोगकर्ता नाम"
     }
   },
   "cases.tree": {

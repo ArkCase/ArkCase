@@ -153,7 +153,9 @@
           "enterLocation": "Enter Location",
           "description": "Exibe a temperatura atual de uma cidade",
           "location": "Localização",
-          "insertLocationInConfiguration": "Insira um local na configuração do widget"
+          "insertLocationInConfiguration": "Insira um local na configuração do widget",
+          "zip": "pt_Zip Code",
+          "enterZip": "pt_Enter Zip Code"
         },
         "title": "Tempo",
         "noDataMessage": "Atualmente não há informações meteorológicas",

@@ -91,14 +91,32 @@ iframe {
     width: 100%;
 }
 
-span.fancytree-title {
+/*span.fancytree-title {
 	width: 100%;
 	padding-right: 30px;
 	overflow: hidden;
 	-ms-text-overflow: ellipsis;
 	-o-text-overflow: ellipsis;
 	text-overflow: ellipsis;
+}*/
+
+span.fancytree-title {
+	margin-left: 0px  !important;
+	padding-right: 0px  !important;
 }
+
+.fancytree-container {
+	font-size:13px;
+}
+
+.fancytree-node {
+	margin-left: 0px !important;
+}
+
+.fancytree-folder .fancytree-node {
+	white-space: inherit !important;
+}
+
 
 
 .form-group.well-sm {
@@ -367,7 +385,21 @@ span.fancytree-title {
 }
 
 .ui-contextmenu {
-	z-index: 3001;
+    z-index: 3001;
+}
+
+
+.docTreeMenu {
+    font-size: 100%;
+}
+.docTreeMenu ul {
+    width: 240px;
+}
+.docTreeMenu ul li {
+    /* white-space: nowrap; */
+}
+.docTreeMenu kbd {
+    float: right;
 }
 
 .module-header .btn-group {
@@ -708,7 +740,7 @@ thead {
 }
 
 .ui-grid a.btn {
-    display: initial;
+    display: inline;
 }
 
 /* Dates Padding Issues */
@@ -1519,4 +1551,8 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 /* For [Primary] on grid cell*/
 a.primary {
     display: inline;
+}
+
+.table > thead > tr > th {
+	vertical-align: top !important;
 }

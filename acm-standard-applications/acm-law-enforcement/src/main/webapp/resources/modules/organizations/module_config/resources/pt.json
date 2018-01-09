@@ -1,9 +1,10 @@
 {
   "organizations": {
     "title": "Organizações",
-    "progressNoComplaint": "[ Não há dados de organizações ]",
+    "progressNoComplaint": "[Sem dados de organizações]",
     "progressLoading": "Carregando organização",
-    "progressError": "Falha ao carregar a organização"
+    "progressError": "Falha ao carregar a organização",
+    "noDataMessage": "Sem dados"
   },
   "organizations.menus": {
     "leftnav.item": "Organizações",
@@ -13,434 +14,441 @@
     "title": "Visão geral"
   },
   "organizations.comp.info": {
-    "title": "Informações",
+    "title": "Info",
     "phone.label": "Telefone",
-    "email.label": "Email",
+    "email.label": "E-mail",
     "status.label": "Status",
-    "organization.label": "Organização",
-    "identification.label": "ID",
+    "identification.label": "Identificação",
     "primary.label": "Contato primário",
-    "parent.label": "Organização pai",
+    "parent.label": "Organização dos pais",
     "parent.placeholder": "Digite a Organização-mãe"
   },
   "organizations.comp.actions": {
     "title": "Ações",
-    "export.button": "Exportar",
-    "import.button": "Importar",
+    "export.button": "Exportação",
+    "import.button": "Importação",
     "delete.button": "Excluir",
     "activate.button": "Ativar",
     "deactivate.button": "Desativar",
-    "merge.button": "Mesclar"
+    "merge.button": "Mesclar",
+    "restrict": "Restringir?"
   },
   "organizations.comp.details": {
     "title": "Detalhes",
-    "informSaved": "pt_Organization details saved",
+    "informSaved": "Detalhes da organização guardados",
     "table.columns": {
-      "title": "pt_Details",
-      "modified": "pt_Date Last Modified",
-      "modifier": "pt_User Last Modified"
+      "title": "Detalhes",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado pela última vez"
     }
   },
   "organizations.comp.addresses": {
     "title": "Localizações",
     "table.columns": {
-      "type": "pt_Type",
-      "streetAddress": "pt_Address 1",
-      "streetAddress2": "pt_Address 2",
-      "city": "pt_City",
-      "state": "pt_State",
-      "zip": "pt_Zip",
-      "country": "pt_Country",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No"
+      "type": "Tipo",
+      "streetAddress": "Endereço 1",
+      "streetAddress2": "Endereço 2",
+      "city": "Cidade",
+      "state": "Estado",
+      "zip": "Código Postal",
+      "country": "País",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não"
     },
     "actions": {
-      "addNew": "pt_Add New",
-      "map": "pt_Map"
+      "addNew": "Adicionar novo",
+      "map": "Mapa"
     },
     "modal": {
-      "addAddress": "pt_Add Location",
-      "editAddress": "pt_Edit Record",
-      "type.label": "pt_Address Type",
-      "type.placeholder": "pt_Enter Address Type",
-      "streetAddress.label": "pt_Address 1",
-      "streetAddress.placeholder": "pt_Enter Address 1",
-      "streetAddress2.label": "pt_Address 2",
-      "streetAddress2.placeholder": "pt_Enter Address 2",
-      "city.label": "pt_City",
-      "city.placeholder": "pt_Enter City",
-      "zip.label": "pt_Zip",
-      "zip.placeholder": "pt_Enter Zip",
-      "state.label": "pt_State",
-      "state.placeholder": "pt_Enter State",
-      "country.label": "pt_Country",
-      "country.placeholder": "pt_Enter Country",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save Location",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No"
+      "addAddress": "Adicionar local",
+      "editAddress": "Editar registro",
+      "type.label": "Tipo de Endereço",
+      "type.placeholder": "Digite o tipo de endereço",
+      "streetAddress.label": "Endereço 1",
+      "streetAddress.placeholder": "Digite o endereço 1",
+      "streetAddress2.label": "Endereço 2",
+      "streetAddress2.placeholder": "Digite o endereço 2",
+      "city.label": "Cidade",
+      "city.placeholder": "Insira a cidade",
+      "zip.label": "Código Postal",
+      "zip.placeholder": "Digite o Código Postal",
+      "state.label": "Estado",
+      "state.placeholder": "Insira o estado",
+      "country.label": "País",
+      "country.placeholder": "Inserir país",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar Localização",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não"
     }
   },
   "organizations.comp.phones": {
     "title": "Números de telefone",
     "table.columns": {
-      "type": "pt_Phone Type",
-      "value": "pt_Phone Number",
-      "description": "pt_Description",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "type": "Tipo de telefone",
+      "value": "Número de telefone",
+      "description": "Descrição",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo"
     },
     "modal": {
-      "addPhone": "pt_Add New Phone Number",
-      "editPhone": "pt_Edit Phone Number",
-      "title": "pt_Add New Phone Number",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "description": "pt_Description",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save Phone Number",
-      "type.label": "pt_Phone Type",
-      "type.placeholder": "pt_Enter Phone Type",
-      "value.label": "pt_Phone Number",
-      "value.placeholder": "pt_Enter Phone Number"
+      "addPhone": "Adicionar novo número de telefone",
+      "editPhone": "Editar número de telefone",
+      "title": "Adicionar novo número de telefone",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "description": "Descrição",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar número de telefone",
+      "type.label": "Tipo de telefone",
+      "type.placeholder": "Digite o tipo de telefone",
+      "value.label": "Número de telefone",
+      "value.placeholder": "Digite o número de telefone"
     }
   },
   "organizations.comp.faxes": {
     "title": "Números de fax",
     "table.columns": {
-      "type": "pt_Fax Type",
-      "value": "pt_Fax Number",
-      "description": "pt_Description",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "type": "Tipo de fax",
+      "value": "Número de fax",
+      "description": "Descrição",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado pela última vez"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo"
     },
     "modal": {
-      "addFax": "pt_Add New Fax Number",
-      "editFax": "pt_Edit Fax Number",
-      "title": "pt_Add New Fax Number",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "description": "pt_Description",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save Fax Number",
-      "type.label": "pt_Fax Type",
-      "type.placeholder": "pt_Enter Fax Type",
-      "value.label": "pt_Fax Number",
-      "value.placeholder": "pt_Enter Fax Number"
+      "addFax": "Adicionar novo número de fax",
+      "editFax": "Editar número de fax",
+      "title": "Adicionar novo número de fax",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "description": "Descrição",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar número de fax",
+      "type.label": "Tipo de fax",
+      "type.placeholder": "Digite o tipo de fax",
+      "value.label": "Número de fax",
+      "value.placeholder": "Digite o número de fax"
     }
   },
   "organizations.comp.emails": {
-    "title": "E-mail",
+    "title": "Endereços de e-mail",
     "table.columns": {
-      "type": "pt_Email Address Type",
-      "value": "pt_Email Address",
-      "description": "pt_Description",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "type": "Tipo de endereço de e-mail",
+      "value": "Endereço de e-mail",
+      "description": "Descrição",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo"
     },
     "modal": {
-      "title": "pt_Add New Email Address",
-      "addEmail": "pt_Add New Email Address",
-      "editEmail": "pt_Edit Email Address",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "description": "pt_Description",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save Email Address",
-      "type.label": "pt_Email Type",
-      "type.placeholder": "pt_Enter Email Type",
-      "value.label": "pt_Email Address",
-      "value.placeholder": "pt_Enter Email Address"
+      "title": "Adicionar novo endereço de e-mail",
+      "addEmail": "Adicionar novo endereço de e-mail",
+      "editEmail": "Editar endereço de e-mail",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "description": "Descrição",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar endereço de e-mail",
+      "type.label": "Tipo de Email",
+      "type.placeholder": "Digite o tipo de email",
+      "value.label": "Endereço de e-mail",
+      "value.placeholder": "Digite o endereço de e-mail"
     }
   },
   "organizations.comp.urls": {
-    "title": "URL",
+    "title": "URLs",
     "table.columns": {
-      "type": "pt_Type",
-      "value": "pt_Url",
-      "description": "pt_Description",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "type": "Tipo",
+      "value": "Url",
+      "description": "Descrição",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo"
     },
     "modal": {
-      "title": "pt_Add New URL",
-      "addUrl": "pt_Add New URL",
-      "editUrl": "pt_Edit URL",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "description": "pt_Description",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save URL",
-      "type.label": "pt_Type",
-      "type.placeholder": "pt_Enter Type",
-      "value.label": "pt_URL",
-      "value.placeholder": "pt_Enter URL"
+      "title": "Adicionar novo URL",
+      "addUrl": "Adicionar novo URL",
+      "editUrl": "Editar URL",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "description": "Descrição",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar URL",
+      "type.label": "Tipo",
+      "type.placeholder": "Digite Tipo",
+      "value.label": "URL",
+      "value.placeholder": "Digite URL"
     }
   },
   "organizations.comp.participants": {
     "title": "Participantes",
     "table.columns": {
-      "type": "pt_Type",
-      "name": "pt_Name"
+      "type": "Tipo",
+      "name": "Nome"
     },
     "dialogUserPicker": {
-      "header": "pt_Choose User",
+      "header": "Escolha Usuário",
       "table.columns": {
-        "name": "pt_Name",
-        "type": "pt_Type",
-        "title": "pt_Title",
-        "id": "pt_Username"
+        "name": "Nome",
+        "type": "Tipo",
+        "title": "Título",
+        "id": "Nome de usuário"
       }
     },
     "dialogGroupPicker": {
-      "header": "pt_Choose Group",
+      "header": "Escolha o grupo",
       "table.columns": {
-        "name": "pt_Name"
+        "name": "Nome"
       }
     }
   },
   "organizations.comp.dbas": {
-    "title": "DBA",
+    "title": "DBAs",
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "upload": "pt_New DBA"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "upload": "Novo DBA"
     },
     "table.columns": {
-      "value": "pt_DBA",
-      "type": "pt_Type",
-      "description": "pt_Description",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "value": "DBA",
+      "type": "Tipo",
+      "description": "Descrição",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado"
     },
     "modal": {
-      "addDBA": "pt_Add New DBA",
-      "editDBA": "pt_Edit DBA",
-      "title": "pt_Insert New DBA",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save DBA",
-      "value.label": "pt_DBA",
-      "value.placeholder": "pt_Enter DBA",
-      "description": "pt_Description",
-      "aliasType.label": "pt_DBA Type",
-      "aliasType.placeholder": "pt_Enter DBA Type"
+      "addDBA": "Adicionar novo DBA",
+      "editDBA": "Editar DBA",
+      "title": "Inserir novo DBA",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar DBA",
+      "value.label": "DBA",
+      "value.placeholder": "Insira DBA",
+      "description": "Descrição",
+      "aliasType.label": "Tipo DBA",
+      "aliasType.placeholder": "Digite o tipo DBA"
     }
   },
   "organizations.comp.ids": {
-    "title": "Identificação da organização",
+    "title": "Identificações",
     "table.columns": {
-      "type": "pt_Type",
-      "id": "pt_ID",
-      "number": "pt_Number",
-      "issuer": "pt_Issuer",
-      "yearIssued": "pt_Year Issued",
-      "created": "pt_Date Added",
-      "creator": "pt_Added By",
-      "modified": "pt_Last Modified",
-      "modifier": "pt_Modified By"
+      "type": "Tipo",
+      "id": "Identificação",
+      "number": "Número",
+      "issuer": "Emissor",
+      "yearIssued": "Ano de emissão",
+      "created": "Data adicionada",
+      "creator": "Adicionado por",
+      "modified": "Última Data Modificada",
+      "modifier": "Usuário modificado"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo"
     },
     "modal": {
-      "addID": "pt_Add New Identification",
-      "editID": "pt_Edit Identification",
-      "title": "pt_Add New Identification",
-      "setPrimary": "pt_Set as Primary?",
-      "yes": "pt_Yes",
-      "no": "pt_No",
-      "type.label": "pt_Type",
-      "type.placeholder": "pt_Enter Type",
-      "id.label": "pt_ID",
-      "id.placeholder": "pt_Enter ID",
-      "number.label": "pt_Number",
-      "number.placeholder": "pt_Enter Number",
-      "issuer.label": "pt_Issuer",
-      "issuer.placeholder": "pt_Enter Issuer",
-      "yearIssued.label": "pt_Year Issued",
-      "yearIssued.placeholder": "pt_Enter Year Issued",
-      "yearIssued.close.button": "pt_Close",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save ID"
+      "addID": "Adicionar nova identificação",
+      "editID": "Editar Identificação",
+      "title": "Adicionar nova identificação",
+      "setPrimary": "Definir como primário?",
+      "yes": "Sim",
+      "no": "Não",
+      "type.label": "Tipo",
+      "type.placeholder": "Digite Tipo",
+      "id.label": "Identificação",
+      "id.placeholder": "Digite a Identificação",
+      "number.label": "Número",
+      "number.placeholder": "Insira numeros",
+      "issuer.label": "Emissor",
+      "issuer.placeholder": "Entre emissora",
+      "yearIssued.label": "Ano de emissão",
+      "yearIssued.placeholder": "Digite Ano Emitido",
+      "yearIssued.close.button": "Fechar",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar Identificação"
     }
   },
   "organizations.comp.people": {
     "title": "Pessoas",
     "table.columns": {
-      "type": "pt_Role",
-      "firstName": "pt_FirstName",
-      "lastName": "pt_LastName",
-      "organization": "pt_Organization",
-      "phone": "pt_Phone",
-      "location": "pt_Location"
+      "type": "Função",
+      "firstName": "Primeiro nome",
+      "lastName": "Último nome",
+      "organization": "Organização",
+      "phone": "Telefone",
+      "location": "Localização"
     },
     "actions": {
-      "delete": "pt_Delete",
-      "setPrimary": "pt_Set as Primary",
-      "addNew": "pt_Add New",
-      "addExisting": "pt_Add Existing"
+      "delete": "Excluir",
+      "setPrimary": "Definir como primário",
+      "addNew": "Adicionar novo",
+      "addExisting": "Adicionar Existente"
     }
   },
   "organizations.comp.cases": {
     "title": "Casos",
+    "objectType.label": "Ficheiro",
     "table.columns": {
-      "priority": "pt_Priority",
-      "id": "pt_ID",
-      "title": "pt_Title",
-      "status": "pt_Status",
-      "assignee": "pt_Assignee",
-      "modified": "pt_Modified"
+      "role": "Função",
+      "priority": "Prioridade",
+      "id": "Identificação",
+      "title": "Título",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Data modificada"
     }
   },
   "organizations.comp.complaints": {
     "title": "Reclamações",
+    "objectType.label": "Queixa",
     "table.columns": {
-      "priority": "pt_Priority",
-      "id": "pt_ID",
-      "title": "pt_Title",
-      "status": "pt_Status",
-      "assignee": "pt_Assignee",
-      "modified": "pt_Modified"
+      "role": "Função",
+      "priority": "Prioridade",
+      "id": "Identificação",
+      "title": "Título",
+      "status": "Status",
+      "assignee": "Assignee",
+      "modified": "Data modificada"
     }
   },
   "organizations.comp.related": {
-    "title": "Organizações Relacionadas",
+    "title": "Organização Relacionada",
+    "linkTitle": "Rel Org",
     "table.columns": {
-      "associationType": "pt_Relationship",
-      "type": "pt_Type",
-      "identification": "pt_ID",
-      "value": "pt_Organization",
-      "contact": "pt_Primary Contact",
-      "phone": "pt_Phone",
-      "location": "pt_Location"
+      "associationType": "Relação",
+      "type": "Tipo",
+      "identification": "Identificação",
+      "value": "Organização",
+      "contact": "Contato primário",
+      "phone": "Telefone",
+      "location": "Localização"
     },
     "modal": {
-      "title": "pt_Add Related Organization",
-      "type.label": "pt_Relationship",
-      "type.placeholder": "pt_Enter Relationship",
-      "organization.label": "pt_Organization",
-      "organization.placeholder": "pt_Search Organizations",
-      "btnCancel.text": "pt_Cancel",
-      "btnOk.text": "pt_Save Related Organization"
+      "title": "Adicionar Organização Relacionada",
+      "type.label": "Relação",
+      "type.placeholder": "Inserir Relação",
+      "organization.label": "Organização",
+      "organization.placeholder": "Organizações de busca",
+      "btnCancel.text": "Cancelar",
+      "btnOk.text": "Salvar Organização Relacionada"
     }
   },
   "organizations.comp.history": {
-    "title": "Histórico",
+    "title": "História",
     "table.columns": {
-      "eventType": "pt_Event Name",
-      "eventDate": "pt_Date",
-      "userId": "pt_User"
+      "eventType": "Nome do evento",
+      "eventDate": "Data",
+      "details.btn.text": "Detalhes",
+      "userId": "Do utilizador"
     }
   },
   "organizations.comp.newOrganization": {
-    "title": "pt_Organization",
-    "addAnother": "pt_Add Another",
-    "remove": "pt_Remove",
-    "name": "pt_Organization Name",
-    "name.placeholder": "pt_Enter Organization Name",
-    "type": "pt_Organization Type",
-    "type.placeholder": "pt_Select Organization Type",
-    "saveButton": "pt_Save Organization",
-    "parentOrganization": "pt_Parent organization",
-    "searchParentOrganization.placeholder": "pt_Search Parent Organization",
+    "title": "Organização",
+    "addAnother": "Adicionar outro",
+    "remove": "Remover",
+    "name": "Nome da organização",
+    "name.placeholder": "Digite o Nome da Organização",
+    "type": "Tipo de organização",
+    "type.placeholder": "Selecione tipo de organização",
+    "saveButton": "Salvar Organização",
+    "cancelButton": "Cancelar",
+    "parentOrganization": "Organização pai",
+    "searchParentOrganization.placeholder": "Pesquisar Organização pai",
     "communicationAccounts": {
-      "title": "pt_Communication Accounts",
-      "phone": "pt_Phone",
-      "phone.placeholder": "pt_Enter Phone",
-      "phoneType": "pt_Phone Type",
-      "email": "pt_Email",
-      "email.placeholder": "pt_Enter Email",
-      "emailType": "pt_Email Type",
-      "fax": "pt_Fax",
-      "fax.placeholder": "pt_Enter Fax",
-      "faxType": "pt_Fax Type",
-      "url": "pt_URL",
-      "url.placeholder": "pt_Enter URL",
-      "removeContactMethod": "pt_Remove",
-      "urlType": "pt_URL Type"
+      "title": "Contas de comunicação",
+      "phone": "Telefone",
+      "phone.placeholder": "Digite o telefone",
+      "phoneType": "Tipo de telefone",
+      "email": "O email",
+      "email.placeholder": "Digite e-mail",
+      "emailType": "Tipo de Email",
+      "fax": "Fax",
+      "fax.placeholder": "Digite o fax",
+      "faxType": "Tipo de fax",
+      "url": "URL",
+      "url.placeholder": "Digite URL",
+      "removeContactMethod": "Remover",
+      "urlType": "Tipo de URL"
     },
     "people": {
-      "title": "pt_People",
-      "searchExisting.placeholder": "pt_Search Existing Person",
-      "personType": "pt_Person Type"
+      "title": "Pessoas",
+      "searchExisting.placeholder": "Pesquisar pessoa existente",
+      "personType": "Tipo de pessoa"
     },
     "locations": {
-      "title": "pt_Locations",
-      "country": "pt_Country",
-      "country.placeholder": "pt_Select Country",
-      "state": "pt_State",
-      "state.placeholder": "pt_Enter State",
-      "zip": "pt_Zip",
-      "zip.placeholder": "pt_Enter Zip",
-      "city": "pt_City",
-      "city.placeholder": "pt_Enter City",
-      "type": "pt_Address Type",
-      "type.placeholder": "pt_Select Address Type",
-      "streetAddress": "pt_Street Address",
-      "streetAddress.placeholder": "pt_Enter Street Address",
-      "streetAddress2": "pt_Street Address2",
-      "streetAddress2.placeholder": "pt_Enter Street Address2"
+      "title": "Localizações",
+      "country": "País",
+      "country.placeholder": "Selecione o pais",
+      "state": "Estado",
+      "state.placeholder": "Insira o estado",
+      "zip": "Fecho eclair",
+      "zip.placeholder": "Digite Zip",
+      "city": "Cidade",
+      "city.placeholder": "Insira a cidade",
+      "type": "Tipo de endereço",
+      "type.placeholder": "Selecione o tipo de endereço",
+      "streetAddress": "Endereço",
+      "streetAddress.placeholder": "Digite o endereço da rua",
+      "streetAddress2": "Rua2",
+      "streetAddress2.placeholder": "Digite Street Address2"
     },
     "identification": {
-      "title": "pt_Identifications",
-      "identificationID": "pt_Identification ID",
-      "identificationID.placeholder": "pt_Enter Identification ID",
-      "identificationType": "pt_Identification Type",
-      "identificationType.placeholder": "pt_Select Identification Type",
-      "identificationNumber": "pt_Identification Number",
-      "identificationNumber.placeholder": "pt_Enter Identification Number",
-      "identificationIssuer": "pt_Identification Issuer",
-      "identificationIssuer.placeholder": "pt_Enter Identification Issuer",
-      "identificationYearIssued": "pt_Identification Issued Date",
-      "identificationYearIssued.placeholder": "pt_Select Identification Issued",
-      "identificationYearIssued.close.button": "pt_Close"
+      "title": "Identificações",
+      "identificationID": "ID de Identificação",
+      "identificationID.placeholder": "Insira o ID de identificação",
+      "identificationType": "Tipo de Identificação",
+      "identificationType.placeholder": "Selecionar tipo de identificação",
+      "identificationNumber": "Número de identificação",
+      "identificationNumber.placeholder": "Digite o número de identificação",
+      "identificationIssuer": "Identificador emissor",
+      "identificationIssuer.placeholder": "Digite a Emissora Identificadora",
+      "identificationYearIssued": "Identificação Data de emissão",
+      "identificationYearIssued.placeholder": "Selecionar Identificação Emitida",
+      "identificationYearIssued.close.button": "Fechar"
     },
-    "informCreated": "pt_{{objectType}} {{organizationValue}} was created."
+    "informCreated": "{{objectType}} {{organizationValue}} foi criado."
   },
   "organizations.tree": {
     "nodeTypes": {
@@ -448,29 +456,129 @@
       "addresses.label": "Localizações",
       "phones.label": "Números de telefone",
       "faxes.label": "Números de fax",
-      "emails.label": "E-mail",
-      "urls.label": "URL",
+      "emails.label": "Endereço de e-mail",
+      "urls.label": "URLs",
       "participants.label": "Participantes",
-      "dbas.label": "DBA",
+      "dbas.label": "DBAs",
       "people.label": "Pessoas",
-      "ids.label": "Identificação da organização",
+      "ids.label": "Identificações",
       "complaints.label": "Reclamações",
       "cases.label": "Casos",
       "related.label": "Organizações Relacionadas",
-      "history.label": "Histórico"
+      "history.label": "História"
     },
     "filters": {
       "iHaveCreated": "Tudo o que eu criei",
       "noFilter": "(Sem filtro)"
     },
     "sorters": {
-      "createdDateAsc": "Data de classificação criada ascendente",
+      "createdDateAsc": "Data de classificação criada Ascendente",
       "createdDateDesc": "Data de classificação criada decrescente",
-      "idAsc": "Classificar ID de organização Ascendente",
-      "idDesc": "Classificar ID de organização Descendente",
-      "nameAsc": "Classificar nome da organização A-Z",
-      "nameDesc": "Classificar nome da organização Z-A",
-      "noSort": "(Não classificar)"
+      "idAsc": "Classifique ID da organização Ascendente",
+      "idDesc": "Classificar ID da Organização Descendente",
+      "nameAsc": "Classificar por nome da organização A-Z",
+      "nameDesc": "Ordenar por nome da organização Z-A",
+      "noSort": "(Não Ordenar)"
+    }
+  },
+  "changes": {
+    "object_replaced": {
+      "organization": {
+        "defaultPhone": "Telefone padrão alterado",
+        "defaultEmail": "Email padrão alterado",
+        "defaultAddress": "Endereço padrão alterado",
+        "defaultUrl": "URL padrão alterado",
+        "defaultAlias": "Alias ​​padrão alterados",
+        "defaultIdentification": "Identificação padrão alterada",
+        "defaultPicture": "Imagem padrão alterada"
+      }
+    },
+    "value_changed": {
+      "organization": {
+        "details": "Organização - Detalhes Alterados",
+        "status": "Organização - Status Alterado",
+        "organizationType": "Organização - Tipo alterado",
+        "organizationValue": "Organização - Nome Alterado",
+        "contactMethods.contactMethod": {
+          "subType": "Método de contato - Tipo alterado",
+          "value": "Método de contato - Valor alterado"
+        },
+        "defaultPhone": {
+          "subType": "Telefone padrão - Tipo alterado",
+          "value": "Telefone Padrão - Valor Alterado"
+        },
+        "defaultEmail": {
+          "subType": "Email padrão - Tipo alterado",
+          "value": "Email padrão - Valor alterado"
+        },
+        "defaultUrl": {
+          "subType": "URL padrão - Tipo alterado",
+          "value": "Url padrão - Valor alterado"
+        },
+        "defaultFax": {
+          "subType": "Fax padrão - Tipo alterado",
+          "value": "Fax padrão - Valor alterado"
+        },
+        "addresses.address": {
+          "city": "Endereço - Cidade alterada",
+          "zip": "Endereço - Código postal alterado",
+          "streetAddress": "Endereço - Street Changed",
+          "streetAddress2": "Endereço - Street2 Changed",
+          "type": "Endereço - Tipo alterado",
+          "country": "Endereço - País alterado",
+          "state": "Endereço - Estado alterado"
+        },
+        "defaultAddress": {
+          "city": "Endereço - Cidade alterada",
+          "zip": "Endereço - Código postal alterado",
+          "streetAddress": "Endereço - Street Changed",
+          "streetAddress2": "Endereço - Street2 Changed",
+          "type": "Endereço - Tipo alterado",
+          "country": "Endereço - País alterado",
+          "state": "Endereço - Estado alterado"
+        },
+        "contactMethods.identifications": {
+          "identificationType": "Identificação - Tipo alterado",
+          "identificationNumber": "Identificação - Número alterado",
+          "identificationIssuer": "Identificação - Emissora alterada",
+          "identificationYearIssued": "Identificação - Ano de emissão alterado"
+        },
+        "defaultIdentification": {
+          "identificationType": "Identificação - Tipo alterado",
+          "identificationNumber": "Identificação - Número alterado",
+          "identificationIssuer": "Identificação - Emissora alterada",
+          "identificationYearIssued": "Identificação - Ano de emissão alterado"
+        }
+      }
+    },
+    "collection_element_added": {
+      "organization": {
+        "identifications.identification": "Identificação adicionada",
+        "contactMethods.contactMethod": "Método de contato adicionado",
+        "personAliases.alias": "Alias ​​Adicionado",
+        "addresses.address": "Endereço Adicionado",
+        "organizations.organization": "Organização adicionada",
+        "associationsToObjects": "Associação Adicionado",
+        "associationsFromObjects": "Associação Adicionado",
+        "organizationAssociations": "Organização adicionada"
+      }
+    },
+    "collection_element_removed": {
+      "organization": {
+        "identifications.identification": "Identificação removida",
+        "contactMethods.contactMethod": "Método de contato removido",
+        "personAliases.alias": "Alias ​​Removidos",
+        "addresses.address": "Endereço removido",
+        "organizations.organization": "Organização removida",
+        "associationsToObjects": "Associação Removida",
+        "associationsFromObjects": "Associação Removida",
+        "organizationAssociations": "Organização removida"
+      },
+      "personAliases.alias": {
+        "aliasType": "Alias ​​- Tipo Alterado",
+        "aliasValue": "Alias ​​- Valor Alterado",
+        "description": "Alias ​​- Descrição alterada"
+      }
     }
   }
 }

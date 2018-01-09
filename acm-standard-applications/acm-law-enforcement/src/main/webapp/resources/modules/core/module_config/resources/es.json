@@ -46,7 +46,9 @@
         "mr": "Liberación médica",
         "noi": "Aviso de investigación",
         "sig": "Firma SF86",
-        "wir": "Solicitud de entrevista de testigos"
+        "wir": "Solicitud de entrevista de testigos",
+        "draw": "Dibujo de Ingeniero",
+        "other": "Otro"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "Tipo de Reclamacione",
         "priority": "Prioridad",
         "complaintTitle": "Título de Reclamacione"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "Afganistán",

@@ -46,7 +46,9 @@
         "mr": "Medical Release",
         "noi": "Notice of Investigation",
         "sig": "SF86 Signature",
-        "wir": "Witness Interview Request"
+        "wir": "Witness Interview Request",
+        "draw": "Engineer Drawing",
+        "other": "Other"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "complaintType",
         "priority": "priority",
         "complaintTitle": "complaintTitle"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "Afghanistan",

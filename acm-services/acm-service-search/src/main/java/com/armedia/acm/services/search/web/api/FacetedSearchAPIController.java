@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.solr.client.solrj.util.ClientUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -59,6 +59,7 @@ public class FacetedSearchAPIController
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
+            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery, //Part of the query to NOT ESCAPE
             HttpServletResponse response,
             Authentication authentication
     ) throws MuleException, UnsupportedEncodingException
@@ -90,10 +91,15 @@ public class FacetedSearchAPIController
         String rowQueryParameters = facetKeys + filterQueries;
         String sort = sortSpec == null ? "" : sortSpec.trim();
 
-        // if the query ends in a *, it has to be quoted, or Solr will not find anything somehow.
-        if (q.endsWith("*"))
+
+        q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
+        q = ClientUtils.escapeQueryChars(q);
+
+        //Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
+        if (StringUtils.isNotEmpty(unescapedQuery))
         {
-            q = "\"" + q + "\"";
+            unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
+            q += unescapedQuery;
         }
 
         String query = SearchConstants.CATCH_ALL_QUERY + q;
@@ -117,11 +123,14 @@ public class FacetedSearchAPIController
 
         if (StringUtils.isNotEmpty(export))
         {
-            if (null != exportTitles) {
-                for (int i = 0; i < exportTitles.length; i++) {
+            if (null != exportTitles)
+            {
+                for (int i = 0; i < exportTitles.length; i++)
+                {
                     exportTitles[i] = new String(exportTitles[i].getBytes("ISO-8859-1"), "UTF-8");
                 }
-            } else {
+            } else
+            {
                 exportTitles = exportFields;
             }
 

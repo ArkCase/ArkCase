@@ -11,8 +11,8 @@
         "xAxis": "隊列",
         "yAxis": "案件數",
         "noDataMessage": "目前沒有案件信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "casesByStatus": {
         "title": "案件狀態",
@@ -25,8 +25,8 @@
           "all": "全部"
         },
         "noDataMessage": "目前沒有案件信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "myCases": {
         "title": "我的案件",
@@ -46,8 +46,8 @@
           "overdue.tooltip": "案件逾期",
           "deadline.tooltip": "截止日期正在接近"
         },
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "myComplaints": {
         "title": "我的投訴",
@@ -67,8 +67,8 @@
           "deadline.tooltip": "截止日期正在接近",
           "noDataMessage": "目前沒有投訴信息"
         },
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "myTasks": {
         "title": "我的任務",
@@ -88,8 +88,8 @@
           "deadline.tooltip": "截止日期正在接近"
         },
         "noDataMessage": "目前沒有任務信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "newComplaints": {
         "title": "新投訴",
@@ -103,8 +103,8 @@
           "all": "全部"
         },
         "noDataMessage": "目前沒有投訴信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "newCases": {
         "title": "新案件",
@@ -125,8 +125,8 @@
           "all": "全部"
         },
         "noDataMessage": "目前沒有團隊任務信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "workflowReport": {
         "title": "工作流程報告",
@@ -143,8 +143,8 @@
           }
         },
         "noDataMessage": "目前沒有工作流報告信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "weather": {
         "description": "顯示天氣",
@@ -153,12 +153,14 @@
           "enterLocation": "輸入位置",
           "description": "顯示城市的當前溫度",
           "location": "位置",
-          "insertLocationInConfiguration": "請在窗口小部件配置中插入位置"
+          "insertLocationInConfiguration": "請在窗口小部件配置中插入位置",
+          "zip": "zh-tw_Zip Code",
+          "enterZip": "zh-tw_Enter Zip Code"
         },
         "title": "天氣",
         "noDataMessage": "目前沒有天氣信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "news": {
         "description": "顯示新聞",
@@ -170,8 +172,8 @@
         },
         "title": "新聞",
         "noDataMessage": "目前沒有RSS /信息",
-        "configDescription": "",
-        "configDescriptionPlaceholder": ""
+        "configDescription": "描述",
+        "configDescriptionPlaceholder": "輸入小部件描述"
       },
       "details": {
         "title": "詳細信息",
@@ -179,7 +181,7 @@
         "noDataMessage": "目前沒有細節"
       },
       "people": {
-        "title": "人",
+        "title": "人員",
         "description": "顯示人物細節",
         "noDataMessage": "目前沒有人信息可以顯示"
       },

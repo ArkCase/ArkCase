@@ -14,8 +14,8 @@
  *
  * The Admin.OrganizationalHierarchyService provides Organizational Hierarchy REST calls functionality
  */
-angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', 'Acm.StoreService', '$resource',
-    function ($http, Util, Store, $resource) {
+angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http', 'UtilService', 'Acm.StoreService', '$resource', 'base64',
+    function ($http, Util, Store, $resource, base64) {
         var Service = $resource('api/latest/users/group', {}, {
             /**
              * @ngdoc method
@@ -92,6 +92,16 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             _deleteLdapGroup: {
                 method: 'DELETE',
                 url: 'api/latest/ldap/:directoryName/groups/:groupName'
+            },
+
+            _removeLdapGroupMembership: {
+                method: 'DELETE',
+                url: 'api/latest/ldap/:directoryName/groups/:groupName/parent/:parentName'
+            },
+
+            _removeGroupMembership: {
+                method: 'DELETE',
+                url: 'api/latest/users/group/:groupName/parent/:parentName'
             }
         });
 
@@ -109,6 +119,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             saveMembers: saveMembers,
             removeMembers: removeMembers,
             removeGroup: removeGroup,
+            removeGroupMembership: removeGroupMembership,
             setSupervisor: setSupervisor,
             getFilteredTopLevelGroups: getFilteredTopLevelGroups,
             isEnabledEditingLdapUsers: isEnabledEditingLdapUsers,
@@ -118,7 +129,8 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             createLdapGroup: createLdapGroup,
             createLdapSubgroup: createLdapSubgroup,
             deleteLdapUserMember: deleteLdapUserMember,
-            deleteLdapGroup: deleteLdapGroup
+            deleteLdapGroup: deleteLdapGroup,
+            removeLdapGroupMembership: removeLdapGroupMembership
         });
 
         /**
@@ -179,7 +191,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         function getSubGroupsForGroup(group) {
             return $http({
                 method: 'GET',
-                url: 'api/latest/users/group/' + group + '/get/subgroups/'
+                url: 'api/latest/users/group/' + base64.urlencode(group) + '/get/subgroups/'
             });
         }
 
@@ -204,7 +216,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
             }
             return $http({
                 method: 'GET',
-                url: 'api/latest/users/by-group/' + group,
+                url: 'api/latest/users/by-group/' + base64.urlencode(group),
                 params: params
             });
         }
@@ -226,7 +238,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         function addAdHocGroup(group, parent) {
             var url = 'api/latest/users/group/save';
             if (parent)
-                url += '/' + parent.object_id_s;
+                url += '/' + base64.urlencode(parent.object_id_s);
             return $http({
                 method: 'POST',
                 url: url,
@@ -253,7 +265,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          */
         function saveMembers(group, members) {
 
-            var url = 'api/latest/users/group/' + group.object_id_s + '/members/save';
+            var url = 'api/latest/users/group/' + base64.urlencode(group.object_id_s) + '/members/save';
             return $http({
                 method: 'POST',
                 url: url,
@@ -281,11 +293,9 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
         function removeMembers(group, members) {
             var data = [];
             for (var i = 0; i < members.length; i++) {
-                var obj = {};
-                obj.userId = members[i].object_id_s;
-                data.push(obj);
+                data.push(members[i].object_id_s);
             }
-            var url = 'api/latest/users/group/' + group.object_id_s + '/members/remove';
+            var url = 'api/latest/users/group/' + base64.urlencode(group.object_id_s) + '/members/remove';
             return $http({
                 method: 'POST',
                 url: url,
@@ -310,7 +320,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          * @returns {HttpPromise} Future info about remove group
          */
         function removeGroup(group) {
-            var url = 'api/latest/users/group/' + group.object_id_s + '/remove';
+            var url = 'api/latest/users/group/' + base64.urlencode(group.object_id_s) + '/remove';
             return $http({
                 method: 'DELETE',
                 url: url,
@@ -336,7 +346,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
          */
         function setSupervisor(group, member) {
 
-            var url = 'api/latest/users/group/' + group.object_id_s + '/supervisor/save/false';
+            var url = 'api/latest/users/group/' + base64.urlencode(group.object_id_s) + '/supervisor/save/false';
             return $http({
                 method: 'POST',
                 url: url,
@@ -457,7 +467,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 service: Service._addExistingMembersToLdapGroup
                 , data: ldapUsers
                 , param: {
-                    groupName: groupName,
+                    groupName: base64.urlencode(groupName),
                     directoryName: directoryName
                 }
                 , onSuccess: function (data) {
@@ -509,7 +519,7 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 service: Service._createLdapSubgroup
                 , data: group
                 , param: {
-                    parentGroupName: parentGroupName,
+                    parentGroupName: base64.urlencode(parentGroupName),
                     directoryName: directoryName
                 }
                 , onSuccess: function (data) {
@@ -535,12 +545,39 @@ angular.module('admin').service('Admin.OrganizationalHierarchyService', ['$http'
                 service: Service._deleteLdapGroup
                 , param: {
                     directoryName: ldapGroup.directory_name_s,
-                    groupName: ldapGroup.name
+                    groupName: base64.urlencode(ldapGroup.name)
                 }
-                , data: ldapGroup
                 , onSuccess: function (data) {
                     return data;
                 }
             });
         }
+
+        function removeLdapGroupMembership(group, parenGroup) {
+            return Util.serviceCall({
+                service: Service._removeLdapGroupMembership
+                , param: {
+                    directoryName: group.directory_name_s,
+                    groupName: base64.urlencode(group.name),
+                    parentName: base64.urlencode(parenGroup.name)
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
+        function removeGroupMembership(groupName, parentName) {
+            return Util.serviceCall({
+                service: Service._removeGroupMembership
+                , param: {
+                    groupName: base64.urlencode(groupName),
+                    parentName: base64.urlencode(parentName)
+                }
+                , onSuccess: function (data) {
+                    return data;
+                }
+            });
+        }
+
     }]);

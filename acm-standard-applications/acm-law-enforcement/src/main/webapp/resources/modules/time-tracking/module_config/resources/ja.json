@@ -31,7 +31,7 @@
     }
   },
   "timeTracking.comp.person": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
       "fullName": "フルネーム",
       "userId": "ユーザー名"
@@ -81,7 +81,7 @@
   "timeTracking.tree": {
     "nodeTypes": {
       "details.label": "詳細",
-      "person.label": "人員",
+      "person.label": "人物",
       "summary.label": "時間",
       "tags.label": "タグ",
       "approvers.label": "承認者"

@@ -540,7 +540,11 @@
           "objectNumberRegexGroup": 2
         },
         "noteRequiredOnCheckin": false,
-        "allowParentOwnerToCancel": true
+        "allowParentOwnerToCancel": true,
+        "menu": {
+          "subMenuForms": "cases.comp.documents.menu.forms",
+          "subMenuCorrespondences": "cases.comp.documents.menu.correspondences"
+        }
       }
     },
     {
@@ -1216,7 +1220,7 @@
     {
       "id": "newFutureTask",
       "userOrGroupSearch": {
-        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
         "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       },
       "groupSearch": {
@@ -1262,7 +1266,7 @@
         },
         {
           "name": "groupName",
-          "displayName": "cases.comp.approvalRouting.table.columns.group",
+          "displayName": "cases.comp.approvalRouting.table.columns.owningGroup",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
@@ -1299,7 +1303,7 @@
         }
       ],
       "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
         "userFacetExtraFilter": "&fq=\"name\": "
       }
     },

@@ -32,7 +32,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -40,8 +39,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.xml.bind.annotation.XmlTransient;
 import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlTransient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -75,7 +74,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     private List<String> organizationTypes;
 
     @Column(name = "cm_organization_value")
-    @Size(min=1)
+    @Size(min = 1)
     private String organizationValue;
 
     @Column(name = "cm_organization_created", nullable = false, insertable = true, updatable = false)
@@ -213,18 +212,6 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     @Convert(converter = BooleanToStringConverter.class)
     private Boolean restricted = Boolean.FALSE;
 
-    @PostLoad
-    protected void postLoad()
-    {
-        /*
-         * FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch same person which is
-         * parent to them. Because of deadline didn't have time to find better solution for this like: get object from cache or explore new
-         * possibilities So when we optimize JPA not to fetch same entity (with same ID) more than once in same transaction, this code
-         * should be removed linked with technical dept: AFDP-3487
-         */
-        updateChildObjectsWithParentObjectReference();
-    }
-
     @PrePersist
     protected void beforeInsert()
     {
@@ -242,8 +229,10 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
     }
 
     /**
-     * Updates child objects which (should) have reference to **this** object instance, reference is lost due to (de)serialization from/to
-     * JSON, XMl, etc. Also JPA without caching returns different instance for same object, executes additional query for same object id.
+     * Updates child objects which (should) have reference to **this** object instance, reference is lost due to
+     * (de)serialization from/to
+     * JSON, XMl, etc. Also JPA without caching returns different instance for same object, executes additional query
+     * for same object id.
      */
     private void updateChildObjectsWithParentObjectReference()
     {
@@ -581,6 +570,7 @@ public class Organization implements Serializable, AcmEntity, AcmObject, AcmAssi
         this.participants = participants;
     }
 
+    @Override
     @XmlTransient
     public String getStatus()
     {

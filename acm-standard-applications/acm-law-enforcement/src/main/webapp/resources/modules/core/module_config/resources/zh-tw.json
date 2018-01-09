@@ -46,7 +46,9 @@
         "mr": "醫療發布",
         "noi": "調查通知",
         "sig": "SF86簽名",
-        "wir": "證人面試請求"
+        "wir": "證人面試請求",
+        "draw": "技術製圖",
+        "other": "其他"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "投訴類型",
         "priority": "優先",
         "complaintTitle": "投訴標題"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "阿富汗",

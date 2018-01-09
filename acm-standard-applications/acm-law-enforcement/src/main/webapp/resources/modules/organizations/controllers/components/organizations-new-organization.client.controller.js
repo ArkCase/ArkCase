@@ -6,6 +6,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         $scope.modalParams = modalParams;
         $scope.loading = false;
+        $scope.loadingIcon = "fa fa-floppy-o";
 
         //used for showing/hiding buttons in communication accounts
         var contactMethodsCounts = {
@@ -270,6 +271,7 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
 
         $scope.save = function () {
             $scope.loading = true;
+            $scope.loadingIcon = "fa fa-circle-o-notch fa-spin";
             var promiseSaveOrganization = OrganizationInfoService.saveOrganizationInfo(clearNotFilledElements(_.cloneDeep($scope.organization)));
             promiseSaveOrganization.then(
                 function (objectInfo) {
@@ -282,9 +284,11 @@ angular.module('organizations').controller('Organizations.NewOrganizationControl
                     ObjectService.showObject(ObjectService.ObjectTypes.ORGANIZATION, objectInfo.organizationId);
                     $scope.onModalClose();
                     $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
                 }
                 , function (error) {
                     $scope.loading = false;
+                    $scope.loadingIcon = "fa fa-floppy-o";
                     if (error.data && error.data.message) {
                         $scope.error = error.data.message;
                     } else {

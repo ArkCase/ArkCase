@@ -46,7 +46,9 @@
         "mr": "医疗发布",
         "noi": "调查通知",
         "sig": "SF86签名",
-        "wir": "证人面试请求"
+        "wir": "证人面试请求",
+        "draw": "技术制图",
+        "other": "其他"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "投诉类型",
         "priority": "优先",
         "complaintTitle": "投诉标题"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "阿富汗",

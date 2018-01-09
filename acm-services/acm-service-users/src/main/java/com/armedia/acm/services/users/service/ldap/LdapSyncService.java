@@ -12,7 +12,6 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -95,7 +94,8 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
+        boolean isFullSync = !ldapLastSyncDate.isPresent();
+        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
 
         writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
     }

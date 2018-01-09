@@ -10,7 +10,7 @@
     "topbar.item": "費用シート"
   },
   "costTracking.comp.main": {
-    "title": "概観"
+    "title": "概要"
   },
   "costTracking.comp.info": {
     "title": "情報",
@@ -21,75 +21,75 @@
     "state": "状態"
   },
   "costTracking.comp.actions": {
-    "title": "行动",
+    "title": "行動",
     "new.button": "新しい費用シート",
-    "edit.button": "費用シートの編集"
+    "edit.button": "費用項目を変更する"
   },
   "costTracking.comp.details": {
     "title": "詳細",
-    "informSaved": "ja_Costsheet details saved",
+    "informSaved": "コストシートの詳細が保存されました",
     "table.columns": {
-      "title": "ja_Details",
-      "modified": "ja_Date Last Modified",
-      "modifier": "ja_User Last Modified"
+      "title": "詳細",
+      "modified": "最終変更日",
+      "modifier": "ユーザー最終更新日"
     }
   },
   "costTracking.comp.person": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
-      "fullName": "ja_Full Name",
-      "userId": "ja_Username"
+      "fullName": "フルネーム",
+      "userId": "ユーザー名"
     }
   },
   "costTracking.comp.summary": {
     "title": "費用の概要",
     "table.columns": {
-      "parentId": "ja_ID",
-      "parentNumber": "ja_Parent ID",
-      "parentType": "ja_Parent Type",
-      "value": "ja_Total Cost",
-      "title": "ja_Title",
-      "description": "ja_Description"
+      "parentId": "識別",
+      "parentNumber": "親ID",
+      "parentType": "親タイプ",
+      "value": "総費用",
+      "title": "タイトル",
+      "description": "説明"
     }
   },
   "costTracking.comp.tags": {
     "title": "タグ",
     "table.columns": {
-      "tag": "ja_Tag",
-      "created": "ja_Created",
-      "createdBy": "ja_Created By"
+      "tag": "タグ",
+      "created": "作成日",
+      "createdBy": "によって作成された"
     },
     "modal": {
-    "title": "ja_Tag",
-    "search": "ja_Search for Tag",
-    "buttons": {
-          "cancel": "ja_Cancel",
-          "ok": "ja_Add Tag"
-     }
+      "title": "タグ",
+      "search": "タグを検索する",
+      "buttons": {
+        "cancel": "キャンセル",
+        "ok": "タグ付けする"
+      }
     },
     "message": {
-      "tagExists": "ja_Tag with that name or description or text already exists",
-      "tagAssociated": "ja_already associated",
+      "tagExists": "その名前または説明またはテキストのタグは既に存在します",
+      "tagAssociated": "すでに関連付けられている",
       "delete": {
-        "success": "ja_Tag deleted successfully",
-        "error": "ja_Error deleting tag"
+        "success": "タグを削除しました",
+        "error": "タグ削除中にエラーが発生しました"
       }
     }
   },
   "costTracking.comp.approvers": {
-    "title": "ja_Approvers",
+    "title": "承認者",
     "table.columns": {
-      "fullName": "ja_Full Name",
-      "userId": "ja_Username"
+      "fullName": "フルネーム",
+      "userId": "ユーザー名"
     }
   },
   "costTracking.tree": {
     "nodeTypes": {
       "details.label": "詳細",
-      "person.label": "人員",
-      "summary.label": "費用",
+      "person.label": "人物",
+      "summary.label": "経費",
       "tags.label": "タグ",
-      "approvers.label": "ja_Approvers"
+      "approvers.label": "承認者"
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",

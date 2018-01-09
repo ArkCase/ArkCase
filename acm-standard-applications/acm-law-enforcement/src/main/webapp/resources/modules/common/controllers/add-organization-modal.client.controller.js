@@ -17,8 +17,8 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
             $scope.returnValueValidationFunction = params.returnValueValidationFunction;
             $scope.duplicateOrganizationRoleError = false;
             $scope.editMode = !!params.organizationId;
-            $scope.organizationId = Util.isEmpty(params.relatedToOrganizationId) ? params.organizationId : params.relatedToOrganizationId;
-            $scope.parentOrganizationId = params.parentOrganizationId;
+            $scope.organizationId = params.organizationId;
+            $scope.externalSearchParams = params.externalSearchParams;
             $scope.organizationValue = params.organizationValue;
             $scope.isInvalid = true;
             $scope.isDefault = params.isDefault;
@@ -105,8 +105,9 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 params.header = $translate.instant("common.dialogOrganizationPicker.header");
                 params.filter = '"Object Type": ORGANIZATION &fq="status_lcs": ACTIVE';
                 params.config = Util.goodMapValue($scope.config, "dialogOrganizationPicker");
-                params.organizationId = $scope.organizationId;
-                params.parentOrganizationId = $scope.parentOrganizationId;
+                if (!Util.isEmpty($scope.externalSearchParams)) {
+                    params.organizationId = $scope.externalSearchParams.organizationId;
+                }
                 params.externalSearchServiceName = $scope.externalSearchServiceName;
 
                 var modalInstance = $modal.open({
@@ -131,7 +132,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     }
                 });
                 modalInstance.result.then(function (selected) {
-                    $scope.isInvalid = false;
                     if (!Util.isEmpty(selected)) {
                         $scope.organizationId = selected.object_id_s;
                         $scope.organizationValue = selected.name;
@@ -149,13 +149,12 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                     );
             };
 
-            $scope.isChanged = function (organizationType) {
-                $scope.isInvalid = false;
-                $scope.notifyOrganizationParent(organizationType);
+            $scope.isInvalid = function () {
+                return !Util.isEmpty(params.isEditOrganization) && !Util.isEmpty($scope.type) && !Util.isEmpty(params.type) && $scope.type.key === params.type;
             };
 
-            $scope.notifyOrganizationParent = function (organizationType) {
-                $scope.hasSubCompany = !Util.isEmpty(organizationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationType.key === "subCompany";
+            $scope.notifyOrganizationParent = function (organizationAssociationType) {
+                $scope.hasSubCompany = !Util.isEmpty(organizationAssociationType) && !Util.isEmpty($scope.newOrganizationPicked) && organizationAssociationType.key === "subCompany";
             };
 
             $scope.addNewOrganization = function () {
@@ -178,7 +177,6 @@ angular.module('common').controller('Common.AddOrganizationModalController', ['$
                 });
 
                 modalInstance.result.then(function (data) {
-                    $scope.isInvalid = false;
                     $scope.organizationId = '';
                     $scope.organizationValue = data.organization.organizationValue;
                     $scope.organization = data.organization;

@@ -46,7 +46,9 @@
         "mr": "Медицинский релиз",
         "noi": "Уведомление о расследовании",
         "sig": "Подпись SF86",
-        "wir": "Свидетельство о проведении собеседования"
+        "wir": "Свидетельство о проведении собеседования",
+        "draw": "Инженерный чертеж",
+        "other": "Другие"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "ComplaintType",
         "priority": "Приоритет",
         "complaintTitle": "ComplaintTitle"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "Афганистан",
