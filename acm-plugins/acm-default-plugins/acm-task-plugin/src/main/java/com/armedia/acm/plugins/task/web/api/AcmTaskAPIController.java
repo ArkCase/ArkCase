@@ -42,7 +42,8 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/businessProcess/{id}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory)
+    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId,
+                                                  @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory)
     {
         try
         {
@@ -57,7 +58,8 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/objectType/{type}/objectId/{id}/buckslipProcessesForChildren", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId)
+    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("type") String objectType,
+                                                           @PathVariable("id") Long objectId)
     {
         try
         {
@@ -72,7 +74,10 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory, Authentication authentication)
+    public ResponseEntity<?> getBuckslipPastTasksForObject(@PathVariable("objectType") String objectType,
+                                                                    @PathVariable("objectId") Long objectId,
+                                                                    @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory,
+                                                                    Authentication authentication)
     {
         log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
         Long businessProcessId = getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
@@ -87,6 +92,39 @@ public class AcmTaskAPIController
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/{processVariable}/businessProcessVariable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> getBusinessProcessVariableForObject(@PathVariable("objectType") String objectType,
+                                                                 @PathVariable("objectId") Long objectId,
+                                                                 @PathVariable("processVariable") String processVariable,
+                                                                 @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory,
+                                                                 Authentication authentication) throws AcmTaskException {
+
+        log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
+
+        Long businessProcessId = null;
+
+        List<BuckslipProcess> buckslipProcesses = getAcmTaskService().getBuckslipProcessesForObject(objectType, objectId);
+
+        if(buckslipProcesses != null && buckslipProcesses.size()>0 && !buckslipProcesses.get(0).getBusinessProcessId().isEmpty())
+        {
+            businessProcessId = Long.valueOf(buckslipProcesses.get(0).getBusinessProcessId());
+        }
+        else
+        {
+            businessProcessId =  getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
+        }
+
+        try
+        {
+            return new ResponseEntity<>(getAcmTaskService().getBusinessProcessVariable(String.valueOf(businessProcessId), processVariable, readFromHistory), HttpStatus.OK);
+        }
+        catch (AcmTaskException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/businessProcess/{id}/initiatable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
