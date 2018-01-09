@@ -371,7 +371,7 @@ public class CmisConfigurationService
     public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException {
 
         SessionFactory sessionFactory = SessionFactoryImpl.newInstance();
-        HashMap<String, String> parameters = new HashMap<>();
+        Map<String, String> parameters = new HashMap<>();
         parameters.put(SessionParameter.USER, cmisUrlConfig.getUsername());
         parameters.put(SessionParameter.PASSWORD, encryptablePropertyUtils.decryptPropertyValue(cmisUrlConfig.getPassword()));
         parameters.put(SessionParameter.REPOSITORY_ID, cmisUrlConfig.getRepositoryId());
