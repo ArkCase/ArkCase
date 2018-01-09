@@ -707,7 +707,7 @@
           "label": "存储库ID",
           "placeholder": "存储库ID"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "版本控制状态",
           "placeholder": "版本控制状态"
         }

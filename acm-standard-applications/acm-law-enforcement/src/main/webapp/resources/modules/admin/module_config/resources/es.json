@@ -707,7 +707,7 @@
           "label": "Id de repositorio",
           "placeholder": "Id de repositorio"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "Versioning State",
           "placeholder": "Versioning State"
         }

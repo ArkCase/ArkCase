@@ -707,7 +707,7 @@
           "label": "रिपॉजिटरी आईडी",
           "placeholder": "रिपॉजिटरी आईडी"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "वर्जनिंग स्टेट",
           "placeholder": "वर्जनिंग स्टेट"
         }

@@ -552,7 +552,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
 
         /**
          * @ngdoc method
-         * @name getVersioningState
+         * @name getCmisVersioningState
          * @methodOf services:Object.LookupService
          *
          * @description
@@ -560,8 +560,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-        Service.getVersioningState = function () {
-            return Service.getLookupByLookupName("versioningState");
+        Service.getCmisVersioningState = function () {
+            return Service.getLookupByLookupName("cmisVersioningState");
         };
 
         /**

@@ -707,7 +707,7 @@
           "label": "Identifiant du référentiel",
           "placeholder": "Identifiant du référentiel"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "État du versionnement",
           "placeholder": "État du versionnement"
         }

@@ -727,8 +727,8 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "versioningState",
-          "displayName": "admin.documentManagement.cmisConfiguration.data.versioningState.label",
+          "name": "cmisVersioningState",
+          "displayName": "admin.documentManagement.cmisConfiguration.data.cmisVersioningState.label",
           "visible": true,
           "headerCellFilter": "translate"
         }

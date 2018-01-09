@@ -707,7 +707,7 @@
           "label": "リポジトリID",
           "placeholder": "リポジトリID"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "バージョン管理の状態",
           "placeholder": "バージョン管理の状態"
         }
