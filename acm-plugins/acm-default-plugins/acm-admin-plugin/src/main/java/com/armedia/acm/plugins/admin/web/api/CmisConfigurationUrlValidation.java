@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping({ "/api/v1/plugin/admin/config/cmis/validate-url", "/api/latest/plugin/admin/config/cmis/validate-url " })
+@RequestMapping({"/api/v1/plugin/admin/config/cmis/validate-url", "/api/latest/plugin/admin/config/cmis/validate-url"})
 public class CmisConfigurationUrlValidation
 {
     private Logger log = LoggerFactory.getLogger(getClass());
