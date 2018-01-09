@@ -59,6 +59,7 @@ public class FacetedSearchAPIController
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
+            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery, //Part of the query to NOT ESCAPE
             HttpServletResponse response,
             Authentication authentication
     ) throws MuleException, UnsupportedEncodingException
@@ -93,6 +94,13 @@ public class FacetedSearchAPIController
 
         q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
         q = ClientUtils.escapeQueryChars(q);
+
+        //Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
+        if (StringUtils.isNotEmpty(unescapedQuery))
+        {
+            unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
+            q += unescapedQuery;
+        }
 
         String query = SearchConstants.CATCH_ALL_QUERY + q;
 
