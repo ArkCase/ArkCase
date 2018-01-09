@@ -30,8 +30,8 @@ angular.module('admin').controller('Admin.CMISConfigurationController', ['$scope
             reloadGrid();
         });
 
-        ObjectLookupService.getVersioningState().then(function (versioningState) {
-            $scope.versioningState = versioningState;
+        ObjectLookupService.getCmisVersioningState().then(function (cmisVersioningState) {
+            $scope.cmisVersioningState = cmisVersioningState;
         });
 
         $scope.showModal = function (cmisConfig, isEdit, originalConfig) {

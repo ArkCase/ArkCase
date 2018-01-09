@@ -85,9 +85,9 @@
                     required>
         </div>
         <div class="form-group">
-            <label>{{ 'admin.documentManagement.cmisConfiguration.data.versioningState.label' | translate }}</label>
-            <select class="form-control" type="text" ng-model="cmisConfig.versioningState" required >
-                <option ng-repeat="option in versioningState" value="{{option.key}}">
+            <label>{{ 'admin.documentManagement.cmisConfiguration.data.cmisVersioningState.label' | translate }}</label>
+            <select class="form-control" type="text" ng-model="cmisConfig.cmisVersioningState" required >
+                <option ng-repeat="option in cmisVersioningState" value="{{option.key}}">
                     {{option.value | translate}}</option>
             </select>
         </div>

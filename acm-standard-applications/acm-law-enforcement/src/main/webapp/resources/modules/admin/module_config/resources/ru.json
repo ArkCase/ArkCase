@@ -707,7 +707,7 @@
           "label": "Идентификатор репозитория",
           "placeholder": "Идентификатор репозитория"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "Состояние версии",
           "placeholder": "Состояние версии"
         }

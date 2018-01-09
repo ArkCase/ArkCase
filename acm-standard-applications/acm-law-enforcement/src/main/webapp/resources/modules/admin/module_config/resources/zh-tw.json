@@ -707,7 +707,7 @@
           "label": "存儲庫ID",
           "placeholder": "存儲庫ID"
         },
-        "versioningState": {
+        "cmisVersioningState": {
           "label": "版本控制狀態",
           "placeholder": "版本控制狀態"
         }
