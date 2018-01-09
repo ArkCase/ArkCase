@@ -1,12 +1,15 @@
 package com.armedia.acm.webdav;
 
+import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.security.core.Authentication;
+
+import java.util.UUID;
 
 import io.milton.http.Auth;
 import io.milton.http.Request;
@@ -15,8 +18,6 @@ import io.milton.http.SecurityManager;
 import io.milton.http.fs.NullSecurityManager;
 import io.milton.http.http11.auth.DigestResponse;
 import io.milton.resource.Resource;
-
-import java.util.UUID;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -49,7 +50,7 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     {
         LOG.debug("authorize called for request {}", request.getAbsoluteUrl());
         String url = request.getAbsoluteUrl();
-        if ( url.contains("webdav") && url.contains("FILE"))
+        if (url.contains("webdav") && url.contains("FILE"))
         {
             int webdavIdx = url.indexOf("webdav");
             int fileIdx = url.indexOf("FILE");
@@ -58,9 +59,16 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
             try
             {
                 Authentication arkcaseAuth = getAuthenticationForTicket(ticket);
-                LOG.debug("got auth for ticket {}, user: {}", ticket, arkcaseAuth.getName());
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, arkcaseAuth.getName());
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
+                if (arkcaseAuth.getDetails() != null && arkcaseAuth.getDetails() instanceof AcmAuthenticationDetails)
+                {
+                    AcmAuthenticationDetails acmAuthenticationDetails = (AcmAuthenticationDetails) arkcaseAuth.getDetails();
+                    String cmisUserId = acmAuthenticationDetails.getCmisUserId();
+                    LOG.debug("got CMIS user id from auth: {}", cmisUserId);
+                    MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, cmisUserId);
+
+                }
                 return true;
             }
             catch (IllegalArgumentException e)
@@ -91,7 +99,6 @@ public class AcmWebDAVSecurityManagerAdapter implements AcmWebDAVSecurityManager
     {
         return getAuthenticationTokenService().getAuthenticationForToken(acmTicket);
     }
-
 
     @Override
     public void removeAuthenticationForTicket(String acmTicket)

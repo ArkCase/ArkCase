@@ -47,14 +47,6 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         return solrDoc;
     }
 
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(ObjectAssociation in)
-    {
-        // No implementation needed
-        return null;
-    }
-
     @Override
     public SolrDocument toSolrQuickSearch(ObjectAssociation in)
     {
