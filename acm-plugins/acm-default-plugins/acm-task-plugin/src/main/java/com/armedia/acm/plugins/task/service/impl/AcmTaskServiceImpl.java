@@ -115,6 +115,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
         return getBusinessProcessIdFromSolr(objectType, objectId, authentication);
     }
 
+    @Override
+    public String getBusinessProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory) throws AcmTaskException {
+        return taskDao.readProcessVariable(businessProcessId, processVariableKey, readFromHistory).toString();
+    }
+
     protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
     {
         List<BuckslipProcess> buckslipProcesses = new ArrayList<>(processInstances.size());

@@ -38,6 +38,16 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
             });
         };
 
+    var _getBusinessProcessVariableForObject = function (objectType, objectId, processVariable, readFromHistory) {
+                return $http({
+                    method: 'GET',
+                    url: 'api/latest/plugin/task/businessProcess/' + objectType + '/' + objectId + '/' + processVariable + '/businessProcessVariable',
+                    params: {
+                        readFromHistory: readFromHistory
+                    }
+                });
+            };
+
     var _getBuckslipProcessesForChildren = function (objectType, objectId) {
         return $http({
             method: 'GET',
@@ -88,6 +98,7 @@ angular.module('services').factory('Case.FutureApprovalService', ['$http', funct
         getBuckslipFutureTasks: _getBuckslipFutureTasks,
         getBuckslipPastTasks: _getBuckslipPastTasks,
         getBuckslipPastTasksForObject: _getBuckslipPastTasksForObject,
+        getBusinessProcessVariableForObject: _getBusinessProcessVariableForObject,
         getBuckslipProcessesForChildren: _getBuckslipProcessesForChildren,
         isWorkflowInitiable: _isWorkflowInitiable,
         isWorkflowWithdrawable: _isWorkflowWithdrawable,
