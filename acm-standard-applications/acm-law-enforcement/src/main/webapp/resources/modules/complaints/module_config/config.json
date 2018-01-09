@@ -295,7 +295,6 @@
           "id": "addresses",
           "type": "component",
           "columnDefs": [
-
             {
               "name": "type",
               "displayName": "complaints.comp.addresses.table.columns.type",
