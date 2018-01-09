@@ -13,7 +13,7 @@
     "invalidData": ""
   },
   "cases.comp.main": {
-    "title": "概観"
+    "title": "概要"
   },
   "cases.comp.info": {
     "title": "情報",
@@ -28,33 +28,33 @@
     "dueDate.label": "期限日",
     "priorities": {
       "low%": "低い",
-      "medium%": "中位",
+      "medium%": "中",
       "high%": "高い",
-      "expedite%": "優先度",
-      "unknown%": "未選択"
+      "expedite%": "迅速化する",
+      "unknown%": "未知の"
     },
     "caseTypes": {
       "agricultural%": "農業",
       "arson%": "放火",
       "backgroundInvestigation%": "背景調査",
       "benefitsAppeal%": "福祉上訴",
-      "businessDispute%": "より良いビジネス紛争",
-      "clinicalFraud%": "臨床調査者の詐欺",
-      "congressional%": "議会の応答",
-      "disabilityWaiver%": "障害免除の要求",
-      "domesticDispute%": "家族紛争",
+      "businessDispute%": "ビジネス紛争の改善",
+      "clinicalFraud%": "臨床検査官の詐欺",
+      "congressional%": "議会の対応",
+      "disabilityWaiver%": "障害免除申請",
+      "domesticDispute%": "国内紛争",
       "drugTrafficking%": "麻薬密売",
-      "educationWaiver%": "教育免除要求",
+      "educationWaiver%": "教育免除リクエスト",
       "eeoHarassment%": "EEO/嫌がらせ",
       "embezzlement%": "横領",
-      "extortion%": "強要",
+      "extortion%": "堕胎",
       "fraud%": "詐欺",
       "government%": "政府",
-      "investorComplaint%": "投資人の苦情",
-      "laborRacketeering%": "労働脅迫",
-      "local%": "ローカル",
+      "investorComplaint%": "投資家の苦情",
+      "laborRacketeering%": "労働ラケット",
+      "local%": "地元",
       "murder%": "殺人",
-      "newDrugFraud%": "新薬申請詐欺",
+      "newDrugFraud%": "新薬申請の詐欺",
       "payoff%": "賄賂",
       "pensionWaiver%": "年金免除申請",
       "pollution%": "汚染",
@@ -63,331 +63,319 @@
     }
   },
   "cases.comp.actions": {
-    "title": "操作",
-    "restrict": "制限する?",
-    "new.button": "新しい案件",
-    "edit.button": "変更",
+    "title": "行動",
+    "restrict": "制限するか？",
+    "new.button": "新しい",
+    "edit.button": "編集",
     "status.button": "状態の変更",
-    "reinvestigate.button": "再調査",
+    "reinvestigate.button": "再検討",
     "subscribe.button": "購読",
     "unsubscribe.button": "購読中止",
+    "merge.button": "合併",
     "claim.button": "申し立て",
     "unclaim.button": "申し立て中止",
-    "merge.button": "合併",
     "split.button": "分开"
   },
   "cases.comp.details": {
     "title": "詳細",
-    "informSaved": "ja_Case details saved",
+    "informSaved": "案件の詳細を保存しました",
     "table.columns": {
-      "title": "ja_Details",
-      "modified": "ja_Date Last Modified",
-      "modifier": "ja_User Last Modified"
+      "title": "詳細",
+      "modified": "最終変更日",
+      "modifier": "ユーザー最終更新日"
     }
   },
   "cases.comp.documents": {
-    "title": "操作",
-    "sendEmail": "ja_Send Email",
-    "filterInputPlaceholder": "ja_Filter",
-    "searchInputPlaceholder": "ja_Search"
+    "title": "ドキュメント",
+    "sendEmail": "メールを送る",
+    "filterInputPlaceholder": "フィルタ",
+    "searchInputPlaceholder": "サーチ",
+    "menu": {
+      "forms": {
+        "info%": "情報",
+        "rptInvestigation%": "調査報告",
+        "ecomm%": "電子通信"
+      },
+      "correspondences": {
+        "correspondenceInvitation%": "通信招待状",
+        "approvalLetter%": "承認の手紙",
+        "medicalRelease%": "医療リリース",
+        "generalRelease%": "標準リリース",
+        "clearanceGranted%": "許可されたクリアランス",
+        "clearanceDenied%": "クリアランスを拒否した",
+        "noticeInvestigation%": "調査の通知",
+        "witnessInterview%": "目撃者のインタビュー要求",
+        "witnessInterview2%": "目撃者のインタビュー要求2.0"
+      }
+    },
+    "newTask": "新しい仕事"
   },
   "cases.comp.people": {
-    "title": "人員",
+    "title": "人物",
     "table.columns": {
-      "entity": "ja_Entity",
-      "type": "ja_Type",
-      "firstName": "ja_FirstName",
-      "lastName": "ja_LastName"
-    },
-    "contactMethods": {
-      "title": "ja_ContactMethods",
-      "table.columns": {
-        "type": "ja_Type",
-        "value": "ja_Value",
-        "created": "ja_Date Added",
-        "creator": "ja_Added By",
-        "modified": "ja_Last Modified",
-        "modifier": "ja_Modified By"
-      }
-    },
-    "organizations": {
-      "title": "組織",
-      "table.columns": {
-        "type": "ja_Type",
-        "value": "ja_Value",
-        "created": "ja_Date Added",
-        "creator": "ja_Added By",
-        "modified": "ja_Last Modified",
-        "modifier": "ja_Modified By"
-      }
-    },
-    "addresses": {
-      "title": "ja_Locations",
-      "table.columns": {
-        "type": "ja_Type",
-        "streetAddress": "ja_Address",
-        "city": "ja_City",
-        "state": "ja_State",
-        "zip": "ja_Zip",
-        "country": "ja_Country",
-        "created": "ja_Date Added",
-        "creator": "ja_Added By",
-        "modified": "ja_Last Modified",
-        "modifier": "ja_Modified By"
-      }
-    },
-    "aliases": {
-      "title": "ja_Aliases",
-      "table.columns": {
-        "type": "ja_Type",
-        "value": "ja_Value",
-        "created": "ja_Date Added",
-        "creator": "ja_Added By",
-        "modified": "ja_Last Modified",
-        "modifier": "ja_Modified By"
-      }
-    },
-    "securityTags": {
-      "title": "ja_Security Tags",
-      "table.columns": {
-        "type": "ja_Type",
-        "value": "ja_Value",
-        "created": "ja_Date Added",
-        "creator": "ja_Added By",
-        "modified": "ja_Last Modified",
-        "modifier": "ja_Modified By"
-      }
+      "entity": "エンティティ",
+      "type": "役割",
+      "firstName": "ファーストネーム",
+      "lastName": "苗字",
+      "organization": "組織",
+      "phone": "電話",
+      "location": "ロケーション"
     }
   },
   "cases.comp.organizations": {
     "title": "組織",
     "table.columns": {
-      "name": "ja_Organization Name",
-      "associationType": "ja_Role",
-      "type": "ja_Organization Type",
-      "identification": "ja_ID",
-      "value": "ja_Organization",
-      "contact": "ja_Primary Contact",
-      "phone": "ja_Phone",
-      "location": "ja_Location"
+      "name": "組織名",
+      "associationType": "役割",
+      "type": "組織の種類",
+      "identification": "ID",
+      "value": "組織",
+      "contact": "一次連絡先",
+      "phone": "電話",
+      "location": "ロケーション"
     }
   },
   "cases.comp.participants": {
     "title": "参加者",
     "table.columns": {
-      "type": "ja_Type",
-      "name": "ja_Name"
+      "type": "タイプ",
+      "name": "名"
     },
     "dialogUserPicker": {
-      "header": "ja_Choose User",
+      "header": "ユーザーを選択",
       "table.columns": {
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "id": "ja_Username"
+        "name": "名",
+        "type": "タイプ",
+        "title": "タイトル",
+        "id": "ユーザー名"
       }
     },
     "dialogGroupPicker": {
-      "header": "ja_Choose Group",
+      "header": "グループを選択",
       "table.columns": {
-        "name": "ja_Name"
+        "name": "名"
       }
     }
   },
   "cases.comp.notes": {
-    "title": "注解",
+    "title": "ノート",
     "table.columns": {
-      "note": "ja_Note",
-      "created": "ja_Created",
-      "creator": "ja_Author"
+      "note": "注意",
+      "created": "作成した",
+      "creator": "著者"
     }
   },
   "cases.comp.tasks": {
-    "title": "任務",
+    "title": "タスク",
     "table.columns": {
-      "title": "ja_Title",
-      "assignee": "ja_Assignee",
-      "created": "ja_Created",
-      "priority": "ja_Priority",
-      "due": "ja_Due",
-      "status": "ja_Status"
+      "title": "タイトル",
+      "assignee": "譲受人",
+      "created": "作成した",
+      "priority": "優先",
+      "due": "支払期日",
+      "status": "状態"
     },
-    "table.overdue.tooltip": "ja_Task is Overdue",
-    "table.deadline.tooltip": "ja_Deadline is Approaching"
+    "table.overdue.tooltip": "タスクが期限切れです",
+    "table.deadline.tooltip": "締め切りは近づいています"
   },
   "cases.comp.references": {
-    "title": "参照",
+    "title": "参考文献",
     "table.columns": {
-      "targetName": "ja_Number",
-      "parentName": "ja_Parent",
-      "targetTitle": "ja_Title",
-      "modified": "ja_Modified",
-      "targetType": "ja_Reference Type",
-      "status": "ja_Status"
+      "targetName": "数",
+      "targetTitle": "タイトル",
+      "targetType": "タイプ",
+      "assignee": "譲受人",
+      "modified": "変更された",
+      "status": "状態"
     }
   },
   "cases.comp.history": {
-    "title": "歷史",
+    "title": "歴史",
     "table.columns": {
-      "eventType": "ja_Event Name",
-      "eventDate": "ja_Date",
-      "userId": "ja_User"
+      "eventType": "イベント名",
+      "eventDate": "日付",
+      "userId": "ユーザー"
     }
   },
   "cases.comp.time": {
     "title": "時間",
     "table.columns": {
-      "name": "ja_Form Name",
-      "user": "ja_User",
-      "tally": "ja_Total Hours",
-      "modified": "ja_Modified Date",
-      "status": "ja_Status"
+      "name": "フォーム名",
+      "user": "ユーザー",
+      "tally": "合計時間",
+      "modified": "変更日",
+      "status": "状態"
     },
-    "formNamePrefix": "ja_Timesheet"
+    "formNamePrefix": "タイムシート"
   },
   "cases.comp.cost": {
-    "title": "支出",
+    "title": "コスト",
     "table.columns": {
-      "name": "ja_Form Name",
-      "user": "ja_User",
-      "tally": "ja_Total Cost",
-      "modified": "ja_Modified Date",
-      "status": "ja_Status"
+      "name": "フォーム名",
+      "user": "ユーザー",
+      "tally": "総費用",
+      "modified": "変更日",
+      "status": "状態"
     },
-    "formNamePrefix": "ja_Costsheet"
+    "formNamePrefix": "コストシート"
   },
   "cases.comp.tags": {
     "title": "タグ",
     "table.columns": {
-      "tag": "ja_Tag",
-      "created": "ja_Created",
-      "createdBy": "ja_Created By"
+      "tag": "タグ",
+      "created": "作成した",
+      "createdBy": "によって作成された"
     },
     "modal": {
       "title": "タグ",
-      "search": "ja_Search for Tag",
+      "search": "タグを検索する",
       "buttons": {
-        "cancel": "ja_Cancel",
-        "ok": "ja_Add Tag"
+        "cancel": "キャンセル",
+        "ok": "タグ付けする"
       }
     },
     "message": {
-      "tagExists": "ja_Tag with that name or description or text already exists",
-      "tagAssociated": "ja_already associated",
+      "tagExists": "その名前または説明またはテキストのタグは既に存在します",
+      "tagAssociated": "すでに関連付けられている",
       "delete": {
-        "success": "ja_Tag deleted successfully",
-        "error": "ja_Error deleting tag"
+        "success": "タグを削除しました",
+        "error": "タグ削除中にエラーが発生しました"
       }
     }
   },
   "cases.comp.calendar": {
-    "title": "日報"
+    "title": "カレンダー"
   },
   "cases.comp.merge": {
-    "id": "ja_merge",
-    "title": "ja_Merge",
-    "cancel.btn": "ja_Cancel",
-    "merge.btn": "ja_Merge",
-    "search.placeholder": "ja_Search for case file.",
-    "search.btn": "ja_Search",
-    "enabled": true,
+    "title": "マージ",
+    "cancel.btn": "キャンセル",
+    "merge.btn": "マージ",
+    "search.placeholder": "案件ファイルを検索します。",
+    "search.btn": "サーチ",
     "table.columns": {
-      "incident": "ja_Type",
-      "name": "ja_Name",
-      "assignee": "ja_Assignee",
-      "title": "ja_Title",
-      "parent": "ja_Parent",
-      "modified": "ja_Modified"
+      "incident": "タイプ",
+      "name": "名",
+      "assignee": "譲受人",
+      "title": "タイトル",
+      "parent": "親",
+      "modified": "変更された"
     }
   },
+  "cases.comp.referenceSearchGrid": {
+    "title": "リファレンス検索"
+  },
   "cases.comp.split": {
-    "title": "ja_Split",
-    "cancel": "ja_Cancel",
-    "split": "ja_Split"
+    "title": "スプリット",
+    "cancel": "キャンセル",
+    "split": "スプリット"
   },
   "cases.comp.addreference": {
-    "title": "ja_Add Reference",
-    "cancelButton": "ja_Cancel",
-    "confirmButton": "ja_Add",
+    "title": "参照を追加する",
+    "cancelButton": "キャンセル",
+    "confirmButton": "追加",
     "search": {
-      "placeholder": "ja_Search for case, complaint, file, task",
-      "btn": "ja_Search"
+      "placeholder": "案件、訴状、ファイル、任務を検索する",
+      "btn": "検索"
     },
     "grid": {
       "columns": {
-        "id": "ja_Id",
-        "name": "ja_Name",
-        "type": "ja_Type",
-        "title": "ja_Title",
-        "parent": "ja_Parent",
-        "assignee": "ja_Assignee",
-        "modified": "ja_Modified"
+        "id": "イド",
+        "name": "名",
+        "type": "タイプ",
+        "title": "タイトル",
+        "parent": "親",
+        "assignee": "譲受人",
+        "modified": "変更された"
       }
     }
   },
   "cases.comp.assigneePickerModal": {
-    "title": "ja_Change Assignee",
-    "assigneeNamelabel": "ja_Assignee Name",
-    "btnCancelText": "ja_Cancel",
-    "btnSaveText": "ja_Save",
-    "searchAssigneeHeader": "ja_Search Assignee"
+    "title": "譲受人の変更",
+    "assigneeNamelabel": "譲受人名",
+    "btnCancelText": "キャンセル",
+    "btnSaveText": "セーブ",
+    "searchAssigneeHeader": "譲受人を検索"
   },
   "cases.comp.groupPickerModal": {
-    "title": "ja_Change Group",
-    "groupNamelabel": "ja_Group Name",
-    "btnCancelText": "ja_Cancel",
-    "btnSaveText": "ja_Save",
-    "searchGroupHeader": "ja_Search Group"
+    "title": "グループの変更",
+    "groupNamelabel": "グループ名",
+    "btnCancelText": "キャンセル",
+    "btnSaveText": "セーブ",
+    "searchGroupHeader": "検索グループ"
   },
   "cases.comp.approvalRouting": {
-    "title": "承認ル",
-    "addNewTooltip": "ja_Add new approver",
-    "noBuckslipMessage": "ja_No Data",
+    "title": "承認者",
+    "addNewTooltip": "新しい承認者を追加",
+    "noBuckslipMessage": "データなし",
+    "processInitialize.successfull": "初期化されたプロセス",
+    "processInitialize.fail": "プロセスが初期化されていない",
+    "processWithdraw.successfull": "取り消されたプロセス",
+    "processWithdraw.fail": "取り消されなかったプロセス",
+    "businessProcessUpdate.successfull": "承認ルーティングの更新",
+    "businessProcessUpdate.fail": "承認ルーティングが更新されない",
     "button": {
-      "save.tooltip": "ja_Save Changes"
+      "save.tooltip": "変更内容を保存",
+      "initiate.tooltip": "タスクを開始する",
+      "withdraw.tooltip": "引退の仕事"
+    },
+    "checkbox": {
+      "nonConcurEndsApprovalCycle": "非同意で承認サイクルが終了する"
     },
     "table.columns": {
-      "fullName": "ja_Full Name"
+      "assignee": "譲受人",
+      "group": "所有グループ",
+      "subject": "件名",
+      "details": "詳細",
+      "dueDate": "期日",
+      "status": "状態",
+      "addedBy": "によって追加"
     },
-    "assignee.label": "ja_Assignee",
-    "owningGroup.label": "ja_Owning Group",
-    "priority.label": "ja_Priority",
-    "startDate.label": "ja_Start Date",
-    "dueDate.label": "ja_Due Date",
-    "state.label": "ja_State"
+    "assignee.label": "譲受人",
+    "owningGroup.label": "所有グループ",
+    "priority.label": "優先",
+    "startDate.label": "開始日",
+    "dueDate.label": "期日",
+    "state.label": "状態",
+    "future.task.modal": {
+      "title": "新しい未来の仕事",
+      "assignee": "譲受人",
+      "subject.label": "件名",
+      "subject.placeholder": "将来の案件の件名を入力",
+      "details.label": "詳細",
+      "cancel.button": "キャンセル",
+      "save.button": "セーブ"
+    }
   },
   "cases.comp.pastApprovals": {
-    "title": "過去の承認",
-    "noBuckslipMessage": "ja_No Data",
+    "title": "過去の承認者",
+    "noBuckslipMessage": "データなし",
     "table.columns": {
-      "approvalDate": "ja_Approval Date",
-      "approverId": "ja_Approver",
-      "approverFullName": "ja_Approver",
-      "approverDecision": "ja_Approver Decision"
+      "approvalDate": "承認日",
+      "approverId": "承認者",
+      "approverFullName": "承認者",
+      "approverDecision": "承認者の決定"
     }
   },
   "cases.userOrGroupSearch": {
-    "id": "ja_userSearch",
-    "title": "ja_User/Group Search",
+    "id": "userSearch",
+    "title": "ユーザー/グループ検索",
     "search": {
-      "btn": "ja_Search",
-      "placeholder": "ja_Search for the user or group."
+      "btn": "検索",
+      "placeholder": "ユーザーまたはグループを検索します。"
     },
-    "cancelButton": "ja_Cancel",
-    "confirmButton": "ja_Confirm",
-    "enabled": true,
-    "userOrGroupFacetFilter": "ja_\"object_type_s\":(GROUP OR USER)",
+    "cancelButton": "キャンセル",
+    "confirmButton": "確認",
     "assigneeGridColumns": {
-      "name": "ja_Name",
-      "type": "ja_Type",
-      "title": "ja_Title",
-      "username": "ja_Username"
+      "name": "名",
+      "type": "タイプ",
+      "title": "タイトル",
+      "username": "ユーザー名"
     }
   },
   "cases.tree": {
     "nodeTypes": {
       "details.label": "詳細",
-      "people.label": "人員",
+      "people.label": "人物",
       "organizations.label": "組織",
       "documents.label": "文書",
       "participants.label": "参加者",
@@ -399,22 +387,22 @@
       "cost.label": "支出",
       "tags.label": "タグ",
       "calendar.label": "日報",
-      "approvalRouting.label": "承認ル"
+      "approvalRouting.label": "承認ルーティング"
     },
     "filters": {
       "opened": "開いているすべての",
-      "iHaveCreated": "私が作成しました",
-      "iAmAssigned": "自分に割り当てられました",
-      "iAmFollowing": "私は心配です",
+      "iHaveCreated": "私が作成したすべて",
+      "iAmAssigned": "私は割り当てられたすべて",
+      "iAmFollowing": "私がフォローしているすべて",
       "closed": "閉じています",
       "noFilter": "(無制限)"
     },
     "sorters": {
       "dateAsc": "日付で並べ替え",
       "dateDesc": "日付で並べ替え降順",
-      "idAsc": "ケース番号で並べ替え",
-      "idDesc": "ケース番号で並べ替え降順",
-      "nameAsc": "名で並べ替え",
+      "idAsc": "案件番号で並べ替え",
+      "idDesc": "案件番号で並べ替え降順",
+      "nameAsc": "案件名で並べ替え",
       "noSort": "(注文しません)"
     }
   }

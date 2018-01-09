@@ -370,7 +370,8 @@
     }
   },
   "people.comp.related": {
-    "title": "Rel People",
+    "title": "Related People",
+    "linkTitle": "Related People",
     "table.columns": {
       "firstName": "First Name",
       "lastName": "Last Name",

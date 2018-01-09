@@ -27,7 +27,9 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
         // must use a native update, since we don't want to add a password property to an entity class; since
         // if we did that, the password would end up being passed around in POJOs and JSON objects.
 
-        String sql = "UPDATE acm_outlook_password " + "SET cm_outlook_password = ?1 " + "WHERE cm_user_id = ?2 ";
+        String sql = "UPDATE acm_outlook_password " +
+                "SET cm_outlook_password = ?1 " +
+                "WHERE cm_user_id = ?2 ";
 
         int updated = updatePassword(authentication, in, sql);
 
@@ -50,7 +52,7 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
     {
         Query q = getEm().createNativeQuery(sql);
         q.setParameter(1, in.getOutlookPassword());
-        q.setParameter(2, authentication.getName().toUpperCase());
+        q.setParameter(2, authentication.getName().toLowerCase());
 
         return q.executeUpdate();
     }
@@ -61,10 +63,12 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
         // must use a native query, since we don't want to add a password property to an entity class; since
         // if we did that, the password would end up being passed around in POJOs and JSON objects.
 
-        String sql = "SELECT cm_outlook_password " + "FROM acm_outlook_password op " + "WHERE op.cm_user_id = ?1 ";
+        String sql = "SELECT cm_outlook_password " +
+                "FROM acm_outlook_password op " +
+                "WHERE op.cm_user_id = ?1 ";
 
         Query q = getEm().createNativeQuery(sql);
-        q.setParameter(1, authentication.getName().toUpperCase());
+        q.setParameter(1, authentication.getName().toLowerCase());
 
         try
         {
@@ -78,7 +82,8 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
             retval.setOutlookPassword(password);
 
             return retval;
-        } catch (PersistenceException pe)
+        }
+        catch (PersistenceException pe)
         {
             throw new IllegalStateException("No outlook password for user '" + authentication.getName() + "'");
         }
@@ -86,6 +91,7 @@ public class OutlookPasswordDao extends AcmAbstractDao<OutlookPassword>
 
     public OutlookPassword findByUserId(String userId)
     {
+        userId = userId.toLowerCase();
         return getEntityManager().find(OutlookPassword.class, userId);
     }
 

@@ -1,18 +1,27 @@
 'use strict';
 
-angular.module('cases').controller('Cases.SplitController', ['$scope', '$stateParams', '$modal', '$modalInstance'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, $modal, $modalInstance
-        , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService, HelperObjectBrowserService) {
+angular.module('cases').controller('Cases.SplitController', ['$scope', '$stateParams', '$modal', '$modalInstance', '$q'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Object.LookupService', 'Case.InfoService'
+    , 'Helper.ObjectBrowserService'
+    , function ($scope, $stateParams, $modal, $modalInstance, $q
+        , Util, ConfigService, ObjectService, ObjectLookupService, CaseInfoService
+        , HelperObjectBrowserService
+    ) {
+        var promiseFormTypes = ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE);
+        var promiseFileTypes = ObjectLookupService.getFileTypes();
+        ConfigService.getComponentConfig("cases", "documents").then(function (componentConfig) {
+            $scope.config = componentConfig;
+            $scope.treeConfig = config.docTree;
+            $q.all([promiseFormTypes, promiseFileTypes]).then(
+                function (data) {
+                    $scope.treeConfig.formTypes = data[0];
+                    $scope.treeConfig.fileTypes = data[1];
+                });
+            return componentConfig;
+        });
 
         $scope.modalInstance = $modalInstance;
         $scope.selectedItem = null;
-        
-        ConfigService.getComponentConfig("cases", "documents").then(function (componentConfig) {
-            $scope.config = componentConfig;
-            return componentConfig;
-        });
-        
         $scope.close = function() {
             $scope.modalInstance.dismiss('cancel');
         };
@@ -38,21 +47,6 @@ angular.module('cases').controller('Cases.SplitController', ['$scope', '$statePa
             
             $scope.modalInstance.close(summary);
         };
-    
-        ObjectLookupService.getFormTypes(ObjectService.ObjectTypes.CASE_FILE).then(
-            function (formTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(formTypes));
-                return formTypes;
-            }
-        );
-        ObjectLookupService.getFileTypes().then(
-            function (fileTypes) {
-                $scope.fileTypes = $scope.fileTypes || [];
-                $scope.fileTypes = $scope.fileTypes.concat(Util.goodArray(fileTypes));
-                return fileTypes;
-            }
-        );
 
 
         $scope.objectType = ObjectService.ObjectTypes.CASE_FILE;

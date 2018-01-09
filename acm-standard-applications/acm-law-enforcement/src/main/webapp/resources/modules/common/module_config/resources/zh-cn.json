@@ -23,7 +23,7 @@
   "common.service.messageService": {
     "authorizationError": "您无权采取此行动",
     "actionMessages": {
-      "success": "行动是成功的",
+      "success": "操作完成",
       "error": "操作错误"
     }
   },
@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "（选择物品）",
-      "editWithWebDAV": "编辑"
+      "editWithWebDAV": "编辑",
+      "cancelEditing": "取消编辑",
+      "newFolder": "创建新文件夹",
+      "newDocument": "创建新文件",
+      "newCorrespondence": "创建新信件",
+      "open": "打开",
+      "email": "电子邮件",
+      "download": "下载",
+      "copy": "复制",
+      "cut": "切割",
+      "paste": "黏贴",
+      "rename": "改名",
+      "delete": "删除",
+      "replace": "更换",
+      "checkout": "登记出",
+      "checkin": "登记回",
+      "declareRecord": "声明为记录"
     },
     "table.columns": {
       "title": "标题",
@@ -140,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "每页项目数",
-    "pagerCountMiddleLabel": " 的",
-    "pagerCountLabel": " 项目"
+    "pagerCountLabel": "第{{pageTotal}}分之{{pageCount}}项"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "选择",
@@ -301,6 +316,12 @@
     "start.label": "开始：",
     "end.label": "结束：",
     "newEvent.button": "新事件",
+    "agenda.button" : {
+      "today": "今天",
+      "month": "月",
+      "week": "周",
+      "day": "日"
+    },
     "addNewEventDialog": {
       "title": "新事件",
       "cancel.button": "取消",
@@ -338,6 +359,8 @@
         "reminder.label": "提醒",
         "reminder.placeholder": "选择提醒窗口",
         "datePickerClose.button": "关闭",
+        "datePickerCurrent.button": "当前",
+        "datePickerClear.button": "清除",
         "otherOptions.label": "其他选项",
         "allDayEvent.checkbox": "全天事件",
         "privateEvent.checkbox": "私人事件",
@@ -396,10 +419,10 @@
       "removeRecurrence.button": "删除当前重复事件",
       "setRecurrence.button": "设置重复事件",
       "repeatsOptions": {
-        "daily": "日常",
-        "weekly": "每周",
-        "monthly": "每月一次",
-        "yearly": "每年"
+        "daily": "按日",
+        "weekly": "按周",
+        "monthly": "按月",
+        "yearly": "按年"
       },
       "sunday.checkbox": "星期日",
       "monday.checkbox": "星期一",

@@ -62,11 +62,14 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 draggable: '@',
                 onDblClickRow: '=?',
                 customization: '=?',
-                secondGrid: '@'
+                secondGrid: '@',
+                pickUserLabel: '@',
+                pickGroupLabel: '@'
 
             },
 
             link: function (scope, el, attrs) {
+
                 //dom operations
                 if (scope.draggable) {
                     el.parent().draggable();
@@ -75,6 +78,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.onNoDataMessage = Util.goodValue(scope.onNoDataMessage, $translate.instant("common.directive.searchModal.noData.text"));
                 scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));
                 scope.ok = Util.goodValue(scope.ok, $translate.instant("common.directive.searchModal.btnOk.text"));
+                scope.pickUserLabel = Util.goodValue(scope.pickUserLabel, $translate.instant("common.directive.searchModal.pickUserLabel"));
+                scope.pickGroupLabel = Util.goodValue(scope.pickGroupLabel, $translate.instant("common.directive.searchModal.pickGroupLabel"));
                 scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);

@@ -67,17 +67,17 @@
       "allUsersFilter": "Введите фильтр поиска для всех пользователей (например, (objectClass = person))",
       "allUsersPageFilter": "Введите фильтр, включая атрибут sort (например, (& (objectClass = person) (uidNumber> =% s)))",
       "allUsersSortingAttribute": "Введите атрибут сортировки для пользователей (например, «uidNumber»)",
+      "allChangedUsersFilter": "Введите фильтр для всех измененных пользователей",
+      "allChangedUsersPageFilter": "Введите фильтр, включая атрибут сортировки для всех измененных пользователей",
       "groupSearchBase": "Введите базу поиска для групп (например, ou = groups)",
       "groupSearchFilterForUser": "Введите поисковый фильтр для пользователя в группе (например, (& (objectClass = group) (member =% s)))",
       "userIdAttributeName": "Введите атрибут, используемый для идентификатора пользователя (например, «uid»)",
       "userDomain": "Введите домен пользователя",
       "syncPageSize": "Введите размер подкачки",
       "groupSearchFilter": "Введите поисковый фильтр для групп (например, (objectClass = group))",
-      "allChangedUsersFilter": "ru_Enter the filter for all changed users",
-      "allChangedUsersPageFilter": "ru_Enter the filter including sort-attribute for all changed users",
-      "changedGroupSearchFilter": "ru_Enter search filter for all changed groups",
-      "changedGroupSearchPageFilter": "ru_Enter filter including sort-attribute for all changed groups",
       "groupsSortingAttribute": "Введите атрибут для групп сортировки (например, «gidNumber»)",
+      "changedGroupSearchFilter": "Введите поисковый фильтр для всех измененных групп",
+      "changedGroupSearchPageFilter": "Введите фильтр, включая атрибут сортировки для всех измененных групп",
       "groupSearchPageFilter": "Введите фильтр, включая атрибут sort (например, (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Проверьте, разрешено ли управлять пользователями и группами на вашем DS"
     },
@@ -157,8 +157,7 @@
           "lastName": "Введите фамилию",
           "email": "Введите адрес электронной почты",
           "password": "Введите пароль",
-          "confirmation": "ru_Enter your password again",
-          "minLengthForPassword": "7"
+          "confirmation": "Введите пароль еще раз"
         },
         "editLdapMember": {
           "title": "Изменить участника Ldap",
@@ -172,7 +171,7 @@
         "lastName": "Фамилия",
         "email": "Эл. адрес",
         "password": "Пароль",
-        "confirmation": "ru_Confirm Password"
+        "confirmation": "Подтвердите Пароль"
       },
       "addMembersGridColumns": {
         "name": "Имя",
@@ -258,8 +257,8 @@
         "email.label": "Адрес электронной почты системы",
         "password.label": "Системный пароль",
         "purgeDays.label": "Дней",
-        "emailValid": "Системный адрес электронной почты действителен",
-        "emailNotValid": "Недействительный адрес электронной почты системы",
+        "emailValid": "Системный адрес электронной почты и пароль действительны",
+        "emailNotValid": "Недействительный системный адрес электронной почты или пароль",
         "enableCalendarIntegration.checkbox": "Включить интеграцию с календарем",
         "purgeOptions": {
           "retainIndefinitely": "Сохранять неопределенно",
@@ -433,6 +432,7 @@
       "cancel": "Отмена",
       "activate": "Сделать активным"
     },
+    "workflows.config.noHistory": "ru_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Бизнес-процесс",
       "description": "Описание",
@@ -442,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Создать новую модель",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Загрузить новый BPMN"
     },
     "workflows.config.links": {

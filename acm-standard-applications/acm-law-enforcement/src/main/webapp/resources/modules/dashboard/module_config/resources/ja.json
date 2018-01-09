@@ -153,7 +153,9 @@
           "enterLocation": "場所を入力",
           "description": "都市の現在の温度を表示する",
           "location": "場所",
-          "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください"
+          "insertLocationInConfiguration": "ウィジェット設定に場所を挿入してください",
+          "zip": "ja_Zip Code",
+          "enterZip": "ja_Enter Zip Code"
         },
         "title": "天気",
         "noDataMessage": "現在、天気情報はありません",
@@ -179,9 +181,9 @@
         "noDataMessage": "現在詳細はありません"
       },
       "people": {
-        "title": "人員",
-        "description": "人員々の詳細を表示する",
-        "noDataMessage": "現在、表示する人員がいません"
+        "title": "人物",
+        "description": "人物々の詳細を表示する",
+        "noDataMessage": "現在、表示する人物がいません"
       },
       "ids": {
         "title": "識別番号",
@@ -304,9 +306,9 @@
         "noDataMessage": "現在、表示する電子署名がありません"
       },
       "person": {
-        "title": "人員",
-        "description": "コストと時間モジュールの人員ウィジェット",
-        "noDataMessage": "現在表示する人員がいません"
+        "title": "人物",
+        "description": "コストと時間モジュールの人物ウィジェット",
+        "noDataMessage": "現在表示する人物がいません"
       },
       "hoursSummary": {
         "title": "時間の要約",

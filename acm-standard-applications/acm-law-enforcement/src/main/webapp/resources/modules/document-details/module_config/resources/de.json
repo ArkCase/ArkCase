@@ -1,104 +1,104 @@
 {
   "documentDetails": {
-    "title": "de_Document details",
-    "creator": "de_Creator",
-    "created": "de_Created",
-    "assignee": "de_Assignee",
-    "fileType": "de_File type",
-    "status": "de_Status",
-    "name": "de_Name",
+    "title": "Dokumentdetails",
+    "creator": "Schöpfer",
+    "created": "Erstellt",
+    "assignee": "Beauftragter",
+    "fileType": "Dateityp",
+    "status": "Status",
+    "name": "Name",
     "comp.eventHistory": {
-      "title": "de_Event History",
+      "title": "Ereignisverlauf",
       "table.columns": {
-        "eventType": "de_Event Name",
-        "eventDate": "de_Created",
-        "userId": "de_User"
+        "eventType": "Veranstaltungsname",
+        "eventDate": "Erstellt",
+        "userId": "Benutzer"
       }
     },
     "comp.tags": {
-      "title": "de_Tags",
+      "title": "Etikett",
       "table.columns": {
-        "tag": "de_Tag",
-        "created": "de_Created",
-        "createdBy": "de_Created By"
+        "tag": "Etikett",
+        "created": "Erstellt",
+        "createdBy": "Erstellt von"
       },
       "modal": {
-        "title": "de_Tag",
-        "search": "de_Search for Tag",
+        "title": "Etikett",
+        "search": "Suche nach Etikett",
         "buttons": {
-          "cancel": "de_Cancel",
-          "ok": "de_Add Tag"
+          "cancel": "Stornieren",
+          "ok": "Etikett hinzufügen"
         }
       },
-      "message.tagExists": "de_Tag with that name or description or text already exists",
-      "message.tagAssociated": "de_already associated",
-      "message.delete.success": "de_Tag deleted successfully",
-      "message.delete.error": "de_Error deleting tag"
+      "message.tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+      "message.tagAssociated": "Bereits verbunden",
+      "message.delete.success": "Markierung erfolgreich gelöscht",
+      "message.delete.error": "Fehler beim Löschen des Tags"
     },
     "comp.participants": {
-      "title": "de_Participants",
+      "title": "Teilnehmer",
       "table.columns": {
-        "name": "de_Name",
-        "type": "de_Type"
+        "name": "Name",
+        "type": "Art"
       },
       "dialogUserPicker": {
-        "header": "de_Choose User",
+        "header": "Wählen Sie Benutzer",
         "table.columns": {
-          "name": "de_Name",
-          "type": "de_Type",
-          "title": "de_Title",
-          "id": "de_Username"
+          "name": "Name",
+          "type": "Art",
+          "title": "Titel",
+          "id": "Nutzername"
         }
       },
       "dialogGroupPicker": {
-        "header": "de_Choose Group",
+        "header": "Wählen Sie Gruppe",
         "table.columns": {
-          "name": "de_Name"
+          "name": "Name"
         }
       }
     },
     "comp.notes": {
-      "title": "de_Notes",
+      "title": "Anmerkungen",
       "table.columns": {
-        "note": "de_Note",
-        "tag": "de_Document Version",
-        "created": "de_Created",
-        "creator": "de_Author"
+        "note": "Hinweis",
+        "tag": "Dokumentversion",
+        "created": "Erstellt",
+        "creator": "Autor"
       }
     },
     "comp.versionHistory": {
-      "title": "de_Version History",
+      "title": "Versionsgeschichte",
       "table.columns": {
-        "creator": "de_User",
-        "created": "de_Created",
-        "versionTag": "de_Version"
+        "creator": "Benutzer",
+        "created": "Erstellt",
+        "versionTag": "Ausführung"
       }
     },
     "comp.details": {
-      "title": "de_Details",
+      "title": "Einzelheiten",
       "label": {
-        "creator": "de_Owner",
-        "modifier": "de_Author",
-        "created": "de_Creation Date",
-        "modified": "de_Modified Date",
-        "description": "de_Description",
-        "type": "de_Type",
-        "organization": "de_Source Organization",
-        "person": "de_Source Entity",
-        "format": "de_Format",
-        "size": "de_Size",
-        "gps": "de_Location",
-        "duration": "de_Duration (seconds)",
-        "width": "de_Width (pixels)",
-        "height": "de_Height (pixels)",
-        "camera.type": "de_Camera Type",
-        "camera.version": "de_Camera Version",
-        "button.save": "de_Save",
-        "button.wait": "de_Please Wait"
+        "creator": "Inhaber",
+        "modifier": "Autor",
+        "created": "Erstellungsdatum",
+        "modified": "Änderungsdatum",
+        "description": "Beschreibung",
+        "type": "Art",
+        "organization": "Quellorganisation",
+        "person": "Quelleinheit",
+        "format": "Format",
+        "size": "Größe",
+        "gps": "Ort",
+        "duration": "Dauer (Sekunden)",
+        "width": "Breite (Pixel)",
+        "height": "Höhe (Pixel)",
+        "camera.type": "Kameratyp",
+        "camera.version": "Kameraversion",
+        "button.save": "Sparen",
+        "button.wait": "Warten Sie mal"
       },
       "message": {
-        "save.success": "de_File metadata are successfully updated",
-        "save.error": "de_Unable to update file metadata"
+        "save.success": "Dateimetadaten werden erfolgreich aktualisiert",
+        "save.error": "Die Metadaten konnten nicht aktualisiert werden"
       }
     }
   }

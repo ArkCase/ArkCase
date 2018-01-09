@@ -46,7 +46,9 @@
         "mr": "医療リリース",
         "noi": "調査の通知",
         "sig": "SF86署名",
-        "wir": "目撃者のインタビューリクエスト"
+        "wir": "目撃者のインタビューリクエスト",
+        "draw": "エンジニア図面",
+        "other": "その他"
       },
       "identificationTypes": {
         "ssn": "SSN",
@@ -197,6 +199,12 @@
         "complaintType": "訴状の種類",
         "priority": "優先度",
         "complaintTitle": "訴状の表題"
+      },
+      "complaint.statuses": {
+        "draft": "Draft",
+        "inapproval": "In Approval",
+        "closed": "Closed",
+        "Deleted": "Deleted"
       },
       "countries": {
         "AF": "アフガニスタン",

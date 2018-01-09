@@ -67,6 +67,8 @@
       "allUsersFilter": "Entrez un filtre de recherche pour tous les utilisateurs (par exemple (objectClass = person))",
       "allUsersPageFilter": "Entrez le filtre, y compris l'attribut de tri (par exemple (& (objectClass = person) (uidNumber> =% s)))",
       "allUsersSortingAttribute": "Entrez un attribut de tri pour les utilisateurs (par exemple, 'uidNumber')",
+      "allChangedUsersFilter": "Entrez le filtre pour tous les utilisateurs modifiés",
+      "allChangedUsersPageFilter": "Entrez le filtre, y compris l'attribut de tri pour tous les utilisateurs modifiés",
       "groupSearchBase": "Entrer la base de recherche pour les groupes (par exemple ou = groupes)",
       "groupSearchFilterForUser": "Entrez le filtre de recherche pour l'utilisateur du groupe (par exemple (& (objectClass = group) (member =% s)))",
       "userIdAttributeName": "Entrez l'attribut utilisé pour l'ID utilisateur (par exemple, 'uid'')",
@@ -74,10 +76,8 @@
       "syncPageSize": "Entrez la taille de la pagination",
       "groupSearchFilter": "Entrez un filtre de recherche pour les groupes (par exemple (objectClass = group))",
       "groupsSortingAttribute": "Entrez un attribut pour les groupes de tri (par exemple, 'gidNumber')",
-      "allChangedUsersFilter": "fr_Enter the filter for all changed users",
-      "allChangedUsersPageFilter": "fr_Enter the filter including sort-attribute for all changed users",
-      "changedGroupSearchFilter": "fr_Enter search filter for all changed groups",
-      "changedGroupSearchPageFilter": "fr_Enter filter including sort-attribute for all changed groups",
+      "changedGroupSearchFilter": "Entrer le filtre de recherche pour tous les groupes modifiés",
+      "changedGroupSearchPageFilter": "Entrez le filtre, y compris l'attribut de tri pour tous les groupes modifiés",
       "groupSearchPageFilter": "Entrez le filtre, y compris l'attribut de tri (par exemple (& (objectClass = group) (gidNumber> =% s)))",
       "enableEditingLdapUsers": "Vérifiez si la gestion des utilisateurs et des groupes sur votre DS est autorisée"
     },
@@ -157,8 +157,7 @@
           "lastName": "Entrez le nom de famille",
           "email": "Entrer un email",
           "password": "Entrer le mot de passe",
-          "confirmation": "fr_Enter your password again",
-          "minLengthForPassword": "7"
+          "confirmation": "Entrez votre mot de passe à nouveau"
         },
         "editLdapMember": {
           "title": "Modifier le membre Ldap",
@@ -172,7 +171,7 @@
         "lastName": "Nom de famille",
         "email": "Email",
         "password": "Mot de passe",
-        "confirmation": "fr_Confirm Password"
+        "confirmation": "Confirmez le mot de passe"
       },
       "addMembersGridColumns": {
         "name": "Prénom",
@@ -258,8 +257,8 @@
         "email.label": "Adresse e-mail du système",
         "password.label": "Mot de passe système",
         "purgeDays.label": "Journées",
-        "emailValid": "L'adresse e-mail du système est valide",
-        "emailNotValid": "L'adresse électronique du système n'est pas valide",
+        "emailValid": "L'adresse électronique et le mot de passe du système sont valides",
+        "emailNotValid": "L'adresse électronique ou le mot de passe du système ne sont pas valides",
         "enableCalendarIntegration.checkbox": "Activer l'intégration de calendrier",
         "purgeOptions": {
           "retainIndefinitely": "Conserver indéfiniment",
@@ -433,6 +432,7 @@
       "cancel": "Annuler",
       "activate": "Rendre actif"
     },
+    "workflows.config.noHistory": "fr_There is no history for this workflow.",
     "workflows.config.grid": {
       "businessProcess": "Processus d'affaires",
       "description": "La description",
@@ -442,7 +442,6 @@
     },
     "workflows.config.btn": {
       "createNew": "Créer un nouveau modèle",
-      "createNewUrl": "https://activiti.alfresco.com",
       "uploadNew": "Importer un nouveau BPMN"
     },
     "workflows.config.links": {

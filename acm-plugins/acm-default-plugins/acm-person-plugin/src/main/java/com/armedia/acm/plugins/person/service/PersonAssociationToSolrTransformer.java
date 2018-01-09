@@ -84,13 +84,6 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonAssociation in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return PersonAssociation.class.equals(acmObjectType);

@@ -129,13 +129,6 @@ public class ComplaintToSolrTransformer implements AcmObjectToSolrDocTransformer
         return solr;
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Complaint in)
-    {
-        // No implementation needed
-        return null;
-    }
-
     private String findAssigneeUserId(Complaint in)
     {
         if (in.getParticipants() != null)

@@ -378,16 +378,23 @@ public class AcmGroup implements Serializable, AcmEntity
      * @return `,` separated list of all ascendants of group
      */
     @JsonIgnore
-    public Stream<String> getAscendants()
+    public Stream<String> getAscendantsStream()
     {
         if (StringUtils.isBlank(ascendantsList)) return Stream.empty();
         return Arrays.stream(ascendantsList.split(",")).sorted();
     }
 
+    public Set<String> getAscendants()
+    {
+        if (StringUtils.isBlank(ascendantsList)) return new HashSet<>();
+        return Arrays.stream(ascendantsList.split(","))
+                .sorted()
+                .collect(Collectors.toSet());
+    }
+
     public void addAscendant(String ascendantGroup)
     {
-        Set<String> ascendants = getAscendants()
-                .collect(Collectors.toSet());
+        Set<String> ascendants = getAscendants();
         ascendants.add(ascendantGroup);
         ascendantsList = ascendants.stream()
                 .sorted()

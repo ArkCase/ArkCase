@@ -2,10 +2,7 @@ package com.armedia.acm.services.users.dao.group;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
-import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.group.AcmGroupConstants;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import org.slf4j.Logger;
@@ -14,13 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +36,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         query.where(
                 builder.and(
-                        builder.equal(group.<String>get("name"), name)
+                        builder.equal(group.<String>get("name"), name.toUpperCase())
                 )
         );
 
@@ -71,51 +65,6 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
     }
 
     @Transactional
-    public boolean deleteAcmGroupByName(String name)
-    {
-        AcmGroup groupToBeDeleted = findByName(name);
-        if (groupToBeDeleted != null)
-        {
-            getEm().remove(groupToBeDeleted);
-            return true;
-        } else
-        {
-            return false;
-        }
-    }
-
-    @Transactional
-    public AcmGroup markGroupDeleted(String groupName)
-    {
-        AcmGroup acmGroup = findByName(groupName);
-        if (acmGroup == null) return null;
-
-        acmGroup.setAscendantsList(null);
-        acmGroup.setStatus(AcmGroupStatus.DELETE);
-
-        acmGroup.getUserMembers()
-                .forEach(user -> user.getGroups().remove(acmGroup));
-        acmGroup.getMemberOfGroups()
-                .forEach(it -> it.getMemberGroups().remove(acmGroup));
-        acmGroup.getMemberGroups()
-                .forEach(it -> acmGroup.getMemberOfGroups().remove(acmGroup));
-
-        acmGroup.setUserMembers(new HashSet<>());
-        acmGroup.setMemberOfGroups(new HashSet<>());
-        acmGroup.setMemberGroups(new HashSet<>());
-        return acmGroup;
-    }
-
-    public void markRolesByGroupInvalid(String groupName)
-    {
-        Query markInvalid = getEm().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state "
-                + "WHERE aur.roleName = :groupName");
-        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
-        markInvalid.setParameter("groupName", groupName);
-        markInvalid.executeUpdate();
-    }
-
-    @Transactional
     public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
     {
         AcmGroup group = findByName(name);
@@ -130,121 +79,47 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return group;
     }
 
-    /**
-     * Mark user groups that are associated exclusively to a single directory inactive.
-     *
-     * @param directoryName LDAP directory name
-     * @param groupType     user group type
-     */
-    @Transactional
-    public void markAllGroupsInactive(String directoryName, String groupType)
-    {
-        // the following query should read:
-        // "select groups that are associated exclusively to a single directory"
-        Query query = getEm().createQuery(
-                "SELECT group FROM AcmGroup group " +
-                        "WHERE group.type = :groupType " +
-                        "AND group.status != :groupStatus " +
-                        "AND group.name NOT IN " +
-                        "(SELECT DISTINCT userRole.roleName FROM AcmUserRole userRole " +
-                        "WHERE userRole.userRoleState = :userRoleState " +
-                        "AND userRole.userId IN " +
-                        // valid users retrieved from other directories
-                        "(SELECT user.userId FROM AcmUser user " +
-                        "WHERE user.userDirectoryName != :directoryName " +
-                        "AND user.userState = :userState))");
-        query.setParameter("groupType", groupType);
-        query.setParameter("groupStatus", AcmGroupStatus.DELETE);
-        query.setParameter("userRoleState", AcmUserRoleState.VALID);
-        query.setParameter("directoryName", directoryName);
-        query.setParameter("userState", AcmUserState.VALID);
-
-        List<AcmGroup> groups = query.getResultList();
-
-        for (AcmGroup group : groups)
-        {
-            group.setStatus(AcmGroupStatus.INACTIVE);
-            save(group);
-        }
-    }
-
     @Transactional
     public List<AcmGroup> findByUserMember(AcmUser user)
     {
-        Query query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.userMembers = :user");
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group "
+                + "WHERE group.userMembers = :user", AcmGroup.class);
         query.setParameter("user", user);
 
-        return (List<AcmGroup>) query.getResultList();
-    }
-
-    private Set<AcmUser> getClonedMembers(Set<AcmUser> members)
-    {
-        @SuppressWarnings("unchecked")
-        Set<AcmUser> clonedMembers = (HashSet) new HashSet<>(members).clone();
-
-        return clonedMembers;
-    }
-
-    public AcmGroup groupByUIName(AcmGroup group)
-    {
-        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT group FROM AcmGroup group WHERE group.name LIKE :name AND " +
-                "group.parentGroup IS NULL AND group.status <> :status", AcmGroup.class);
-
-        query.setParameter("name", group.getName() + AcmGroupConstants.UUID_LIKE_STRING);
-        query.setParameter("status", AcmGroupStatus.DELETE);
-        List<AcmGroup> result = query.getResultList();
-
-        return result.isEmpty() ? null : result.get(0);
-    }
-
-    /**
-     * Find ad-hoc group by matching name.
-     * <p>
-     * We need this since UI names and internal names of ad-hoc groups differ
-     * (ArkCase is adding `-UUID-...` suffix internally)
-     *
-     * @param name group name
-     * @return ad-hoc group if found, null otherwise
-     */
-    @Transactional
-    public AcmGroup findByMatchingName(String name)
-    {
-        CriteriaBuilder builder = this.getEm().getCriteriaBuilder();
-        CriteriaQuery query = builder.createQuery(AcmGroup.class);
-        Root group = query.from(AcmGroup.class);
-        query.select(group);
-        query.where(builder.and(new Predicate[] { builder.like(group.<String>get("name"), name + "-UUID-%") }));
-
-        TypedQuery dbQuery = this.getEm().createQuery(query);
-        AcmGroup acmGroup = null;
-
-        try
-        {
-            acmGroup = (AcmGroup) dbQuery.getSingleResult();
-        }
-        catch (NoResultException e)
-        {
-            LOG.warn("There is no group with name [{}]", name);
-        }
-        catch (NonUniqueResultException e)
-        {
-            LOG.warn("There is no unique group found with name [{}]. More than one group has this name", name);
-        }
-        catch (Exception e)
-        {
-            LOG.error("Error while retrieving group by group name [{}]", name, e);
-        }
-        return acmGroup;
+        return query.getResultList();
     }
 
     public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
         TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
                 createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
-                        + "WHERE acmGroup.type = :groupType AND acmGroup.directoryName = :directoryName", AcmGroup.class);
-        allLdapGroupsInDirectory.setParameter("groupType", AcmGroupType.LDAP_GROUP);
+                                + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
+                                + "AND acmGroup.directoryName = :directoryName",
+                        AcmGroup.class);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
+    }
+
+    public List<AcmGroup> findByTypeWithUsers(AcmGroupType type)
+    {
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT DISTINCT acmGroup "
+                + "FROM AcmGroup acmGroup "
+                + "LEFT JOIN FETCH acmGroup.userMembers "
+                + "WHERE acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("groupType", type);
+        return query.getResultList();
+    }
+
+    public List<AcmGroup> findByStatusAndType(AcmGroupStatus status, AcmGroupType type)
+    {
+        TypedQuery<AcmGroup> query = getEm()
+                .createQuery("SELECT acmGroup "
+                        + "FROM AcmGroup acmGroup "
+                        + "WHERE acmGroup.status = :status "
+                        + "AND acmGroup.type = :groupType", AcmGroup.class);
+        query.setParameter("status", status);
+        query.setParameter("groupType", type);
+        return query.getResultList();
     }
 
     @Override

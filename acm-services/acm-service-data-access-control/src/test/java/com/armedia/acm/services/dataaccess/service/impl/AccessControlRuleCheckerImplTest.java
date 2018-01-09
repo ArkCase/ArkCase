@@ -88,7 +88,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "completeTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -97,12 +98,13 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     public void testEmptyRules()
     {
         // mock the behavior
-        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(new ArrayList<AccessControlRule>()).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(new ArrayList<>()).anyTimes();
         EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "completeTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -121,7 +123,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "completeTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "completeTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -195,8 +198,62 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
+        verifyAll();
+    }
+
+    @Test
+    public void testMatchingRolesAllWithWildcardRole()
+    {
+        AccessControlRule accessControlRule = new AccessControlRule();
+        accessControlRule.setActionName("createTask");
+        accessControlRule.setObjectType("CASE_FILE");
+        accessControlRule.setObjectSubType("ORDER");
+        accessControlRule.setUserRolesAll(Arrays.asList("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV@*"));
+
+        GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+        GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
+        GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
+        GrantedAuthority grantedAuthority4 = new SimpleGrantedAuthority("ACM_ADMINISTRATOR_DEV@armedia.com");
+        Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3, grantedAuthority4);
+        // mock the behavior
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
+        EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
+        EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
+        replayAll();
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
+        assertTrue(granted);
+        verifyAll();
+    }
+
+    @Test
+    public void testNonMatchingRolesAllWithWildcardRole()
+    {
+        AccessControlRule accessControlRule = new AccessControlRule();
+        accessControlRule.setActionName("createTask");
+        accessControlRule.setObjectType("CASE_FILE");
+        accessControlRule.setObjectSubType("ORDER");
+        accessControlRule.setUserRolesAll(Arrays.asList("ROLE_ADMINISTRATOR", "ACM_ADMINISTRATOR_DEV@*"));
+
+        GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+        GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
+        GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
+        Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
+        // mock the behavior
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
+        EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
+        EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
+        replayAll();
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
+        assertFalse(granted);
         verifyAll();
     }
 
@@ -220,7 +277,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -245,7 +303,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }
@@ -269,7 +328,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -300,6 +360,32 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
     }
 
     @Test
+    public void testMatchingRolesAnyWithWildcardRole()
+    {
+        AccessControlRule accessControlRule = new AccessControlRule();
+        accessControlRule.setActionName("createTask");
+        accessControlRule.setObjectType("CASE_FILE");
+        accessControlRule.setObjectSubType("ORDER");
+        accessControlRule.setUserRolesAny(Arrays.asList("ROLE_SUPERVISOR", "ACM_ADMINISTRATOR@*"));
+
+        GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
+        GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
+        GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ACM_ADMINISTRATOR@armedia.com");
+        Collection grantedAuthorities = Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
+        // mock the behavior
+        EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
+        EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
+        EasyMock.expect(authenticationMock.getName()).andReturn("ann-acm").anyTimes();
+        EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
+        replayAll();
+
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
+        assertTrue(granted);
+        verifyAll();
+    }
+
+    @Test
     public void testCaseInsensitiveMatchingRolesAny()
     {
         AccessControlRule accessControlRule = new AccessControlRule();
@@ -319,7 +405,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -331,7 +418,7 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         accessControlRule.setActionName("createTask");
         accessControlRule.setObjectType("CASE_FILE");
         accessControlRule.setObjectSubType("ORDER");
-        accessControlRule.setUserRolesAny(Arrays.asList("ROLE_INVESTIGATOR", "ROLE_SUPERVISOR"));
+        accessControlRule.setUserRolesAny(Arrays.asList("ROLE_INVESTIGATOR", "ROLE_SUPERVISOR", "ACM_ADMINISTRATOR@*"));
 
         GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
         GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
@@ -344,7 +431,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertFalse(granted);
         verifyAll();
     }

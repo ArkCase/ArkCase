@@ -126,7 +126,7 @@ angular.module('services').factory('Object.TaskService', ['$resource', '$q', 'Ac
          */
         Service.queryChildTasks = function (parentType, parentId, start, n, sortBy, sortDir) {
             var cacheChildTaskData = new Store.CacheFifo(Service.CacheNames.CHILD_TASK_DATA);
-            var cacheKey = parentType + "." + parentId + "." + start + "." + n + "." + sortBy + "." + sortDir;
+            var cacheKey = parentType + "." + parentId + "." +  start +  "." + n + "." + sortBy + "." + sortDir;
             var taskData = cacheChildTaskData.get(cacheKey);
             
             var sort = "";
