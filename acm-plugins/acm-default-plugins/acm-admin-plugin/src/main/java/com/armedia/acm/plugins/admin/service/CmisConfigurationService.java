@@ -268,7 +268,7 @@ public class CmisConfigurationService
         props.put("reconnectFrequency", jsonObj.getInt(CmisConfigurationConstants.CMIS_RECONNECTFREQUENCY));
         props.put("repositoryId", jsonObj.has(CmisConfigurationConstants.CMIS_REPOSITORYID)
                 ? jsonObj.getString(CmisConfigurationConstants.CMIS_REPOSITORYID) : "");
-        props.put("versioningState", jsonObj.getString(CmisConfigurationConstants.CMIS_VERSIONINGSTATE));
+        props.put("cmisVersioningState", jsonObj.getString(CmisConfigurationConstants.CMIS_VERSIONINGSTATE));
 
         return props;
     }
