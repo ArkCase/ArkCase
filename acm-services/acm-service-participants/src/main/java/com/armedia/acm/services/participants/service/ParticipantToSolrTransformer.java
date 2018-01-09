@@ -82,12 +82,6 @@ public class ParticipantToSolrTransformer implements AcmObjectToSolrDocTransform
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmParticipant in)
-    {
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmParticipant.class.equals(acmObjectType);

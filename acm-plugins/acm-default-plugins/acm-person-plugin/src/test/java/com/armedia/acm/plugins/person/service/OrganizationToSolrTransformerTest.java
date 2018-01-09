@@ -18,6 +18,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
@@ -244,7 +245,7 @@ public class OrganizationToSolrTransformerTest extends EasyMockSupport
         // given
 
         // when
-        SolrAdvancedSearchDocument result = unit.toContentFileIndex(in);
+        SolrContentDocument result = unit.toContentFileIndex(in);
 
         // then
         assertNull(result);

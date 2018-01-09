@@ -119,18 +119,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
     /*
      * (non-Javadoc)
      *
-     * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#toContentFileIndex(java.lang.Object)
-     */
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Category in)
-    {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#isAcmObjectTypeSupported(java.lang.Class)
      */

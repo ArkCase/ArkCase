@@ -59,6 +59,8 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
         };
         Service.CacheNames = {};
 
+        Service.getLookupTypes = ['standardLookup', 'inverseValuesLookup', 'nestedLookup'];
+
         /**
          * @ngdoc method
          * @name getAuditReportNames
@@ -671,17 +673,29 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 var lookupsDefs = [];
                 if (lookups.standardLookup) {
                     for (var i = 0, len = lookups.standardLookup.length; i < len; i++) {
-                        lookupsDefs.push({'name' : Object.keys(lookups.standardLookup[i])[0], 'lookupType' : 'standardLookup'});
+                        lookupsDefs.push({
+                            'name': lookups.standardLookup[i].name,
+                            'lookupType': 'standardLookup',
+                            'readonly': lookups.standardLookup[i].readonly
+                        });
                     }
                 }
                 if (lookups.nestedLookup) {
                     for (var i = 0, len = lookups.nestedLookup.length; i < len; i++) {
-                        lookupsDefs.push({'name' : Object.keys(lookups.nestedLookup[i])[0], 'lookupType' : 'nestedLookup'});
+                        lookupsDefs.push({
+                            'name': lookups.nestedLookup[i].name,
+                            'lookupType': 'nestedLookup',
+                            'readonly': lookups.nestedLookup[i].readonly
+                        });
                     }
                 }
                 if (lookups.inverseValuesLookup) {
                     for (var i = 0, len = lookups.inverseValuesLookup.length; i < len; i++) {
-                        lookupsDefs.push({'name' : Object.keys(lookups.inverseValuesLookup[i])[0], 'lookupType' : 'inverseValuesLookup'});
+                        lookupsDefs.push({
+                            'name': lookups.inverseValuesLookup[i].name,
+                            'lookupType': 'inverseValuesLookup',
+                            'readonly': lookups.inverseValuesLookup[i].readonly
+                        });
                     }
                 }
 
@@ -704,14 +718,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} Promise returning the lookup entries as array
          */
         Service.getLookup = function (lookupDef) {
-            return LookupService.getLookups().then(function (lookups) {
-                for (var i = 0, len = lookups[lookupDef.lookupType].length; i < len; i++) {
-                    if (lookups[lookupDef.lookupType][i].hasOwnProperty(lookupDef.name)) {
-                        // return a deep copy of the lookup not to allow clients to change the original object
-                        return _.cloneDeep(lookups[lookupDef.lookupType][i][lookupDef.name]);
-                    }
-                }
-            });
+            return Service.getLookupByLookupName(lookupDef.name);
         };
 
         /**
@@ -731,9 +738,9 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 for (var lookupType in lookups) {
                     if (lookups.hasOwnProperty(lookupType)) {
                         for (var i = 0, len = lookups[lookupType].length; i < len; i++) {
-                            if (lookups[lookupType][i].hasOwnProperty(name)) {
+                            if (lookups[lookupType][i].name == name) {
                                 // return a deep copy of the lookup not to allow clients to change the original object
-                                return _.cloneDeep(lookups[lookupType][i][name]);
+                                return _.cloneDeep(lookups[lookupType][i].entries);
                             }
                         }
                     }
