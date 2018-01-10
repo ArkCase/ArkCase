@@ -353,7 +353,7 @@
         "templateName.label": "Template Name",
         "templateName.placeholder": "Enter Template Name",
         "emailPattern.label": "Email Pattern",
-        "emailPattern.description": "Use '.*' for all recipients, use '.+@armedia.com' for armedia recipients or some other regex pattern.",
+        "emailPattern.description": "Use '.*' for all recipients, use '.+@armedia.com' for armedia.com recipients or some other regex. Please note that dot(.) should be escaped with backslash!",
         "emailPattern.placeholder": "Enter Email Pattern",
         "source.label": "Source",
         "objectTypes.label": "Object Types",
@@ -363,7 +363,7 @@
         "browse": "Browse",
         "save": "Save",
         "cancel": "Cancel",
-        "validationResponse": "Email Template exists for parameters"
+        "validationResponse": "Email Template already exists with selected parameters"
       }
     },
     "security.exchangeConfiguration": {
