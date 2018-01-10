@@ -31,7 +31,6 @@ public class LdapUser
     {
         AcmUser acmUser = new AcmUser();
         acmUser.setUserId(userId.toLowerCase());
-        acmUser.setDistinguishedName(distinguishedName);
         acmUser.setUid(uid);
         acmUser.setUserPrincipalName(userPrincipalName);
         acmUser.setsAMAccountName(sAMAccountName);
@@ -50,6 +49,7 @@ public class LdapUser
         acmUser.setCountry(country);
         acmUser.setCountryAbbreviation(countryAbbreviation);
         acmUser.setPasswordExpirationDate(passwordExpirationDate);
+        acmUser.setDistinguishedName(distinguishedName);
         return acmUser;
     }
 
@@ -70,9 +70,10 @@ public class LdapUser
         boolean countryAbbreviationChanged = objChanged(countryAbbreviation, acmUser.getCountryAbbreviation());
         boolean departmentChanged = objChanged(department, acmUser.getDepartment());
         boolean passwordExpirationDateChanged = objChanged(passwordExpirationDate, acmUser.getPasswordExpirationDate());
+        boolean dnChanged = objChanged(distinguishedName, acmUser.getDistinguishedName());
         return directoryNameChanged || stateChanged || titleChanged || mailChanged || firstNameChanged
                 || lastNameChanged || companyChanged || countryChanged || countryAbbreviationChanged
-                || departmentChanged || passwordExpirationDateChanged;
+                || departmentChanged || passwordExpirationDateChanged || dnChanged;
     }
 
     public String getUserId()

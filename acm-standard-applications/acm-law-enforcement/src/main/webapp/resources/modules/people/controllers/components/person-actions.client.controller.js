@@ -86,7 +86,7 @@ angular.module('people').controller('People.ActionsController', ['$scope', '$sta
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
-                        $scope.activationMode = true;
+                        activationMode = true;
                         return objectInfo;
                     }
                     , function (error) {

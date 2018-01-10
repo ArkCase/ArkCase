@@ -58,7 +58,23 @@
     },
     "menu": {
       "noop": "(Select Item)",
-      "editWithWebDAV": "Edit"
+      "editWithWebDAV": "Edit",
+      "cancelEditing": "Cancel Editing",
+      "newFolder": "New Folder",
+      "newDocument": "New Document",
+      "newCorrespondence": "New Correspondence",
+      "open": "Open",
+      "email": "Email",
+      "download": "Download",
+      "copy": "Copy",
+      "cut": "Cut",
+      "paste": "Paste",
+      "rename": "Rename",
+      "delete": "Delete",
+      "replace": "Replace",
+      "checkout": "Check Out",
+      "checkin": "Check In",
+      "declareRecord": "Declare As Record(s)"
     },
     "table.columns": {
       "title": "Title",
@@ -313,6 +329,12 @@
     "start.label": "Start: ",
     "end.label": "End: ",
     "newEvent.button": "New Event",
+    "agenda.button" : {
+      "today": "Today",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day"
+    },
     "addNewEventDialog": {
       "title": "New Event",
       "cancel.button": "Cancel",
@@ -350,6 +372,8 @@
         "reminder.label": "Reminder",
         "reminder.placeholder": "Choose Reminder Window",
         "datePickerClose.button": "Close",
+        "datePickerCurrent.button": "Current",
+        "datePickerClear.button": "Clear",
         "otherOptions.label": "Other Options",
         "allDayEvent.checkbox": "All Day Event",
         "privateEvent.checkbox": "Private Event",

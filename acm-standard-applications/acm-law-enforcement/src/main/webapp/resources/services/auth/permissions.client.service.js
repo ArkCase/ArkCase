@@ -125,8 +125,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check ALL authorities
                     if (isEnabled && _.isArray(userProfile.authorities) && action.userRolesAll) {
                         _.forEach(action.userRolesAll, function (role) {
-                            var processedRole = processRole(role, objectProperties);
-                            isEnabled = (_.indexOf(userProfile.authorities, processedRole) != -1);
+                            isEnabled = hasAuthorityRole(userProfile.authorities, role, objectProperties);
                             return isEnabled;
                         });
                     }
@@ -136,8 +135,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                         if (action.userRolesAny.length > 0) {
                             var anyEnabled = false;
                             _.forEach(action.userRolesAny, function (role) {
-                                var processedRole = processRole(role, objectProperties);
-                                anyEnabled = anyEnabled || (_.indexOf(userProfile.authorities, processedRole) != -1);
+                                anyEnabled = anyEnabled || hasAuthorityRole(userProfile.authorities, role, objectProperties);
                             });
                             isEnabled = anyEnabled;
                         }
@@ -205,7 +203,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check ALL authorities
                     if (action.userRolesAll) {
                         _.forEach(action.userRolesAll, function (role) {
-                            if (_.indexOf(roles, role) != -1) {
+                            if (hasAuthorityRole(roles, role)) {
                                 if (_.indexOf(actionsList, action) == -1) {
                                     actionsList.push(action);
                                 }
@@ -216,7 +214,7 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
                     // Check ANY authorities
                     if (action.userRolesAny) {
                         _.forEach(action.userRolesAny, function (role) {
-                            if (_.indexOf(roles, role) != -1) {
+                            if (hasAuthorityRole(roles, role)) {
                                 if (_.indexOf(actionsList, action) == -1) {
                                     actionsList.push(action);
                                 }
@@ -254,5 +252,33 @@ angular.module('services').factory('PermissionsService', ['$q', '$http', '$log',
             var exp = $interpolate(role);
             return exp(objectProperties);
         }
+
+        /**
+         * Check if the required role is in user authority roles.
+         * If this role contains wildcard "@*", check if the string before "@" matches
+         * some of the user authority roles without domain.
+         * eg. role: ACM_ADMIN@*, userAuthorities: ACM_ADMIN@X.COM
+         * ACM_ADMIN matches ACM_ADMIN without domain
+         * @param userAuthorities array of user roles
+         * @param role required role
+         * @param objectProperties
+         * @returns boolean  true if match found, otherwise false
+         */
+        function hasAuthorityRole(userAuthorities, role, objectProperties) {
+            var processedRole = objectProperties ? processRole(role, objectProperties) : role;
+            var authorities = angular.copy(userAuthorities);
+            if (_.endsWith(processedRole, '@*')) {
+                processedRole = processedRole.substring(0, processedRole.lastIndexOf('@*'));
+                authorities = _.map(authorities, function (authority) {
+                    var authIndexOfDomain = authority.lastIndexOf('@');
+                    if (authIndexOfDomain === -1) {
+                        return authority;
+                    }
+                    return authority.substring(0, authIndexOfDomain);
+                });
+            }
+            return _.indexOf(authorities, processedRole) !== -1;
+        }
+
     }
 ]);

@@ -110,10 +110,4 @@
         </update>
     </changeSet>
 
-    <changeSet id="12-update-cm_distinguished_name-with-cm_user_id" author="ncuculova">
-        <sql>
-            UPDATE acm_user SET cm_distinguished_name = cm_user_id;
-        </sql>
-    </changeSet>
-
 </databaseChangeLog>

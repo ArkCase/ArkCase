@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "（選択項目）",
-      "editWithWebDAV": "編集"
+      "editWithWebDAV": "編集",
+      "cancelEditing": "編集をキャンセルする",
+      "newFolder": "新しいフォルダ",
+      "newDocument": "新しい文書",
+      "newCorrespondence": "新しい対応",
+      "open": "開いた",
+      "email": "電子メイル",
+      "download": "ダウンロード",
+      "copy": "複写",
+      "cut": "カット",
+      "paste": "貼る",
+      "rename": "名前を変更",
+      "delete": "削除",
+      "replace": "交換",
+      "checkout": "登録",
+      "checkin": "チェックイン",
+      "declareRecord": "レコードとして宣言"
     },
     "table.columns": {
       "title": "タイトル",
@@ -223,8 +239,8 @@
       "fields.objectType.contactMethod%": "接触方式",
       "fields.objectType.task%": "任務",
       "fields.objectType.file%": "文書",
-      "fields.objectType.person%": "人員",
-      "fields.objectType.personAssociation%": "人員関連",
+      "fields.objectType.person%": "人物",
+      "fields.objectType.personAssociation%": "人物関連",
       "fields.objectType.reference%": "参照",
       "fields.objectType.location%": "場所",
       "fields.objectType.organization%": "組織",
@@ -247,7 +263,7 @@
       "fields.parentType.caseFile%": "案件文書",
       "fields.parentType.complaint%": "訴状",
       "fields.parentType.organization%": "組織",
-      "fields.parentType.person%": "人員",
+      "fields.parentType.person%": "人物",
       "fields.parentType.task%": "任務",
       "fields.parentType.file%": "文書",
       "fields.parentType.group%": "%群",
@@ -260,7 +276,7 @@
       "fields.parentObjectType.caseFile%": "案件文書",
       "fields.parentObjectType.complaint%": "訴状",
       "fields.parentObjectType.organization%": "組織",
-      "fields.parentObjectType.person%": "人員",
+      "fields.parentObjectType.person%": "人物",
       "fields.parentObjectType.task%": "任務",
       "fields.parentObjectType.file%": "文書",
       "fields.parentObjectType.group%": "群",
@@ -300,6 +316,12 @@
     "start.label": "開始：",
     "end.label": "終わり：",
     "newEvent.button": "新しいイベント",
+    "agenda.button" : {
+      "today": "今日",
+      "month": "月",
+      "week": "週間",
+      "day": "日"
+    },
     "addNewEventDialog": {
       "title": "新しいイベント",
       "cancel.button": "キャンセル",
@@ -337,6 +359,8 @@
         "reminder.label": "リマインダ",
         "reminder.placeholder": "リマインダーウィンドウを選択",
         "datePickerClose.button": "閉じる",
+        "datePickerCurrent.button": "現在",
+        "datePickerClear.button": "明らす",
         "otherOptions.label": "その他のオプション",
         "allDayEvent.checkbox": "終日イベント",
         "privateEvent.checkbox": "プライベートイベント",
@@ -587,7 +611,7 @@
     "FILE": "ファイル",
     "DOC_REPO": "ドキュメントリポジトリ",
     "ORGANIZATION": "組織",
-    "PERSON": "人員"
+    "PERSON": "人物"
   },
   "frevvo.dialogUserPicker": {
     "header": "ユーザーを選択",
@@ -600,7 +624,7 @@
   },
   "common.objects.objectWasCreatedMessage": "id {{objectId}}の{{objectTypeString}}が作成されました。",
   "common.newPerson": {
-    "title": "人",
+    "title": "人物",
     "addAnother": "追加する",
     "remove": "削除する",
     "familyName": "苗字",
@@ -639,7 +663,7 @@
       "country.placeholder": "国を選択",
       "state": "状態",
       "state.placeholder": "州に入る",
-      "zip": "ジップ",
+      "zip": "郵便番号",
       "zip.placeholder": "郵便番号を入力",
       "city": "シティ",
       "city.placeholder": "都市を入力",
@@ -651,17 +675,17 @@
       "streetAddress2.placeholder": "住所2を入力してください"
     },
     "identification": {
-      "title": "識別",
-      "identificationID": "識別ID",
-      "identificationID.placeholder": "ID番号を入力",
-      "identificationType": "識別タイプ",
-      "identificationType.placeholder": "識別タイプの選択",
-      "identificationNumber": "識別番号",
-      "identificationNumber.placeholder": "識別番号を入力",
+      "title": "身分証明書",
+      "identificationID": "識別番号",
+      "identificationID.placeholder": "識別番号を入力",
+      "identificationType": "身分証明書タイプ",
+      "identificationType.placeholder": "身分証明書タイプの選択",
+      "identificationNumber": "身分証明書番号",
+      "identificationNumber.placeholder": "身分証明書番号を入力",
       "identificationIssuer": "身分証明書発行者",
       "identificationIssuer.placeholder": "身分証明書発行者を入力",
       "identificationYearIssued": "身分証明書発行",
-      "identificationYearIssued.placeholder": "選択されたIDを選択",
+      "identificationYearIssued.placeholder": "選択された番号を選択",
       "identificationYearIssued.close.button": "閉じる"
     }
   },
@@ -669,7 +693,7 @@
     "title": "人を追加する",
     "addNew.label": "新しい人を追加",
     "selectExisting.label": "既存の人を選択",
-    "person.label": "人員",
+    "person.label": "人物",
     "type.label": "人物の種類",
     "btnCancel.text": "キャンセル",
     "btnOk.text": "人を救う",
@@ -687,7 +711,7 @@
     "table.columns": {
       "givenName": "ファーストネーム",
       "familyName": "苗字",
-      "id": "ID番号",
+      "id": "識別番号",
       "organization": "組織",
       "phone": "電話",
       "location": "場所"
@@ -698,7 +722,7 @@
     "table.columns": {
       "type": "組織の種類",
       "name": "組織",
-      "identification": "ID番号",
+      "identification": "識別番号",
       "contact": "一次連絡先",
       "phone": "電話",
       "location": "場所"
@@ -708,7 +732,7 @@
     "header": "検索{{オブジェクトラベル}}",
     "table.columns": {
       "name": "名前",
-      "id": "ID",
+      "id": "識別",
       "title": "タイトル"
     }
   },
@@ -778,9 +802,9 @@
       "urlType": "URLの種類"
     },
     "people": {
-      "title": "人員",
+      "title": "人物",
       "searchExisting.placeholder": "既存の人を検索する",
-      "personType": "人員の種類"
+      "personType": "人物の種類"
     },
     "locations": {
       "title": "場所",
@@ -800,17 +824,17 @@
       "streetAddress2.placeholder": "住所2を入力してください"
     },
     "identification": {
-      "title": "識別",
-      "identificationID": "識別ID",
-      "identificationID.placeholder": "ID番号を入力",
-      "identificationType": "識別タイプ",
-      "identificationType.placeholder": "識別タイプの選択",
-      "identificationNumber": "識別番号",
-      "identificationNumber.placeholder": "識別番号を入力",
+      "title": "身分証明書",
+      "identificationID": "識別番号",
+      "identificationID.placeholder": "識別番号を入力",
+      "identificationType": "身分証明書タイプ",
+      "identificationType.placeholder": "身分証明書タイプの選択",
+      "identificationNumber": "身分証明書番号",
+      "identificationNumber.placeholder": "身分証明書番号を入力",
       "identificationIssuer": "身分証明書発行者",
       "identificationIssuer.placeholder": "身分証明書発行者を入力",
       "identificationYearIssued": "身分証明書発行",
-      "identificationYearIssued.placeholder": "選択されたIDを選択",
+      "identificationYearIssued.placeholder": "選択された番号を選択",
       "identificationYearIssued.close.button": "閉じる"
     }
   },

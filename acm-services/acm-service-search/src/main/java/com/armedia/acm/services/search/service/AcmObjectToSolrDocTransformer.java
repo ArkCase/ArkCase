@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 
 import java.util.Date;
@@ -23,7 +24,10 @@ public interface AcmObjectToSolrDocTransformer<T extends Object>
 
     SolrDocument toSolrQuickSearch(T in);
 
-    SolrAdvancedSearchDocument toContentFileIndex(T in);
+    default SolrContentDocument toContentFileIndex(T in)
+    {
+        return null;
+    }
 
     boolean isAcmObjectTypeSupported(Class acmObjectType);
 

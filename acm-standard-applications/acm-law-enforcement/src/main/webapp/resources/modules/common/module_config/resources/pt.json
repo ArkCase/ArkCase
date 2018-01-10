@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(Selecionar item)",
-      "editWithWebDAV": "Editar"
+      "editWithWebDAV": "Editar",
+      "cancelEditing": "Cancelar edição",
+      "newFolder": "Nova pasta",
+      "newDocument": "Novo Documento",
+      "newCorrespondence": "Nova Correspondência",
+      "open": "Aberto",
+      "email": "Email",
+      "download": "Baixar",
+      "copy": "Cópia de",
+      "cut": "Cortar",
+      "paste": "Colar",
+      "rename": "Mudar o nome",
+      "delete": "Excluir",
+      "replace": "Substituir",
+      "checkout": "Confira",
+      "checkin": "Check-in",
+      "declareRecord": "Declarar como registro(s)"
     },
     "table.columns": {
       "title": "Título",
@@ -300,6 +316,12 @@
     "start.label": "Começar:",
     "end.label": "Fim:",
     "newEvent.button": "Novo evento",
+    "agenda.button" : {
+      "today": "Hoje",
+      "month": "Mês",
+      "week": "Semana",
+      "day": "Dia"
+    },
     "addNewEventDialog": {
       "title": "Novo evento",
       "cancel.button": "Cancelar",
@@ -337,6 +359,8 @@
         "reminder.label": "Lembrete",
         "reminder.placeholder": "Escolha a janela de lembrete",
         "datePickerClose.button": "Fechar",
+        "datePickerCurrent.button": "Atual",
+        "datePickerClear.button": "Claro",
         "otherOptions.label": "Outras opções",
         "allDayEvent.checkbox": "Evento Todo Dia",
         "privateEvent.checkbox": "Evento privado",
