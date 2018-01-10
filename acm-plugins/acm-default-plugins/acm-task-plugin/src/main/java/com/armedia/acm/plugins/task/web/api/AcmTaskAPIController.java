@@ -104,18 +104,10 @@ public class AcmTaskAPIController
 
         log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
 
-        Long businessProcessId = null;
-
         List<BuckslipProcess> buckslipProcesses = getAcmTaskService().getBuckslipProcessesForObject(objectType, objectId);
 
-        if(buckslipProcesses != null && buckslipProcesses.size()>0 && !buckslipProcesses.get(0).getBusinessProcessId().isEmpty())
-        {
-            businessProcessId = Long.valueOf(buckslipProcesses.get(0).getBusinessProcessId());
-        }
-        else
-        {
-            businessProcessId =  getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
-        }
+        Long businessProcessId = (buckslipProcesses != null && buckslipProcesses.size()>0 && !buckslipProcesses.get(0).getBusinessProcessId().isEmpty()) ?
+                Long.valueOf(buckslipProcesses.get(0).getBusinessProcessId()) : getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
 
         try
         {
