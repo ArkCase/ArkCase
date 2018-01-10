@@ -91,8 +91,8 @@ angular.module('admin').controller('Admin.SecurityEmailTemplatesController', ['$
                         });
                     } else {
                         DialogService.alert($translate.instant("admin.security.emailTemplates.modal.validationResponse") +
-                                ' [' + response.data.objectType + ', ' + response.data.action +
-                                ', "' + response.data.emailPattern + '"]');
+                                ' [' + response.data.objectType + '] [' + response.data.action +
+                                '] [' + response.data.emailPattern + ']');
                     }
                 }, function (error) {
                     MessageService.errorAction(error);

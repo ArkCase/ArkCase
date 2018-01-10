@@ -148,39 +148,28 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     public EmailTemplateValidationResponse validateEmailTemplate(EmailTemplateConfiguration templateData)
             throws AcmEmailConfigurationException
     {
-        EmailTemplateValidationResponse response = new EmailTemplateValidationResponse();
-        List<EmailTemplateConfiguration> readConfigurationList = new ArrayList<EmailTemplateConfiguration>();
-        Lock readLock = lock.readLock();
-        readLock.lock();
-        try (InputStream is = templateConfigurations.getInputStream())
-        {
-            readConfigurationList = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(IOUtils.toString(is, StandardCharsets.UTF_8), List.class, EmailTemplateConfiguration.class);
-            if (readConfigurationList == null)
-            {
-                log.warn("Error while deserializing email templates configuration from {} file.", templateConfigurations.getDescription(),
-                        null);
-                throw new AcmEmailConfigurationJsonException(
-                        String.format("Error while deserializing email templates configuration from %s file.",
-                                templateConfigurations.getDescription()),
-                        null);
 
-            }
-        }
-        catch (IOException e)
-        {
-            log.warn("Error while reading email templates configuration from {} file.", templateConfigurations.getDescription(), e);
-            throw new AcmEmailConfigurationIOException(String.format("Error while reading email templates configuration from %s file.",
-                    templateConfigurations.getDescription()), e);
-        }
-        finally
-        {
-            readLock.unlock();
-        }
+        List<EmailTemplateConfiguration> readConfigurationList = getTemplateConfigurations();
 
+        Map<String, Map<String, List<String>>> templateConfigurationsMap = getTemplateConfigurationsMap(templateData,
+                readConfigurationList);
+
+        EmailTemplateValidationResponse response = getCollideConfiguration(templateData, templateConfigurationsMap);
+
+        return response;
+    }
+
+    /**
+     * @param templateData
+     * @param configurationList
+     * @return
+     */
+    protected Map<String, Map<String, List<String>>> getTemplateConfigurationsMap(EmailTemplateConfiguration templateData,
+            List<EmailTemplateConfiguration> configurationList)
+    {
         // Map<objectType, Map<action, List<emailPattern>>>
-        Map<String, Map<String, List<String>>> templateConfigurations = new HashMap<String, Map<String, List<String>>>();
-        for (EmailTemplateConfiguration configuration : readConfigurationList)
+        Map<String, Map<String, List<String>>> templateConfigurations = new HashMap<>();
+        for (EmailTemplateConfiguration configuration : configurationList)
         {
             if (templateData.getTemplateName() != null && !templateData.getTemplateName().equals(configuration.getTemplateName()))
             {
@@ -198,23 +187,34 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
                 }
             }
         }
+        return templateConfigurations;
+    }
 
-        existingTemplate: for (String objectType : templateData.getObjectTypes())
+    /**
+     * @param templateData
+     * @param templateConfigurationsMap
+     * @return
+     */
+    protected EmailTemplateValidationResponse getCollideConfiguration(EmailTemplateConfiguration templateData,
+            Map<String, Map<String, List<String>>> templateConfigurationsMap)
+    {
+        EmailTemplateValidationResponse response = new EmailTemplateValidationResponse();
+
+        for (String objectType : templateData.getObjectTypes())
         {
             for (String action : templateData.getActions())
             {
-                if (templateConfigurations.containsKey(objectType) && templateConfigurations.get(objectType).containsKey(action)
-                        && templateConfigurations.get(objectType).get(action).contains(templateData.getEmailPattern()))
+                if (templateConfigurationsMap.containsKey(objectType) && templateConfigurationsMap.get(objectType).containsKey(action)
+                        && templateConfigurationsMap.get(objectType).get(action).contains(templateData.getEmailPattern()))
                 {
                     response.setObjectType(objectType);
                     response.setAction(action);
                     response.setEmailPattern(templateData.getEmailPattern());
                     response.setValidTemplate(false);
-                    break existingTemplate;
+                    return response;
                 }
             }
         }
-
         return response;
     }
 
