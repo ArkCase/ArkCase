@@ -70,7 +70,7 @@ angular.module('dashboard.locations', ['adf.provider'])
                 $scope.objectInfo = objectInfo;
                 if((objectInfo.objectType != ObjectService.ObjectTypes.PERSON && objectInfo.objectType != ObjectService.ObjectTypes.ORGANIZATION) && objectInfo.container.containerObjectType == ObjectService.ObjectTypes.COMPLAINT) {
                     var location = $scope.objectInfo.addresses;
-                    if(location != null){
+                    if(!Util.isEmpty(location)){
                         gridHelper.setWidgetsGridData(location);
                     }
                 }
