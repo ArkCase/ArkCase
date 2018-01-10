@@ -26,6 +26,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,6 +56,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher eventPublisher;
 
+    @Async
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
         log.debug("Publish send set password email for user: [{}]", user.getUserId());
@@ -210,14 +212,20 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
+    public List<AcmUser> addExistingLdapUsersToGroup(List<String> userIds, String directoryName, String groupName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         List<AcmUser> ldapUsers = new ArrayList<>();
-        for (AcmUser user : acmUsers)
+        for (String userId : userIds)
         {
-            AcmUser existingUser = userDao.findByUserId(user.getUserId());
-            log.debug("Adding Group [{}] to User [{}]", groupName, user.getUserId());
+            AcmUser existingUser = userDao.findByUserId(userId);
+
+            if (existingUser == null)
+            {
+                throw new AcmObjectNotFoundException("USER", null, "User " + userId + " not found");
+            }
+
+            log.debug("Adding Group [{}] to User [{}]", groupName, userId);
             AcmGroup ldapGroup = groupService.addUserMemberToGroup(existingUser, groupName, true);
 
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
