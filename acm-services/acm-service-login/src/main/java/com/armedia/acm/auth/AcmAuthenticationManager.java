@@ -76,6 +76,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
             // Spring Security publishes an authentication success event all by itself, so we do not have to raise
             // one here.
             return getAcmAuthentication(providerAuthentication);
+        } else {
+            lastException = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
         }
         if (lastException != null)
         {
@@ -94,7 +96,10 @@ public class AcmAuthenticationManager implements AuthenticationManager
                     ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
                 }
 
-            } else
+            } else if (lastException instanceof NoProviderFoundException) {
+                ae = (AuthenticationException) lastException;
+            }
+            else
             {
                 ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException") ?
                         new AuthenticationServiceException(

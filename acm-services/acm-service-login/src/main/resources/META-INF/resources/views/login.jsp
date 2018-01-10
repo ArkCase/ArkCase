@@ -118,10 +118,6 @@ Time: 12:44
                 <div class="alert alert-danger">Bad credentials. Please try again</div>
             </c:when>
 
-            <c:when test='${"No AuthenticationProvider found for org.springframework.security.authentication.UsernamePasswordAuthenticationToken".equals(sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message)}'>
-                <div class="alert alert-danger">Authentication problem.</br>Please contact your administrator.</div>
-            </c:when>
-
             <c:otherwise>
                 <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
             </c:otherwise>
@@ -170,6 +166,8 @@ Time: 12:44
             <div class="list-group-item">
                 <input id="j_username"
                        type="text"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                       title="You must provide a domain, for example user@example.com"
                        name="j_username"
                        value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"
                        placeholder="Username"
