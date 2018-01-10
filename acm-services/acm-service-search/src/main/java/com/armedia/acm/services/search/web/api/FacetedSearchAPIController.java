@@ -7,7 +7,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.solr.client.solrj.util.ClientUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +92,7 @@ public class FacetedSearchAPIController
 
 
         q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
-        q = ClientUtils.escapeQueryChars(q);
+        q = getFacetedSearchService().escapeQueryChars(q);
 
         //Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
         if (StringUtils.isNotEmpty(unescapedQuery))
