@@ -9,6 +9,7 @@
     "security.ldapConfig.addNewMember": "Add New Member",
     "security.ldapConfig.addMembers": "Add Members",
     "security.ldapConfig.addSubgroup": "Add Subgroup",
+    "security.ldapConfig.addExistingSubgroup": "Add Existing Group",
     "security.ldapConfig.addExistingMembers": "Add Existing Members",
     "security.ldapConfig.addLdapSubgroup": "Add LDAP Subgroup",
     "security.ldapConfig.deleteLdapGroup": "Delete LDAP group",
