@@ -1280,7 +1280,8 @@
           "name": "details",
           "displayName": "cases.comp.approvalRouting.table.columns.details",
           "cellEditableCondition": false,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
         },
         {
           "name": "dueDate",
