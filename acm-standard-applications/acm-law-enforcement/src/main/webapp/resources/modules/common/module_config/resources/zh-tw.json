@@ -23,7 +23,7 @@
   "common.service.messageService": {
     "authorizationError": "您無權採取此行動",
     "actionMessages": {
-      "success": "行動是成功的",
+      "success": "操作完成",
       "error": "操作錯誤"
     }
   },
@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "（選擇項目）",
-      "editWithWebDAV": "編輯"
+      "editWithWebDAV": "編輯",
+      "cancelEditing": "取消編輯",
+      "newFolder": "創建新文件夾",
+      "newDocument": "創建新文件",
+      "newCorrespondence": "創建新信件",
+      "open": "打開",
+      "email": "電子郵件",
+      "download": "下載",
+      "copy": "複製",
+      "cut": "切割",
+      "paste": "黏貼",
+      "rename": "改名",
+      "delete": "刪除",
+      "replace": "更換",
+      "checkout": "登記出",
+      "checkin": "登記回",
+      "declareRecord": "聲明為記錄"
     },
     "table.columns": {
       "title": "標題",
@@ -300,6 +316,12 @@
     "start.label": "開始：",
     "end.label": "結束：",
     "newEvent.button": "新事件",
+    "agenda.button" : {
+      "today": "今天",
+      "month": "月",
+      "week": "週",
+      "day": "日"
+    },
     "addNewEventDialog": {
       "title": "新事件",
       "cancel.button": "取消",
@@ -337,6 +359,8 @@
         "reminder.label": "提醒",
         "reminder.placeholder": "選擇提醒窗口",
         "datePickerClose.button": "關閉",
+        "datePickerCurrent.button": "當前",
+        "datePickerClear.button": "清除",
         "otherOptions.label": "其他選項",
         "allDayEvent.checkbox": "全天事件",
         "privateEvent.checkbox": "私人事件",
@@ -395,10 +419,10 @@
       "removeRecurrence.button": "刪除當前重複事件",
       "setRecurrence.button": "設置重複事件",
       "repeatsOptions": {
-        "daily": "每日",
-        "weekly": "每週",
-        "monthly": "每月",
-        "yearly": "每年"
+        "daily": "按日",
+        "weekly": "按週",
+        "monthly": "按月",
+        "yearly": "按年"
       },
       "sunday.checkbox": "星期日",
       "monday.checkbox": "星期一",

@@ -111,13 +111,6 @@ public class AssociatedTagToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmAssociatedTag in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmAssociatedTag.class.equals(acmObjectType);

@@ -1,10 +1,14 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
-import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,9 +21,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
 
 /**
  * Created by vladimir.radeski on 11/22/2017.
@@ -43,7 +44,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void startReviewDocumentsWorkflow () throws Exception
+    public void startReviewDocumentsWorkflow() throws Exception
     {
         String businessProcessName = "acmDocumentWorkflow";
 
@@ -75,10 +76,12 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
         List<String> reviewers = new ArrayList<>();
         reviewers.add(reviewTask.getAssignee());
         pVars.put("reviewers", reviewers);
+        pVars.put("assignee", reviewTask.getAssignee());
         pVars.put("taskName", "title");
         pVars.put("documentAuthor", "assignee");
         pVars.put("pdfRenditionId", 500l);
         pVars.put("formXmlId", null);
+        pVars.put("dueDate", reviewTask.getDueDate());
         pVars.put("candidateGroups", "Test Group");
         pVars.put("OBJECT_TYPE", "FILE");
         pVars.put("OBJECT_ID", 500l);
@@ -99,7 +102,7 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
     }
 
     @Test
-    public void startReviewDocumentsWorkflow_exception () throws Exception
+    public void startReviewDocumentsWorkflow_exception() throws Exception
     {
         String businessProcessName = "acmDocumentWorkflow";
 
@@ -137,7 +140,8 @@ public class AcmTaskServiceImplTest extends EasyMockSupport
 
         replayAll();
         Exception exception = null;
-        try{
+        try
+        {
             acmTaskService.startReviewDocumentsWorkflow(reviewTask, businessProcessName, mockAuthentication);
         }
         catch (AcmTaskException e)

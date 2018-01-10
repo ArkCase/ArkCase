@@ -58,6 +58,8 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         ldapSyncServices.forEach((beanId, service) -> {
             if (beanId.endsWith("_ldapSyncJob"))
             {
+                int n = userIdGroupNameDomainUpdateDao.setUserIdAsDn(service.getLdapSyncConfig().getDirectoryName());
+                log.debug("User dn changed in [{}] rows", n);
                 service.ldapSync();
             }
         });
@@ -217,17 +219,20 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         adHocGroups.stream()
                 .filter(group -> !group.getUserMembers().isEmpty())
                 .forEach(group -> {
-                    Set<AcmUser> userMembers = group.getUserMembers();
-                    group.setUserMembers(new HashSet<>());
-                    userMembers.forEach(user -> {
-                        if (userHolderByOldId.containsKey(user.getUserId()))
-                        {
-                            AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
-                            group.addUserMember(userUpdateHolder.getNewUser());
-                            log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
-                        }
-                    });
-                    groupDao.save(group);
+                    Set<AcmUser> userMembers = new HashSet<>(group.getUserMembers());
+                    Predicate<AcmUser> userIsUpdated = user -> userHolderByOldId.containsKey(user.getUserId());
+                    userMembers.stream()
+                            .filter(userIsUpdated)
+                            .forEach(user -> {
+                                AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
+                                group.addUserMember(userUpdateHolder.getNewUser());
+                                log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
+                            });
+                    boolean isUpdated = group.getUserMembers().removeIf(userIsUpdated);
+                    if (isUpdated)
+                    {
+                        groupDao.save(group);
+                    }
                 });
 
         Map<String, String> newOldGroupName = getNewToOldGroupNames();
