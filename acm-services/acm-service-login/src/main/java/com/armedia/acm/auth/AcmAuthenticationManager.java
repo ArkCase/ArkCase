@@ -80,7 +80,10 @@ public class AcmAuthenticationManager implements AuthenticationManager
         if (lastException != null)
         {
             AuthenticationException ae;
-            if (lastException instanceof BadCredentialsException)
+            if (lastException instanceof ProviderNotFoundException)
+            {
+                ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
+            } else if (lastException instanceof BadCredentialsException)
             {
                 if (getUserDao().isUserPasswordExpired(authentication.getName()))
                 {
@@ -91,10 +94,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
                     ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
                 }
 
-            } else if (lastException instanceof NoProviderFoundException) {
-                ae = (AuthenticationException) lastException;
-            }
-            else
+            } else
             {
                 ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException") ?
                         new AuthenticationServiceException(
