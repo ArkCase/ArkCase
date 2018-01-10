@@ -271,7 +271,6 @@ public class FacetedSearchService
                     || c == '{'
                     || c == '}'
                     || c == '~'
-                    || c == '*'
                     || c == '?'
                     || c == '|'
                     || c == '&'
