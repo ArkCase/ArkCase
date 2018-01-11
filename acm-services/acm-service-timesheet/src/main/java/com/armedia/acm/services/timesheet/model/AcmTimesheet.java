@@ -43,7 +43,7 @@ public class AcmTimesheet implements Serializable, AcmObject, AcmEntity, AcmStat
     @Column(name = "cm_timesheet_id")
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "cm_timesheet_user_id")
 	private AcmUser user;
 	

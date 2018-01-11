@@ -316,6 +316,12 @@
     "start.label": "Начало:",
     "end.label": "Конец:",
     "newEvent.button": "Новое событие",
+    "agenda.button" : {
+      "today": "Cегодня",
+      "month": "Месяц",
+      "week": "Неделю",
+      "day": "День"
+    },
     "addNewEventDialog": {
       "title": "Новое событие",
       "cancel.button": "Отмена",
@@ -353,6 +359,8 @@
         "reminder.label": "Напоминание",
         "reminder.placeholder": "Выберите «Напомнить»",
         "datePickerClose.button": "Закрыть",
+        "datePickerCurrent.button": "Текущий",
+        "datePickerClear.button": "Очистить",
         "otherOptions.label": "Другие варианты",
         "allDayEvent.checkbox": "Событие на весь день",
         "privateEvent.checkbox": "Частное мероприятие",

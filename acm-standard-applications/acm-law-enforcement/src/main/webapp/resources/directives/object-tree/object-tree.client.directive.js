@@ -918,6 +918,12 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                     Tree.refresh();
                 };
 
+                scope.keyUp = function (event) {
+                    if (event.keyCode == 13) {
+                        scope.onClickSearch();
+                    }
+                };
+
                 scope.$bus.subscribe('$translateChangeSuccess', function (data) {
                     Tree.tree.visit(function(node){
                         var label = node.data.label;

@@ -36,7 +36,7 @@ angular.module('dashboard.new-cases')
 
                 vm.labels = labels;
                 vm.data = [chartData];
-                vm.series = [config.title];
+                vm.series = [$translate.instant(config.title)];
             })
         });
     }

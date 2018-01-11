@@ -114,13 +114,6 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         return solr;
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Notification in)
-    {
-        // No implementation needed
-        return null;
-    }
-
     /*
      * (non-Javadoc)
      *
