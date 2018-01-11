@@ -130,8 +130,6 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         mockEventPublisher.publishAuthenticationFailure(capture(captureCustomException), eq(mockAuthentication));
         expectLastCall().once();
 
-        AuthenticationException a = null;
-
         try
         {
             replayAll();
@@ -142,10 +140,10 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         }
         catch (AuthenticationException ae)
         {
-            a = ae;
+            assertEquals(captureCustomException.getValue(), ae);
 
         }
-        assertEquals(captureCustomException.getValue(), a);
+
 
     }
 
