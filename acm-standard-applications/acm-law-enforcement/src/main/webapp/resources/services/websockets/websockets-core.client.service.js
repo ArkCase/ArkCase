@@ -104,7 +104,7 @@ angular.module("services").factory("WebSocketsListener", ['$q', '$timeout', 'Web
     }]).run(
     function (WebSocketsListener) {
         if (WebSocketsListener.shouldStart) {
-            // WebSocketsListener.connect();
+            WebSocketsListener.connect();
         }
     }
 );
