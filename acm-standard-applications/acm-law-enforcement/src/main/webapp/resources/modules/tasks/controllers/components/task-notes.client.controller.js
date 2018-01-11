@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', 'ConfigService', 'ObjectService', 'Helper.ObjectBrowserService'
-    , 'PermissionsService', 'Task.InfoService'
-    , function ($scope, $stateParams, ConfigService, ObjectService, HelperObjectBrowserService, PermissionsService, TaskInfoService) {
+angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$stateParams', '$translate'
+    , 'ConfigService', 'ObjectService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Task.InfoService'
+    , function ($scope, $stateParams, $translate
+        , ConfigService, ObjectService, HelperObjectBrowserService, PermissionsService, TaskInfoService
+    ) {
 
         var componentHelper = new HelperObjectBrowserService.Component(
             {
@@ -18,6 +20,9 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
                 },
                 onObjectInfoRetrieved : function(objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
+                },
+                onTranslateChangeSuccess: function(data) {
+                    onTranslateChangeSuccess(data);
                 }
             });
 
@@ -28,7 +33,7 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
         };
 
         $scope.notesInit = {
-            noteTitle: "Notes",
+            noteTitle: $translate.instant("tasks.comp.notes.title"),
             objectType: ObjectService.ObjectTypes.TASK,
             currentObjectId: $stateParams.id,
             parentTitle: "",
@@ -37,10 +42,18 @@ angular.module('tasks').controller('Tasks.NotesController', ['$scope', '$statePa
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.objectInfo = objectInfo;
-            $scope.notesInit.parentTitle = $scope.objectInfo.parentObjectName;
+            if ($scope.notesInit) {
+                $scope.notesInit.parentTitle = $scope.objectInfo.parentObjectName;
+            }
             PermissionsService.getActionPermission('editNote', objectInfo, {objectType: ObjectService.ObjectTypes.TASK}).then(function (result) {
                 $scope.notesInit.isReadOnly = !result;
             });
+        };
+
+        var onTranslateChangeSuccess = function(data) {
+            if ($scope.notesInit) {
+                $scope.notesInit.noteTitle = $translate.instant("tasks.comp.notes.title");
+            }
         };
     }
 ]);
