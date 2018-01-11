@@ -69,7 +69,7 @@ public class ReportServiceImpl implements ReportService
         Authentication authentication = SecurityContextHolder.getContext() != null ? SecurityContextHolder.getContext().getAuthentication() : null;
         if (authentication != null)
         {
-            username = authentication.getName();
+            username = StringUtils.substringBeforeLast(authentication.getName(), "@");
         }
 
         String fullReportUrl = getReportUrl().getReportsUrl();

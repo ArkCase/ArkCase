@@ -78,13 +78,6 @@ public class CostsheetToSolrTransformer implements AcmObjectToSolrDocTransformer
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmCostsheet in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmCostsheet.class.equals(acmObjectType);

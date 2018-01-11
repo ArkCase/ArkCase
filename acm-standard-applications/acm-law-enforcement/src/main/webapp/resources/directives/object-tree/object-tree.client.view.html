@@ -1,20 +1,20 @@
 <section class="scrollable">
-    <header class="dk header">
+  <header class="dk header">
 
         <div ng-hide="!!treeConfig.search || treeConfig.search === false">
             <div class="input-group">
-                <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
+                <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery" ng-keyup="keyUp($event)"
                         placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
                 <span class="input-group-btn">
           <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button" ng-click="onClickSearch()">
             {{'common.directive.objectTree.btnQuery.text' | translate}}
           </button>
         </span>
-            </div>
-        </div>
+      </div>
+    </div>
 
-        <div class="btn-group inline select pull-right" ng-hide="!!treeConfig.refresh || treeConfig.refresh === false">
-            <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
+    <div class="btn-group inline select pull-right" ng-hide="!!treeConfig.refresh || treeConfig.refresh === false"> 
+      <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
         <span>
           <i class="fa fa-refresh"></i>
         </span>
@@ -58,11 +58,11 @@
             </ul>
         </div>
 
-    </header>
-    <div class="row m-b">
-        <div class="col-sm-12">
-            <div class="tree"></div>
-        </div>
+  </header>
+  <div class="row m-b">
+    <div class="col-sm-12">
+      <div class="tree"></div>
     </div>
+  </div>
 </section>
 

@@ -2,11 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.data.AcmDatabaseChangesEvent;
 import com.armedia.acm.data.AcmObjectChangelist;
-import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
-import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
-import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
-import com.armedia.acm.services.search.model.solr.SolrDocument;
-import com.armedia.acm.services.search.model.solr.SolrDocumentId;
+import com.armedia.acm.services.search.model.solr.*;
 import com.armedia.acm.spring.SpringContextHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +41,8 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
         List<SolrAdvancedSearchDocument> deleteFromSolrAdvancedSearch = new ArrayList<>();
         List<SolrDocument> addOrUpdateSolrQuickSearch = new ArrayList<>();
         List<SolrDocument> deleteFromSolrQuickSearch = new ArrayList<>();
-        List<SolrAdvancedSearchDocument> addOrUpdateSolrContentFile = new ArrayList<>();
-        List<SolrAdvancedSearchDocument> deleteFromSolrContentFile = new ArrayList<>();
+        List<SolrContentDocument> addOrUpdateSolrContentFile = new ArrayList<>();
+        List<SolrContentDocument> deleteFromSolrContentFile = new ArrayList<>();
 
         Collection<AcmObjectToSolrDocTransformer> transformers = getSpringContextHolder()
                 .getAllBeansOfType(AcmObjectToSolrDocTransformer.class).values();
@@ -116,7 +112,7 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
 
     private void toSolrDocuments(Map<Class<?>, List<AcmObjectToSolrDocTransformer>> typeTransformerMap, List<Object> jpaObjects,
             List<SolrAdvancedSearchDocument> solrAdvancedSearchDocs, List<SolrDocument> solrQuickSearchDocs,
-            List<SolrAdvancedSearchDocument> solrContentFileDocs)
+            List<SolrContentDocument> solrContentFileDocs)
     {
 
         Map<Class<?>, List<Object>> objects = jpaObjects.stream().collect(Collectors.groupingBy(Object::getClass));
@@ -158,7 +154,7 @@ public class JpaObjectsToSearchService implements ApplicationListener<AcmDatabas
 
                         try
                         {
-                            SolrAdvancedSearchDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
+                            SolrContentDocument contentFileDocument = transformer.toContentFileIndex(jpaObject);
                             if (contentFileDocument != null)
                             {
                                 solrContentFileDocs.add(contentFileDocument);

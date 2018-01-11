@@ -242,6 +242,12 @@ public class Complaint implements Serializable, AcmAssignedObject, AcmEntity, Ac
             ap.setObjectId(getComplaintId());
             ap.setObjectType(getObjectType());
         }
+        for (OrganizationAssociation oa : getOrganizationAssociations())
+        {
+            oa.setParentId(getComplaintId());
+            oa.setParentTitle(getComplaintNumber());
+            oa.setParentType(getObjectType());
+        }
 
         if (getContainer() != null)
         {

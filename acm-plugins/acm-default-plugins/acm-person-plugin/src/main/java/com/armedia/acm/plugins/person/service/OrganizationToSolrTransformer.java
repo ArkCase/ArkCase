@@ -199,13 +199,6 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
-    {
-        // No implementation needed
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Organization.class.equals(acmObjectType);
