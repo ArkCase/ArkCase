@@ -21,17 +21,17 @@ angular.module('directives').controller('Directives.CoreParticipantsModalControl
 
             if($scope.participant.participantType == "assignee" || $scope.participant.participantType == "owner") {
                 params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-                params.filter = 'fq="object_type_s": USER &fq="groups_id_ss": '+$scope.owningGroup;
+                params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID &fq="groups_id_ss": '+$scope.owningGroup;
                 params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
             } else
             if ($scope.participant.participantType != "owning group") {
                 params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-                params.filter = '"Object Type": USER';
+                params.filter = '"Object Type": USER &fq="status_lcs": VALID';
                 params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
             }
             else{
                     params.header = $translate.instant("common.directive.coreParticipants.modal.dialogGroupPicker.header");
-                    params.filter = '"Object Type": GROUP';
+                    params.filter = '"Object Type": GROUP &fq="status_lcs": ACTIVE';
                     params.config = Util.goodMapValue($scope.config, "dialogGroupPicker");
             }
 
