@@ -69,34 +69,16 @@ public class GroupServiceTest
     private AcmUser user;
 
     @Mock
-    private AcmGroup mockedMemeberOfGroup1;
-
-    @Mock
-    private AcmGroup mockedMemeberOfGroup2;
-
-    @Mock
     private AcmGroup mockedMemberGroup1;
-
-    @Mock
-    private AcmUser userGroup1;
 
     @Mock
     private AcmGroup mockedMemberSubGroup1;
 
     @Mock
-    private AcmUser userSubGroup1;
-
-    @Mock
     private AcmGroup mockedMemberGroup2;
 
     @Mock
-    private AcmUser userGroup2;
-
-    @Mock
     private AcmGroup mockedMemberSubGroup2;
-
-    @Mock
-    private AcmUser userSubGroup2;
 
     @InjectMocks
     @Spy
@@ -166,9 +148,6 @@ public class GroupServiceTest
     @Test(expected = AcmObjectNotFoundException.class)
     public void testMarkGroupDeleted_nonExistingGroup() throws Exception
     {
-        // given
-        when(mockedGroupDao.findByName(GROUP)).thenReturn(null);
-
         try
         {
             // when
@@ -199,7 +178,6 @@ public class GroupServiceTest
         when(group.getSupervisor()).thenReturn(user);
         when(group.getAscendantsList()).thenReturn("");
         when(mockedMemberGroup1.getSupervisor()).thenReturn(null);
-        when(groupService.findByName(GROUP_1)).thenReturn(null);
         when(groupService.save(mockedMemberGroup1)).thenReturn(mockedMemberGroup1);
 
         // when
@@ -209,7 +187,6 @@ public class GroupServiceTest
         verify(mockedMemberGroup1).setSupervisor(user);
         verify(mockedMemberGroup1).setAscendantsList("");
         verify(groupService).createGroup(mockedMemberGroup1);
-        verify(groupService).findByName(GROUP_1);
         verify(groupService).save(mockedMemberGroup1);
         verify(group).addGroupMember(mockedMemberGroup1);
 
@@ -226,7 +203,6 @@ public class GroupServiceTest
     public void testSaveAdHocSubGroup_existingSubGroup_parentGroupNotFound() throws Exception
     {
         // given
-        when(mockedGroupDao.findByName(GROUP)).thenReturn(null);
         when(mockedGroupDao.findByName(GROUP_1)).thenReturn(mockedMemberGroup1);
 
         try
@@ -257,7 +233,6 @@ public class GroupServiceTest
     {
         // given
         when(mockedGroupDao.findByName(GROUP)).thenReturn(group);
-        when(mockedGroupDao.findByName(GROUP_1)).thenReturn(null);
 
         try
         {
@@ -285,10 +260,6 @@ public class GroupServiceTest
     @Test(expected = AcmCreateObjectFailedException.class)
     public void testSaveAdHocSubGroup_existingSubGroup_bothGroupsNotFound() throws Exception
     {
-        // given
-        when(mockedGroupDao.findByName(GROUP)).thenReturn(null);
-        when(mockedGroupDao.findByName(GROUP_1)).thenReturn(null);
-
         try
         {
             // when
@@ -352,9 +323,6 @@ public class GroupServiceTest
     @Test(expected = AcmCreateObjectFailedException.class)
     public void testSaveAdHocSubGroup_newSubGroup_parentNotFound() throws Exception
     {
-        // given
-        when(mockedGroupDao.findByName(GROUP)).thenReturn(null);
-
         try
         {
             // when
