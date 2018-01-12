@@ -316,6 +316,12 @@
     "start.label": "開始：",
     "end.label": "終わり：",
     "newEvent.button": "新しいイベント",
+    "agenda.button" : {
+      "today": "今日",
+      "month": "月",
+      "week": "週間",
+      "day": "日"
+    },
     "addNewEventDialog": {
       "title": "新しいイベント",
       "cancel.button": "キャンセル",
@@ -353,6 +359,8 @@
         "reminder.label": "リマインダ",
         "reminder.placeholder": "リマインダーウィンドウを選択",
         "datePickerClose.button": "閉じる",
+        "datePickerCurrent.button": "現在",
+        "datePickerClear.button": "明らす",
         "otherOptions.label": "その他のオプション",
         "allDayEvent.checkbox": "終日イベント",
         "privateEvent.checkbox": "プライベートイベント",

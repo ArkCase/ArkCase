@@ -2,8 +2,9 @@
 
 angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope', '$stateParams', '$sce', '$q', '$modal', '$translate', '$interval'
     , 'UtilService', 'ConfigService', 'TicketService', 'LookupService', 'Frevvo.FormService', 'ServCommService', 'Person.InfoService', 'Object.LookupService'
+    , 'Organization.InfoService'
     , function ($rootScope, $scope, $stateParams, $sce, $q, $modal, $translate, $interval
-        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService, PersonInfoService, ObjectLookupService) {
+        , Util, ConfigService, TicketService, LookupService, FrevvoFormService, ServCommService, PersonInfoService, ObjectLookupService, OrganizationInfoService) {
 
         var promiseConfig = ConfigService.getModuleConfig("frevvo");
         var promiseTicket = TicketService.getArkCaseTicket();
@@ -83,6 +84,9 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                             if (e.data.action == "open-person-picker") {
                                 pickPerson(e.data);
                             }
+                            if (e.data.action == "open-organization-picker") {
+                                pickOrganization(e.data);
+                            }
                         }
                     };
 
@@ -122,7 +126,7 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
             }
 
             params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-            params.filter = '"Object Type": USER' + owningGroup;
+            params.filter = '"Object Type": USER' + '&fq="status_lcs": "VALID"' + owningGroup;
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 
             var modalInstance = $modal.open({
@@ -265,6 +269,8 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 returnMessage.firstName = response.data.givenName;
                 returnMessage.middleName = response.data.middleName;
                 returnMessage.lastName = response.data.familyName;
+                returnMessage.phone = !Util.isEmpty(response.data.defaultPhone) ? response.data.defaultPhone.value : '';
+                returnMessage.fax = !Util.isEmpty(response.data.defaultFax) ? response.data.defaultFax.value : '';
                 returnMessage.email = !Util.isEmpty(response.data.defaultEmail) ? response.data.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
@@ -282,6 +288,8 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                 returnMessage.firstName = person.givenName;
                 returnMessage.middleName = person.middleName;
                 returnMessage.lastName = person.familyName;
+                returnMessage.phone = !Util.isEmpty(person.defaultPhone) ? person.defaultPhone.value : '';
+                returnMessage.fax = !Util.isEmpty(person.defaultFax) ? person.defaultFax.value : '';
                 returnMessage.email = !Util.isEmpty(person.defaultEmail) ? person.defaultEmail.value : '';
                 returnMessage.personType = data.type;
 
@@ -345,6 +353,79 @@ angular.module('frevvo').controller('FrevvoController', ['$rootScope', '$scope',
                  }
                  else {
                      retrieveExistingPersonAndUpdateFrevvo(data, message);
+                }
+            });
+        }
+
+        function saveNewOrganizationAndUpdateFrevvo(data, message) {
+            OrganizationInfoService.saveOrganizationInfo(data.organization).then(function (organization) {
+                message.data = createOrganizationFrevvoMessage(organization, data);
+                $scope.frevvoMessaging.send(message);
+            });
+        }
+
+        function retrieveExistingOrganizationAndUpdateFrevvo(data, message) {
+            OrganizationInfoService.getOrganizationInfo(data.organizationId).then(function (organization) {
+                message.data = createOrganizationFrevvoMessage(organization, data);
+                $scope.frevvoMessaging.send(message);
+            });
+        }
+
+        function createOrganizationFrevvoMessage(organization, data) {
+            var returnMessage = {};
+
+            returnMessage.id = organization.organizationId;
+            returnMessage.name = organization.organizationValue;
+            returnMessage.address = !Util.isEmpty(organization.defaultAddress) ? organization.defaultAddress.streetAddress : '';
+            returnMessage.city = !Util.isEmpty(organization.defaultAddress) ? organization.defaultAddress.city : '';
+            returnMessage.state = !Util.isEmpty(organization.defaultAddress) ? organization.defaultAddress.state : '';
+            returnMessage.zip = !Util.isEmpty(organization.defaultAddress) ? organization.defaultAddress.zip : '';
+            returnMessage.phone = !Util.isEmpty(organization.defaultPhone) ? organization.defaultPhone.value : '';
+            returnMessage.email = !Util.isEmpty(organization.defaultEmail) ? organization.defaultEmail.value : '';
+            returnMessage.type = data.type;
+
+            return returnMessage;
+        }
+
+        function pickOrganization(data) {
+            var params = {};
+            var message = {};
+
+            message.source = "arkcase";
+            message.action = "fill-organization-picker-data";
+            message.elementId = data.elementId;
+
+            // TODO: I can see in the case module and complaint module
+            // TODO: still we are using person types instead of some custom organization types
+            // TODO: Once this thing is changed there, we should change here too
+            if(data.formType === "CASE_FILE"){
+                $scope.organizationTypes =  $scope.caseFilePersonTypes;
+            }
+            else if(data.formType === "COMPLAINT") {
+                $scope.organizationTypes = $scope.complaintPersonTypes;
+            }
+            params.typeEnabled = true;
+            params.types = $scope.organizationTypes;
+
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'modules/common/views/add-organization-modal.client.view.html',
+                controller: 'Common.AddOrganizationModalController',
+                size: 'md',
+                backdrop: 'static',
+                resolve: {
+                    params: function () {
+                        return params;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                if (data.isNew) {
+                    saveNewOrganizationAndUpdateFrevvo(data, message);
+                }
+                else {
+                    retrieveExistingOrganizationAndUpdateFrevvo(data, message);
                 }
             });
         }

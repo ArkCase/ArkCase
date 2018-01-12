@@ -1,6 +1,7 @@
 package com.armedia.acm.services.search.model;
 
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 
@@ -37,10 +38,10 @@ public class AcmObjectTypeOneSolrConverter implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectTypeOne in)
+    public SolrContentDocument toContentFileIndex(AcmObjectTypeOne in)
     {
         ++handledObjectsCount;
-        return new SolrAdvancedSearchDocument();
+        return new SolrContentDocument();
     }
 
     @Override
