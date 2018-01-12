@@ -201,15 +201,9 @@ public class AcmGroup implements Serializable, AcmEntity
         memberOfGroups.remove(group);
     }
 
-    @JsonIgnore
-    public boolean isNotMemeberOfGroups()
-    {
-        return memberOfGroups.isEmpty();
-    }
-
     public void removeAsMemberOf()
     {
-        memberOfGroups.forEach(memberOfgroup -> memberOfgroup.removeGroupMember(this));
+        memberOfGroups.forEach(memberOfGroup -> memberOfGroup.removeGroupMember(this));
         memberOfGroups.clear();
     }
 
