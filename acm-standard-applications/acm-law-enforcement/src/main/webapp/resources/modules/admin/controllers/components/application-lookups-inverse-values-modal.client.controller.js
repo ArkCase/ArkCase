@@ -3,8 +3,8 @@
 angular.module('admin').controller('Admin.InverseValuesLookupModalController', ['$scope', '$modal', '$modalInstance', 'params',
         function ($scope, $modal, $modalInstance, params) {
 
-            $scope.entry = angular.copy(params.entry);
-            $scope.isEdit = angular.copy(params.isEdit);
+            $scope.entry = params.entry;
+            $scope.isEdit = params.isEdit;
 
             $scope.onClickCancel = function () {
                 $modalInstance.dismiss('Cancel');

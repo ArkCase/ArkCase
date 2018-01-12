@@ -126,21 +126,25 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(firstException);
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
         expect(mockAuthentication.getName()).andReturn(null);
-        mockEventPublisher.publishAuthenticationFailure(firstException, mockAuthentication);
-
-        replayAll();
+        Capture<AuthenticationException> captureCustomException = Capture.newInstance();
+        mockEventPublisher.publishAuthenticationFailure(capture(captureCustomException), eq(mockAuthentication));
+        expectLastCall().once();
 
         try
         {
+            replayAll();
             unit.authenticate(mockAuthentication);
+            verifyAll();
             fail("should have gotten an exception");
+
         }
         catch (AuthenticationException ae)
         {
-            assertEquals(firstException, ae);
+            assertEquals(captureCustomException.getValue(), ae);
+
         }
 
-        verifyAll();
+
     }
 
     @Test(expected = AuthenticationServiceException.class)
