@@ -39,8 +39,7 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
                         return angular.toJson(Util.omitNg(encodedOrganization));
                     }
                     return data;
-                },
-                cache: false
+                }
             },
 
             /**
@@ -66,11 +65,6 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
             }
         });
 
-        Service.SessionCacheNames = {};
-        Service.CacheNames = {
-            ORGANIZATION_INFO: "OrganizationInfo"
-        };
-
         /**
          * @ngdoc method
          * @name resetOrganizationInfo
@@ -82,8 +76,7 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
          * @returns None
          */
         Service.resetOrganizationInfo = function () {
-            var cacheInfo = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_INFO);
-            cacheInfo.reset();
+           //TODO remove this method
         };
 
         /**
@@ -99,10 +92,7 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
          * @returns {Object} Promise
          */
         Service.updateOrganizationInfo = function (organizationInfo) {
-            if (Service.validateComplaintInfo(organizationInfo)) {
-                var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_INFO);
-                cachePersonInfo.put(organizationInfo.id, organizationInfo);
-            }
+            //TODO remove this method
         };
 
         /**
@@ -118,15 +108,11 @@ angular.module('services').factory('Organization.InfoService', ['$resource', '$t
          * @returns {Object} Promise
          */
         Service.getOrganizationInfo = function (id) {
-            var cacheOrganizationInfo = new Store.CacheFifo(Service.CacheNames.ORGANIZATION_INFO);
-            var organizationInfo = cacheOrganizationInfo.get(id);
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}
-                , result: organizationInfo
                 , onSuccess: function (data) {
                     if (Service.validateOrganizationInfo(data)) {
-                        cacheOrganizationInfo.put(id, data);
                         return data;
                     }
                 }

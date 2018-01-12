@@ -10,8 +10,8 @@
  *
  * ObjectAssociation.Service provides functions for Object database data
  */
-angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$translate', 'Acm.StoreService', 'UtilService',
-    function ($resource, $translate, Store, Util) {
+angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$translate', 'UtilService',
+    function ($resource, $translate, Util) {
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -162,11 +162,6 @@ angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$
             });
         };
 
-        Service.SessionCacheNames = {};
-        Service.CacheNames = {
-            OBJECT_ASSOCIATION_INFO: "ObjectAssociationInfo"
-        };
-
         /**
          * @ngdoc method
          * @name getAssociationInfo
@@ -180,14 +175,10 @@ angular.module('services').factory('ObjectAssociation.Service', ['$resource', '$
          * @returns {Object} Promise
          */
         Service.getAssociationInfo = function (id) {
-            var cacheAssociationInfo = new Store.CacheFifo(Service.CacheNames.OBJECT_ASSOCIATION_INFO);
-            var associationInfo = cacheAssociationInfo.get(id);
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}
-                , result: associationInfo
                 , onSuccess: function (data) {
-                    cacheAssociationInfo.put(id, data);
                     return data;
                 }
             });
