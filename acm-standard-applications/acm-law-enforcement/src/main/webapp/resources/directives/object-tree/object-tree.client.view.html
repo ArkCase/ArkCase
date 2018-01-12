@@ -1,5 +1,5 @@
 <section class="scrollable">
-  <header class="dk header">
+    <header class="dk header">
 
         <div ng-hide="!!treeConfig.search || treeConfig.search === false">
             <div class="input-group">
@@ -10,25 +10,23 @@
             {{'common.directive.objectTree.btnQuery.text' | translate}}
           </button>
         </span>
-      </div>
-    </div>
+            </div>
+        </div>
 
-    <div class="btn-group inline select pull-right" ng-hide="!!treeConfig.refresh || treeConfig.refresh === false"> 
-      <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
+        <div class="btn-group inline select pull-right" ng-hide="!!treeConfig.refresh || treeConfig.refresh === false">
+            <button class="btn btn-default btn-xs " ng-click="onClickRefresh()">
         <span>
           <i class="fa fa-refresh"></i>
         </span>
             </button>
         </div>
-        <div class="row">
-        </div>
+
         <div class="btn-group inline select pull-right" ng-show="treeConfig.sorters">
-            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown" title="{{nameSort | translate}}">
         <span class="dropdown-label"
                 style="width: 65px;">
-
+          <i class="fa fa-sort"></i>
         </span>
-                <span translate>{{nameSort}}</span>
                 <span class="caret"></span>
             </button>
 
@@ -42,11 +40,11 @@
         </div>
 
         <div class="btn-group select pull-right" ng-show="treeConfig.filters">
-            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown">
+            <button class="btn btn-default btn-xs  dropdown-toggle" data-toggle="dropdown" title="{{nameFilter | translate}}">
         <span class="dropdown-label"
                 style="width: 65px;">
+			<i class="fa fa-filter"></i>
         </span>
-                <span translate>{{nameFilter}}</span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu text-left text-sm treeFilter">
@@ -58,11 +56,11 @@
             </ul>
         </div>
 
-  </header>
-  <div class="row m-b">
-    <div class="col-sm-12">
-      <div class="tree"></div>
+    </header>
+    <div class="row m-b">
+        <div class="col-sm-12">
+            <div class="tree"></div>
+        </div>
     </div>
-  </div>
 </section>
 
