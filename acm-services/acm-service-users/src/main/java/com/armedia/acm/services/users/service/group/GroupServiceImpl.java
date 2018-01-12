@@ -25,7 +25,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class GroupServiceImpl implements GroupService
 {
@@ -50,13 +49,11 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        String groupName = group.getName();
-        AcmGroup acmGroup = groupDao.findByName(groupName);
+        AcmGroup acmGroup = groupDao.findByName(group.getName());
         if (acmGroup != null)
         {
-            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+            throw new AcmObjectAlreadyExistsException("Group " + group.getName() + " already exists.");
         }
-        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
         return groupDao.save(group);
     }
 
@@ -142,14 +139,9 @@ public class GroupServiceImpl implements GroupService
             throw new AcmObjectNotFoundException("GROUP", null, "Group with name " + groupName + " not found");
         }
 
-        acmGroup.removeAsMemberOf();
-        Assert.isTrue(acmGroup.isNotMemeberOfGroups());
+        Assert.isTrue(acmGroup.getMemberOfGroups().isEmpty());
 
-        // acmGroup.getUserMembers().stream().collect(Collectors.toMap(Function.identity(), acmUser ->
-        // Collections.singleton(acmGroup)));
         Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
-        Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
-        users.addAll(acmGroup.getUserMembers());
 
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
@@ -199,7 +191,7 @@ public class GroupServiceImpl implements GroupService
         log.debug("Remove group member [{}] from group [{}]", groupName, parentGroupName);
         parentGroup.removeGroupMember(acmGroup);
 
-        if (acmGroup.isNotMemeberOfGroups())
+        if (acmGroup.getMemberOfGroups().isEmpty())
         {
             log.debug("Group [{}] has no other parent groups, will be deleted", groupName);
             return markGroupDeleted(groupName);
@@ -210,10 +202,6 @@ public class GroupServiceImpl implements GroupService
             save(acmGroup);
 
             Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
-            Set<AcmUser> users = descendantGroups.stream().flatMap(group -> group.getUserMembers().stream()).collect(Collectors.toSet());
-            users.addAll(acmGroup.getUserMembers());
-
-            log.debug("Remove roles for user members from the parent group [{}]", parentGroupName);
 
             descendantGroups.forEach(group -> {
                 log.debug("Build ancestors string for descendants group: [{}]", groupName);
@@ -408,11 +396,11 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
-        subGroup.addAscendant(parentId);
         parent.addGroupMember(subGroup);
         String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
         subGroup.setAscendantsList(ancestorsStringList);
-
+        Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
+        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
         return subGroup;
     }
 
@@ -433,9 +421,11 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
-        String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
-        subGroup.setName(groupName);
-        subGroup.setDisplayName(groupName);
+        String name = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
+        subGroup.setName(name);
+        subGroup.setDisplayName(name);
+        subGroup.setAscendantsList(parent.getAscendantsList());
+        subGroup.addAscendant(parentId);
         AcmGroup acmGroup = createGroup(subGroup);
         parent.addGroupMember(acmGroup);
         return acmGroup;

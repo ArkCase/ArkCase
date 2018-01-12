@@ -36,11 +36,12 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         }
 
         function refreshPageData() {
+            // set delay for solr to finish indexing
             $timeout(function () {
                 $scope.data = [];
                 groupsMap = {};
                 $scope.onLoadMore(gridCurrentPage, gridPageSize);
-            }, 1000);
+            }, 2000);
         }
 
         function addToGroupsMap(groups) {
@@ -153,7 +154,8 @@ angular.module('admin').controller('Admin.OrganizationalHierarchyController', ['
         $scope.onAddExistingSubGroup = function (parent) {
             var deferred = $q.defer();
             var params = {
-                filter: '\"Object Type\":GROUP %26object_sub_type_s:ADHOC_GROUP %26 status_lcs:ACTIVE'
+                filter: '\"Object Type\":GROUP %26 object_sub_type_s:ADHOC_GROUP %26 status_lcs:ACTIVE %26 -object_id_s:'
+                + parent.object_id_s
             };
             var modalInstance = openMembersPicker(params);
             modalInstance.result.then(function (group) {
