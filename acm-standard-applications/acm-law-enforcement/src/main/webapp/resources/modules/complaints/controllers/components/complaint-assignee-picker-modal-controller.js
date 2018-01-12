@@ -22,7 +22,7 @@ angular.module('complaints').controller('Complaints.AssigneePickerController', [
             $scope.owningGroup = owningGroup;
 
             params.header = $translate.instant("complaints.comp.assigneePickerModal.searchAssigneeHeader");
-            params.filter = '"Object Type": USER' + '&fq="Group": ' + $scope.owningGroup;
+            params.filter = '"Object Type": USER' + '&fq="status_lcs": "VALID"' + '&fq="Group": '  + $scope.owningGroup;
             params.extraFilter = '&fq="name": ';
             params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
 

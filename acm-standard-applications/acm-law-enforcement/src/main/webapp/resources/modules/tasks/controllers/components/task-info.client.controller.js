@@ -7,8 +7,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
     , function ($scope, $stateParams, $translate, $filter, $modal
         , Util, UtilDateService, ConfigService, LookupService, ObjectLookupService, TaskInfoService
         , ObjectModelService, HelperObjectBrowserService, TaskAlertsService, ObjectService, HelperUiGridService
-        , ObjectParticipantService, CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder
-    ) {
+        , ObjectParticipantService, CaseInfoService, ComplaintInfoService, SearchService, SearchQueryBuilder) {
 
         new HelperObjectBrowserService.Component({
             scope: $scope
@@ -105,8 +104,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                             var assigneeParticipantType = 'assignee';
                             // Iterating through the array to find the participant with the ParticipantType eqaul assignee
                             // then setiing the participantLdapId to empty string
-                            _.each($scope.objectInfo.participants, function(participant) {
-                                if(participant.participantType == assigneeParticipantType){
+                            _.each($scope.objectInfo.participants, function (participant) {
+                                if (participant.participantType == assigneeParticipantType) {
                                     participant.participantLdapId = '';
                                 }
                             });
@@ -118,7 +117,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                     }
                 }
 
-            }, function(error) {
+            }, function (error) {
             });
         };
 
@@ -194,8 +193,8 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                                     var assigneeParticipantType = 'assignee';
                                     // Iterating through the array to find the participant with the ParticipantType eqaul assignee
                                     // then setiing the participantLdapId to empty string
-                                    _.each($scope.objectInfo.participants, function(participant) {
-                                        if(participant.participantType == assigneeParticipantType){
+                                    _.each($scope.objectInfo.participants, function (participant) {
+                                        if (participant.participantType == assigneeParticipantType) {
                                             participant.participantLdapId = '';
                                         }
                                     });
@@ -207,7 +206,7 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
                             });
                     }
                 }
-            }, function(error) {
+            }, function (error) {
             });
         };
 
@@ -219,7 +218,16 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.dateInfo.isOverdue = TaskAlertsService.calculateOverdue($scope.dateInfo.dueDate);
             $scope.dateInfo.isDeadline = TaskAlertsService.calculateDeadline($scope.dateInfo.dueDate);
             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-            
+            $scope.taskStartDateBeforeChange = $scope.dateInfo.taskStartDate;
+            $scope.dueDateBeforeChange = $scope.dateInfo.dueDate;
+
+            var today = new Date();
+            if (moment($scope.dateInfo.taskStartDate).isAfter(today)) {
+                $scope.minStartDate = new Date();
+            } else {
+                $scope.minStartDate = $scope.dateInfo.taskStartDate;
+            }
+
             var owningGroupParticipantType = 'owning group';
             $scope.owningGroup = 'Unknown';
 
@@ -235,13 +243,22 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
 
         $scope.defaultDatePickerFormat = UtilDateService.defaultDatePickerFormat;
         $scope.picker = {opened: false};
-        $scope.onPickerClick = function () {
-            $scope.picker.opened = true;
+
+        $scope.taskStartDateBeforeChange = null;
+        $scope.dueDateBeforeChange = null;
+
+        $scope.onPickerClick = function (data, form) {
+            if(!Util.isEmpty(data)){
+                $scope.picker.opened = true;
+                form.$setError(name, "");
+            } else {
+                form.$setError(name, "Format: M/d/yy");
+            }
         };
 
         $scope.validatePercentComplete = function (value) {
             var pctCompleteValue = Util.goodValue(value, -1);  // -1 instead of 0
-            if ( pctCompleteValue < 0 || pctCompleteValue > 100 ) {
+            if (pctCompleteValue < 0 || pctCompleteValue > 100) {
                 return "Invalid value";
             }
         };
@@ -273,15 +290,59 @@ angular.module('tasks').controller('Tasks.InfoController', ['$scope', '$statePar
             $scope.objectInfo.assignee = assignee;
             $scope.saveTask();
         };
-        $scope.updateStartDate = function () {
-            var correctedDate = UtilDateService.convertToCurrentTime($scope.dateInfo.taskStartDate);
-            $scope.objectInfo.taskStartDate = moment.utc(UtilDateService.dateToIso(correctedDate)).format();
-            $scope.saveTask();
+
+        $scope.convertToCorrectCurrentTime = function (from, to) {
+            var correctedDate = null;
+            if(!Util.isEmpty(to)){
+                correctedDate = UtilDateService.convertToCurrentTime(to);
+            } else {
+                correctedDate = UtilDateService.convertToCurrentTime(from);
+            }
+            return moment.utc(UtilDateService.dateToIso(correctedDate)).format();
         };
+
+        $scope.onChange = function (data, form) {
+            if (Util.isEmpty(data)){
+                $scope.picker.opened = false;
+                form.$setError(name, "Format: M/d/yy");
+            } else {
+                form.$setError(name, "");
+            }
+        };
+
+        $scope.validateStartDueDate = function () {
+            if (moment($scope.dateInfo.taskStartDate).isAfter($scope.dateInfo.dueDate)) {
+                $scope.dateInfo.dueDate = $scope.dateInfo.taskStartDate;
+                $scope.updateDueDate();
+            } else {
+                $scope.saveTask();
+            }
+        };
+
+        $scope.updateStartDate = function () {
+            if(!Util.isEmpty($scope.dateInfo.taskStartDate)){
+                $scope.objectInfo.taskStartDate = $scope.convertToCorrectCurrentTime($scope.dateInfo.taskStartDate);
+                $scope.validateStartDueDate();
+            } else {
+                var tempDate = new Date($scope.taskStartDateBeforeChange);
+                $scope.dateInfo.taskStartDate = $scope.taskStartDateBeforeChange;
+                $scope.objectInfo.taskStartDate = $scope.convertToCorrectCurrentTime($scope.dateInfo.taskStartDate, tempDate);
+                $scope.validateStartDueDate();
+            }
+        };
+
         $scope.updateDueDate = function () {
-            var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
-            $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
-            $scope.saveTask();
+            if(!Util.isEmpty($scope.dateInfo.dueDate)){
+                var correctedDueDate = UtilDateService.convertToCurrentTime($scope.dateInfo.dueDate);
+                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                $scope.saveTask();
+            } else {
+                var tempDate = new Date($scope.dueDateBeforeChange);
+                $scope.dateInfo.dueDate = $scope.dueDateBeforeChange;
+                var correctedDueDate = UtilDateService.convertToCurrentTime(tempDate);
+                $scope.objectInfo.dueDate = moment.utc(UtilDateService.dateToIso(correctedDueDate)).format();
+                $scope.saveTask();
+            }
         };
         $scope.updateOwningGroup = function () {
             ObjectModelService.setGroup($scope.objectInfo, $scope.owningGroup);

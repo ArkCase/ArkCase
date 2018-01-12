@@ -21,6 +21,8 @@ angular.module('complaints').controller('Complaints.FutureApprovalRoutingControl
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "approvalRouting"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }
