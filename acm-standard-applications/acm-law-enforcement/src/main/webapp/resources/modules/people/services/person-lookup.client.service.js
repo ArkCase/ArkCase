@@ -15,10 +15,6 @@ angular.module('services').factory('Person.LookupService', ['$resource', '$trans
         var Service = $resource('api/latest/plugin', {}, {
         });
 
-        Service.SessionCacheNames = {
-            PERSON_TYPES: "AcmPersonTypes"
-        };
-
         /**
          * @ngdoc method
          * @name getPersonTypes

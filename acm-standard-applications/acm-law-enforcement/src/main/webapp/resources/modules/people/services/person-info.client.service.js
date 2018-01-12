@@ -10,8 +10,16 @@
  *
  * Person.InfoService provides functions for Person database data
  */
-angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http',
-    function ($resource, $translate, Store, Util, $http) {
+angular.module('services').factory('Person.InfoService', ['$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', 'CacheFactory',
+    function ($resource, $translate, Store, Util, $http, CacheFactory) {
+        var personCache = CacheFactory('personCache', {
+            maxAge: 1 * 60 * 1000, // Items added to this cache expire after 1 minute
+            cacheFlushInterval: 60 * 60 * 1000, // This cache will clear itself every hour
+            deleteOnExpire: 'aggressive', // Items will be deleted from this cache when they expire
+            capacity: 1
+        });
+
+        var peopleBaseUrl = "api/latest/plugin/people/";
         var Service = $resource('api/latest/plugin', {}, {
             /**
              * @ngdoc method
@@ -38,8 +46,7 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                         return angular.toJson(Util.omitNg(encodedPerson));
                     }
                     return data;
-                },
-                cache: false
+                }
             },
 
             /**
@@ -59,17 +66,12 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
              */
             get: {
                 method: 'GET',
-                url: 'api/latest/plugin/people/:id',
-                cache: false,
+                url: peopleBaseUrl + ':id',
+                cache: personCache,
                 isArray: false
             }
 
         });
-
-        Service.SessionCacheNames = {};
-        Service.CacheNames = {
-            PERSON_INFO: "PersonInfo"
-        };
 
         /**
          * @ngdoc method
@@ -81,9 +83,12 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          *
          * @returns None
          */
-        Service.resetPersonInfo = function () {
-            var cacheInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-            cacheInfo.reset();
+        Service.resetPersonInfo = function (personInfo) {
+            if (personInfo && personInfo.id) {
+                personCache.remove(peopleBaseUrl + personInfo.id);
+            } else {
+                personCache.removeAll();
+            }
         };
 
         /**
@@ -99,10 +104,7 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.updatePersonInfo = function (personInfo) {
-            if (Service.validatePersonInfo(personInfo)) {
-                var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                cachePersonInfo.put(personInfo.id, personInfo);
-            }
+            //TODO remove this method
         };
 
         /**
@@ -118,15 +120,11 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
          * @returns {Object} Promise
          */
         Service.getPersonInfo = function (id) {
-            var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-            var personInfo = cachePersonInfo.get(id);
             return Util.serviceCall({
                 service: Service.get
                 , param: {id: id}
-                , result: personInfo
                 , onSuccess: function (data) {
                     if (Service.validatePersonInfo(data)) {
-                        cachePersonInfo.put(id, data);
                         return data;
                     }
                 }
@@ -159,10 +157,10 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
                 , data: personInfo
                 , onSuccess: function (data) {
                     if (Service.validatePersonInfo(data)) {
-                        var personInfo = data;
-                        var cachePersonInfo = new Store.CacheFifo(Service.CacheNames.PERSON_INFO);
-                        cachePersonInfo.put(personInfo.id, personInfo);
-                        return personInfo;
+                        if (data.id) {
+                            personCache.put(peopleBaseUrl + data.id, data);
+                        }
+                        return data;
                     }
                 }
             });
@@ -213,12 +211,23 @@ angular.module('services').factory('Person.InfoService', ['$resource', '$transla
             // manually will not set this boundary parameter. Setting the Content-type to
             // undefined will force the request to automatically
             // populate the headers properly including the boundary parameter.
-            return $http({
+            var responsePromise =  $http({
                 method: 'POST',
                 url: 'api/latest/plugin/people',
                 data: formData,
                 headers: {'Content-Type': undefined}
             });
+
+            responsePromise.then(function (data) {
+                if (Service.validatePersonInfo(data)) {
+                    if (data.id) {
+                        personCache.put(peopleBaseUrl + data.id, data);
+                    }
+                    return data;
+                }
+            });
+
+            return responsePromise;
         };
 
         /**

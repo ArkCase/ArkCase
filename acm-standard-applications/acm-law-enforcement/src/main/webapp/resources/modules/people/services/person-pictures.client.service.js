@@ -74,8 +74,7 @@ angular.module('services').factory('Person.PicturesService', ['$resource', '$tra
              */
             delete: {
                 method: 'DELETE',
-                url: 'api/latest/plugin/people/:personId/images/:imageId',
-                cache: false
+                url: 'api/latest/plugin/people/:personId/images/:imageId'
             }
 
         });

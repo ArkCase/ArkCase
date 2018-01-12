@@ -21,8 +21,8 @@ angular
 
                 $httpProvider.interceptors.push(httpInterceptor);
 
-                $httpProvider.interceptors.push(noCacheInterceptor);
-                //$httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
+                //$httpProvider.interceptors.push(noCacheInterceptor);
+                $httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
 
                 $httpProvider.defaults.transformResponse.splice(0, 0, function (data, headersGetter) {
                     var contentType = headersGetter()['content-type'] || '';
