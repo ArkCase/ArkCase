@@ -598,7 +598,7 @@
             {
               "width": 150,
               "name": "assignee",
-              "field": "parent_object.creator_full_name_lcs",
+              "field": "parent_object.assignee_full_name_lcs",
               "displayName": "organizations.comp.cases.table.columns.assignee",
               "headerCellFilter": "translate",
               "lookup": "userFullNames"
@@ -1237,7 +1237,7 @@
         {
           "width": 150,
           "name": "assignee",
-          "field": "parent_object.creator_full_name_lcs",
+          "field": "parent_object.assignee_full_name_lcs",
           "displayName": "organizations.comp.cases.table.columns.assignee",
           "headerCellFilter": "translate",
           "lookup": "userFullNames"
