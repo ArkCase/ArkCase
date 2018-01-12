@@ -140,7 +140,8 @@ angular.module('organizations').controller('Organizations.CasesController', ['$s
                     rowEntity = {
                         object_id_s: response.id,
                         type_lcs: response.associationType,
-                        parent_object: data.solrDocument
+                        parent_object: data.solrDocument,
+                        modified_date_tdt: response.modified
                     };
                     $scope.gridOptions.data.push(rowEntity);
                 }

@@ -1,8 +1,10 @@
 'use strict';
 
-angular.module('document-repository').controller('DocumentRepository.NotesController', ['$scope', '$stateParams'
+angular.module('document-repository').controller('DocumentRepository.NotesController', ['$scope', '$stateParams', '$translate'
     , 'ObjectService', 'DocumentRepository.InfoService', 'Helper.ObjectBrowserService'
-    , function ($scope, $stateParams, ObjectService, DocumentRepositoryInfoService, HelperObjectBrowserService) {
+    , function ($scope, $stateParams, $translate
+        , ObjectService, DocumentRepositoryInfoService, HelperObjectBrowserService
+    ) {
 
         new HelperObjectBrowserService.Component(
             {
@@ -14,11 +16,14 @@ angular.module('document-repository').controller('DocumentRepository.NotesContro
                 validateObjectInfo: DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
                 onObjectInfoRetrieved: function (objectInfo) {
                     onObjectInfoRetrieved(objectInfo);
+                },
+                onTranslateChangeSuccess: function(data) {
+                    onTranslateChangeSuccess(data);
                 }
             });
 
         $scope.notesInit = {
-            noteTitle: "Notes",
+            noteTitle: $translate.instant("document-repository.comp.notes.title"),
             objectType: ObjectService.ObjectTypes.DOC_REPO,
             currentObjectId: $stateParams.id,
             parentTitle: "",
@@ -27,7 +32,15 @@ angular.module('document-repository').controller('DocumentRepository.NotesContro
 
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.parentObjectTitle = objectInfo.name;
-            $scope.notesInit.parentTitle = objectInfo.name;
+            if ($scope.notesInit) {
+                $scope.notesInit.parentTitle = objectInfo.name;
+            }
+        };
+
+        var onTranslateChangeSuccess = function(data) {
+            if ($scope.notesInit) {
+                $scope.notesInit.noteTitle = $translate.instant("document-repository.comp.notes.title");
+            }
         };
     }
 ]);
