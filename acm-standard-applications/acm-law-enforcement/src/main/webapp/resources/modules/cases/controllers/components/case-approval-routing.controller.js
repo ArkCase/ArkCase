@@ -32,6 +32,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
+            $scope.owningGroup = 'Unknown';
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (!$scope.isTask(objectInfo)) {
                 $scope.objectInfo = {'id': currentObjectId};
@@ -53,9 +54,14 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
                             $scope.dateInfo.dueDate = UtilDateService.isoToDate($scope.objectInfo.dueDate);
                             $scope.dateInfo.taskStartDate = UtilDateService.isoToDate($scope.objectInfo.taskStartDate);
                             $scope.assignee = ObjectModelService.getAssignee($scope.objectInfo);
-                            $scope.owningGroup = ObjectModelService.getGroup($scope.objectInfo);
-    
-    
+
+                            if (!Util.isEmpty(ObjectModelService.getGroup($scope.objectInfo))){
+                                $scope.owningGroup = ObjectModelService.getGroup($scope.objectInfo);
+                            }
+                            else if(Util.goodMapValue($scope.objectInfo, "candidateGroups[0]", false)){
+                                $scope.owningGroup = $scope.objectInfo.candidateGroups[0];
+                            }
+
                             //we should wait for userId before we compare it with assignee
                             promiseUser.then(function (data) {
                                 $scope.userId = data.userId;
