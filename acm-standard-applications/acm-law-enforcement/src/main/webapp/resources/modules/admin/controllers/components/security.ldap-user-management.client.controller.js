@@ -21,12 +21,18 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             });
         });
 
+
+        for (var k = 0; k < 20; k++){
+            var element = {};
+            element.name = "test" + k;
+            $scope.appUsers.push(element);
+        }
         var selectedUser;
         var currentAuthGroups;
 
         //callback function when user is selected
         function onObjSelect(selectedObject, authorized, notAuthorized) {
-            selectedUser = selectedObject;
+            selectedUser = angular.copy(selectedObject);
             currentAuthGroups = [];
 
             var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);

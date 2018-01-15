@@ -52,7 +52,7 @@ public class AngularResourceCopier implements ServletContextAware
     @Override
     public void setServletContext(ServletContext servletContext)
     {
-        copyAngularResources(servletContext);
+//        copyAngularResources(servletContext);
     }
 
     public void copyAngularResources(ServletContext servletContext)
@@ -111,7 +111,8 @@ public class AngularResourceCopier implements ServletContextAware
             }
 
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not copy Angular resources", e);
             // make sure the webapp does not start... if it did start it wouldn't work right.  So better to make sure
@@ -177,7 +178,8 @@ public class AngularResourceCopier implements ServletContextAware
             executor.setStreamHandler(new PumpStreamHandler(debugOutputStream));
             int exitCode = executor.execute(command);
             log.debug("done with {}: exit code {}", commandLine, exitCode);
-        } finally
+        }
+        finally
         {
             if (debugOutputStream != null)
             {
@@ -217,7 +219,8 @@ public class AngularResourceCopier implements ServletContextAware
         try
         {
             resources = resolver.getResources(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot + "/**");
-        } catch (FileNotFoundException fe)
+        }
+        catch (FileNotFoundException fe)
         {
             log.debug("Not copying resources under {}, since no such resources exist.",
                     AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot);
@@ -260,7 +263,8 @@ public class AngularResourceCopier implements ServletContextAware
             {
                 targetFile = new File(tmpDir, webappPath);
             }
-        } else if (r.getFile().isFile())
+        }
+        else if (r.getFile().isFile())
         {
             targetFile = determineTargetFile(rootPath, tmpDir, r, moduleRoot, targetRoot);
         }

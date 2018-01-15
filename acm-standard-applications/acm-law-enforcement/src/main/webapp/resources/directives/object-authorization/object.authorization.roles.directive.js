@@ -73,12 +73,12 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
             },
             templateUrl: 'directives/object-authorization/object.authorization.roles.html',
             link: function (scope) {
-                scope.$watch('data', function (newValue) {
+                /*scope.$watch('data', function (newValue) {
                     if (newValue && newValue.length > 0) {
                         scope.selectedObject = scope.data[0];
                         scope.selectObject();
                     }
-                }, true);
+                }, true);*/
 
                 //initial setup
                 scope.selectedNotAuthorized = "";
@@ -112,6 +112,30 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
                     }
                 };
 
+                document.getElementById("scrollTest").addEventListener("scroll", myFunction);
+                var temp = document.getElementById("scrollTest");
+
+                var maxScrolled = 0;
+
+                function myFunction() {
+                    var temp = document.getElementById("scrollTest");
+                    console.log(temp.scrollTop);
+                    console.log(temp.offsetHeight + temp.scrollTop);
+                    if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
+//                         maxScrolled = temp.scrollTop / 200;
+//                         console.log(maxScrolled);
+
+                        /*for (var k = 0; k < 20; k++) {
+                            var element = {};
+                            element.name = "test" + k;
+                            scope.data.push(element);
+                        }*/
+                        // scope.selectObject();
+
+                        // scope.data = [];
+                        scope.$parent.$digest();
+                    }
+                }
 
                 //object is selected event, call callback function
                 scope.selectObject = function () {
