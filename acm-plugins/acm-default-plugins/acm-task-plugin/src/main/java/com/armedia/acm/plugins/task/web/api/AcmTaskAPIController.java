@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.QueryParam;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -84,7 +85,8 @@ public class AcmTaskAPIController
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.debug("No history for Business Proess {}", businessProcessId);
+            return new ResponseEntity<String>(new ArrayList<>().toString(), HttpStatus.OK);
         }
 
     }
@@ -110,7 +112,7 @@ public class AcmTaskAPIController
     {
         try
         {
-            log.info("Checking is the routing workflow for Business Process {] withdrawable", businessProcessId);
+            log.info("Checking is the routing workflow for Business Process {} withdrawable", businessProcessId);
             return new ResponseEntity<Boolean>(getAcmTaskService().isWithdrawable(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
