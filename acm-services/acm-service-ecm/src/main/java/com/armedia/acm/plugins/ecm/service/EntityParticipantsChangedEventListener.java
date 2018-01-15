@@ -38,11 +38,7 @@ public class EntityParticipantsChangedEventListener implements ApplicationListen
             getFileParticipantService().inheritParticipantsFromAssignedObject(
                     ((AcmAssignedObject) obj).getParticipants(),
                     originalParticipants,
-                    ((AcmContainerEntity) obj).getContainer());
-
-            // inherit restricted flag
-            getFileParticipantService().setRestrictedFlagRecursively(((AcmAssignedObject) obj).getRestricted(),
-                    ((AcmContainerEntity) obj).getContainer());
+                    ((AcmContainerEntity) obj).getContainer(), ((AcmAssignedObject) obj).getRestricted());
         }
     }
 
