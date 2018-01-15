@@ -51,6 +51,9 @@ angular.module('cases').controller('Cases.PastApprovalRoutingController', ['$sco
                             $scope.gridOptions.data = angular.fromJson(result.data);
                             $scope.gridOptions.noData = false;
                         }
+                        else{
+                            $scope.gridOptions.noData = true;
+                        }
                     });
             }
             else if (objectInfo.buckslipPastApprovers) {
