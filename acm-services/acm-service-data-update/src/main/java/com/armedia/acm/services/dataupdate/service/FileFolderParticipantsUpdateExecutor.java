@@ -52,6 +52,7 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
         {
             // since this code is run via a executor, there is no authenticated user, so we need to specify the user to
             // be used for CMIS connections. Some changes can trigger Mule flows.
+            MDC.put(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY, "DATA_UPDATE");
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, "admin");
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
             MDC.put(MDCConstants.EVENT_MDC_REQUEST_REMOTE_ADDRESS_KEY, "localhost");
@@ -67,8 +68,16 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
                 List<?> assignedAndContainerObjects = daoInstance.findAll();
                 for (Object assignedAndContainerObject : assignedAndContainerObjects)
                 {
-                    List<AcmParticipant> assignedObjectParticipants = ((AcmAssignedObject) assignedAndContainerObject).getParticipants();
                     AcmContainer container = ((AcmContainerEntity) assignedAndContainerObject).getContainer();
+
+                    // closed assigned object might have been merged. The participants for such object must be taken
+                    // from the object with the root folder
+                    if (container.getFolder().getParentFolder() != null)
+                    {
+                        continue;
+                    }
+
+                    List<AcmParticipant> assignedObjectParticipants = ((AcmAssignedObject) assignedAndContainerObject).getParticipants();
 
                     log.info("Updating participants to entity: {} [{}]", ((AcmAssignedObject) assignedAndContainerObject).getObjectType(),
                             ((AcmAssignedObject) assignedAndContainerObject).getId());
@@ -109,12 +118,7 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
         {
             assignedObjectParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             getFileParticipantService().inheritParticipantsFromAssignedObject(assignedObjectParticipants, new ArrayList<>(),
-                    container);
-        }
-
-        if (restricted)
-        {
-            getFileParticipantService().setRestrictedFlagRecursively(true, container);
+                    container, restricted);
         }
     }
 

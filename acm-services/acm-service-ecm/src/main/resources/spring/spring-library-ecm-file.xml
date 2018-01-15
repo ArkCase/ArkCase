@@ -28,12 +28,25 @@
     	<property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
+    
+    <bean id="fileParticipantsThreadPoolTaskExecutor" class="com.armedia.acm.web.api.MDCThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="10"/>
+        <property name="waitForTasksToCompleteOnShutdown" value="true"/>
+    </bean>
 
+    <bean id="fileParticipantServiceHelper" class="com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper">
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+    
     <bean id="fileParticipantService" class="com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService">
         <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
         <property name="participantService" ref="acmParticipantService"/>
         <property name="ecmFileServiceProperties" ref="ecmFileServiceProperties"/>
+        <property name="fileParticipantServiceHelper" ref="fileParticipantServiceHelper"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventListener" class="com.armedia.acm.plugins.ecm.service.EntityParticipantsChangedEventListener">
