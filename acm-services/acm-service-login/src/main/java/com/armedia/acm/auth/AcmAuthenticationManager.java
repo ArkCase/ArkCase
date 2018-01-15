@@ -82,7 +82,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
             AuthenticationException ae;
             if (lastException instanceof ProviderNotFoundException)
             {
-                ae = (AuthenticationException) lastException;
+                ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
             } else if (lastException instanceof BadCredentialsException)
             {
                 if (getUserDao().isUserPasswordExpired(authentication.getName()))
@@ -109,10 +109,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
         // either there are no providers, or no providers can handle the incoming authentication
 
-        ProviderNotFoundException providerNotFoundException =
-                new ProviderNotFoundException("No providers to handle authentication of type: " + authentication.getClass().getName());
-        getAuthenticationEventPublisher().publishAuthenticationFailure(providerNotFoundException, authentication);
-        throw providerNotFoundException;
+
+        throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }
 
     protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
