@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.personnelsecurity.casestatus.service;
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.casefile.service.ChangeCaseFileStateService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,7 @@ public class CaseFileStateService
 
         String ipAddress = null;
 
-        if ( currentUser.getDetails() != null && AcmAuthenticationDetails.class.isAssignableFrom(currentUser.getDetails().getClass()) )
+        if (currentUser.getDetails() != null && AcmAuthenticationDetails.class.isAssignableFrom(currentUser.getDetails().getClass()))
         {
             ipAddress = ((AcmAuthenticationDetails) currentUser.getDetails()).getRemoteAddress();
         }

@@ -1,5 +1,10 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -7,6 +12,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,11 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * @author riste.tutureski
@@ -113,7 +114,7 @@ public class GetUsersByPrivilegeAndGroupAPIControllerTest extends EasyMockSuppor
         expect(mockPluginManager.getRolesForPrivilege(privilege)).andReturn(rolesForPrivilege);
 
         // this is a unit test, so we are only verifying our class returns the results it got from the
-        // functional access control service.  We need unit tests on the functional access control service, to
+        // functional access control service. We need unit tests on the functional access control service, to
         // ensure it is working correctly.
         expect(mockFunctionalAccessService.getApplicationRolesToGroups()).andReturn(rolesToGroups);
         expect(mockFunctionalAccessService.getUsersByRolesAndGroups(rolesForPrivilege, rolesToGroups, null, null))

@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,7 +30,6 @@ public class AcmQueue implements Serializable, AcmEntity
 {
     private static final long serialVersionUID = -3949175334101994270L;
 
-
     public AcmQueue(Long id, String name, Integer displayOrder)
     {
         this.id = id;
@@ -42,13 +42,7 @@ public class AcmQueue implements Serializable, AcmEntity
     }
 
     @Id
-    @TableGenerator(name = "acm_queue_gen",
-            table = "acm_queue_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_queue",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_queue_gen", table = "acm_queue_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_queue", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_queue_gen")
     @Column(name = "cm_queue_id")
     private Long id;

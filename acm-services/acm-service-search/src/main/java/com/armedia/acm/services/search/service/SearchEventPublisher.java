@@ -1,18 +1,19 @@
 package com.armedia.acm.services.search.service;
 
+import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
-import com.armedia.acm.services.search.model.ApplicationSearchEvent;
+public class SearchEventPublisher implements ApplicationEventPublisherAware
+{
 
-public class SearchEventPublisher implements ApplicationEventPublisherAware {
-    
     private ApplicationEventPublisher applicationEventPublisher;
-    
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
-    
+
     public void publishSearchEvent(ApplicationSearchEvent event)
     {
         getApplicationEventPublisher().publishEvent(event);

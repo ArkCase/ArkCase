@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -32,10 +33,9 @@ public class CompleteTaskAPIController
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
             HttpSession httpSession,
-            HttpServletResponse response
-    ) throws AcmUserActionFailedException
+            HttpServletResponse response) throws AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Completing task '" + taskId + "'");
         }
@@ -44,8 +44,8 @@ public class CompleteTaskAPIController
         {
             AcmTask completed = getTaskDao().completeTask(authentication, taskId);
 
-            //TODO after demo should be found appropriate solution in taskDao.
-            //this is a bug-926 fix (workaround)
+            // TODO after demo should be found appropriate solution in taskDao.
+            // this is a bug-926 fix (workaround)
             completed.setStatus("CLOSED");
 
             publishTaskCompletedEvent(authentication, httpSession, completed, true);
@@ -73,7 +73,6 @@ public class CompleteTaskAPIController
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "complete", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
     }
-
 
     public TaskDao getTaskDao()
     {

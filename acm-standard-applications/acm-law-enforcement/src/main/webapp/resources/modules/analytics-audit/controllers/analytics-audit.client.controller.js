@@ -10,24 +10,22 @@
  * The Audit Analytics module main controller
  */
 
-angular.module('analytics-audit').controller('AnalyticsAuditController', ['$scope', 'LookupService',
-    'Analytics.BuildUrl'
-    , function ($scope, LookupService, BuildUrl) {
+angular.module('analytics-audit').controller('AnalyticsAuditController',
+        [ '$scope', 'LookupService', 'Analytics.BuildUrl', function($scope, LookupService, BuildUrl) {
 
-        $scope.data = {};
+            $scope.data = {};
 
-        // Retrieves the properties from the acm-analytics-config.properties file
-        var promiseServerConfig = LookupService.getConfig("acm-analytics-config");
-    
-        promiseServerConfig.then(function (data) {
-            var elkConfig = data;
-            $scope.data.elkHost = elkConfig['elk.server.url'];
-            $scope.data.elkPort = elkConfig['elk.server.port'];
-            $scope.data.elkUser = elkConfig['elk.server.user'];
-            $scope.data.elkPassword = elkConfig['elk.server.password'];
-            $scope.data.elkDashboard = elkConfig['elk.dashboard.url'];
-            $scope.elkUrl = BuildUrl.getUrl($scope.data);
-        });
-    
-    }
-]);
+            // Retrieves the properties from the acm-analytics-config.properties file
+            var promiseServerConfig = LookupService.getConfig("acm-analytics-config");
+
+            promiseServerConfig.then(function(data) {
+                var elkConfig = data;
+                $scope.data.elkHost = elkConfig['elk.server.url'];
+                $scope.data.elkPort = elkConfig['elk.server.port'];
+                $scope.data.elkUser = elkConfig['elk.server.user'];
+                $scope.data.elkPassword = elkConfig['elk.server.password'];
+                $scope.data.elkDashboard = elkConfig['elk.dashboard.url'];
+                $scope.elkUrl = BuildUrl.getUrl($scope.data);
+            });
+
+        } ]);

@@ -1,6 +1,5 @@
 package com.armedia.acm.calendar;
 
-import microsoft.exchange.webservices.data.util.TimeZoneUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.TimeZone;
+
+import microsoft.exchange.webservices.data.util.TimeZoneUtils;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity May 15, 2017
@@ -69,12 +70,14 @@ public class DateTimeAdjuster
             Map<String, String> microsoftTimeZones = TimeZoneUtils.createOlsonTimeZoneToMsMap();
             if (microsoftTimeZones != null)
             {
-                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey).findFirst().orElse(timeZone);
+                timeZone = microsoftTimeZones.entrySet().stream().filter(entry -> entry.getValue().equals(msName)).map(Map.Entry::getKey)
+                        .findFirst().orElse(timeZone);
             }
         }
         catch (Exception e)
         {
-            LOG.warn("Cannot take Java TimeZone name from Microsoft TimeZone name = [{}]. Default TimeZone [{}] will be used instead.", msName, timeZone);
+            LOG.warn("Cannot take Java TimeZone name from Microsoft TimeZone name = [{}]. Default TimeZone [{}] will be used instead.",
+                    msName, timeZone);
         }
 
         return timeZone;

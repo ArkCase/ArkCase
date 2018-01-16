@@ -10,6 +10,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,21 +26,21 @@ import java.util.stream.Stream;
 /**
  * Determine whether a user is authorized to take an action for a specific object.
  * <p/>
- * For a user to take an action against an object, two conditions have to be met.  They need read access to the
- * object (which proves they are not on the "No Access" list), and they have to be able to take the specific action.  If
+ * For a user to take an action against an object, two conditions have to be met. They need read access to the
+ * object (which proves they are not on the "No Access" list), and they have to be able to take the specific action. If
  * we only checked the participant privilege table to see if they have the access, they could also be in the
  * No Access list, hence the check to ensure they can read the object.
  * <p/>
  * For read access all we have to do is check Solr.
  * <p/>
- * For other access types, we run queries against the acm_participant_privilege table.  A user has access if:
+ * For other access types, we run queries against the acm_participant_privilege table. A user has access if:
  * <ul>
  * <li>The user is specifically in the table and has access</li>
  * <li>The default user has access</li>
  * <li>The user is in a group that has access</li>
  * </ul>
  * <p/>
- * The first two conditions are checked in a single query.  The group access is checked in a separate query.
+ * The first two conditions are checked in a single query. The group access is checked in a separate query.
  */
 public class ArkPermissionEvaluator implements PermissionEvaluator
 {
@@ -95,10 +96,14 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     /**
      * Check user access for object with particular id.
      *
-     * @param authentication authentication token
-     * @param id             object identifier
-     * @param targetType     object type
-     * @param permission     requested permission (actionName)
+     * @param authentication
+     *            authentication token
+     * @param id
+     *            object identifier
+     * @param targetType
+     *            object type
+     * @param permission
+     *            requested permission (actionName)
      * @return true if granted, false otherwise
      */
     private boolean checkAccessForSingleObject(Authentication authentication, Long id, String targetType, Object permission)
@@ -161,7 +166,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     }
 
     private boolean hasObjectAccessViaGroup(String principal, Long objectId, String objectType,
-                                            String objectAction, String access)
+            String objectAction, String access)
     {
         AcmUser user = getUserDao().findByUserId(principal);
         List<AcmGroup> userGroups = getGroupDao().findByUserMember(user);

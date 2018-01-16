@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
+@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class FindCaseByIdAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -30,15 +31,11 @@ public class FindCaseByIdAPIController
     private CaseFileEventUtility caseFileEventUtility;
 
     @PreAuthorize("hasPermission(#id, 'CASE_FILE', 'viewCaseDetailsPage')")
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/byId/{id}",
-            produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.GET, value = "/byId/{id}", produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public CaseFile findCaseById(
             @PathVariable(value = "id") Long id,
-            Authentication auth
-    ) throws AcmObjectNotFoundException
+            Authentication auth) throws AcmObjectNotFoundException
     {
         try
         {
@@ -54,7 +51,8 @@ public class FindCaseByIdAPIController
 
             caseFileEventUtility.raiseCaseFileViewed(retval, auth);
             return retval;
-        } catch (PersistenceException e)
+        }
+        catch (PersistenceException e)
         {
             throw new AcmObjectNotFoundException("Case File", id, e.getMessage(), e);
         }

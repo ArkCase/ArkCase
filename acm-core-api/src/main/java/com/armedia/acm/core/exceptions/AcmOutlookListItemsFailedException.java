@@ -1,23 +1,28 @@
 package com.armedia.acm.core.exceptions;
 
-
-public class AcmOutlookListItemsFailedException extends AcmOutlookException {
-    public AcmOutlookListItemsFailedException() {
+public class AcmOutlookListItemsFailedException extends AcmOutlookException
+{
+    public AcmOutlookListItemsFailedException()
+    {
     }
 
-    public AcmOutlookListItemsFailedException(String message) {
+    public AcmOutlookListItemsFailedException(String message)
+    {
         super(message);
     }
 
-    public AcmOutlookListItemsFailedException(String message, Throwable cause) {
+    public AcmOutlookListItemsFailedException(String message, Throwable cause)
+    {
         super(message, cause);
     }
 
-    public AcmOutlookListItemsFailedException(Throwable cause) {
+    public AcmOutlookListItemsFailedException(Throwable cause)
+    {
         super(cause);
     }
 
-    public AcmOutlookListItemsFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AcmOutlookListItemsFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

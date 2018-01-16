@@ -7,10 +7,12 @@ import java.util.Date;
 /**
  * Created by ivo.shurbanovski on 1/17/2017.
  */
-public class SmtpEmailReceivedEvent extends AcmEvent {
+public class SmtpEmailReceivedEvent extends AcmEvent
+{
     private static final String EVENT_TYPE = "com.armedia.acm.smtp.event.received";
 
-    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType) {
+    public SmtpEmailReceivedEvent(Object source, String userId, Long objectId, String objectType)
+    {
         super(source);
         setUserId(userId);
         setEventDate(new Date());
@@ -20,7 +22,8 @@ public class SmtpEmailReceivedEvent extends AcmEvent {
     }
 
     @Override
-    public String getEventType() {
+    public String getEventType()
+    {
         return EVENT_TYPE;
     }
 }

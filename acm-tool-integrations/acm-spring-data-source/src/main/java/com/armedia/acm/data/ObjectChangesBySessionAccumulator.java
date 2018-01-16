@@ -9,13 +9,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    private Map<String, AcmObjectChangelist> changesBySession =
-            Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
+    private Map<String, AcmObjectChangelist> changesBySession = Collections.synchronizedMap(new HashMap<String, AcmObjectChangelist>());
 
     @Override
     public void postInsert(DescriptorEvent event)
@@ -27,28 +25,35 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         {
             String sessionName = event.getSession().getName();
             getChangesBySession().get(sessionName).getAddedObjects().add(event.getObject());
-        } catch (NullPointerException npe)
+        }
+        catch (NullPointerException npe)
         {
             String nullPart = "[???]";
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            } else if (event == null)
+            }
+            else if (event == null)
             {
                 nullPart = "event";
-            } else if (event.getSession() == null)
+            }
+            else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            } else if (event.getSession().getName() == null)
+            }
+            else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            } else if (getChangesBySession().get(event.getSession().getName()) == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            } else if (event.getObject() == null)
+            }
+            else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            } else if (getChangesBySession().get(event.getSession().getName()).getAddedObjects() == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()).getAddedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getAddedObjects()";
             }
@@ -66,34 +71,40 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         {
             String sessionName = event.getSession().getName();
             getChangesBySession().get(sessionName).getUpdatedObjects().add(event.getObject());
-        } catch (NullPointerException npe)
+        }
+        catch (NullPointerException npe)
         {
             String nullPart = "[???]";
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            } else if (event == null)
+            }
+            else if (event == null)
             {
                 nullPart = "event";
-            } else if (event.getSession() == null)
+            }
+            else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            } else if (event.getSession().getName() == null)
+            }
+            else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            } else if (getChangesBySession().get(event.getSession().getName()) == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            } else if (event.getObject() == null)
+            }
+            else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            } else if (getChangesBySession().get(event.getSession().getName()).getUpdatedObjects() == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()).getUpdatedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getUpdatedObjects()";
             }
             log.error("Mystery Null Pointer Exception: Null part is... " + nullPart);
         }
-
 
     }
 
@@ -107,34 +118,40 @@ public class ObjectChangesBySessionAccumulator extends DescriptorEventAdapter
         {
             String sessionName = event.getSession().getName();
             getChangesBySession().get(sessionName).getDeletedObjects().add(event.getObject());
-        } catch (NullPointerException npe)
+        }
+        catch (NullPointerException npe)
         {
             String nullPart = "[???]";
             if (getChangesBySession() == null)
             {
                 nullPart = "getChangesBySession";
-            } else if (event == null)
+            }
+            else if (event == null)
             {
                 nullPart = "event";
-            } else if (event.getSession() == null)
+            }
+            else if (event.getSession() == null)
             {
                 nullPart = "event.getSession";
-            } else if (event.getSession().getName() == null)
+            }
+            else if (event.getSession().getName() == null)
             {
                 nullPart = "event.getSession().getName()";
-            } else if (getChangesBySession().get(event.getSession().getName()) == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()) == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName())";
-            } else if (event.getObject() == null)
+            }
+            else if (event.getObject() == null)
             {
                 nullPart = "event.getObject()";
-            } else if (getChangesBySession().get(event.getSession().getName()).getDeletedObjects() == null)
+            }
+            else if (getChangesBySession().get(event.getSession().getName()).getDeletedObjects() == null)
             {
                 nullPart = "getChangesBySession().get(event.getSession().getName()).getDeletedObjects()";
             }
             log.error("Mystery Null Pointer Exception: Null part is... " + nullPart);
         }
-
 
     }
 

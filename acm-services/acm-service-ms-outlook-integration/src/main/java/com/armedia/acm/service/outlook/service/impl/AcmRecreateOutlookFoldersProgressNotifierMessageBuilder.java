@@ -20,7 +20,6 @@ public class AcmRecreateOutlookFoldersProgressNotifierMessageBuilder implements 
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.data.AcmProgressNotifierMessageBuilder#buildMessage(com.armedia.acm.data.AcmProgressIndicator)
      */
@@ -40,7 +39,6 @@ public class AcmRecreateOutlookFoldersProgressNotifierMessageBuilder implements 
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.data.AcmProgressNotifierMessageBuilder#getObjectType()
      */
     @Override

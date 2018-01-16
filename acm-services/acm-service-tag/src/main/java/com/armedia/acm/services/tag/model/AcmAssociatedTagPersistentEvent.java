@@ -4,11 +4,12 @@ import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
-public class AcmAssociatedTagPersistentEvent  extends AcmEvent
+public class AcmAssociatedTagPersistentEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "ASSOCIATE_TAG";
 
-    public AcmAssociatedTagPersistentEvent(AcmAssociatedTag source,String userId) {
+    public AcmAssociatedTagPersistentEvent(AcmAssociatedTag source, String userId)
+    {
 
         super(source);
         setObjectId(source.getId());

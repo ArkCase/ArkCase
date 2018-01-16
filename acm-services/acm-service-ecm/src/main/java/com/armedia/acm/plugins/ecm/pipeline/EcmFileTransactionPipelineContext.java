@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.springframework.security.core.Authentication;
 

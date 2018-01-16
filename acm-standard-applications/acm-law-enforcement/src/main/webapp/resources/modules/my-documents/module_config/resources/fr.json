@@ -1,11 +1,11 @@
 {
-  "my-documents": {
-    "title": "Mes documents"
-  },
-  "my-documents.menus": {
-    "leftnav.item": "Mes documents"
-  },
-  "document-repository.comp.referenceSearchGrid": {
-    "title": "Recherche de référence"
-  }
+    "my-documents": {
+        "title": "Mes documents"
+    },
+    "my-documents.menus": {
+        "leftnav.item": "Mes documents"
+    },
+    "document-repository.comp.referenceSearchGrid": {
+        "title": "Recherche de référence"
+    }
 }
