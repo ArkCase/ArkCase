@@ -19,5 +19,3 @@ public class ApplicationNotificationEvent extends AcmEvent
         setIpAddress(ipAddress);
     }
 }
-
-

@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +36,14 @@ public class CaseFileEcmFolderHandler implements PipelineHandler<CaseFile, CaseF
             {
                 String folderId = ecmFileService.createFolder(entity.getEcmFolderPath());
                 entity.getContainer().getFolder().setCmisFolderId(folderId);
-            } catch (AcmCreateObjectFailedException e)
+            }
+            catch (AcmCreateObjectFailedException e)
             {
                 throw new PipelineProcessException(e);
             }
 
-        } else
+        }
+        else
         {
             log.info("There is no need to create folder");
         }

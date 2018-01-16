@@ -1,11 +1,14 @@
 package com.armedia.acm.plugins.complaint;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,18 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring",
-        locations = {
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-complaint-dao-test.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-acm-encryption.xml"
-        }
-)
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-complaint-dao-test.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintDaoIT
 {
@@ -53,7 +52,7 @@ public class ComplaintDaoIT
     {
         auditAdapter.setUserId("auditUser");
 
-        // stupid Drools throws a null pointer exception if we don't wait long enough here.  What bad software.
+        // stupid Drools throws a null pointer exception if we don't wait long enough here. What bad software.
         Thread.sleep(1000);
     }
 
@@ -91,7 +90,6 @@ public class ComplaintDaoIT
         }
 
         entityManager.flush();
-
 
     }
 

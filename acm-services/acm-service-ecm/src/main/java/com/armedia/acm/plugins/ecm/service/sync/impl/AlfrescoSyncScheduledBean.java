@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
 import com.armedia.acm.scheduler.AcmSchedulableBean;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,6 @@ public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
 
         getAlfrescoSyncService().queryAlfrescoAuditApplications();
 
-
     }
 
     public AlfrescoSyncService getAlfrescoSyncService()
@@ -36,7 +36,6 @@ public class AlfrescoSyncScheduledBean implements AcmSchedulableBean
     {
         this.alfrescoSyncService = alfrescoSyncService;
     }
-
 
     public void setEnabled(boolean enabled)
     {

@@ -2,12 +2,14 @@ package com.armedia.acm.services.participants.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -45,7 +47,8 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
                 {
                     log.debug("Persisting since the participant ID is null");
                     getEm().persist(merged);
-                } else
+                }
+                else
                 {
                     log.debug("Did NOT persist since participant ID is not null");
                 }
@@ -81,14 +84,15 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     }
 
     public boolean hasObjectAccessViaGroup(Set<String> userGroups, Long objectId, String objectType,
-                                           String objectAction, String accessType)
+            String objectAction, String accessType)
     {
         TypedQuery<AcmParticipant> findParticipants = getEm().createQuery(
                 "SELECT app.participant FROM AcmParticipantPrivilege app " +
                         "WHERE app.participant.objectId = :objectId " +
                         "AND app.participant.objectType = :objectType " +
                         "AND app.objectAction = :action " +
-                        "AND app.accessType = :accessType", AcmParticipant.class);
+                        "AND app.accessType = :accessType",
+                AcmParticipant.class);
 
         findParticipants.setParameter("objectId", objectId);
         findParticipants.setParameter("objectType", objectType);
@@ -121,7 +125,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     @Transactional
     public int removeAllOtherParticipantsForObject(String objectType, Long objectId, List<AcmParticipant> keepTheseParticipants)
     {
-        // a simple delete query will not cascade deletes to related objects.  So we need to delete
+        // a simple delete query will not cascade deletes to related objects. So we need to delete
         // one by one :-(
 
         List<Long> keepTheseIds = new ArrayList<>(keepTheseParticipants.size());
@@ -151,7 +155,7 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     }
 
     public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
-                                                                            Long objectId)
+            Long objectId)
     {
 
         Query query = getEm().createQuery(

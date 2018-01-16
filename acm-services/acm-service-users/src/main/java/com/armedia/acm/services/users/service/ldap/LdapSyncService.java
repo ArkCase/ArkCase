@@ -9,6 +9,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -21,18 +22,25 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create multiple Spring beans, each
+ * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create
+ * multiple Spring beans, each
  * with its own ldapSyncConfig.
  * <p/>
  * Both application roles and LDAP groups are synced.
  * <ul>
- * <li>Application roles drive role-based access control, and every deployment has the same application role names regardless of the LDAP
- * group names. The ldapSyncConfig includes a mapping from the logical role name to the physical LDAP group name. For each entry in this
+ * <li>Application roles drive role-based access control, and every deployment has the same application role names
+ * regardless of the LDAP
+ * group names. The ldapSyncConfig includes a mapping from the logical role name to the physical LDAP group name. For
+ * each entry in this
  * mapping, the members of the indicated LDAP group are linked to the indicated logical application role.</li>
- * <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny access to specific groups.
- * The groups could be more granular than application roles; for example, all case agents share the same application roles, but different
- * LDAP groups could represent different functional or geographic areas. So granting access at the LDAP group level could be more
- * appropriate - i.e., would restrict access to only those case agents in the appropriate functional or geographic area.</li>
+ * <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny access
+ * to specific groups.
+ * The groups could be more granular than application roles; for example, all case agents share the same application
+ * roles, but different
+ * LDAP groups could represent different functional or geographic areas. So granting access at the LDAP group level
+ * could be more
+ * appropriate - i.e., would restrict access to only those case agents in the appropriate functional or geographic
+ * area.</li>
  * </ul>
  */
 public class LdapSyncService
@@ -48,7 +56,8 @@ public class LdapSyncService
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
+    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
+    // ($HOME/.acm).
     public void ldapSync()
     {
         if (!isSyncEnabled())
@@ -72,7 +81,8 @@ public class LdapSyncService
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
 
-    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
+    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
+    // ($HOME/.acm).
     public void ldapPartialSync()
     {
         if (!isSyncEnabled())
@@ -103,7 +113,8 @@ public class LdapSyncService
     /**
      * Try to sync user from LDAP by given username
      *
-     * @param username - username of the user
+     * @param username
+     *            - username of the user
      */
     public LdapUser ldapUserSync(String username)
     {
@@ -124,7 +135,8 @@ public class LdapSyncService
     /**
      * Try to sync user from LDAP by given dn
      *
-     * @param dn - distinguished name of the user
+     * @param dn
+     *            - distinguished name of the user
      */
     public LdapUser syncUserByDn(String dn)
     {

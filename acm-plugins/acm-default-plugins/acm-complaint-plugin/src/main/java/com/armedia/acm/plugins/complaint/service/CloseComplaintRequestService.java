@@ -190,7 +190,8 @@ public class CloseComplaintRequestService
                     getEcmFileDao().save(ecmFile);
                 }
             }
-        } catch (AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        }
+        catch (AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             log.error("Cannot save files.", e);
         }
@@ -298,7 +299,7 @@ public class CloseComplaintRequestService
 
     private String getClosedComplaintApprovers(Complaint closingComplaint)
     {
-        List<String> approvers = new ArrayList<String>();
+        List<String> approvers = new ArrayList<>();
         List<AcmParticipant> acmParticipants = getCloseComplaintRequestDao().findByComplaintId(closingComplaint.getComplaintId())
                 .getParticipants();
         if (!acmParticipants.isEmpty())

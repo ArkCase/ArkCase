@@ -1,172 +1,172 @@
 {
-  "id": "preference",
-  "title": "Preferences",
-  "configurable": false,
-  "menus": [
-    {
-      "menuId": "usermenu",
-      "menuItemURL": "preference",
-      "menuItemTitle": "preference.menus.usermenu.item",
-      "moduleId": "none",
-      "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 120
-    }
-  ],
-  "moduleWidgetPreferences": [
-    {
-      "id": "complaints",
-      "title": "core.menus.leftnav.complaints.main",
-      "name": "COMPLAINT",
-      "allowedWidgets": [
-        "details",
-        "locations",
-        "people",
-        "organizations",
-        "documents",
-        "participants",
-        "notes",
-        "tasks",
-        "references",
-        "history",
-        "time",
-        "cost",
-        "tags",
-        "calendar",
-        "approvalRouting"
-      ]
-    },
-    {
-      "id": "cases",
-      "title": "core.menus.leftnav.cases.main",
-      "name": "CASE",
-      "allowedWidgets": [
-        "details",
-        "people",
-        "organizations",
-        "documents",
-        "participants",
-        "notes",
-        "tasks",
-        "references",
-        "history",
-        "time",
-        "cost",
-        "tags",
-        "calendar",
-        "approvalRouting"
-      ]
-    },
-    {
-      "id": "tasks",
-      "title": "core.menus.leftnav.tasks.main",
-      "name": "TASK",
-      "allowedWidgets": [
-        "details",
-        "reworkDetails",
-        "docReview",
-        "parentDocs",
-        "documents",
-        "notes",
-        "references",
-        "workflow",
-        "history",
-        "signature",
-        "tags"
-      ]
-    },
-    {
-      "id": "people",
-      "title": "core.menus.leftnav.people.main",
-      "name": "PERSON",
-      "allowedWidgets": [
-        "details",
-        "pictures",
-        "locations",
-        "phones",
-        "emails",
-        "urls",
-        "participants",
-        "aliases",
-        "organizations",
-        "ids",
-        "complaints",
-        "cases",
-        "related",
-        "history"
-      ]
-    },
-    {
-      "id": "organizations",
-      "title": "core.menus.leftnav.organizations.main",
-      "name": "ORGANIZATION",
-      "allowedWidgets": [
-        "details",
-        "locations",
-        "phones",
-        "faxes",
-        "emails",
-        "urls",
-        "participants",
-        "dbas",
-        "people",
-        "ids",
-        "complaints",
-        "cases",
-        "relOrganizations",
-        "history"
-      ]
-    },
-    {
-      "id": "document-repository",
-      "title": "core.menus.leftnav.document-repository.main",
-      "name": "DOC_REPO",
-      "allowedWidgets": [
-        "details",
-        "documents",
-        "participants",
-        "notes",
-        "references",
-        "history",
-        "tags"
-      ]
-    },
-    {
-      "id": "my-documents",
-      "title": "core.menus.leftnav.my-documents.main",
-      "name": "MY_DOC_REPO",
-      "allowedWidgets": [
-        "details",
-        "documents",
-        "participants",
-        "notes",
-        "references",
-        "history",
-        "tags"
-      ]
-    },
-    {
-      "id": "cost-tracking",
-      "title": "core.menus.leftnav.cost-tracking.main",
-      "name": "COST",
-      "allowedWidgets": [
-        "details",
-        "person",
-        "expenses",
-        "tags",
-        "approvers"
-      ]
-    },
-    {
-      "id": "time-tracking",
-      "title": "core.menus.leftnav.time-tracking.main",
-      "name": "TIME",
-      "allowedWidgets": [
-        "details",
-        "person",
-        "hoursSummary",
-        "tags",
-        "approvers"
-      ]
-    }
-  ]
+    "id": "preference",
+    "title": "Preferences",
+    "configurable": false,
+    "menus": [
+        {
+            "menuId": "usermenu",
+            "menuItemURL": "preference",
+            "menuItemTitle": "preference.menus.usermenu.item",
+            "moduleId": "none",
+            "iconClass": "glyphicon glyphicon-asterisk",
+            "position": 120
+        }
+    ],
+    "moduleWidgetPreferences": [
+        {
+            "id": "complaints",
+            "title": "core.menus.leftnav.complaints.main",
+            "name": "COMPLAINT",
+            "allowedWidgets": [
+                "details",
+                "locations",
+                "people",
+                "organizations",
+                "documents",
+                "participants",
+                "notes",
+                "tasks",
+                "references",
+                "history",
+                "time",
+                "cost",
+                "tags",
+                "calendar",
+                "approvalRouting"
+            ]
+        },
+        {
+            "id": "cases",
+            "title": "core.menus.leftnav.cases.main",
+            "name": "CASE",
+            "allowedWidgets": [
+                "details",
+                "people",
+                "organizations",
+                "documents",
+                "participants",
+                "notes",
+                "tasks",
+                "references",
+                "history",
+                "time",
+                "cost",
+                "tags",
+                "calendar",
+                "approvalRouting"
+            ]
+        },
+        {
+            "id": "tasks",
+            "title": "core.menus.leftnav.tasks.main",
+            "name": "TASK",
+            "allowedWidgets": [
+                "details",
+                "reworkDetails",
+                "docReview",
+                "parentDocs",
+                "documents",
+                "notes",
+                "references",
+                "workflow",
+                "history",
+                "signature",
+                "tags"
+            ]
+        },
+        {
+            "id": "people",
+            "title": "core.menus.leftnav.people.main",
+            "name": "PERSON",
+            "allowedWidgets": [
+                "details",
+                "pictures",
+                "locations",
+                "phones",
+                "emails",
+                "urls",
+                "participants",
+                "aliases",
+                "organizations",
+                "ids",
+                "complaints",
+                "cases",
+                "related",
+                "history"
+            ]
+        },
+        {
+            "id": "organizations",
+            "title": "core.menus.leftnav.organizations.main",
+            "name": "ORGANIZATION",
+            "allowedWidgets": [
+                "details",
+                "locations",
+                "phones",
+                "faxes",
+                "emails",
+                "urls",
+                "participants",
+                "dbas",
+                "people",
+                "ids",
+                "complaints",
+                "cases",
+                "relOrganizations",
+                "history"
+            ]
+        },
+        {
+            "id": "document-repository",
+            "title": "core.menus.leftnav.document-repository.main",
+            "name": "DOC_REPO",
+            "allowedWidgets": [
+                "details",
+                "documents",
+                "participants",
+                "notes",
+                "references",
+                "history",
+                "tags"
+            ]
+        },
+        {
+            "id": "my-documents",
+            "title": "core.menus.leftnav.my-documents.main",
+            "name": "MY_DOC_REPO",
+            "allowedWidgets": [
+                "details",
+                "documents",
+                "participants",
+                "notes",
+                "references",
+                "history",
+                "tags"
+            ]
+        },
+        {
+            "id": "cost-tracking",
+            "title": "core.menus.leftnav.cost-tracking.main",
+            "name": "COST",
+            "allowedWidgets": [
+                "details",
+                "person",
+                "expenses",
+                "tags",
+                "approvers"
+            ]
+        },
+        {
+            "id": "time-tracking",
+            "title": "core.menus.leftnav.time-tracking.main",
+            "name": "TIME",
+            "allowedWidgets": [
+                "details",
+                "person",
+                "hoursSummary",
+                "tags",
+                "approvers"
+            ]
+        }
+    ]
 }

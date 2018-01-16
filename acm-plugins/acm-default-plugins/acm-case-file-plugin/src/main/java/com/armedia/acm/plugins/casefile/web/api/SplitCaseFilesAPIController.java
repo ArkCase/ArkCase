@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.casefile.model.SplitCaseOptions;
 import com.armedia.acm.plugins.casefile.service.SplitCaseService;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,24 +22,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Objects;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/copyCaseFile", "/api/latest/plugin/copyCaseFile"})
+@RequestMapping({ "/api/v1/plugin/copyCaseFile", "/api/latest/plugin/copyCaseFile" })
 public class SplitCaseFilesAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private SplitCaseService splitCaseService;
 
-
-    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile splitCaseFiles(
             @RequestBody SplitCaseOptions splitCaseOptions,
             HttpSession session,
-            Authentication auth
-    ) throws MuleException, AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
+            Authentication auth) throws MuleException, AcmCreateObjectFailedException, AcmUserActionFailedException, SplitCaseFileException,
+            AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
 
         Objects.requireNonNull(splitCaseOptions.getCaseFileId(), "Case file for splitting should not be null");
@@ -46,7 +47,6 @@ public class SplitCaseFilesAPIController
         CaseFile copyCaseFile = splitCaseService.splitCase(auth, ipAddress, splitCaseOptions);
         return copyCaseFile;
     }
-
 
     public void setSplitCaseService(SplitCaseService splitCaseService)
     {

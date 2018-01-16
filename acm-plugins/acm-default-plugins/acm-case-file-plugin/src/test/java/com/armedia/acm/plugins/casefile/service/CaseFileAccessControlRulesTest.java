@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -18,8 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/17/14.
@@ -77,19 +80,18 @@ public class CaseFileAccessControlRulesTest
         workingMemory.execute(caseFile);
 
         caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
-                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()
-        ));
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
 
         assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("deny") && app.getObjectAction().equals("read")).count());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
 
     }
 
@@ -108,20 +110,18 @@ public class CaseFileAccessControlRulesTest
         workingMemory.execute(caseFile);
 
         caseFile.getParticipants().get(0).getPrivileges().stream().forEach(pr -> log.info(
-                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()
-        ));
+                "type: {}, action: {}", pr.getAccessType(), pr.getObjectAction()));
 
         assertEquals(3, caseFile.getParticipants().get(0).getPrivileges().size());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("read")).count());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("subscribe")).count());
 
-        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream().
-                filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
+        assertEquals(1, caseFile.getParticipants().get(0).getPrivileges().stream()
+                .filter(app -> app.getAccessType().equals("grant") && app.getObjectAction().equals("addTag")).count());
     }
-
 
 }

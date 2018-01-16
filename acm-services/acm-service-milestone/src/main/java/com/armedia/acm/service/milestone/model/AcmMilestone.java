@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -23,17 +24,12 @@ import java.util.Objects;
 @Entity
 @Table(name = "acm_milestone")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmMilestone implements Serializable, AcmEntity {
+public class AcmMilestone implements Serializable, AcmEntity
+{
     private static final long serialVersionUID = -2866319464429863768L;
 
     @Id
-    @TableGenerator(name = "acm_milestone_gen",
-            table = "acm_milestone_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_milestone",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_milestone_gen", table = "acm_milestone_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_milestone", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_milestone_gen")
     @Column(name = "cm_milestone_id")
     private Long id;
@@ -65,88 +61,107 @@ public class AcmMilestone implements Serializable, AcmEntity {
     @Column(name = "cm_milestone_modifier")
     private String modifier;
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return objectType;
     }
 
-    public void setObjectType(String objectType) {
+    public void setObjectType(String objectType)
+    {
         this.objectType = objectType;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
-    public LocalDate getMilestoneDate() {
+    public LocalDate getMilestoneDate()
+    {
         return milestoneDate;
     }
 
-    public void setMilestoneDate(LocalDate milestoneDate) {
+    public void setMilestoneDate(LocalDate milestoneDate)
+    {
         this.milestoneDate = milestoneDate;
     }
 
-    public String getMilestoneName() {
+    public String getMilestoneName()
+    {
         return milestoneName;
     }
 
-    public void setMilestoneName(String milestoneName) {
+    public void setMilestoneName(String milestoneName)
+    {
         this.milestoneName = milestoneName;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(Object obj)
+    {
         Objects.requireNonNull(obj, "Comparable object must not be null");
         if (!(obj instanceof AcmMilestone))
             return false;
@@ -157,7 +172,8 @@ public class AcmMilestone implements Serializable, AcmEntity {
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         if (getId() == null)
             return super.hashCode();
         else

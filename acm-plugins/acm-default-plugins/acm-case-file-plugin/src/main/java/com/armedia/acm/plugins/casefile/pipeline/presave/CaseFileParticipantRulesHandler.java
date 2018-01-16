@@ -7,6 +7,7 @@ import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import com.armedia.acm.services.participants.service.ParticipantsBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,8 @@ public class CaseFileParticipantRulesHandler implements PipelineHandler<CaseFile
         log.info("CaseFile exiting CaseFileParticipantRulesHandler : [{}]", entity);
         if (model.getErrorsList() != null && !model.getErrorsList().isEmpty())
         {
-            throw new PipelineProcessException(new AcmAccessControlException(model.getErrorsList(), "Conflict permissions combination has occurred for the chosen participants"));
+            throw new PipelineProcessException(new AcmAccessControlException(model.getErrorsList(),
+                    "Conflict permissions combination has occurred for the chosen participants"));
         }
     }
 
@@ -46,7 +48,6 @@ public class CaseFileParticipantRulesHandler implements PipelineHandler<CaseFile
     {
         // nothing to do here, there is no rollback action to be executed
     }
-
 
     public void setParticipantsRule(ParticipantsBusinessRule participantsRule)
     {

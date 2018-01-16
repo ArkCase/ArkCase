@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-note-table" author="manoj">
@@ -40,7 +38,7 @@
     <changeSet id="02-note-table-add-type-column" author="riste.tutureski">
         <addColumn tableName="acm_note">
             <column name="cm_note_type" afterColumn="cm_note_text" beforeColumn="cm_note_creator" defaultValue="GENERAL"
-                    type="VARCHAR(1024)">
+                type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
@@ -76,8 +74,7 @@
 
     <changeSet id="06-acm_note-add-parent-title" author="johnfaniyi">
         <addColumn tableName="acm_note">
-            <column name="cm_parent_object_title" type="VARCHAR(1024)">
-            </column>
+            <column name="cm_parent_object_title" type="VARCHAR(1024)"></column>
         </addColumn>
     </changeSet>
 

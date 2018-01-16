@@ -53,10 +53,12 @@ public class AcmTaskActivitiEvent extends AcmEvent implements AcmTaskEvent
         if (priority < 50)
         {
             return "Low";
-        } else if (priority < 70)
+        }
+        else if (priority < 70)
         {
             return "Medium";
-        } else if (priority < 90)
+        }
+        else if (priority < 90)
         {
             return "High";
         }

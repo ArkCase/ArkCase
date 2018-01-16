@@ -36,7 +36,8 @@ public class TemplateLabel
     }
 
     /**
-     * @param template the template to set
+     * @param template
+     *            the template to set
      */
     public void setTemplate(String template)
     {
@@ -52,7 +53,8 @@ public class TemplateLabel
     }
 
     /**
-     * @param label the label to set
+     * @param label
+     *            the label to set
      */
     public void setLabel(String label)
     {
@@ -68,7 +70,8 @@ public class TemplateLabel
     }
 
     /**
-     * @param activated the activated to set
+     * @param activated
+     *            the activated to set
      */
     public void setActivated(boolean activated)
     {

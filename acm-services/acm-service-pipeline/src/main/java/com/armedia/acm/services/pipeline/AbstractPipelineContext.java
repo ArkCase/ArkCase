@@ -17,8 +17,10 @@ public abstract class AbstractPipelineContext
     /**
      * Adds property into the map. If key exists than value is overridden
      *
-     * @param key   key for the property. Key must not be null.
-     * @param value value of the property. Value must not be null.
+     * @param key
+     *            key for the property. Key must not be null.
+     * @param value
+     *            value of the property. Value must not be null.
      */
     public void addProperty(String key, Object value)
     {
@@ -50,7 +52,8 @@ public abstract class AbstractPipelineContext
     /**
      * removes object and key from the map
      *
-     * @param key must not be null.
+     * @param key
+     *            must not be null.
      * @return returns Object associated with this key
      */
     public Object removeProperty(String key)

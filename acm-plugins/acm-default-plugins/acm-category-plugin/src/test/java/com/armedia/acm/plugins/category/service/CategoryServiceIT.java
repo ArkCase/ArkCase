@@ -209,7 +209,8 @@ public class CategoryServiceIT
         try
         {
             categoryService.update(nonExisting);
-        } finally
+        }
+        finally
         {
 
         }
@@ -309,7 +310,8 @@ public class CategoryServiceIT
         try
         {
             categoryService.activate(nonExisting.getId(), false);
-        } finally
+        }
+        finally
         {
 
         }
@@ -357,7 +359,8 @@ public class CategoryServiceIT
         try
         {
             categoryService.deactivate(nonExisting.getId());
-        } finally
+        }
+        finally
         {
 
         }

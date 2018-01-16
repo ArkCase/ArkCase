@@ -49,7 +49,6 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -71,7 +70,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             List<CorrespondenceMergeFieldVersionConfiguration> mergeFieldsVersionConfigurations = getObjectConverter().getJsonUnmarshaller()
                     .unmarshallCollection(resource, List.class, CorrespondenceMergeFieldVersionConfiguration.class);
 
-            mergeFieldsVersions = new ArrayList<CorrespondenceMergeFieldVersion>(mergeFieldsVersionConfigurations.stream()
+            mergeFieldsVersions = new ArrayList<>(mergeFieldsVersionConfigurations.stream()
                     .map(configuration -> mapMergeFieldVersionFromConfiguration(configuration)).collect(Collectors.toList()));
 
             if (mergeFieldsVersions.isEmpty())
@@ -93,7 +92,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
             List<CorrespondenceMergeFieldConfiguration> mergeFieldsConfigurations = getObjectConverter().getJsonUnmarshaller()
                     .unmarshallCollection(resource, List.class, CorrespondenceMergeFieldConfiguration.class);
 
-            mergeFields = new ArrayList<CorrespondenceMergeField>(mergeFieldsConfigurations.stream()
+            mergeFields = new ArrayList<>(mergeFieldsConfigurations.stream()
                     .map(configuration -> mapMergeFieldFromConfiguration(configuration)).collect(Collectors.toList()));
 
             if (mergeFields.isEmpty())
@@ -173,7 +172,7 @@ public class CorrespondenceMergeFieldManager implements ApplicationListener<Cont
     public List<CorrespondenceMergeField> saveMergeFieldsData(List<CorrespondenceMergeField> newMergeFields, Authentication auth)
             throws IOException
     {
-        List<CorrespondenceMergeField> result = new ArrayList<CorrespondenceMergeField>();
+        List<CorrespondenceMergeField> result = new ArrayList<>();
         String objectType = newMergeFields.get(0).getFieldType();
         String newVersion = getNewVersionByType(objectType).toString();
 

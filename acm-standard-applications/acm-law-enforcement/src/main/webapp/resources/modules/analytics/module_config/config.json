@@ -1,15 +1,15 @@
 {
-  "id": "analytics",
-  "title": "Analytics",
-  "configurable": false,
-  "menus": [
-    {
-      "menuId": "leftnav",
-      "menuItemURL": "analytics",
-      "menuItemTitle": "analytics.menus.leftnav.item",
-      "moduleId": "analytics",
-      "iconClass": "fa fa-bar-chart",
-      "position": 180
-    }
-  ]
+    "id": "analytics",
+    "title": "Analytics",
+    "configurable": false,
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "analytics",
+            "menuItemTitle": "analytics.menus.leftnav.item",
+            "moduleId": "analytics",
+            "iconClass": "fa fa-bar-chart",
+            "position": 180
+        }
+    ]
 }

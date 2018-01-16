@@ -5,7 +5,7 @@ package com.armedia.acm.data;
  */
 public interface AcmObjectEventConstants
 {
-    //event actions
+    // event actions
     String ACTION_DELETE = "DELETE";
     String ACTION_INSERT = "INSERT";
     String ACTION_UPDATE = "UPDATE";

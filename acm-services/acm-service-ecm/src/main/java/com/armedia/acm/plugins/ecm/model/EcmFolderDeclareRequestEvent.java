@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.model.AcmEvent;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
@@ -34,57 +35,67 @@ public class EcmFolderDeclareRequestEvent extends AcmEvent
         setFolderId(acmCmisObjectList.getFolderId());
         setContainer(acmContainer);
         setParentObjectName(acmContainer.getContainerObjectTitle());
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }
     }
 
+    @Override
     public String getParentObjectType()
     {
         return parentObjectType;
     }
 
+    @Override
     public void setParentObjectType(String parentObjectType)
     {
         this.parentObjectType = parentObjectType;
     }
 
+    @Override
     public Long getParentObjectId()
     {
         return parentObjectId;
     }
 
+    @Override
     public void setParentObjectId(Long parentObjectId)
     {
         this.parentObjectId = parentObjectId;
     }
 
-    public AcmContainer getContainer() {
+    public AcmContainer getContainer()
+    {
         return container;
     }
 
-    public void setContainer(AcmContainer container) {
+    public void setContainer(AcmContainer container)
+    {
         this.container = container;
     }
 
-
-    public Long getFolderId() {
+    public Long getFolderId()
+    {
         return folderId;
     }
 
-    public void setFolderId(Long folderId) {
+    public void setFolderId(Long folderId)
+    {
         this.folderId = folderId;
     }
 
-    public String getParentObjectName() {
+    @Override
+    public String getParentObjectName()
+    {
         return parentObjectName;
     }
 
-    public void setParentObjectName(String parentObjectName) {
+    @Override
+    public void setParentObjectName(String parentObjectName)
+    {
         this.parentObjectName = parentObjectName;
     }
-
 
     @Override
     public AcmCmisObjectList getSource()

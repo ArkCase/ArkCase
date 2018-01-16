@@ -14,13 +14,13 @@ public class StartBusinessProcessModel<T, P extends AbstractPipelineContext>
     private String processName;
 
     /**
-     * Many queue workflows set the business object to a new status.  This property allows for a generic
+     * Many queue workflows set the business object to a new status. This property allows for a generic
      * Activiti business process that can be used for many such queue workflows.
      */
     private String businessObjectNewStatus;
 
     /**
-     * Many queue workflows send the business object toa  new queue.  This property allows for a generic
+     * Many queue workflows send the business object toa new queue. This property allows for a generic
      * Activiti business process that can be used for many such queue workflows.
      */
     private String businessObjectNewQueueName;

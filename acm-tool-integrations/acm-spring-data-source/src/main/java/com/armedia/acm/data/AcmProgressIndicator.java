@@ -1,6 +1,5 @@
 package com.armedia.acm.data;
 
-
 public class AcmProgressIndicator
 {
     private int progress;

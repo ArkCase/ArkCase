@@ -7,6 +7,7 @@ import com.armedia.acm.services.participants.model.CheckParticipantListModel;
 import com.armedia.acm.services.participants.service.ParticipantsBusinessRule;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,8 @@ public class ComplaintParticipantRulesHandler implements PipelineHandler<Complai
         log.info("Complaint exiting ComplaintParticipantRulesHandler : [{}]", entity);
         if (model.getErrorsList() != null && !model.getErrorsList().isEmpty())
         {
-            throw new PipelineProcessException(new AcmAccessControlException(model.getErrorsList(), "Conflict permissions combination has occurred for the chosen participants"));
+            throw new PipelineProcessException(new AcmAccessControlException(model.getErrorsList(),
+                    "Conflict permissions combination has occurred for the chosen participants"));
         }
     }
 

@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.dashboard.service;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreferenceCreatedEvent;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreferenceDeletedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

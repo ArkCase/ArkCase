@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class ClaimTaskAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -35,8 +36,7 @@ public class ClaimTaskAPIController
     public AcmTask claimTask(
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+            HttpSession httpSession) throws AcmUserActionFailedException
     {
         log.info("User [{}] is claiming workflow task with ID [{}]", authentication.getName(), taskId);
         try
@@ -45,7 +45,8 @@ public class ClaimTaskAPIController
             AcmTask claimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, claimedTask, "claim", true);
             return getTaskDao().save(claimedTask);
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();
@@ -60,8 +61,7 @@ public class ClaimTaskAPIController
     public AcmTask unclaimTask(
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+            HttpSession httpSession) throws AcmUserActionFailedException
     {
         log.info("User [{}] is unclaiming workflow task with ID [{}]", authentication.getName(), taskId);
         try
@@ -70,7 +70,8 @@ public class ClaimTaskAPIController
             AcmTask unclaimedTask = getTaskDao().findById(taskId);
             publishTaskClaimEvent(authentication, httpSession, unclaimedTask, "unclaim", true);
             return getTaskDao().save(unclaimedTask);
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             // gen up a fake task so we can audit the failure
             AcmTask fakeTask = new AcmTask();

@@ -52,8 +52,7 @@ public class QueueCaseServiceImpl implements QueueCaseService
         ctx.setAuthentication(auth);
         ctx.setIpAddress(ipAddress);
 
-        return getQueuePipelineManager().executeOperation(caseFile, ctx, () ->
-        {
+        return getQueuePipelineManager().executeOperation(caseFile, ctx, () -> {
             CaseFile merged = getCaseFileDao().getEm().merge(caseFile);
             getCaseFileDao().getEm().persist(merged);
 
@@ -75,7 +74,8 @@ public class QueueCaseServiceImpl implements QueueCaseService
         try
         {
             caseFile = getCaseFileDao().getEm().find(CaseFile.class, caseFileId);
-        } catch (EntityNotFoundException e)
+        }
+        catch (EntityNotFoundException e)
         {
             // try and flush our SQL in case we are trying to operate on a brand new object
             getCaseFileDao().getEm().flush();

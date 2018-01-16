@@ -14,12 +14,12 @@
  *
  * The Admin.FunctionalAccessControlService provides Functional Access Control REST calls functionality
  */
-angular.module('admin').service('Admin.FunctionalAccessControlService', function ($http) {
+angular.module('admin').service('Admin.FunctionalAccessControlService', function($http) {
     return ({
-        getAppRoles: getAppRoles,
-        getUserGroups: getUserGroups,
-        getAppUserToGroups: getAppUserToGroups,
-        saveAppRolesToGroups: saveAppRolesToGroups,
+        getAppRoles : getAppRoles,
+        getUserGroups : getUserGroups,
+        getAppUserToGroups : getAppUserToGroups,
+        saveAppRolesToGroups : saveAppRolesToGroups,
     });
 
     /**
@@ -34,10 +34,11 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppRoles() {
         return $http({
-            method: 'GET',
-            url: 'api/latest/functionalaccess/roles'
+            method : 'GET',
+            url : 'api/latest/functionalaccess/roles'
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -51,10 +52,11 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getUserGroups() {
         return $http({
-            method: 'GET',
-            url: 'api/latest/users/groups/get'
+            method : 'GET',
+            url : 'api/latest/users/groups/get'
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -68,10 +70,11 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function getAppUserToGroups() {
         return $http({
-            method: 'GET',
-            url: 'api/latest/functionalaccess/rolestogroups'
+            method : 'GET',
+            url : 'api/latest/functionalaccess/rolestogroups'
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -85,12 +88,13 @@ angular.module('admin').service('Admin.FunctionalAccessControlService', function
      */
     function saveAppRolesToGroups(appRolesToGroups) {
         return $http({
-            method: 'POST',
-            url: 'api/latest/functionalaccess/rolestogroups',
-            data: appRolesToGroups,
-            headers: {
-                'Content-Type': 'application/json'
+            method : 'POST',
+            url : 'api/latest/functionalaccess/rolestogroups',
+            data : appRolesToGroups,
+            headers : {
+                'Content-Type' : 'application/json'
             }
         });
-    };
+    }
+    ;
 });
