@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Routage d'approbation non mis à jour",
     "button": {
       "save.tooltip": "Sauvegarder les modifications",
+      "initiate": "Lancer",
+      "withdraw": "Retirer",
       "initiate.tooltip": "Lancer la tâche",
       "withdraw.tooltip": "Retirer la tâche"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Cessionnaire",
-      "group": "Groupe propriétaire",
+      "owningGroup": "Groupe propriétaire",
       "subject": "Assujettir",
       "details": "Détails",
       "dueDate": "Date d'échéance",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "Nouvelle tâche future",
       "assignee": "Cessionnaire",
+      "owningGroup": "Groupe propriétaire",
       "subject.label": "Assujettir",
       "subject.placeholder": "Entrez le sujet du futur cas",
       "details.label": "Détails",

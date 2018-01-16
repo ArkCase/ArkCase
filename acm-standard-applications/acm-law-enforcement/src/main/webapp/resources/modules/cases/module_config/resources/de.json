@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Genehmigungs-Routing nicht aktualisiert",
     "button": {
       "save.tooltip": "Änderungen speichern",
+      "initiate": "Initiieren",
+      "withdraw": "Zurückziehen",
       "initiate.tooltip": "Aufgabe initiieren",
       "withdraw.tooltip": "Aufgabe zurückziehen"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Empfänger",
-      "group": "Eigentümergruppe",
+      "owningGroup": "Eigentümergruppe",
       "subject": "Gegenstand",
       "details": "Einzelheiten",
       "dueDate": "Geburtstermin",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "Neue zukünftige Aufgabe",
       "assignee": "Empfänger",
+      "owningGroup": "Eigentümergruppe",
       "subject.label": "Gegenstand",
       "subject.placeholder": "Geben Sie zukünftiges Fallthema ein",
       "details.label": "Einzelheiten",
