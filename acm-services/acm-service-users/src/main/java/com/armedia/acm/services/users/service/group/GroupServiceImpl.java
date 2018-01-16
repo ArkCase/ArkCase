@@ -67,7 +67,7 @@ public class GroupServiceImpl implements GroupService
             acmGroup.setStatus(AcmGroupStatus.ACTIVE);
             acmGroup.setDescription(group.getDescription());
             acmGroup.setSupervisor(group.getSupervisor());
-            acmGroup.setDisplayName(group.getDisplayName());
+            acmGroup.setDisplayName(groupName);
             acmGroup.setDistinguishedName(null);
             acmGroup.setDirectoryName(null);
             return groupDao.save(acmGroup);
