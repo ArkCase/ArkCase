@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "अनुमोदन रूटिंग को अद्यतन नहीं किया गया",
     "button": {
       "save.tooltip": "परिवर्तनों को सुरक्षित करें",
+      "initiate": "कार्य शुरू करे",
+      "withdraw": "वापस लेना कार्य",
       "initiate.tooltip": "कार्य शुरू करें",
       "withdraw.tooltip": "वापस लेना कार्य"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "संपत्ति-भागी",
-      "group": "मालिकाना समूह",
+      "owningGroup": "मालिकाना समूह",
       "subject": "विषय",
       "details": "विवरण",
       "dueDate": "नियत तारीख",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "नया भविष्य कार्य",
       "assignee": "संपत्ति-भागी",
+      "owningGroup": "मालिकाना समूह",
       "subject.label": "विषय",
       "subject.placeholder": "भविष्य के मामले विषय दर्ज करें",
       "details.label": "विवरण",

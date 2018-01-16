@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Маршрутизация одобрения не обновляется",
     "button": {
       "save.tooltip": "Сохранить изменения",
+      "initiate": "Запустить",
+      "withdraw": "Снять",
       "initiate.tooltip": "Запустить задачу",
       "withdraw.tooltip": "Снять задачу"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Правопреемник",
-      "group": "Собственная группа",
+      "owningGroup": "Собственная группа",
       "subject": "Предмет",
       "details": "Детали",
       "dueDate": "Срок",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "Новая задача будущего",
       "assignee": "Правопреемник",
+      "owningGroup": "Собственная группа",
       "subject.label": "Предмет",
       "subject.placeholder": "Введите тему будущего дела",
       "details.label": "Детали",
