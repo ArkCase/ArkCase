@@ -69,10 +69,9 @@ angular.module('dashboard.locations', ['adf.provider'])
 
                 $scope.objectInfo = objectInfo;
                 if((objectInfo.objectType != ObjectService.ObjectTypes.PERSON && objectInfo.objectType != ObjectService.ObjectTypes.ORGANIZATION) && objectInfo.container.containerObjectType == ObjectService.ObjectTypes.COMPLAINT) {
-                    var location = Util.goodMapValue($scope.objectInfo, "location", null);
-                    if(location != null){
-                        var locationArrayTransformer = [location];
-                        gridHelper.setWidgetsGridData(locationArrayTransformer);
+                    var location = $scope.objectInfo.addresses;
+                    if(!Util.isEmpty(location)){
+                        gridHelper.setWidgetsGridData(location);
                     }
                 }
                 else {

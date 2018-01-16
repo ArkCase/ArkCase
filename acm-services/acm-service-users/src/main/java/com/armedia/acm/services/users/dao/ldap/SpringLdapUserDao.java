@@ -59,28 +59,15 @@ public class SpringLdapUserDao
         {
             // Return the first entity that will be found. The above search can return multiple results under one domain if
             // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
-            LdapUser ldapUser = results.get(0);
-            ldapUser = appendDomainNameIfSet(ldapUser, config);
-            return ldapUser;
+            return results.get(0);
         }
 
         throw new UsernameNotFoundException("User with id [" + username + "] cannot be found");
     }
 
-    private LdapUser appendDomainNameIfSet(LdapUser ldapUser, AcmLdapSyncConfig config)
-    {
-        // append user domain name if set. Used in Single Sign-On scenario.
-        String userDomainSuffix = (StringUtils.isBlank(config.getUserDomain()) ? "" : "@" + config.getUserDomain());
-        log.debug("Adding user domain suffix to the username: [{}]", userDomainSuffix);
-        ldapUser.setUserId(ldapUser.getUserId() + userDomainSuffix);
-        return ldapUser;
-    }
-
     public LdapUser findUserByLookup(String dn, LdapTemplate template, AcmLdapSyncConfig config)
     {
-        LdapUser user = lookupUser(dn, template, config);
-        user = appendDomainNameIfSet(user, config);
-        return user;
+        return lookupUser(dn, template, config);
     }
 
     public LdapUser lookupUser(String dn, LdapTemplate template, AcmLdapSyncConfig config)
