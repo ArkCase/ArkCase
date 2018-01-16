@@ -27,7 +27,7 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
     public static final String substitutionSuffix = "}";
 
     /**
-     * Generate the Word document via direct manipulation of Word paragraph texts.  This works seamlessly (user sees
+     * Generate the Word document via direct manipulation of Word paragraph texts. This works seamlessly (user sees
      * no prompt to update document fields) but loses all formatting in paragraphs with substitution variables.
      */
     @Override
@@ -63,12 +63,11 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
             }
         }
 
-
     }
 
     private List<XWPFParagraph> updateGraphs(List<XWPFParagraph> graphs, Map<String, String> substitutions)
     {
-        for ( XWPFParagraph graph : graphs )
+        for (XWPFParagraph graph : graphs)
         {
             String graphText = graph.getText();
             String newText = graphText;
@@ -91,13 +90,13 @@ public class ParagraphRunPoiWordGenerator implements PoiWordGenerator
 
                 if (replaced)
                 {
-                    // the paragraph is made up of runs.  The text to be replaced may be split across contiguous runs.
-                    // So we need to remove all the runs, then add one new run with the replacement text.  This will
+                    // the paragraph is made up of runs. The text to be replaced may be split across contiguous runs.
+                    // So we need to remove all the runs, then add one new run with the replacement text. This will
                     // lose formatting.
                     int origCount = graph.getRuns().size();
                     for (int a = 0; a < origCount; a++)
                     {
-                        // each time we remove a run, the graph is updated, and now has one less run.  So we remove the
+                        // each time we remove a run, the graph is updated, and now has one less run. So we remove the
                         // run at index 0 until they are all gone.
                         graph.removeRun(0);
                     }

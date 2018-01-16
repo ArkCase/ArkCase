@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
+
 import org.springframework.context.ApplicationListener;
 
 public class ReferenceEventListener implements ApplicationListener<ObjectAssociationEvent>
@@ -33,16 +34,19 @@ public class ReferenceEventListener implements ApplicationListener<ObjectAssocia
     {
         switch (objectAssociationEvent.getObjectAssociationState())
         {
-            case NEW:
-                getObjectAssociationEventPublisher().publishAddReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
-                break;
-            case UPDATE:
-                getObjectAssociationEventPublisher().publishUpdateReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
-                break;
+        case NEW:
+            getObjectAssociationEventPublisher().publishAddReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(),
+                    true);
+            break;
+        case UPDATE:
+            getObjectAssociationEventPublisher().publishUpdateReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(),
+                    true);
+            break;
 
-            case DELETE:
-                getObjectAssociationEventPublisher().publishDeleteReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(), true);
-                break;
+        case DELETE:
+            getObjectAssociationEventPublisher().publishDeleteReferenceEvent(objectAssociation, objectAssociationEvent.getAuthentication(),
+                    true);
+            break;
         }
     }
 

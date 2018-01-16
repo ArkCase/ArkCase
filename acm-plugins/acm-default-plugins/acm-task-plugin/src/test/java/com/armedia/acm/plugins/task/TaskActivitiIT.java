@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.task;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -23,10 +27,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-task-activiti-test.xml" } )
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-task-activiti-test.xml" })
 public class TaskActivitiIT
 {
     public static final int ACTIVITI_DEFAULT_PRIORITY = 50;
@@ -53,7 +55,7 @@ public class TaskActivitiIT
 
         // deploy
         repo.createDeployment()
-                    .addClasspathResource("activiti/TestTaskProcess.bpmn20.xml")
+                .addClasspathResource("activiti/TestTaskProcess.bpmn20.xml")
                 .deploy();
 
     }
@@ -90,7 +92,6 @@ public class TaskActivitiIT
         assertEquals(task.getId(), hti.getId());
     }
 
-
     @Test
     public void findTasks() throws Exception
     {
@@ -106,18 +107,11 @@ public class TaskActivitiIT
         verifyUserTask(user);
         verifyUserTask(user2);
 
-
     }
 
     protected void verifyUserTask(String user)
     {
-        List<Task> userTasks = ts.
-                createTaskQuery().
-                taskAssignee(user).
-                includeProcessVariables().
-                orderByDueDate().
-                desc().
-                list();
+        List<Task> userTasks = ts.createTaskQuery().taskAssignee(user).includeProcessVariables().orderByDueDate().desc().list();
 
         assertEquals(1, userTasks.size());
 
@@ -126,17 +120,15 @@ public class TaskActivitiIT
         assertEquals(ACTIVITI_DEFAULT_PRIORITY, first.getPriority());
 
         String pid = first.getProcessDefinitionId();
-        if ( pid != null )
+        if (pid != null)
         {
             ProcessDefinition pd = repo.createProcessDefinitionQuery().processDefinitionId(pid).singleResult();
             log.info("process name: " + pd.getName());
             log.info("process id: " + pd.getId());
         }
 
-
         log.info("Task due date: " + first.getDueDate());
         log.info("Priority: " + first.getPriority());
-
 
     }
 }

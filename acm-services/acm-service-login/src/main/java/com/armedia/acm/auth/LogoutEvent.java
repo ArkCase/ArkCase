@@ -1,6 +1,5 @@
 package com.armedia.acm.auth;
 
-
 import org.springframework.security.core.Authentication;
 
 public class LogoutEvent extends AcmAbstractAuthenticationEvent

@@ -18,7 +18,6 @@ public class OutlookRecreatableCalendarServiceImpl implements OutlookRecreateabl
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.service.outlook.service.OutlookRecreateableCalendarService#clearFolderRecreatedFlag(java.lang.
      * String, java.lang.Long)

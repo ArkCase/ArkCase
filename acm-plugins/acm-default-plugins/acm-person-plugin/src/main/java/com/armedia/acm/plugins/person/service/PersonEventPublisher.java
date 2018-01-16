@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.person.model.PersonPersistenceEvent;
 import com.armedia.acm.plugins.person.model.PersonUpdatedImageEvent;
 import com.armedia.acm.plugins.person.model.PersonViewedEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -49,7 +50,8 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
         if (newPerson)
         {
             personPersistenceEvent.setEventAction("created");
-        } else
+        }
+        else
         {
             AcmDiff acmDiff = acmDiffService.compareObjects(oldPerson, updatedPerson);
             if (acmDiff != null)
@@ -57,7 +59,8 @@ public class PersonEventPublisher implements ApplicationEventPublisherAware
                 try
                 {
                     personPersistenceEvent.setDiffDetailsAsJson(acmDiff.getChangesAsListJson());
-                } catch (JsonProcessingException e)
+                }
+                catch (JsonProcessingException e)
                 {
                     log.warn("can't process diff details for [{}].", updatedPerson, e);
                 }

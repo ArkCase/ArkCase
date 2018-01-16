@@ -1,11 +1,11 @@
 package com.armedia.acm.services.users.model.ldap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Test;
 import org.springframework.ldap.core.DirContextAdapter;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 public class AcmUserContextMapperTest extends EasyMockSupport
 {

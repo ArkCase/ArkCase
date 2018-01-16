@@ -1,11 +1,10 @@
 package com.armedia.acm.services.notification.model;
 
-import java.util.Map;
-
-import com.armedia.acm.services.notification.service.Executor;
 import com.armedia.acm.services.notification.service.CustomTitleFormatter;
+import com.armedia.acm.services.notification.service.Executor;
 import com.armedia.acm.services.notification.service.UsersNotified;
 
+import java.util.Map;
 
 public interface NotificationRule
 {

@@ -1,8 +1,13 @@
 package com.armedia.acm.activiti.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.activiti.exceptions.AcmBpmnException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
+
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -29,8 +34,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:spring/spring-library-test-activiti-process-definition-service.xml")
@@ -102,6 +105,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         capture = new Capture<>();
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
+            @Override
             public AcmProcessDefinition answer() throws Throwable
             {
                 capture.getValue().setId(1l);
@@ -124,12 +128,12 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
-        //check if file is deleted from temp folder
+        // check if file is deleted from temp folder
         assertTrue(f.exists());
-        //check if file is copied to new location
+        // check if file is copied to new location
         assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-        //cleanup
+        // cleanup
         processDefinitionManagementService.remove(pd, true);
     }
 
@@ -150,10 +154,12 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         fromDBExisting.setVersion(1);
         fromDBExisting.setMd5Hash("ecf918b65e9ad2b6aaf51166aa3cac9a");
         fromDBExisting.setKey("TestActivitiSpringProcessUnitTest");
-        EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileNotChangedMD5Sum)).andReturn(fromDBExisting);
+        EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileNotChangedMD5Sum))
+                .andReturn(fromDBExisting);
         capture = new Capture<>();
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
+            @Override
             public AcmProcessDefinition answer() throws Throwable
             {
                 capture.getValue().setId(1l);
@@ -176,7 +182,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
-
         AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
@@ -188,14 +193,12 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(1, pd1.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd1.getKey());
 
-
-        //check if file is deleted from temp folder
+        // check if file is deleted from temp folder
         assertTrue(f.exists());
-        //check if file is copied to new location
+        // check if file is copied to new location
         assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-
-        //cleanup
+        // cleanup
         processDefinitionManagementService.remove(pd, true);
     }
 
@@ -211,6 +214,7 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         EasyMock.expect(acmBpmnDao.getByKeyAndDigest("TestActivitiSpringProcessUnitTest", resourceFileChangedMD5Sum)).andReturn(null);
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
+            @Override
             public AcmProcessDefinition answer() throws Throwable
             {
                 capture.getValue().setId(1l);
@@ -219,13 +223,13 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         });
         EasyMock.expect(acmBpmnDao.save(EasyMock.capture(capture))).andAnswer(new IAnswer<AcmProcessDefinition>()
         {
+            @Override
             public AcmProcessDefinition answer() throws Throwable
             {
                 capture.getValue().setId(2l);
                 return capture.getValue();
             }
         });
-
 
         acmBpmnDao.remove(EasyMock.anyObject());
         EasyMock.expectLastCall().times(2);
@@ -242,7 +246,6 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(1, pd.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd.getKey());
 
-
         AcmProcessDefinition pd1 = processDefinitionManagementService.deploy(f1, "", false, false);
         filesToDelete.add(pd1.getFileName());
         assertNotNull(pd1);
@@ -254,14 +257,12 @@ public class AcmBpmnServiceTest extends EasyMockSupport
         assertEquals(2, pd1.getVersion());
         assertEquals("TestActivitiSpringProcessUnitTest", pd1.getKey());
 
-
-        //check if file is deleted from temp folder
+        // check if file is deleted from temp folder
         assertTrue(f.exists());
-        //check if file is copied to new location
+        // check if file is copied to new location
         assertTrue(new File(processDefinitionsFolder + "/" + pd.getFileName()).exists());
 
-
-        //cleanup
+        // cleanup
         processDefinitionManagementService.remove(pd, true);
         processDefinitionManagementService.remove(pd1, true);
     }
@@ -285,10 +286,10 @@ public class AcmBpmnServiceTest extends EasyMockSupport
     @After
     public void cleanUp()
     {
-        //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
+        // in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
         String userHome = System.getProperty("user.home");
         String processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
-        //delete created files
+        // delete created files
         for (String file : filesToDelete)
         {
             File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
@@ -306,7 +307,8 @@ public class AcmBpmnServiceTest extends EasyMockSupport
             String md5Hex = DigestUtils.md5Hex(stream);
             closeStream(stream);
             return md5Hex;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmBpmnException("Error performing file digest!", e);
         }
@@ -319,7 +321,8 @@ public class AcmBpmnServiceTest extends EasyMockSupport
             try
             {
                 stream.close();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
 
             }

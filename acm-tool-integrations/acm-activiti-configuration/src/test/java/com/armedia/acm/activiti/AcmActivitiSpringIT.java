@@ -1,5 +1,8 @@
 package com.armedia.acm.activiti;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -17,8 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-activiti-configuration.xml",
@@ -30,7 +31,6 @@ import static org.junit.Assert.*;
 })
 public class AcmActivitiSpringIT
 {
-
 
     @Autowired
     private TaskService taskService;

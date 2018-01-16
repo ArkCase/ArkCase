@@ -1,172 +1,187 @@
 'use strict';
 
-angular.module('people').controller('People.EmailsController', ['$scope', '$q', '$stateParams', '$translate', '$modal'
-    , 'UtilService', 'ObjectService', 'Person.InfoService', 'Authentication'
-    , 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'PermissionsService', 'Object.LookupService', 'Object.ModelService'
-    , function ($scope, $q, $stateParams, $translate, $modal
-        , Util, ObjectService, PersonInfoService, Authentication
-        , HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
+angular.module('people').controller(
+        'People.EmailsController',
+        [
+                '$scope',
+                '$q',
+                '$stateParams',
+                '$translate',
+                '$modal',
+                'UtilService',
+                'ObjectService',
+                'Person.InfoService',
+                'Authentication',
+                'Helper.UiGridService',
+                'Helper.ObjectBrowserService',
+                'PermissionsService',
+                'Object.LookupService',
+                'Object.ModelService',
+                function($scope, $q, $stateParams, $translate, $modal, Util, ObjectService, PersonInfoService, Authentication,
+                        HelperUiGridService, HelperObjectBrowserService, PermissionsService, ObjectLookupService, ObjectModelService) {
 
+                    Authentication.queryUserInfo().then(function(userInfo) {
+                        $scope.userId = userInfo.userId;
+                        return userInfo;
+                    });
 
-        Authentication.queryUserInfo().then(
-            function (userInfo) {
-                $scope.userId = userInfo.userId;
-                return userInfo;
-            }
-        );
+                    var componentHelper = new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : "people",
+                        componentId : "emails",
+                        retrieveObjectInfo : PersonInfoService.getPersonInfo,
+                        validateObjectInfo : PersonInfoService.validatePersonInfo,
+                        onConfigRetrieved : function(componentConfig) {
+                            return onConfigRetrieved(componentConfig);
+                        },
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        }
+                    });
 
-        var componentHelper = new HelperObjectBrowserService.Component({
-            scope: $scope
-            , stateParams: $stateParams
-            , moduleId: "people"
-            , componentId: "emails"
-            , retrieveObjectInfo: PersonInfoService.getPersonInfo
-            , validateObjectInfo: PersonInfoService.validatePersonInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
-        });
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope : $scope
+                    });
 
-        var gridHelper = new HelperUiGridService.Grid({scope: $scope});
+                    var promiseUsers = gridHelper.getUsers();
 
-        var promiseUsers = gridHelper.getUsers();
+                    var onConfigRetrieved = function(config) {
+                        $scope.config = config;
+                        PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {
+                            objectType : ObjectService.ObjectTypes.PERSON
+                        }).then(function(result) {
+                            if (result) {
+                                gridHelper.addButton(config, "edit");
+                                gridHelper.addButton(config, "delete", null, null, "isDefault");
+                            }
+                        });
+                        gridHelper.setColumnDefs(config);
+                        gridHelper.setBasicOptions(config);
+                        gridHelper.disableGridScrolling(config);
+                        gridHelper.setUserNameFilterToConfig(promiseUsers, config);
+                    };
 
-        var onConfigRetrieved = function (config) {
-            $scope.config = config;
-            PermissionsService.getActionPermission('editPerson', $scope.objectInfo, {objectType: ObjectService.ObjectTypes.PERSON}).then(function (result) {
-                if (result) {
-                    gridHelper.addButton(config, "edit");
-                    gridHelper.addButton(config, "delete", null, null, "isDefault");
-                }
-            });
-            gridHelper.setColumnDefs(config);
-            gridHelper.setBasicOptions(config);
-            gridHelper.disableGridScrolling(config);
-            gridHelper.setUserNameFilterToConfig(promiseUsers, config);
-        };
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.objectInfo = objectInfo;
+                        var emails = _.filter($scope.objectInfo.contactMethods, {
+                            type : 'email'
+                        });
+                        $scope.gridOptions.data = emails;
+                    };
 
-        var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.objectInfo = objectInfo;
-            var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
-            $scope.gridOptions.data = emails;
-        };
+                    ObjectLookupService.getSubContactMethodType('email').then(function(contactMethodTypes) {
+                        $scope.emailTypes = contactMethodTypes;
+                        return contactMethodTypes;
+                    });
 
-        ObjectLookupService.getSubContactMethodType('email').then(
-            function (contactMethodTypes) {
-                $scope.emailTypes = contactMethodTypes;
-                return contactMethodTypes;
-            });
+                    $scope.addNew = function() {
+                        var email = {};
+                        email.created = Util.dateToIsoString(new Date());
+                        email.creator = $scope.userId;
+                        email.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
 
-        $scope.addNew = function () {
-            var email = {};
-            email.created = Util.dateToIsoString(new Date());
-            email.creator = $scope.userId;
-            email.className = "com.armedia.acm.plugins.addressable.model.ContactMethod";
+                        //put contactMethod to scope, we will need it when we return from popup
+                        $scope.email = email;
+                        var item = {
+                            id : '',
+                            parentId : $scope.objectInfo.id,
+                            type : 'email',
+                            subType : '',
+                            value : '',
+                            description : ''
+                        };
+                        showModal(item, false);
+                    };
 
-            //put contactMethod to scope, we will need it when we return from popup
-            $scope.email = email;
-            var item = {
-                id: '',
-                parentId: $scope.objectInfo.id,
-                type: 'email',
-                subType: '',
-                value: '',
-                description: ''
-            };
-            showModal(item, false);
-        };
+                    $scope.editRow = function(rowEntity) {
+                        $scope.email = rowEntity;
+                        var item = {
+                            id : rowEntity.id,
+                            type : rowEntity.type,
+                            subType : rowEntity.subType,
+                            subLookup : rowEntity.subType,
+                            value : rowEntity.value,
+                            description : rowEntity.description
+                        };
+                        showModal(item, true);
+                    };
 
-        $scope.editRow = function (rowEntity) {
-            $scope.email = rowEntity;
-            var item = {
-                id: rowEntity.id,
-                type: rowEntity.type,
-                subType: rowEntity.subType,
-                subLookup: rowEntity.subType,
-                value: rowEntity.value,
-                description: rowEntity.description
-            };
-            showModal(item, true);
-        };
+                    $scope.deleteRow = function(rowEntity) {
+                        var id = Util.goodMapValue(rowEntity, "id", 0);
+                        if (0 < id) { //do not need to call service when deleting a new row with id==0
+                            $scope.objectInfo.contactMethods = _.remove($scope.objectInfo.contactMethods, function(item) {
+                                return item.id != id;
+                            });
+                            saveObjectInfoAndRefresh()
+                        }
+                    };
 
-        $scope.deleteRow = function (rowEntity) {
-            var id = Util.goodMapValue(rowEntity, "id", 0);
-            if (0 < id) {    //do not need to call service when deleting a new row with id==0
-                $scope.objectInfo.contactMethods = _.remove($scope.objectInfo.contactMethods, function (item) {
-                    return item.id != id;
-                });
-                saveObjectInfoAndRefresh()
-            }
-        };
+                    function showModal(email, isEdit) {
+                        var params = {};
+                        params.email = email || {};
+                        params.isEdit = isEdit || false;
+                        params.isDefault = $scope.isDefault(email);
 
-        function showModal(email, isEdit) {
-            var params = {};
-            params.email = email || {};
-            params.isEdit = isEdit || false;
-            params.isDefault = $scope.isDefault(email);
+                        var modalInstance = $modal.open({
+                            animation : true,
+                            templateUrl : 'modules/people/views/components/person-emails-modal.client.view.html',
+                            controller : 'People.EmailsModalController',
+                            size : 'md',
+                            backdrop : 'static',
+                            resolve : {
+                                params : function() {
+                                    return params;
+                                }
+                            }
+                        });
 
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/people/views/components/person-emails-modal.client.view.html',
-                controller: 'People.EmailsModalController',
-                size: 'md',
-                backdrop: 'static',
-                resolve: {
-                    params: function () {
-                        return params;
+                        modalInstance.result.then(function(data) {
+                            var email;
+                            if (!data.isEdit)
+                                email = $scope.email;
+                            else {
+                                email = _.find($scope.objectInfo.contactMethods, {
+                                    id : data.email.id
+                                });
+                            }
+                            email.type = 'email';
+                            email.subType = data.email.subLookup;
+                            email.value = data.email.value;
+                            email.description = data.email.description;
+
+                            if (!data.isEdit) {
+                                $scope.objectInfo.contactMethods.push(email);
+                            }
+
+                            var emails = _.filter($scope.objectInfo.contactMethods, {
+                                type : 'email'
+                            });
+                            if (data.isDefault || emails.length == 1) {
+                                $scope.objectInfo.defaultEmail = email;
+                            }
+
+                            saveObjectInfoAndRefresh();
+                        });
                     }
-                }
-            });
 
-            modalInstance.result.then(function (data) {
-                var email;
-                if (!data.isEdit)
-                    email = $scope.email;
-                else {
-                    email = _.find($scope.objectInfo.contactMethods, {id: data.email.id});
-                }
-                email.type = 'email';
-                email.subType = data.email.subLookup;
-                email.value = data.email.value;
-                email.description = data.email.description;
-
-                if (!data.isEdit) {
-                    $scope.objectInfo.contactMethods.push(email);
-                }
-
-                var emails = _.filter($scope.objectInfo.contactMethods, {type: 'email'});
-                if (data.isDefault || emails.length == 1) {
-                    $scope.objectInfo.defaultEmail = email;
-                }
-
-                saveObjectInfoAndRefresh();
-            });
-        }
-
-        function saveObjectInfoAndRefresh() {
-            var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
-            if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
-                var objectInfo = Util.omitNg($scope.objectInfo);
-                promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
-                promiseSaveInfo.then(
-                    function (objectInfo) {
-                        $scope.$emit("report-object-updated", objectInfo);
-                        return objectInfo;
+                    function saveObjectInfoAndRefresh() {
+                        var promiseSaveInfo = Util.errorPromise($translate.instant("common.service.error.invalidData"));
+                        if (PersonInfoService.validatePersonInfo($scope.objectInfo)) {
+                            var objectInfo = Util.omitNg($scope.objectInfo);
+                            promiseSaveInfo = PersonInfoService.savePersonInfo(objectInfo);
+                            promiseSaveInfo.then(function(objectInfo) {
+                                $scope.$emit("report-object-updated", objectInfo);
+                                return objectInfo;
+                            }, function(error) {
+                                $scope.$emit("report-object-update-failed", error);
+                                return error;
+                            });
+                        }
+                        return promiseSaveInfo;
                     }
-                    , function (error) {
-                        $scope.$emit("report-object-update-failed", error);
-                        return error;
-                    }
-                );
-            }
-            return promiseSaveInfo;
-        }
 
-        $scope.isDefault = function (data) {
-            return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultEmail");
-        };
-    }
-]);
+                    $scope.isDefault = function(data) {
+                        return ObjectModelService.isObjectReferenceSame($scope.objectInfo, data, "defaultEmail");
+                    };
+                } ]);

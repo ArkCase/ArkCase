@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.auth.AcmGrantedAuthority;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -21,6 +25,7 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,54 +50,51 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 
-@ContextConfiguration(name = "spring",
-        locations = {
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-audit-service.xml",
-                "/spring/spring-library-authentication-token.xml",
-                "/spring/spring-library-business-process.xml",
-                "/spring/spring-library-calendar-config-service.xml",
-                "/spring/spring-library-calendar-integration-exchange-service.xml",
-                "/spring/spring-library-case-file-dao.xml",
-                "/spring/spring-library-case-file-rules.xml",
-                "/spring/spring-library-case-file-save.xml",
-                "/spring/spring-library-case-file-split-merge.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-drools-rule-monitor.xml",
-                "/spring/spring-library-ecm-file.xml",
-                "/spring/spring-library-ecm-tika.xml",
-                "/spring/spring-library-email.xml",
-                "/spring/spring-library-email-smtp.xml",
-                "/spring/spring-library-event.xml",
-                "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-merge-case-test-IT.xml",
-                "/spring/spring-library-ms-outlook-integration.xml",
-                "/spring/spring-library-ms-outlook-plugin.xml",
-                "/spring/spring-library-note.xml",
-                "/spring/spring-library-notification.xml",
-                "/spring/spring-library-object-association-plugin.xml",
-                "/spring/spring-library-object-diff.xml",
-                "/spring/spring-library-object-history.xml",
-                "/spring/spring-library-object-lock.xml",
-                "/spring/spring-library-organization-rules.xml",
-                "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-person.xml",
-                "/spring/spring-library-profile.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-service-data.xml",
-                "/spring/spring-library-task.xml",
-                "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-person-rules.xml",
-                "/spring/spring-library-object-converter.xml"
-        })
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-audit-service.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-business-process.xml",
+        "/spring/spring-library-calendar-config-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-library-case-file-dao.xml",
+        "/spring/spring-library-case-file-rules.xml",
+        "/spring/spring-library-case-file-save.xml",
+        "/spring/spring-library-case-file-split-merge.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-email.xml",
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-event.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-merge-case-test-IT.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ms-outlook-plugin.xml",
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-notification.xml",
+        "/spring/spring-library-object-association-plugin.xml",
+        "/spring/spring-library-object-diff.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-object-converter.xml"
+})
 @TransactionConfiguration(defaultRollback = true)
 public class SplitCaseFileServiceIT extends EasyMock
 {
@@ -133,7 +135,8 @@ public class SplitCaseFileServiceIT extends EasyMock
 
     @Test
     @Transactional
-    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException, IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
+    public void splitCaseTest() throws MergeCaseFilesException, MuleException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+            IOException, SplitCaseFileException, AcmFolderException, AcmObjectNotFoundException, PipelineProcessException
     {
         auditAdapter.setUserId("auditUser");
         String roleAdd = "ROLE_ADMINISTRATOR";
@@ -142,7 +145,6 @@ public class SplitCaseFileServiceIT extends EasyMock
         auth = new UsernamePasswordAuthenticationToken("ann-acm", "AcMd3v$", Arrays.asList(authority));
 
         ipAddress = "127.0.0.1";
-
 
         Resource dammyDocument = new ClassPathResource("/documents/textDammydocument.txt");
         Resource dammyDocument1 = new ClassPathResource("/documents/textDammydocument1.txt");
@@ -156,7 +158,7 @@ public class SplitCaseFileServiceIT extends EasyMock
         assertNotNull(acmFolderService);
         assertNotNull(splitCaseService);
 
-        //create source case file
+        // create source case file
         CaseFile sourceCaseFile = new CaseFile();
         sourceCaseFile.setCaseType("caseType");
         sourceCaseFile.setTitle("title");
@@ -164,12 +166,10 @@ public class SplitCaseFileServiceIT extends EasyMock
         CaseFile sourceSaved = saveCaseService.saveCase(sourceCaseFile, auth, ipAddress);
         sourceId = sourceSaved.getId();
 
-
-        //verify that case files are saved
+        // verify that case files are saved
         assertNotNull(sourceId);
 
-
-        //upload in root folder
+        // upload in root folder
         ecmFileService.upload("dammyDocument1.txt",
                 "attachment",
                 "Document",
@@ -181,10 +181,10 @@ public class SplitCaseFileServiceIT extends EasyMock
                 sourceSaved.getContainer().getContainerObjectType(),
                 sourceSaved.getContainer().getContainerObjectId());
 
-        //create folder and add folder to this folder
+        // create folder and add folder to this folder
         AcmFolder folderInSourceCase = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder(), "Folder");
 
-        //create folder and add document to this folder
+        // create folder and add document to this folder
         AcmFolder folderInSourceCase1 = acmFolderService.addNewFolder(folderInSourceCase, "Folder1");
 
         EcmFile file = ecmFileService.upload("dammyDocument.txt",
@@ -209,8 +209,7 @@ public class SplitCaseFileServiceIT extends EasyMock
                 sourceSaved.getContainer().getContainerObjectType(),
                 sourceSaved.getContainer().getContainerObjectId());
 
-
-        //create folder and add document to this folder
+        // create folder and add document to this folder
         AcmFolder folderInSourceCase2 = acmFolderService.addNewFolder(sourceSaved.getContainer().getFolder(), "Folder2");
 
         EcmFile file2 = ecmFileService.upload("dammyDocument2.txt",
@@ -224,8 +223,7 @@ public class SplitCaseFileServiceIT extends EasyMock
                 sourceSaved.getContainer().getContainerObjectType(),
                 sourceSaved.getContainer().getContainerObjectId());
 
-
-        //set split options
+        // set split options
         SplitCaseOptions splitCaseOptions = new SplitCaseOptions();
         splitCaseOptions.setCaseFileId(sourceId);
         List<SplitCaseOptions.AttachmentDTO> attachments = new ArrayList<>();

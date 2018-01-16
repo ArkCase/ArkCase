@@ -2,12 +2,19 @@ package com.armedia.acm.calendar.web.api;
 
 import static com.armedia.acm.calendar.DateTimeAdjuster.adjustDateTimeString;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-
-import javax.servlet.http.HttpSession;
+import com.armedia.acm.calendar.config.service.CalendarAdminService;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
+import com.armedia.acm.calendar.service.AcmCalendar;
+import com.armedia.acm.calendar.service.AcmCalendarEvent;
+import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
+import com.armedia.acm.calendar.service.AcmCalendarInfo;
+import com.armedia.acm.calendar.service.AcmEventAttachmentDTO;
+import com.armedia.acm.calendar.service.CalendarExceptionMapper;
+import com.armedia.acm.calendar.service.CalendarService;
+import com.armedia.acm.calendar.service.CalendarServiceConfigurationException;
+import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
@@ -24,26 +31,19 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.calendar.config.service.CalendarAdminService;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration;
-import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
-import com.armedia.acm.calendar.service.AcmCalendar;
-import com.armedia.acm.calendar.service.AcmCalendarEvent;
-import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
-import com.armedia.acm.calendar.service.AcmCalendarInfo;
-import com.armedia.acm.calendar.service.AcmEventAttachmentDTO;
-import com.armedia.acm.calendar.service.CalendarExceptionMapper;
-import com.armedia.acm.calendar.service.CalendarService;
-import com.armedia.acm.calendar.service.CalendarServiceConfigurationException;
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.services.users.model.AcmUser;
+import javax.servlet.http.HttpSession;
+
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
  *
  */
 @Controller
-@RequestMapping({"/api/v1/service/calendar", "/api/latest/service/calendar"})
+@RequestMapping({ "/api/v1/service/calendar", "/api/latest/service/calendar" })
 public class AcmCalendarAPIController
 {
 
@@ -156,7 +156,7 @@ public class AcmCalendarAPIController
         return response;
     }
 
-    @RequestMapping(method = RequestMethod.POST, consumes = {"multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE})
+    @RequestMapping(method = RequestMethod.POST, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> addCalendarEvent(HttpSession session, Authentication auth, @RequestPart("data") AcmCalendarEvent calendarEvent,
             @RequestPart(value = "file", required = false) MultipartFile[] attachments) throws CalendarServiceException
     {
@@ -165,7 +165,7 @@ public class AcmCalendarAPIController
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, consumes = {"multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE})
+    @RequestMapping(method = RequestMethod.PUT, consumes = { "multipart/mixed", MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<?> updateCalendarEvent(HttpSession session, Authentication auth,
             @RequestParam(value = "updateMaster", required = false, defaultValue = "false") boolean updateMaster,
             @RequestPart("data") AcmCalendarEvent calendarEvent, @RequestPart(value = "file", required = false) MultipartFile[] attachments)

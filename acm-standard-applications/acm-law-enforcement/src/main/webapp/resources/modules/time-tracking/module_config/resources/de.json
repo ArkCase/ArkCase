@@ -1,98 +1,98 @@
 {
-  "timeTracking": {
-    "title": "Zeiterfassung",
-    "progressNoTimesheet": "[Keine Arbeitszeittabelle ausgewählt]",
-    "progressLoading": "Arbeitszeitblatt wird geladen",
-    "progressError": "Fehler beim Laden der Arbeitszeittabelle"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "Zeiterfassung",
-    "topbar.item": "Arbeitszeittabelle"
-  },
-  "timeTracking.comp.main": {
-    "title": "Überblick"
-  },
-  "timeTracking.comp.info": {
-    "title": "Info",
-    "lastModified.label": "Zuletzt bearbeitet"
-  },
-  "timeTracking.comp.actions": {
-    "title": "Aktionen",
-    "new.button": "Neue Arbeitszeittabelle",
-    "edit.button": "Arbeitszeittabelle bearbeiten"
-  },
-  "timeTracking.comp.details": {
-    "title": "Einzelheiten",
-    "informSaved": "Arbeitszeittabellen-Details gespeichert",
-    "table.columns": {
-      "title": "Einzelheiten",
-      "modified": "Datum der letzten Änderung",
-      "modifier": "Benutzer zuletzt geändert"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "Menschen",
-    "table.columns": {
-      "fullName": "Vollständiger Name",
-      "userId": "Nutzername"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "Stunde Zusammenfassung",
-    "table.columns": {
-      "code": "Eltern ID",
-      "type": "Übergeordneter Typ",
-      "value": "Gesamtstunden",
-      "date": "Datum aufgeladen",
-      "modified": "Änderungsdatum"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "Etiketten",
-    "table.columns": {
-      "tag": "Etikett",
-      "created": "Erstellt",
-      "createdBy": "Erstellt von"
+    "timeTracking": {
+        "title": "Zeiterfassung",
+        "progressNoTimesheet": "[Keine Arbeitszeittabelle ausgewählt]",
+        "progressLoading": "Arbeitszeitblatt wird geladen",
+        "progressError": "Fehler beim Laden der Arbeitszeittabelle"
     },
-    "modal": {
-      "title": "Etikett",
-      "search": "Suche nach Tag",
-      "buttons": {
-        "cancel": "Stornieren",
-        "ok": "Tag hinzufügen"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "Zeiterfassung",
+        "topbar.item": "Arbeitszeittabelle"
     },
-    "message": {
-      "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
-      "tagAssociated": "Bereits verbunden",
-      "delete": {
-        "success": "Markierung erfolgreich gelöscht",
-        "error": "Fehler beim Löschen des Tags"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "Genehmiger",
-    "table.columns": {
-      "fullName": "Vollständiger Name",
-      "userId": "Nutzername"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Einzelheiten",
-      "person.label": "Menschen",
-      "summary.label": "Stunde Zusammenfassung",
-      "tags.label": "Etiketten",
-      "approvers.label": "Genehmiger"
+    "timeTracking.comp.main": {
+        "title": "Überblick"
     },
-    "sorters": {
-      "dateAsc": "Sortieren Datum Auf",
-      "dateDesc": "Sortieren Datum Dec",
-      "idAsc": "Sortieren Zeiterzeugung-ID Auf",
-      "idDesc": "Sortieren Zeiterzeugung-ID Dec",
-      "nameDesc": "Nach Name sortieren",
-      "noSort": "(Keine Sortierung)"
+    "timeTracking.comp.info": {
+        "title": "Info",
+        "lastModified.label": "Zuletzt bearbeitet"
+    },
+    "timeTracking.comp.actions": {
+        "title": "Aktionen",
+        "new.button": "Neue Arbeitszeittabelle",
+        "edit.button": "Arbeitszeittabelle bearbeiten"
+    },
+    "timeTracking.comp.details": {
+        "title": "Einzelheiten",
+        "informSaved": "Arbeitszeittabellen-Details gespeichert",
+        "table.columns": {
+            "title": "Einzelheiten",
+            "modified": "Datum der letzten Änderung",
+            "modifier": "Benutzer zuletzt geändert"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "Menschen",
+        "table.columns": {
+            "fullName": "Vollständiger Name",
+            "userId": "Nutzername"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "Stunde Zusammenfassung",
+        "table.columns": {
+            "code": "Eltern ID",
+            "type": "Übergeordneter Typ",
+            "value": "Gesamtstunden",
+            "date": "Datum aufgeladen",
+            "modified": "Änderungsdatum"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "Etiketten",
+        "table.columns": {
+            "tag": "Etikett",
+            "created": "Erstellt",
+            "createdBy": "Erstellt von"
+        },
+        "modal": {
+            "title": "Etikett",
+            "search": "Suche nach Tag",
+            "buttons": {
+                "cancel": "Stornieren",
+                "ok": "Tag hinzufügen"
+            }
+        },
+        "message": {
+            "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+            "tagAssociated": "Bereits verbunden",
+            "delete": {
+                "success": "Markierung erfolgreich gelöscht",
+                "error": "Fehler beim Löschen des Tags"
+            }
+        }
+    },
+    "timeTracking.comp.approvers": {
+        "title": "Genehmiger",
+        "table.columns": {
+            "fullName": "Vollständiger Name",
+            "userId": "Nutzername"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Einzelheiten",
+            "person.label": "Menschen",
+            "summary.label": "Stunde Zusammenfassung",
+            "tags.label": "Etiketten",
+            "approvers.label": "Genehmiger"
+        },
+        "sorters": {
+            "dateAsc": "Sortieren Datum Auf",
+            "dateDesc": "Sortieren Datum Dec",
+            "idAsc": "Sortieren Zeiterzeugung-ID Auf",
+            "idDesc": "Sortieren Zeiterzeugung-ID Dec",
+            "nameDesc": "Nach Name sortieren",
+            "noSort": "(Keine Sortierung)"
+        }
     }
-  }
 }

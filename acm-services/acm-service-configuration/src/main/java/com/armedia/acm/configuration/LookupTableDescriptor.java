@@ -1,7 +1,7 @@
 package com.armedia.acm.configuration;
 
 /**
- * Allow plugins to define their own lookup tables, but still prevent SQL injection.  We don't want to just send
+ * Allow plugins to define their own lookup tables, but still prevent SQL injection. We don't want to just send
  * a raw String table name to query a lookup table. Plugin authors have to write a LookupTableDescriptor to
  * encapsulate the table name.
  */

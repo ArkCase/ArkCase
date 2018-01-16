@@ -15,13 +15,15 @@ public class JacksonDeserializationHandler extends DeserializationProblemHandler
 {
 
     @Override
-    public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser jp, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException, JsonProcessingException
+    public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser jp, JsonDeserializer<?> deserializer, Object beanOrClass,
+            String propertyName) throws IOException, JsonProcessingException
     {
-        //if @id or @ref exists that means Bean is not annotated to be processed with Jsog
+        // if @id or @ref exists that means Bean is not annotated to be processed with Jsog
         if ("@id".equals(propertyName) || "@ref".equals(propertyName))
         {
             return true;
-        } else
+        }
+        else
         {
             return super.handleUnknownProperty(ctxt, jp, deserializer, beanOrClass, propertyName);
         }

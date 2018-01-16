@@ -5,17 +5,17 @@ package com.armedia.acm.services.users.model;
  */
 public enum AcmRoleType
 {
-    LDAP_GROUP("LDAP_GROUP"),
-    APPLICATION_ROLE("APPLICATION_ROLE"),
-    ADHOC_GROUP("ADHOC_GROUP");
+    LDAP_GROUP("LDAP_GROUP"), APPLICATION_ROLE("APPLICATION_ROLE"), ADHOC_GROUP("ADHOC_GROUP");
 
     private String roleName;
 
-    AcmRoleType(String roleName) {
+    AcmRoleType(String roleName)
+    {
         this.roleName = roleName;
     }
 
-    public String getRoleName() {
+    public String getRoleName()
+    {
         return roleName;
     }
 }

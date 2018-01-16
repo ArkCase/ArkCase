@@ -1,48 +1,48 @@
 {
-  "reports": {
-    "title": "Rapports",
-    "menus": {
-      "leftnav.item": "Rapports"
+    "reports": {
+        "title": "Rapports",
+        "menus": {
+            "leftnav.item": "Rapports"
+        },
+        "selectReport": {
+            "label": "Rapport",
+            "placeholder": "Sélectionnez le rapport"
+        },
+        "selectState": {
+            "label": "Etat",
+            "placeholder": "Sélectionnez l'état"
+        },
+        "startDate": {
+            "label": "De"
+        },
+        "endDate": {
+            "label": "À"
+        },
+        "dropdown": {
+            "turnaround": "Délai d'exécution par le demandeur",
+            "requester": "Récapitulatif du type de demandeur",
+            "pending": "Rapport sur les commandes en attente",
+            "associate": "Rapport de productivité associé",
+            "origination": "Nombre d'origines",
+            "transfers": "Rapport sur les transferts",
+            "exceptions": "Rapport d'exceptions (non-conformité)"
+        },
+        "datepicker": {
+            "close": "Terminé",
+            "clear": "Clair",
+            "current": "Aujourd'hui"
+        },
+        "btn": {
+            "generateReport": "Générer un rapport"
+        },
+        "checkBox": {
+            "xmlReport": "Afficher en XML"
+        }
     },
-    "selectReport": {
-      "label": "Rapport",
-      "placeholder": "Sélectionnez le rapport"
+    "reports.comp.datepickers": {
+        "title": "Sélecteurs de date"
     },
-    "selectState": {
-      "label": "Etat",
-      "placeholder": "Sélectionnez l'état"
-    },
-    "startDate": {
-      "label": "De"
-    },
-    "endDate": {
-      "label": "À"
-    },
-    "dropdown": {
-      "turnaround": "Délai d'exécution par le demandeur",
-      "requester": "Récapitulatif du type de demandeur",
-      "pending": "Rapport sur les commandes en attente",
-      "associate": "Rapport de productivité associé",
-      "origination": "Nombre d'origines",
-      "transfers": "Rapport sur les transferts",
-      "exceptions": "Rapport d'exceptions (non-conformité)"
-    },
-    "datepicker": {
-      "close": "Terminé",
-      "clear": "Clair",
-      "current": "Aujourd'hui"
-    },
-    "btn": {
-      "generateReport": "Générer un rapport"
-    },
-    "checkBox": {
-      "xmlReport": "Afficher en XML"
+    "reports.comp.reportselection": {
+        "title": "Rapports"
     }
-  },
-  "reports.comp.datepickers": {
-    "title": "Sélecteurs de date"
-  },
-  "reports.comp.reportselection": {
-    "title": "Rapports"
-  }
 }

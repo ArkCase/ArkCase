@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="eventRaisingActivitiProcessListener" class="com.armedia.acm.activiti.AcmProcessEventHandler">
         <property name="runtimeService" ref="activitiRuntimeService"/>
@@ -15,14 +14,12 @@
     <bean id="acmActivitiListener_processStart" class="com.armedia.acm.activiti.AcmActivitiListener">
         <property name="event" value="start"/>
         <property name="implementationType" value="expression"/>
-        <property name="implementation"
-                  value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
+        <property name="implementation" value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
     </bean>
     <bean id="acmActivitiListener_processEnd" class="com.armedia.acm.activiti.AcmActivitiListener">
         <property name="event" value="end"/>
         <property name="implementationType" value="expression"/>
-        <property name="implementation"
-                  value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
+        <property name="implementation" value="eventRaisingActivitiProcessListener.handleProcessEvent(execution.eventName, execution)"/>
     </bean>
 
     <bean id="acmActivitiListener_taskCreate" class="com.armedia.acm.activiti.AcmActivitiListener">
@@ -89,8 +86,7 @@
         <property name="taskExecutor" ref="activitiTaskScheduler"/>
     </bean>
 
-    <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration"
-          depends-on="liquibase">
+    <bean id="activitiProcessEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration" depends-on="liquibase">
         <property name="dataSource" ref="acmDataSource"/>
         <property name="transactionManager" ref="transactionManager"/>
         <property name="databaseSchemaUpdate" value="true"/>
@@ -135,8 +131,7 @@
         <constructor-arg value="classpath*:/activiti/*.bpmn20.xml"/>
     </bean>
 
-    <bean id="activitiPathMatchingResolver"
-          class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
+    <bean id="activitiPathMatchingResolver" class="org.springframework.core.io.support.PathMatchingResourcePatternResolver"/>
 
     <bean id="activitiDeployer" class="com.armedia.acm.spring.SpringClasspathCopier" depends-on="bpmnFileAddedMonitor">
         <property name="resourcePattern" ref="activitiResourceExpression"/>
@@ -152,8 +147,7 @@
 
     <bean id="acmProcessDefinitionDao" class="com.armedia.acm.activiti.services.dao.AcmBpmnDao"/>
 
-    <bean id="activitiProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="activitiProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->

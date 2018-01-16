@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.admin.service;
 
-
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.model.LinkFormsWorkflowsConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.poi.ss.util.SheetUtil;
 import org.apache.poi.xssf.usermodel.XSSFCell;
@@ -45,7 +45,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
     private String configurationFileBackupTemplate;
     private String configurationFileBackupRegex;
 
-    private final String[] START_PROCESS_VALUES = new String[]{"", "true", "false"};
+    private final String[] START_PROCESS_VALUES = new String[] { "", "true", "false" };
 
     private AcmBpmnService acmBpmnService;
     private AcmFileTypesService acmFileTypesService;
@@ -58,7 +58,6 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
      */
     public JSONObject retrieveConfigurationAsJson() throws AcmLinkFormsWorkflowException
     {
-
 
         try (FileInputStream file = new FileInputStream(new File(configurationLocation + configurationFile)))
         {
@@ -153,7 +152,6 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
             metaObject.put(COL_TYPE_PROCESS_NAME, processNames);
             metaObject.put(COL_TYPE_START_PROCESS, START_PROCESS_VALUES);
 
-
             JSONObject configObject = new JSONObject();
             configObject.put(PROP_CELLS, cellsMatrix);
             configObject.put(PROP_COLUMNS_WIDTH, columnsWidths);
@@ -161,8 +159,8 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 
             return configObject;
 
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
 
             log.error("Can't retrieve Link Forms Workflows configuration file", e);
@@ -183,29 +181,29 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
 
         switch (draftColumnType)
         {
-            case COL_TYPE_RULE_NAME:
-                colType = COL_TYPE_RULE_NAME;
-                break;
+        case COL_TYPE_RULE_NAME:
+            colType = COL_TYPE_RULE_NAME;
+            break;
 
-            case COL_TYPE_FILE_TYPE:
-                colType = COL_TYPE_FILE_TYPE;
-                break;
+        case COL_TYPE_FILE_TYPE:
+            colType = COL_TYPE_FILE_TYPE;
+            break;
 
-            case COL_TYPE_START_PROCESS:
-                colType = COL_TYPE_START_PROCESS;
-                break;
+        case COL_TYPE_START_PROCESS:
+            colType = COL_TYPE_START_PROCESS;
+            break;
 
-            case COL_TYPE_PROCESS_NAME:
-                colType = COL_TYPE_PROCESS_NAME;
-                break;
+        case COL_TYPE_PROCESS_NAME:
+            colType = COL_TYPE_PROCESS_NAME;
+            break;
 
-            case COL_TYPE_PRIORITY:
-                colType = COL_TYPE_PRIORITY;
-                break;
+        case COL_TYPE_PRIORITY:
+            colType = COL_TYPE_PRIORITY;
+            break;
 
-            case COL_TYPE_DUE_DATE:
-                colType = COL_TYPE_DUE_DATE;
-                break;
+        case COL_TYPE_DUE_DATE:
+            colType = COL_TYPE_DUE_DATE;
+            break;
         }
 
         return colType;
@@ -327,7 +325,6 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         }
         int fontSize = cellFont.getFontHeightInPoints();
 
-
         cellObj.put(PROP_COLOR, color);
         cellObj.put(PROP_BG_COLOR, bgColor);
         cellObj.put(PROP_READONLY, isLocked);
@@ -336,7 +333,6 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
         return cellObj;
     }
 
-
     /**
      * Update Excel workflow configuration
      *
@@ -344,7 +340,6 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
      */
     public void updateConfiguration(List<List<String>> newValues) throws AcmLinkFormsWorkflowException
     {
-
 
         try (FileInputStream inputFile = new FileInputStream(new File(configurationLocation + configurationFile)))
         {
@@ -384,8 +379,7 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
             // Save current configuration file as backup
             FileUtils.copyFile(
                     new File(configurationLocation + configurationFile),
-                    new File(configurationLocation + destFileName)
-            );
+                    new File(configurationLocation + destFileName));
 
             // Store updates
             try (FileOutputStream outputFile = new FileOutputStream(configurationLocation + configurationFile))
@@ -393,8 +387,8 @@ public class LinkFormsWorkflowsService implements LinkFormsWorkflowsConstants
                 workbook.write(outputFile);
             }
 
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
 
             log.error("Can't retrieve Link Forms Workflows configuration file", e);

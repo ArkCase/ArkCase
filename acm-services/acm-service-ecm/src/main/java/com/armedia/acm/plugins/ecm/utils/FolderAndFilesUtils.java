@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.utils;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFileVersion;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +106,8 @@ public class FolderAndFilesUtils
             if (inputArray != null && inputArray.length == 1)
             {
                 input = input + "_" + dateString;
-            } else if (inputArray != null && inputArray.length > 1)
+            }
+            else if (inputArray != null && inputArray.length > 1)
             {
                 input = input.replace("." + inputArray[inputArray.length - 1], "_" + dateString + "." + inputArray[inputArray.length - 1]);
             }
@@ -126,7 +128,8 @@ public class FolderAndFilesUtils
         try
         {
             return Long.parseLong(folderId);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot convert String representation of folderId=" + folderId + " to Long", e);
         }
@@ -138,8 +141,10 @@ public class FolderAndFilesUtils
      * Returns a PDF file which matches the supplied ArkCase model file type from the list and which is a PDF document
      * since only PDF files can be merged
      *
-     * @param fileList - List of ecmFiles which will be searched for the desired type
-     * @param fileType - type to search for in the ecm file list
+     * @param fileList
+     *            - List of ecmFiles which will be searched for the desired type
+     * @param fileType
+     *            - type to search for in the ecm file list
      * @return ecmFile which has the given ArkCase type and is a PDF, or null if not found
      */
     public EcmFile findMatchingPDFFileType(List<EcmFile> fileList, String fileType)
@@ -160,7 +165,8 @@ public class FolderAndFilesUtils
         if (fileName.lastIndexOf(".") > 0)
         {
             return fileName.substring(0, fileName.lastIndexOf("."));
-        } else
+        }
+        else
         {
             return fileName;
         }
@@ -172,7 +178,8 @@ public class FolderAndFilesUtils
         if (fileName.lastIndexOf(".") > 0 && fileExtension != null && fileName.endsWith(fileExtension))
         {
             return fileName.substring(0, fileName.lastIndexOf("."));
-        } else
+        }
+        else
         {
             return fileName;
         }
@@ -183,7 +190,8 @@ public class FolderAndFilesUtils
         if (fileName.lastIndexOf(".") > 0)
         {
             return fileName.substring(fileName.lastIndexOf("."));
-        } else
+        }
+        else
         {
             return "";
         }

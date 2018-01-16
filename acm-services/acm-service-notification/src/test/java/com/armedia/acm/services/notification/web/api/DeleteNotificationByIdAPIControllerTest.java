@@ -1,6 +1,11 @@
 package com.armedia.acm.services.notification.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import com.armedia.acm.services.notification.dao.NotificationDao;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,10 +23,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -44,7 +45,8 @@ public class DeleteNotificationByIdAPIControllerTest extends EasyMockSupport
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         mockNotificationDao = createMock(NotificationDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
@@ -80,9 +82,10 @@ public class DeleteNotificationByIdAPIControllerTest extends EasyMockSupport
     }
 
     @Test
-    public void deleteNotificationById_notFound() throws Exception {
+    public void deleteNotificationById_notFound() throws Exception
+    {
 
-        Long notificationId =234L;
+        Long notificationId = 234L;
 
         mockNotificationDao.deleteNotificationById(notificationId);
 
