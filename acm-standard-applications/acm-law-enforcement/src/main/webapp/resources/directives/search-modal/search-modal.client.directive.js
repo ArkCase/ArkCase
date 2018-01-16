@@ -159,6 +159,14 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                     scope.gridOptionsMaster.totalItems = data.response.numFound;
                 };
 
+                scope.setSecondGridData = function () {
+                    if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
+                        scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
+                    } else if (scope.selectedItem.object_type_s === 'GROUP') { // Select group
+                        scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
+                    }
+                };
+
                 scope.querySubItems = function (filters) {
                     if (!Util.isEmpty(filters)) {
                         var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuerySorted('*', filters, scope.pageSizeSecond, scope.startSecond, scope.sortSecond);
@@ -277,14 +285,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 if (scope.onItemsSelected) {
                                     scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
                                 }
-                                    if(scope.secondGrid) {
-                                        if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
-                                            scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
-                                        } else if (scope.selectedItem.object_type_s === 'GROUP') {
-                                            scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
-                                        }
-                                    }
-
+                                if(scope.secondGrid) {
+                                    scope.setSecondGridData();
+                                }
                             });
 
                             gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
@@ -365,7 +368,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.startSecond = (newPage - 1) * pageSize;   //newPage is 1-based index
                                     scope.pageSizeSecond = pageSize;
-                                    scope.querySubItems();
+                                    scope.setSecondGridData();
+
                                 });
                             }
                         };
