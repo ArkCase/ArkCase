@@ -3,7 +3,7 @@
 
     <div ng-hide="!!treeConfig.search || treeConfig.search === false"> 
       <div class="input-group">
-        <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery"
+        <input type="text" class="input-sm form-control edtTreeQuery" ng-model="searchQuery" ng-keyup="keyUp($event)"
                placeholder="{{'common.directive.objectTree.edtQuery.placeHolder' | translate}}">
         <span class="input-group-btn">
           <button class="btn btn-sm btn-default" id="btnTreeQuery" type="button" ng-click="onClickSearch()">

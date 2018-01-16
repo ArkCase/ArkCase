@@ -1,7 +1,11 @@
 'use strict';
 
-angular.module('directives').controller('Directives.CoreCalendarSetEventRecurrenceController', ['$scope', '$modalInstance', 'Object.CalendarService', 'MessageService', 'Util.DateService', '$modal', 'Directives.CalendarUtilService', '$params',
-    function($scope, $modalInstance, CalendarService, MessageService, DateService, $modal, CalendarUtilService, $params) {
+angular.module('directives').controller('Directives.CoreCalendarSetEventRecurrenceController', ['$scope', '$params', '$modal', '$modalInstance'
+    , 'Object.CalendarService', 'MessageService', 'Util.DateService', 'Directives.CalendarUtilService', 'Helper.LocaleService'
+    , function($scope, $params, $modal, $modalInstance
+        , CalendarService, MessageService, DateService, CalendarUtilService, LocaleHelper
+    ) {
+        new LocaleHelper.Locale({scope: $scope});
 
         /*Init dropdown select options*/
         $scope.repeatsOptions = CalendarUtilService.RECURRENCE_OPTIONS;

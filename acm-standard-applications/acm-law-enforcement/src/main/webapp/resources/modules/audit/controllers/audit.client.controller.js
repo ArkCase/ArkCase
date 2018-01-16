@@ -36,11 +36,9 @@ angular.module('audit').controller('AuditController', ['$scope', '$sce', '$q', '
          * @param {String} selectedObjectType String that represents value that is selected from dropdown
          * @param {String} inputObjectId String that represents value from text input(default is empty string "")
          */
-        function getObjectValues(e, selectedObjectType, inputObjectId, validDate) {
+        function getObjectValues(e, selectedObjectType, inputObjectId) {
             $scope.objectType = selectedObjectType;
             $scope.objectId = Util.goodValue(inputObjectId);
-
-            $scope.validDate = validDate;
         }
 
         /**

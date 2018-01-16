@@ -89,12 +89,6 @@ public class QueueToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmQueue in)
-    {
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmQueue.class.equals(acmObjectType);

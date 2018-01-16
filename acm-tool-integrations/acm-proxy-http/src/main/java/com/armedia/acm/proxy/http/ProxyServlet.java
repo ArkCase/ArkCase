@@ -18,6 +18,7 @@ package com.armedia.acm.proxy.http;
 
 import com.armedia.acm.web.api.MDCConstants;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpEntity;
@@ -51,7 +52,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -1038,6 +1038,9 @@ public class ProxyServlet extends HttpServlet
         {
             case MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY: // "MDC_USER_ID"
                 return getMDCUserIdValue();
+            case MDCConstants.EVENT_MDC_REQUEST_PENTAHO_USER_ID_KEY: // "MDC_USER_ID
+                String userId = StringUtils.substringBeforeLast(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY), "@");
+                return userId;
             default:
                 throw new RuntimeException("Header variable name '" + headerVariableName + "' unknown!");
         }

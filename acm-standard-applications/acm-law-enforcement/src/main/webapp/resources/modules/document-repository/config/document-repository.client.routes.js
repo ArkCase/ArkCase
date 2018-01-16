@@ -61,7 +61,10 @@ angular.module('document-repository').config(['$stateProvider',
 
             .state('document-repository.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/document-repository/views/components/document-repository-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "DOC_REPO"
+                }
             })
 
             .state('document-repository.notes', {

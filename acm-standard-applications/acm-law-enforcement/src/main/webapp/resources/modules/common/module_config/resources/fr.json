@@ -45,7 +45,23 @@
     },
     "menu": {
       "noop": "(Sélectionner un article)",
-      "editWithWebDAV": "Modifier"
+      "editWithWebDAV": "Modifier",
+      "cancelEditing": "Annuler l'édition",
+      "newFolder": "Nouveau dossier",
+      "newDocument": "Nouveau document",
+      "newCorrespondence": "Nouvelle correspondance",
+      "open": "Ouvrir",
+      "email": "Email",
+      "download": "Télécharger",
+      "copy": "Copie",
+      "cut": "Couper",
+      "paste": "Coller",
+      "rename": "Renommer",
+      "delete": "Effacer",
+      "replace": "Remplacer",
+      "checkout": "registre",
+      "checkin": "Enregistrement",
+      "declareRecord": "Déclarer comme enregistrement(s)"
     },
     "table.columns": {
       "title": "Titre",
@@ -140,8 +156,7 @@
   },
   "common.directive.simplePager": {
     "rowCountLabel": "Objets par page",
-    "pagerCountMiddleLabel": " de",
-    "pagerCountLabel": " articles"
+    "pagerCountLabel": "{{pageCount}} sur {{pageTotal}} articles"
   },
   "common.directive.objectAuthorizationRoles": {
     "choose": "Choisir",
@@ -301,6 +316,12 @@
     "start.label": "Début:",
     "end.label": "Fin:",
     "newEvent.button": "Nouvel évènement",
+    "agenda.button" : {
+      "today": "Aujourd'hui",
+      "month": "Mois",
+      "week": "La semaine",
+      "day": "Journée"
+    },
     "addNewEventDialog": {
       "title": "Nouvel évènement",
       "cancel.button": "Annuler",
@@ -338,6 +359,8 @@
         "reminder.label": "Rappel",
         "reminder.placeholder": "Choisissez la fenêtre de rappel",
         "datePickerClose.button": "Fermer",
+        "datePickerCurrent.button": "Actuel",
+        "datePickerClear.button": "Clair",
         "otherOptions.label": "Autres options",
         "allDayEvent.checkbox": "Événement d'une journée",
         "privateEvent.checkbox": "Événement privé",

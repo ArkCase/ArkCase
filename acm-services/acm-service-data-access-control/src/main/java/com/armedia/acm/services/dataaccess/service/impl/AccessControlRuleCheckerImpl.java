@@ -6,7 +6,7 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -76,6 +76,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * configured AC entries until the first positive match. It only requires one permission to match, from the list of
      * required permissions
      *
+     * <<<<<<< HEAD
+     * 
      * @param authentication
      *            authentication token
      * @param targetId
@@ -86,6 +88,18 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      *            required permissions, separated with "|"
      * @param solrDocument
      *            Solr data stored for this object
+     *            =======
+     * @param authentication
+     *            authentication token
+     * @param targetId
+     *            the identifier for the object instance
+     * @param targetType
+     *            target type
+     * @param permission
+     *            required permission
+     * @param solrDocument
+     *            Solr data stored for this object
+     *            >>>>>>> b0544e2e1ba71ede1ec56aa59f10fb7be9500948
      * @return true if user is allowed to access this object, false otherwise
      */
     @Override
@@ -298,7 +312,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             boolean found = false;
             for (GrantedAuthority authority : grantedAuthorities)
             {
-                if (userRole.equalsIgnoreCase(authority.getAuthority()))
+                if (evaluateAuthorityWildcardRole(userRole, authority.getAuthority()))
                 {
                     found = true;
                     // if any of the granted roles does match, continue with the next role
@@ -314,6 +328,20 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             }
         }
         return true;
+    }
+
+    private boolean evaluateAuthorityWildcardRole(String role, String authority)
+    {
+        if (StringUtils.endsWith(role, "@*"))
+        {
+            String roleName = StringUtils.substringBeforeLast(role, "@");
+            String authorityName = StringUtils.substringBeforeLast(authority, "@");
+            return authorityName.equalsIgnoreCase(roleName);
+        }
+        else
+        {
+            return role.equalsIgnoreCase(authority);
+        }
     }
 
     /**
@@ -342,7 +370,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             userRole = evaluateRole(userRole, targetObjectProperties);
             for (GrantedAuthority authority : grantedAuthorities)
             {
-                if (userRole.equalsIgnoreCase(authority.getAuthority()))
+                if (evaluateAuthorityWildcardRole(userRole, authority.getAuthority()))
                 {
                     // if any of the granted roles does match, break immediately and return true
                     log.debug("Found \"ANY\" matching user role [{}]", userRole);

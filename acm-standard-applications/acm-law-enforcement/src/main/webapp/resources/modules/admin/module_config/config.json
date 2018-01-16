@@ -521,7 +521,8 @@
           "displayName": "modifier",
           "visible": false
         }
-      ]
+      ],
+      "createNewUrl": "https://activiti.alfresco.com"
     },
     {
       "id": "workflowsHistoryDialogConfig",
@@ -810,6 +811,10 @@
         {
           "name": "Task",
           "id": "TASK"
+        },
+        {
+          "name": "Document",
+          "id": "DOC_REPO"
         }
       ],
       "actions": [

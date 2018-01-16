@@ -87,12 +87,6 @@ public class AcmObjectLockToSolrTransformer implements AcmObjectToSolrDocTransfo
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmObjectLock in)
-    {
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmObjectLock.class.equals(acmObjectType);

@@ -2,10 +2,18 @@
     <div class="clearfix">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()"
+                <h4>
+                    <a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()"
                        permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                        permission-action="disable" e-required>
-                    {{objectInfo.complaintTitle || "Unknown" }}</a> ({{objectInfo.status}})</h4></div>
+                        {{objectInfo.complaintTitle || "Unknown" }}
+                    </a>
+                    <a ng-href="#" editable-select="objectInfo.status" onaftersave="saveComplaint()"
+                       permission="editComplaintStatus" permission-object-type="COMPLAINT" permission-properties="objectInfo"
+                       permission-action="disable" e-ng-options="c.key as (c.value | translate) for c in complaintStatuses">
+                        ({{ (objectInfo.status | translateData: 'core.lookups.complaints.statuses' : lang) || ('common.value.unknown' | translate) }})
+                    </a>
+                </h4></div>
             <div class="col-xs-6  text-right">
                 <h4>{{objectInfo.complaintNumber}}</h4>
             </div>

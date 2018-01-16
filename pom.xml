@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.2-SNAPSHOT</version>
+    <version>3.2.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -126,6 +126,7 @@
         <json-path.version>2.2.0</json-path.version>
         <magic.matcher.version>0.1.2</magic.matcher.version>
         <springfox-version>2.5.0</springfox-version>
+        <solr-solrj.version>6.6.0</solr-solrj.version>
     </properties>
 
     <organization>
@@ -1958,6 +1959,13 @@
                 <groupId>us.fatehi</groupId>
                 <artifactId>pointlocation6709</artifactId>
                 <version>${gps.pointlocations.version}</version>
+            </dependency>
+
+            <!-- SolrJ -->
+            <dependency>
+                <groupId>org.apache.solr</groupId>
+                <artifactId>solr-solrj</artifactId>
+                <version>${solr-solrj.version}</version>
             </dependency>
 
         </dependencies>
