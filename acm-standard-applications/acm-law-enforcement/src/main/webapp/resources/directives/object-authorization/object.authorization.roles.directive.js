@@ -59,8 +59,8 @@
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService',
-    function (Menus, messageService) {
+angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService', '$http', 'UtilService', '$injector',
+    function (Menus, messageService, $http, Util, $injector) {
         return {
             restrict: 'E',
             scope: {
@@ -69,16 +69,62 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
                 onAuthRoleChange: "=",
                 objectDisplayName: "@",
                 roleDisplayName: "@",
-                objectTitle: "@"
+                objectTitle: "@",
+                externalServiceName: "@",
+                externalServiceMethodName: "@"
             },
             templateUrl: 'directives/object-authorization/object.authorization.roles.html',
             link: function (scope) {
-                /*scope.$watch('data', function (newValue) {
+                scope.$watch('data', function (newValue) {
                     if (newValue && newValue.length > 0) {
                         scope.selectedObject = scope.data[0];
                         scope.selectObject();
                     }
-                }, true);*/
+                }, true);
+
+                scope.filterWord = "";
+
+                scope.filterObjects = function () {
+                    if(!Util.isEmpty(scope.filterWord)){
+                        var req = {
+                            method: 'GET',
+                            url: 'api/latest/ldap/getUsers/search?' + scope.filterWord,
+                            params: {
+                                fq: scope.filterWord,
+                                n: 1,
+                                start: 0
+                            }
+                        };
+
+                        $http(req).then(function (response) {
+                            console.log(response);
+                            scope.data = [];
+                            _.forEach(response.data.response.docs, function (user) {
+                                var element = {};
+                                element.name = user.name;
+                                element.key = user.object_id_s;
+                                element.directory = user.directory_name_s;
+                                scope.data.push(element);
+                            });
+                            scope.selectedObject = scope.data[0]
+                        }, function () {
+                            console.log("error");
+                        });
+                        scope.noData = false;
+                    } else if(scope.filterWord === "") {
+                        scope.externalService = $injector.get(scope.externalServiceName);
+                        scope.externalService[scope.externalServiceMethodName]().then(function (data) {
+                            scope.data = [];
+                            _.forEach(data, function (user) {
+                                var element = {};
+                                element.name = user.name;
+                                element.key = user.object_id_s;
+                                element.directory = user.directory_name_s;
+                                scope.data.push(element);
+                            });
+                        });
+                    }
+                };
 
                 //initial setup
                 scope.selectedNotAuthorized = "";
@@ -133,7 +179,7 @@ angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'Me
                         // scope.selectObject();
 
                         // scope.data = [];
-                        scope.$parent.$digest();
+                        // scope.$parent.$digest();
                     }
                 }
 
