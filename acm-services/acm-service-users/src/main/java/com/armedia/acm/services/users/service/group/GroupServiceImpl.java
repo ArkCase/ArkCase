@@ -12,6 +12,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -51,12 +52,29 @@ public class GroupServiceImpl implements GroupService
     {
         String groupName = group.getName();
         AcmGroup acmGroup = groupDao.findByName(groupName);
-        if (acmGroup != null)
+        if (acmGroup != null && acmGroup.getStatus() == AcmGroupStatus.ACTIVE)
         {
             throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
         }
-        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
-        return groupDao.save(group);
+        if(acmGroup == null){
+            group.setStatus(AcmGroupStatus.ACTIVE);
+            group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+            return groupDao.save(group);
+        }
+       else{
+            acmGroup.setType(AcmGroupType.ADHOC_GROUP);
+            acmGroup.setStatus(AcmGroupStatus.ACTIVE);
+            acmGroup.setUserMembers(group.getUserMembers());
+            acmGroup.setAscendantsList(group.getAscendantsList());
+            acmGroup.setDescription(group.getDescription());
+            acmGroup.setMemberGroups(group.getMemberGroups());
+            acmGroup.setSupervisor(group.getSupervisor());
+            acmGroup.setDisplayName(group.getDisplayName());
+            acmGroup.setDistinguishedName(null);
+            acmGroup.setDirectoryName(null);
+            return groupDao.save(acmGroup);
+        }
+
     }
 
     @Override
