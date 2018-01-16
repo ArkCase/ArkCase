@@ -64,7 +64,7 @@ public class LdapGroupService
         }
         else {
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
-            existingGroup.setDisplayName(group.getDisplayName());
+            existingGroup.setDisplayName(groupName);
             existingGroup.setDescription(group.getDescription());
             existingGroup.setStatus(AcmGroupStatus.ACTIVE);
             existingGroup.setDistinguishedName(groupDN);
@@ -121,7 +121,7 @@ public class LdapGroupService
             groupService.saveAndFlush(parentGroup);
         }  else{
             existingGroup.setStatus(AcmGroupStatus.ACTIVE);
-            existingGroup.setDisplayName(group.getDisplayName());
+            existingGroup.setDisplayName(groupName);
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
             existingGroup.setDescription(group.getDescription());
             existingGroup.setDistinguishedName(groupDN);
