@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "",
     "button": {
       "save.tooltip": "保存更改",
+      "initiate": "啟動任務",
+      "withdraw": "撤回任務",
       "initiate.tooltip": "啟動任務",
       "withdraw.tooltip": "撤回任務"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "指定人員",
-      "group": "擁有群組",
+      "owningGroup": "擁有群組",
       "subject": "主題",
       "details": "詳情",
       "dueDate": "截止日期",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "新的未來任務",
       "assignee": "指定人員",
+      "owningGroup": "擁有群組",
       "subject.label": "主題",
       "subject.placeholder": "鍵入將來的案例主題",
       "details.label": "細節",

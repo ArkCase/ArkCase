@@ -32,7 +32,7 @@ angular.module('cases').controller('Cases.ApprovalRoutingController', ['$scope',
         };
 
         var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.owningGroup = 'Unknown';
+            $scope.owningGroup = '';
             var currentObjectId = Util.goodMapValue(objectInfo, "id");
             if (!$scope.isTask(objectInfo)) {
                 $scope.objectInfo = {'id': currentObjectId};

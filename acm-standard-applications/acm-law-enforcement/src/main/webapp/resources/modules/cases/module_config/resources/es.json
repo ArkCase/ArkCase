@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Aprobación del enrutamiento no actualizado",
     "button": {
       "save.tooltip": "Guardar cambios",
+      "initiate": "Iniciar",
+      "withdraw": "Retirar",
       "initiate.tooltip": "Iniciar tarea",
       "withdraw.tooltip": "Retirar Tarea"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Cesionario",
-      "group": "Poseer grupo",
+      "owningGroup": "Poseer grupo",
       "subject": "Tema",
       "details": "Detalles",
       "dueDate": "Fecha de vencimiento",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "Nueva tarea futura",
       "assignee": "Cesionario",
+      "owningGroup": "Poseer grupo",
       "subject.label": "Tema",
       "subject.placeholder": "Ingrese el asunto futuro del caso",
       "details.label": "Detalles",

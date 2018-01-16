@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Approval Routing Not Updated",
     "button": {
       "save.tooltip": "Save Changes",
+      "initiate": "Initiate",
+      "withdraw": "Withdraw",
       "initiate.tooltip": "Initiate Task",
       "withdraw.tooltip": "Withdraw Task"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Assignee",
-      "group": "Owning Group",
+      "owningGroup": "Owning Group",
       "subject": "Subject",
       "details": "Details",
       "dueDate": "Due Date",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "New Future Task",
       "assignee": "Assignee",
+      "owningGroup": "Owning Group",
       "subject.label": "Subject",
       "subject.placeholder": "Enter future case subject",
       "details.label": "Details",

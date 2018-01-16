@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Approval Routing Not Updated",
     "button": {
       "save.tooltip": "Save Changes",
+      "initiate": "Initiate",
+      "withdraw": "Withdraw",
       "initiate.tooltip": "Initiate Task",
       "withdraw.tooltip": "Withdraw Task"
     },
