@@ -9,10 +9,11 @@ public class CaseFileModifiedEvent extends AcmEvent
     private static final long serialVersionUID = 1L;
 
     private static final String EVENT_TYPE = "com.armedia.acm.casefile";
-    
+
     private String eventStatus;
 
-    public CaseFileModifiedEvent( CaseFile source ) {
+    public CaseFileModifiedEvent(CaseFile source)
+    {
 
         super(source);
 

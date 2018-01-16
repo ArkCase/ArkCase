@@ -45,7 +45,8 @@ public class AcmApplicationTaskEventHandler implements ApplicationListener<AcmAp
                 try
                 {
                     getTaskDao().createFolderForTaskEvent(acmTask);
-                } catch (AcmTaskException | AcmCreateObjectFailedException e)
+                }
+                catch (AcmTaskException | AcmCreateObjectFailedException e)
                 {
                     log.error("Failed to create task container folder!", e.getMessage(), e);
                 }

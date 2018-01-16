@@ -32,7 +32,7 @@ import java.util.List;
  *
  */
 @Controller
-@RequestMapping({"/api/v1/service/email/send", "/api/latest/service/email/send"})
+@RequestMapping({ "/api/v1/service/email/send", "/api/latest/service/email/send" })
 public class AcmMailServiceAPIController
 {
     private AcmMailTemplateConfigurationService templateService;
@@ -66,7 +66,8 @@ public class AcmMailServiceAPIController
                     emailSenderService.sendEmailWithAttachments(in, authentication, user);
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmEmailServiceException(
                     "Could not send emails with attachment,among other things check your request body. Exception message is : "
@@ -105,7 +106,8 @@ public class AcmMailServiceAPIController
                 }
             }
             return result;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmEmailServiceException(
                     "Could not send emails with embedded links, among other things check your request body. Exception message is : "
@@ -140,7 +142,8 @@ public class AcmMailServiceAPIController
                     emailSenderService.sendEmailWithAttachmentsAndLinks(in, authentication, user);
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmEmailServiceException(
                     "Could not send emails with attachment, among other things check your request body. Exception message is : "
@@ -171,7 +174,8 @@ public class AcmMailServiceAPIController
     }
 
     /**
-     * @param templateService the templateService to set
+     * @param templateService
+     *            the templateService to set
      */
     public void setTemplateService(AcmMailTemplateConfigurationService templateService)
     {
@@ -179,7 +183,8 @@ public class AcmMailServiceAPIController
     }
 
     /**
-     * @param emailSenderService the emailSenderService to set
+     * @param emailSenderService
+     *            the emailSenderService to set
      */
     public void setEmailSenderService(AcmEmailSenderService emailSenderService)
     {

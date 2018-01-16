@@ -50,7 +50,8 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
         return results;
     }
 
-    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes) {
+    public int changeContainer(AcmContainer containerFrom, AcmContainer containerTo, List<String> excludeDocumentTypes)
+    {
         if (excludeDocumentTypes == null)
             excludeDocumentTypes = new LinkedList<>();
         String jpql = "UPDATE EcmFile e SET e.container=:containerTo, e.modified=:modifiedDate " +
@@ -90,20 +91,20 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
 
         try
         {
-        	result = (EcmFile) query.getSingleResult();
+            result = (EcmFile) query.getSingleResult();
         }
-        catch(NoResultException e)
+        catch (NoResultException e)
         {
             LOG.debug("Cannot find EcmFile for containerId=[{}], folderId=[{}] and fileType=[{}]", containerId, folderId, fileType, e);
         }
         catch (NonUniqueResultException e1)
         {
-        	LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType + ". Multiple files found ...", e1);
-		}
+            LOG.error("Cannot find unique EcmFile for containerId=" + containerId + ", folderId=" + folderId + " and fileType=" + fileType
+                    + ". Multiple files found ...", e1);
+        }
 
         return result;
     }
-
 
     public EcmFile findByCmisFileIdAndFolderId(String cmisFileId, Long folderId)
     {
@@ -134,7 +135,7 @@ public class EcmFileDao extends AcmAbstractDao<EcmFile>
     @Transactional
     public void deleteFile(Long id)
     {
-        EcmFile file = getEm().find(getPersistenceClass(),id);
+        EcmFile file = getEm().find(getPersistenceClass(), id);
         getEm().remove(file);
     }
 

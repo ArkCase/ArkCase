@@ -1,14 +1,14 @@
 package com.armedia.acm.service.outlook.model;
 
-import java.util.Date;
-
 import com.armedia.acm.core.model.AcmEvent;
+
+import java.util.Date;
 
 public class CalendarEventAddedEvent extends AcmEvent
 {
     private static final long serialVersionUID = 1L;
     private static final String EVENT_TYPE = "com.armedia.acm.outlook.calendar.event.added";
-    
+
     public CalendarEventAddedEvent(OutlookCalendarItem source, String userId, Long objectId, String objectType)
     {
         super(source);
@@ -17,7 +17,7 @@ public class CalendarEventAddedEvent extends AcmEvent
         setObjectType(objectType);
         setUserId(userId);
     }
-    
+
     @Override
     public String getEventType()
     {

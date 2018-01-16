@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.person.model;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +20,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,13 +33,7 @@ public class OrganizationDBA implements Serializable, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_organization_dba_gen",
-            table = "acm_organization_dba_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_organization_dba",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_organization_dba_gen", table = "acm_organization_dba_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_organization_dba", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_organization_dba_gen")
     @Column(name = "cm_id")
     private Long id;
@@ -90,7 +86,6 @@ public class OrganizationDBA implements Serializable, AcmEntity
     {
         this.organization = organization;
     }
-
 
     @XmlTransient
     public String getType()

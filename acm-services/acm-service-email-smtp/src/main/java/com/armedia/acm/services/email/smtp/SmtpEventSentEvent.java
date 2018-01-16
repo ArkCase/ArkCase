@@ -1,6 +1,5 @@
 package com.armedia.acm.services.email.smtp;
 
-
 import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;

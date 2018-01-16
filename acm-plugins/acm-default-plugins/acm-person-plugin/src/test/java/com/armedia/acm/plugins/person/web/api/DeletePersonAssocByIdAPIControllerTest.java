@@ -5,6 +5,10 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
+import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
+import com.armedia.acm.plugins.person.model.PersonAssociation;
+import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,14 +27,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
-import com.armedia.acm.plugins.person.model.PersonAssociation;
-import com.armedia.acm.plugins.person.service.PersonAssociationEventPublisher;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-    "classpath:/spring/spring-web-acm-web.xml",
-    "classpath:/spring/spring-library-person-plugin-test.xml"    
+        "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-person-plugin-test.xml"
 })
 
 public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
@@ -52,13 +52,14 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws Exception
+    {
         mockPersonAssociationDao = createMock(PersonAssociationDao.class);
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
         mockPersonAssociation = createMock(PersonAssociation.class);
         mockPersonAssociationEventPublisher = createMock(PersonAssociationEventPublisher.class);
-        
+
         unit = new DeletePersonAssocByIdAPIController();
 
         unit.setPersonAssociationDao(mockPersonAssociationDao);
@@ -69,12 +70,12 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
 
     @Test
     public void deletePersonAssociationById() throws Exception
-    {                        
-        Long personAssocId =958L;
-        
+    {
+        Long personAssocId = 958L;
+
         expect(mockPersonAssociationDao.find(personAssocId)).andReturn(mockPersonAssociation);
         mockPersonAssociationEventPublisher.publishPersonAssociationDeletedEvent(mockPersonAssociation);
-        expectLastCall();      
+        expectLastCall();
         mockPersonAssociationDao.deletePersonAssociationById(personAssocId);
 
         // MVC test classes must call getName() somehow
@@ -82,7 +83,7 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
 
         replayAll();
         MvcResult result = mockMvc.perform(
-               delete("/api/v1/plugin/personAssociation/delete/{personAssocId}", personAssocId)
+                delete("/api/v1/plugin/personAssociation/delete/{personAssocId}", personAssocId)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))
@@ -90,27 +91,23 @@ public class DeletePersonAssocByIdAPIControllerTest extends EasyMockSupport
 
         verifyAll();
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-       
+
     }
 
-    /*@Test
-    public void deletePersonAssociationById_notFound() throws Exception {
-
-        Long personAssocId =958L;
-
-        mockPersonAssociationDao.deletePersonAssociationById(personAssocId);
-
-        // MVC test classes must call getName() somehow
-        expect(mockAuthentication.getName()).andReturn("user");
-
-        replayAll();
-
-        mockMvc.perform(
-                delete("/api/v1/plugin/personAssociation/delete/{personAssocId}", personAssocId)
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .principal(mockAuthentication));
-
-        verifyAll();
-    }*/
+    /*
+     * @Test
+     * public void deletePersonAssociationById_notFound() throws Exception {
+     * Long personAssocId =958L;
+     * mockPersonAssociationDao.deletePersonAssociationById(personAssocId);
+     * // MVC test classes must call getName() somehow
+     * expect(mockAuthentication.getName()).andReturn("user");
+     * replayAll();
+     * mockMvc.perform(
+     * delete("/api/v1/plugin/personAssociation/delete/{personAssocId}", personAssocId)
+     * .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+     * .principal(mockAuthentication));
+     * verifyAll();
+     * }
+     */
 
 }

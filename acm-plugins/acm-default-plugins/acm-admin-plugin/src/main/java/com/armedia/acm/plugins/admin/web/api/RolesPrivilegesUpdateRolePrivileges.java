@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -20,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sergey.kolomiets  on 6/2/15.
+ * Created by sergey.kolomiets on 6/2/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConstants
 {
     private final String PROP_PRIVILEGES = "privileges";
@@ -57,7 +58,8 @@ public class RolesPrivilegesUpdateRolePrivileges implements RolePrivilegesConsta
 
             rolesPrivilegesService.updateRolePrivileges(roleName, privileges);
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update role [{}] privileges", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't update role '%s' privileges", roleName), e);

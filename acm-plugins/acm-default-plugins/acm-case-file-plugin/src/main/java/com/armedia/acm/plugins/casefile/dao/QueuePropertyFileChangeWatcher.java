@@ -64,7 +64,8 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
             setQueueNamesProperties(queueProperties);
 
             loadQueues(queueProperties);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not load queue names: {}", e.getMessage(), e);
         }
@@ -87,8 +88,7 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 
                 Map<String, AcmQueue> nameQueue = storedQueues.stream().collect(Collectors.toMap(AcmQueue::getName, Function.identity()));
 
-                queues.stream().forEach(q ->
-                {
+                queues.stream().forEach(q -> {
 
                     if (nameQueue.containsKey(q.getName()))
                     {
@@ -98,7 +98,8 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
                             queue.setDisplayOrder(q.getDisplayOrder());
                             getAcmQueueDao().save(queue);
                         }
-                    } else
+                    }
+                    else
                     {
                         getAcmQueueDao().save(q);
                     }
@@ -112,8 +113,7 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 
     protected List<AcmQueue> getQueueNamesFromPropertiesFile(Properties p)
     {
-        TreeMap<String, String> orderedProperties = new TreeMap<>((key1, key2) ->
-        {
+        TreeMap<String, String> orderedProperties = new TreeMap<>((key1, key2) -> {
             String order1 = key1.substring(key1.lastIndexOf('_') + 1);
             String order2 = key2.substring(key2.lastIndexOf('_') + 1);
             return order1.compareTo(order2);
@@ -121,8 +121,7 @@ public class QueuePropertyFileChangeWatcher implements ApplicationListener<Abstr
 
         p.entrySet().stream().forEach(e -> orderedProperties.put((String) e.getKey(), (String) e.getValue()));
 
-        return orderedProperties.entrySet().stream().map(e ->
-        {
+        return orderedProperties.entrySet().stream().map(e -> {
             AcmQueue queue = new AcmQueue();
             String key = e.getKey();
             queue.setName(e.getValue());

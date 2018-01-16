@@ -9,8 +9,8 @@ import java.util.Date;
 public class AcmFolderPersistenceEvent extends AcmEvent
 {
 
-
-    public AcmFolderPersistenceEvent(AcmFolder source, String userId, String ipAddress) {
+    public AcmFolderPersistenceEvent(AcmFolder source, String userId, String ipAddress)
+    {
 
         super(source);
         setObjectId(source.getId());

@@ -1,12 +1,12 @@
 package com.armedia.acm.plugins.person.service;
 
-
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.dao.OrganizationAssociationDao;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.services.search.service.SolrJoinDocumentsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -19,14 +19,16 @@ public class OrganizationAssociationServiceImpl implements OrganizationAssociati
     private SolrJoinDocumentsService solrJoinDocumentsService;
 
     @Override
-    public OrganizationAssociation saveOrganizationAssociation(OrganizationAssociation organizationAssociation, Authentication authentication)
+    public OrganizationAssociation saveOrganizationAssociation(OrganizationAssociation organizationAssociation,
+            Authentication authentication)
             throws AcmCreateObjectFailedException
     {
         try
         {
             OrganizationAssociation savedOrganizationAssociation = organizationAssociationDao.save(organizationAssociation);
             return savedOrganizationAssociation;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmCreateObjectFailedException("organizationAssociation", e.getMessage(), e);
         }
@@ -47,7 +49,8 @@ public class OrganizationAssociationServiceImpl implements OrganizationAssociati
     }
 
     @Override
-    public String getOrganizationAssociations(Long organizationId, String parentType, int start, int limit, String sort, Authentication auth) throws AcmObjectNotFoundException
+    public String getOrganizationAssociations(Long organizationId, String parentType, int start, int limit, String sort,
+            Authentication auth) throws AcmObjectNotFoundException
     {
         return solrJoinDocumentsService.getJoinedDocuments(
                 auth, organizationId, "child_id_s",
@@ -55,8 +58,7 @@ public class OrganizationAssociationServiceImpl implements OrganizationAssociati
                 PersonOrganizationConstants.ORGANIZATION_ASSOCIATION_OBJECT_TYPE,
                 parentType, "parent_type_s",
                 "parent_object",
-                "parent_ref_s", "id", start, limit, sort
-        );
+                "parent_ref_s", "id", start, limit, sort);
     }
 
     public OrganizationAssociationDao getOrganizationAssociationDao()

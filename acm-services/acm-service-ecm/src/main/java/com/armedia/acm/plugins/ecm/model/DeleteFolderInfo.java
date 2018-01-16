@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.ecm.model;
 
-
 public class DeleteFolderInfo
 {
     private int foldersToDeleteNum;

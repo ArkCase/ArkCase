@@ -3,6 +3,7 @@ package com.armedia.acm.services.subscription.web.api;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -21,7 +23,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/subscription", "/api/latest/service/subscription"})
+@RequestMapping({ "/api/v1/service/subscription", "/api/latest/service/subscription" })
 public class GetUserSubscriptionAPIController
 {
 
@@ -35,8 +37,7 @@ public class GetUserSubscriptionAPIController
             @PathVariable("objType") String objectType,
             @PathVariable("objId") Long objectId,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+            HttpSession httpSession) throws AcmUserActionFailedException
     {
         log.info("Find subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
 

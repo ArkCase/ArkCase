@@ -4,12 +4,12 @@ import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.CheckParticipantListModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * Created by marjan.stefanoski on 01.04.2015.
@@ -22,7 +22,8 @@ public class AcmParticipantService
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType) throws AcmAccessControlException
+    public AcmParticipant saveParticipant(String userId, String participantType, Long objectId, String objectType)
+            throws AcmAccessControlException
     {
 
         AcmParticipant participant = new AcmParticipant();
@@ -33,9 +34,10 @@ public class AcmParticipantService
 
         CheckParticipantListModel model = new CheckParticipantListModel();
         List<String> errorListAfterRules = applyParticipantRules(participant, model);
-        if (errorListAfterRules != null && !errorListAfterRules.isEmpty() )
+        if (errorListAfterRules != null && !errorListAfterRules.isEmpty())
         {
-            throw new AcmAccessControlException(errorListAfterRules, "Conflict permissions combination has occurred for the chosen participants");
+            throw new AcmAccessControlException(errorListAfterRules,
+                    "Conflict permissions combination has occurred for the chosen participants");
         }
 
         AcmParticipant savedParticipant = getParticipantDao().save(participant);
@@ -47,7 +49,8 @@ public class AcmParticipantService
 
     private List<String> applyParticipantRules(AcmParticipant participant, CheckParticipantListModel model)
     {
-        List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(), participant.getObjectId());
+        List<AcmParticipant> allParticipantsFromParentObject = participantDao.findParticipantsForObject(participant.getObjectType(),
+                participant.getObjectId());
         if (allParticipantsFromParentObject != null)
         {
             for (AcmParticipant someParticipant : allParticipantsFromParentObject)
@@ -73,7 +76,8 @@ public class AcmParticipantService
         return null;
     }
 
-    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType, Long objectId)
+    public AcmParticipant getParticipantByParticipantTypeAndObjectTypeAndId(String userId, String participantType, String objectType,
+            Long objectId)
     {
         return getParticipantDao().getParticipantByParticipantTypeAndObjectTypeAndId(userId, participantType, objectType, objectId);
     }

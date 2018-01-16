@@ -163,7 +163,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
         // Create and initialize appropriate service for given form name
         FrevvoFormService frevvoFormService = getFrevvoFormServiceFactory().getService(formName, this, request, authentication);
 
-        // Initialize some data that should be shown on the form (if there should be any) - this is happen while form is loading for the
+        // Initialize some data that should be shown on the form (if there should be any) - this is happen while form is
+        // loading for the
         // first time
         String result = (String) frevvoFormService.init();
         try
@@ -196,7 +197,8 @@ public class FrevvoFormController implements ApplicationEventPublisherAware
         // Create and initialize appropriate service for given form name
         FrevvoFormService frevvoFormService = getFrevvoFormServiceFactory().getService(formName, this, request, authentication);
 
-        // Initialize some data that should be shown on the form (if there should be any) - this is happening after form is loaded
+        // Initialize some data that should be shown on the form (if there should be any) - this is happening after form
+        // is loaded
         Object result = frevvoFormService.get(action);
         try
         {

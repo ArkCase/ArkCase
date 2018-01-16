@@ -1,9 +1,7 @@
 <div class="col-xs-12">
-    <div class="col-xs-3 b-r"><label>{{'common.directive.objectAuthorizationRoles.choose' | translate}}&nbsp;
-        {{objectTitle}}</label>
+    <div class="col-xs-3 b-r"><label>{{'common.directive.objectAuthorizationRoles.choose' | translate}}&nbsp; {{objectTitle}}</label>
         <select ng-model="selectedObject" ng-change="selectObject()"
-                ng-options="d[objectDisplayName] | translate for d in data | orderObjectBy:'objectDisplayName'"
-                name="" size="15"
+                ng-options="d[objectDisplayName] | translate for d in data | orderObjectBy:'objectDisplayName'" name="" size="15"
                 class="form-control">
         </select>
     </div>
@@ -12,21 +10,20 @@
                 name="" size="15" multiple class="form-control">
         </select>
     </div>
-    <div class="col-xs-1 b-r" style="text-align:center;"><br/><br/><br/><br/>
+    <div class="col-xs-1 b-r" style="text-align:center;"><br /><br /><br /><br />
         <button class="btn btn-rounded btn-sm" data-toggle="tooltip"
-                data-title="{{'common.directive.objectAuthorizationRoles.move_right' | translate}}"
-                ng-click="authorize()"><i class="fa fa-angle-double-right"></i>
+                data-title="{{'common.directive.objectAuthorizationRoles.move_right' | translate}}" ng-click="authorize()"><i
+                class="fa fa-angle-double-right"></i>
         </button>
-        <br/><br/>
+        <br /><br />
         <button class="btn btn-rounded btn-sm" data-toggle="tooltip"
-                data-title="{{'common.directive.objectAuthorizationRoles.move_left' | translate}}"
-                ng-click="unAuthorize()"><i class="fa fa-angle-double-left"></i>
+                data-title="{{'common.directive.objectAuthorizationRoles.move_left' | translate}}" ng-click="unAuthorize()"><i
+                class="fa fa-angle-double-left"></i>
         </button>
-        <br/><br/><br/><br/><br/>
+        <br /><br /><br /><br /><br />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
-        <select ng-model="selectedAuthorized"
-                ng-options="a[roleDisplayName] for a in authorized| orderObjectBy:'roleDisplayName'" size="15"
+        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized| orderObjectBy:'roleDisplayName'" size="15"
                 multiple class="form-control">
         </select>
     </div>

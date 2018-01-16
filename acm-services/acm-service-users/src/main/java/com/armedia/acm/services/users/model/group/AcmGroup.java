@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -24,6 +25,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -87,19 +89,16 @@ public class AcmGroup implements Serializable, AcmEntity
 
     @JsonProperty("members")
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "acm_user_membership",
-            joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
+    @JoinTable(name = "acm_user_membership", joinColumns = {
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
     private Set<AcmUser> userMembers = new HashSet<>();
 
-    @JoinTable(name = "acm_group_membership",
-            joinColumns = {
-                    @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
-            })
+    @JoinTable(name = "acm_group_membership", joinColumns = {
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    })
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<AcmGroup> memberGroups = new HashSet<>();
 
@@ -380,13 +379,15 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public Stream<String> getAscendantsStream()
     {
-        if (StringUtils.isBlank(ascendantsList)) return Stream.empty();
+        if (StringUtils.isBlank(ascendantsList))
+            return Stream.empty();
         return Arrays.stream(ascendantsList.split(",")).sorted();
     }
 
     public Set<String> getAscendants()
     {
-        if (StringUtils.isBlank(ascendantsList)) return new HashSet<>();
+        if (StringUtils.isBlank(ascendantsList))
+            return new HashSet<>();
         return Arrays.stream(ascendantsList.split(","))
                 .sorted()
                 .collect(Collectors.toSet());
@@ -409,8 +410,10 @@ public class AcmGroup implements Serializable, AcmEntity
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmGroup acmGroup = (AcmGroup) o;
         return Objects.equals(name, acmGroup.name);
     }

@@ -2,27 +2,6 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import static com.armedia.acm.calendar.service.integration.exchange.ExchangeCalendarService.PROCESS_USER;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.access.PermissionEvaluator;
-import org.springframework.security.core.Authentication;
-
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
@@ -34,6 +13,27 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.access.PermissionEvaluator;
+import org.springframework.security.core.Authentication;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -59,7 +59,7 @@ public class CalendarEntityHandler
 
     public static enum PermissionType
     {
-        READ, WRITE, DELETE;
+        READ, WRITE, DELETE
     }
 
     @FunctionalInterface
@@ -110,7 +110,8 @@ public class CalendarEntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    public boolean checkPermission(Authentication auth, String objectType, String objectId, PermissionType permissionType) throws CalendarServiceException
+    public boolean checkPermission(Authentication auth, String objectType, String objectId, PermissionType permissionType)
+            throws CalendarServiceException
     {
         return permissionEvaluator.hasPermission(auth, Long.parseLong(objectId), objectType, convertToPermission(permissionType));
     }

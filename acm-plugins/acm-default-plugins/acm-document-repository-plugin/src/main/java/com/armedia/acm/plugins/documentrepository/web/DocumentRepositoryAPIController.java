@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConsta
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryEventPublisher;
 import com.armedia.acm.plugins.documentrepository.service.DocumentRepositoryService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ import java.util.Date;
 import java.util.Objects;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/documentrepository", "/api/latest/plugin/documentrepository"})
+@RequestMapping({ "/api/v1/plugin/documentrepository", "/api/latest/plugin/documentrepository" })
 public class DocumentRepositoryAPIController
 {
 
@@ -56,7 +57,8 @@ public class DocumentRepositoryAPIController
             in.setModifier(AuthenticationUtils.getUsername());
             in.setModified(new Date());
             return getDocumentRepositoryService().save(in, auth);
-        } catch (PipelineProcessException | TransactionException e)
+        }
+        catch (PipelineProcessException | TransactionException e)
         {
             log.error("Could not save Document Repository: {}", in.getName(), e);
             throw new AcmCreateObjectFailedException(DocumentRepositoryConstants.OBJECT_TYPE, e.getMessage(), e);

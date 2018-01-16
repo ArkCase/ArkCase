@@ -2,6 +2,7 @@ package com.armedia.acm.services.email.sender.service;
 
 import com.armedia.acm.services.email.sender.model.EmailSenderConfiguration;
 import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConstants;
+
 import org.apache.commons.net.smtp.AuthenticatingSMTPClient;
 import org.apache.commons.net.smtp.SMTPClient;
 import org.apache.commons.net.smtp.SMTPReply;
@@ -56,10 +57,12 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         try (OutputStream propertyOutputStream = new FileOutputStream(emailSenderPropertiesResource.getFile()))
         {
             emailSenderProperties.store(propertyOutputStream, String.format("Updated by %s", auth.getName()));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not write properties to [{}] file.", emailSenderPropertiesResource.getFilename());
-        } finally
+        }
+        finally
         {
             writeLock.unlock();
         }
@@ -80,35 +83,35 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
             String propertyValue = emailSenderProperties.getProperty(propertyName);
             switch (propertyName)
             {
-                case EmailSenderConfigurationConstants.HOST:
-                    emailSenderConfiguration.setHost(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.PORT:
-                    emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
-                    break;
-                case EmailSenderConfigurationConstants.ENCRYPTION:
-                    emailSenderConfiguration.setEncryption(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.TYPE:
-                    emailSenderConfiguration.setType(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.USERNAME:
-                    emailSenderConfiguration.setUsername(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.PASSWORD:
-                    emailSenderConfiguration.setPassword(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.USER_FROM:
-                    emailSenderConfiguration.setUserFrom(propertyValue);
-                    break;
-                case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
-                    emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
-                    break;
-                case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
-                    emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
-                    break;
-                case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
-                    emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
+            case EmailSenderConfigurationConstants.HOST:
+                emailSenderConfiguration.setHost(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.PORT:
+                emailSenderConfiguration.setPort(Integer.valueOf(propertyValue));
+                break;
+            case EmailSenderConfigurationConstants.ENCRYPTION:
+                emailSenderConfiguration.setEncryption(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.TYPE:
+                emailSenderConfiguration.setType(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.USERNAME:
+                emailSenderConfiguration.setUsername(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.PASSWORD:
+                emailSenderConfiguration.setPassword(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.USER_FROM:
+                emailSenderConfiguration.setUserFrom(propertyValue);
+                break;
+            case EmailSenderConfigurationConstants.ALLOW_DOCUMENTS:
+                emailSenderConfiguration.setAllowDocuments(Boolean.valueOf(propertyValue));
+                break;
+            case EmailSenderConfigurationConstants.ALLOW_ATTACHMENTS:
+                emailSenderConfiguration.setAllowAttachments(Boolean.valueOf(propertyValue));
+                break;
+            case EmailSenderConfigurationConstants.ALLOW_HYPERLINKS:
+                emailSenderConfiguration.setAllowHyperlinks(Boolean.valueOf(propertyValue));
             }
         }
 
@@ -123,10 +126,12 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
         try (InputStream propertyInputStream = emailSenderPropertiesResource.getInputStream())
         {
             emailSenderProperties.load(propertyInputStream);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not read properties from [{}] file.", emailSenderPropertiesResource.getFilename());
-        } finally
+        }
+        finally
         {
             readLock.unlock();
 
@@ -182,7 +187,8 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
 
             validation = true;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("SMTP Error, [{}]", e.getMessage(), e);
             if (authenticatingSmtpClient.isConnected())
@@ -190,7 +196,8 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
                 try
                 {
                     authenticatingSmtpClient.disconnect();
-                } catch (IOException ioe)
+                }
+                catch (IOException ioe)
                 {
                 }
             }
@@ -214,7 +221,8 @@ public class EmailSenderConfigurationServiceImpl implements EmailSenderConfigura
     }
 
     /**
-     * @param emailSenderPropertiesResource the emailSenderPropertiesResource to set
+     * @param emailSenderPropertiesResource
+     *            the emailSenderPropertiesResource to set
      */
     public void setEmailSenderPropertiesResource(Resource emailSenderPropertiesResource)
     {

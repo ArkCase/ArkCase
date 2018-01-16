@@ -131,7 +131,8 @@ public class JPAAcmOutlookFolderCreatorDaoIT
         try
         {
             outlookFolderCreatorDao.getOutlookObjectReference(REFERENCE_ID, CASE_FILE);
-        } catch (AcmOutlookFolderCreatorDaoException e)
+        }
+        catch (AcmOutlookFolderCreatorDaoException e)
         {
             expectedEx = e;
         }
@@ -241,7 +242,8 @@ public class JPAAcmOutlookFolderCreatorDaoIT
         try
         {
             outlookFolderCreatorDao.getFolderCreatorForObject(REFERENCE_ID, CASE_FILE);
-        } catch (AcmOutlookFolderCreatorDaoException e)
+        }
+        catch (AcmOutlookFolderCreatorDaoException e)
         {
             expectedEx = e;
         }

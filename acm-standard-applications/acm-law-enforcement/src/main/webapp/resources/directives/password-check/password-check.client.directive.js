@@ -21,35 +21,34 @@
  *
  */
 
-angular.module('directives').directive('passwordCheck', ['$translate' ,function($translate){
+angular.module('directives').directive('passwordCheck', [ '$translate', function($translate) {
     return {
-        resctrict: 'A',
-        require: '^form',                            // access the FormController in a directive
-        scope: {
-            newPassword: '=',
-            confirmNewPassword: '=',
-            errorMessages: '=',
-            newPasswordValidation: '@',
-            confirmNewPasswordValidation: '@'
+        resctrict : 'A',
+        require : '^form', // access the FormController in a directive
+        scope : {
+            newPassword : '=',
+            confirmNewPassword : '=',
+            errorMessages : '=',
+            newPasswordValidation : '@',
+            confirmNewPasswordValidation : '@'
         },
-        link: function(scope, elem, attrs, formCtrl){
-            scope.$watch('newPassword', function(){
+        link : function(scope, elem, attrs, formCtrl) {
+            scope.$watch('newPassword', function() {
                 scope.differentPasswords();
                 scope.$bus.publish('ldap-change-password-clear-errors');
             });
 
-            scope.$watch('confirmNewPassword', function(){
+            scope.$watch('confirmNewPassword', function() {
                 scope.differentPasswords();
                 scope.$bus.publish('ldap-change-password-clear-errors');
             });
 
-            scope.differentPasswords = function(){
-                if( typeof scope.confirmNewPassword !== 'undefined' && scope.newPassword !== scope.confirmNewPassword){
+            scope.differentPasswords = function() {
+                if (typeof scope.confirmNewPassword !== 'undefined' && scope.newPassword !== scope.confirmNewPassword) {
                     formCtrl[scope.newPasswordValidation].$setValidity('notSamePasswords', false);
                     formCtrl[scope.confirmNewPasswordValidation].$setValidity('notSamePasswords', false);
                     scope.errorMessages.notSamePasswordsMessage = $translate.instant("profile.modal.differentPasswords");
-                }
-                else{
+                } else {
                     formCtrl[scope.newPasswordValidation].$setValidity('notSamePasswords', true);
                     formCtrl[scope.confirmNewPasswordValidation].$setValidity('notSamePasswords', true);
                     scope.errorMessages.notSamePasswordsMessage = '';
@@ -60,4 +59,4 @@ angular.module('directives').directive('passwordCheck', ['$translate' ,function(
 
     }
 
-}]);
+} ]);

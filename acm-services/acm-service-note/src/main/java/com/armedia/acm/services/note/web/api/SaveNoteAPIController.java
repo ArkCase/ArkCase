@@ -7,6 +7,7 @@ import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
+@RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" })
 public class SaveNoteAPIController
 {
 
@@ -58,7 +59,8 @@ public class SaveNoteAPIController
             publishNoteEvent(httpSession, savedNote, noteEvent, true);
 
             return savedNote;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Create a fake note to audit the failure.
             Note fakeNote = new Note();
@@ -115,4 +117,3 @@ public class SaveNoteAPIController
     }
 
 }
-

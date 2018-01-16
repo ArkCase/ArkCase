@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -27,7 +29,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
+@RequestMapping({ "/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard" })
 public class GetDashboardConfigAPIController
 {
 
@@ -64,12 +66,14 @@ public class GetDashboardConfigAPIController
             retval = dashboardService.getDashboardConfigForUserAndModuleName(owner, moduleName);
             dashboardDto = dashboardService.prepareDashboardDto(retval, inserted, moduleName);
             return dashboardDto;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             if (dashboardPropertyReader.getModuleNameList().contains(moduleName))
             {
 
-                // If there is no record into the DB ( when user logs in for the first time) we will read defaultDashboard
+                // If there is no record into the DB ( when user logs in for the first time) we will read
+                // defaultDashboard
                 // config String from .acm/dashboardPlugin.properties and that value will be stored into
                 // DB table acm-dashboard.
                 if (retval == null)
@@ -81,12 +85,15 @@ public class GetDashboardConfigAPIController
                 log.info("Module dashboard config for user [{}] and module [{}] is inserted into the DB", userId, moduleName);
                 dashboardDto = dashboardService.prepareDashboardDto(retval, inserted, moduleName);
                 return dashboardDto;
-            } else
+            }
+            else
             {
-                log.warn("Module dashboard config for user: [{}] and module: [{}] NOT inserted into the DB, the moduleName does NOT exists", userId, moduleName, moduleName, e);
+                log.warn("Module dashboard config for user: [{}] and module: [{}] NOT inserted into the DB, the moduleName does NOT exists",
+                        userId, moduleName, moduleName, e);
                 throw e;
             }
-        } catch (Exception e1)
+        }
+        catch (Exception e1)
         {
             log.error("Exception occurred while raising an event or while reading values from fetched DB dashboard ", e1);
             throw new AcmDashboardException("Get dashboard exception", e1);

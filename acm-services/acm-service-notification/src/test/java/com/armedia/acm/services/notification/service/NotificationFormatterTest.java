@@ -1,16 +1,16 @@
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 public class NotificationFormatterTest extends EasyMockSupport
 {

@@ -89,7 +89,8 @@ public class ComplaintUiController
                     mv.addObject(attrName, ar);
                 }
 
-            } catch (JSONException e)
+            }
+            catch (JSONException e)
             {
                 log.error(e.getMessage());
             }
