@@ -36,7 +36,8 @@ public class LdapGroupService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException {
+    public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
+    {
         AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
                 get(String.format("%s_sync", directoryName));
 
@@ -47,6 +48,7 @@ public class LdapGroupService
             log.debug("Group with name: [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
+        AcmGroup acmGroup;
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
         if (existingGroup == null) {
             group.setName(groupName);
@@ -57,13 +59,10 @@ public class LdapGroupService
             group.setDirectoryName(directoryName);
             group.setStatus(AcmGroupStatus.ACTIVE);
             log.debug("Saving Group [{}] with DN [{}] in database", group.getName(), group.getDistinguishedName());
-            AcmGroup acmGroup = groupService.saveAndFlush(group);
-            ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
-            log.debug("Group [{}] with DN [{}] saved in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
-            return acmGroup;
+            groupService.saveAndFlush(group);
+            acmGroup = group;
         }
         else {
-
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
             existingGroup.setDisplayName(group.getDisplayName());
             existingGroup.setDescription(group.getDescription());
@@ -71,11 +70,12 @@ public class LdapGroupService
             existingGroup.setDistinguishedName(groupDN);
             existingGroup.setDirectoryName(directoryName);
             log.debug("Saving Group [{}] with DN [{}] in database", existingGroup.getName(), existingGroup.getDistinguishedName());
-            AcmGroup acmGroup = groupService.saveAndFlush(existingGroup);
-            ldapGroupDao.createGroup( existingGroup, ldapSyncConfig);
-            log.debug("Group [{}] with DN [{}] saved in DB and LDAP",  existingGroup.getName(),  existingGroup.getDistinguishedName());
-            return  existingGroup;
+            groupService.saveAndFlush(existingGroup);
+            acmGroup = existingGroup;
         }
+        ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
+        log.debug("Group [{}] with DN [{}] saved in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
+        return acmGroup;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -104,9 +104,7 @@ public class LdapGroupService
         AcmGroup acmGroup;
         String groupDN = buildDnForGroup(givenName, ldapSyncConfig);
         if(existingGroup == null) {
-
-
-           acmGroup = new AcmGroup();
+            acmGroup = new AcmGroup();
             acmGroup.setName(groupName);
             acmGroup.setDisplayName(groupName);
             acmGroup.setType(AcmGroupType.LDAP_GROUP);
@@ -123,7 +121,7 @@ public class LdapGroupService
             groupService.saveAndFlush(parentGroup);
         }  else{
             existingGroup.setStatus(AcmGroupStatus.ACTIVE);
-            existingGroup.setDisplayName(groupName);
+            existingGroup.setDisplayName(group.getDisplayName());
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
             existingGroup.setDescription(group.getDescription());
             existingGroup.setDistinguishedName(groupDN);
@@ -134,10 +132,8 @@ public class LdapGroupService
 
             parentGroup.addGroupMember(existingGroup);
             log.debug("Updated parent-group [{}] with sub-group [{}] in database", existingGroup.getName(), existingGroup.getName());
-            acmGroup = groupService.saveAndFlush(existingGroup);
-
-
-
+            groupService.saveAndFlush(parentGroup);
+            acmGroup = existingGroup;
         }
 
             log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
@@ -157,12 +153,6 @@ public class LdapGroupService
                 throw e;
             }
             return acmGroup;
-
-
-
-
-
-
     }
 
     @Transactional(rollbackFor = Exception.class)

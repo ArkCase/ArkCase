@@ -59,15 +59,13 @@ public class GroupServiceImpl implements GroupService
         if(acmGroup == null){
             group.setStatus(AcmGroupStatus.ACTIVE);
             group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+            group.setDisplayName(groupName);
             return groupDao.save(group);
         }
        else{
             acmGroup.setType(AcmGroupType.ADHOC_GROUP);
             acmGroup.setStatus(AcmGroupStatus.ACTIVE);
-            acmGroup.setUserMembers(group.getUserMembers());
-            acmGroup.setAscendantsList(group.getAscendantsList());
             acmGroup.setDescription(group.getDescription());
-            acmGroup.setMemberGroups(group.getMemberGroups());
             acmGroup.setSupervisor(group.getSupervisor());
             acmGroup.setDisplayName(group.getDisplayName());
             acmGroup.setDistinguishedName(null);
