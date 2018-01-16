@@ -62,6 +62,22 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
 
             /**
              * @ngdoc method
+             * @name _getFilteredUsers
+             * @methodOf services.service:LookupService
+             *
+             * @description
+             * Filtered list n users from start position start POUBAV DESCRIPTION + IME NA METHOD!!!!!
+             *
+             * @returns {Object} An object returned by $resource
+             */
+            , _getFilteredUsers: {
+                url: "api/latest/plugin/search/advanced/USER?start=0&n=5"
+                , method: "GET"
+                , cache: false
+            }
+
+            /**
+             * @ngdoc method
              * @name _getUsersBasic
              * @methodOf services.service:LookupService
              *
@@ -117,6 +133,34 @@ angular.module('services').factory('LookupService', ['$resource', 'Acm.StoreServ
             });
         };
 
+        /**
+         * @ngdoc method
+         * @name getFilteredUsers
+         * @methodOf services.service:LookupService
+         *
+         * @description
+         * Query filtered list of users
+         *
+         * @returns {Object} Promise
+         */
+        Service.getFilteredUsers = function () {
+            var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS);
+            var users = cacheUsers.get();
+            return Util.serviceCall({
+                service: Service._getFilteredUsers
+                , result: users
+                , onSuccess: function (data) {
+                    if (data.response.docs) {
+                        users = [];
+                        _.each(data.response.docs, function (item) {
+                            users.push(item);
+                        });
+                        cacheUsers.set(users);
+                        return users;
+                    }
+                }
+            });
+        };
 
         /**
          * @ngdoc method

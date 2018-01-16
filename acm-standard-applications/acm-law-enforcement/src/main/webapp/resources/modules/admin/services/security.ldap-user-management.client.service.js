@@ -11,12 +11,12 @@ angular.module('admin').factory('Admin.LdapUserManagementService', ['$resource',
             deleteUser: deleteUser
         });
 
-        function queryGroupsByDirectory(directory) {
+        function queryGroupsByDirectory(directory, n) {
             return $http({
                 method: 'GET',
                 url: 'api/latest/users/' + directory + '/groups',
                 params: {
-                    n: 10000
+                    n: (n ? n : 10000)
                 }
             });
         }

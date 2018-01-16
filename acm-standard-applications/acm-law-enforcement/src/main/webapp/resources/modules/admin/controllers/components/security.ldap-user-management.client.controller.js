@@ -11,7 +11,7 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
         $scope.appUsers = [];
         $scope.appGroups = [];
 
-        LookupService.getUsers().then(function (data) {
+        LookupService.getFilteredUsers().then(function (data) {
             _.forEach(data, function (user) {
                 var element = {};
                 element.name = user.name;
@@ -21,12 +21,6 @@ angular.module('admin').controller('Admin.LdapUserManagementController', ['$scop
             });
         });
 
-
-        for (var k = 0; k < 20; k++){
-            var element = {};
-            element.name = "test" + k;
-            $scope.appUsers.push(element);
-        }
         var selectedUser;
         var currentAuthGroups;
 
