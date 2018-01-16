@@ -844,9 +844,6 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 if (!lookup[i].value) {
                     return { isValid : false, errorMessage: "Empty value found!" };
                 }
-                if (!lookup[i].inverseKey) {
-                    return { isValid : false, errorMessage: "Empty inverse key found!" };
-                }
                 if (!lookup[i].inverseValue) {
                     return { isValid : false, errorMessage: "Empty inverse value found!" };
                 }
