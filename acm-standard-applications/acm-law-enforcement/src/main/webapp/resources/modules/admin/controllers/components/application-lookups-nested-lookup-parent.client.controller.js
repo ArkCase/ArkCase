@@ -63,16 +63,23 @@ angular.module('admin').controller('Admin.NestedLookupParentController', ['$scop
         };
 
         $scope.deleteRow = function (rowEntity) {
-            var idx;
-            _.find($scope.lookup, function(entry, entryIdx){ 
-                if (entry.key == rowEntity.key) { 
-                   idx = entryIdx;
-                   return true;
+            bootbox.confirm(
+                $translate.instant('admin.application.lookups.config.deleteEntryMsg'),
+                function (result) {
+                    if (result) {
+                        var idx;
+                        _.find($scope.lookup, function (entry, entryIdx) {
+                            if (entry.key == rowEntity.key) {
+                                idx = entryIdx;
+                                return true;
+                            }
+                        });
+                        $scope.parentLookupValueSelected(null);
+                        $scope.lookup.splice(idx, 1);
+                        saveLookup();
+                    }
                 }
-            });
-            $scope.parentLookupValueSelected(null);
-            $scope.lookup.splice(idx , 1);
-            saveLookup();
+            );
         };
 
         function showModal(entry, isEdit) {
