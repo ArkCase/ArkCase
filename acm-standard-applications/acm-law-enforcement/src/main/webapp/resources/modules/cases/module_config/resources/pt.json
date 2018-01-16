@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "Roteamento de aprovação não atualizado",
     "button": {
       "save.tooltip": "Salvar alterações",
+      "initiate": "Iniciar",
+      "withdraw": "Retirar",
       "initiate.tooltip": "Iniciar Tarefa",
       "withdraw.tooltip": "Retirar Tarefa"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "Assignee",
-      "group": "Grupo de propriedade",
+      "owningGroup": "Grupo de propriedade",
       "subject": "Sujeito",
       "details": "Detalhes",
       "dueDate": "Data de Vencimento",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "Nova tarefa futura",
       "assignee": "Assignee",
+      "owningGroup": "Grupo de propriedade",
       "subject.label": "Sujeito",
       "subject.placeholder": "Insira o assunto futuro do caso",
       "details.label": "Detalhes",

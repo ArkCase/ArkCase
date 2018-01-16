@@ -315,6 +315,8 @@
     "businessProcessUpdate.fail": "承認ルーティングが更新されない",
     "button": {
       "save.tooltip": "変更内容を保存",
+      "initiate": "タスクを開始する",
+      "withdraw": "引退の仕事",
       "initiate.tooltip": "タスクを開始する",
       "withdraw.tooltip": "引退の仕事"
     },
@@ -323,7 +325,7 @@
     },
     "table.columns": {
       "assignee": "譲受人",
-      "group": "所有グループ",
+      "owningGroup": "所有グループ",
       "subject": "件名",
       "details": "詳細",
       "dueDate": "期日",
@@ -339,6 +341,7 @@
     "future.task.modal": {
       "title": "新しい未来の仕事",
       "assignee": "譲受人",
+      "owningGroup": "所有グループ",
       "subject.label": "件名",
       "subject.placeholder": "将来の案件の件名を入力",
       "details.label": "詳細",
