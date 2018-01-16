@@ -119,7 +119,7 @@ angular.module('cases').controller('Cases.FutureApprovalRoutingController', ['$s
                 .then(function (result){
                     var futureTask = {
                         approverId: result.pickedUserId,
-                        groupName: result.pickedUserGroup,
+                        groupName: result.pickedGroupId,
                         taskName: result.futureTaskTitle,
                         details: result.futureTaskDetails,
                         addedBy: currentUser

@@ -1220,7 +1220,7 @@
     {
       "id": "newFutureTask",
       "userOrGroupSearch": {
-        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)",
+        "userOrGroupFacetFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
         "userOrGroupFacetExtraFilter": "&fq=\"name\": "
       },
       "groupSearch": {
@@ -1266,7 +1266,7 @@
         },
         {
           "name": "groupName",
-          "displayName": "cases.comp.approvalRouting.table.columns.group",
+          "displayName": "cases.comp.approvalRouting.table.columns.owningGroup",
           "cellEditableCondition": false,
           "headerCellFilter": "translate"
         },
@@ -1280,7 +1280,8 @@
           "name": "details",
           "displayName": "cases.comp.approvalRouting.table.columns.details",
           "cellEditableCondition": false,
-          "headerCellFilter": "translate"
+          "headerCellFilter": "translate",
+          "cellTemplate": "<div ng-bind-html='row.entity.details' title='{{row.entity.details}}' class='ui-grid-cell-contents'></div>"
         },
         {
           "name": "dueDate",
@@ -1303,7 +1304,7 @@
         }
       ],
       "userSearch": {
-        "userFacetFilter": "\"Object Type\": USER",
+        "userFacetFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
         "userFacetExtraFilter": "&fq=\"name\": "
       }
     },

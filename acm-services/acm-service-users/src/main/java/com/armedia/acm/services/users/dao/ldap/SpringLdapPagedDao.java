@@ -101,15 +101,9 @@ public class SpringLdapPagedDao implements SpringLdapDao
         }
 
         // filter out the DISABLED users
-        ldapUsers = ldapUsers.stream().filter(u -> !("DISABLED".equals(u.getState()))).collect(Collectors.toList());
-
-        // do we need to append the domain?
-        String userDomain = syncConfig.getUserDomain();
-        if (userDomain != null && !userDomain.trim().isEmpty())
-        {
-            String userDomainSuffix = "@" + userDomain;
-            ldapUsers.forEach(u -> u.setUserId(u.getUserId() + userDomainSuffix));
-        }
+        ldapUsers = ldapUsers.stream()
+                .filter(u -> !("DISABLED".equals(u.getState())))
+                .collect(Collectors.toList());
 
         log.info("LDAP sync number of enabled users: [{}]", ldapUsers.size());
         return ldapUsers;

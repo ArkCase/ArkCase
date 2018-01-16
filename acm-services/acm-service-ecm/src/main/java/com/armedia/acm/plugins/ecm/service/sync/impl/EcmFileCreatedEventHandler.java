@@ -118,7 +118,7 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
      */
     protected String findFileType(Document cmisDocument)
     {
-        return "Other";
+        return "other";
     }
 
     protected Document lookupCmisDocument(String cmisRepositoryId, String nodeId)

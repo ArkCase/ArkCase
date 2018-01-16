@@ -103,9 +103,8 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockAuthoritiesMapper.mapAuthorities(authsFromProvider)).andReturn(authsFromMapper);
         expect(mockUserDao.findByUserId(user.getUserId())).andReturn(user);
         expect(mockGroupService.findByUserMember(user)).andReturn(groups);
-        expect(mockGroupService.isUUIDPresentInTheGroupName(ldapGroup.getName())).andReturn(false);
-        expect(mockGroupService.isUUIDPresentInTheGroupName(adhocGroup.getName())).andReturn(false);
         expect(mockAuthoritiesMapper.mapAuthorities(authsGroups)).andReturn(authsGroups);
+        expect(mockAuthentication.getName()).andReturn(user.getUserId());
 
         replayAll();
 
@@ -126,21 +125,26 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
         expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(firstException);
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
-        mockEventPublisher.publishAuthenticationFailure(firstException, mockAuthentication);
-
-        replayAll();
+        expect(mockAuthentication.getName()).andReturn(null);
+        Capture<AuthenticationException> captureCustomException = Capture.newInstance();
+        mockEventPublisher.publishAuthenticationFailure(capture(captureCustomException), eq(mockAuthentication));
+        expectLastCall().once();
 
         try
         {
+            replayAll();
             unit.authenticate(mockAuthentication);
+            verifyAll();
             fail("should have gotten an exception");
+
         }
         catch (AuthenticationException ae)
         {
-            assertEquals(firstException, ae);
+            assertEquals(captureCustomException.getValue(), ae);
+
         }
 
-        verifyAll();
+
     }
 
     @Test(expected = AuthenticationServiceException.class)
@@ -153,7 +157,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
         expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(badCredentialsException);
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
-        expect(mockAuthentication.getName()).andReturn("ann-acm");
+        expect(mockAuthentication.getName()).andReturn("ann-acm").times(2);
         expect(mockUserDao.isUserPasswordExpired("ann-acm")).andReturn(false);
 
         Capture<AuthenticationServiceException> authenticationServiceExceptionCapture = Capture.newInstance();
@@ -183,7 +187,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockContextHolder.getAllBeansOfType(AuthenticationProvider.class)).andReturn(providers);
         expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(badCredentialsException);
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
-        expect(mockAuthentication.getName()).andReturn("ann-acm");
+        expect(mockAuthentication.getName()).andReturn("ann-acm").times(2);
         expect(mockUserDao.isUserPasswordExpired("ann-acm")).andReturn(true);
 
         Capture<AuthenticationServiceException> authenticationServiceExceptionCapture = Capture.newInstance();

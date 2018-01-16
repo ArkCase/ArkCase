@@ -78,19 +78,23 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
          * @param {String} url - The base url of the weather service api without parameters.
          * @param {String} appid - the APPID ( unique application ID, provided by the weather service )
          * @param {String} location - The location for which the method is going to fetch a weather data.
+         * @param {String} zip - The zip code for which the method is going to fetch a weather data.
          * @param {String} units - units in which retrieved data will be represented ( metric, imperial )
+         * @param {String} type - accuracy level of the search (accurate, like. 'accurate' returns exact match value, 'like' returns results by searching for that substring)
          *
          * @returns {HttpPromise} Feature info about weather object created in this method and filed with the needed
          * data fetched from the weather api service.
          */
-        function getWeather(url, appid, location, units) {
+        function getWeather(url, appid, location, zip, units, type) {
 
             var configObj = {
                 params: {
                     callback: "JSON_CALLBACK",
                     units: units,
                     q: location,
-                    APPID: appid
+                    zip: zip,
+                    APPID: appid,
+                    type: type
                 }
             };
 
@@ -104,6 +108,7 @@ angular.module('dashboard').factory('Dashboard.WidgetService', ['$http', '$log',
                         weather.temp.max = response.data.main.temp_max;
                         weather.location.city = response.data.name;
                         weather.location.country = response.data.sys.country;
+                        weather.location.zip = response.params.zip;
 
                     }
 

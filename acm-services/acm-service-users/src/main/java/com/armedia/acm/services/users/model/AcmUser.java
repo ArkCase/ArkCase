@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.model;
 import com.armedia.acm.data.converter.LocalDateConverter;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.MoreObjects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,7 +19,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -407,5 +407,13 @@ public class AcmUser implements Serializable
     public int hashCode()
     {
         return Objects.hash(userId);
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper(this)
+                .add("userId", userId)
+                .toString();
     }
 }

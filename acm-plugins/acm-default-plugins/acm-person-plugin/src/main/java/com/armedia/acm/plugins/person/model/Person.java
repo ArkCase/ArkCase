@@ -38,7 +38,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PostLoad;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -313,37 +312,6 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
             getContainer().setContainerObjectTitle("Person-" + getId());
-        }
-    }
-
-    @PostLoad
-    protected void postLoad()
-    {
-        /*
-         * FIXME this code is added because in personAliases or personAssosiation additional sql is executed to fetch
-         * same person which is
-         * parent to them. Because of deadline didn't have time to find better solution for this like: get object from
-         * cache or explore new
-         * possibilities So when we optimize JPA not to fetch same entity (with same ID) more than once in same
-         * transaction, this code
-         * should be removed linked with technical dept: AFDP-3487
-         */
-        for (PersonAlias pa : getPersonAliases())
-        {
-            pa.setPerson(this);
-        }
-
-        for (PersonAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setPerson(this);
-        }
-        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
-        {
-            poa.setPerson(this);
-        }
-        if (getDefaultOrganization() != null)
-        {
-            getDefaultOrganization().setPerson(this);
         }
     }
 

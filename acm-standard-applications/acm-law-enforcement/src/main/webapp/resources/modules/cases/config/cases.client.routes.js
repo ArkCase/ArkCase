@@ -60,7 +60,10 @@ angular.module('cases').config(['$stateProvider',
 
             .state('cases.history', {
                 url: '/:id/history',
-                templateUrl: 'modules/cases/views/components/case-history.client.view.html'
+                templateUrl: 'modules/common/views/object-history.client.view.html',
+                params: {
+                    "type": "CASE_FILE"
+                }
             })
 
             .state('cases.notes', {

@@ -186,7 +186,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
                 .map(AcmGroup::getName);
 
         Stream<String> principalAuthoritiesPerAscendants = userGroups.stream()
-                .flatMap(AcmGroup::getAscendants);
+                .flatMap(AcmGroup::getAscendantsStream);
 
         Set<String> principalAllAuthorities = Stream.concat(principalAuthoritiesPerAscendants, principalDirectAuthorities)
                 .collect(Collectors.toSet());

@@ -15,6 +15,7 @@ import com.armedia.acm.services.dataaccess.service.SearchAccessControlFields;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.tag.model.AcmAssociatedTag;
 import com.armedia.acm.services.tag.model.AcmTag;
@@ -151,7 +152,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         expect(mockUserDao.quietFindByUserId(null)).andReturn(null);
 
         replayAll();
-        SolrAdvancedSearchDocument result = unit.toContentFileIndex(in);
+        SolrContentDocument result = unit.toContentFileIndex(in);
         verifyAll();
 
         validateResult(result);
@@ -227,6 +228,29 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileName(), result.getTitle_parseable());
         assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
         assertEquals(6, result.getAdditionalProperties().size());
+    }
+
+    private void validateResult(SolrContentDocument result)
+    {
+        assertNotNull(result);
+        assertEquals(result.getEcmFileId(), String.valueOf(in.getVersionSeriesId()));
+        assertEquals("101-FILE", result.getId());
+        assertEquals(String.valueOf(in.getFileId()), result.getObject_id_s());
+        assertEquals(in.getObjectType(), result.getObject_type_s());
+        assertEquals(in.getFileName(), result.getName());
+        assertEquals(in.getFileActiveVersionNameExtension(), result.getExt_s());
+        assertEquals(in.getFileActiveVersionMimeType(), result.getMime_type_s());
+        assertEquals(in.getCreated(), result.getCreate_date_tdt());
+        assertEquals(in.getCreator(), result.getCreator_lcs());
+        assertEquals(in.getModified(), result.getModified_date_tdt());
+        assertEquals(in.getModifier(), result.getModifier_lcs());
+        assertEquals(in.getFileName(), result.getTitle_parseable());
+        assertEquals(in.getFileName(), result.getTitle_parseable_lcs());
+        assertEquals(in.getStatus(), result.getStatus_lcs());
+        assertEquals(in.getFileType(), result.getType_lcs());
+        assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
+        assertEquals(in.getParentObjectType(), result.getParent_type_s());
+        assertEquals(9, result.getAdditionalProperties().size());
     }
 
 }

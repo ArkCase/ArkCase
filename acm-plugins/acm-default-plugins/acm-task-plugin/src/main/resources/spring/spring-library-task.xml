@@ -140,7 +140,6 @@
         <property name="noteDao" ref="noteDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
-        <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>

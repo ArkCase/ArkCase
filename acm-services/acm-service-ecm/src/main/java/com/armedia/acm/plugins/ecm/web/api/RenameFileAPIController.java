@@ -48,6 +48,7 @@ public class RenameFileAPIController
         return getEcmFile(objectId, authentication, session, newName);
     }
 
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{objectId}/rename", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public EcmFile renameFileWithoutExt(@PathVariable("objectId") Long objectId, @RequestParam("newName") String newName,

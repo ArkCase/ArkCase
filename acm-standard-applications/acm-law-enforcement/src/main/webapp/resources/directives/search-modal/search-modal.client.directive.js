@@ -62,11 +62,14 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 draggable: '@',
                 onDblClickRow: '=?',
                 customization: '=?',
-                secondGrid: '@'
+                secondGrid: '@',
+                pickUserLabel: '@',
+                pickGroupLabel: '@'
 
             },
 
             link: function (scope, el, attrs) {
+
                 //dom operations
                 if (scope.draggable) {
                     el.parent().draggable();
@@ -75,6 +78,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                 scope.onNoDataMessage = Util.goodValue(scope.onNoDataMessage, $translate.instant("common.directive.searchModal.noData.text"));
                 scope.search = Util.goodValue(scope.search, $translate.instant("common.directive.searchModal.btnSearch.text"));
                 scope.ok = Util.goodValue(scope.ok, $translate.instant("common.directive.searchModal.btnOk.text"));
+                scope.pickUserLabel = Util.goodValue(scope.pickUserLabel, $translate.instant("common.directive.searchModal.pickUserLabel"));
+                scope.pickGroupLabel = Util.goodValue(scope.pickGroupLabel, $translate.instant("common.directive.searchModal.pickGroupLabel"));
                 scope.cancel = Util.goodValue(scope.cancel, $translate.instant("common.directive.searchModal.btnCancel.text"));
                 scope.searchPlaceholder = Util.goodValue(scope.searchPlaceholder, $translate.instant("common.directive.searchModal.edtPlaceholder"));
                 scope.showHeaderFooter = !Util.isEmpty(scope.modalInstance);
@@ -152,6 +157,14 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                         scope.showNoData = true;
                     }
                     scope.gridOptionsMaster.totalItems = data.response.numFound;
+                };
+
+                scope.setSecondGridData = function () {
+                    if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
+                        scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
+                    } else if (scope.selectedItem.object_type_s === 'GROUP') { // Select group
+                        scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
+                    }
                 };
 
                 scope.querySubItems = function (filters) {
@@ -272,14 +285,9 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 if (scope.onItemsSelected) {
                                     scope.onItemsSelected(scope.selectedItems, [scope.selectedItem], row.isSelected);
                                 }
-                                    if(scope.secondGrid) {
-                                        if (scope.selectedItem.object_type_s === 'USER') {  // Selected a user
-                                            scope.querySubItems('fq="object_type_s":GROUP%26fq="member_id_ss":' + scope.selectedItem.object_id_s);
-                                        } else if (scope.selectedItem.object_type_s === 'GROUP') {
-                                            scope.querySubItems('fq="object_type_s":USER%26fq="groups_id_ss":' + scope.selectedItem.object_id_s);
-                                        }
-                                    }
-
+                                if(scope.secondGrid) {
+                                    scope.setSecondGridData();
+                                }
                             });
 
                             gridApi.selection.on.rowSelectionChangedBatch(scope, function (rows) {
@@ -360,7 +368,8 @@ angular.module('directives').directive('searchModal', ['$q', '$translate', 'Util
                                 gridApi.pagination.on.paginationChanged(scope, function (newPage, pageSize) {
                                     scope.startSecond = (newPage - 1) * pageSize;   //newPage is 1-based index
                                     scope.pageSizeSecond = pageSize;
-                                    scope.querySubItems();
+                                    scope.setSecondGridData();
+
                                 });
                             }
                         };

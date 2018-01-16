@@ -85,7 +85,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
                 promiseSaveInfo.then(
                     function (objectInfo) {
                         $scope.$emit("report-object-updated", objectInfo);
-                        $scope.activationMode = true;
+                        activationMode = true;
                         return objectInfo;
                     }
                     , function (error) {

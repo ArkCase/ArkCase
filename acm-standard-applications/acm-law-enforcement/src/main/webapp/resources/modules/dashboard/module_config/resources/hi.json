@@ -153,7 +153,9 @@
           "enterLocation": "स्थान दर्ज करें",
           "description": "एक शहर का वर्तमान तापमान प्रदर्शित करें",
           "location": "स्थान",
-          "insertLocationInConfiguration": "विजेट विन्यास में एक स्थान डालें"
+          "insertLocationInConfiguration": "विजेट विन्यास में एक स्थान डालें",
+          "zip": "hi_Zip Code",
+          "enterZip": "hi_Enter Zip Code"
         },
         "title": "मौसम",
         "noDataMessage": "वर्तमान में कोई मौसम जानकारी नहीं है",

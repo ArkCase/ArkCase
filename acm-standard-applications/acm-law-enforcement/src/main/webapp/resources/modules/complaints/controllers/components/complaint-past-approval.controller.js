@@ -20,6 +20,8 @@ angular.module('complaints').controller('Complaints.PastApprovalRoutingControlle
             , stateParams: $stateParams
             , moduleId: "complaints"
             , componentId: "pastapprovals"
+            , retrieveObjectInfo: ComplaintInfoService.getComplaintInfo
+            , validateObjectInfo: ComplaintInfoService.validateComplaintInfo
             , onConfigRetrieved: function (componentConfig) {
                 return onConfigRetrieved(componentConfig);
             }

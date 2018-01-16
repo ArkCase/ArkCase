@@ -20,7 +20,6 @@ import org.springframework.security.core.AuthenticationException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,6 +38,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException
     {
+        String principal = authentication.getName();
+
         Map<String, AuthenticationProvider> providerMap = getSpringContextHolder().getAllBeansOfType(AuthenticationProvider.class);
         Authentication providerAuthentication = null;
         Exception lastException = null;
@@ -46,7 +47,19 @@ public class AcmAuthenticationManager implements AuthenticationManager
         {
             try
             {
-                providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                if (providerEntry.getValue() instanceof AcmLdapAuthenticationProvider)
+                {
+                    AcmLdapAuthenticationProvider provider = (AcmLdapAuthenticationProvider) providerEntry.getValue();
+                    String userDomain = provider.getLdapSyncService().getLdapSyncConfig().getUserDomain();
+                    if (principal.endsWith(userDomain))
+                    {
+                        providerAuthentication = provider.authenticate(authentication);
+                    }
+                } else
+                {
+                    providerAuthentication = providerEntry.getValue().authenticate(authentication);
+                }
+
                 if (providerAuthentication != null)
                 {
                     break;
@@ -69,7 +82,7 @@ public class AcmAuthenticationManager implements AuthenticationManager
             AuthenticationException ae;
             if (lastException instanceof ProviderNotFoundException)
             {
-                ae = (AuthenticationException) lastException;
+                ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
             } else if (lastException instanceof BadCredentialsException)
             {
                 if (getUserDao().isUserPasswordExpired(authentication.getName()))
@@ -96,15 +109,12 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
         // either there are no providers, or no providers can handle the incoming authentication
 
-        ProviderNotFoundException providerNotFoundException =
-                new ProviderNotFoundException("No providers to handle authentication of type: " + authentication.getClass().getName());
-        getAuthenticationEventPublisher().publishAuthenticationFailure(providerNotFoundException, authentication);
-        throw providerNotFoundException;
+
+        throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }
 
     protected AcmAuthentication getAcmAuthentication(Authentication providerAuthentication)
     {
-
         AcmUser user = getUserDao().findByUserId(providerAuthentication.getName());
 
         Collection<AcmGrantedAuthority> acmAuths = getAuthoritiesMapper().mapAuthorities(providerAuthentication.getAuthorities());
@@ -128,17 +138,13 @@ public class AcmAuthenticationManager implements AuthenticationManager
         // All LDAP and ADHOC groups that the user belongs to (all these we are keeping in the database)
         List<AcmGroup> groups = getGroupService().findByUserMember(user);
 
-        Function<String, AcmGrantedAuthority> groupToAuthority = groupName -> new AcmGrantedAuthority(
-                groupService.isUUIDPresentInTheGroupName(groupName) ?
-                        groupName.substring(0, groupName.lastIndexOf("-UUID-")) : groupName);
-
         Stream<AcmGrantedAuthority> authorityGroups = groups.stream()
                 .map(AcmGroup::getName)
-                .map(groupToAuthority);
+                .map(AcmGrantedAuthority::new);
 
         Stream<AcmGrantedAuthority> authorityAscendantsGroups = groups.stream()
-                .flatMap(AcmGroup::getAscendants)
-                .map(groupToAuthority);
+                .flatMap(AcmGroup::getAscendantsStream)
+                .map(AcmGrantedAuthority::new);
 
         return Stream.concat(authorityGroups, authorityAscendantsGroups)
                 .collect(Collectors.toSet());

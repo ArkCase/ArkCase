@@ -94,7 +94,8 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), false);
+        boolean isFullSync = !ldapLastSyncDate.isPresent();
+        getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
 
         writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
     }

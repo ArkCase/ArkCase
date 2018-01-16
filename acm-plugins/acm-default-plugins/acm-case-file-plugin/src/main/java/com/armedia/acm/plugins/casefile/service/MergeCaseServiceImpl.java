@@ -45,8 +45,9 @@ public class MergeCaseServiceImpl implements MergeCaseService
 
     @Override
     @Transactional
-    public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions) throws PipelineProcessException,
-            MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException, AcmAccessControlException
+    public CaseFile mergeCases(Authentication auth, String ipAddress, MergeCaseOptions mergeCaseOptions)
+            throws PipelineProcessException, MergeCaseFilesException, AcmUserActionFailedException, AcmCreateObjectFailedException,
+            AcmAccessControlException
     {
 
         CaseFile source = caseFileDao.find(mergeCaseOptions.getSourceCaseFileId());
@@ -129,9 +130,23 @@ public class MergeCaseServiceImpl implements MergeCaseService
                     return;
                 foundAssignee.setParticipantType(ParticipantTypes.FOLLOWER);
                 getAcmParticipantDao().save(foundAssignee);
-                AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
-                        target.getId(), target.getObjectType());
-                target.getParticipants().add(addedAssignee);
+                // the assignment rules may have given us a new default assignee, if so find it and update it.
+                AcmParticipant defaultAssigneeFromRules = acmParticipantService
+                        .listAllParticipantsPerObjectTypeAndId(target.getObjectType(),
+                                target.getId())
+                        .stream().filter(ap -> ParticipantTypes.ASSIGNEE.equals(ap.getParticipantType()))
+                        .findFirst().orElse(null);
+                if (defaultAssigneeFromRules != null)
+                {
+                    defaultAssigneeFromRules.setParticipantLdapId(auth.getName());
+                    getAcmParticipantDao().save(defaultAssigneeFromRules);
+                }
+                else
+                {
+                    AcmParticipant addedAssignee = acmParticipantService.saveParticipant(auth.getName(), ParticipantTypes.ASSIGNEE,
+                            target.getId(), target.getObjectType());
+                    target.getParticipants().add(addedAssignee);
+                }
             }
             else
             {
@@ -191,7 +206,6 @@ public class MergeCaseServiceImpl implements MergeCaseService
     {
         this.caseFileDao = caseFileDao;
     }
-
 
     public void setAcmFolderService(AcmFolderService acmFolderService)
     {

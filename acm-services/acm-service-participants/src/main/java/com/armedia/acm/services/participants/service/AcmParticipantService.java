@@ -137,6 +137,11 @@ public class AcmParticipantService
         return updatedParticipant;
     }
 
+    public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId)
+    {
+        return listAllParticipantsPerObjectTypeAndId(objectType, objectId, FlushModeType.AUTO);
+    }
+
     public List<AcmParticipant> listAllParticipantsPerObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
     {
         return getParticipantDao().findParticipantsForObject(objectType, objectId, flushModeType);

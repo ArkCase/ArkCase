@@ -1987,7 +1987,11 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         item.title = $translate.data(subTypes[i].label, correspondenceCategory);
                                     }
                                     item.cmd = "template/" + subTypes[i].templateFilename;
-                                    //item.data.label = subTypes[i].label;
+				    // AFDP-5105 the below line "item.data.label = ..." is needed, since the
+				    // correspondence upload code looks for this label to update the doc tree
+				    // after the upload is done.  Without "item.data.label" the doc tree will
+				    // not be updated after the upload is finished.
+                                    item.data.label = subTypes[i].label;
                                 } else if(!Util.isEmpty(subTypes[i].form)){
                                     if (Util.isEmpty(formsCategory)) {
                                         item.title = subTypes[i].value;
@@ -2136,6 +2140,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                 })
                                 , function (result) {
                                     var op = result.op;
+                                    var fileType = result.fileType.type;
                                     if (DialogDnd.OpTypes.OP_REPLACE == op) {
                                         DocTree.uploadSetting = {
                                             replaceFileNode: node
@@ -2148,10 +2153,10 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                                         var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
                                         DocTree.Command.handleCommand(replaceFiles, [node], args);
 
-                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(result.fileType)) {
+                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
                                         DocTree.uploadSetting = {
                                             uploadToFolderNode: node.parent
-                                            , uploadFileType: Util.goodValue(result.fileType.type)
+                                            , uploadFileType: fileType
                                             , uploadFileNew: true
                                             , deferUploadFile: $q.defer()
                                         };
@@ -3644,7 +3649,7 @@ angular.module('directives').directive('docTree', ['$q', '$translate', '$modal',
                     documentType = documentType.trim().toLowerCase();
                     for (var i = 0; i < labelMappings.length; i++) {
                         if (labelMappings[i]["key"] && labelMappings[i]["key"].trim().toLowerCase() == documentType) {
-                            return labelMappings[i]["value"];
+                            return $translate.instant(labelMappings[i]["value"]);
                         }
                     }
                 }
