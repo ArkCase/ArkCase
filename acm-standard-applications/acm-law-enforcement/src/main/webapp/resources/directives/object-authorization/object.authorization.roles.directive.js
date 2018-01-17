@@ -31,207 +31,206 @@
  <file name="app.js">
  angular.module('ngAppDemo', [])
  .controller('ngAppDemoController', function ($scope) {
-         $scope.widgets = [{name:"widget Name1", widgetName:"widgetName1"}, {name:"widget Name2", widgetName:"widgetName2"}];
-         $scope.widgetsMap = [];
-        angular.forEach($scope.widgets, function (widget) {
-            var element = new Object;
-            element.name = widget.name;
-            element.key = widget.widgetName;
-            $scope.widgets.push(element);
-            $scope.widgetsMap[widget.widgetName] = widget;
-        });
+ $scope.widgets = [{name:"widget Name1", widgetName:"widgetName1"}, {name:"widget Name2", widgetName:"widgetName2"}];
+ $scope.widgetsMap = [];
+ angular.forEach($scope.widgets, function (widget) {
+ var element = new Object;
+ element.name = widget.name;
+ element.key = widget.widgetName;
+ $scope.widgets.push(element);
+ $scope.widgetsMap[widget.widgetName] = widget;
+ });
 
 
-        $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
-            angular.forEach($scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles, function (element) {
-                authorized.push(element);
-            });
-            angular.forEach($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles, function (element) {
-                notAuthorized.push(element);
-            });
-        };
+ $scope.onObjSelect = function (selectedObject, authorized, notAuthorized) {
+ angular.forEach($scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles, function (element) {
+ authorized.push(element);
+ });
+ angular.forEach($scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles, function (element) {
+ notAuthorized.push(element);
+ });
+ };
 
-        $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
-            $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
-            $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
-        };
-     });
+ $scope.onAuthRoleSelected = function (selectedObject, authorized, notAuthorized) {
+ $scope.widgetsMap[selectedObject.key].widgetAuthorizedRoles = authorized;
+ $scope.widgetsMap[selectedObject.key].widgetNotAuthorizedRoles = notAuthorized;
+ };
+ });
  </file>
  </example>
  */
-angular.module('directives').directive('objectAuthorizationRoles', ['Menus', 'MessageService', '$http', 'UtilService', '$injector',
-    function (Menus, messageService, $http, Util, $injector) {
-        return {
-            restrict: 'E',
-            scope: {
-                data: "=",
-                onObjectSelected: "=",
-                onAuthRoleChange: "=",
-                objectDisplayName: "@",
-                roleDisplayName: "@",
-                objectTitle: "@",
-                externalServiceName: "@",
-                externalServiceMethodName: "@"
-            },
-            templateUrl: 'directives/object-authorization/object.authorization.roles.html',
-            link: function (scope) {
-                scope.$watch('data', function (newValue) {
-                    if (newValue && newValue.length > 0) {
-                        scope.selectedObject = scope.data[0];
-                        scope.selectObject();
-                    }
-                }, true);
+angular.module('directives').directive('objectAuthorizationRoles',
+        [ 'Menus', 'MessageService', '$http', 'UtilService', '$injector', function(Menus, messageService, $http, Util, $injector) {
+            return {
+                restrict : 'E',
+                scope : {
+                    data : "=",
+                    onObjectSelected : "=",
+                    onAuthRoleChange : "=",
+                    objectDisplayName : "@",
+                    roleDisplayName : "@",
+                    objectTitle : "@",
+                    externalServiceName : "@",
+                    externalServiceMethodName : "@"
+                },
+                templateUrl : 'directives/object-authorization/object.authorization.roles.html',
+                link : function(scope) {
+                    scope.$watch('data', function(newValue) {
+                        if (newValue && newValue.length > 0) {
+                            scope.selectedObject = scope.data[0];
+                            scope.selectObject();
+                        }
+                    }, true);
 
-                scope.filterWord = "";
+                    scope.filterWord = "";
 
-                scope.filterObjects = function () {
-                    if(!Util.isEmpty(scope.filterWord)){
-                        var req = {
-                            method: 'GET',
-                            url: 'api/latest/ldap/getUsers/search?' + scope.filterWord,
-                            params: {
-                                fq: scope.filterWord,
-                                n: 1,
-                                start: 0
-                            }
-                        };
+                    scope.filterObjects = function() {
+                        if (!Util.isEmpty(scope.filterWord)) {
+                            var req = {
+                                method : 'GET',
+                                url : 'api/latest/ldap/getUsers/search?' + scope.filterWord,
+                                params : {
+                                    fq : scope.filterWord,
+                                    n : 1,
+                                    start : 0
+                                }
+                            };
 
-                        $http(req).then(function (response) {
-                            console.log(response);
-                            scope.data = [];
-                            _.forEach(response.data.response.docs, function (user) {
-                                var element = {};
-                                element.name = user.name;
-                                element.key = user.object_id_s;
-                                element.directory = user.directory_name_s;
-                                scope.data.push(element);
+                            $http(req).then(function(response) {
+                                console.log(response);
+                                scope.data = [];
+                                _.forEach(response.data.response.docs, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    scope.data.push(element);
+                                });
+                                scope.selectedObject = scope.data[0]
+                            }, function() {
+                                console.log("error");
                             });
-                            scope.selectedObject = scope.data[0]
-                        }, function () {
-                            console.log("error");
-                        });
-                        scope.noData = false;
-                    } else if(scope.filterWord === "") {
-                        scope.externalService = $injector.get(scope.externalServiceName);
-                        scope.externalService[scope.externalServiceMethodName]().then(function (data) {
-                            scope.data = [];
-                            _.forEach(data, function (user) {
-                                var element = {};
-                                element.name = user.name;
-                                element.key = user.object_id_s;
-                                element.directory = user.directory_name_s;
-                                scope.data.push(element);
+                            scope.noData = false;
+                        } else if (scope.filterWord === "") {
+                            scope.externalService = $injector.get(scope.externalServiceName);
+                            scope.externalService[scope.externalServiceMethodName]().then(function(data) {
+                                scope.data = [];
+                                _.forEach(data, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    scope.data.push(element);
+                                });
                             });
-                        });
-                    }
-                };
+                        }
+                    };
 
-                //initial setup
-                scope.selectedNotAuthorized = "";
-                scope.selectedAuthorized = "";
-                scope.authorized = [];
-                scope.notAuthorized = [];
-
-                //authorize button is clicked
-                scope.authorize = function () {
-                    //don't do anything if array null or empty
-                    if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
-                        angular.forEach(scope.selectedNotAuthorized, function (sel) {
-                            var indexOf = scope.notAuthorized.indexOf(sel);
-                            scope.notAuthorized.splice(indexOf, 1);
-                            scope.authorized.push(sel);
-                        });
-                        scope.authRoleChange();
-                    }
-                };
-
-                //unauthorize button is clicked
-                scope.unAuthorize = function () {
-                    //don't do anything if array null or empty
-                    if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
-                        angular.forEach(scope.selectedAuthorized, function (sel) {
-                            var indexOf = scope.authorized.indexOf(sel);
-                            scope.authorized.splice(indexOf, 1);
-                            scope.notAuthorized.push(sel);
-                        });
-                        scope.authRoleChange();
-                    }
-                };
-
-                document.getElementById("scrollTest").addEventListener("scroll", myFunction);
-                var temp = document.getElementById("scrollTest");
-
-                var maxScrolled = 0;
-
-                function myFunction() {
-                    var temp = document.getElementById("scrollTest");
-                    console.log(temp.scrollTop);
-                    console.log(temp.offsetHeight + temp.scrollTop);
-                    if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
-//                         maxScrolled = temp.scrollTop / 200;
-//                         console.log(maxScrolled);
-
-                        /*for (var k = 0; k < 20; k++) {
-                            var element = {};
-                            element.name = "test" + k;
-                            scope.data.push(element);
-                        }*/
-                        // scope.selectObject();
-
-                        // scope.data = [];
-                        // scope.$parent.$digest();
-                    }
-                }
-
-                //object is selected event, call callback function
-                scope.selectObject = function () {
+                    //initial setup
+                    scope.selectedNotAuthorized = "";
+                    scope.selectedAuthorized = "";
                     scope.authorized = [];
                     scope.notAuthorized = [];
-                    if (scope.selectedObject) {
-                        scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
+
+                    //authorize button is clicked
+                    scope.authorize = function() {
+                        //don't do anything if array null or empty
+                        if (scope.selectedNotAuthorized && scope.selectedNotAuthorized.length > 0) {
+                            angular.forEach(scope.selectedNotAuthorized, function(sel) {
+                                var indexOf = scope.notAuthorized.indexOf(sel);
+                                scope.notAuthorized.splice(indexOf, 1);
+                                scope.authorized.push(sel);
+                            });
+                            scope.authRoleChange();
+                        }
+                    };
+
+                    //unauthorize button is clicked
+                    scope.unAuthorize = function() {
+                        //don't do anything if array null or empty
+                        if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
+                            angular.forEach(scope.selectedAuthorized, function(sel) {
+                                var indexOf = scope.authorized.indexOf(sel);
+                                scope.authorized.splice(indexOf, 1);
+                                scope.notAuthorized.push(sel);
+                            });
+                            scope.authRoleChange();
+                        }
+                    };
+
+                    document.getElementById("scrollTest").addEventListener("scroll", myFunction);
+                    var temp = document.getElementById("scrollTest");
+
+                    var maxScrolled = 0;
+
+                    function myFunction() {
+                        var temp = document.getElementById("scrollTest");
+                        console.log(temp.scrollTop);
+                        console.log(temp.offsetHeight + temp.scrollTop);
+                        if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
+                            //                         maxScrolled = temp.scrollTop / 200;
+                            //                         console.log(maxScrolled);
+
+                            /*for (var k = 0; k < 20; k++) {
+                                var element = {};
+                                element.name = "test" + k;
+                                scope.data.push(element);
+                            }*/
+                            // scope.selectObject();
+                            // scope.data = [];
+                            // scope.$parent.$digest();
+                        }
                     }
-                };
 
-                //roles has been changed, call callback function with changed values
-                scope.authRoleChange = function () {
-                    scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function () {
-                        //success save
-                        messageService.succsessAction();
-                    }, function () {
-                        //error save
-                        messageService.errorAction();
-                    });
+                    //object is selected event, call callback function
+                    scope.selectObject = function() {
+                        scope.authorized = [];
+                        scope.notAuthorized = [];
+                        if (scope.selectedObject) {
+                            scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
+                        }
+                    };
 
-                    var allMenuObj = [];
-                    angular.forEach(Menus.allMenuObjects, function (menuO) {
-                        allMenuObj.push(menuO);
-                    });
-                    Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
-                    Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
-                    Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
-                    Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
-                    for (var i = 0; i < allMenuObj.length; i++) {
-                        var mO = [];
-                        mO.push(allMenuObj[i]);
-                        Menus.addMenuItems(mO);
-                    }
-                    scope.$bus.publish('refreshLeftMenu', null);
-                };
-            }
-        };
-    }
-]);
+                    //roles has been changed, call callback function with changed values
+                    scope.authRoleChange = function() {
+                        scope.onAuthRoleChange(scope.selectedObject, scope.authorized, scope.notAuthorized).then(function() {
+                            //success save
+                            messageService.succsessAction();
+                        }, function() {
+                            //error save
+                            messageService.errorAction();
+                        });
 
-angular.module('directives').filter('orderObjectBy', function () {
-    return function (input) {
-        if (!angular.isObject(input)) return input;
+                        var allMenuObj = [];
+                        angular.forEach(Menus.allMenuObjects, function(menuO) {
+                            allMenuObj.push(menuO);
+                        });
+                        Menus.allMenuObjects.splice(0, Menus.allMenuObjects.length);
+                        Menus.menus.leftnav.items.splice(0, Menus.menus.leftnav.items.length);
+                        Menus.menus.topbar.items.splice(0, Menus.menus.topbar.items.length);
+                        Menus.menus.usermenu.items.splice(0, Menus.menus.usermenu.items.length);
+                        for (var i = 0; i < allMenuObj.length; i++) {
+                            var mO = [];
+                            mO.push(allMenuObj[i]);
+                            Menus.addMenuItems(mO);
+                        }
+                        scope.$bus.publish('refreshLeftMenu', null);
+                    };
+                }
+            };
+        } ]);
+
+angular.module('directives').filter('orderObjectBy', function() {
+    return function(input) {
+        if (!angular.isObject(input))
+            return input;
 
         var array = [];
-        for (var objectKey in input) {
+        for ( var objectKey in input) {
             array.push(input[objectKey]);
         }
 
-        array.sort(function (a, b) {
+        array.sort(function(a, b) {
             a = a["name"];
             b = b["name"];
             return a > b ? 1 : a < b ? -1 : 0;

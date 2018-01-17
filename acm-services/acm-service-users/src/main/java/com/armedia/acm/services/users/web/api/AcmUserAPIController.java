@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.service.AcmUserEventPublisher;
 import com.armedia.acm.services.users.service.AcmUserService;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,13 +29,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {"/api/v1/ldap/", "/api/latest/ldap/"})
+@RequestMapping(value = { "/api/v1/ldap/", "/api/latest/ldap/" })
 public class AcmUserAPIController extends SecureLdapController
 {
     private LdapUserService ldapUserService;
@@ -48,12 +50,12 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/getUsers/search", method = RequestMethod.GET)
     @ResponseBody
     public String listFlatSearchResultsFromFolderContent(Authentication auth,
-                                                         @RequestParam(value = "fq") String searchFilter,
-                                                         @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
-                                                         @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-                                                         @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                                         @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-                                                         @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
+            @RequestParam(value = "fq") String searchFilter,
+            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
     {
         return acmUserService.test(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
     }
@@ -66,11 +68,10 @@ public class AcmUserAPIController extends SecureLdapController
         return Collections.singletonMap("enableEditingLdapUsers", enableEditingLdapUsers);
     }
 
-    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory,
-                                         @PathVariable String groupName)
+            @PathVariable String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
@@ -89,7 +90,7 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "/{directory:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser createUser(@RequestBody UserDTO ldapUserCreateRequest, @PathVariable String directory,
-                              HttpSession httpSession, Authentication authentication)
+            HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -117,7 +118,7 @@ public class AcmUserAPIController extends SecureLdapController
     @RequestMapping(value = "{directory:.+}/users/{userId:.+}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser editUser(@RequestBody AcmUser acmUser, @PathVariable String userId, @PathVariable String directory,
-                            HttpSession httpSession, Authentication authentication)
+            HttpSession httpSession, Authentication authentication)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
@@ -134,11 +135,10 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser addUserInGroups(@RequestBody List<String> groupNames, @PathVariable("userId") String userId,
-                                   @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -152,11 +152,10 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "{directory:.+}/manage/{userId:.+}/groups", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmUser removeUserFromGroups(@RequestParam("groupNames") List<String> groupNames, @PathVariable("userId") String userId,
-                                        @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            @PathVariable("directory") String directory) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         checkIfLdapManagementIsAllowed(directory);
         try
@@ -216,11 +215,10 @@ public class AcmUserAPIController extends SecureLdapController
         }
     }
 
-    @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{directory:.+}/users/{userId:.+}/password", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, String> changePassword(@RequestBody UserDTO credentials, @PathVariable String directory,
-                                              @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
+            @PathVariable String userId, HttpServletResponse response) throws AcmAppErrorJsonMsg
     {
         validateLdapPassword(credentials);
         checkIfLdapManagementIsAllowed(directory);

@@ -5,6 +5,7 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentsByQueryRequest;
 import com.armedia.acm.services.search.model.solr.SolrDocumentsQuery;
+
 import org.apache.commons.lang3.StringUtils;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -35,52 +36,53 @@ public class ExecuteSolrQuery
     }
 
     @Async
-    public CompletableFuture<String> getResultsByPredefinedQueryAsync(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort)
+    public CompletableFuture<String> getResultsByPredefinedQueryAsync(Authentication auth, SolrCore core, String solrQuery, int firstRow,
+            int maxRows, String sort)
             throws MuleException
     {
         return CompletableFuture.completedFuture(getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true));
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              boolean indent) throws MuleException
+            boolean indent) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, "", true, false);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              String rowQueryParameters) throws MuleException
+            String rowQueryParameters) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              boolean indent, String rowQueryParameters) throws MuleException
+            boolean indent, String rowQueryParameters) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, true, false);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              String rowQueryParameters, boolean filterParentRef) throws MuleException
+            String rowQueryParameters, boolean filterParentRef) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters, filterParentRef);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              boolean indent, String rowQueryParameters, boolean filterParentRef) throws MuleException
+            boolean indent, String rowQueryParameters, boolean filterParentRef) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
                 false);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
+            String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
     {
         return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, true, rowQueryParameters, filterParentRef,
                 filterSubscriptionEvents);
     }
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
-                                              boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
     {
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
@@ -109,8 +111,10 @@ public class ExecuteSolrQuery
      * This method executes delete of documents in solr using search query
      * (Beware) it could easily delete all documents if query is not specific
      *
-     * @param toSolrFlow Which solr flow (quick search or advanced search to solr flow)
-     * @param query      Solr Search query for removing found documents
+     * @param toSolrFlow
+     *            Which solr flow (quick search or advanced search to solr flow)
+     * @param query
+     *            Solr Search query for removing found documents
      * @throws MuleExceptions
      */
     public void sendSolrDeleteQuery(String toSolrFlow, String query) throws MuleException

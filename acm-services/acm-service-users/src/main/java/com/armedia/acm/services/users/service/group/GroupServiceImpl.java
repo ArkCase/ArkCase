@@ -13,6 +13,7 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,14 +84,16 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows) throws MuleException
+    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException
     {
 
         String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
 
         String fq = String.format("fq=name_partial:%s", searchFilter);
 
-        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortBy + " " + sortDirection, fq);
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection, fq);
     }
 
     @Override

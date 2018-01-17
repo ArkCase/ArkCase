@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,11 +41,14 @@ public interface GroupService
      * @param auth
      * @return LDAP groups
      */
-    String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows) throws MuleException;
+    String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException;
 
     /**
-     * @param groupName  list users for this specific group
-     * @param userStatus optional value for "status_lcs" field to be included in the solr query
+     * @param groupName
+     *            list users for this specific group
+     * @param userStatus
+     *            optional value for "status_lcs" field to be included in the solr query
      * @return solr results for user members in specific group
      * @throws MuleException
      */
@@ -57,9 +61,11 @@ public interface GroupService
      * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
      * groups, users and roles for users per the target group are removed.
      *
-     * @param groupId name of the group
+     * @param groupId
+     *            name of the group
      * @return group with updated status, ancestors and removed user and group relations
-     * @throws AcmObjectNotFoundException in case group with groupId is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupId is not found
      */
     AcmGroup markGroupDeleted(String groupId) throws AcmObjectNotFoundException;
 
@@ -68,10 +74,13 @@ public interface GroupService
      * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
      * groups, users and roles for users per the target group are removed.
      *
-     * @param groupId           name of the group
-     * @param flushInstructions if set to true there is an explicit flush before the end of the method
+     * @param groupId
+     *            name of the group
+     * @param flushInstructions
+     *            if set to true there is an explicit flush before the end of the method
      * @return group with updated status, ancestors and removed user and group relations
-     * @throws AcmObjectNotFoundException in case group with groupId is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupId is not found
      */
     AcmGroup markGroupDeleted(String groupId, boolean flushInstructions) throws AcmObjectNotFoundException;
 
@@ -79,10 +88,13 @@ public interface GroupService
      * Removes group membership to the given parent group. In case this group is
      * not member to any other group, the group is deleted.
      *
-     * @param groupName       name of the group to be removed
-     * @param parentGroupName name of the parent group
+     * @param groupName
+     *            name of the group to be removed
+     * @param parentGroupName
+     *            name of the parent group
      * @return updated AcmGroup
-     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
      */
     AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
 
@@ -90,11 +102,15 @@ public interface GroupService
      * Removes group membership to the given parent group. In case this group is
      * not member to any other group, the group is deleted.
      *
-     * @param groupName         name of the group to be removed
-     * @param parentGroupName   name of the parent group
-     * @param flushInstructions if set to true there is an explicit flush before the end of the method
+     * @param groupName
+     *            name of the group to be removed
+     * @param parentGroupName
+     *            name of the parent group
+     * @param flushInstructions
+     *            if set to true there is an explicit flush before the end of the method
      * @return updated AcmGroup
-     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
      */
     AcmGroup removeGroupMembership(String groupName, String parentGroupName, boolean flushInstructions) throws AcmObjectNotFoundException;
 
