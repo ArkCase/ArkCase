@@ -1,11 +1,15 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.complaint.ComplaintForm;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,65 +24,61 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.Date;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring",
-        locations = {
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-activiti-actions.xml",
-                "/spring/spring-library-activiti-configuration.xml",
-                "/spring/spring-library-authentication-token.xml",
-                "/spring/spring-library-business-process.xml",
-                "/spring/spring-library-calendar-config-service.xml",
-                "/spring/spring-library-calendar-integration-exchange-service.xml",
-                "/spring/spring-library-case-file-dao.xml",
-                "/spring/spring-library-case-file-events.xml",
-                "/spring/spring-library-case-file-rules.xml",
-                "/spring/spring-library-case-file-save.xml",
-                "/spring/spring-library-complaint.xml",
-                "/spring/spring-library-complaint-plugin-test.xml",
-                "/spring/spring-library-complaint-plugin-test-mule.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-data-access-control.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-drools-rule-monitor.xml",
-                "/spring/spring-library-ecm-file.xml",
-                "/spring/spring-library-ecm-tika.xml",
-                "/spring/spring-library-email.xml",
-                "/spring/spring-library-email-smtp.xml",
-                "/spring/spring-library-event.xml",
-                "/spring/spring-library-folder-watcher.xml",
-                "/spring/spring-library-form-configurations.xml",
-                "/spring/spring-library-forms-configuration.xml",
-                "/spring/spring-library-functional-access-control.xml",
-                "/spring/spring-library-ms-outlook-integration.xml",
-                "/spring/spring-library-ms-outlook-plugin.xml",
-                "/spring/spring-library-note.xml",
-                "/spring/spring-library-notification.xml",
-                "/spring/spring-library-object-association-plugin.xml",
-                "/spring/spring-library-object-diff.xml",
-                "/spring/spring-library-object-history.xml",
-                "/spring/spring-library-object-lock.xml",
-                "/spring/spring-library-organization-rules.xml",
-                "/spring/spring-library-particpants.xml",
-                "/spring/spring-library-person.xml",
-                "/spring/spring-library-person-rules.xml",
-                "/spring/spring-library-plugin-manager.xml",
-                "/spring/spring-library-profile.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-service-data.xml",
-                "/spring/spring-library-task.xml",
-                "/spring/spring-library-user-login.xml",
-                "/spring/spring-library-user-service.xml",
-                "/spring/spring-library-object-converter.xml"
-        }
-)
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-activiti-actions.xml",
+        "/spring/spring-library-activiti-configuration.xml",
+        "/spring/spring-library-authentication-token.xml",
+        "/spring/spring-library-business-process.xml",
+        "/spring/spring-library-calendar-config-service.xml",
+        "/spring/spring-library-calendar-integration-exchange-service.xml",
+        "/spring/spring-library-case-file-dao.xml",
+        "/spring/spring-library-case-file-events.xml",
+        "/spring/spring-library-case-file-rules.xml",
+        "/spring/spring-library-case-file-save.xml",
+        "/spring/spring-library-complaint.xml",
+        "/spring/spring-library-complaint-plugin-test.xml",
+        "/spring/spring-library-complaint-plugin-test-mule.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-data-access-control.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-drools-rule-monitor.xml",
+        "/spring/spring-library-ecm-file.xml",
+        "/spring/spring-library-ecm-tika.xml",
+        "/spring/spring-library-email.xml",
+        "/spring/spring-library-email-smtp.xml",
+        "/spring/spring-library-event.xml",
+        "/spring/spring-library-folder-watcher.xml",
+        "/spring/spring-library-form-configurations.xml",
+        "/spring/spring-library-forms-configuration.xml",
+        "/spring/spring-library-functional-access-control.xml",
+        "/spring/spring-library-ms-outlook-integration.xml",
+        "/spring/spring-library-ms-outlook-plugin.xml",
+        "/spring/spring-library-note.xml",
+        "/spring/spring-library-notification.xml",
+        "/spring/spring-library-object-association-plugin.xml",
+        "/spring/spring-library-object-diff.xml",
+        "/spring/spring-library-object-history.xml",
+        "/spring/spring-library-object-lock.xml",
+        "/spring/spring-library-organization-rules.xml",
+        "/spring/spring-library-particpants.xml",
+        "/spring/spring-library-person.xml",
+        "/spring/spring-library-person-rules.xml",
+        "/spring/spring-library-plugin-manager.xml",
+        "/spring/spring-library-profile.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-service-data.xml",
+        "/spring/spring-library-task.xml",
+        "/spring/spring-library-user-login.xml",
+        "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-object-converter.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class ComplaintServiceIT
 {
@@ -148,7 +148,6 @@ public class ComplaintServiceIT
         location.setType("home");
         location.setCountry("country");
 
-
         PostalAddress pa1 = new PostalAddress();
         pa1.setCity("Amaurot");
         pa1.setCountry("Utopia");
@@ -174,7 +173,6 @@ public class ComplaintServiceIT
         assertEquals(0, acmComplaint.getPersonAssociations().size());
     }
 
-
     private void verifyComplaint(ComplaintForm frevvoComplaint, com.armedia.acm.plugins.complaint.model.Complaint acmComplaint)
     {
         assertNotNull(acmComplaint.getDetails());
@@ -183,7 +181,7 @@ public class ComplaintServiceIT
         assertNotNull(acmComplaint.getComplaintTitle());
 
         assertEquals(frevvoComplaint.getComplaintDescription(), acmComplaint.getDetails());
-        //assertEquals(frevvoComplaint.getDate().toString(), acmComplaint.getIncidentDate().toString());
+        // assertEquals(frevvoComplaint.getDate().toString(), acmComplaint.getIncidentDate().toString());
         assertEquals(frevvoComplaint.getPriority(), acmComplaint.getPriority());
         assertEquals(frevvoComplaint.getComplaintTitle(), acmComplaint.getComplaintTitle());
     }

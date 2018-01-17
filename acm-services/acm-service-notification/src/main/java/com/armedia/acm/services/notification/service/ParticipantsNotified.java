@@ -47,9 +47,12 @@ public class ParticipantsNotified implements UsersNotified
      * Find the users that should be notified on specific event for TASK, CASE_FILE or COMPLAINT and set notification
      * for each
      *
-     * @param notification     The result row of the notification
-     * @param parentObjectId   The id of the parent
-     * @param parentObjectType The object type of the parent
+     * @param notification
+     *            The result row of the notification
+     * @param parentObjectId
+     *            The id of the parent
+     * @param parentObjectType
+     *            The object type of the parent
      * @return List of notifications
      */
 
@@ -57,9 +60,11 @@ public class ParticipantsNotified implements UsersNotified
     public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
     {
         AcmNotificationDao notificationDao = getAcmDataService().getNotificationDaoByObjectType(parentObjectType);
-        if (notificationDao != null){
+        if (notificationDao != null)
+        {
             AcmNotifiableEntity entity = notificationDao.findEntity(parentObjectId);
-            if (entity != null){
+            if (entity != null)
+            {
                 Set<AcmNotificationReceiver> participants = entity.getReceivers();
                 Set<AcmUser> receivers = getUsers(participants);
                 return setNotificationForUsers(notification, receivers);
@@ -81,7 +86,8 @@ public class ParticipantsNotified implements UsersNotified
                     receivers.addAll(group.getUserMembers());
                 }
 
-            } else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
+            }
+            else if (!participant.getReceiverType().equals(NotificationConstants.SPECIAL_PARTICIPANT_TYPE))
             {
                 AcmUser user = getUserDao().findByUserId(participant.getReceiverLdapId());
                 if (user != null)

@@ -1,15 +1,11 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-addressable-tables" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_postal_address">
             <column name="cm_address_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_postal_address"/>
+                <constraints primaryKey="true" primaryKeyName="pk_postal_address"/>
             </column>
             <column name="cm_address_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -51,9 +47,7 @@
 
         <createTable tableName="acm_contact_method">
             <column name="cm_contact_method_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_contact_method"/>
+                <constraints primaryKey="true" primaryKeyName="pk_contact_method"/>
             </column>
             <column name="cm_contact_method_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -86,9 +80,7 @@
     <changeSet id="01-create-addressable-tables" author="dmiller" dbms="mysql">
         <createTable tableName="acm_postal_address">
             <column name="cm_address_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_postal_address"/>
+                <constraints primaryKey="true" primaryKeyName="pk_postal_address"/>
             </column>
             <column name="cm_address_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -130,22 +122,18 @@
 
         <createTable tableName="acm_contact_method">
             <column name="cm_contact_method_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_contact_method"/>
+                <constraints primaryKey="true" primaryKeyName="pk_contact_method"/>
             </column>
             <column name="cm_contact_method_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_created" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_contact_method_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_contact_method_modified" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_contact_method_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_contact_method_modifier" type="VARCHAR(1024)">
@@ -187,12 +175,11 @@
     <changeSet id="04-add-address-contact-method-table" author="nebojsha.davidovikj">
         <createTable tableName="acm_address_contact_method">
             <column name="cm_address_id" type="${fkIdType}">
-                <constraints nullable="false" foreignKeyName="fk_address_cntct_address_id"
-                             references="acm_postal_address(cm_address_id)"/>
+                <constraints nullable="false" foreignKeyName="fk_address_cntct_address_id" references="acm_postal_address(cm_address_id)"/>
             </column>
             <column name="cm_contact_method_id" type="${fkIdType}">
                 <constraints nullable="false" foreignKeyName="fk_address_cntct_cntct_id"
-                             references="acm_contact_method(cm_contact_method_id)"/>
+                    references="acm_contact_method(cm_contact_method_id)"/>
             </column>
         </createTable>
         <createIndex tableName="acm_address_contact_method" indexName="idx_address_cntct_person_id">
@@ -222,14 +209,12 @@
 
     <changeSet id="06-add-discriminator-column-extensibility" author="manoj.dhungana">
         <addColumn tableName="acm_postal_address">
-            <column name="cm_class_name" type="VARCHAR(400)"
-                    defaultValue="com.armedia.acm.plugins.addressable.model.PostalAddress">
+            <column name="cm_class_name" type="VARCHAR(400)" defaultValue="com.armedia.acm.plugins.addressable.model.PostalAddress">
                 <constraints nullable="false"/>
             </column>
         </addColumn>
         <addColumn tableName="acm_contact_method">
-            <column name="cm_class_name" type="VARCHAR(400)"
-                    defaultValue="com.armedia.acm.plugins.addressable.model.ContactMethod">
+            <column name="cm_class_name" type="VARCHAR(400)" defaultValue="com.armedia.acm.plugins.addressable.model.ContactMethod">
                 <constraints nullable="false"/>
             </column>
         </addColumn>

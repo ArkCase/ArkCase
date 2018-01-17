@@ -1,8 +1,16 @@
 package com.armedia.acm.services.email.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.newCapture;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -18,12 +26,10 @@ import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeBodyPart;
+
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by nebojsha.davidovikj on 1/20/2017.
@@ -38,7 +44,6 @@ public class AcmProcessMailServiceTest extends EasyMockSupport
     private AcmProcessMailService acmProcessMailService;
     private AcmFolderService acmFolderServiceMock = createMock(AcmFolderService.class);
     private EcmFileService ecmFileServiceMock = createMock(EcmFileService.class);
-
 
     @Before
     public void setUp() throws Exception
@@ -55,28 +60,24 @@ public class AcmProcessMailServiceTest extends EasyMockSupport
         Multipart multipartMock = createMock(Multipart.class);
         Authentication authMock = createMock(Authentication.class);
 
-
         expect(messageMock.getContent()).andAnswer(() -> multipartMock);
 
         expect(multipartMock.getCount()).andReturn(2).anyTimes();
 
-        expect(multipartMock.getBodyPart(0)).andAnswer(() ->
-        {
+        expect(multipartMock.getBodyPart(0)).andAnswer(() -> {
             BodyPart bodyPart = new MimeBodyPart();
             return bodyPart;
         });
 
         ByteArrayInputStream bais = new ByteArrayInputStream("asdasd".getBytes());
-        expect(multipartMock.getBodyPart(1)).andAnswer(() ->
-        {
+        expect(multipartMock.getBodyPart(1)).andAnswer(() -> {
 
             BodyPart bodyPart = new MimeBodyPart(bais);
             bodyPart.setFileName("just bytes");
             return bodyPart;
         });
 
-        expect(acmFolderServiceMock.getRootFolder(1L, "CASE_FILE")).andAnswer(() ->
-        {
+        expect(acmFolderServiceMock.getRootFolder(1L, "CASE_FILE")).andAnswer(() -> {
             AcmFolder folder = new AcmFolder();
             folder.setCmisFolderId("cmis_folder_id");
             folder.setId(1L);

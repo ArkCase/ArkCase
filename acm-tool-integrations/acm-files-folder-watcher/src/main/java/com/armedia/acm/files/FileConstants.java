@@ -8,7 +8,6 @@ public interface FileConstants
     String XML_BATCH_USER = "EPHESOFT_BATCH";
     String PROCESS_ATTACHMENTS_USER = "PROCESS_ATTACHMENTS_USER";
 
-
     String XML_BATCH_CLASS_NAME_KEY = "BatchClassName";
     String XML_BATCH_DOCUMENTS_KEY = "Documents";
     String XML_BATCH_DOCUMENT_LEVEL_FIELDS_KEY = "DocumentLevelFields";

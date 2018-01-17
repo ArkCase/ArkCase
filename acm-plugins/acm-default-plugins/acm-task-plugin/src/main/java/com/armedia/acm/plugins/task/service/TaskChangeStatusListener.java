@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -34,7 +35,7 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                 {
                     // call Mule flow to create the Alfresco folder
                     LOG.debug("Sending message to jms://copyTaskFilesAndFoldersToParent.in for task {}", event.getAcmTask().getId());
-                    // AFDP-4146 The EcmFile has JPA mappings such that it can't be sent to JMS.  The queue listener
+                    // AFDP-4146 The EcmFile has JPA mappings such that it can't be sent to JMS. The queue listener
                     // doesn't need the doc-under-review anyway, so easiest solution is to remove it from the AcmTask,
                     // then restore it after the AcmTask is sent to JMS
                     EcmFile docUnderReview = event.getAcmTask().getDocumentUnderReview();
@@ -43,7 +44,8 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                     event.getAcmTask().setDocumentUnderReview(docUnderReview);
                     LOG.debug("Done sending message to jms://copyTaskFilesAndFoldersToParent.in for task {}", event.getAcmTask().getId());
 
-                    // TODO: this is fix for bug EDTRM-178 (workaround). We should see why on this point msg is null (maybe it's normal behaviour?)
+                    // TODO: this is fix for bug EDTRM-178 (workaround). We should see why on this point msg is null
+                    // (maybe it's normal behaviour?)
                     if (msg != null)
                     {
                         MuleException e = msg.getInboundProperty("executionException");
@@ -54,11 +56,11 @@ public class TaskChangeStatusListener implements ApplicationListener<AcmApplicat
                         }
                     }
 
-                } catch (MuleException e)
+                }
+                catch (MuleException e)
                 {
                     throw new RuntimeException("Error while copying Task documents.", e);
                 }
-
 
             }
         }

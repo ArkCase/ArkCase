@@ -23,7 +23,8 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
     private List<String> users;
     private List<String> emailAddresses;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.services.email.model.AttachmentsProcessableDTO#getAttachmentIds()
      */
     @Override
@@ -122,7 +123,8 @@ public class EmailWithAttachmentsDTO extends MessageBodyFactory implements Attac
         return buildMessageBodyFromTemplate(getBody(), getHeader(), getFooter());
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
      * @see com.armedia.acm.services.email.model.AttachmentsProcessableDTO#getFilePaths()
      */
     @Override

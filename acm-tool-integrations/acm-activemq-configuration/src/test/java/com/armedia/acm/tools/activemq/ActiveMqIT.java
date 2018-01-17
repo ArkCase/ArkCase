@@ -1,5 +1,7 @@
 package com.armedia.acm.tools.activemq;
 
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.activemq.advisory.AdvisorySupport;
 import org.apache.activemq.broker.BrokerService;
 import org.apache.activemq.command.ActiveMQMessage;
@@ -27,8 +29,6 @@ import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.Topic;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-mule-activemq.xml",
@@ -38,7 +38,7 @@ import static org.junit.Assert.*;
 })
 /**
  * To see ActiveMQ flow control happening in this test, ensure the queue memory limit is set to "1 mb" in the
- * spring-mule-activemq.xml file.  Then you will see output pause, and after a few seconds restart.
+ * spring-mule-activemq.xml file. Then you will see output pause, and after a few seconds restart.
  */
 public class ActiveMqIT
 {
@@ -77,7 +77,6 @@ public class ActiveMqIT
     {
         String destination = "testQueue.in";
 
-
         JmsTemplate template = new JmsTemplate(connectionFactory);
         template.setDeliveryPersistent(true);
         template.setReceiveTimeout(500L);
@@ -99,7 +98,6 @@ public class ActiveMqIT
         createTopicListener(session, slowTopic);
 
         c.start();
-
 
         String base = "Grateful Dead";
         String kb500message = base;

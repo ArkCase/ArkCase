@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <import resource="file:${user.home}/.arkcase/acm/app-config.xml"/>
 
     <!-- Rules definitions -->
-    <bean id="assignRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="assignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="sendExecutor"/>
@@ -42,8 +40,7 @@
         </property>
     </bean>
 
-    <bean id="unassignRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="unassignRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="sendExecutor"/>
@@ -77,8 +74,7 @@
         </property>
     </bean>
 
-    <bean id="purgeRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="purgeRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="SELECT"/>
         <property name="executor" ref="purgeExecutor"/>
@@ -141,8 +137,7 @@
         </property>
     </bean>
 
-    <bean id="documentDeletedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="documentDeletedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -180,8 +175,7 @@
         </property>
     </bean>
 
-    <bean id="documentReplacedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="documentReplacedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -220,8 +214,7 @@
         </property>
     </bean>
 
-    <bean id="documentVersionedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="documentVersionedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -259,8 +252,7 @@
         </property>
     </bean>
 
-    <bean id="complaintStatusChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="complaintStatusChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -294,9 +286,7 @@
         </property>
     </bean>
 
-
-    <bean id="caseStatusChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="caseStatusChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -330,8 +320,7 @@
         </property>
     </bean>
 
-    <bean id="noteAddedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="noteAddedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -365,8 +354,7 @@
         </property>
     </bean>
 
-    <bean id="complaintPriorityChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="complaintPriorityChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -400,8 +388,7 @@
         </property>
     </bean>
 
-    <bean id="complaintDetailsUpdatedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="complaintDetailsUpdatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -435,8 +422,7 @@
         </property>
     </bean>
 
-    <bean id="caseFilePriorityChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="caseFilePriorityChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -470,8 +456,7 @@
         </property>
     </bean>
 
-    <bean id="caseFileDetailsUpdatedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="caseFileDetailsUpdatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -505,8 +490,7 @@
         </property>
     </bean>
 
-    <bean id="taskDetailsUpdatedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="taskDetailsUpdatedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -540,8 +524,7 @@
         </property>
     </bean>
 
-    <bean id="taskPriorityChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="taskPriorityChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -575,8 +558,7 @@
         </property>
     </bean>
 
-    <bean id="taskStatusChangedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="taskStatusChangedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -610,8 +592,7 @@
         </property>
     </bean>
 
-    <bean id="personAssociationAddedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="personAssociationAddedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -645,8 +626,7 @@
         </property>
     </bean>
 
-    <bean id="personAssociationDeletedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="personAssociationDeletedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -680,8 +660,7 @@
         </property>
     </bean>
 
-    <bean id="participantAddedInComplaintRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="participantAddedInComplaintRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -715,8 +694,7 @@
         </property>
     </bean>
 
-    <bean id="participantDeletedInComplaintRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="participantDeletedInComplaintRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -750,8 +728,7 @@
         </property>
     </bean>
 
-    <bean id="participantAddedInCaseFileRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="participantAddedInCaseFileRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -785,8 +762,7 @@
         </property>
     </bean>
 
-    <bean id="participantDeletedInCaseFileRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="participantDeletedInCaseFileRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -820,8 +796,7 @@
         </property>
     </bean>
 
-    <bean id="calendarEventAddedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="calendarEventAddedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -854,8 +829,7 @@
         </property>
     </bean>
 
-    <bean id="correspondenceAddedRule"
-          class="com.armedia.acm.services.notification.model.BasicNotificationRule">
+    <bean id="correspondenceAddedRule" class="com.armedia.acm.services.notification.model.BasicNotificationRule">
         <property name="globalRule" value="true"/>
         <property name="queryType" value="CREATE"/>
         <property name="executor" ref="noopExecutor"/>
@@ -897,20 +871,16 @@
     <!-- notificationSenderFactory is defined in spring-library-notification.xml now; do not define it here. -->
 
     <!-- Task Scheduler -->
-    <task:scheduler id="notificationTaskScheduler"
-                    pool-size="1"/>
+    <task:scheduler id="notificationTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="notificationTaskScheduler">
-        <task:scheduled ref="notificationService" method="run"
-                        fixed-delay="300000"/>
+        <task:scheduled ref="notificationService" method="run" fixed-delay="300000"/>
     </task:scheduled-tasks>
 
     <!-- Service Definition -->
-    <bean id="notificationFormatter"
-          class="com.armedia.acm.services.notification.service.NotificationFormatter">
+    <bean id="notificationFormatter" class="com.armedia.acm.services.notification.service.NotificationFormatter">
         <property name="notificationProperties" ref="notificationProperties"/>
     </bean>
-    <bean id="notificationService"
-          class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
+    <bean id="notificationService" class="com.armedia.acm.services.notification.service.NotificationServiceImpl">
         <property name="batchRun" ref="notificationUserBatchRun"/>
         <property name="batchSize" ref="notificationUserBatchSize"/>
         <property name="purgeDays" ref="notificationPurgeDays"/>

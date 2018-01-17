@@ -8,6 +8,7 @@ import com.armedia.acm.service.objecthistory.model.AcmAssignment;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEventType;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 

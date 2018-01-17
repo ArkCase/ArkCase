@@ -7,9 +7,7 @@ import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
 import com.armedia.acm.plugins.admin.model.LdapDirectoryConfig;
 import com.armedia.acm.plugins.admin.model.LdapTemplateConfig;
 import com.armedia.acm.spring.SpringContextHolder;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -37,6 +35,10 @@ import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * Created by sergey.kolomiets on 6/2/15.
@@ -67,12 +69,13 @@ public class LdapConfigurationService implements InitializingBean
 
     private SpringContextHolder contextHolder;
 
-
     /**
      * Create LDAP Directory config files
      *
-     * @param dirId Directory identifier
-     * @param props Directory properties data
+     * @param dirId
+     *            Directory identifier
+     * @param props
+     *            Directory properties data
      * @throws AcmLdapConfigurationException
      */
     public void createLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
@@ -94,7 +97,8 @@ public class LdapConfigurationService implements InitializingBean
         {
             createPropertiesFile(dirId, props);
             createLdapFile(dirId, props);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Delete created files quietly
             deletePropertiesFileQuietly(dirId);
@@ -108,8 +112,10 @@ public class LdapConfigurationService implements InitializingBean
     /**
      * Update LDAP Directory settings
      *
-     * @param dirId Directory identifier
-     * @param props Directory properties data
+     * @param dirId
+     *            Directory identifier
+     * @param props
+     *            Directory properties data
      */
     public void updateLdapDirectory(String dirId, Map<String, Object> props) throws AcmLdapConfigurationException
     {
@@ -127,7 +133,8 @@ public class LdapConfigurationService implements InitializingBean
         try
         {
             contextHolder.addContextFromFile(ldapFile);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not add context from file: [{}]. ", ldapFile.getName(), e);
         }
@@ -136,12 +143,13 @@ public class LdapConfigurationService implements InitializingBean
     /**
      * Delete LDAP Directory
      *
-     * @param dirId Directory identifier
+     * @param dirId
+     *            Directory identifier
      * @throws AcmLdapConfigurationException
      */
     public void deleteLdapDirectory(String dirId) throws AcmLdapConfigurationException
     {
-        String[] extensions = new String[]{"properties"};
+        String[] extensions = new String[] { "properties" };
         List<File> propertiesFiles = (List<File>) FileUtils.listFiles(
                 new File(ldapDirectoryConfig.getLdapConfigurationLocation()), extensions, false);
 
@@ -165,8 +173,7 @@ public class LdapConfigurationService implements InitializingBean
         forceDeleteFileQuietly(getLdapFileName(dirId));
     }
 
-    public Map<String, Object> createLdapAddUserTemplateFiles(String templateId, String
-            templateType, Map<String, String> props)
+    public Map<String, Object> createLdapAddUserTemplateFiles(String templateId, String templateType, Map<String, String> props)
             throws AcmLdapConfigurationException
     {
         LdapTemplateConfig templateConfig = templatesConfigMap.get(templateType.toLowerCase());
@@ -185,9 +192,8 @@ public class LdapConfigurationService implements InitializingBean
                 templateType, templateId), null);
     }
 
-
     public Map<String, Object> createLdapAddGroupTemplate(String templateId, String templateType,
-                                                          Map<String, String> props) throws AcmLdapConfigurationException
+            Map<String, String> props) throws AcmLdapConfigurationException
     {
         LdapTemplateConfig templateConfig = templatesConfigMap.get(templateType.toLowerCase());
 
@@ -206,8 +212,8 @@ public class LdapConfigurationService implements InitializingBean
     }
 
     public Map<String, Object> saveTemplateFiles(String propertiesFileName, String propertiesTemplateName,
-                                                 String fileName, String fileTemplateName, Map<String, String> props,
-                                                 String templateId, Properties attributesTemplate)
+            String fileName, String fileTemplateName, Map<String, String> props,
+            String templateId, Properties attributesTemplate)
             throws AcmLdapConfigurationException
     {
         Map<String, Object> ldapAddUserMapAttributes = createLdapTemplatesMapAttributes(props, templateId, attributesTemplate);
@@ -226,7 +232,8 @@ public class LdapConfigurationService implements InitializingBean
 
             }
             return ldapAddUserMapAttributes;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // Delete created files quietly
             // If the files exist, do not delete on failed update
@@ -243,7 +250,7 @@ public class LdapConfigurationService implements InitializingBean
     }
 
     public Map<String, Object> createLdapTemplatesMapAttributes(Map<String, String> userDefinedProperties, String id,
-                                                                Properties attributesTemplate)
+            Properties attributesTemplate)
     {
         // set any attribute which the user has defined
         Map<String, Object> ldapAttributes = userDefinedProperties.entrySet().stream()
@@ -258,8 +265,10 @@ public class LdapConfigurationService implements InitializingBean
     /**
      * Create Properties file
      *
-     * @param dirId Directory identifier
-     * @param props Directory properties data
+     * @param dirId
+     *            Directory identifier
+     * @param props
+     *            Directory properties data
      * @throws AcmLdapConfigurationException
      * @throws IOException
      */
@@ -289,7 +298,8 @@ public class LdapConfigurationService implements InitializingBean
         {
             // Create Properties file
             writeTemplateFile(ldapDirectoryConfig.getLdapTemplatePropertiesFile(), propertiesFileName, props);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't write LDAP properties with ID [{}] ", dirId, e);
             throw new AcmLdapConfigurationException("Can't write LDAP properties file ", e);
@@ -305,7 +315,8 @@ public class LdapConfigurationService implements InitializingBean
         try
         {
             writeTemplateFile(templateName, tempFileName, props);
-        } catch (IOException | TemplateException e)
+        }
+        catch (IOException | TemplateException e)
         {
             throw new AcmLdapConfigurationException("Can't write LDAP template file", e);
         }
@@ -315,7 +326,8 @@ public class LdapConfigurationService implements InitializingBean
         try
         {
             FileUtils.moveFile(new File(tempFileName), new File(fileName));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Renaming file from: [{}] to: [{}] failed ", tempFileName, fileName);
         }
@@ -338,8 +350,10 @@ public class LdapConfigurationService implements InitializingBean
     /**
      * Create LDAP file
      *
-     * @param dirId Directory identifier
-     * @param props Directory properties data
+     * @param dirId
+     *            Directory identifier
+     * @param props
+     *            Directory properties data
      * @throws IOException
      * @throws AcmLdapConfigurationException
      */
@@ -354,7 +368,8 @@ public class LdapConfigurationService implements InitializingBean
         try
         {
             writeTemplateFile(ldapDirectoryConfig.getLdapTemplateFile(), ldapFileName, props);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't create LDAP file with ID [{}] ", dirId, e);
             throw new AcmLdapConfigurationException("Can't create LDAP file ", e);
@@ -390,7 +405,8 @@ public class LdapConfigurationService implements InitializingBean
         props.put("groupSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_FILTER));
         props.put("changedGroupSearchFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_CHANGED_GROUP_SEARCH_FILTER));
         props.put("groupSearchPageFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUP_SEARCH_PAGE_FILTER));
-        props.put("changedGroupSearchPageFilter", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_CHANGED_GROUP_SEARCH_PAGE_FILTER));
+        props.put("changedGroupSearchPageFilter",
+                jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_CHANGED_GROUP_SEARCH_PAGE_FILTER));
         props.put("groupsSortingAttribute", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_GROUPS_SORT_ATTRIBUTE));
         props.put("ldapUrl", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_LDAP_URL));
         props.put("enableEditingLdapUsers", jsonObj.getBoolean(LdapConfigurationProperties.LDAP_PROP_ENABLE_EDITING_LDAP_USERS));
@@ -399,7 +415,8 @@ public class LdapConfigurationService implements InitializingBean
         props.put("syncPageSize", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_SYNC_PAGE_SIZE));
         props.put("userIdAttributeName", jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_ID_ATTR_NAME));
         props.put("userDomain", jsonObj.has(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
-                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN) : "");
+                ? jsonObj.getString(LdapConfigurationProperties.LDAP_PROP_USER_DOMAIN)
+                : "");
         return props;
     }
 
@@ -422,8 +439,7 @@ public class LdapConfigurationService implements InitializingBean
     public Optional<File> getDirectoryConfigurationFiles(String directory, String configurationLocation, Pattern pattern)
     {
         List<File> files = getAllLdapConfigFiles(configurationLocation, "properties", "xml");
-        Predicate<File> filterUserTemplatesPredicate = file ->
-                pattern.matcher(file.getName()).find() && file.getName().contains(directory);
+        Predicate<File> filterUserTemplatesPredicate = file -> pattern.matcher(file.getName()).find() && file.getName().contains(directory);
         return files.stream()
                 .filter(filterUserTemplatesPredicate)
                 .findFirst();
@@ -435,7 +451,8 @@ public class LdapConfigurationService implements InitializingBean
         {
             log.debug("Deleting file: [{}]", fileName);
             FileUtils.forceDelete(new File(fileName));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Can't delete file [{}] ", fileName, e);
         }
@@ -493,9 +510,8 @@ public class LdapConfigurationService implements InitializingBean
             List<Pattern> deletePatterns = Arrays.asList(ldapGroupPropertiesFilePattern,
                     ldapGroupFilePattern, ldapUserPropertiesFilePattern, ldapUserFilePattern);
 
-            deletePatterns.forEach(pattern ->
-                    getDirectoryConfigurationFiles(directoryId, configurationLocation, pattern)
-                            .ifPresent(deleteFile));
+            deletePatterns.forEach(pattern -> getDirectoryConfigurationFiles(directoryId, configurationLocation, pattern)
+                    .ifPresent(deleteFile));
         }
     }
 
@@ -504,13 +520,13 @@ public class LdapConfigurationService implements InitializingBean
         String configurationLocation = ldapDirectoryConfig.getLdapConfigurationLocation();
         List<File> propertiesFiles = getPropertiesFiles();
 
-        Function<File, JSONObject> jsonTemplate = (File file) ->
-        {
+        Function<File, JSONObject> jsonTemplate = (File file) -> {
             Properties properties = new Properties();
             try (InputStream propInputStrem = FileUtils.openInputStream(file))
             {
                 properties.load(propInputStrem);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.warn("Can not load template from file: [{}]", file, e);
             }
@@ -530,17 +546,17 @@ public class LdapConfigurationService implements InitializingBean
 
                 String directory = prop.getProperty(LdapConfigurationProperties.LDAP_PROP_ID);
 
-
                 getDirectoryConfigurationFiles(directory, configurationLocation,
                         ldapUserPropertiesFilePattern)
-                        .map(jsonTemplate)
-                        .ifPresent(jsonObject ->
-                                dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE, jsonObject));
+                                .map(jsonTemplate)
+                                .ifPresent(
+                                        jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_USER_TEMPLATE, jsonObject));
 
                 getDirectoryConfigurationFiles(directory, configurationLocation,
                         ldapGroupPropertiesFilePattern)
-                        .map(jsonTemplate)
-                        .ifPresent(jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE, jsonObject));
+                                .map(jsonTemplate)
+                                .ifPresent(
+                                        jsonObject -> dirJsonObj.put(LdapConfigurationProperties.LDAP_PROP_ADD_GROUP_TEMPLATE, jsonObject));
 
                 dirsJsonArr.put(dirJsonObj);
             }
@@ -552,9 +568,7 @@ public class LdapConfigurationService implements InitializingBean
     {
         JSONObject jsonProperties = new JSONObject();
         Set<String> propertyNames = properties.stringPropertyNames();
-        propertyNames.forEach(property ->
-                jsonProperties.put(property, properties.getProperty(property))
-        );
+        propertyNames.forEach(property -> jsonProperties.put(property, properties.getProperty(property)));
         return jsonProperties;
     }
 

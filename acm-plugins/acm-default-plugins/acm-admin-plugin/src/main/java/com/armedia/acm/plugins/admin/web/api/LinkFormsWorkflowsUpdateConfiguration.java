@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService;
+
 import org.activiti.engine.impl.util.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by sergey.kolomiets  on 6/15/15.
+ * Created by sergey.kolomiets on 6/15/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LinkFormsWorkflowsUpdateConfiguration
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -56,7 +57,8 @@ public class LinkFormsWorkflowsUpdateConfiguration
             linkFormsWorkflowsService.updateConfiguration(values);
 
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update Link Forms Workflows Configuration", e);
             throw new AcmLinkFormsWorkflowException("Can't update Link Forms Workflows Configuration", e);

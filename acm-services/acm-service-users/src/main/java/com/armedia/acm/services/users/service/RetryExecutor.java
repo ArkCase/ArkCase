@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.service;
 
 import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
+
 import org.springframework.ldap.ServiceUnavailableException;
 
 import java.util.Collections;

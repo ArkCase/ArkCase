@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
@@ -17,7 +15,6 @@
     <property name="lowerUserId" value="lower(cm_user_id)" dbms="postgresql"/>
     <property name="lowerUserId" value="cm_user_id" dbms="mysql,mssql"/>
 
-
     <property name="cmGroupSupervisorIdLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmGroupSupervisorIdLength" value="255" dbms="mysql,mssql"/>
 
@@ -29,7 +26,6 @@
 
     <property name="currentTime" value="now()" dbms="postgresql,oracle, mssql"/>
 
-
     <changeSet id="01-user-service-tables" author="dmiller">
         <createTable tableName="acm_user">
             <column name="cm_user_id" type="VARCHAR(${cmUserIdLength})">
@@ -39,8 +35,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_full_name" type="VARCHAR(1024)"/>
-            <column name="cm_user_created" type="DATE">
-            </column>
+            <column name="cm_user_created" type="DATE"></column>
             <column name="cm_user_modified" type="DATE">
                 <constraints nullable="false"/>
             </column>
@@ -65,18 +60,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addPrimaryKey
-                tableName="acm_user"
-                columnNames="cm_user_id, cm_user_directory_name"
-                constraintName="pk_acm_user_id"/>
-        <addPrimaryKey
-                tableName="acm_user_role"
-                columnNames="cm_role_name, cm_user_id"
-                constraintName="pk_acm_user_role"/>
-        <addPrimaryKey
-                tableName="acm_role"
-                columnNames="cm_role_name"
-                constraintName="pk_acm_role_name"/>
+        <addPrimaryKey tableName="acm_user" columnNames="cm_user_id, cm_user_directory_name" constraintName="pk_acm_user_id"/>
+        <addPrimaryKey tableName="acm_user_role" columnNames="cm_role_name, cm_user_id" constraintName="pk_acm_user_role"/>
+        <addPrimaryKey tableName="acm_role" columnNames="cm_role_name" constraintName="pk_acm_role_name"/>
     </changeSet>
 
     <changeSet id="02-user-service-drop-directory-name" author="dmiller">
@@ -103,10 +89,7 @@
     <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_role_type_lu">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_role_type"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role_type"/>
             </column>
             <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_role_type"/>
@@ -136,10 +119,7 @@
     <changeSet id="05-user-service-add-role-type-lookup-table" author="dmiller" dbms="mysql">
         <createTable tableName="acm_role_type_lu">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_role_type"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_role_type"/>
             </column>
             <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_role_type"/>
@@ -168,7 +148,7 @@
 
     <changeSet id="06-role-type-notnull" author="dmiller">
         <addNotNullConstraint tableName="acm_role" columnName="cm_role_type" defaultNullValue="APPLICATION_ROLE"
-                              columnDataType="VARCHAR(${cmValueLength})"/>
+            columnDataType="VARCHAR(${cmValueLength})"/>
     </changeSet>
 
     <changeSet id="08-add-email-column-to-user-table" author="marst">
@@ -205,11 +185,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_user_action" baseColumnNames="cm_user_action_user_id"
-                                 constraintName="fk_user_action_user_id"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_user_action_user_id" referencedTableName="acm_user" referencedColumnNames="cm_user_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="09-users-add-user-action-table" author="riste.tutureski" dbms="mysql">
@@ -240,11 +217,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_user_action" baseColumnNames="cm_user_action_user_id"
-                                 constraintName="fk_user_action_user_id"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_user_action_user_id" referencedTableName="acm_user" referencedColumnNames="cm_user_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="10-create-group-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
@@ -277,12 +251,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name"
-                                 constraintName="fk_group_parent_name"
-                                 referencedTableName="acm_group"
-                                 referencedColumnNames="cm_group_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name" constraintName="fk_group_parent_name"
+            referencedTableName="acm_group" referencedColumnNames="cm_group_name" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="10-create-group-table" author="riste.tutureski" dbms="mysql">
@@ -315,12 +286,9 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name"
-                                 constraintName="fk_group_parent_name"
-                                 referencedTableName="acm_group"
-                                 referencedColumnNames="cm_group_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_parent_name" constraintName="fk_group_parent_name"
+            referencedTableName="acm_group" referencedColumnNames="cm_group_name" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="12-create-group-member-table" author="riste.tutureski">
@@ -333,18 +301,12 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_group_name"
-                                 constraintName="fk_group_member_group_name"
-                                 referencedTableName="acm_group"
-                                 referencedColumnNames="cm_group_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_group_member_group_name" referencedTableName="acm_group" referencedColumnNames="cm_group_name"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
-        <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_user_id"
-                                 constraintName="fk_group_member_user_id"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group_member" baseColumnNames="cm_user_id" constraintName="fk_group_member_user_id"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="14-add-column-to-group-table" author="riste.tutureski">
@@ -353,12 +315,9 @@
                 <constraints nullable="true"/>
             </column>
         </addColumn>
-        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_supervisor_id"
-                                 constraintName="fk_group_supervisor_id"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group" baseColumnNames="cm_group_supervisor_id" constraintName="fk_group_supervisor_id"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="user-tables-15-add-group_member_primary_key" author="dmiller">
@@ -424,15 +383,13 @@
 
     <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="mysql">
         <comment>Directory name is not applicable to ad-hoc groups</comment>
-        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"
-                               columnDataType="VARCHAR(${cmUserDirectoryNameLength})"/>
+        <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name" columnDataType="VARCHAR(${cmUserDirectoryNameLength})"/>
     </changeSet>
 
     <changeSet id="22-remove-directory-name-constraint" author="ilinpetar" dbms="oracle,postgresql,mssql">
         <comment>Directory name is not applicable to ad-hoc groups</comment>
         <dropNotNullConstraint tableName="acm_group" columnName="cm_directory_name"/>
     </changeSet>
-
 
     <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mssql,oracle,postgresql">
         <addColumn tableName="acm_user">
@@ -444,7 +401,6 @@
         </addColumn>
     </changeSet>
 
-
     <changeSet id="23-add-country-department-company-attributes" author="manoj.dhungana" dbms="mysql">
         <addColumn tableName="acm_user">
             <column name="cm_country" type="TEXT"/>
@@ -454,7 +410,6 @@
             <column name="cm_title" type="TEXT"/>
         </addColumn>
     </changeSet>
-
 
     <changeSet id="24-added-deleted-at-column" author="jovan.ivanovski" dbms="mysql">
         <comment>New column for tracking when an AcmUser has been deleted</comment>
@@ -476,8 +431,7 @@
 
     <changeSet id="25-remove-constraint-on-deleted-at-column" author="jovan.ivanovski">
         <comment>Removed not null constraint on cm_user_deleted_at</comment>
-        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at"
-                               columnDataType="${timestampType}"/>
+        <dropNotNullConstraint tableName="acm_user" columnName="cm_user_deleted_at" columnDataType="${timestampType}"/>
     </changeSet>
 
     <changeSet id="26-add-password-expiration-date-column" author="ncuculova">
@@ -494,13 +448,13 @@
             </column>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="28-add-group-display-name-column" author="marko.stojanoski" dbms="mssql,oracle,postgresql">
         <addColumn tableName="acm_group">
             <column name="cm_group_display_name" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
-    
+
     <changeSet id="28-add-group-display-name-column" author="marko.stojanoski" dbms="mysql">
         <addColumn tableName="acm_group">
             <column name="cm_group_display_name" type="TEXT"/>

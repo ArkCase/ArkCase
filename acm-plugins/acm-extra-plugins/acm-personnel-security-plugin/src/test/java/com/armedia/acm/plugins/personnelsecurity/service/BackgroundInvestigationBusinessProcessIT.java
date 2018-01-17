@@ -1,10 +1,13 @@
 package com.armedia.acm.plugins.personnelsecurity.service;
 
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.personnelsecurity.casestatus.service.CaseFileStateService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.service.ClearanceVerificationSystemExportService;
 import com.armedia.acm.service.milestone.service.MilestoneService;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -30,11 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-personnel-security-activiti-test.xml" } )
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-personnel-security-activiti-test.xml" })
 public class BackgroundInvestigationBusinessProcessIT
 {
     @Autowired
@@ -104,7 +104,6 @@ public class BackgroundInvestigationBusinessProcessIT
         pvars.put("taskDueDateExpression", taskDueDateExpression);
         pvars.put("taskPriority", priority);
 
-
         EasyMock.reset(mockMilestoneService, caseFileStateService, clearanceVerificationSystemExportService, correspondenceService);
     }
 
@@ -156,7 +155,6 @@ public class BackgroundInvestigationBusinessProcessIT
 
         verify(mocks);
 
-
     }
 
     @Test
@@ -194,7 +192,6 @@ public class BackgroundInvestigationBusinessProcessIT
 
         verify(mocks);
 
-
     }
 
     private void happyPath_completeIssueClearanceTask(ProcessInstance pi)
@@ -228,7 +225,8 @@ public class BackgroundInvestigationBusinessProcessIT
         completeTask("Adjudicate Clearance Request " + caseNumberInQuotes, "adjudicationOutcome", outcomeValue);
     }
 
-    /** should now have one user task to adjudicate the case
+    /**
+     * should now have one user task to adjudicate the case
      *
      * @param pi
      */
@@ -283,20 +281,19 @@ public class BackgroundInvestigationBusinessProcessIT
                 "Verify Address History " + caseNumberInQuotes,
                 "Verify Employment History " + caseNumberInQuotes,
                 "Verify SF86 Packet " + caseNumberInQuotes,
-                "eVerify " + caseNumberInQuotes
-        );
+                "eVerify " + caseNumberInQuotes);
 
         assertEquals(expectedVerifyTasks, verifyTasks.size());
 
         List<String> foundTaskNames = new ArrayList<>();
-        for ( Task task : verifyTasks )
+        for (Task task : verifyTasks)
         {
             foundTaskNames.add(task.getName());
         }
 
         assertEquals(expectedNames, foundTaskNames);
 
-        for ( Task task : verifyTasks )
+        for (Task task : verifyTasks)
         {
             assertNotNull(task.getDueDate());
             log.debug(task.getName() + " is due on: " + task.getDueDate());
@@ -305,6 +302,5 @@ public class BackgroundInvestigationBusinessProcessIT
         }
 
     }
-
 
 }

@@ -17,13 +17,14 @@ import org.springframework.util.ResourceUtils;
 
 import javax.persistence.Converter;
 import javax.persistence.PersistenceException;
+
 import java.io.IOException;
 import java.net.URL;
 
 /**
  * Most of this code copied from DefaultPersistenceUnitManager; the goal is to scan for and register converter
- * classes.  DefaultPersistenceUnitManager only scans for Entity, Embeddable, and MappedSuperclass, and there is no
- * way to configure it to scan for other JPA types.  So this class uses the same strategy to scan for @Converter.
+ * classes. DefaultPersistenceUnitManager only scans for Entity, Embeddable, and MappedSuperclass, and there is no
+ * way to configure it to scan for other JPA types. So this class uses the same strategy to scan for @Converter.
  */
 public class ConverterScanPostProcessor implements PersistenceUnitPostProcessor
 {
@@ -73,7 +74,8 @@ public class ConverterScanPostProcessor implements PersistenceUnitPostProcessor
                             }
                         }
                     }
-                } catch (IOException ex)
+                }
+                catch (IOException ex)
                 {
                     throw new PersistenceException("Failed to scan classpath for unlisted entity classes", ex);
                 }

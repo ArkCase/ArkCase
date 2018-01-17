@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="createContactItemAPIController"
-          class="com.armedia.acm.plugins.outlook.web.api.CreateContactItemAPIController">
-    </bean>
+    <bean id="createContactItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateContactItemAPIController"></bean>
 
-    <bean id="createTaskItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateTaskItemAPIController">
-    </bean>
+    <bean id="createTaskItemAPIController" class="com.armedia.acm.plugins.outlook.web.api.CreateTaskItemAPIController"></bean>
 
     <bean id="createCalendarAppointmentAPIController"
-          class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController">
-    </bean>
+        class="com.armedia.acm.plugins.outlook.web.api.CreateCalendarAppointmentAPIController"></bean>
 
-    <bean id="exceptionResolver"
-          class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
+    <bean id="exceptionResolver" class="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver"/>
 
     <!-- dummy bean for the activiti engine. -->
     <bean id="activitiProcessEngineConfiguration" class="java.lang.String">
