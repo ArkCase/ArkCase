@@ -51,16 +51,16 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        String groupName = group.getName();
+        String groupName = MapperUtils.buildGroupName(group.getName(), Optional.empty());
         AcmGroup acmGroup = groupDao.findByName(groupName);
         if (acmGroup != null && acmGroup.getStatus() == AcmGroupStatus.ACTIVE)
         {
-            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+            throw new AcmObjectAlreadyExistsException("Group " + group.getName() + " already exists.");
         }
         if (acmGroup == null)
         {
             group.setStatus(AcmGroupStatus.ACTIVE);
-            group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
+            group.setName(groupName);
             group.setDisplayName(groupName);
             return groupDao.save(group);
         }
@@ -75,7 +75,6 @@ public class GroupServiceImpl implements GroupService
             acmGroup.setDirectoryName(null);
             return groupDao.save(acmGroup);
         }
-
     }
 
     @Override
@@ -97,8 +96,8 @@ public class GroupServiceImpl implements GroupService
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
-                0, 1000, "name asc");
+        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
+                "name asc");
     }
 
     @Override
@@ -162,17 +161,14 @@ public class GroupServiceImpl implements GroupService
 
         Assert.isTrue(acmGroup.getMemberOfGroups().isEmpty());
 
+        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
 
-        acmGroup.getMemberGroups()
-                .forEach(memberGroup -> memberGroup.getMemberOfGroups().remove(acmGroup));
-
-        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+        acmGroup.removeMembers();
 
         acmGroup.setUserMembers(new HashSet<>());
-        acmGroup.setMemberOfGroups(new HashSet<>());
-        acmGroup.setMemberGroups(new HashSet<>());
 
         save(acmGroup);
 
@@ -288,8 +284,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, boolean flushInstructions)
-            throws AcmObjectNotFoundException
+    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, boolean flushInstructions) throws AcmObjectNotFoundException
     {
         AcmGroup group = groupDao.findByName(groupId);
 
@@ -392,13 +387,29 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
-            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
+    public AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException
+
     {
         AcmGroup parent = groupDao.findByName(parentId);
-        if (parent == null)
+        AcmGroup subGroup = groupDao.findByName(subGroupId);
+
+        if (parent == null || subGroup == null)
         {
-            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " + parentId + " not found", null);
+            StringBuilder errorMessage = new StringBuilder();
+            if (parent == null)
+            {
+                errorMessage.append("Parent group with id [").append(parentId).append("] not found.");
+            }
+            if (subGroup == null)
+            {
+                if (errorMessage.length() > 0)
+                {
+                    errorMessage.append(" ");
+                }
+                errorMessage.append("Subgroup with id [").append(subGroupId).append("] not found.");
+            }
+
+            throw new AcmCreateObjectFailedException("GROUP", errorMessage.toString(), null);
         }
 
         // If supervisor for the subgroup is empty, get from the parent group
@@ -407,11 +418,36 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
+        parent.addGroupMember(subGroup);
+        String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
+        subGroup.setAscendantsList(ancestorsStringList);
+        Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
+        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
+        return subGroup;
+    }
+
+    @Override
+    @Transactional
+    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
+            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
+    {
+        AcmGroup parent = groupDao.findByName(parentId);
+        if (parent == null)
+        {
+            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found", null);
+        }
+
+        // If supervisor for the subgroup is empty, get from the parent group
+        if (subGroup.getSupervisor() == null)
+        {
+            subGroup.setSupervisor(parent.getSupervisor());
+        }
+
+        String name = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
+        subGroup.setName(name);
+        subGroup.setDisplayName(name);
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
-        subGroup.setName(groupName);
-        subGroup.setDisplayName(groupName);
         AcmGroup acmGroup = createGroup(subGroup);
         parent.addGroupMember(acmGroup);
         return acmGroup;

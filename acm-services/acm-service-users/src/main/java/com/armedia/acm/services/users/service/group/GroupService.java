@@ -49,8 +49,8 @@ public interface GroupService
 
     /**
      * AcmGroups are not deleted from the system. This method sets the group with status
-     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
-     * groups, users and roles for users per the target group are removed.
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to groups, users and roles
+     * for users per the target group are removed.
      *
      * @param groupId
      *            name of the group
@@ -62,8 +62,8 @@ public interface GroupService
 
     /**
      * AcmGroups are not deleted from the system. This method sets the group with status
-     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
-     * groups, users and roles for users per the target group are removed.
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to groups, users and roles
+     * for users per the target group are removed.
      *
      * @param groupId
      *            name of the group
@@ -76,8 +76,8 @@ public interface GroupService
     AcmGroup markGroupDeleted(String groupId, boolean flushInstructions) throws AcmObjectNotFoundException;
 
     /**
-     * Removes group membership to the given parent group. In case this group is
-     * not member to any other group, the group is deleted.
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
      *
      * @param groupName
      *            name of the group to be removed
@@ -90,8 +90,8 @@ public interface GroupService
     AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
 
     /**
-     * Removes group membership to the given parent group. In case this group is
-     * not member to any other group, the group is deleted.
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
      *
      * @param groupName
      *            name of the group to be removed
@@ -123,5 +123,31 @@ public interface GroupService
 
     AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
+    /**
+     * Saves new ADHOC group and adds it as member to parent group.
+     * 
+     * @param subGroup
+     *            group to be created
+     * @param parentId
+     *            name of the parent group
+     * @return new AcmGroup
+     * @throws AcmCreateObjectFailedException
+     *             in case when parent group is not found
+     * @throws AcmObjectAlreadyExistsException
+     *             in case when this group already exists
+     */
     AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
+
+    /**
+     * Adds group as member to parent group
+     * 
+     * @param subGroupId
+     *            member group name
+     * @param parentId
+     *            parent group name
+     * @return updated group member AcmGroup
+     * @throws AcmCreateObjectFailedException
+     *             in case when subgroup or parent group are not found
+     */
+    AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
 }
