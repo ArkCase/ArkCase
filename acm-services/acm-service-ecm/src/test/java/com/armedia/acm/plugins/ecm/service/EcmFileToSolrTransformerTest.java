@@ -250,7 +250,7 @@ public class EcmFileToSolrTransformerTest extends EasyMockSupport
         assertEquals(in.getFileType(), result.getType_lcs());
         assertEquals(String.valueOf(in.getParentObjectId()), result.getParent_id_s());
         assertEquals(in.getParentObjectType(), result.getParent_type_s());
-        assertEquals(9, result.getAdditionalProperties().size());
+        assertEquals(10, result.getAdditionalProperties().size());
     }
 
 }

@@ -4,7 +4,15 @@
         xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <changeSet id="01-acm_paticipant-delete-multiple-owner-participants" author="bojan.milenkoski">
+    <changeSet id="01-acm_paticipant-fix-no-access-type" author="bojan.milenkoski">
+        <sql>
+            UPDATE acm_participant
+            SET cm_participant_type='No Access'
+            WHERE cm_participant_type='no access'
+        </sql>
+    </changeSet>
+
+    <changeSet id="02-acm_paticipant-delete-multiple-owner-participants" author="bojan.milenkoski">
         <sql>
             CREATE TABLE DuplicateParticipantIds (cm_participant_id bigint);
 
@@ -20,14 +28,14 @@
         </sql>
     </changeSet>
 
-    <changeSet id="02-acm_paticipant-delete-owner-with-no-access" author="bojan.milenkoski">
+    <changeSet id="03-acm_paticipant-delete-owner-with-no-access" author="bojan.milenkoski">
         <sql>
             CREATE TABLE ParticipantsOwnerWithNoAccess (cm_participant_id bigint);
 
             INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
-            SELECT MAX(cm_participant_id) FROM acm_participant
-            WHERE cm_participant_type='owner' OR cm_participant_type='No Access'
-            GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
+            SELECT p.cm_participant_id FROM acm_participant p 
+            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND p.cm_participant_ldap_id = p1.cm_participant_ldap_id
+            WHERE p.cm_participant_type='No Access' AND p1.cm_participant_type='owner';
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
             DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsOwnerWithNoAccess);
@@ -36,27 +44,19 @@
         </sql>
     </changeSet>
 
-    <changeSet id="03-acm_paticipant-delete-assignee-with-no-access" author="bojan.milenkoski">
+    <changeSet id="04-acm_paticipant-delete-assignee-with-no-access" author="bojan.milenkoski">
         <sql>
             CREATE TABLE ParticipantsAssigneeWithNoAccess (cm_participant_id bigint);
 
-            INSERT INTO ParticipantsAssigneeWithNoAccess (cm_participant_id)
-            SELECT MAX(cm_participant_id) FROM acm_participant
-            WHERE cm_participant_type='assignee' OR cm_participant_type='No Access'
-            GROUP BY cm_object_id, cm_object_type HAVING COUNT(*) > 1;
+            INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
+            SELECT p.cm_participant_id FROM acm_participant p 
+            LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND p.cm_participant_ldap_id = p1.cm_participant_ldap_id
+            WHERE p.cm_participant_type='assignee' AND p1.cm_participant_type='owner';
 
             DELETE FROM acm_participant_privilege where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
             DELETE FROM acm_participant where cm_participant_id IN (SELECT cm_participant_id FROM ParticipantsAssigneeWithNoAccess);
 
             DROP TABLE ParticipantsAssigneeWithNoAccess;
-        </sql>
-    </changeSet>
-    
-    <changeSet id="04-acm_paticipant-fix-no-access-type" author="bojan.milenkoski">
-        <sql>
-            UPDATE acm_participant
-            SET cm_participant_type='No Access'
-            WHERE cm_participant_type='no access'
         </sql>
     </changeSet>
 </databaseChangeLog>
