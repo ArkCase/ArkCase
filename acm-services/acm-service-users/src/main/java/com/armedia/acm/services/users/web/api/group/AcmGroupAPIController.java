@@ -10,11 +10,6 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -29,6 +24,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Controller
 @RequestMapping({ "/api/v1/users", "/api/latest/users" })
 public class AcmGroupAPIController
@@ -42,8 +42,8 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/groups/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-                            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
             throws MuleException
     {
         LOG.info("Taking all groups and subgroups from Solr.");
@@ -75,8 +75,8 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/groups/adhoc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getAdhocGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                 @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
-                                 @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
             throws MuleException
     {
         LOG.info("Taking ad-hoc groups from Solr.");
@@ -92,9 +92,9 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroupsByDirectory(@PathVariable String directory,
-                                       @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                       @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
-                                       @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
             throws MuleException
     {
 
@@ -118,9 +118,9 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/{groupId:.+}/get", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroup(@PathVariable("groupId") String groupId,
-                           @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                           @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                           @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
             throws Exception
     {
 
@@ -156,9 +156,9 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/{groupId:.+}/get/subgroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getSubGroups(@PathVariable("groupId") String groupId,
-                               @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                               @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                               @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort, Authentication auth)
             throws MuleException
     {
 
@@ -172,9 +172,9 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/get/toplevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getTopLevelGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                    @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
-                                    @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                    @RequestParam(value = "groupSubtype", required = false) List<String> groupSubtype, Authentication auth)
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "groupSubtype", required = false) List<String> groupSubtype, Authentication auth)
             throws Exception
     {
         LOG.info("Taking all top level groups from Solr.");
@@ -252,8 +252,7 @@ public class AcmGroupAPIController
         }
     }
 
-    @RequestMapping(value = "/group/save/{subGroupId:.+}/{parentId:.+}", method = RequestMethod.POST,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/group/save/{subGroupId:.+}/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup addGroupMember(@PathVariable("subGroupId") String subGroupId, @PathVariable("parentId") String parentId)
             throws AcmCreateObjectFailedException
@@ -269,7 +268,7 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup,
-                                 @PathVariable("parentId") String parentId) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
+            @PathVariable("parentId") String parentId) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
 
     {
 
@@ -306,14 +305,13 @@ public class AcmGroupAPIController
         }
     }
 
-    @RequestMapping(value = "/group/{groupId:.+}/parent/{parentId:.+}", method = RequestMethod.DELETE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/group/{groupId:.+}/parent/{parentId:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup removeGroupMembership(@PathVariable String groupId, @PathVariable String parentId) throws AcmAppErrorJsonMsg
     {
         try
         {
-            //we need to decode base64 encoded group id because can contain characters which can interfere with url
+            // we need to decode base64 encoded group id because can contain characters which can interfere with url
             groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
             parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
 
