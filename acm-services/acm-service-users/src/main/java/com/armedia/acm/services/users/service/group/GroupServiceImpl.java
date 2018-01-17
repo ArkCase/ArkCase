@@ -79,7 +79,18 @@ public class GroupServiceImpl implements GroupService
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
         return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
-                0, 1000, "name asc");
+                0, 1000, "name asc", true);
+    }
+
+    @Override
+    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows) throws MuleException
+    {
+
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE";
+
+        String fq = String.format("fq=name_partial:%s", searchFilter);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortBy + " " + sortDirection, fq);
     }
 
     @Override
@@ -200,7 +211,8 @@ public class GroupServiceImpl implements GroupService
         {
             log.debug("Group [{}] has no other parent groups, will be deleted", groupName);
             return markGroupDeleted(groupName);
-        } else
+        }
+        else
         {
             log.debug("Build ancestors string for group: [{}]", groupName);
             acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
@@ -258,7 +270,8 @@ public class GroupServiceImpl implements GroupService
             if (user != null)
             {
                 group = addUserMemberToGroup(user, groupId);
-            } else
+            }
+            else
             {
                 log.warn("User with id [{}] not found", userId);
             }

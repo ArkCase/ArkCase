@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping({ "/api/v1/users", "/api/latest/users" })
+@RequestMapping({"/api/v1/users", "/api/latest/users"})
 public class AcmGroupAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -88,6 +88,20 @@ public class AcmGroupAPIController
         return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows, sort);
 
     }
+
+    @RequestMapping(value = "/groups/search", method = RequestMethod.GET)
+    @ResponseBody
+    public String listFlatSearchResultsFromFolderContent(Authentication auth,
+                                                         @RequestParam(value = "fq") String searchFilter,
+                                                         @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+                                                         @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+                                                         @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+                                                         @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+                                                         @RequestParam(value = "category", required = false) String category) throws MuleException
+    {
+        return getGroupService().test(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
+    }
+
 
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

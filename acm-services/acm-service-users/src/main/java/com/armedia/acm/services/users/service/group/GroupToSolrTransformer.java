@@ -80,6 +80,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         }
 
         solr.setAdditionalProperty("directory_name_s", in.getDirectoryName());
+        solr.setAdditionalProperty("name_partial", in.getName());
 
         return solr;
     }
@@ -102,7 +103,7 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
 
         solr.setTitle_parseable(in.getName());
         solr.setStatus_s(in.getStatus().name());
-
+        solr.setAdditionalProperty("name_partial", in.getName());
         return solr;
     }
 

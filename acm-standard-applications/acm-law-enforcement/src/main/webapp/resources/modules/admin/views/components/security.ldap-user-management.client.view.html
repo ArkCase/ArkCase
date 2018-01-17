@@ -16,7 +16,9 @@
         <div class="row">
             <object-authorization-roles data="appUsers" object-display-name="name" on-object-selected="onObjSelect"
                                         role-display-name="name" on-auth-role-change="onAuthRoleSelected"
+                                        external-service-name="LookupService" external-service-method-name="getFilteredUsers"
                                         object-title="{{'admin.security.ldap.user.management.user' | translate}}"/>
         </div>
     </panel-view>
 </div>
+

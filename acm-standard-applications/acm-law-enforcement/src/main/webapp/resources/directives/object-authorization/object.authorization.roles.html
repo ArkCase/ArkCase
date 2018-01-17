@@ -1,11 +1,20 @@
 <div class="col-xs-12">
-    <div class="col-xs-3 b-r"><label>{{'common.directive.objectAuthorizationRoles.choose' | translate}}&nbsp;
+    <div class="col-xs-3 b-r"
+         onscroll="myFunction()"><label>{{'common.directive.objectAuthorizationRoles.choose' | translate}}&nbsp;
         {{objectTitle}}</label>
         <select ng-model="selectedObject" ng-change="selectObject()"
                 ng-options="d[objectDisplayName] | translate for d in data | orderObjectBy:'objectDisplayName'"
-                name="" size="15"
+                name="" size="15" id="scrollTest"
                 class="form-control">
         </select>
+        <form class="form-inline">
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="filterWord" pattern=".{2,}" title="Error, 2 characters required.">
+            </div>
+            <button class="btn btn-default text-right" ng-click="filterObjects()">
+                <span class="glyphicon glyphicon-search"></span> Search
+            </button>
+        </form>
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
         <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized| orderObjectBy:'roleDisplayName'"
