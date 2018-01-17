@@ -365,7 +365,7 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup saveAdHocSubGroup(String subGroupId, String parentId) throws AcmCreateObjectFailedException
+    public AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException
 
     {
         AcmGroup parent = groupDao.findByName(parentId);

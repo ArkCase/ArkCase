@@ -195,7 +195,7 @@ public class GroupServiceTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#saveAdHocSubGroup(java.lang.String, java.lang.String)}.
+     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#addGroupMember(java.lang.String, java.lang.String)}.
      *
      * @throws Exception
      */
@@ -208,7 +208,7 @@ public class GroupServiceTest
         try
         {
             // when
-            groupService.saveAdHocSubGroup(GROUP_1, GROUP);
+            groupService.addGroupMember(GROUP_1, GROUP);
         }
         catch (AcmCreateObjectFailedException e)
         {
@@ -224,7 +224,7 @@ public class GroupServiceTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#saveAdHocSubGroup(java.lang.String, java.lang.String)}.
+     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#addGroupMember(java.lang.String, java.lang.String)}.
      *
      * @throws Exception
      */
@@ -237,7 +237,7 @@ public class GroupServiceTest
         try
         {
             // when
-            groupService.saveAdHocSubGroup(GROUP_1, GROUP);
+            groupService.addGroupMember(GROUP_1, GROUP);
         }
         catch (AcmCreateObjectFailedException e)
         {
@@ -253,7 +253,7 @@ public class GroupServiceTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#saveAdHocSubGroup(java.lang.String, java.lang.String)}.
+     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#addGroupMember(java.lang.String, java.lang.String)}.
      *
      * @throws Exception
      */
@@ -263,7 +263,7 @@ public class GroupServiceTest
         try
         {
             // when
-            groupService.saveAdHocSubGroup(GROUP_1, GROUP);
+            groupService.addGroupMember(GROUP_1, GROUP);
         }
         catch (AcmCreateObjectFailedException e)
         {
@@ -279,7 +279,7 @@ public class GroupServiceTest
 
     /**
      * Test method for
-     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#saveAdHocSubGroup(java.lang.String, java.lang.String)}.
+     * {@link com.armedia.acm.services.users.service.group.GroupServiceImpl#addGroupMember(java.lang.String, java.lang.String)}.
      *
      * @throws Exception
      */
@@ -302,7 +302,7 @@ public class GroupServiceTest
         when(mockedMemberGroup1.getMemberGroups()).thenReturn(new HashSet<>());
 
         // when
-        AcmGroup resultGroup = groupService.saveAdHocSubGroup(GROUP_1, GROUP);
+        AcmGroup resultGroup = groupService.addGroupMember(GROUP_1, GROUP);
 
         // then
         verify(group).getSupervisor();

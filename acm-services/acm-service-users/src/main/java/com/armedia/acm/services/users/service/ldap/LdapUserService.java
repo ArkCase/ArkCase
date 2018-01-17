@@ -26,7 +26,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.NameAlreadyBoundException;
 import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +55,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private ApplicationEventPublisher eventPublisher;
 
-    @Async
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
         log.debug("Publish send set password email for user: [{}]", user.getUserId());
