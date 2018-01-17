@@ -133,5 +133,4 @@ public interface GroupService
     AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
     AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
-
 }

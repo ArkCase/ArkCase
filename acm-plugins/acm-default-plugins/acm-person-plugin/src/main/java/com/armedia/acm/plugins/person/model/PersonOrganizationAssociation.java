@@ -5,6 +5,7 @@ import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -45,20 +47,16 @@ public class PersonOrganizationAssociation implements Serializable, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_person_org_assoc_gen",
-            table = "acm_person_org_assoc_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_person_org_assoc", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "acm_person_org_assoc_gen", table = "acm_person_org_assoc_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_person_org_assoc", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_org_assoc_gen")
     @Column(name = "cm_id")
     private Long id;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST }, optional = false)
     @JoinColumn(name = "cm_person_id", nullable = false)
     private Person person;
 
-    @ManyToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST}, optional = false)
+    @ManyToOne(cascade = { CascadeType.REFRESH, CascadeType.DETACH, CascadeType.PERSIST }, optional = false)
     @JoinColumn(name = "cm_organization_id", nullable = false)
     private Organization organization;
 

@@ -2,14 +2,24 @@
     <h3> {{title}}</h3>
 </div>
 <div class="modal-body" ng-style="{'height':'{{height}}', 'width': '{{width}}'}">
-    <iframe iframe-onload="iframeLoaded()" id="frevvoFormIframe" ng-src="{{frevvoFormUrl}}" ng-if="frevvoFormUrl" class="new-iframe"></iframe>
+    <iframe iframe-onload="iframeLoaded()" id="frevvoFormIframe" ng-src="{{frevvoFormUrl}}" ng-if="frevvoFormUrl"
+            class="new-iframe"></iframe>
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" ng-click="close()" translate>
         common.directive.docTree.dndDialog.btnCancel.text
     </button>
 </div>
-<style>.modal-dialog {width: {{widthDialogBox}};} </style>
+<style>.modal-dialog {
+
+width: {
+
+{
+    widthDialogBox
+}
+}
+;
+} </style>
 
 
 

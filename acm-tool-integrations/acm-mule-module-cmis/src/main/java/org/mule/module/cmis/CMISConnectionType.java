@@ -11,22 +11,25 @@ package org.mule.module.cmis;
 /**
  * Connection Type for CMIS
  */
-public enum CMISConnectionType {
-    ATOM("ATOM"),
-    SOAP("SOAP");
+public enum CMISConnectionType
+{
+    ATOM("ATOM"), SOAP("SOAP");
 
     private String value;
 
-    CMISConnectionType(String v) {
+    CMISConnectionType(String v)
+    {
         value = v;
     }
 
-    public String value() {
+    public String value()
+    {
         return value;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return this.value();
     }
 }

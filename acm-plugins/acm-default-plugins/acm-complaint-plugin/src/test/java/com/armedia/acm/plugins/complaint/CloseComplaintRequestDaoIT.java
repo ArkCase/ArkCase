@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint;
 
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.dao.CloseComplaintRequestDao;
@@ -8,6 +10,7 @@ import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,17 +27,14 @@ import javax.persistence.PersistenceContext;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(name = "spring",
-        locations = {
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-complaint-dao-test.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-library-acm-encryption.xml"
-        })
+@ContextConfiguration(name = "spring", locations = {
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-complaint-dao-test.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-library-acm-encryption.xml"
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class CloseComplaintRequestDaoIT
 {

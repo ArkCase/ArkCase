@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.exception;
 /**
  * Created by admin on 4/28/15.
  */
-public class AcmRolesPrivilegesException extends Exception {
+public class AcmRolesPrivilegesException extends Exception
+{
 
     public AcmRolesPrivilegesException()
     {
@@ -29,5 +30,3 @@ public class AcmRolesPrivilegesException extends Exception {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

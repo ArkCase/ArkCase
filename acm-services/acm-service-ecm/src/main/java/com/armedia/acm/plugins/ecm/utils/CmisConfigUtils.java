@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.utils;
 
 import com.armedia.acm.cmis.CmisConfigRegistry;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+
 import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 
 /**
@@ -19,7 +20,8 @@ public class CmisConfigUtils
     /**
      * Retrieve CMIS configuration (used with config-ref attribute of Mule flows) for given configuration id.
      *
-     * @param configId configuration identifier
+     * @param configId
+     *            configuration identifier
      * @return CMIS configuration reference
      */
     public CMISCloudConnectorConnectionManager getCmisConfiguration(String configId)
@@ -30,7 +32,8 @@ public class CmisConfigUtils
     /**
      * Retrieve versioning state value (used with versioningState attribute of Mule flows) for given configuration id.
      *
-     * @param configId configuration identifier
+     * @param configId
+     *            configuration identifier
      * @return versioning state value (NONE, MINOR, MAJOR)
      */
     public String getVersioningState(String configId)

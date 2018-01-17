@@ -4,6 +4,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
  * Created by marst on 10/10/16.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
 public class SuggesterAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -37,20 +38,23 @@ public class SuggesterAPIController
             @RequestParam(value = "q") String query,
             @RequestParam(value = "core", defaultValue = "QUICK") String core,
             @RequestParam(value = "filter", required = false) String filter,
-            Authentication authentication
-    ) throws MuleException
+            Authentication authentication) throws MuleException
     {
         String filterQueries = "";
-        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f)).collect(Collectors.joining("&"));
+        filterQueries = Arrays.asList(filter).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                .collect(Collectors.joining("&"));
 
         switch (core)
         {
-            case SearchConstants.CORE_QUICK:
-                return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0, 10, "", filterQueries);
-            case SearchConstants.CORE_ADVANCED:
-                return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SUGGESTER_SEARCH, query, 0, 10, "", filterQueries);
-            default:
-                return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0, 10, "", filterQueries);
+        case SearchConstants.CORE_QUICK:
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0, 10, "",
+                    filterQueries);
+        case SearchConstants.CORE_ADVANCED:
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SUGGESTER_SEARCH, query, 0, 10, "",
+                    filterQueries);
+        default:
+            return getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SUGGESTER_SEARCH, query, 0, 10, "",
+                    filterQueries);
         }
     }
 

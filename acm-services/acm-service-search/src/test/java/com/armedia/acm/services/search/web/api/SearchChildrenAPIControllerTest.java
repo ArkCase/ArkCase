@@ -1,7 +1,14 @@
 package com.armedia.acm.services.search.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,11 +25,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -65,14 +67,16 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         Boolean activeOnly = false;
         Boolean exceptDeletedOnly = true;
 
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
 
-        String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly) {
+        if (activeOnly)
+        {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
         }
-        if (exceptDeletedOnly) {
-            if(!activeOnly){
+        if (exceptDeletedOnly)
+        {
+            if (!activeOnly)
+            {
                 query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
@@ -82,19 +86,18 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).
-                andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+                .andReturn(solrResponse);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/children")  
+                get("/api/v1/plugin/search/children")
                         .param("parentId", parentId)
                         .param("parentType", parentType)
                         .param("childType", childType)
 
-                       
-                .principal(mockAuthentication))
+                        .principal(mockAuthentication))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
@@ -107,7 +110,6 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
 
         assertEquals(solrResponse, jsonString);
 
-
     }
 
     @Test
@@ -119,26 +121,27 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         Boolean activeOnly = false;
         Boolean exceptDeletedOnly = true;
 
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
 
-        String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly) {
+        if (activeOnly)
+        {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
         }
-        if (exceptDeletedOnly) {
-            if(!activeOnly){
+        if (exceptDeletedOnly)
+        {
+            if (!activeOnly)
+            {
                 query += " AND -status_s:DELETED";
             }
         }
-
 
         String solrResponse = "{ \"solrResponse\": \"this is a test response.\" }";
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, "")).
-                andReturn(solrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.ADVANCED_SEARCH, query, 0, 10, ""))
+                .andReturn(solrResponse);
 
         replayAll();
 
@@ -147,7 +150,6 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
                         .param("parentId", parentId)
                         .param("parentType", parentType)
                         .param("childType", childType)
-
 
                         .principal(mockAuthentication))
                 .andExpect(status().isOk())
@@ -173,31 +175,33 @@ public class SearchChildrenAPIControllerTest extends EasyMockSupport
         Boolean activeOnly = false;
         Boolean exceptDeletedOnly = true;
 
+        String query = "parent_object_type_s:" + parentType + " AND parent_object_id_i:" + parentId + " AND object_type_s:" + childType;
 
-        String query = "parent_object_type_s:" + parentType+ " AND parent_object_id_i:"+ parentId + " AND object_type_s:" + childType;
-
-        if (activeOnly) {
+        if (activeOnly)
+        {
             query += " AND -status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED";
         }
-        if (exceptDeletedOnly) {
-            if(!activeOnly){
+        if (exceptDeletedOnly)
+        {
+            if (!activeOnly)
+            {
                 query += " AND -status_s:DELETED AND -status_s:DELETE";
             }
         }
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).
-                andThrow(new DefaultMuleException("test Exception"));
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+                .andThrow(new DefaultMuleException("test Exception"));
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/v1/plugin/search/children")  
-                        .param("parentId",parentId)
+                get("/api/v1/plugin/search/children")
+                        .param("parentId", parentId)
                         .param("parentType", parentType)
                         .param("childType", childType)
-                .principal(mockAuthentication))
+                        .principal(mockAuthentication))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().contentType(MediaType.TEXT_PLAIN))
                 .andReturn();

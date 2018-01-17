@@ -8,6 +8,7 @@ import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenS
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.service.group.GroupService;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.json.JSONArray;
@@ -36,6 +37,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -51,7 +53,7 @@ import java.util.List;
  * <p>
  * If token request handling was done in some other filter position (e.g. as the pre-auth filter), then Spring
  * Security always causes an HTTP redirect to be sent to the client, so the client has to issue another request
- * (being sure to include the session cookie) that goes through another authentication chain.  But by placing the token
+ * (being sure to include the session cookie) that goes through another authentication chain. But by placing the token
  * handling in the basic authentication position, there is no redirect and the requested URL is activated right away.
  */
 public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFilter
@@ -67,17 +69,14 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
 
     private enum AuthRequestType
     {
-        AUTH_REQUEST_TYPE_TOKEN,
-        AUTH_REQUEST_TYPE_EMAIL_TOKEN,
-        AUTH_REQUEST_TYPE_CLIENT_CERT,
-        AUTH_REQUEST_TYPE_BASIC,
-        AUTH_REQUEST_TYPE_OTHER
+        AUTH_REQUEST_TYPE_TOKEN, AUTH_REQUEST_TYPE_EMAIL_TOKEN, AUTH_REQUEST_TYPE_CLIENT_CERT, AUTH_REQUEST_TYPE_BASIC, AUTH_REQUEST_TYPE_OTHER
     }
 
     /**
      * Constructor.
      *
-     * @param authenticationManager authentication requests submitted here
+     * @param authenticationManager
+     *            authentication requests submitted here
      */
     public AcmBasicAndTokenAuthenticationFilter(AuthenticationManager authenticationManager)
     {
@@ -129,9 +128,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * ArkCase token authentication handler.
      *
-     * @param request  HTTP servlet request
-     * @param response HTTP servlet response
-     * @throws IOException on error
+     * @param request
+     *            HTTP servlet request
+     * @param response
+     *            HTTP servlet response
+     * @throws IOException
+     *             on error
      */
     private void tokenAuthentication(HttpServletRequest request, HttpServletResponse response) throws IOException
     {
@@ -160,9 +162,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * ArkCase email token authentication handler, used for file download.
      *
-     * @param request HTTP servlet request
-     * @throws IOException      on error
-     * @throws ServletException on error
+     * @param request
+     *            HTTP servlet request
+     * @throws IOException
+     *             on error
+     * @throws ServletException
+     *             on error
      */
     private void emailTokenAuthentication(HttpServletRequest request) throws IOException, ServletException
     {
@@ -182,7 +187,7 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                         {
                             log.trace("Starting token authentication for email links using acm_email_ticket [{}]", emailToken);
                             int days = Days.daysBetween(new DateTime(authenticationToken.getCreated()), new DateTime()).getDays();
-                            //token expires after 3 days
+                            // token expires after 3 days
                             if (days > 3)
                             {
                                 authenticationToken.setStatus(AuthenticationTokenConstants.EXPIRED);
@@ -214,7 +219,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * ArkCase client certificate authentication handler.
      *
-     * @param request HTTP servlet request
+     * @param request
+     *            HTTP servlet request
      */
     private void certificateAuthentication(HttpServletRequest request)
     {
@@ -243,9 +249,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * ArkCase basic authentication handler.
      *
-     * @param request  HTTP servlet request
-     * @param response HTTP servlet response
-     * @param chain    Filter chain
+     * @param request
+     *            HTTP servlet request
+     * @param response
+     *            HTTP servlet response
+     * @param chain
+     *            Filter chain
      */
     private void basicAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException
@@ -258,9 +267,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * Create user authentication token.
      *
-     * @param request HTTP servlet request
-     * @param userId  user identifier
-     * @throws MuleException on error while retrieving LDAP groups
+     * @param request
+     *            HTTP servlet request
+     * @param userId
+     *            user identifier
+     * @throws MuleException
+     *             on error while retrieving LDAP groups
      */
     private void authenticateUser(HttpServletRequest request, String userId) throws MuleException
     {
@@ -298,7 +310,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * Extract client certificate from the request.
      *
-     * @param request incoming HTTP request
+     * @param request
+     *            incoming HTTP request
      * @return the client certificate
      */
     private X509Certificate extractX509ClientCertificate(HttpServletRequest request)
@@ -317,7 +330,8 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
     /**
      * Detect authentication request type.
      *
-     * @param request HTTP Servlet Request
+     * @param request
+     *            HTTP Servlet Request
      * @return detected authentication request type
      */
     private AuthRequestType detectAuthRequestType(HttpServletRequest request)
@@ -328,19 +342,23 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
         {
             log.trace("Token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_TOKEN;
-        } else if (request.getParameter("acm_email_ticket") != null)
+        }
+        else if (request.getParameter("acm_email_ticket") != null)
         {
             log.trace("Email token authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_EMAIL_TOKEN;
-        } else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
+        }
+        else if (request.getAttribute("javax.servlet.request.X509Certificate") != null)
         {
             log.trace("Client Certificate authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_CLIENT_CERT;
-        } else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Basic "))
+        }
+        else if (request.getHeader("Authorization") != null && request.getHeader("Authorization").startsWith("Basic "))
         {
             log.trace("Basic authentication requested");
             authRequestType = AuthRequestType.AUTH_REQUEST_TYPE_BASIC;
-        } else
+        }
+        else
         {
             log.trace("Neither token, basic nor certificate authentication requested, skipping");
         }

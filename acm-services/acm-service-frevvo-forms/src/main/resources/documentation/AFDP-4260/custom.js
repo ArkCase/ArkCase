@@ -5,8 +5,10 @@ document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/l
 document.writeln('<script type="text/javascript">var frevvo_jQuery = jQuery.noConflict(true);</script>');
 
 // Import jQuery UI
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
-document.writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
+document
+        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/js/jquery-ui-1.10.3.custom.js"></script>');
+document
+        .writeln('<link href="/frevvo/js-28315/arkcase/libs/jquery-ui-1.10.3/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet" />');
 
 // Import Bootstrap
 document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/js/bootstrap.js"></script>');
@@ -16,9 +18,12 @@ document.writeln('<link href="/frevvo/js-28315/arkcase/libs/bootstrap-3.1.1/css/
 document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/libs/font-awesome/css/font-awesome.css" type="text/css">');
 
 // Import Rich TextArea Plugin
-document.writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
-document.writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
+document
+        .writeln('<link rel="stylesheet" href="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.css" type="text/css">');
+document
+        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/summernote/summernote.js"></script>');
+document
+        .writeln('<script type="text/javascript" src="/frevvo/js-28315/arkcase/rich-textarea-plugin-v3.0/richtextarea.plugin.js"></script>');
 
 // Import ArkCase libs
 // Still we need these libraries because for Advanced User Picker we are taking more information for the user using REST call (please see method "doAdvancedUserPicker(..)")
@@ -57,7 +62,7 @@ var frevvoMessaging = null;
 var objectTypePicked;
 
 var CustomEventHandlers = {
-    setup: function (el) {
+    setup : function(el) {
         var elState = CustomView.getState(el);
         if (CustomView.hasClass(el, 'nextTab')) {
             FEvent.observe(el, 'click', this.scrollTop.bindAsObserver(this, el));
@@ -69,18 +74,18 @@ var CustomEventHandlers = {
             FEvent.observe(el, 'click', this.showUserPicker.bindAsObserver(this, el));
         } else if (isObjectPicker(el)) {
             FEvent.observe(el, 'click', this.showObjectPicker.bindAsObserver(this, el));
-        } else if(isCasePersonPicker(el)) {
+        } else if (isCasePersonPicker(el)) {
             FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'CASE_FILE'));
-        } else if(isComplaintPersonPicker(el)) {
+        } else if (isComplaintPersonPicker(el)) {
             FEvent.observe(el, 'click', this.showPersonPicker.bindAsObserver(this, el, 'COMPLAINT'));
         }
     },
 
-    scrollTop: function (event, element) {
+    scrollTop : function(event, element) {
         document.getElementById("wrapper").scrollIntoView();
     },
 
-    createCommonPicker: function () {
+    createCommonPicker : function() {
         if (isEmpty(frevvoMessaging)) {
             frevvoMessaging = {};
             frevvoMessaging.elements = {};
@@ -114,7 +119,7 @@ var CustomEventHandlers = {
                                 updateElementValue(pickedObject.name, 'input', e.data.elementId, null);
                             }
                         }
-                        if(e.data.action == "fill-person-picker-data") {
+                        if (e.data.action == "fill-person-picker-data") {
                             var element = frevvoMessaging.elements[e.data.elementId];
                             if (!isEmpty(element)) {
                                 updateElement(element, 'fullName', e.data.data.fullName);
@@ -127,9 +132,9 @@ var CustomEventHandlers = {
             }
             window.addEventListener('message', frevvoMessaging.receive);
         }
-   },
+    },
 
-   showUserPicker: function(event, element) {
+    showUserPicker : function(event, element) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -138,13 +143,15 @@ var CustomEventHandlers = {
             message.elementId = element.id;
             frevvoMessaging.elements[element.id] = element;
 
-			var participantType = findElement(element, 'participantType');
+            var participantType = findElement(element, 'participantType');
             var owningGroup = null;
-			if (!isEmpty(participantType) && participantType.getAttribute('ovalue') === 'assignee') {
-				owningGroup = getOwningGroup();
-			}
+            if (!isEmpty(participantType) && participantType.getAttribute('ovalue') === 'assignee') {
+                owningGroup = getOwningGroup();
+            }
             if (!isEmpty(owningGroup)) {
-                message.data = {"owningGroup": owningGroup};
+                message.data = {
+                    "owningGroup" : owningGroup
+                };
             }
 
             // Open user picker
@@ -152,8 +159,7 @@ var CustomEventHandlers = {
         }
     },
 
-
-    showObjectPicker: function (event, element) {
+    showObjectPicker : function(event, element) {
         var itemsToExclude = [];
         var objectType;
         var costFormElement = getHtmlElement('costsheetForm', 'input');
@@ -179,8 +185,8 @@ var CustomEventHandlers = {
             frevvoMessaging.elements[element.id] = element;
             if (!isEmpty(objectType)) {
                 message.data = {
-                    "objectType": objectType,
-                    "itemsToExclude": itemsToExclude
+                    "objectType" : objectType,
+                    "itemsToExclude" : itemsToExclude
                 };
             }
             // Open user picker
@@ -195,8 +201,8 @@ var CustomEventHandlers = {
                 if (chargeCode.length > 0) {
                     var type = findObjectType(populatedElements[i]);
                     var item = {
-                        type: type,
-                        chargeCode: chargeCode
+                        type : type,
+                        chargeCode : chargeCode
                     };
                     chargeItems.push(item);
                 }
@@ -216,7 +222,7 @@ var CustomEventHandlers = {
         }
     },
 
-    showPersonPicker: function (event, element, formType) {
+    showPersonPicker : function(event, element, formType) {
         if (!isEmpty(frevvoMessaging)) {
             var message = {};
             message.source = "frevvo";
@@ -227,8 +233,7 @@ var CustomEventHandlers = {
             message.formType = formType;
 
             var cssClassArray = cssClassToArray(element);
-            if (cssClassArray && cssClassArray.length > 1)
-            {
+            if (cssClassArray && cssClassArray.length > 1) {
                 message.pickerType = cssClassArray[1];
             }
 
@@ -289,18 +294,18 @@ function doSimpleUserPicker(element, userId, value) {
  * The logic for populating fields after clicking "Add" button in the user picker when we should fill multiple fields, like User Id, First Name, Last Name, Location, Email, Phone
  */
 function doAdvancedUserPicker(element, userId) {
-	var response = Profile.Service.Info.retrieveProfileInfo(userId);
-	if (response) {
-		var responseObj = JSON.parse(response);
-		if (responseObj) {
-			updateElement(element, 'id', responseObj.userId);
-			updateElement(element, 'location', responseObj.firstAddress);
-			updateElement(element, 'firstName', responseObj.firstName);
-			updateElement(element, 'lastName', responseObj.lastName);
-			updateElement(element, 'email', responseObj.email);
-			updateElement(element, 'phone', responseObj.mobilePhoneNumber);
-		}
-	}
+    var response = Profile.Service.Info.retrieveProfileInfo(userId);
+    if (response) {
+        var responseObj = JSON.parse(response);
+        if (responseObj) {
+            updateElement(element, 'id', responseObj.userId);
+            updateElement(element, 'location', responseObj.firstAddress);
+            updateElement(element, 'firstName', responseObj.firstName);
+            updateElement(element, 'lastName', responseObj.lastName);
+            updateElement(element, 'email', responseObj.email);
+            updateElement(element, 'phone', responseObj.mobilePhoneNumber);
+        }
+    }
 }
 
 /**
@@ -308,23 +313,22 @@ function doAdvancedUserPicker(element, userId) {
  * Frevvo make update on his data model on the backend side
  */
 function dispatchChangeEvent(element) {
-	var changeEvent = document.createEvent("Event");
-	changeEvent.initEvent("change", true, true);
-	element.dispatchEvent(changeEvent);
+    var changeEvent = document.createEvent("Event");
+    changeEvent.initEvent("change", true, true);
+    element.dispatchEvent(changeEvent);
 }
 
 /**
  * Recognizing if the simple user picker logic should be executed - fill single field
  */
 function isSimpleUserPicker(element) {
-	var elementState = CustomView.getState(element);
-	if((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerSimple') != -1)) {
-		return true;
-	} else {
-		return false;
-	}
+    var elementState = CustomView.getState(element);
+    if ((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerSimple') != -1)) {
+        return true;
+    } else {
+        return false;
+    }
 }
-
 
 function isObjectPicker(element) {
     var cssClass = getCssClass(element);
@@ -335,12 +339,12 @@ function isObjectPicker(element) {
  * Recognizing if the advanced user picker logic should be executed - fill multiple fields
  */
 function isAdvancedUserPicker(element) {
-	var elementState = CustomView.getState(element);
-	if((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerAdvanced') != -1)) {
-		return true;
-	} else {
-		return false;
-	}
+    var elementState = CustomView.getState(element);
+    if ((elementState && elementState.cssClass && elementState.cssClass.indexOf('userPickerAdvanced') != -1)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 function isCasePersonPicker(element) {
@@ -359,11 +363,11 @@ function isComplaintPersonPicker(element) {
  * "userPickerAdvanced_<RECOGNITIONTEXT>_<FIELDNAME>" - for advanced user picker
  */
 function getCssClass(element) {
-	var elementState = CustomView.getState(element);
-	if(elementState && elementState.cssClass) {
-		return elementState.cssClass;
-	}
-	return null;
+    var elementState = CustomView.getState(element);
+    if (elementState && elementState.cssClass) {
+        return elementState.cssClass;
+    }
+    return null;
 }
 
 /**
@@ -372,15 +376,15 @@ function getCssClass(element) {
  * This method will return: userPickerAdvanced_prosecutor
  */
 function getCssClassDivided(element) {
-	var cssClass = getCssClass(element);
-	if (cssClass != null) {
-		var cssClassArray = cssClass.split('_');
+    var cssClass = getCssClass(element);
+    if (cssClass != null) {
+        var cssClassArray = cssClass.split('_');
 
-		if (cssClassArray && cssClassArray.length === 3) {
-			return cssClassArray[0] + '_' + cssClassArray[1];
-		}
-	}
-	return null;
+        if (cssClassArray && cssClassArray.length === 3) {
+            return cssClassArray[0] + '_' + cssClassArray[1];
+        }
+    }
+    return null;
 }
 
 function cssClassToArray(element) {
@@ -395,52 +399,53 @@ function cssClassToArray(element) {
  * After finding the element (if exist), the value will be changed and dispathed change event (on that way the data model on the Frevvo backend will be updated too)
  */
 function updateElement(element, fieldName, value) {
-	var cssClassDivided = getCssClassDivided(element);
-	if (cssClassDivided != null) {
-		if (value === null) {
-			value = '';
-		}
-		var elementToUpdate = null;
-		var elements = document.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input');
-		if (elements && elements.length == 1) {
-			elementToUpdate = elements[0];
-		} else if (elements && elements.length > 1){
-			try{
-				elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input')[0];
-			}catch(e) {
-				// Normal behaviour - element is not found
-			}
-		}
+    var cssClassDivided = getCssClassDivided(element);
+    if (cssClassDivided != null) {
+        if (value === null) {
+            value = '';
+        }
+        var elementToUpdate = null;
+        var elements = document.getElementsBySelector('.' + cssClassDivided + '_' + fieldName + ' input');
+        if (elements && elements.length == 1) {
+            elementToUpdate = elements[0];
+        } else if (elements && elements.length > 1) {
+            try {
+                elementToUpdate = element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('.' + cssClassDivided + '_'
+                        + fieldName + ' input')[0];
+            } catch (e) {
+                // Normal behaviour - element is not found
+            }
+        }
 
-		if (elementToUpdate != null) {
-			elementToUpdate.value = value;
-			dispatchChangeEvent(elementToUpdate);
-		}
-	}
+        if (elementToUpdate != null) {
+            elementToUpdate.value = value;
+            dispatchChangeEvent(elementToUpdate);
+        }
+    }
 }
 
 function findElement(element, key) {
-	try{
-		return element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('div[cname=participantType] input')[0];
-	}catch(e) {
-		// Normal behaviour - element is not found
-	}
-	
-	return null;
+    try {
+        return element.parentNode.parentNode.parentNode.parentNode.getElementsBySelector('div[cname=participantType] input')[0];
+    } catch (e) {
+        // Normal behaviour - element is not found
+    }
+
+    return null;
 }
 
 /**
  * This method will return the value selected in the owning group if exist that kind of element
  */
 function getOwningGroup() {
-	var owningGroup = null;
-	try{
-		var element = document.getElementsBySelector('.owningGroup input')[0];
-		return element.value;
-	}catch(e) {
-		// Normal behaviour - the element is not found
+    var owningGroup = null;
+    try {
+        var element = document.getElementsBySelector('.owningGroup input')[0];
+        return element.value;
+    } catch (e) {
+        // Normal behaviour - the element is not found
         return null;
-	}
+    }
 }
 
 /**
@@ -480,7 +485,6 @@ function getHtmlElementsByCssClass(cssClass, elementType) {
     }
 }
 
-
 /**
  * Returns html element value
  * @param cssClass Class of the html element to be used as selector
@@ -516,7 +520,6 @@ function updateElementValue(value, elementType, elementId, cssClass, property) {
     }
 }
 
-
 function createInfoMesssage(objectType, objectNumber, objectTitle) {
     if (objectType == 'COMPLAINT') {
         objectType = 'Complaint';
@@ -534,19 +537,11 @@ function createInfoMesssage(objectType, objectNumber, objectTitle) {
 var rtaSelector = 'div.rta_container span.f-message:not([style="display: none;"])';
 
 var rtaSummernoteOptions = {
-    toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'italic', 'underline', 'clear']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['height', ['height']],
-        ['table', ['table']],
-        ['view', ['fullscreen', 'codeview']],
-        ['help', ['help']]
-    ],
+    toolbar : [ [ 'style', [ 'style' ] ], [ 'font', [ 'bold', 'italic', 'underline', 'clear' ] ], [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ], [ 'para', [ 'ul', 'ol', 'paragraph' ] ], [ 'height', [ 'height' ] ], [ 'table', [ 'table' ] ],
+            [ 'view', [ 'fullscreen', 'codeview' ] ], [ 'help', [ 'help' ] ] ],
 
-    height: 280
+    height : 280
 };
 
 var rtaRefreshMilliseconds = 500;

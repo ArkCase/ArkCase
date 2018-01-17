@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,13 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-
 /**
  * Created by marjan.stefanoski on 02.04.2015.
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class RenameFileAPIController
 {
 
@@ -84,7 +84,8 @@ public class RenameFileAPIController
         this.fileService = fileService;
     }
 
-    private EcmFile getEcmFile(Long objectId, Authentication authentication, HttpSession session, String newName) throws AcmUserActionFailedException
+    private EcmFile getEcmFile(Long objectId, Authentication authentication, HttpSession session, String newName)
+            throws AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -94,7 +95,8 @@ public class RenameFileAPIController
         EcmFile source = getFileService().findById(objectId);
         if (source == null)
         {
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE, EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found.", null);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE, EcmFileConstants.OBJECT_FILE_TYPE, objectId,
+                    "File not found.", null);
         }
         try
         {
@@ -105,7 +107,8 @@ public class RenameFileAPIController
             }
             getFileEventPublisher().publishFileRenamedEvent(renamedFile, authentication, ipAddress, true);
             return renamedFile;
-        } catch (AcmUserActionFailedException e)
+        }
+        catch (AcmUserActionFailedException e)
         {
             if (log.isErrorEnabled())
             {
@@ -113,14 +116,16 @@ public class RenameFileAPIController
             }
             getFileEventPublisher().publishFileRenamedEvent(source, authentication, ipAddress, false);
             throw e;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             if (log.isErrorEnabled())
             {
                 log.debug("File with id: " + objectId + " not found in the DB");
             }
             getFileEventPublisher().publishFileMovedEvent(source, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE, EcmFileConstants.OBJECT_FILE_TYPE, objectId, "File not found.", e);
+            throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_RENAME_FILE, EcmFileConstants.OBJECT_FILE_TYPE, objectId,
+                    "File not found.", e);
         }
     }
 }

@@ -1,43 +1,41 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-update-association-names-package-body" author="dmiller" runOnChange="true" dbms="oracle">
         <createProcedure>
             CREATE OR REPLACE PACKAGE BODY pkg_update_association_names
             AS
-                PROCEDURE update_association_names(
-                    p_object_id IN acm_object_association.cm_parent_id%TYPE,
-                    p_object_type IN acm_object_association.cm_parent_type%TYPE,
-                    p_object_name IN acm_object_association.cm_parent_name%TYPE)
-                IS
-                BEGIN
-                    UPDATE acm_object_association
-                    SET cm_parent_name = p_object_name
-                    WHERE cm_parent_id = p_object_id
-                    AND cm_parent_type = p_object_type;
+            PROCEDURE update_association_names(
+            p_object_id IN acm_object_association.cm_parent_id%TYPE,
+            p_object_type IN acm_object_association.cm_parent_type%TYPE,
+            p_object_name IN acm_object_association.cm_parent_name%TYPE)
+            IS
+            BEGIN
+            UPDATE acm_object_association
+            SET cm_parent_name = p_object_name
+            WHERE cm_parent_id = p_object_id
+            AND cm_parent_type = p_object_type;
 
-                    UPDATE acm_object_association
-                    SET cm_target_name = p_object_name
-                    WHERE cm_target_id = p_object_id
-                    AND cm_target_type = p_object_type;
-                END update_association_names;
+            UPDATE acm_object_association
+            SET cm_target_name = p_object_name
+            WHERE cm_target_id = p_object_id
+            AND cm_target_type = p_object_type;
+            END update_association_names;
 
-                PROCEDURE remove_associations(
-                    p_object_id IN acm_object_association.cm_parent_id%TYPE,
-                    p_object_type IN acm_object_association.cm_parent_type%TYPE)
-                IS
-                BEGIN
-                    DELETE FROM acm_object_association
-                    WHERE cm_target_id = p_object_id
-                    AND cm_target_type = p_object_type;
+            PROCEDURE remove_associations(
+            p_object_id IN acm_object_association.cm_parent_id%TYPE,
+            p_object_type IN acm_object_association.cm_parent_type%TYPE)
+            IS
+            BEGIN
+            DELETE FROM acm_object_association
+            WHERE cm_target_id = p_object_id
+            AND cm_target_type = p_object_type;
 
-                    DELETE FROM acm_object_association
-                    WHERE cm_parent_id = p_object_id
-                    AND cm_parent_type = p_object_type;
-                END remove_associations;
+            DELETE FROM acm_object_association
+            WHERE cm_parent_id = p_object_id
+            AND cm_parent_type = p_object_type;
+            END remove_associations;
 
             END pkg_update_association_names;
         </createProcedure>

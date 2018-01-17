@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.audit.web.api;
 import com.armedia.acm.event.model.AcmGenericApplicationEvent;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,7 +39,7 @@ import java.util.Map;
  * Created by Petar Ilin <petar.ilin@armedia.com> on 19.08.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/audit", "/api/latest/plugin/audit"})
+@RequestMapping({ "/api/v1/plugin/audit", "/api/latest/plugin/audit" })
 public class PostAuditEventAPIController implements ApplicationEventPublisherAware
 {
     private ApplicationEventPublisher applicationEventPublisher;
@@ -57,8 +59,7 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
             @RequestParam(value = "reorder_operation", required = false) String pageReorderOperation,
             @RequestParam(value = "document_viewed", required = false) String documentViewed,
             Authentication auth,
-            HttpSession session
-    )
+            HttpSession session)
     {
         // Common generic audit event information
         String user = auth.getName();
@@ -70,30 +71,33 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         if (auditEventType.equals("delete"))
         {
             createDeleteEvent(user, ip, userId, pages, fileId, deleteReason);
-        } else if (auditEventType.equals("reorder"))
+        }
+        else if (auditEventType.equals("reorder"))
         {
             createReorderEvent(user, ip, userId, fileId, pageReorderOperation);
-        } else if (auditEventType.equals("viewed"))
+        }
+        else if (auditEventType.equals("viewed"))
         {
             createViewedEvent(user, ip, userId, fileId, documentViewed);
         }
     }
 
-
     /**
      * Remotely trigger publish a generic event.
      *
-     * @param type    fully qualified event type
-     * @param auth    authentication token
-     * @param session http session object
+     * @param type
+     *            fully qualified event type
+     * @param auth
+     *            authentication token
+     * @param session
+     *            http session object
      */
     @RequestMapping(value = "/generic", method = RequestMethod.POST)
     @ResponseBody
     public void createGenericEvent(
             @RequestParam(value = "type") String type,
             Authentication auth,
-            HttpSession session
-    )
+            HttpSession session)
     {
         // Common generic audit event information
         String user = auth.getName();
@@ -126,7 +130,7 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectType("FILE");
         event.setSucceeded(true);
 
-        Map<String, Object> eventProperties = new HashMap<String, Object>();
+        Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("documentViewed", documentViewed);
         event.setEventProperties(eventProperties);
         applicationEventPublisher.publishEvent(event);
@@ -148,7 +152,7 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectType("FILE");
         event.setSucceeded(true);
 
-        Map<String, Object> eventProperties = new HashMap<String, Object>();
+        Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("pageReorderOperation", pageReorderOperation);
         event.setEventProperties(eventProperties);
         applicationEventPublisher.publishEvent(event);
@@ -170,7 +174,7 @@ public class PostAuditEventAPIController implements ApplicationEventPublisherAwa
         event.setObjectType("FILE");
         event.setSucceeded(true);
 
-        Map<String, Object> eventProperties = new HashMap<String, Object>();
+        Map<String, Object> eventProperties = new HashMap<>();
         eventProperties.put("deletedPages", pages);
         eventProperties.put("deleteReason", deleteReason);
         event.setEventProperties(eventProperties);

@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.plugins.casefile.service.AcmQueueService;
+
 import org.easymock.EasyMockSupport;
 import org.easymock.IAnswer;
 import org.junit.Before;
@@ -22,10 +27,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 /**
  * Created by nebojsha on 31.08.2015.
  */
@@ -41,7 +42,6 @@ public class GetQueuesAPIControllerTest extends EasyMockSupport
     private GetQueuesAPIController getQueuesAPIController;
 
     private AcmQueueService acmQueueService;
-
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -70,9 +70,10 @@ public class GetQueuesAPIControllerTest extends EasyMockSupport
 
         expect(acmQueueService.listAllQueues()).andAnswer(new IAnswer<List<AcmQueue>>()
         {
+            @Override
             public List<AcmQueue> answer() throws Throwable
             {
-                List<AcmQueue> queues = new ArrayList<AcmQueue>();
+                List<AcmQueue> queues = new ArrayList<>();
                 queues.add(new AcmQueue(1l, "queue1", 0));
                 queues.add(new AcmQueue(2l, "queue2", 1));
                 queues.add(new AcmQueue(3l, "queue3", 2));

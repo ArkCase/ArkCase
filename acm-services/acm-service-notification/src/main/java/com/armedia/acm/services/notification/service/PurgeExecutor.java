@@ -11,30 +11,33 @@ import com.armedia.acm.services.notification.model.NotificationConstants;
  * @author riste.tutureski
  *
  */
-public class PurgeExecutor implements Executor {
+public class PurgeExecutor implements Executor
+{
 
-	private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
-	
-	@Override
-	public Notification execute(Notification notification) 
-	{
-		getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
-		
-		if (notification != null)
-		{
-			notification.setStatus(NotificationConstants.STATUS_DELETE);
-		}
-		
-		return notification;
-	}
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-	public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter() {
-		return auditPropertyEntityAdapter;
-	}
+    @Override
+    public Notification execute(Notification notification)
+    {
+        getAuditPropertyEntityAdapter().setUserId(NotificationConstants.SYSTEM_USER);
 
-	public void setAuditPropertyEntityAdapter(
-			AuditPropertyEntityAdapter auditPropertyEntityAdapter) {
-		this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
-	}
+        if (notification != null)
+        {
+            notification.setStatus(NotificationConstants.STATUS_DELETE);
+        }
+
+        return notification;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(
+            AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
+    }
 
 }

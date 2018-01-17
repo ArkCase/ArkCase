@@ -1,10 +1,16 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.casefile.model.CaseByStatusDto;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -28,11 +34,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 /**
  * Created by marjan.stefanoski on 10/13/2014.
  */
@@ -42,7 +43,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-case-plugin-test.xml"
 })
-public class GetCasesByStatusAPIControllerTest extends EasyMockSupport {
+public class GetCasesByStatusAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -74,13 +76,16 @@ public class GetCasesByStatusAPIControllerTest extends EasyMockSupport {
     @Test
     public void allCasesByStatusTest() throws Exception
     {
-        String facetQuery = "object_type_s:CASE_FILE&rows=0&fl=id&wt=json&indent=true&facet=true&facet.mincount=1&facet.field=" + SearchConstants.PROPERTY_STATUS;
+        String facetQuery = "object_type_s:CASE_FILE&rows=0&fl=id&wt=json&indent=true&facet=true&facet.mincount=1&facet.field="
+                + SearchConstants.PROPERTY_STATUS;
 
-        InputStream facetInputStream = getClass().getClassLoader().getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByStatusTest.json");
+        InputStream facetInputStream = getClass().getClassLoader()
+                .getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByStatusTest.json");
         String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "")).andReturn(facetSolrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, ""))
+                .andReturn(facetSolrResponse);
 
         replayAll();
 

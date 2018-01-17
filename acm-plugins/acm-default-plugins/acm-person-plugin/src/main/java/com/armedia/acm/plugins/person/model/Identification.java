@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -33,13 +35,7 @@ public class Identification implements Serializable, AcmEntity, AcmObject
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_identification_gen",
-            table = "acm_identification_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_identification",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_identification_gen", table = "acm_identification_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_identification", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_identification_gen")
     @Column(name = "cm_identification_id")
     private Long identificationID;

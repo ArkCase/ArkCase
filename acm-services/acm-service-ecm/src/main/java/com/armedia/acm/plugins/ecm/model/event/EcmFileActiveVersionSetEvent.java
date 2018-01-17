@@ -16,7 +16,8 @@ public class EcmFileActiveVersionSetEvent extends EcmFilePersistenceEvent
         setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
-    @Override public String getEventType()
+    @Override
+    public String getEventType()
     {
         return EcmFileConstants.EVENT_TYPE_ACTIVE_VERSION_SET;
     }

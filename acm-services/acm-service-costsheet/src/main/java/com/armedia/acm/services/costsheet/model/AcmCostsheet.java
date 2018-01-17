@@ -37,6 +37,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -57,13 +58,7 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     private static final long serialVersionUID = 6290288826480329085L;
 
     @Id
-    @TableGenerator(name = "acm_costsheet_gen",
-            table = "acm_costsheet_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_costsheet",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_costsheet_gen", table = "acm_costsheet_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_costsheet", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_costsheet_gen")
     @Column(name = "cm_costsheet_id")
     private Long id;

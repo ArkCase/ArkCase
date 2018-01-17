@@ -2,6 +2,7 @@ package com.armedia.acm.files.propertymanager;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +37,8 @@ public class PropertyFileManager
             log.debug("Properties loaded from [{}]", propertiesFile.getName());
 
             return p;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not reload properties from [{}] ", propertiesFile.getName(), e);
             throw e;
@@ -52,7 +54,8 @@ public class PropertyFileManager
         {
             log.info("Saving property file [{}]", fileName);
             p.store(fos, "last updated");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.debug("could not create properties file: [{}] ", e.getMessage(), e);
         }
@@ -67,7 +70,8 @@ public class PropertyFileManager
             try (InputStream in = new FileInputStream(fileName))
             {
                 p.load(in);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.warn("Could not open properties file: {}", e.getMessage());
             }
@@ -78,7 +82,8 @@ public class PropertyFileManager
             p.setProperty(key, value);
             log.info("Saving property file [{}]", fileName);
             p.store(out, null);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Could not update properties file: {}", e.getMessage());
         }
@@ -86,7 +91,8 @@ public class PropertyFileManager
 
     public void storeMultiple(Map<String, String> propertiesMap, String fileName, boolean clean)
     {
-        if (propertiesMap == null) return;
+        if (propertiesMap == null)
+            return;
 
         Properties p = new Properties();
 
@@ -95,7 +101,8 @@ public class PropertyFileManager
             try (InputStream in = new FileInputStream(fileName))
             {
                 p.load(in);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.warn("Could not open properties file: {}", e.getMessage(), e);
             }
@@ -106,7 +113,8 @@ public class PropertyFileManager
             propertiesMap.forEach(p::setProperty);
             log.info("Saving property file [{}]", fileName);
             p.store(out, null);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("Could not update properties file: {}", e.getMessage(), e);
         }
@@ -126,7 +134,8 @@ public class PropertyFileManager
                 {
                     p.remove(key);
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.debug("Could not update properties file: " + e.getMessage(), e);
             }
@@ -135,7 +144,8 @@ public class PropertyFileManager
             {
                 log.info("Saving property file [{}]", fileName);
                 p.store(out, null);
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.debug("Could not update properties file: " + e.getMessage(), e);
             }
@@ -154,7 +164,8 @@ public class PropertyFileManager
 
             retval = encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key, defaultValue));
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("file [{}] not found, using default last update time.", filename);
         }
@@ -177,7 +188,8 @@ public class PropertyFileManager
                 retval.put(key, encryptablePropertyUtils.decryptPropertyValue(p.getProperty(key)));
             }
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.warn("file [{}] not found, using default last update time.", filename);
         }
@@ -194,7 +206,8 @@ public class PropertyFileManager
     }
 
     /**
-     * @param encryptablePropertyUtils the encryptablePropertyUtils to set
+     * @param encryptablePropertyUtils
+     *            the encryptablePropertyUtils to set
      */
     public void setEncryptablePropertyUtils(AcmEncryptablePropertyUtils encryptablePropertyUtils)
     {

@@ -85,7 +85,8 @@ public class SpringConfigCopier implements ApplicationContextAware
                         // NOTE: FileCopyUtils will close both the input and the output streams.
                         FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
 
-                    } else
+                    }
+                    else
                     {
                         // this file belongs to the WAR we are providing
                         File target = new File(builtinFolderPath + File.separator + resourceFilename);
@@ -97,7 +98,8 @@ public class SpringConfigCopier implements ApplicationContextAware
                     log.debug("Done scanning for resources matching '{}'", resourcePattern);
                 }
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not copy resource: {}", e.getMessage(), e);
         }

@@ -1,98 +1,98 @@
 {
-  "timeTracking": {
-    "title": "Seguimiento de Tiempo",
-    "progressNoTimesheet": "[No se selecciona la hoja de tiempo]",
-    "progressLoading": "Hoja de tiempos de carga",
-    "progressError": "Error al cargar la hoja de horas"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "Seguimiento de tiempo",
-    "topbar.item": "Hoja de tiempo"
-  },
-  "timeTracking.comp.main": {
-    "title": "Visión de conjunto"
-  },
-  "timeTracking.comp.info": {
-    "title": "Información",
-    "lastModified.label": "Última modificación"
-  },
-  "timeTracking.comp.actions": {
-    "title": "Acciones",
-    "new.button": "Nuevo Hoja de Tiempo",
-    "edit.button": "Editar Hoja de Tiempo"
-  },
-  "timeTracking.comp.details": {
-    "title": "Detalles",
-    "informSaved": "Detalles de la hoja de tiempo guardados",
-    "table.columns": {
-      "title": "Detalles",
-      "modified": "Fecha de última modificación",
-      "modifier": "Última modificación del usuario"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "Persona",
-    "table.columns": {
-      "fullName": "Nombre completo",
-      "userId": "Nombre de usuario"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "Horas",
-    "table.columns": {
-      "code": "Identificación de los padres",
-      "type": "Tipo de padre",
-      "value": "Horas totales",
-      "date": "Fecha cargada",
-      "modified": "Fecha modificada"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "Etiquetas",
-    "table.columns": {
-      "tag": "Etiqueta",
-      "created": "Creado",
-      "createdBy": "Creado por"
+    "timeTracking": {
+        "title": "Seguimiento de Tiempo",
+        "progressNoTimesheet": "[No se selecciona la hoja de tiempo]",
+        "progressLoading": "Hoja de tiempos de carga",
+        "progressError": "Error al cargar la hoja de horas"
     },
-    "modal": {
-      "title": "Etiqueta",
-      "search": "Buscar etiqueta",
-      "buttons": {
-        "cancel": "Cancelar",
-        "ok": "Añadir etiqueta"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "Seguimiento de tiempo",
+        "topbar.item": "Hoja de tiempo"
     },
-    "message": {
-      "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
-      "tagAssociated": "Ya asociado",
-      "delete": {
-        "success": "Tag eliminado con éxito",
-        "error": "Error al eliminar la etiqueta"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "Aprobadores",
-    "table.columns": {
-      "fullName": "Nombre completo",
-      "userId": "Nombre de usuario"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Detalles",
-      "person.label": "Persona",
-      "summary.label": "Horas",
-      "tags.label": "Etiquetas",
-      "approvers.label": "Aprobadores"
+    "timeTracking.comp.main": {
+        "title": "Visión de conjunto"
     },
-    "sorters": {
-      "dateAsc": "Ordenar fecha ascendente",
-      "dateDesc": "Ordenar fecha descendente",
-      "idAsc": "Ordenar tiempos de la identificación Asc",
-      "idDesc": "Ordenar tiempos de la identificación Dec",
-      "nameDesc": "Ordenar por nombre Dec",
-      "noSort": "(No Ordenar)"
+    "timeTracking.comp.info": {
+        "title": "Información",
+        "lastModified.label": "Última modificación"
+    },
+    "timeTracking.comp.actions": {
+        "title": "Acciones",
+        "new.button": "Nuevo Hoja de Tiempo",
+        "edit.button": "Editar Hoja de Tiempo"
+    },
+    "timeTracking.comp.details": {
+        "title": "Detalles",
+        "informSaved": "Detalles de la hoja de tiempo guardados",
+        "table.columns": {
+            "title": "Detalles",
+            "modified": "Fecha de última modificación",
+            "modifier": "Última modificación del usuario"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "Persona",
+        "table.columns": {
+            "fullName": "Nombre completo",
+            "userId": "Nombre de usuario"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "Horas",
+        "table.columns": {
+            "code": "Identificación de los padres",
+            "type": "Tipo de padre",
+            "value": "Horas totales",
+            "date": "Fecha cargada",
+            "modified": "Fecha modificada"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "Etiquetas",
+        "table.columns": {
+            "tag": "Etiqueta",
+            "created": "Creado",
+            "createdBy": "Creado por"
+        },
+        "modal": {
+            "title": "Etiqueta",
+            "search": "Buscar etiqueta",
+            "buttons": {
+                "cancel": "Cancelar",
+                "ok": "Añadir etiqueta"
+            }
+        },
+        "message": {
+            "tagExists": "La etiqueta con ese nombre o descripción o texto ya existe",
+            "tagAssociated": "Ya asociado",
+            "delete": {
+                "success": "Tag eliminado con éxito",
+                "error": "Error al eliminar la etiqueta"
+            }
+        }
+    },
+    "timeTracking.comp.approvers": {
+        "title": "Aprobadores",
+        "table.columns": {
+            "fullName": "Nombre completo",
+            "userId": "Nombre de usuario"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Detalles",
+            "person.label": "Persona",
+            "summary.label": "Horas",
+            "tags.label": "Etiquetas",
+            "approvers.label": "Aprobadores"
+        },
+        "sorters": {
+            "dateAsc": "Ordenar fecha ascendente",
+            "dateDesc": "Ordenar fecha descendente",
+            "idAsc": "Ordenar tiempos de la identificación Asc",
+            "idDesc": "Ordenar tiempos de la identificación Dec",
+            "nameDesc": "Ordenar por nombre Dec",
+            "noSort": "(No Ordenar)"
+        }
     }
-  }
 }

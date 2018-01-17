@@ -3,23 +3,28 @@ package com.armedia.acm.plugins.ecm.model;
 /**
  * Created by marjan.stefanoski on 15.05.2015.
  */
-public class FolderDTO {
+public class FolderDTO
+{
     private Long originalFolderId;
     private AcmFolder newFolder;
 
-    public Long getOriginalFolderId() {
+    public Long getOriginalFolderId()
+    {
         return originalFolderId;
     }
 
-    public void setOriginalFolderId(Long originalFolderId) {
+    public void setOriginalFolderId(Long originalFolderId)
+    {
         this.originalFolderId = originalFolderId;
     }
 
-    public AcmFolder getNewFolder() {
+    public AcmFolder getNewFolder()
+    {
         return newFolder;
     }
 
-    public void setNewFolder(AcmFolder newFolder) {
+    public void setNewFolder(AcmFolder newFolder)
+    {
         this.newFolder = newFolder;
     }
 }

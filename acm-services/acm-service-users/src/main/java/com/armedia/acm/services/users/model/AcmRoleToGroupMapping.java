@@ -47,15 +47,14 @@ public class AcmRoleToGroupMapping
                 .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
                         Collectors.toMap(entry -> {
-                                    String groupName = entry.getKey().trim().toUpperCase();
-                                    if (!groupName.startsWith("ROLE_"))
-                                    {
-                                        groupName = "ROLE_" + groupName;
-                                    }
-                                    return groupName;
-                                },
-                                entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase()))
-                );
+                            String groupName = entry.getKey().trim().toUpperCase();
+                            if (!groupName.startsWith("ROLE_"))
+                            {
+                                groupName = "ROLE_" + groupName;
+                            }
+                            return groupName;
+                        },
+                                entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase())));
     }
 
     public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
