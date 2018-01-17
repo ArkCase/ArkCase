@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('tags').controller('Tags.FacetedSearchController', ['$scope', 'ConfigService', 'UtilService',
-    function ($scope, ConfigService, Util) {
+angular.module('tags').controller('Tags.FacetedSearchController',
+        [ '$scope', 'ConfigService', 'UtilService', function($scope, ConfigService, Util) {
             $scope.$emit('req-component-config', 'tagsFacetedSearch');
-        $scope.$on('component-config', applyConfig);
+            $scope.$on('component-config', applyConfig);
 
-        ConfigService.getModuleConfig("common").then(function (moduleConfig) {
-            var customization = Util.goodMapValue(moduleConfig, "customization", {});
-            if (customization) {
-                $scope.customization = customization;
-            }
-        });
+            ConfigService.getModuleConfig("common").then(function(moduleConfig) {
+                var customization = Util.goodMapValue(moduleConfig, "customization", {});
+                if (customization) {
+                    $scope.customization = customization;
+                }
+            });
 
             function applyConfig(e, componentId, config) {
                 if (componentId == 'tagsFacetedSearch') {
@@ -19,6 +19,4 @@ angular.module('tags').controller('Tags.FacetedSearchController', ['$scope', 'Co
                     $scope.multiFilter = config.multiFilter;
                 }
             }
-        }
-    ]
-);
+        } ]);

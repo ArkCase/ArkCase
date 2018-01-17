@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,8 @@ public class AcmAuthenticationManager implements AuthenticationManager
                     {
                         providerAuthentication = provider.authenticate(authentication);
                     }
-                } else
+                }
+                else
                 {
                     providerAuthentication = providerEntry.getValue().authenticate(authentication);
                 }
@@ -83,23 +85,26 @@ public class AcmAuthenticationManager implements AuthenticationManager
             if (lastException instanceof ProviderNotFoundException)
             {
                 ae = new NoProviderFoundException("Authentication problem. Please contact your administrator.");
-            } else if (lastException instanceof BadCredentialsException)
+            }
+            else if (lastException instanceof BadCredentialsException)
             {
                 if (getUserDao().isUserPasswordExpired(authentication.getName()))
                 {
                     ae = new AuthenticationServiceException(
                             "Your password has expired! An email with reset password link was sent to you.", lastException);
-                } else
+                }
+                else
                 {
                     ae = new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
                 }
 
-            } else
+            }
+            else
             {
-                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException") ?
-                        new AuthenticationServiceException(
-                                "There was an unknown error in connecting with the authentication services!", lastException) :
-                        new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
+                ae = ExceptionUtils.getRootCauseMessage(lastException).contains("UnknownHostException")
+                        ? new AuthenticationServiceException(
+                                "There was an unknown error in connecting with the authentication services!", lastException)
+                        : new AuthenticationServiceException(ExceptionUtils.getRootCauseMessage(lastException), lastException);
             }
             getAuthenticationEventPublisher().publishAuthenticationFailure(ae, authentication);
             log.debug("Detailed exception: ", lastException);
@@ -108,7 +113,6 @@ public class AcmAuthenticationManager implements AuthenticationManager
 
         // didn't get an exception, or an authentication either, so we can throw a provider not found exception, since
         // either there are no providers, or no providers can handle the incoming authentication
-
 
         throw new NoProviderFoundException("Authentication problem. Please contact your administrator.");
     }

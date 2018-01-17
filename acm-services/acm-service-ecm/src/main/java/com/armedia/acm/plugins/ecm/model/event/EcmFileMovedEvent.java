@@ -14,7 +14,8 @@ public class EcmFileMovedEvent extends EcmFilePersistenceEvent
         setParentObjectId(source.getContainer().getContainerObjectId());
     }
 
-    @Override public String getEventType()
+    @Override
+    public String getEventType()
     {
         return EVENT_TYPE;
     }

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.profile.service;
 
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.model.UserOrg;
+
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 

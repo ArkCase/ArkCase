@@ -27,11 +27,11 @@ public class AcmListObjectsFailedException extends Exception
     public String getMessage()
     {
         String message = "";
-        if ( getObjectType() != null )
+        if (getObjectType() != null)
         {
             message += "Could not list " + getObjectType() + "s.\n";
         }
-        if ( super.getMessage() != null )
+        if (super.getMessage() != null)
         {
             message += "Server encountered exception: " + super.getMessage() + "\n";
         }

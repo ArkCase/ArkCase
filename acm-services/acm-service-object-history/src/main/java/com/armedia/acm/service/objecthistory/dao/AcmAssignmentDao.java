@@ -10,13 +10,13 @@ import com.armedia.acm.service.objecthistory.model.AcmAssignment;
  * @author riste.tutureski
  *
  */
-public class AcmAssignmentDao extends AcmAbstractDao<AcmAssignment> {
+public class AcmAssignmentDao extends AcmAbstractDao<AcmAssignment>
+{
 
-
-	@Override
-	protected Class<AcmAssignment> getPersistenceClass() 
-	{
-		return AcmAssignment.class;
-	}
+    @Override
+    protected Class<AcmAssignment> getPersistenceClass()
+    {
+        return AcmAssignment.class;
+    }
 
 }

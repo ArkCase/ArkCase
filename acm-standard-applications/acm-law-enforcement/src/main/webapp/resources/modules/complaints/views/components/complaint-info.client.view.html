@@ -3,15 +3,15 @@
         <div class="row">
             <div class="col-xs-6">
                 <h4>
-                    <a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable" e-required>
+                    <a href="#" editable-text="objectInfo.complaintTitle" onaftersave="saveComplaint()" permission="editComplaint"
+                            permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable" e-required>
                         {{objectInfo.complaintTitle || "Unknown" }}
                     </a>
-                    <a ng-href="#" editable-select="objectInfo.status" onaftersave="saveComplaint()"
-                       permission="editComplaintStatus" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable" e-ng-options="c.key as (c.value | translate) for c in complaintStatuses">
-                        ({{ (objectInfo.status | translateData: 'core.lookups.complaints.statuses' : lang) || ('common.value.unknown' | translate) }})
+                    <a ng-href="#" editable-select="objectInfo.status" onaftersave="saveComplaint()" permission="editComplaintStatus"
+                            permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable"
+                            e-ng-options="c.key as (c.value | translate) for c in complaintStatuses">
+                        ({{ (objectInfo.status | translateData: 'core.lookups.complaints.statuses' : lang) || ('common.value.unknown' |
+                        translate) }})
                     </a>
                 </h4></div>
             <div class="col-xs-6  text-right">
@@ -21,11 +21,11 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.complaintType" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable"
-                       e-ng-options="c.key as (c.key | translateData: 'core.lookups.categories' : lang) for c in complaintTypes">
-                        {{ (objectInfo.complaintType | translateData: 'core.lookups.categories' : lang) || ('common.value.unknown' | translate) }}</a>
+                    <a href="#" editable-select="objectInfo.complaintType" onaftersave="saveComplaint()" permission="editComplaint"
+                            permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable"
+                            e-ng-options="c.key as (c.key | translateData: 'core.lookups.categories' : lang) for c in complaintTypes">
+                        {{ (objectInfo.complaintType | translateData: 'core.lookups.categories' : lang) || ('common.value.unknown' |
+                        translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.type.label</span></small>
             </div>
@@ -36,11 +36,11 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveComplaint()"
-                       permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable"
-                       e-ng-options="p.key as (p.key | translateData: 'core.lookups.priorities' : lang) for p in priorities">
-                        {{ (objectInfo.priority | translateData: 'core.lookups.priorities' : lang) || ('common.value.unknown' | translate) }}</a>
+                    <a href="#" editable-select="objectInfo.priority" onaftersave="saveComplaint()" permission="editComplaint"
+                            permission-object-type="COMPLAINT" permission-properties="objectInfo" permission-action="disable"
+                            e-ng-options="p.key as (p.key | translateData: 'core.lookups.priorities' : lang) for p in priorities">
+                        {{ (objectInfo.priority | translateData: 'core.lookups.priorities' : lang) || ('common.value.unknown' | translate)
+                        }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.priority.label</span></small>
             </div>
@@ -49,9 +49,9 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
-                       permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable">
-                        <user-full-name userId="assignee" fallback="None"/>
+                            permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
+                            permission-action="disable">
+                        <user-full-name userId="assignee" fallback="None" />
                     </a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.assignee.label</span></small>
@@ -59,22 +59,18 @@
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openGroupPickerModal()"
-                       permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable">
+                            permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
+                            permission-action="disable">
                         {{owningGroup || 'None'}}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.owningGroup.label</span></small>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">
-                    <a href="#" editable-bsdate="dateInfo.dueDate"
-                       e-datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                       e-ng-click="onPickerClick()" e-is-open="picker.opened"
-                       e-init-date="dateInfo.dueDate"
-                       e-on-open-focus="false"
-                       onaftersave="updateDueDate(dateInfo.dueDate)"
-                       permission="editComplaint" permission-object-type="COMPLAINT" permission-properties="objectInfo"
-                       permission-action="disable">
+                    <a href="#" editable-bsdate="dateInfo.dueDate" e-datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
+                            e-ng-click="onPickerClick()" e-is-open="picker.opened" e-init-date="dateInfo.dueDate" e-on-open-focus="false"
+                            onaftersave="updateDueDate(dateInfo.dueDate)" permission="editComplaint" permission-object-type="COMPLAINT"
+                            permission-properties="objectInfo" permission-action="disable">
                         {{ (dateInfo.dueDate | date: 'shortDate' ) || ('common.value.unknown' | translate) }}</a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.dueDate.label</span></small>

@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Holds static patterns loaded from file '$user.home/.arkcase/acm/auditPatterns.properties'. The substitution string is default
+ * Holds static patterns loaded from file '$user.home/.arkcase/acm/auditPatterns.properties'. The substitution string is
+ * default
  * "$1*****$3".
  * <p>
  * Created by Bojan Milenkoski on 30.5.2016

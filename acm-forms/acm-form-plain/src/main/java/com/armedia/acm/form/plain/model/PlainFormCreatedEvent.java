@@ -8,7 +8,7 @@ public class PlainFormCreatedEvent extends PlainFormEvent
     private final String EVENT_TYPE = "com.armedia.acm.form.plain.created";
 
     public PlainFormCreatedEvent(PlainForm source, String formName, Long folderId, String cmisFolderId, String userId,
-                                 String ipAddress, Long pdfRenditionId, Long xmlRenditionId)
+            String ipAddress, Long pdfRenditionId, Long xmlRenditionId)
     {
         super(source);
 

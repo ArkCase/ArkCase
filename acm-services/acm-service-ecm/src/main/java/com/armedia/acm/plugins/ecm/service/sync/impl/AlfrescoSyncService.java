@@ -5,6 +5,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -79,13 +80,16 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
             List<EcmEvent> events = reader.read(auditEntries);
 
             return events;
-        } catch (AcmEncryptionException e)
+        }
+        catch (AcmEncryptionException e)
         {
             log.error("Could not decrypt property {}.lastAuditId", applicationName, e);
-        } catch (NumberFormatException e)
+        }
+        catch (NumberFormatException e)
         {
             log.error("The last audit id {} should be a number, but it is not!", lastAuditIdFetched);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Could not query Alfresco audit records for application {}", applicationName, e);
         }
@@ -95,7 +99,7 @@ public class AlfrescoSyncService implements ApplicationEventPublisherAware
 
     protected void updatePropertiesWithLastAuditId(String lastAuditIdKey, JSONObject fullAuditResponse)
     {
-        // some of the readers ignore some events.  So we want to store the last audit id from the full
+        // some of the readers ignore some events. So we want to store the last audit id from the full
         // response... not the last audit id returned by the reader.
         JSONArray allAudits = fullAuditResponse.getJSONArray("entries");
         int numAudits = allAudits.length();

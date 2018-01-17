@@ -30,7 +30,8 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg>
         try
         {
             return query.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             return null;
         }
@@ -45,7 +46,6 @@ public class UserOrgDao extends AcmAbstractDao<UserOrg>
         }
         return userOrg;
     }
-
 
     @Override
     protected Class<UserOrg> getPersistenceClass()

@@ -4,6 +4,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  * Created by riste.tutureski on 9/22/2015.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/casefile/number/by/queue", "/api/latest/plugin/casefile/number/by/queue"})
+@RequestMapping({ "/api/v1/plugin/casefile/number/by/queue", "/api/latest/plugin/casefile/number/by/queue" })
 public class GetNumberOfActiveCaseFilesByQueueAPIController
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
@@ -39,7 +40,7 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
      * @param authentication
      * @return
      */
-    @RequestMapping(method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public Map<String, Long> getNumberOfActiveCaseFilesByQueue(Authentication authentication)
     {
@@ -56,9 +57,12 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     /**
      * This method will return Solr response as String for queues
      *
-     * @param authentication - authentication object
-     * @param start          - start index for the page
-     * @param n              - number of elements in the page
+     * @param authentication
+     *            - authentication object
+     * @param start
+     *            - start index for the page
+     * @param n
+     *            - number of elements in the page
      * @return - Solr response in string representation
      */
     private String getSolrQueuesResponse(Authentication authentication, int start, int n)
@@ -69,7 +73,8 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
         try
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, start, n, "");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Error while executing Solr query: {}", query, e);
         }
@@ -80,18 +85,21 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     /**
      * This method will return Solr response as String for facet search
      *
-     * @param authentication - authentication object
+     * @param authentication
+     *            - authentication object
      * @return - Solr response in string representation
      */
     private String getSolrFacetResponse(Authentication authentication)
     {
         String solrResponse = null;
-        String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
+        String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S
+                + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
 
         try
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Error while executing Solr query: {}", facetQuery, e);
         }
@@ -102,13 +110,16 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     /**
      * Generate a map with queue names (as keys) and case files count (as values)
      *
-     * @param queuesValues - queue names in the list
-     * @param facetValues  - facet results in the list
+     * @param queuesValues
+     *            - queue names in the list
+     * @param facetValues
+     *            - facet results in the list
      * @return - map with queue names and case files count
      */
     private Map<String, Long> getNumberOfActiveCaseFilesByQueue(List<Object> queuesValues, List<Object> facetValues)
     {
-        Map<String, Long> retval = queuesValues.stream().collect(Collectors.toMap(queueName -> (String) queueName, queueName -> findValue((String) queueName, facetValues), (v1, v2) -> v2, LinkedHashMap::new));
+        Map<String, Long> retval = queuesValues.stream().collect(Collectors.toMap(queueName -> (String) queueName,
+                queueName -> findValue((String) queueName, facetValues), (v1, v2) -> v2, LinkedHashMap::new));
 
         return retval;
     }
@@ -138,12 +149,14 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
                 {
                     start += n;
                     queuesValues.addAll(searchResults.getListForField(docs, SearchConstants.PROPERTY_QUEUE_NAME_S));
-                } else
+                }
+                else
                 {
                     // Skip looping if there is no more results
                     skipLoop = true;
                 }
-            } else
+            }
+            else
             {
                 // Skip looping if there is no any response from the Solr
                 skipLoop = true;
@@ -156,7 +169,8 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     /**
      * This method will return facet results in the list. The result is taken from the Solr
      *
-     * @param authentication - authentication object
+     * @param authentication
+     *            - authentication object
      * @return - list of facet results
      */
     private List<Object> getFacet(Authentication authentication, SearchResults searchResults)
@@ -182,8 +196,10 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
     /**
      * This method will try to get value for given queue name. The search is made in the facet results list
      *
-     * @param queueName       - queue name for which we will try to find any value in the facet results list
-     * @param facetFieldValue - facet results list
+     * @param queueName
+     *            - queue name for which we will try to find any value in the facet results list
+     * @param facetFieldValue
+     *            - facet results list
      * @return - number of case files in the queue
      */
     private Long findValue(String queueName, List<Object> facetFieldValue)
@@ -199,7 +215,8 @@ public class GetNumberOfActiveCaseFilesByQueueAPIController
                     // Try to find the next element in the list. It should represent number of case files in the queue
                     Integer count = (Integer) facetFieldValue.get(index + 1);
                     return new Long(count);
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     LOG.warn("Cannot create Long value. 0 wil be used instead.");
                 }

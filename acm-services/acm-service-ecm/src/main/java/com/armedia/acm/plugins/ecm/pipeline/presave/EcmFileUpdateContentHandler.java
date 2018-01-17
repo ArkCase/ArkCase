@@ -37,7 +37,8 @@ public class EcmFileUpdateContentHandler implements PipelineHandler<EcmFile, Ecm
                 Document newDocument = ecmFileMuleUtils.updateFile(entity, pipelineContext.getEcmFile(),
                         new ByteArrayInputStream(pipelineContext.getFileByteArray()));
                 pipelineContext.setCmisDocument(newDocument);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);

@@ -65,7 +65,8 @@ public class SpringClasspathCopier implements ApplicationContextAware
                     FileCopyUtils.copy(resource.getInputStream(), new FileOutputStream(target));
                 }
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not copy resource: " + e.getMessage(), e);
         }

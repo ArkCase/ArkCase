@@ -199,7 +199,8 @@ public class NotificationServiceTest extends EasyMockSupport
             messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
 
         }
@@ -351,7 +352,8 @@ public class NotificationServiceTest extends EasyMockSupport
             Capture<Map<String, Object>> messagePropsCapture = EasyMock.newCapture();
             expect(mockMuleContextManager.send(eq("vm://sendEmailViaSmtp.in"), contains("note"), capture(messagePropsCapture)))
                     .andReturn(mockMuleMessage).anyTimes();
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
 
         }
