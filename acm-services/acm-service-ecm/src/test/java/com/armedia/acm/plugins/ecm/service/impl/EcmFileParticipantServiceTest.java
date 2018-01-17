@@ -8,10 +8,13 @@ import static org.mockito.Mockito.mock;
 
 import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmParticipantsException;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.utils.EcmFileParticipantServiceHelper;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
@@ -30,19 +33,25 @@ import java.util.Properties;
 public class EcmFileParticipantServiceTest extends EasyMockSupport
 {
     private EcmFileParticipantService fileParticipantService;
+    private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
     private EcmFileDao mockFileDao;
+    private AcmFolderDao mockFolderDao;
     private AcmFolderService mockFolderService;
     private AcmParticipantService mockParticipantService;
     private Properties fileServiceProperties;
+    private AuditPropertyEntityAdapter mockAuditPropertyEntityAdapter;
 
     @Before
     public void setUp()
     {
         fileParticipantService = new EcmFileParticipantService();
+        fileParticipantServiceHelper = new EcmFileParticipantServiceHelper();
 
         mockFileDao = createMock(EcmFileDao.class);
+        mockFolderDao = createMock(AcmFolderDao.class);
         mockFolderService = createMock(AcmFolderService.class);
         mockParticipantService = createMock(AcmParticipantService.class);
+        mockAuditPropertyEntityAdapter = createNiceMock(AuditPropertyEntityAdapter.class);
 
         fileServiceProperties = new Properties();
         fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.read", "");
@@ -53,9 +62,15 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         fileServiceProperties.put("ecm.documentsParticipantTypes.mappings.group-no-access", "");
 
         fileParticipantService.setFileDao(mockFileDao);
+        fileParticipantService.setFolderDao(mockFolderDao);
         fileParticipantService.setFolderService(mockFolderService);
         fileParticipantService.setParticipantService(mockParticipantService);
         fileParticipantService.setEcmFileServiceProperties(fileServiceProperties);
+        fileParticipantService.setFileParticipantServiceHelper(fileParticipantServiceHelper);
+
+        fileParticipantServiceHelper.setFileDao(mockFileDao);
+        fileParticipantServiceHelper.setFolderDao(mockFolderDao);
+        fileParticipantServiceHelper.setAuditPropertyEntityAdapter(mockAuditPropertyEntityAdapter);
     }
 
     @Test
@@ -309,9 +324,16 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         file.setParticipants(fileParticipants);
         file.setFolder(parentFolder);
 
-        expect(mockFileDao.findByFolderId(folder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
+        expect(mockFileDao.findByFolderId(folder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file)).times(2);
         expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         expect(mockFileDao.save(file)).andReturn(file);
+
+        expect(mockFolderDao.findSubFolders(folderId, FlushModeType.COMMIT)).andReturn(Arrays.asList(childFolder)).times(2);
+        expect(mockFolderDao.findSubFolders(childFolderId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
+        EntityManager em = mock(EntityManager.class);
+        expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
+        em.flush();
+        expectLastCall();
 
         // when
         replayAll();
@@ -363,9 +385,16 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         EcmFile file = new EcmFile();
         file.setFolder(parentFolder);
 
-        expect(mockFileDao.findByFolderId(folder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
+        expect(mockFileDao.findByFolderId(folder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file)).times(2);
         expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         expect(mockFileDao.save(file)).andReturn(file);
+
+        expect(mockFolderDao.findSubFolders(folderId, FlushModeType.COMMIT)).andReturn(Arrays.asList(childFolder)).times(2);
+        expect(mockFolderDao.findSubFolders(childFolderId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
+        EntityManager em = mock(EntityManager.class);
+        expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
+        em.flush();
+        expectLastCall();
 
         // when
         replayAll();
@@ -438,6 +467,12 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFileDao.findByFolderId(folder.getId(), FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
         expect(mockFileDao.findByFolderId(childFolder.getId(), FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         expect(mockFileDao.save(file)).andReturn(file);
+
+        expect(mockFolderDao.findSubFolders(folderId, FlushModeType.COMMIT)).andReturn(Arrays.asList(childFolder));
+        EntityManager em = mock(EntityManager.class);
+        expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
+        em.flush();
+        expectLastCall();
 
         // when
         replayAll();
@@ -700,8 +735,9 @@ public class EcmFileParticipantServiceTest extends EasyMockSupport
         expect(mockFileDao.findByFolderId(objectId, FlushModeType.COMMIT)).andReturn(Arrays.asList(file));
         expect(mockFileDao.save(file)).andReturn(file);
         expect(mockFolderService.saveFolder(folder)).andReturn(folder);
+        expect(mockFolderDao.findSubFolders(objectId, FlushModeType.COMMIT)).andReturn(new ArrayList<>());
         EntityManager em = mock(EntityManager.class);
-        expect(mockFileDao.getEm()).andReturn(em);
+        expect(mockFolderDao.getEm()).andReturn(em).anyTimes();
         em.flush();
         expectLastCall();
 

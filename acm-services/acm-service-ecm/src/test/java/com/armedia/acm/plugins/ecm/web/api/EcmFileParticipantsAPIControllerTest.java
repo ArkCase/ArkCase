@@ -3,7 +3,6 @@ package com.armedia.acm.plugins.ecm.web.api;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -109,29 +108,5 @@ public class EcmFileParticipantsAPIControllerTest extends EasyMockSupport
                 .unmarshallCollection(result.getResponse().getContentAsString(), List.class, AcmParticipant.class);
         assertTrue(returnedParticipants.size() == participants.size());
 
-    }
-
-    @Test
-    public void testSaveParticipantsForOtherEntityTypeReturnsError() throws Exception
-    {
-        // given
-        Long objectId = 1L;
-        String objectType = "TASK";
-        expect(mockAuthentication.getName()).andReturn("user");
-        String participantsJson = "[]";
-
-        // when
-        replayAll();
-        mockMvc.perform(
-                post("/api/latest/service/ecm/participants/{objectType}/{objectId}", objectType, objectId)
-                        .principal(mockAuthentication)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON)
-                        .content(participantsJson))
-                .andExpect(status().isInternalServerError())
-                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-
-        // then
-        verifyAll();
     }
 }
