@@ -37,8 +37,10 @@ public class AcmUserUpdateHolder
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmUserUpdateHolder holder = (AcmUserUpdateHolder) o;
         return Objects.equals(oldId, holder.oldId) &&
                 Objects.equals(newId, holder.newId);

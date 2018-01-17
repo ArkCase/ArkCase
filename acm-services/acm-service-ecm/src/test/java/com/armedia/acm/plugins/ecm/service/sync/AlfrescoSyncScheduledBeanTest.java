@@ -1,13 +1,14 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncScheduledBean;
 import com.armedia.acm.plugins.ecm.service.sync.impl.AlfrescoSyncService;
+
 import org.easymock.EasyMock;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
 
 /**
  * Created by dmiller on 5/15/17.

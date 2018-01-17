@@ -177,7 +177,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
                     processSchedulerConfiguration(configFile);
                 }
-            } catch (IOException | JSONException e)
+            }
+            catch (IOException | JSONException e)
             {
                 log.error("Could not load scheduler configuration from file {}, error was: {}.", configFile.getAbsoluteFile(), e);
             }
@@ -287,7 +288,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
             {
                 AcmSchedulerTask task = tasks.get(taskName);
                 task.setHowOften(howOften);
-            } else
+            }
+            else
             {
                 String beanName = taskConfiguration.getString(BEAN_NAME_KEY);
                 try
@@ -299,7 +301,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                     tasks.put(taskName, task);
                     log.debug("Added task {} for bean named {} to run every {} minutes.", taskName, beanName,
                             taskConfiguration.getString(HOW_OFTEN_KEY));
-                } catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e)
+                }
+                catch (NoSuchBeanDefinitionException | BeanNotOfRequiredTypeException e)
                 {
                     log.error("Either bean with name {} does not exist or does not implement {}.", beanName,
                             AcmSchedulableBean.class.getName(), e);
@@ -360,10 +363,12 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
                 {
                     log.debug("Waiting for {} tasks to complete.", taskCompletedSignal.getCount());
                     taskCompletedSignal.await(scheduleInterval, TimeUnit.MILLISECONDS);
-                } catch (InterruptedException e)
+                }
+                catch (InterruptedException e)
                 {
                     log.error("Configuration update thread was interrupted prematurelly with exception {}.", e);
-                } finally
+                }
+                finally
                 {
                     updateCоnfiguration();
                 }
@@ -411,7 +416,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
 
             lastModifiedTime = lastModified.toMillis();
 
-        } catch (IOException | JSONException e)
+        }
+        catch (IOException | JSONException e)
         {
             log.error("Could not write scheduler configuration to file {}, error was: {}.", configurationPath, e);
         }
@@ -431,7 +437,8 @@ public class AcmScheduler implements ApplicationListener<AbstractConfigurationFi
         try
         {
             processSchedulerConfiguration(configFile);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not update scheduler configuration: {}", e.getMessage(), e);
         }

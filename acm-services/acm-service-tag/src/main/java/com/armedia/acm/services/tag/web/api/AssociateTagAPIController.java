@@ -8,6 +8,7 @@ import com.armedia.acm.services.tag.model.AcmTag;
 import com.armedia.acm.services.tag.service.AssociatedTagEventPublisher;
 import com.armedia.acm.services.tag.service.AssociatedTagService;
 import com.armedia.acm.services.tag.service.TagService;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ import java.util.List;
  * Created by marjan.stefanoski on 24.03.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/tag", "/api/latest/service/tag"})
+@RequestMapping({ "/api/v1/service/tag", "/api/latest/service/tag" })
 public class AssociateTagAPIController
 {
 
@@ -45,22 +46,25 @@ public class AssociateTagAPIController
     @RequestMapping(value = "{objectId}/{objectType}/{objectTitle}/{tagId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmAssociatedTag associateTag(@PathVariable("objectId") Long objectId, @PathVariable("objectType") String objectType,
-                                         @PathVariable("objectTitle") String objectTitle, @PathVariable("tagId") Long tagId, Authentication authentication)
+            @PathVariable("objectTitle") String objectTitle, @PathVariable("tagId") Long tagId, Authentication authentication)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, UnsupportedEncodingException
     {
 
         objectTitle = URLDecoder.decode(objectTitle, "UTF-8");
-        
-        log.info("Creating new tag association on object type [{}], title [{}], id [{}], and tagId: {}", objectType, objectTitle, objectId, tagId);
+
+        log.info("Creating new tag association on object type [{}], title [{}], id [{}], and tagId: {}", objectType, objectTitle, objectId,
+                tagId);
 
         AcmTag tagForAssociating = getTagService().findTag(tagId);
         AcmAssociatedTag newAssociatedTag = null;
         try
         {
-            AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag(objectType, objectId, objectTitle ,tagForAssociating);
+            AcmAssociatedTag returnedAssociatedTag = getAssociatedTagService().saveAssociateTag(objectType, objectId, objectTitle,
+                    tagForAssociating);
             getAssociatedTagEventPublisher().publishAssociatedTagCreatedEvent(returnedAssociatedTag, authentication, true);
             newAssociatedTag = returnedAssociatedTag;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
@@ -77,11 +81,13 @@ public class AssociateTagAPIController
                             objectType, objectId, tagId, e);
                     throw new AcmCreateObjectFailedException(objectType, "Tag Association  on object [" + objectType + "]:[" + objectId
                             + "] and tagId: " + tagId + " was not inserted into the DB", e);
-                } else
+                }
+                else
                 {
                     newAssociatedTag = associatedTagList.get(ZERO);
                 }
-            } else
+            }
+            else
             {
 
                 log.error("Exception occurred while trying to associate tag with tagId: {} on object [{}]:[{}]", objectType, objectId,

@@ -89,7 +89,8 @@ public abstract class NotificationSender
             in.setEmailAddresses(Arrays.asList(notification.getUserEmail()));
 
             Authentication authentication = SecurityContextHolder.getContext() != null
-                    ? SecurityContextHolder.getContext().getAuthentication() : null;
+                    ? SecurityContextHolder.getContext().getAuthentication()
+                    : null;
 
             String userId = propertyFileManager.load(emailSenderPropertyFileLocation, EmailSenderConfigurationConstants.USERNAME, null);
 
@@ -97,14 +98,16 @@ public abstract class NotificationSender
 
             getEmailSenderService().sendEmail(in, authentication, acmUser);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             exception = e;
         }
         if (exception == null)
         {
             notification.setState(NotificationConstants.STATE_SENT);
-        } else
+        }
+        else
         {
             LOG.error("Notification message not sent ...", exception);
             notification.setState(NotificationConstants.STATE_NOT_SENT);

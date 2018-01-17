@@ -19,47 +19,47 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-public class CMISFacadeAdaptor 
+public class CMISFacadeAdaptor
 {
 
     private static Logger LOGGER = LoggerFactory.getLogger(CMISFacadeAdaptor.class);
 
-    public static CMISFacade adapt(CMISFacade facade) 
+    public static CMISFacade adapt(CMISFacade facade)
     {
         return (CMISFacade) Proxy.newProxyInstance(CMISFacadeAdaptor.class.getClassLoader(),
-               new Class[]{CMISFacade.class}, new MyInvocationHandler(facade));
+                new Class[] { CMISFacade.class }, new MyInvocationHandler(facade));
     }
 
-    private static class MyInvocationHandler implements InvocationHandler 
+    private static class MyInvocationHandler implements InvocationHandler
     {
         private final CMISFacade facade;
 
-        private MyInvocationHandler(CMISFacade facade) 
+        private MyInvocationHandler(CMISFacade facade)
         {
             this.facade = facade;
         }
 
         @Override
-        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable 
+        public Object invoke(Object proxy, Method method, Object[] args) throws Throwable
         {
-            if (LOGGER.isDebugEnabled()) 
+            if (LOGGER.isDebugEnabled())
             {
                 LOGGER.debug("Invoked method {0} with arguments {1}", method.getName(), args);
             }
-            
-            try 
+
+            try
             {
                 Object ret = method.invoke(facade, args);
-                
-                if (LOGGER.isDebugEnabled()) 
+
+                if (LOGGER.isDebugEnabled())
                 {
                     LOGGER.debug("Returned method {0} with value {1}", ret);
                 }
                 return ret;
-            } 
-            catch (InvocationTargetException e) 
+            }
+            catch (InvocationTargetException e)
             {
-                if (LOGGER.isWarnEnabled()) 
+                if (LOGGER.isWarnEnabled())
                 {
                     LOGGER.warn("Method " + method.getName() + " thew " + e.getClass(), e);
                 }

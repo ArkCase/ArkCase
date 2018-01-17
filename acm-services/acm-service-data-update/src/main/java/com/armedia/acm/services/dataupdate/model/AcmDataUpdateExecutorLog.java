@@ -7,6 +7,7 @@ import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -45,8 +46,10 @@ public class AcmDataUpdateExecutorLog
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmDataUpdateExecutorLog that = (AcmDataUpdateExecutorLog) o;
         return Objects.equals(executorId, that.executorId);
     }

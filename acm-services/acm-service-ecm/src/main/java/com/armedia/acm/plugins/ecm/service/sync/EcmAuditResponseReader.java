@@ -1,14 +1,15 @@
 package com.armedia.acm.plugins.ecm.service.sync;
 
+import static java.util.stream.Collectors.toList;
+
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.IntStream;
-
-import static java.util.stream.Collectors.toList;
 
 /**
  * Created by dmiller on 5/12/17.

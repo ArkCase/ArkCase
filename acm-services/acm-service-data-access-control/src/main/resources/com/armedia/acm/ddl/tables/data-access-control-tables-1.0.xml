@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmValueLength" value="4000" dbms="postgresql,oracle"/>
@@ -25,14 +23,10 @@
     <property name="cmAccessorIdLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmAccessorIdLength" value="255" dbms="mysql,mssql"/>
 
-
     <changeSet id="01-data-access-acl-table" author="dmiller" dbms="oracle,postgresql">
         <createTable tableName="acm_boolean_lu">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_boolean"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_boolean"/>
             </column>
             <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_type"/>
@@ -61,10 +55,7 @@
     <changeSet id="01-data-access-acl-table" author="dmiller" dbms="mysql">
         <createTable tableName="acm_boolean_lu">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_boolean"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_boolean"/>
             </column>
             <column name="cm_value" type="VARCHAR(${cmValueLength})">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_type"/>
@@ -93,10 +84,7 @@
     <changeSet id="01-data-access-acl-table-mssql" author="riste.tutureski" dbms="mssql">
         <createTable tableName="acm_boolean_lu">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        nullable="false"
-                        primaryKey="true"
-                        primaryKeyName="pk_boolean"/>
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_boolean"/>
             </column>
             <column name="cm_value" type="VARCHAR(32)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="uk_boolean_type"/>

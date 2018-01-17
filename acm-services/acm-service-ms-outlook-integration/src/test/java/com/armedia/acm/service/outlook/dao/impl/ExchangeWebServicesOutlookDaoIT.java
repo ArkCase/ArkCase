@@ -1,5 +1,13 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotDeletedException;
 import com.armedia.acm.core.exceptions.AcmOutlookItemNotFoundException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
@@ -10,6 +18,22 @@ import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.misc.DateTimePrecision;
@@ -31,22 +55,6 @@ import microsoft.exchange.webservices.data.property.complex.FolderPermission;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/20/15.
@@ -107,7 +115,8 @@ public class ExchangeWebServicesOutlookDaoIT
 
         for (Item item : mailItems.getItems())
         {
-            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
+            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: "
+                    + ((EmailMessage) item).getFrom());
         }
 
         if (!mailItems.getItems().isEmpty())
@@ -115,14 +124,15 @@ public class ExchangeWebServicesOutlookDaoIT
             log.info("Body of first message: " + (mailItems.getItems().get(0).getBody()));
         }
 
-
         mailItems = dao.findItems(
-                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false, null);
+                service, WellKnownFolderName.Inbox, new PropertySet(ItemSchema.Body, EmailMessageSchema.From), 0, 5, "subject", false,
+                null);
         log.info("--- descending: ");
 
         for (Item item : mailItems.getItems())
         {
-            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: " + ((EmailMessage) item).getFrom());
+            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; from: "
+                    + ((EmailMessage) item).getFrom());
         }
 
     }
@@ -133,7 +143,10 @@ public class ExchangeWebServicesOutlookDaoIT
         ExchangeService service = dao.connect(user);
 
         FindItemsResults<Item> items = dao.findItems(
-                service, WellKnownFolderName.Calendar, new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType, AppointmentSchema.Recurrence), 0, 15,
+                service, WellKnownFolderName.Calendar,
+                new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType,
+                        AppointmentSchema.Recurrence),
+                0, 15,
                 "subject", true, null);
 
         assertNotNull(items);
@@ -143,24 +156,25 @@ public class ExchangeWebServicesOutlookDaoIT
         for (Item item : items.getItems())
         {
             Appointment appointment = (Appointment) item;
-            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
+            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: "
+                    + ((Appointment) item).getAppointmentType());
         }
-
 
         if (!items.getItems().isEmpty())
         {
             log.info("Body of first message: " + (items.getItems().get(0).getBody()));
         }
 
-
         items = dao.findItems(
-                service, WellKnownFolderName.Calendar, new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType), 0, 15,
+                service, WellKnownFolderName.Calendar,
+                new PropertySet(ItemSchema.Subject, AppointmentSchema.Start, AppointmentSchema.AppointmentType), 0, 15,
                 "subject", false, null);
         log.info("--- descending: ");
 
         for (Item item : items.getItems())
         {
-            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
+            log.info("Date: " + item.getDateTimeReceived() + "; subject: " + item.getSubject() + "; type: "
+                    + ((Appointment) item).getAppointmentType());
         }
 
     }
@@ -198,12 +212,12 @@ public class ExchangeWebServicesOutlookDaoIT
         for (Item item : items.getItems())
         {
             Appointment appointment = (Appointment) item;
-            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: " + ((Appointment) item).getAppointmentType());
+            log.info("Date: " + appointment.getStart() + "; subject: " + item.getSubject() + "; type: "
+                    + ((Appointment) item).getAppointmentType());
             assertFalse(startSearchDate.after(appointment.getStart()));
             assertFalse(endSearchDate.before(appointment.getStart()));
 
         }
-
 
     }
 
@@ -255,7 +269,8 @@ public class ExchangeWebServicesOutlookDaoIT
         {
             dao.connect(invalidUser);
             log.info("hmmm... with Office 365 even an invalid user gets here");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // expected
             log.info("Exception: " + e.getMessage(), e);
@@ -270,11 +285,11 @@ public class ExchangeWebServicesOutlookDaoIT
         OutlookTaskItem taskItem = new OutlookTaskItem();
         taskItem.setSubject("Task 1");
         taskItem.setBody("");
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//due to tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// due to tomorrow
         taskItem.setDueDate(new Date(tomorrow));
         taskItem.setPercentComplete(20);
         taskItem.setComplete(false);
-        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));//start next minute
+        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));// start next minute
         assertNull(taskItem.getId());
         taskItem = dao.createTaskItem(service, folder, taskItem);
         verifyFilledItemDetails(taskItem);
@@ -287,7 +302,6 @@ public class ExchangeWebServicesOutlookDaoIT
     {
         ExchangeService service = dao.connect(user);
         Folder folder = Folder.bind(service, WellKnownFolderName.Contacts);
-
 
         OutlookContactItem contactItem = new OutlookContactItem();
         contactItem.setDisplayName("John Doe");
@@ -311,19 +325,18 @@ public class ExchangeWebServicesOutlookDaoIT
         ExchangeService service = dao.connect(user);
         Folder folder = Folder.bind(service, WellKnownFolderName.Calendar);
 
-
         OutlookCalendarItem appointmentItem = new OutlookCalendarItem();
         appointmentItem.setBody("Body");
         appointmentItem.setSubject("Subject");
         appointmentItem.setAllDayEvent(false);
 
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//start tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// start tomorrow
         appointmentItem.setStartDate(new Date(tomorrow));
-        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));//start + 1 hour
+        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));// start + 1 hour
         appointmentItem.setMeeting(false);
         appointmentItem.setRecurring(true);
         appointmentItem.setRecurringInterval(1);
-        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));//ends after 2 days
+        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));// ends after 2 days
 
         assertNull(appointmentItem.getId());
         appointmentItem = dao.createCalendarAppointment(service, folder, appointmentItem);
@@ -343,9 +356,9 @@ public class ExchangeWebServicesOutlookDaoIT
         appointmentItem.setSubject("Subject");
         appointmentItem.setAllDayEvent(false);
 
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//start tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// start tomorrow
         appointmentItem.setStartDate(new Date(tomorrow));
-        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));//start + 1 hour
+        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));// start + 1 hour
         appointmentItem.setMeeting(false);
 
         assertNull(appointmentItem.getId());
@@ -396,7 +409,8 @@ public class ExchangeWebServicesOutlookDaoIT
         {
 
             dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
-        } catch (AcmOutlookItemNotDeletedException e)
+        }
+        catch (AcmOutlookItemNotDeletedException e)
         {
             log.warn("Could not delete folder: {}", e.getMessage(), e);
         }
@@ -405,7 +419,7 @@ public class ExchangeWebServicesOutlookDaoIT
     @Test
     public void testAddRemovePrivilegesToFolder() throws InterruptedException, ServiceLocalException
     {
-        //create folder
+        // create folder
         ExchangeService service = dao.connect(user);
         OutlookFolder newFolderData = new OutlookFolder();
         newFolderData.setDisplayName("FolderWithPrivileges " + UUID.randomUUID().toString());
@@ -414,7 +428,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         Folder folder = dao.getFolder(service, createdFolder.getId());
 
-        // Exchange sometimes gives a different answer, possibly from caching.  Maybe by iterating over the
+        // Exchange sometimes gives a different answer, possibly from caching. Maybe by iterating over the
         // permission collection we can force a cache refresh and get a consistent answer.
         for (FolderPermission fp : folder.getPermissions().getItems())
         {
@@ -425,7 +439,7 @@ public class ExchangeWebServicesOutlookDaoIT
 
         assertTrue(initialSize >= 2);
 
-        //add privileges to user1
+        // add privileges to user1
         OutlookFolderPermission permission = new OutlookFolderPermission();
         permission.setEmail(user1.getEmailAddress());
         permission.setLevel(FolderPermissionLevel.Custom);
@@ -436,7 +450,7 @@ public class ExchangeWebServicesOutlookDaoIT
         permissionList.add(permission);
         dao.addFolderPermissions(service, createdFolder.getId(), permissionList);
 
-        // Exchange sometimes gives a different answer, possibly from caching.  Maybe by iterating over the
+        // Exchange sometimes gives a different answer, possibly from caching. Maybe by iterating over the
         // permission collection we can force a cache refresh and get a consistent answer.
         for (FolderPermission fp : folder.getPermissions().getItems())
         {
@@ -452,7 +466,7 @@ public class ExchangeWebServicesOutlookDaoIT
             log.info("Perm before removing: {}", fp);
         }
 
-        //remove the privileges to the user1
+        // remove the privileges to the user1
         dao.removeFolderPermissions(service, createdFolder.getId(), permissionList);
 
         folder = dao.getFolder(service, createdFolder.getId());
@@ -465,12 +479,13 @@ public class ExchangeWebServicesOutlookDaoIT
         int sizeAfterRemove = folder.getPermissions().getItems().size();
         assertTrue(sizeAfterRemove <= sizeAfterAdd);
 
-        //delete the folder
+        // delete the folder
         try
         {
 
             dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
-        } catch (AcmOutlookItemNotDeletedException e)
+        }
+        catch (AcmOutlookItemNotDeletedException e)
         {
             log.warn("Could not remove folder: {}", e.getMessage(), e);
         }
@@ -479,7 +494,7 @@ public class ExchangeWebServicesOutlookDaoIT
     @Test
     public void testNotAllowedListFolder() throws InterruptedException, ServiceLocalException
     {
-        //create folder
+        // create folder
         ExchangeService service = dao.connect(user);
         ExchangeService service1 = dao.connect(user1);
         OutlookFolder newFolderData = new OutlookFolder();
@@ -493,26 +508,31 @@ public class ExchangeWebServicesOutlookDaoIT
                     new PropertySet(ItemSchema.Subject,
                             AppointmentSchema.Start,
                             AppointmentSchema.AppointmentType,
-                            AppointmentSchema.Recurrence), 0, 15,
+                            AppointmentSchema.Recurrence),
+                    0, 15,
                     "subject", true, null);
-        } catch (AcmOutlookItemNotFoundException e)
+        }
+        catch (AcmOutlookItemNotFoundException e)
         {
             e.printStackTrace();
             assertTrue(e.getMessage().contains("Folder not found"));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error:", e);
             fail();
-        } finally
+        }
+        finally
         {
-            //delete the folder
+            // delete the folder
             if (createdFolder.getId() != null)
             {
                 try
                 {
 
                     dao.deleteFolder(service, createdFolder.getId(), DeleteMode.HardDelete);
-                } catch (AcmOutlookItemNotDeletedException e)
+                }
+                catch (AcmOutlookItemNotDeletedException e)
                 {
                     log.warn("Cannot delete item: {}", e.getMessage(), e);
                 }

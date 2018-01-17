@@ -44,7 +44,7 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
     {
         LOG.debug("Looking for files in folder '{}'", getWatchFolder().getName());
 
-        // This event just tells us when the whole application context is ready.  We don't actually need the context.
+        // This event just tells us when the whole application context is ready. We don't actually need the context.
         try
         {
             // All this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
@@ -67,7 +67,8 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
                 }
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Could not find existing files: {}", e.getMessage(), e);
             throw new BeanCreationException("Could not find existing files: " + e.getMessage(), e);
@@ -131,7 +132,8 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
     /**
      * Get file from the event
      *
-     * @param fileChangeEvent - changed event
+     * @param fileChangeEvent
+     *            - changed event
      * @return - File object
      * @throws FileSystemException
      * @throws URISyntaxException
@@ -145,7 +147,8 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
     /**
      * Take file name for given file
      *
-     * @param file - the file
+     * @param file
+     *            - the file
      * @return - the file name
      * @throws IOException
      */
@@ -190,7 +193,8 @@ public class FileWatcher implements FileListener, ApplicationContextAware, Appli
                 File baseFile = new File(new URI(baseUrl.toString().replace(" ", "%20")));
                 setWatchFolderPath(baseFile.getCanonicalPath());
 
-            } catch (URISyntaxException | IOException e)
+            }
+            catch (URISyntaxException | IOException e)
             {
                 LOG.error("Cannot take watch folder path.", e);
             }

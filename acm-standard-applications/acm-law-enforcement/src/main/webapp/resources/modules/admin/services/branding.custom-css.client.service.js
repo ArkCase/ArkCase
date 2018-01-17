@@ -14,10 +14,10 @@
  *
  * The Admin.BrandingCustomCss provides Branding custom css calls functionality
  */
-angular.module('admin').service('Admin.BrandingCustomCssService', function ($http) {
+angular.module('admin').service('Admin.BrandingCustomCssService', function($http) {
     return ({
-        getCustomCss: getCustomCss,
-        saveCustomCss: saveCustomCss
+        getCustomCss : getCustomCss,
+        saveCustomCss : saveCustomCss
     });
     /**
      * @ngdoc method
@@ -31,10 +31,11 @@ angular.module('admin').service('Admin.BrandingCustomCssService', function ($htt
      */
     function getCustomCss() {
         return $http({
-            method: "GET",
-            url: "branding/customcss"
+            method : "GET",
+            url : "branding/customcss"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -50,12 +51,13 @@ angular.module('admin').service('Admin.BrandingCustomCssService', function ($htt
      */
     function saveCustomCss(data) {
         return $http({
-            method: "PUT",
-            url: "api/latest/plugin/admin/branding/customcss",
-            data: data,
-            headers: {
-                "Content-Type": "application/json"
+            method : "PUT",
+            url : "api/latest/plugin/admin/branding/customcss",
+            data : data,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 });

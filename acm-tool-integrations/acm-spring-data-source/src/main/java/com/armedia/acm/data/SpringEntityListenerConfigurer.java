@@ -1,6 +1,7 @@
 package com.armedia.acm.data;
 
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.eclipse.persistence.descriptors.ClassDescriptor;
 import org.eclipse.persistence.descriptors.DescriptorEventAdapter;
 import org.eclipse.persistence.descriptors.DescriptorEventListener;
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.metamodel.EntityType;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,11 +44,11 @@ public class SpringEntityListenerConfigurer implements ApplicationContextAware
         Collection<DescriptorEventAdapter> descriptorEventAdapters = generateAdaptersForListeners();
 
         Project project = getEntityManagerFactory().unwrap(Session.class).getProject();
-        for (EntityType<?> entityType : getEntityManagerFactory().getMetamodel().getEntities() )
+        for (EntityType<?> entityType : getEntityManagerFactory().getMetamodel().getEntities())
         {
             ClassDescriptor descriptor = project.getClassDescriptor(entityType.getJavaType());
             boolean foundDescriptor = descriptor != null;
-            if ( foundDescriptor )
+            if (foundDescriptor)
             {
                 log.debug("adding listeners...");
                 descriptor.getEventManager().getEventListeners().addAll(getDefaultListeners());
@@ -60,19 +62,19 @@ public class SpringEntityListenerConfigurer implements ApplicationContextAware
     {
         List<DescriptorEventAdapter> retval = new ArrayList<>();
 
-        for ( AcmBeforeUpdateListener beforeUpdateListener : findBeforeUpdateListeners() )
+        for (AcmBeforeUpdateListener beforeUpdateListener : findBeforeUpdateListeners())
         {
             DescriptorEventAdapter dea = new AcmBeforeUpdateAdapter(beforeUpdateListener);
             retval.add(dea);
-            }
+        }
 
-        for ( AcmBeforeInsertListener beforeInsertListener : findBeforeInsertListeners()  )
+        for (AcmBeforeInsertListener beforeInsertListener : findBeforeInsertListeners())
         {
             DescriptorEventAdapter dea = new AcmBeforeInsertAdapter(beforeInsertListener);
             retval.add(dea);
         }
 
-        for ( AcmBeforeDeleteListener beforeDeleteListener : findBeforeDeleteListeners() )
+        for (AcmBeforeDeleteListener beforeDeleteListener : findBeforeDeleteListeners())
         {
             DescriptorEventAdapter dea = new AcmBeforeDeleteAdapter(beforeDeleteListener);
             retval.add(dea);
@@ -141,7 +143,5 @@ public class SpringEntityListenerConfigurer implements ApplicationContextAware
     {
         this.springContextHolder = springContextHolder;
     }
-
-
 
 }

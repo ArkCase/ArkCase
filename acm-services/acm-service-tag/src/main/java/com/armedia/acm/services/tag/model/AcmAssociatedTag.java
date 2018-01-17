@@ -1,7 +1,13 @@
 package com.armedia.acm.services.tag.model;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.armedia.acm.core.AcmObject;
+import com.armedia.acm.data.AcmEntity;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,14 +21,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.armedia.acm.core.AcmObject;
-import com.armedia.acm.data.AcmEntity;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by marjan.stefanoski on 24.03.2015.
@@ -174,7 +174,10 @@ public class AcmAssociatedTag implements AcmEntity, Serializable, AcmObject
         return id;
     }
 
-    public String getParentTitle() {return parentTitle; }
+    public String getParentTitle()
+    {
+        return parentTitle;
+    }
 
     public void setParentTitle(String parentTitle)
     {

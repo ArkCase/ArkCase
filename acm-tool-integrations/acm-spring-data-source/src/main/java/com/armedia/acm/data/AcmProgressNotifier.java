@@ -24,7 +24,8 @@ public class AcmProgressNotifier implements ApplicationListener<AcmProgressEvent
         if (messageBuilders == null || !messageBuilders.containsKey(progressIndicator.getObjectType()))
         {
             progressMessage = AcmProgressNotifierMessageBuilder.defaultBuildMessage(progressIndicator);
-        } else
+        }
+        else
         {
             progressMessage = messageBuilders.get(progressIndicator.getObjectType()).buildMessage(progressIndicator);
         }

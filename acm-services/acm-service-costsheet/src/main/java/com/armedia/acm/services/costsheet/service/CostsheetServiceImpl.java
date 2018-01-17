@@ -8,6 +8,7 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.CostsheetConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -87,12 +88,12 @@ public class CostsheetServiceImpl implements CostsheetService
 
     @Override
     public String getObjectsFromSolr(String objectType,
-                                     Authentication authentication,
-                                     int startRow,
-                                     int maxRows,
-                                     String sortParams,
-                                     String searchQuery,
-                                     String userId)
+            Authentication authentication,
+            int startRow,
+            int maxRows,
+            String sortParams,
+            String searchQuery,
+            String userId)
     {
         String retval = null;
 
@@ -112,10 +113,12 @@ public class CostsheetServiceImpl implements CostsheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                    sortParams);
 
             LOG.debug("Objects was retrieved.");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }
@@ -125,11 +128,11 @@ public class CostsheetServiceImpl implements CostsheetService
 
     @Override
     public String getObjectsFromSolr(String objectType,
-                                     Authentication authentication,
-                                     int startRow,
-                                     int maxRows,
-                                     String sortParams,
-                                     String userId)
+            Authentication authentication,
+            int startRow,
+            int maxRows,
+            String sortParams,
+            String userId)
     {
         String retval = null;
 
@@ -144,10 +147,12 @@ public class CostsheetServiceImpl implements CostsheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                    sortParams);
 
             LOG.debug("Objects was retrieved.");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!--
+<?xml version="1.0" encoding="UTF-8" ?><!--
  Licensed to the Apache Software Foundation (ASF) under one or more
  contributor license agreements.  See the NOTICE file distributed with
  this work for additional information regarding copyright ownership.
@@ -62,7 +61,6 @@
          1.5: omitNorms defaults to true for primitive field types
               (int, float, boolean, string...)
        -->
-
 
     <!-- Valid attributes for fields:
       name: mandatory - the name for the field
@@ -127,8 +125,7 @@
     <field name="manu" type="text_general" indexed="true" stored="true" omitNorms="true"/>
     <field name="cat" type="string" indexed="true" stored="true" multiValued="true"/>
     <field name="features" type="text_general" indexed="true" stored="true" multiValued="true"/>
-    <field name="includes" type="text_general" indexed="true" stored="true" termVectors="true" termPositions="true"
-           termOffsets="true"/>
+    <field name="includes" type="text_general" indexed="true" stored="true" termVectors="true" termPositions="true" termOffsets="true"/>
 
     <field name="weight" type="float" indexed="true" stored="true"/>
     <field name="price" type="float" indexed="true" stored="true"/>
@@ -263,13 +260,11 @@
     <copyField source="*_lcs" dest="*_facet"/>
     <copyField source="*_s" dest="*_facet"/>
 
-
     <!-- uncomment the following to ignore any fields that don't already match an existing
     field name or dynamic field, rather than reporting them as an error.
     alternately, change the type="ignored" to some other type e.g. "text" if you want
     unknown fields indexed and/or stored by default -->
     <!--dynamicField name="*" type="ignored" multiValued="true" /-->
-
 
     <!-- Field to use to determine and enforce document uniqueness.
     Unless this field is marked with required="false", it will be a required field
@@ -347,7 +342,6 @@
 
     <!-- copy name to alphaNameSort, a field designed for sorting by name -->
     <!-- <copyField source="name" dest="alphaNameSort"/> -->
-
 
     <!-- field type definitions. The "name" attribute is
        just a label to be used by field definitions.  The "class"
@@ -434,7 +428,6 @@
 
     <!-- A Trie based date field for faster date range queries and date faceting. -->
     <fieldType name="tdate" class="solr.TrieDateField" precisionStep="6" positionIncrementGap="0"/>
-
 
     <!--Binary data type. The data should be sent/retrieved in as Base64 encoded Strings -->
     <fieldtype name="binary" class="solr.BinaryField"/>
@@ -540,10 +533,7 @@
             -->
             <!-- Case insensitive stop word removal.
             -->
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"
-            />
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.EnglishPossessiveFilterFactory"/>
             <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
@@ -555,10 +545,7 @@
         <analyzer type="query">
             <tokenizer class="solr.StandardTokenizerFactory"/>
             <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"
-            />
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.EnglishPossessiveFilterFactory"/>
             <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
@@ -578,8 +565,7 @@
 	 cases will work, for example query "wi fi" will match
 	 document "WiFi" or "wi-fi".
         -->
-    <fieldType name="text_en_splitting" class="solr.TextField" positionIncrementGap="100"
-               autoGeneratePhraseQueries="true">
+    <fieldType name="text_en_splitting" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
         <analyzer type="index">
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
             <!-- in this example, we will only use synonyms at query time
@@ -587,12 +573,9 @@
             -->
             <!-- Case insensitive stop word removal.
             -->
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"
-            />
-            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                    catenateWords="1" catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="1"
+                catenateNumbers="1" catenateAll="0" splitOnCaseChange="1"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
             <filter class="solr.PorterStemFilterFactory"/>
@@ -600,12 +583,9 @@
         <analyzer type="query">
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
             <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"
-            />
-            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1"
-                    catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0"
+                catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
             <filter class="solr.PorterStemFilterFactory"/>
@@ -614,14 +594,13 @@
 
     <!-- Less flexible matching, but less false matches.  Probably not ideal for product names,
          but may be good for SKUs.  Can insert dashes in the wrong place and still match. -->
-    <fieldType name="text_en_splitting_tight" class="solr.TextField" positionIncrementGap="100"
-               autoGeneratePhraseQueries="true">
+    <fieldType name="text_en_splitting_tight" class="solr.TextField" positionIncrementGap="100" autoGeneratePhraseQueries="true">
         <analyzer>
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
             <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="false"/>
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
-            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0"
-                    catenateWords="1" catenateNumbers="1" catenateAll="0"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="0" generateNumberParts="0" catenateWords="1"
+                catenateNumbers="1" catenateAll="0"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.KeywordMarkerFilterFactory" protected="protwords.txt"/>
             <filter class="solr.EnglishMinimalStemFilterFactory"/>
@@ -638,8 +617,8 @@
             <tokenizer class="solr.StandardTokenizerFactory"/>
             <filter class="solr.StopFilterFactory" ignoreCase="true" words="stopwords.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
-            <filter class="solr.ReversedWildcardFilterFactory" withOriginal="true"
-                    maxPosAsterisk="3" maxPosQuestion="2" maxFractionAsterisk="0.33"/>
+            <filter class="solr.ReversedWildcardFilterFactory" withOriginal="true" maxPosAsterisk="3" maxPosQuestion="2"
+                maxFractionAsterisk="0.33"/>
         </analyzer>
         <analyzer type="query">
             <tokenizer class="solr.StandardTokenizerFactory"/>
@@ -686,9 +665,7 @@
 
                  http://docs.oracle.com/javase/7/docs/api/java/util/regex/package-summary.html
               -->
-            <filter class="solr.PatternReplaceFilterFactory"
-                    pattern="([^a-z])" replacement="" replace="all"
-            />
+            <filter class="solr.PatternReplaceFilterFactory" pattern="([^a-z])" replacement="" replace="all"/>
         </analyzer>
     </fieldType>
 
@@ -774,8 +751,8 @@
       For more information about this and other Spatial fields new to Solr 4, see:
       http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
     -->
-    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-               geo="true" distErrPct="0.025" maxDistErr="0.000009" units="degrees"/>
+    <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType" geo="true" distErrPct="0.025" maxDistErr="0.000009"
+        units="degrees"/>
 
     <!-- Money/currency field type. See http://wiki.apache.org/solr/MoneyFieldType
          Parameters:
@@ -788,52 +765,30 @@
                               ratesFileLocation: URL or path to rates JSON file (default latest.json on the web)
                               refreshInterval: Number of minutes between each rates fetch (default: 1440, min: 60)
     -->
-    <fieldType name="currency" class="solr.CurrencyField" precisionStep="8" defaultCurrency="USD"
-               currencyConfig="currency.xml"/>
+    <fieldType name="currency" class="solr.CurrencyField" precisionStep="8" defaultCurrency="USD" currencyConfig="currency.xml"/>
 
     <!-- ACM field types -->
     <fieldType name="text_parseable" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-            <filter class="solr.WordDelimiterFilterFactory"
-                    generateWordParts="1"
-                    splitOnCaseChange="0"
-                    splitOnNumerics="0"
-                    stemEnglishPossessive="1"
-                    preserveOriginal="0"
-                    catenateWords="1"
-                    generateNumberParts="1"
-                    catenateNumbers="0"
-                    catenateAll="0"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" splitOnCaseChange="0" splitOnNumerics="0"
+                stemEnglishPossessive="1" preserveOriginal="0" catenateWords="1" generateNumberParts="1" catenateNumbers="0"
+                catenateAll="0"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.KStemFilterFactory"/>
         </analyzer>
         <analyzer type="query">
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-            <filter class="solr.WordDelimiterFilterFactory"
-                    generateWordParts="1"
-                    splitOnCaseChange="0"
-                    splitOnNumerics="0"
-                    stemEnglishPossessive="1"
-                    preserveOriginal="0"
-                    catenateWords="1"
-                    generateNumberParts="1"
-                    catenateNumbers="0"
-                    catenateAll="0"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" splitOnCaseChange="0" splitOnNumerics="0"
+                stemEnglishPossessive="1" preserveOriginal="0" catenateWords="1" generateNumberParts="1" catenateNumbers="0"
+                catenateAll="0"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.KStemFilterFactory"/>
-            <filter class="solr.SynonymFilterFactory"
-                    synonyms="synonyms.txt"
-                    ignoreCase="true"
-                    expand="true"/>
+            <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
         </analyzer>
     </fieldType>
 
@@ -841,19 +796,10 @@
         <analyzer type="index">
             <charFilter class="solr.HTMLStripCharFilterFactory"/>
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-            <filter class="solr.WordDelimiterFilterFactory"
-                    generateWordParts="1"
-                    splitOnCaseChange="0"
-                    splitOnNumerics="0"
-                    stemEnglishPossessive="1"
-                    preserveOriginal="0"
-                    catenateWords="1"
-                    generateNumberParts="1"
-                    catenateNumbers="0"
-                    catenateAll="0"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" splitOnCaseChange="0" splitOnNumerics="0"
+                stemEnglishPossessive="1" preserveOriginal="0" catenateWords="1" generateNumberParts="1" catenateNumbers="0"
+                catenateAll="0"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.KStemFilterFactory"/>
@@ -862,41 +808,24 @@
         <analyzer type="query">
             <charFilter class="solr.HTMLStripCharFilterFactory"/>
             <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-            <filter class="solr.WordDelimiterFilterFactory"
-                    generateWordParts="1"
-                    splitOnCaseChange="0"
-                    splitOnNumerics="0"
-                    stemEnglishPossessive="1"
-                    preserveOriginal="0"
-                    catenateWords="1"
-                    generateNumberParts="1"
-                    catenateNumbers="0"
-                    catenateAll="0"/>
-            <filter class="solr.StopFilterFactory"
-                    ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.WordDelimiterFilterFactory" generateWordParts="1" splitOnCaseChange="0" splitOnNumerics="0"
+                stemEnglishPossessive="1" preserveOriginal="0" catenateWords="1" generateNumberParts="1" catenateNumbers="0"
+                catenateAll="0"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.KStemFilterFactory"/>
-            <filter class="solr.SynonymFilterFactory"
-                    synonyms="synonyms.txt"
-                    ignoreCase="true"
-                    expand="true"/>
+            <filter class="solr.SynonymFilterFactory" synonyms="synonyms.txt" ignoreCase="true" expand="true"/>
         </analyzer>
     </fieldType>
 
-
     <fieldType name="text_numbersonly" class="solr.TextField" sortMissingLast="true" omitNorms="true">
         <analyzer type="index">
-            <charFilter class="solr.PatternReplaceCharFilterFactory"
-                        pattern="\D"
-                        replacement=""/>
+            <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\D" replacement=""/>
             <tokenizer class="solr.KeywordTokenizerFactory"/>
         </analyzer>
         <analyzer type="query">
-            <charFilter class="solr.PatternReplaceCharFilterFactory"
-                        pattern="\D"
-                        replacement=""/>
+            <charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\D" replacement=""/>
             <tokenizer class="solr.KeywordTokenizerFactory"/>
         </analyzer>
     </fieldType>
@@ -925,53 +854,40 @@
             <!-- The TrimFilter removes any leading or trailing whitespace -->
             <filter class="solr.TrimFilterFactory"/>
             <!-- Remove leading articles -->
-            <filter class="solr.PatternReplaceFilterFactory"
-                    pattern="^(a |the |les |la |le |l'|de la |du |des )" replacement="" replace="all"
-            />
+            <filter class="solr.PatternReplaceFilterFactory" pattern="^(a |the |les |la |le |l'|de la |du |des )" replacement=""
+                replace="all"/>
             <!-- Left-pad numbers with zeroes -->
-            <filter class="solr.PatternReplaceFilterFactory"
-                    pattern="(\d+)" replacement="000000000000000$1" replace="all"
-            />
+            <filter class="solr.PatternReplaceFilterFactory" pattern="(\d+)" replacement="000000000000000$1" replace="all"/>
             <!-- Left-trim zeroes to produce 6 digit numbers -->
-            <filter class="solr.PatternReplaceFilterFactory"
-                    pattern="0*([0-9]{16,})" replacement="$1" replace="all"
-            />
+            <filter class="solr.PatternReplaceFilterFactory" pattern="0*([0-9]{16,})" replacement="$1" replace="all"/>
             <!-- Remove all but alphanumeric characters -->
-            <filter class="solr.PatternReplaceFilterFactory"
-                    pattern="([^a-z0-9])" replacement="" replace="all"
-            />
+            <filter class="solr.PatternReplaceFilterFactory" pattern="([^a-z0-9])" replacement="" replace="all"/>
         </analyzer>
     </fieldType>
 
     <!-- AFDP-2567 (autosuggest) field types -->
-    <fieldType name="text_suggest" class="solr.TextField"
-               positionIncrementGap="100">
+    <fieldType name="text_suggest" class="solr.TextField" positionIncrementGap="100">
         <analyzer>
             <tokenizer class="solr.UAX29URLEmailTokenizerFactory"/>
-            <filter class="solr.StopFilterFactory" ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.EnglishPossessiveFilterFactory"/>
         </analyzer>
     </fieldType>
 
-    <fieldType name="text_suggest_ngram"
-               class="solr.TextField" positionIncrementGap="100">
+    <fieldType name="text_suggest_ngram" class="solr.TextField" positionIncrementGap="100">
         <analyzer type="index">
             <tokenizer class="solr.UAX29URLEmailTokenizerFactory"/>
-            <filter class="solr.StopFilterFactory" ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.EnglishPossessiveFilterFactory"/>
-            <filter class="solr.EdgeNGramFilterFactory"
-                    maxGramSize="10" minGramSize="2"/>
+            <filter class="solr.EdgeNGramFilterFactory" maxGramSize="10" minGramSize="2"/>
         </analyzer>
         <analyzer type="query">
             <tokenizer class="solr.UAX29URLEmailTokenizerFactory"/>
-            <filter class="solr.StopFilterFactory" ignoreCase="true"
-                    words="lang/stopwords_en.txt"/>
+            <filter class="solr.StopFilterFactory" ignoreCase="true" words="lang/stopwords_en.txt"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.ASCIIFoldingFilterFactory"/>
             <filter class="solr.EnglishPossessiveFilterFactory"/>

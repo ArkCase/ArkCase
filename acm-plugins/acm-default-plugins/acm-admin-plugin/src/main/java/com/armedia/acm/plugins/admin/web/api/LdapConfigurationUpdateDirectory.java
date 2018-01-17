@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,10 @@ import java.io.IOException;
 import java.util.Map;
 
 /**
- * Created by sergey.kolomiets  on 5/26/15.
+ * Created by sergey.kolomiets on 5/26/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LdapConfigurationUpdateDirectory
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -49,7 +50,8 @@ public class LdapConfigurationUpdateDirectory
             Map<String, Object> props = ldapConfigurationService.getProperties(ldapObject);
             ldapConfigurationService.updateLdapDirectory(directoryId, props);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update LDAP directory", e);
             throw new AcmLdapConfigurationException("Update LDAP directory error", e);

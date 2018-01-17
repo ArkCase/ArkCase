@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.armedia.acm.plugins.complaint.service.ComplaintService;
 import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,9 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 
-
 @Controller
-@RequestMapping({"/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
+@RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
 public class CreateComplaintAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -37,8 +37,7 @@ public class CreateComplaintAPIController
     @ResponseBody
     public Complaint createComplaint(
             @RequestBody Complaint in,
-            Authentication auth
-    ) throws AcmCreateObjectFailedException
+            Authentication auth) throws AcmCreateObjectFailedException
     {
         log.trace("Got a complaint: {}; complaint ID: '{}'", in, in.getComplaintId());
         log.trace("complaint type: {}", in.getComplaintType());
@@ -60,13 +59,14 @@ public class CreateComplaintAPIController
             getEventPublisher().publishComplaintEvent(saved, auth, isInsert, true);
 
             // since the approver list is not persisted to the database, we want to send them back to the caller...
-            // the approver list is only here to send to the Activiti engine.  After the workflow is started the
+            // the approver list is only here to send to the Activiti engine. After the workflow is started the
             // approvers are stored in Activiti.
             saved.setApprovers(in.getApprovers());
 
             return saved;
 
-        } catch (PipelineProcessException | TransactionException e)
+        }
+        catch (PipelineProcessException | TransactionException e)
         {
             log.error("Could not save complaint: {}", e.getMessage(), e);
             getEventPublisher().publishComplaintEvent(in, auth, isInsert, false);

@@ -11,6 +11,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -18,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LdapGroupService
 {
@@ -37,8 +37,8 @@ public class LdapGroupService
     @Transactional(rollbackFor = Exception.class)
     public AcmGroup createLdapGroup(AcmGroup group, String directoryName) throws AcmLdapActionFailedException
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
 
         String groupName = MapperUtils.buildGroupName(group.getName(), Optional.of(ldapSyncConfig.getUserDomain()));
 
@@ -69,8 +69,8 @@ public class LdapGroupService
     public AcmGroup createLdapSubgroup(AcmGroup group, String parentGroupName, String directoryName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
-        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
+        AcmLdapSyncConfig ldapSyncConfig = acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class)
+                .get(String.format("%s_sync", directoryName));
 
         String givenName = group.getName();
         String groupName = MapperUtils.buildGroupName(givenName, Optional.of(ldapSyncConfig.getUserDomain()));
@@ -148,7 +148,8 @@ public class LdapGroupService
         if (acmGroup.getStatus() == AcmGroupStatus.DELETE)
         {
             ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
-        } else
+        }
+        else
         {
             ldapGroupDao.removeMemberFromGroup(acmGroup.getDistinguishedName(), parentGroup.getDistinguishedName(), ldapSyncConfig);
         }
@@ -156,8 +157,7 @@ public class LdapGroupService
 
     private AcmLdapSyncConfig getLdapSyncConfig(String directoryName)
     {
-        return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).
-                get(String.format("%s_sync", directoryName));
+        return acmContextHolder.getAllBeansOfType(AcmLdapSyncConfig.class).get(String.format("%s_sync", directoryName));
     }
 
     private String buildDnForGroup(String cn, AcmLdapSyncConfig ldapSyncConfig)

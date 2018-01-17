@@ -53,7 +53,8 @@ public class LdapUser
         return acmUser;
     }
 
-    private boolean objChanged(Object o1, Object o2) {
+    private boolean objChanged(Object o1, Object o2)
+    {
         return !Objects.equals(o1, o2);
     }
 
@@ -259,8 +260,10 @@ public class LdapUser
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         LdapUser ldapUser = (LdapUser) o;
         return Objects.equals(userId, ldapUser.userId);
     }

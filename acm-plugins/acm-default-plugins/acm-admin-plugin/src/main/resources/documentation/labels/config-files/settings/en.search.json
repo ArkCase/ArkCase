@@ -78,7 +78,6 @@
                 "value": "Enter to search for assignee",
                 "defaultValue": "Enter to search for assignee",
                 "description": ""
-
             },
             "btnGoText": {
                 "value": "Search now",

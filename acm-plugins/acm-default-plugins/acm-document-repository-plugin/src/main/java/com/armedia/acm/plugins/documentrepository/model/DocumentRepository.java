@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -45,6 +46,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,9 +68,7 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         AcmContainerEntity, AcmNotifiableEntity, AcmStatefulEntity, AcmChildObjectEntity
 {
     @Id
-    @TableGenerator(name = "document_repository_gen", table = "acm_document_repository_id",
-            pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_document_repository", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "document_repository_gen", table = "acm_document_repository_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_document_repository", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "document_repository_gen")
     @Column(name = "cm_doc_repo_id")
     private Long id;
@@ -118,8 +118,8 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     private String className = this.getClass().getName();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({@JoinColumn(name = "cm_object_id"),
-            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_object_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     /**
@@ -136,8 +136,8 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
     @JoinColumn(name = "cm_container_id")
     private AcmContainer container = new AcmContainer();
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumns({@JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type")})
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+    @JoinColumns({ @JoinColumn(name = "cm_parent_id"), @JoinColumn(name = "cm_parent_type", referencedColumnName = "cm_object_type") })
     private Collection<ObjectAssociation> childObjects = new ArrayList<>();
 
     @PrePersist
@@ -149,8 +149,8 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         }
         setNameUpperCase(getName().toUpperCase());
         setupChildPointers();
-         if(repositoryType == null)
-         {
+        if (repositoryType == null)
+        {
             repositoryType = DocumentRepositoryType.GENERAL;
         }
     }
@@ -236,10 +236,15 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         this.restricted = restricted;
     }
 
-    public String getClassName() {return className;
+    public String getClassName()
+    {
+        return className;
     }
 
-    public void setClassName(String className) {this.className = className;}
+    public void setClassName(String className)
+    {
+        this.className = className;
+    }
 
     @Override
     public Date getCreated()
@@ -301,9 +306,15 @@ public class DocumentRepository implements Serializable, AcmAssignedObject, AcmE
         this.objectType = objectType;
     }
 
-    public DocumentRepositoryType getRepositoryType() {return repositoryType;}
+    public DocumentRepositoryType getRepositoryType()
+    {
+        return repositoryType;
+    }
 
-    public void setRepositoryType(DocumentRepositoryType repositoryType) {this.repositoryType = repositoryType;}
+    public void setRepositoryType(DocumentRepositoryType repositoryType)
+    {
+        this.repositoryType = repositoryType;
+    }
 
     @Override
     public List<AcmParticipant> getParticipants()

@@ -1,90 +1,90 @@
 {
-  "id": "profile",
-  "title": "Profile",
-  "configurable": true,
-  "menus": [
-    {
-      "menuId": "usermenu",
-      "menuItemURL": "profile",
-      "menuItemTitle": "profile.menus.usermenu.item",
-      "moduleId": "none",
-      "iconClass": "glyphicon glyphicon-asterisk",
-      "position": 100
-    }
-  ],
-  "components": [
-    {
-      "id": "subscription",
-      "title": "profile.comp.subscription.title",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
+    "id": "profile",
+    "title": "Profile",
+    "configurable": true,
+    "menus": [
         {
-          "name": "title",
-          "displayName": "profile.subscriptions.table.columns.title",
-          "headerCellFilter": "translate",
-          "width": "40%"
-        },
-        {
-          "name": "created",
-          "displayName": "profile.subscriptions.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-          "width": "25%"
-        },
-        {
-          "name": "delete",
-          "displayName": " ",
-          "headerCellFilter": "translate",
-          "width": "*",
-          "headerCellTemplate": "<div></div>",
-          "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-link fa fa-trash'></button></div>'"
-        },
-        {
-          "name": "parentID",
-          "displayName": "profile.subscriptions.table.columns.parentId",
-          "headerCellFilter": "translate",
-          "visible": false
-        },
-        {
-          "name": "userID",
-          "displayName": "profile.subscriptions.table.columns.userId",
-          "headerCellFilter": "translate",
-          "visible": false
+            "menuId": "usermenu",
+            "menuItemURL": "profile",
+            "menuItemTitle": "profile.menus.usermenu.item",
+            "moduleId": "none",
+            "iconClass": "glyphicon glyphicon-asterisk",
+            "position": 100
         }
-      ]
-    },
-    {
-      "id": "company",
-      "title": "profile.comp.company.title",
-      "enabled": true,
-      "configurable": true
-    },
-    {
-      "id": "contact",
-      "title": "profile.comp.contact.title",
-      "enabled": true,
-      "configurable": true
-    },
-    {
-      "id": "group",
-      "title": "profile.comp.group.title",
-      "enabled": true,
-      "configurable": true
-    },
-    {
-      "id": "picture",
-      "title": "profile.comp.picture.title",
-      "enabled": true,
-      "configurable": true
-    }
-  ]
+    ],
+    "components": [
+        {
+            "id": "subscription",
+            "title": "profile.comp.subscription.title",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "title",
+                    "displayName": "profile.subscriptions.table.columns.title",
+                    "headerCellFilter": "translate",
+                    "width": "40%"
+                },
+                {
+                    "name": "created",
+                    "displayName": "profile.subscriptions.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "width": "25%"
+                },
+                {
+                    "name": "delete",
+                    "displayName": " ",
+                    "headerCellFilter": "translate",
+                    "width": "*",
+                    "headerCellTemplate": "<div></div>",
+                    "cellTemplate": "<div align='center'><button type='button' ng-click='grid.appScope.unsubscribe(row.entity)' class='btn btn-link fa fa-trash'></button></div>'"
+                },
+                {
+                    "name": "parentID",
+                    "displayName": "profile.subscriptions.table.columns.parentId",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "userID",
+                    "displayName": "profile.subscriptions.table.columns.userId",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                }
+            ]
+        },
+        {
+            "id": "company",
+            "title": "profile.comp.company.title",
+            "enabled": true,
+            "configurable": true
+        },
+        {
+            "id": "contact",
+            "title": "profile.comp.contact.title",
+            "enabled": true,
+            "configurable": true
+        },
+        {
+            "id": "group",
+            "title": "profile.comp.group.title",
+            "enabled": true,
+            "configurable": true
+        },
+        {
+            "id": "picture",
+            "title": "profile.comp.picture.title",
+            "enabled": true,
+            "configurable": true
+        }
+    ]
 }

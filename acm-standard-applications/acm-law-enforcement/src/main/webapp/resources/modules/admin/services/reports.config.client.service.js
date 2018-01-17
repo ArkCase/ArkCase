@@ -14,14 +14,14 @@
  *
  * The Admin.ReportsConfigService provides Reports Config REST calls functionality
  */
-angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
+angular.module('admin').service('Admin.ReportsConfigService', function($http) {
     return ({
-        getReports: getReports,
-        getUserGroups: getUserGroups,
-        getReportsUserGroups: getReportsUserGroups,
-        saveReportsUserGroups: saveReportsUserGroups,
-        saveReports: saveReports,
-        syncReports: syncReports
+        getReports : getReports,
+        getUserGroups : getUserGroups,
+        getReportsUserGroups : getReportsUserGroups,
+        saveReportsUserGroups : saveReportsUserGroups,
+        saveReports : saveReports,
+        syncReports : syncReports
     });
     /**
      * @ngdoc method
@@ -35,10 +35,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function getReports() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/report/get/pentaho"
+            method : "GET",
+            url : "api/latest/plugin/report/get/pentaho"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -52,10 +53,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function getUserGroups() {
         return $http({
-            method: "GET",
-            url: "api/latest/users/groups/get"
+            method : "GET",
+            url : "api/latest/users/groups/get"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -69,10 +71,11 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function getReportsUserGroups() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/report/reporttogroupsmap"
+            method : "GET",
+            url : "api/latest/plugin/report/reporttogroupsmap"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -86,14 +89,15 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function saveReportsUserGroups(reportsUserGroups) {
         return $http({
-            method: "POST",
-            url: "api/latest/plugin/report/reporttogroupsmap",
-            data: reportsUserGroups,
-            headers: {
-                "Content-Type": "application/json"
+            method : "POST",
+            url : "api/latest/plugin/report/reporttogroupsmap",
+            data : reportsUserGroups,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -107,14 +111,15 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function saveReports(reports) {
         return $http({
-            method: "POST",
-            url: "api/latest/plugin/report/save",
-            data: reports,
-            headers: {
-                "Content-Type": "application/json"
+            method : "POST",
+            url : "api/latest/plugin/report/save",
+            data : reports,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -127,11 +132,12 @@ angular.module('admin').service('Admin.ReportsConfigService', function ($http) {
      */
     function syncReports() {
         return $http({
-            method: "PUT",
-            url: "api/latest/plugin/report/sync",
-            headers: {
-                "Content-Type": "application/json"
+            method : "PUT",
+            url : "api/latest/plugin/report/sync",
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 });

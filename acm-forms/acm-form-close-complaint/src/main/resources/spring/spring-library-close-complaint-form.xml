@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-       <bean id="closeComplaintTaskName" class="java.lang.String">
-              <constructor-arg>
-                     <value>Request to Close Complaint '%s'</value>
-              </constructor-arg>
-       </bean>
+    <bean id="closeComplaintTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Close Complaint '%s'</value>
+        </constructor-arg>
+    </bean>
 
-       <bean id="closeComplaintWorkflowListener" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintWorkflowListener">
-              <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-              <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
-              <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
-       </bean>
+    <bean id="closeComplaintWorkflowListener" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="closeComplaintTaskName" ref="closeComplaintTaskName"/>
+    </bean>
 
-       <bean id="closeComplaintRequestFactory" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintRequestFactory"/>
+    <bean id="closeComplaintRequestFactory" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintRequestFactory"/>
 
-       <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService" parent="frevvoFormService" scope="prototype">
-              <property name="closeComplaintRequestFactory" ref="closeComplaintRequestFactory"/>              
-              <property name="complaintDao" ref="acmComplaintDao" />
-              <property name="caseFileDao" ref="caseFileDao" />
-              <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>              
-              <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
-       </bean>
+    <bean id="closeComplaintService" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService" parent="frevvoFormService"
+        scope="prototype">
+        <property name="closeComplaintRequestFactory" ref="closeComplaintRequestFactory"/>
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
+        <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
+        <property name="applicationEventPublisher" ref="frevvoApplicationEventPublisher"/>
+    </bean>
 </beans>
