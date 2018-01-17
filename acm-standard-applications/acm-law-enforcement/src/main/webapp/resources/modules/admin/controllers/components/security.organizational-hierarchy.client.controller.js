@@ -165,9 +165,13 @@ angular.module('admin').controller(
 
                     $scope.onAddExistingSubGroup = function(parent) {
                         var deferred = $q.defer();
+                        var excludeAncestorGroups = '';
+                        if(parent.ascendants_id_ss && parent.ascendants_id_ss.length > 0){
+                            excludeAncestorGroups = " OR " + parent.ascendants_id_ss.join(' OR ');
+                        }
                         var params = {
-                            filter : '\"Object Type\":GROUP %26 object_sub_type_s:ADHOC_GROUP %26 status_lcs:ACTIVE %26 -object_id_s:'
-                                    + parent.object_id_s
+                            filter : '\"Object Type\":GROUP %26 object_sub_type_s:ADHOC_GROUP %26 status_lcs:ACTIVE %26 -object_id_s:('
+                                    + parent.object_id_s + excludeAncestorGroups + ")"
                         };
                         var modalInstance = openMembersPicker(params);
                         modalInstance.result.then(function(group) {
