@@ -61,7 +61,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-
         return solr;
     }
 

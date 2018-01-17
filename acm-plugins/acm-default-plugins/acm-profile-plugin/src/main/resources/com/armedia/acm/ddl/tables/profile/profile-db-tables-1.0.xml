@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
@@ -10,9 +8,7 @@
     <changeSet id="03-profile-tables" author="marst">
         <createTable tableName="acm_user_org">
             <column name="cm_user_org_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_user_org"/>
+                <constraints primaryKey="true" primaryKeyName="pk_user_org"/>
             </column>
             <column name="cm_company_name" type="VARCHAR(512)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -128,7 +124,7 @@
 
     <changeSet id="userorg-08-rename-container-id" author="dmiller">
         <renameColumn tableName="acm_user_org" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
-                      columnDataType="${fkIdType}"/>
+            columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="userorg-09-add-column-cm-object-type" author="nebojsha.davidovikj">
@@ -167,13 +163,10 @@
             <column name="cm_ecm_signature_file_id" type="${fkIdType}"/>
         </addColumn>
         <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_signature_file_id"
-                                 constraintName="fk_user_org_signature_fileid"
-                                 referencedTableName="acm_file"
-                                 referencedColumnNames="cm_file_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_user_org_signature_fileid" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
     <changeSet id="13-add-signature-fileId" author="bojan.milenkoski">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -182,7 +175,7 @@
         </preConditions>
         <addColumn tableName="acm_user_org">
             <column name="cm_ecm_signature_file_id" type="${fkIdType}"/>
-        </addColumn>        
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

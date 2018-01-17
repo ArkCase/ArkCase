@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.casefile.model.CaseFileParticipantsModifiedEvent;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -76,7 +77,8 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         applicationEventPublisher.publishEvent(event);
     }
 
-    public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus, String description)
+    public void raiseParticipantsModifiedInCaseFile(AcmParticipant participant, CaseFile source, String ipAddress, String eventStatus,
+            String description)
     {
         CaseFileParticipantsModifiedEvent event = new CaseFileParticipantsModifiedEvent(participant);
         event.setEventStatus(eventStatus);
@@ -88,7 +90,6 @@ public class CaseFileEventUtility implements ApplicationEventPublisherAware
         event.setEventDescription(description);
         applicationEventPublisher.publishEvent(event);
     }
-
 
     public void raiseCaseFileCreated(CaseFile source, Authentication authentication)
     {

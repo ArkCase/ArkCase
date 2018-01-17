@@ -27,6 +27,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,15 +47,8 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
      */
     private static final long serialVersionUID = 1L;
 
-
     @Id
-    @TableGenerator(name = "change_case_status_gen",
-            table = "acm_change_case_status_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_change_case_status",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "change_case_status_gen", table = "acm_change_case_status_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_change_case_status", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "change_case_status_gen")
     @Column(name = "cm_change_case_status_id")
     private Long id;
@@ -110,6 +104,7 @@ public class ChangeCaseStatus implements Serializable, AcmObject, AcmEntity, Acm
         setupChildPointers();
     }
 
+    @Override
     public Long getId()
     {
         return id;

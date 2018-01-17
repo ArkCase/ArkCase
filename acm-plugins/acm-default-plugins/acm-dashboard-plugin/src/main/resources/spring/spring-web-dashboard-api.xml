@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getDashboardSettings" class="com.armedia.acm.plugins.dashboard.web.api.GetDashboardConfigAPIController">
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
@@ -16,8 +15,7 @@
         <property name="dashboardService" ref="dashboardService"/>
     </bean>
 
-    <bean id="getWidgetsByUserRoles"
-          class="com.armedia.acm.plugins.dashboard.web.api.GetWidgetsByUserRolesAPIController">
+    <bean id="getWidgetsByUserRoles" class="com.armedia.acm.plugins.dashboard.web.api.GetWidgetsByUserRolesAPIController">
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="userDao" ref="userJpaDao"/>
@@ -33,20 +31,17 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="setAuthorizedWidgetRoles"
-          class="com.armedia.acm.plugins.dashboard.web.api.SetAuthorizedWidgetRolesAPIController">
+    <bean id="setAuthorizedWidgetRoles" class="com.armedia.acm.plugins.dashboard.web.api.SetAuthorizedWidgetRolesAPIController">
         <property name="widgetDao" ref="acmWidgetDao"/>
         <property name="eventPublisher" ref="widgetEventPublisher"/>
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="getUserPreferredWidgetsByModule"
-          class="com.armedia.acm.plugins.dashboard.web.api.GetUserPreferredWidgetsByModule">
+    <bean id="getUserPreferredWidgetsByModule" class="com.armedia.acm.plugins.dashboard.web.api.GetUserPreferredWidgetsByModule">
         <property name="userPreferenceService" ref="userPreferenceService"/>
     </bean>
 
-    <bean id="dashboardPropertyReader" class="com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader"
-          init-method="init">
+    <bean id="dashboardPropertyReader" class="com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader" init-method="init">
         <property name="dashboardPlugin" ref="dashboardPlugin"/>
         <property name="moduleDao" ref="moduleDao"/>
         <property name="widgetDao" ref="acmWidgetDao"/>
@@ -75,8 +70,7 @@
         <property name="userRoleService" ref="userRoleService"/>
     </bean>
 
-    <bean id="setUserPreferredWidgetsPerModule"
-          class="com.armedia.acm.plugins.dashboard.web.api.SetUserPreferredWidgetsPerModule">
+    <bean id="setUserPreferredWidgetsPerModule" class="com.armedia.acm.plugins.dashboard.web.api.SetUserPreferredWidgetsPerModule">
         <property name="userPreferenceService" ref="userPreferenceService"/>
     </bean>
 

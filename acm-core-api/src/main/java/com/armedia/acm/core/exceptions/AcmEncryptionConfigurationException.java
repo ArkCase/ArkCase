@@ -1,25 +1,29 @@
 package com.armedia.acm.core.exceptions;
 
-public class AcmEncryptionConfigurationException extends AcmEncryptionException {
+public class AcmEncryptionConfigurationException extends AcmEncryptionException
+{
 
-    public AcmEncryptionConfigurationException() {
+    public AcmEncryptionConfigurationException()
+    {
     }
 
-    public AcmEncryptionConfigurationException(String message) {
+    public AcmEncryptionConfigurationException(String message)
+    {
         super(message);
     }
 
-    public AcmEncryptionConfigurationException(String message, Throwable cause) {
+    public AcmEncryptionConfigurationException(String message, Throwable cause)
+    {
         super(message, cause);
     }
 
-    public AcmEncryptionConfigurationException(Throwable cause) {
+    public AcmEncryptionConfigurationException(Throwable cause)
+    {
         super(cause);
     }
 
-    public AcmEncryptionConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AcmEncryptionConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

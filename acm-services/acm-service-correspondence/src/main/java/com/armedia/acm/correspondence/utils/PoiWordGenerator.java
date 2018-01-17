@@ -2,7 +2,6 @@ package com.armedia.acm.correspondence.utils;
 
 import org.springframework.core.io.Resource;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;

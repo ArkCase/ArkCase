@@ -14,16 +14,16 @@
  * @param {string} fallback-err-src URL of the image that is displayed in case of default image loading error.
  *
  * @example
-    <example>
-    <file name="index.html">
-        <img ng-src="{{imgSrc}}" fallback-err-src="http://google.com/favicon.ico"/>
-    </file>
-    </example>
+ <example>
+ <file name="index.html">
+ <img ng-src="{{imgSrc}}" fallback-err-src="http://google.com/favicon.ico"/>
+ </file>
+ </example>
  */
-angular.module('directives').directive('fallbackErrSrc', function () {
+angular.module('directives').directive('fallbackErrSrc', function() {
     return {
-        link: function (scope, element, attrs) {
-            element.bind('error', function () {
+        link : function(scope, element, attrs) {
+            element.bind('error', function() {
                 if (attrs.src != attrs.fallbackErrSrc) {
                     attrs.$set('src', attrs.fallbackErrSrc);
                 }

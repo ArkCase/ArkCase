@@ -1,10 +1,20 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static junit.framework.TestCase.assertTrue;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileUpdatedEvent;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,13 +34,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static junit.framework.TestCase.assertTrue;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by manoj.dhungana on 04/10/2017.
@@ -104,7 +107,6 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
                         .principal(mockAuthentication))
                 .andReturn();
 
-
         verifyAll();
 
         String returned = result.getResponse().getContentAsString();
@@ -120,7 +122,6 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
         assertEquals("FILE", event.getObjectType());
         assertTrue(event.isSucceeded());
     }
-
 
     @Test
     public void updateFile_exception() throws Exception
@@ -152,7 +153,8 @@ public class UpdateFileMetadataAPIControllerTest extends EasyMockSupport
                             .principal(mockAuthentication))
                     .andExpect(status().isBadRequest())
                     .andExpect(content().contentType(MediaType.TEXT_PLAIN));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // do nothing, exception expected
         }

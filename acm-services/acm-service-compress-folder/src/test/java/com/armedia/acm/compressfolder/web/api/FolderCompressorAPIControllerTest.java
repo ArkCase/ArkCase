@@ -1,11 +1,20 @@
 package com.armedia.acm.compressfolder.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.compressfolder.DefaultFolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
 import com.armedia.acm.compressfolder.model.FileFolderNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,19 +37,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 16, 2016
  *
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-compress-folder-service-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-compress-folder-service-test.xml" })
 public class FolderCompressorAPIControllerTest extends EasyMockSupport
 {
 
@@ -146,11 +149,9 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         verifyAll();
 
-
         assertEquals(response.getResponse().getStatus(), HttpStatus.OK.value());
         assertEquals(response.getResponse().getContentType(), "application/zip");
         assertEquals(response.getResponse().getHeader("Content-Disposition"), "attachment; filename=\"acm-101-ROOT.zip\"");
-
 
     }
 
@@ -187,11 +188,11 @@ public class FolderCompressorAPIControllerTest extends EasyMockSupport
 
         MvcResult response = mockMvc.perform(
                 post("/api/v1/service/compressor/download")
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                    .content(objectMapper.writeValueAsString(compressNode))
-                    .accept("application/zip")
-                    .session(mockHttpSession))
-                    .andReturn();
+                        .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                        .content(objectMapper.writeValueAsString(compressNode))
+                        .accept("application/zip")
+                        .session(mockHttpSession))
+                .andReturn();
         verifyAll();
 
         assertEquals(response.getResponse().getStatus(), HttpStatus.OK.value());

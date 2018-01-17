@@ -12,7 +12,6 @@ public class AcmObjectLockEvent extends AcmObjectLockUnlockEvent
     {
         super(source, userId, success);
 
-
     }
 
     @Override
@@ -21,12 +20,12 @@ public class AcmObjectLockEvent extends AcmObjectLockUnlockEvent
         String eventType;
         switch (getObjectType())
         {
-            case AcmObjectLockConstants.WORD_EDIT_LOCK:
-            case AcmObjectLockConstants.CHECKOUT_LOCK:
-                eventType = CHECKOUT_TYPE;
-                break;
-            default:
-                eventType = EVENT_TYPE;
+        case AcmObjectLockConstants.WORD_EDIT_LOCK:
+        case AcmObjectLockConstants.CHECKOUT_LOCK:
+            eventType = CHECKOUT_TYPE;
+            break;
+        default:
+            eventType = EVENT_TYPE;
         }
         return eventType;
     }

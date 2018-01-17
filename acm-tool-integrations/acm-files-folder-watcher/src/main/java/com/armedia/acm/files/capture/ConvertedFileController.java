@@ -20,7 +20,8 @@ public class ConvertedFileController
             try
             {
                 log.debug("Monitoring converted files folder " + getConvertedFolder().getURL());
-            } catch (FileSystemException fse)
+            }
+            catch (FileSystemException fse)
             {
             }
 

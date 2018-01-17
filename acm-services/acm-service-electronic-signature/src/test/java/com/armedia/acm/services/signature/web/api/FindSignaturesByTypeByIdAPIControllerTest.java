@@ -1,7 +1,10 @@
 package com.armedia.acm.services.signature.web.api;
 
-import java.util.ArrayList;
-import java.util.List;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import com.armedia.acm.services.signature.dao.SignatureDao;
 import com.armedia.acm.services.signature.model.Signature;
@@ -25,139 +28,143 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { 
-		 "classpath:/spring/spring-web-acm-web.xml",
-		"classpath:/spring/spring-library-electronic-signature-test.xml" })
-public class FindSignaturesByTypeByIdAPIControllerTest extends EasyMockSupport {
+@ContextConfiguration(locations = {
+        "classpath:/spring/spring-web-acm-web.xml",
+        "classpath:/spring/spring-library-electronic-signature-test.xml" })
+public class FindSignaturesByTypeByIdAPIControllerTest extends EasyMockSupport
+{
 
-	private MockMvc mockMvc;
-	private MockHttpSession mockHttpSession;
-	private Authentication mockAuthentication;
+    private MockMvc mockMvc;
+    private MockHttpSession mockHttpSession;
+    private Authentication mockAuthentication;
 
-	private FindSignaturesByTypeByIdAPIController unit;
+    private FindSignaturesByTypeByIdAPIController unit;
 
-	private SignatureDao mockSignatureDao;
+    private SignatureDao mockSignatureDao;
 
-	@Autowired
-	private ExceptionHandlerExceptionResolver exceptionResolver;
+    @Autowired
+    private ExceptionHandlerExceptionResolver exceptionResolver;
 
-	private Logger log = LoggerFactory.getLogger(getClass());
+    private Logger log = LoggerFactory.getLogger(getClass());
 
-	@Before
-	public void setUp() throws Exception {
-		mockSignatureDao = createMock(SignatureDao.class);
-		mockHttpSession = new MockHttpSession();
-		mockAuthentication = createMock(Authentication.class);
+    @Before
+    public void setUp() throws Exception
+    {
+        mockSignatureDao = createMock(SignatureDao.class);
+        mockHttpSession = new MockHttpSession();
+        mockAuthentication = createMock(Authentication.class);
 
-		unit = new FindSignaturesByTypeByIdAPIController();
+        unit = new FindSignaturesByTypeByIdAPIController();
 
-		unit.setSignatureDao(mockSignatureDao);
+        unit.setSignatureDao(mockSignatureDao);
 
-		mockMvc = MockMvcBuilders.standaloneSetup(unit)
-				.setHandlerExceptionResolvers(exceptionResolver).build();
-	}
+        mockMvc = MockMvcBuilders.standaloneSetup(unit)
+                .setHandlerExceptionResolvers(exceptionResolver).build();
+    }
 
-	@Test
-	public void findSignatures() throws Exception {
-		Long objectId = 500L;
-		String objectType = "TASK";
-		String ipAddress = "ipAddress";
-		String userName = "userName";
-		
-		Signature foundSignature = new Signature();
-		foundSignature.setObjectId(objectId);
-		foundSignature.setObjectType(objectType);
-		
-		List<Signature> signatureList = new ArrayList<Signature>();
-		signatureList.add(foundSignature);
+    @Test
+    public void findSignatures() throws Exception
+    {
+        Long objectId = 500L;
+        String objectType = "TASK";
+        String ipAddress = "ipAddress";
+        String userName = "userName";
 
-		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        Signature foundSignature = new Signature();
+        foundSignature.setObjectId(objectId);
+        foundSignature.setObjectType(objectType);
 
-		expect(mockSignatureDao.findByObjectIdObjectType(objectId, objectType)).andReturn(signatureList);
-		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+        List<Signature> signatureList = new ArrayList<>();
+        signatureList.add(foundSignature);
 
-		replayAll();
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-		// To see details on the HTTP calls, change .andReturn() to .andDo(print())	
-//		ResultActions resultAction = mockMvc
-//		.perform(
-//				get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
-//						.session(mockHttpSession)
-//						.principal(mockAuthentication)).andDo(print());
+        expect(mockSignatureDao.findByObjectIdObjectType(objectId, objectType)).andReturn(signatureList);
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
 
-		MvcResult result = mockMvc
-		.perform(
-				get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
-						.session(mockHttpSession)
-						.principal(mockAuthentication)).andReturn();
-		
-		verifyAll();
+        replayAll();
 
-		assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-		assertTrue(result.getResponse().getContentType()
-				.startsWith(MediaType.APPLICATION_JSON_VALUE));
+        // To see details on the HTTP calls, change .andReturn() to .andDo(print())
+        // ResultActions resultAction = mockMvc
+        // .perform(
+        // get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
+        // .session(mockHttpSession)
+        // .principal(mockAuthentication)).andDo(print());
 
-		String returned = result.getResponse().getContentAsString();
+        MvcResult result = mockMvc
+                .perform(
+                        get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
+                                .session(mockHttpSession)
+                                .principal(mockAuthentication))
+                .andReturn();
 
-		log.info("results: " + returned);
+        verifyAll();
 
-		ObjectMapper objectMapper = new ObjectMapper();
+        assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        assertTrue(result.getResponse().getContentType()
+                .startsWith(MediaType.APPLICATION_JSON_VALUE));
 
-		List<Signature> returnedSignatureList = objectMapper.readValue(
-				returned,
-				objectMapper.getTypeFactory().constructParametricType(List.class, Signature.class));
+        String returned = result.getResponse().getContentAsString();
 
-		assertNotNull(returnedSignatureList);
-		assertEquals(returnedSignatureList.size(), 1);
-		assertEquals(returnedSignatureList.get(0).getObjectId(), objectId);
-		assertEquals(returnedSignatureList.get(0).getObjectType(), objectType);
-	}
-	
-	@Test
-	public void findSignatures_exception() throws Exception {
-		Long objectId = 500L;
-		String objectType = "TASK";
-		String ipAddress = "ipAddress";
-		String userName = "userName";
-		
-		Signature foundSignature = new Signature();
-		foundSignature.setObjectId(objectId);
-		foundSignature.setObjectType(objectType);
-		
-		List<Signature> signatureList = new ArrayList<Signature>();
-		signatureList.add(foundSignature);
+        log.info("results: " + returned);
 
-		mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+        ObjectMapper objectMapper = new ObjectMapper();
 
-		expect(mockSignatureDao.findByObjectIdObjectType(objectId, objectType)).andThrow(new RuntimeException("testException"));
-		// MVC test classes must call getName() somehow
-		expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+        List<Signature> returnedSignatureList = objectMapper.readValue(
+                returned,
+                objectMapper.getTypeFactory().constructParametricType(List.class, Signature.class));
 
-		replayAll();
+        assertNotNull(returnedSignatureList);
+        assertEquals(returnedSignatureList.size(), 1);
+        assertEquals(returnedSignatureList.get(0).getObjectId(), objectId);
+        assertEquals(returnedSignatureList.get(0).getObjectType(), objectType);
+    }
 
-		// To see details on the HTTP calls, change .andReturn() to .andDo(print())	
-//		ResultActions resultAction = mockMvc
-//		.perform(
-//				get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
-//						.session(mockHttpSession)
-//						.principal(mockAuthentication)).andDo(print());
+    @Test
+    public void findSignatures_exception() throws Exception
+    {
+        Long objectId = 500L;
+        String objectType = "TASK";
+        String ipAddress = "ipAddress";
+        String userName = "userName";
 
-		MvcResult result = mockMvc
-		.perform(
-				get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
-						.session(mockHttpSession)
-						.principal(mockAuthentication)).andReturn();
-		
-		verifyAll();
+        Signature foundSignature = new Signature();
+        foundSignature.setObjectId(objectId);
+        foundSignature.setObjectType(objectType);
 
-		assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        List<Signature> signatureList = new ArrayList<>();
+        signatureList.add(foundSignature);
 
-	}
+        mockHttpSession.setAttribute("acm_ip_address", ipAddress);
+
+        expect(mockSignatureDao.findByObjectIdObjectType(objectId, objectType)).andThrow(new RuntimeException("testException"));
+        // MVC test classes must call getName() somehow
+        expect(mockAuthentication.getName()).andReturn(userName).atLeastOnce();
+
+        replayAll();
+
+        // To see details on the HTTP calls, change .andReturn() to .andDo(print())
+        // ResultActions resultAction = mockMvc
+        // .perform(
+        // get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
+        // .session(mockHttpSession)
+        // .principal(mockAuthentication)).andDo(print());
+
+        MvcResult result = mockMvc
+                .perform(
+                        get("/api/v1/plugin/signature/find/{objectType}/{objectId}", objectType, objectId)
+                                .session(mockHttpSession)
+                                .principal(mockAuthentication))
+                .andReturn();
+
+        verifyAll();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+
+    }
 }
-

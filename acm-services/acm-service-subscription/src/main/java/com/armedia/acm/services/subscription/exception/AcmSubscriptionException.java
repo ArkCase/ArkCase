@@ -3,9 +3,12 @@ package com.armedia.acm.services.subscription.exception;
 /**
  * Created by marjan.stefanoski on 03.02.2015.
  */
-public class AcmSubscriptionException extends Exception {
+public class AcmSubscriptionException extends Exception
+{
 
-    public AcmSubscriptionException(){}
+    public AcmSubscriptionException()
+    {
+    }
 
     public AcmSubscriptionException(String message)
     {

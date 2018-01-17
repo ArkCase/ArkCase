@@ -5,6 +5,7 @@ import com.armedia.acm.services.email.model.EmailWithAttachmentsAndLinksDTO;
 import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.service.NotificationSenderFactory;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({"/api/v1/service/notification/email", "/api/latest/service/notification/email"})
+@RequestMapping({ "/api/v1/service/notification/email", "/api/latest/service/notification/email" })
 public class SendEmailWithAttachmentsAndLinksAPIController
 {
 
@@ -27,8 +28,9 @@ public class SendEmailWithAttachmentsAndLinksAPIController
 
     @RequestMapping(value = "/withattachmentsandlinks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EmailWithAttachmentsAndLinksDTO createEmailWithAttachments(@RequestBody EmailWithAttachmentsAndLinksDTO in, Authentication authentication,
-                                                                      HttpSession session) throws AcmNotificationException, AcmUserActionFailedException
+    public EmailWithAttachmentsAndLinksDTO createEmailWithAttachments(@RequestBody EmailWithAttachmentsAndLinksDTO in,
+            Authentication authentication,
+            HttpSession session) throws AcmNotificationException, AcmUserActionFailedException
     {
 
         if (null == in)
@@ -41,7 +43,8 @@ public class SendEmailWithAttachmentsAndLinksAPIController
         try
         {
             getNotificationSenderFactory().getNotificationSender().sendEmailWithAttachmentsAndLinks(in, authentication, user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmUserActionFailedException(
                     "Could not send emails with attachment,among other things check your request body. Exception message is : ", null, null,

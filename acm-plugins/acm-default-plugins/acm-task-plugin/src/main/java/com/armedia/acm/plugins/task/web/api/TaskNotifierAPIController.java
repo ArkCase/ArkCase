@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.web.api;
 
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
+
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,13 +14,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Oct 18, 2016
  *
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class TaskNotifierAPIController
 {
 

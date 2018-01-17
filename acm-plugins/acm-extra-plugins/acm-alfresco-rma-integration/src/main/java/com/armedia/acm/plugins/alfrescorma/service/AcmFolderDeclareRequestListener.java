@@ -1,24 +1,18 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.alfrescorma.model.AcmRecord;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
-import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
-import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
-import com.armedia.acm.plugins.ecm.model.*;
+import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
+import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import org.apache.commons.lang.exception.ExceptionUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Date;
-import java.util.Map;
 
 public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmFolderDeclareRequestEvent>
 {
@@ -31,16 +25,17 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
     @Override
     public void onApplicationEvent(EcmFolderDeclareRequestEvent ecmFolderDeclareRequestEvent)
     {
-        boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY);
+        boolean proceed = getAlfrescoRecordsService()
+                .checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY);
 
-        if ( !proceed )
+        if (!proceed)
         {
             return;
         }
 
-        if ( ! ecmFolderDeclareRequestEvent.isSucceeded() )
+        if (!ecmFolderDeclareRequestEvent.isSucceeded())
         {
-            if ( log.isTraceEnabled() )
+            if (log.isTraceEnabled())
             {
                 log.trace("Returning - folder declaration request was not successful");
             }
@@ -53,25 +48,32 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
                     ecmFolderDeclareRequestEvent.getEventDate(), ecmFolderDeclareRequestEvent.getParentObjectName());
 
             AcmFolder folder = getAcmFolderService().findById(acmCmisObjectList.getFolderId());
-            try {
-                if ( folder == null ){
-                    throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE,folder.getId(),"Folder not found",null);
+            try
+            {
+                if (folder == null)
+                {
+                    throw new AcmObjectNotFoundException(AcmFolderConstants.OBJECT_FOLDER_TYPE, folder.getId(), "Folder not found", null);
                 }
-                else {
+                else
+                {
                     folder.setStatus(EcmFileConstants.RECORD);
                     getAcmFolderDao().save(folder);
-                    if ( log.isDebugEnabled() ) {
-                        log.debug("Folder with ID: " + folder.getId() + " Status is changed to "+ EcmFileConstants.RECORD);
+                    if (log.isDebugEnabled())
+                    {
+                        log.debug("Folder with ID: " + folder.getId() + " Status is changed to " + EcmFileConstants.RECORD);
                     }
                 }
             }
-            catch ( Exception e ) {
-                if ( log.isErrorEnabled() ){
+            catch (Exception e)
+            {
+                if (log.isErrorEnabled())
+                {
                     log.error("Status change failed for " + folder.getName() + " folder" + e.getMessage(), e);
                 }
             }
         }
-        else{
+        else
+        {
             return;
         }
     }
@@ -86,20 +88,23 @@ public class AcmFolderDeclareRequestListener implements ApplicationListener<EcmF
         this.alfrescoRecordsService = alfrescoRecordsService;
     }
 
-
-    public AcmFolderService getAcmFolderService() {
+    public AcmFolderService getAcmFolderService()
+    {
         return acmFolderService;
     }
 
-    public void setAcmFolderService(AcmFolderService acmFolderService) {
+    public void setAcmFolderService(AcmFolderService acmFolderService)
+    {
         this.acmFolderService = acmFolderService;
     }
 
-    public AcmFolderDao getAcmFolderDao() {
+    public AcmFolderDao getAcmFolderDao()
+    {
         return acmFolderDao;
     }
 
-    public void setAcmFolderDao(AcmFolderDao acmFolderDao) {
+    public void setAcmFolderDao(AcmFolderDao acmFolderDao)
+    {
         this.acmFolderDao = acmFolderDao;
     }
 }

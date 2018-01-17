@@ -1,14 +1,14 @@
 'use strict';
-angular.module('profile').service('Profile.ChangePasswordService', function ($http, $q, $modal) {
+angular.module('profile').service('Profile.ChangePasswordService', function($http, $q, $modal) {
     return ({
-        changePassword: changePassword,
-        changeLdapPassword: changeLdapPassword
+        changePassword : changePassword,
+        changeLdapPassword : changeLdapPassword
     });
     function changePassword(newPassword) {
         var request = $http({
-            method: "POST",
-            url: "api/v1/plugin/profile/savepassword",
-            data: newPassword
+            method : "POST",
+            url : "api/v1/plugin/profile/savepassword",
+            data : newPassword
         });
         return (request.then(handleSuccess, handleError));
     }
@@ -19,13 +19,13 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
         }
         var params = response.data;
         $modal.open({
-            templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
-            size: 'sm',
-            controller: ['$scope', 'params', function ($scope, params) {
+            templateUrl : 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
+            size : 'sm',
+            controller : [ '$scope', 'params', function($scope, params) {
                 $scope.message = params.message;
-            }],
-            resolve: {
-                params: params
+            } ],
+            resolve : {
+                params : params
             }
         });
         return ($q.reject(response.data.message));
@@ -33,23 +33,23 @@ angular.module('profile').service('Profile.ChangePasswordService', function ($ht
 
     function handleSuccess(response) {
         $modal.open({
-            templateUrl: 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
-            size: 'sm',
-            controller: ['$scope', function ($scope) {
+            templateUrl : 'modules/profile/views/components/modalTemplates/profile-modal-password-info.client.view.html',
+            size : 'sm',
+            controller : [ '$scope', function($scope) {
                 $scope.message = 'profile.modal.success';
-            }]
+            } ]
         });
         return (response.data);
     }
 
     function changeLdapPassword(credentials) {
         return $http({
-            method: "POST",
-            url: 'api/latest/ldap/' + credentials.directory + '/users/' + credentials.userId + '/password',
-            data: {
-                password: credentials.password,
-                currentPassword: credentials.currentPassword,
-                userId: credentials.userId
+            method : "POST",
+            url : 'api/latest/ldap/' + credentials.directory + '/users/' + credentials.userId + '/password',
+            data : {
+                password : credentials.password,
+                currentPassword : credentials.currentPassword,
+                userId : credentials.userId
             }
         });
     }

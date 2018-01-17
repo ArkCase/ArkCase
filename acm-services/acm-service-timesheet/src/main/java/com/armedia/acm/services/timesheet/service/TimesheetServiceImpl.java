@@ -10,6 +10,7 @@ import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
                     if (retval == null)
                     {
-                        retval = new ArrayList<AcmTimesheet>();
+                        retval = new ArrayList<>();
                     }
 
                     retval.add(timesheet);
@@ -107,7 +108,7 @@ public class TimesheetServiceImpl implements TimesheetService
 
     private List<AcmTime> getTimesForObjectId(List<AcmTime> times, Long objectId)
     {
-        List<AcmTime> retval = new ArrayList<AcmTime>();
+        List<AcmTime> retval = new ArrayList<>();
 
         if (times != null)
         {
@@ -126,12 +127,12 @@ public class TimesheetServiceImpl implements TimesheetService
 
     @Override
     public String getObjectsFromSolr(String objectType,
-                                     Authentication authentication,
-                                     int startRow,
-                                     int maxRows,
-                                     String sortParams,
-                                     String searchQuery,
-                                     String userId)
+            Authentication authentication,
+            int startRow,
+            int maxRows,
+            String sortParams,
+            String searchQuery,
+            String userId)
     {
         String retval = null;
 
@@ -147,15 +148,17 @@ public class TimesheetServiceImpl implements TimesheetService
         {
             authorQuery = " AND author_s:" + userId;
         }
-        
+
         String query = "object_type_s:" + objectType + authorQuery + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                    sortParams);
 
             LOG.debug("Objects was retrieved.");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }
@@ -165,11 +168,11 @@ public class TimesheetServiceImpl implements TimesheetService
 
     @Override
     public String getObjectsFromSolr(String objectType,
-                                     Authentication authentication,
-                                     int startRow,
-                                     int maxRows,
-                                     String sortParams,
-                                     String userId)
+            Authentication authentication,
+            int startRow,
+            int maxRows,
+            String sortParams,
+            String userId)
     {
         String retval = null;
 
@@ -185,10 +188,12 @@ public class TimesheetServiceImpl implements TimesheetService
 
         try
         {
-            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows, sortParams);
+            retval = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, startRow, maxRows,
+                    sortParams);
 
             LOG.debug("Objects was retrieved.");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOG.error("Cannot retrieve objects from Solr.", e);
         }

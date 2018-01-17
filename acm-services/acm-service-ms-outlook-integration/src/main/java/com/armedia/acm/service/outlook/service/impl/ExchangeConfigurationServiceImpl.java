@@ -3,6 +3,7 @@ package com.armedia.acm.service.outlook.service.impl;
 import com.armedia.acm.service.outlook.model.ExchangeConfiguration;
 import com.armedia.acm.service.outlook.model.ExchangeConfigurationConstants;
 import com.armedia.acm.service.outlook.service.ExchangeConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -51,10 +52,12 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
         try (OutputStream propertyOutputStream = new FileOutputStream(exchangePropertiesResource.getFile()))
         {
             exchangeProperties.store(propertyOutputStream, String.format("Updated by %s", auth.getName()));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not write properties to [{}] file.", exchangePropertiesResource.getFilename());
-        } finally
+        }
+        finally
         {
             writeLock.unlock();
         }
@@ -75,30 +78,30 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
             String propertyValue = exchangeProperties.getProperty(propertyName);
             switch (propertyName)
             {
-                case ExchangeConfigurationConstants.INTEGRATION_ENABLED:
-                    exchangeConfiguration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
-                    break;
-                case ExchangeConfigurationConstants.SERVER_VERSION:
-                    exchangeConfiguration.setServerVersion(propertyValue);
-                    break;
-                case ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY:
-                    exchangeConfiguration.setEnableAutodiscovery(Boolean.valueOf(propertyValue));
-                    break;
-                case ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER:
-                    exchangeConfiguration.setClientAccessServer(propertyValue);
-                    break;
-                case ExchangeConfigurationConstants.DEFAULT_ACCESS:
-                    exchangeConfiguration.setDefaultAccess(propertyValue);
-                    break;
-                case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL:
-                    exchangeConfiguration.setSystemUserEmail(propertyValue);
-                    break;
-                case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD:
-                    exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
-                    break;
-                case ExchangeConfigurationConstants.SYSTEM_USER_ID:
-                    exchangeConfiguration.setSystemUserId(propertyValue);
-                    break;
+            case ExchangeConfigurationConstants.INTEGRATION_ENABLED:
+                exchangeConfiguration.setIntegrationEnabled(Boolean.valueOf(propertyValue));
+                break;
+            case ExchangeConfigurationConstants.SERVER_VERSION:
+                exchangeConfiguration.setServerVersion(propertyValue);
+                break;
+            case ExchangeConfigurationConstants.ENABLE_AUTODISCOVERY:
+                exchangeConfiguration.setEnableAutodiscovery(Boolean.valueOf(propertyValue));
+                break;
+            case ExchangeConfigurationConstants.CLIENT_ACCESS_SERVER:
+                exchangeConfiguration.setClientAccessServer(propertyValue);
+                break;
+            case ExchangeConfigurationConstants.DEFAULT_ACCESS:
+                exchangeConfiguration.setDefaultAccess(propertyValue);
+                break;
+            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL:
+                exchangeConfiguration.setSystemUserEmail(propertyValue);
+                break;
+            case ExchangeConfigurationConstants.SYSTEM_USER_EMAIL_PASSWORD:
+                exchangeConfiguration.setSystemUserEmailPassword(propertyValue);
+                break;
+            case ExchangeConfigurationConstants.SYSTEM_USER_ID:
+                exchangeConfiguration.setSystemUserId(propertyValue);
+                break;
             }
         }
 
@@ -113,10 +116,12 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
         try (InputStream propertyInputStream = exchangePropertiesResource.getInputStream())
         {
             exchangeProperties.load(propertyInputStream);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not read properties from [{}] file.", exchangePropertiesResource.getFilename());
-        } finally
+        }
+        finally
         {
             readLock.unlock();
 
@@ -125,7 +130,8 @@ public class ExchangeConfigurationServiceImpl implements ExchangeConfigurationSe
     }
 
     /**
-     * @param exchangePropertiesResource the exchangePropertiesResource to set
+     * @param exchangePropertiesResource
+     *            the exchangePropertiesResource to set
      */
     public void setExchangePropertiesResource(Resource exchangePropertiesResource)
     {

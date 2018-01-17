@@ -1,8 +1,8 @@
 package com.armedia.acm.calendar;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Created by riste.tutureski on 5/17/2017.

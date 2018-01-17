@@ -12,18 +12,24 @@ public interface PipelineHandler<T, S extends AbstractPipelineContext>
     /**
      * Execute handler actions.
      *
-     * @param entity          currently processed entity
-     * @param pipelineContext pipeline context
-     * @throws PipelineProcessException on error
+     * @param entity
+     *            currently processed entity
+     * @param pipelineContext
+     *            pipeline context
+     * @throws PipelineProcessException
+     *             on error
      */
     void execute(T entity, S pipelineContext) throws PipelineProcessException;
 
     /**
      * In case of error, try to revert all the changes applied with execute() method.
      *
-     * @param entity          currently processed entity
-     * @param pipelineContext pipeline context
-     * @throws PipelineProcessException on error
+     * @param entity
+     *            currently processed entity
+     * @param pipelineContext
+     *            pipeline context
+     * @throws PipelineProcessException
+     *             on error
      */
     void rollback(T entity, S pipelineContext) throws PipelineProcessException;
 }

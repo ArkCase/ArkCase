@@ -1,11 +1,12 @@
 package com.armedia.acm.services.tag.model;
 
-
-public class AcmAssociatedTagDeletedEvent extends AcmAssociatedTagPersistentEvent{
+public class AcmAssociatedTagDeletedEvent extends AcmAssociatedTagPersistentEvent
+{
     private static final String EVENT_TYPE = "com.armedia.acm.associatedtag.deleted";
 
-    public AcmAssociatedTagDeletedEvent( AcmAssociatedTag source,String userId ) {
-        super(source,userId);
+    public AcmAssociatedTagDeletedEvent(AcmAssociatedTag source, String userId)
+    {
+        super(source, userId);
     }
 
     @Override

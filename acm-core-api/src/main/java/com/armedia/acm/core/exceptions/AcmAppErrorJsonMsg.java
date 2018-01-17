@@ -1,6 +1,5 @@
 package com.armedia.acm.core.exceptions;
 
-
 import java.util.HashMap;
 import java.util.Map;
 

@@ -2,7 +2,6 @@ package com.armedia.acm.data;
 
 import java.io.Serializable;
 
-
 public class BuckslipFutureTask implements Serializable
 {
     private String approverId;

@@ -10,7 +10,8 @@ public class PdfServiceException extends Exception
      * Constructor.
      * Create new exception with custom message
      *
-     * @param message error message
+     * @param message
+     *            error message
      */
     public PdfServiceException(String message)
     {
@@ -21,7 +22,8 @@ public class PdfServiceException extends Exception
      * Constructor.
      * Wrap thrown exception
      *
-     * @param exception exception to be wrapped
+     * @param exception
+     *            exception to be wrapped
      */
     public PdfServiceException(Exception exception)
     {
