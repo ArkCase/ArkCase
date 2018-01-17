@@ -57,13 +57,15 @@ public class GroupServiceImpl implements GroupService
         {
             throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
         }
-        if(acmGroup == null){
+        if (acmGroup == null)
+        {
             group.setStatus(AcmGroupStatus.ACTIVE);
             group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
             group.setDisplayName(groupName);
             return groupDao.save(group);
         }
-       else{
+        else
+        {
             acmGroup.setType(AcmGroupType.ADHOC_GROUP);
             acmGroup.setStatus(AcmGroupStatus.ACTIVE);
             acmGroup.setDescription(group.getDescription());

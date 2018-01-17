@@ -11,7 +11,6 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
-import org.omg.PortableInterceptor.ACTIVE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class LdapGroupService
 {
@@ -45,13 +43,15 @@ public class LdapGroupService
         String groupName = MapperUtils.buildGroupName(group.getName(), Optional.of(ldapSyncConfig.getUserDomain()));
 
         AcmGroup existingGroup = groupService.findByName(groupName);
-        if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE) {
+        if (existingGroup != null && existingGroup.getStatus() == AcmGroupStatus.ACTIVE)
+        {
             log.debug("Group with name: [{}] already exists!", group.getName());
             throw new NameAlreadyBoundException(null);
         }
         AcmGroup acmGroup;
         String groupDN = buildDnForGroup(group.getName(), ldapSyncConfig);
-        if (existingGroup == null) {
+        if (existingGroup == null)
+        {
             group.setName(groupName);
             group.setDisplayName(groupName);
             group.setType(AcmGroupType.LDAP_GROUP);
@@ -63,7 +63,8 @@ public class LdapGroupService
             groupService.saveAndFlush(group);
             acmGroup = group;
         }
-        else {
+        else
+        {
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
             existingGroup.setDisplayName(groupName);
             existingGroup.setDescription(group.getDescription());
@@ -104,7 +105,8 @@ public class LdapGroupService
         log.debug("Found parent group [{}] for new LDAP sub-group [{}]", parentGroup.getName(), group.getName());
         AcmGroup acmGroup;
         String groupDN = buildDnForGroup(givenName, ldapSyncConfig);
-        if(existingGroup == null) {
+        if (existingGroup == null)
+        {
             acmGroup = new AcmGroup();
             acmGroup.setName(groupName);
             acmGroup.setDisplayName(groupName);
@@ -120,7 +122,9 @@ public class LdapGroupService
             parentGroup.addGroupMember(acmGroup);
             log.debug("Updated parent-group [{}] with sub-group [{}] in database", parentGroup.getName(), acmGroup.getName());
             groupService.saveAndFlush(parentGroup);
-        }  else{
+        }
+        else
+        {
             existingGroup.setStatus(AcmGroupStatus.ACTIVE);
             existingGroup.setDisplayName(groupName);
             existingGroup.setType(AcmGroupType.LDAP_GROUP);
@@ -137,23 +141,23 @@ public class LdapGroupService
             acmGroup = existingGroup;
         }
 
-            log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
-            ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
-            log.debug("Sub-group [{}] with DN [{}] saved in LDAP server", acmGroup.getName(), acmGroup.getDistinguishedName());
-            try
-            {
-                log.debug("Update parent-group [{}] with DN [{}] with the new member [{}] in LDAP server", parentGroup.getName(),
-                        parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
-                ldapGroupDao.addMemberToGroup(acmGroup.getDistinguishedName(), parentGroup.getDistinguishedName(), ldapSyncConfig);
-            }
-            catch (AcmLdapActionFailedException e)
-            {
-                log.error("Updating parent-group DN [{}] failed! Rollback saved sub-group DN [{}] ",
-                        parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
-                ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
-                throw e;
-            }
-            return acmGroup;
+        log.debug("Saving sub-group [{}] with parent-group [{}] in LDAP server", acmGroup.getDistinguishedName(), parentGroup.getName());
+        ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
+        log.debug("Sub-group [{}] with DN [{}] saved in LDAP server", acmGroup.getName(), acmGroup.getDistinguishedName());
+        try
+        {
+            log.debug("Update parent-group [{}] with DN [{}] with the new member [{}] in LDAP server", parentGroup.getName(),
+                    parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
+            ldapGroupDao.addMemberToGroup(acmGroup.getDistinguishedName(), parentGroup.getDistinguishedName(), ldapSyncConfig);
+        }
+        catch (AcmLdapActionFailedException e)
+        {
+            log.error("Updating parent-group DN [{}] failed! Rollback saved sub-group DN [{}] ",
+                    parentGroup.getDistinguishedName(), acmGroup.getDistinguishedName());
+            ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
+            throw e;
+        }
+        return acmGroup;
     }
 
     @Transactional(rollbackFor = Exception.class)
