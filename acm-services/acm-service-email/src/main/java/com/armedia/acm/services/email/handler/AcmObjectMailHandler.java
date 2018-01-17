@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.email.event.SmtpEmailReceivedEvent;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.persistence.EntityNotFoundException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -67,19 +69,19 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     public void handle(Message message) throws MessagingException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException, SecurityException
     {
-        if ( !enabled )
+        if (!enabled)
         {
             return;
         }
 
         String entityId = extractIdFromSubject(message);
-        if ( entityId == null )
+        if (entityId == null)
         {
             throw new EntityNotFoundException("Subject in the mail didn't match correct entity number. subject: " + message.getSubject());
         }
 
         AcmObject entity = entityDao.findByName(entityId);
-        if ( entity == null )
+        if (entity == null)
         {
             throw new EntityNotFoundException("No entity was found with given number: " + entityId);
         }
@@ -98,22 +100,22 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
 
         try
         {
-            try ( OutputStream os = new FileOutputStream(messageFile) )
+            try (OutputStream os = new FileOutputStream(messageFile))
             {
                 message.writeTo(os);
             }
 
             AcmFolder folder = acmFolderService.addNewFolderByPath(entity.getObjectType(), entity.getId(), mailDirectory);
-            try ( InputStream is = new FileInputStream(messageFile) )
+            try (InputStream is = new FileInputStream(messageFile))
             {
                 Authentication auth = new UsernamePasswordAuthenticationToken(userId, "");
                 ecmFileService.upload(messageFileName, "mail", "Document", is, "message/rfc822", messageFileName, auth,
                         folder.getCmisFolderId(), entity.getObjectType(), entity.getId());
 
-
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error processing complaint with number '{}'. Exception msg: '{}' ", entityId, e.getMessage());
             exception = e;
@@ -137,12 +139,12 @@ public class AcmObjectMailHandler implements ApplicationEventPublisherAware
     {
         String result = null;
         String subject = message.getSubject();
-        if ( !StringUtils.isEmpty(subject) )
+        if (!StringUtils.isEmpty(subject))
         {
 
             Pattern pattern = Pattern.compile(objectIdRegexPattern);
             Matcher matcher = pattern.matcher(subject);
-            if ( matcher.find() )
+            if (matcher.find())
             {
                 result = subject.substring(matcher.start(), matcher.end());
             }

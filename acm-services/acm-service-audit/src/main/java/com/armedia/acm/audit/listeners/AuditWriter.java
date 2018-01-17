@@ -53,7 +53,8 @@ public class AuditWriter implements ApplicationListener<AcmEvent>
 
             auditService.audit(auditEvent);
 
-        } else
+        }
+        else
         {
             if (log.isErrorEnabled())
                 log.error("Event " + acmEvent.getEventType() + " is not auditable");

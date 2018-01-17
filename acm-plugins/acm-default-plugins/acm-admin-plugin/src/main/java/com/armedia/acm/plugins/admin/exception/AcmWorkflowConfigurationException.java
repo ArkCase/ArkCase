@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.exception;
 /**
  * Created by admin on 6/28/15.
  */
-public class AcmWorkflowConfigurationException extends Exception{
+public class AcmWorkflowConfigurationException extends Exception
+{
 
     public AcmWorkflowConfigurationException()
     {
@@ -29,5 +30,3 @@ public class AcmWorkflowConfigurationException extends Exception{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

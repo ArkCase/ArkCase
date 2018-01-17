@@ -3,23 +3,28 @@ package com.armedia.acm.services.labels.model;
 /**
  * Created by sergey on 2/14/16.
  */
-public class ModuleConfig {
+public class ModuleConfig
+{
     private String id;
     private String name;
 
-    public String getId() {
+    public String getId()
+    {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(String id)
+    {
         this.id = id;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 }

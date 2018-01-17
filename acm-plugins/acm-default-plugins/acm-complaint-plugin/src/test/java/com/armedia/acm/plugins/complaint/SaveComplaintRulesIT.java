@@ -1,8 +1,14 @@
 package com.armedia.acm.plugins.complaint;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -19,9 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/17/14.
@@ -48,9 +51,9 @@ public class SaveComplaintRulesIT
         dtconf.setInputType(DecisionTableInputType.XLS);
         kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        if ( kbuilder.hasErrors() )
+        if (kbuilder.hasErrors())
         {
-            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
             }

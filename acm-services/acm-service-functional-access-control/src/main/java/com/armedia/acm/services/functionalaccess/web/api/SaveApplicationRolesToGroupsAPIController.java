@@ -1,7 +1,6 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
-import java.util.List;
-import java.util.Map;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
@@ -21,30 +21,31 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
  */
 @Controller
 @RequestMapping({ "/api/v1/functionalaccess", "/api/latest/functionalaccess" })
-public class SaveApplicationRolesToGroupsAPIController {
+public class SaveApplicationRolesToGroupsAPIController
+{
 
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private FunctionalAccessService functionalAccessService;
-	
-	@RequestMapping(value="/rolestogroups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private FunctionalAccessService functionalAccessService;
+
+    @RequestMapping(value = "/rolestogroups", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public boolean saveApplicationRolesToGroups(@RequestBody Map<String, List<String>> applicationRolesToGroups, Authentication auth)
     {
-		LOG.debug("Saving application roles to groups ...");
-		
-		boolean retval = getFunctionalAccessService().saveApplicationRolesToGroups(applicationRolesToGroups, auth);
-		LOG.debug("Successfuly save ? " + retval);
-		
-		return retval;
+        LOG.debug("Saving application roles to groups ...");
+
+        boolean retval = getFunctionalAccessService().saveApplicationRolesToGroups(applicationRolesToGroups, auth);
+        LOG.debug("Successfuly save ? " + retval);
+
+        return retval;
     }
 
-	public FunctionalAccessService getFunctionalAccessService() 
-	{
-		return functionalAccessService;
-	}
+    public FunctionalAccessService getFunctionalAccessService()
+    {
+        return functionalAccessService;
+    }
 
-	public void setFunctionalAccessService(FunctionalAccessService functionalAccessService) 
-	{
-		this.functionalAccessService = functionalAccessService;
-	}
+    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
+    {
+        this.functionalAccessService = functionalAccessService;
+    }
 }

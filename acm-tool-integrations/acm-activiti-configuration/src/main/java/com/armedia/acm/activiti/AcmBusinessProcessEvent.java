@@ -1,7 +1,7 @@
 package com.armedia.acm.activiti;
 
-
 import com.armedia.acm.core.model.AcmEvent;
+
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class AcmBusinessProcessEvent extends AcmEvent
         setObjectId(Long.valueOf(source.getProcessInstanceId()));
         setEventDate(new Date());
         setUserId("ACTIVITI_SYSTEM");
-        if ( source.getProcessVariables() != null && source.getProcessVariables().containsKey("IP_ADDRESS"))
+        if (source.getProcessVariables() != null && source.getProcessVariables().containsKey("IP_ADDRESS"))
         {
             setIpAddress((String) source.getProcessVariables().get("IP_ADDRESS"));
         }
@@ -37,9 +37,10 @@ public class AcmBusinessProcessEvent extends AcmEvent
 
         // do not put the ProcessInstance in the event source... since
         // the ProcessInstance is not Serializable, so it can't be sent to a
-        // JMS queue. //  setSource(source);
+        // JMS queue. // setSource(source);
     }
 
+    @Override
     public ProcessInstance getSource()
     {
         return source;

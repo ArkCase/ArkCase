@@ -1,10 +1,10 @@
 package com.armedia.acm.pluginmanager.model;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
-
-import static org.junit.Assert.*;
 
 public class AcmPluginUrlPrivilegeTest
 {

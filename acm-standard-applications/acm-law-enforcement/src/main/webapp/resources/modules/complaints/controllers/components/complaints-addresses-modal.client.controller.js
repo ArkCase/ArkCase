@@ -1,13 +1,12 @@
-angular.module('complaints').controller('Complaint.AddressesModalController', ['$scope', '$modalInstance', 'Object.LookupService', 'params',
-        function ($scope, $modalInstance, ObjectLookupService, params) {
+angular.module('complaints').controller('Complaint.AddressesModalController',
+        [ '$scope', '$modalInstance', 'Object.LookupService', 'params', function($scope, $modalInstance, ObjectLookupService, params) {
 
-            ObjectLookupService.getAddressTypes().then(
-                function (addressTypes) {
-                    $scope.addressTypes = addressTypes;
-                    return addressTypes;
-                });
+            ObjectLookupService.getAddressTypes().then(function(addressTypes) {
+                $scope.addressTypes = addressTypes;
+                return addressTypes;
+            });
 
-            ObjectLookupService.getCountries().then(function (countries) {
+            ObjectLookupService.getCountries().then(function(countries) {
                 $scope.countries = countries;
             });
 
@@ -16,18 +15,14 @@ angular.module('complaints').controller('Complaint.AddressesModalController', ['
             $scope.isDefault = params.isDefault;
             $scope.hideNoField = params.isDefault;
 
-            $scope.onClickCancel = function () {
+            $scope.onClickCancel = function() {
                 $modalInstance.dismiss('Cancel');
             };
-            $scope.onClickOk = function () {
-                $modalInstance.close(
-                    {
-                        address: $scope.address,
-                        isDefault: $scope.isDefault,
-                        isEdit: $scope.isEdit
-                    }
-                );
+            $scope.onClickOk = function() {
+                $modalInstance.close({
+                    address : $scope.address,
+                    isDefault : $scope.isDefault,
+                    isEdit : $scope.isEdit
+                });
             };
-        }
-    ]
-);
+        } ]);

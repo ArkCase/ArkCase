@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.admin.model;
 
-
 public class LdapTemplateConfig
 {
     private String userPropertiesTemplate;

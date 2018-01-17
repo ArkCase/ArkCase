@@ -1,5 +1,14 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
@@ -7,6 +16,7 @@ import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonEventPublisher;
 import com.armedia.acm.plugins.person.service.SavePersonTransaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -27,12 +37,6 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -105,11 +109,9 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
 
-
         person.getAddresses().add(address);
         person.getPersonAliases().add(personAlias);
         person.getAssociationsFromObjects().add(perAssoc);
-
 
         Person saved = new Person();
         saved.setId(person.getId());
@@ -210,7 +212,6 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
         perAssoc.setCreated(new Date());
         perAssoc.setModified(new Date());
 
-
         person.getAddresses().add(address);
         person.getPersonAliases().add(personAlias);
         person.getAssociationsFromObjects().add(perAssoc);
@@ -224,8 +225,8 @@ public class SavePersonAPIControllerTest extends EasyMockSupport
 
         Capture<Person> found = Capture.newInstance();
 
-        expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication))).
-                andThrow(new CannotCreateTransactionException("testException"));
+        expect(mockSaveTransaction.savePerson(capture(found), eq(mockAuthentication)))
+                .andThrow(new CannotCreateTransactionException("testException"));
         mockEventPublisher.publishPersonUpsertEvents(capture(found), anyObject(), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow

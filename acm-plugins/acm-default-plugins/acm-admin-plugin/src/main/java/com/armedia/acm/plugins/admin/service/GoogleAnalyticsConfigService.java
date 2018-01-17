@@ -1,8 +1,5 @@
 package com.armedia.acm.plugins.admin.service;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +11,10 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Properties;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 
 /**
  * Google Analytics configuration service.
@@ -47,7 +48,8 @@ public class GoogleAnalyticsConfigService
         try
         {
             template = configuration.getTemplate("config.js.ftl");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             logger.error("Cannot read template [classpath:/templates/config.js.ftl]", e);
         }
@@ -63,18 +65,21 @@ public class GoogleAnalyticsConfigService
         Properties properties = new Properties();
 
         try (FileInputStream fis = new FileInputStream(configFile);
-             Writer stringWriter = new StringWriter())
+                Writer stringWriter = new StringWriter())
         {
             properties.load(fis);
             template.process(properties, stringWriter);
             return stringWriter.toString();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
-        } catch (TemplateException e)
+        }
+        catch (TemplateException e)
         {
             logger.error("Cannot process [config.js.ftl] template", e);
-        } catch (NullPointerException e)
+        }
+        catch (NullPointerException e)
         {
             logger.error("Template [config.js.ftl] not loaded", e);
         }
@@ -96,7 +101,8 @@ public class GoogleAnalyticsConfigService
         {
             properties.load(fis);
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             logger.error("Cannot read configuration file [{}]", configFile.getAbsolutePath(), e);
         }
@@ -111,7 +117,8 @@ public class GoogleAnalyticsConfigService
     /**
      * Store Google Analytics configuration as key-value properties (used in Admin UI).
      *
-     * @param configuration JSON representation of GA settings
+     * @param configuration
+     *            JSON representation of GA settings
      * @return properties
      */
     public String setGoogleAnalyticsSettings(String configuration)
@@ -129,7 +136,8 @@ public class GoogleAnalyticsConfigService
         {
             properties.store(fos, "Google Analytics configuration");
             logger.debug("Google Analytics configuration stored");
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             logger.error("Cannot write configuration file [{}]", configFile.getAbsolutePath(), e);
         }

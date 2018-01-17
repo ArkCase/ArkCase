@@ -1,15 +1,16 @@
 package com.armedia.acm.services.search.service;
 
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 2/23/16.
@@ -48,12 +49,14 @@ public class FacetedSearchServiceTest
     public void updateQueryWithExcludedObjects_includeIfSpecificallyRequested() throws Exception
     {
         String query = "ann.*";
-        String updatedQuery = unit.updateQueryWithExcludedObjects(query, URLEncoder.encode("{!field f=object_type_facet}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
+        String updatedQuery = unit.updateQueryWithExcludedObjects(query,
+                URLEncoder.encode("{!field f=object_type_facet}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
 
         assertEquals("ann.* AND -object_type_s:AUTHOR", updatedQuery);
-        
+
         query = "ann.*";
-        updatedQuery = unit.updateQueryWithExcludedObjects(query, URLEncoder.encode("{!field f=object_type_s}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
+        updatedQuery = unit.updateQueryWithExcludedObjects(query,
+                URLEncoder.encode("{!field f=object_type_s}BAND", SearchConstants.FACETED_SEARCH_ENCODING));
 
         assertEquals("ann.* AND -object_type_s:AUTHOR", updatedQuery);
     }
@@ -100,6 +103,5 @@ public class FacetedSearchServiceTest
 
         assertEquals(expected, found);
     }
-
 
 }

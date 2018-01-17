@@ -4,14 +4,15 @@
 
 'use strict';
 
-angular.module('directives').directive('iframeOnload', [function(){
+angular.module('directives').directive('iframeOnload', [ function() {
     return {
-        scope: {
-            callBack: '&iframeOnload'
+        scope : {
+            callBack : '&iframeOnload'
         },
-        link: function(scope, element, attrs){
-            element.on('load', function(){
+        link : function(scope, element, attrs) {
+            element.on('load', function() {
                 return scope.callBack();
             })
         }
-    }}]);
+    }
+} ]);

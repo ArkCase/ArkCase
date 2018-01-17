@@ -43,7 +43,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#get(java.lang.Long)
      */
     @Override
@@ -55,7 +54,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.plugins.category.service.CategoryService#create(com.armedia.acm.plugins.category.model.Category)
      */
@@ -87,7 +85,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#createSubcategory(java.lang.Long,
      * com.armedia.acm.plugins.category.model.Category)
      */
@@ -99,7 +96,8 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
             Category parent = get(parentId);
             category.setParent(parent);
             return create(category);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             throw new AcmCreateObjectFailedException("Category", String.format("Parent Category with [%d] id does not exist.", parentId),
                     e);
@@ -108,7 +106,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.plugins.category.service.CategoryService#update(com.armedia.acm.plugins.category.model.Category)
      */
@@ -162,7 +159,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#delete(java.lang.Long)
      */
     @Override
@@ -182,7 +178,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#activate(com.armedia.acm.plugins.category.model.
      * Category)
      */
@@ -203,7 +198,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#deactivate(com.armedia.acm.plugins.category.model.
      * Category)
      */
@@ -232,7 +226,8 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
         {
             update(category);
             publishCategoryStatusEvent(category, status);
-        } catch (AcmUpdateObjectFailedException e)
+        }
+        catch (AcmUpdateObjectFailedException e)
         {
             log.warn("Failed to update status of Category with [{id}] to " + getStatusVerb(status)
                     + ". Probably attempt to change name while changing status.");
@@ -261,7 +256,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#getRoot()
      */
     @Override
@@ -272,7 +266,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#getParent(java.lang.Long)
      */
     @Override
@@ -286,7 +279,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.plugins.category.service.CategoryService#getChildren(java.lang.Long)
      */
     @Override
@@ -352,13 +344,15 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
         {
             parent.setStatus(ACTIVATED);
             activateAncestors(parent);
-        } else
+        }
+        else
         {
             // test if cascade on update will update all children, otherwise update on every level will be needed.
             try
             {
                 update(category);
-            } catch (AcmUpdateObjectFailedException e)
+            }
+            catch (AcmUpdateObjectFailedException e)
             {
                 log.warn("Failed to update status of Category with [{id}] to " + getStatusVerb(CategoryStatus.ACTIVATED)
                         + ". Probably attempt to change name while changing status.");
@@ -368,7 +362,6 @@ public class CategoryServiceImpl implements CategoryService, ApplicationEventPub
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
      * context.ApplicationEventPublisher)
      */

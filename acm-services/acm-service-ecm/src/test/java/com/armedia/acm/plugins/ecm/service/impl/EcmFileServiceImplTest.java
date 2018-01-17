@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -9,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.easymock.Capture;
@@ -21,10 +26,6 @@ import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 3/11/15.
@@ -128,7 +129,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockMuleMessage.getPayload(CmisObject.class)).andReturn(mockCmisObject);
         expect(mockCmisObject.getId()).andReturn(id);
         expect(mockCmisConfigUtils.getCmisConfiguration(defaultCmisId)).andReturn(cmisConfig);
-
 
         replayAll();
 

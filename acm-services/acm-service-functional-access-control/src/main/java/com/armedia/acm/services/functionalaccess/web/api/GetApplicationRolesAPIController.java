@@ -1,6 +1,6 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
-import java.util.List;
+import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
+import java.util.List;
 
 /**
  * @author riste.tutureski
@@ -19,30 +19,31 @@ import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService
  */
 @Controller
 @RequestMapping({ "/api/v1/functionalaccess", "/api/latest/functionalaccess" })
-public class GetApplicationRolesAPIController {
+public class GetApplicationRolesAPIController
+{
 
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private FunctionalAccessService functionalAccessService;
-	
-	@RequestMapping(value="/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private FunctionalAccessService functionalAccessService;
+
+    @RequestMapping(value = "/roles", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<String> getApplicationRoles(Authentication auth)
     {
-		LOG.debug("Taking application roles ...");
-		
-		List<String> retval = getFunctionalAccessService().getApplicationRoles();
-		LOG.debug("Application roles: " + retval.toString());
-		
-		return retval;
+        LOG.debug("Taking application roles ...");
+
+        List<String> retval = getFunctionalAccessService().getApplicationRoles();
+        LOG.debug("Application roles: " + retval.toString());
+
+        return retval;
     }
 
-	public FunctionalAccessService getFunctionalAccessService() 
-	{
-		return functionalAccessService;
-	}
+    public FunctionalAccessService getFunctionalAccessService()
+    {
+        return functionalAccessService;
+    }
 
-	public void setFunctionalAccessService(FunctionalAccessService functionalAccessService) 
-	{
-		this.functionalAccessService = functionalAccessService;
-	}
+    public void setFunctionalAccessService(FunctionalAccessService functionalAccessService)
+    {
+        this.functionalAccessService = functionalAccessService;
+    }
 }

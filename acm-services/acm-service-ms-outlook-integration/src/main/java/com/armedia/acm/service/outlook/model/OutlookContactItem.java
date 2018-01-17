@@ -1,8 +1,5 @@
 package com.armedia.acm.service.outlook.model;
 
-import microsoft.exchange.webservices.data.property.complex.CompleteName;
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-
 /**
  * Created by armdev on 4/20/15.
  */
@@ -25,7 +22,6 @@ public class OutlookContactItem extends OutlookItem
     {
         return surname;
     }
-
 
     public void setDisplayName(String displayName)
     {

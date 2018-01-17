@@ -1,19 +1,14 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmObjectTypeLength" value="255" dbms="mysql,mssql"/>
 
-    <changeSet id="01-create-person-organization-association-table" author="nebojsha.davidovikj"
-               dbms="oracle,postgresql,mssql">
+    <changeSet id="01-create-person-organization-association-table" author="nebojsha.davidovikj" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_person_org_assoc">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_person_org_association"/>
+                <constraints primaryKey="true" primaryKeyName="pk_person_org_association"/>
             </column>
             <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>
@@ -44,9 +39,7 @@
     <changeSet id="01-create-person-organization-association-table" author="nebojsha.davidovikj" dbms="mysql">
         <createTable tableName="acm_person_org_assoc">
             <column name="cm_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_person_org_association"/>
+                <constraints primaryKey="true" primaryKeyName="pk_person_org_association"/>
             </column>
             <column name="cm_person_id" type="${fkIdType}">
                 <constraints nullable="false"/>

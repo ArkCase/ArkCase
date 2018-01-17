@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.service;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.AcmBpmnService;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -29,14 +30,16 @@ public class WorkflowConfigurationService
     public static final String PROP_MODIFIER = "modifier";
 
     private final Set<String> ORDERABLE_PROPERTIES = Collections.unmodifiableSet(new HashSet<String>()
-    {{
-        add(PROP_NAME);
-        add(PROP_DESCRIPTION);
-        add(PROP_CREATED);
-        add(PROP_CREATOR);
-        add(PROP_MODIFIED);
-        add(PROP_MODIFIER);
-    }});
+    {
+        {
+            add(PROP_NAME);
+            add(PROP_DESCRIPTION);
+            add(PROP_CREATED);
+            add(PROP_CREATOR);
+            add(PROP_MODIFIED);
+            add(PROP_MODIFIER);
+        }
+    });
 
     private String temporaryFolder;
     private AcmBpmnService acmBpmnService;
@@ -50,7 +53,8 @@ public class WorkflowConfigurationService
      * @param isAsc
      * @return
      */
-    public List<AcmProcessDefinition> retrieveWorkflows(int start, int length, String orderBy, boolean isAsc) throws AcmWorkflowConfigurationException
+    public List<AcmProcessDefinition> retrieveWorkflows(int start, int length, String orderBy, boolean isAsc)
+            throws AcmWorkflowConfigurationException
     {
         if (!validateOrderByParam(orderBy))
         {
@@ -59,7 +63,6 @@ public class WorkflowConfigurationService
 
         return acmBpmnService.listPage(start, length, orderBy, isAsc);
     }
-
 
     /**
      * Return Workflow process history
@@ -105,10 +108,12 @@ public class WorkflowConfigurationService
             tmpFile = File.createTempFile("bpmn-", ".xml", tempDir);
             FileUtils.copyInputStreamToFile(fileInputStream, tmpFile);
             acmBpmnService.deploy(tmpFile, fileDescription, false, true);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmWorkflowConfigurationException("Can't replace bpmn file", e);
-        } finally
+        }
+        finally
         {
             if (tmpFile != null)
             {
@@ -123,7 +128,6 @@ public class WorkflowConfigurationService
         AcmProcessDefinition processDefinition = acmBpmnService.getByKeyAndVersion(key, version);
         acmBpmnService.makeActive(processDefinition);
     }
-
 
     public boolean validateOrderByParam(String orderByParam)
     {

@@ -1,13 +1,13 @@
 package com.armedia.acm.drools;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by dmiller on 3/24/2017.

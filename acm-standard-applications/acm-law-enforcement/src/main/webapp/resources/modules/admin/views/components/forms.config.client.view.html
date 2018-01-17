@@ -1,27 +1,19 @@
 <div data-ng-controller="Admin.FormsConfigController">
-<div class="pull-right well">
-	<select ng-model="selectedTarget"
-	        ng-options="option.id as option.name for option in formsDropdownOptions"
-	        ng-change="change()">
-	    <option value="" translate>admin.forms.defaultValue</option>
-	</select>
-    <div class="btn-group">
-        <button ng-disabled="!selectedTarget" class="btn btn-xs btn-link"
-                ng-click=newForm()>
-            <i class="glyphicon glyphicon-plus-sign"></i>
-            <span translate>admin.forms.addForm</span>
-        </button>
+    <div class="pull-right well">
+        <select ng-model="selectedTarget" ng-options="option.id as option.name for option in formsDropdownOptions" ng-change="change()">
+            <option value="" translate>admin.forms.defaultValue</option>
+        </select>
+        <div class="btn-group">
+            <button ng-disabled="!selectedTarget" class="btn btn-xs btn-link" ng-click=newForm()>
+                <i class="glyphicon glyphicon-plus-sign"></i>
+                <span translate>admin.forms.addForm</span>
+            </button>
+        </div>
     </div>
-</div>
-<panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
+    <panel-view header="{{'admin.forms.config' | translate}}" collapsible="false">
 
-            <div ui-grid="gridOptions"
-                 ui-grid-resize-columns
-                 ui-grid-selection
-                 adjust-table-height="gridOptions.data.length"
-                 ui-grid-auto-resize
-                 class="grid">
-            </div>
+        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-selection adjust-table-height="gridOptions.data.length"
+                ui-grid-auto-resize class="grid"></div>
 
-</panel-view>
+    </panel-view>
 </div>

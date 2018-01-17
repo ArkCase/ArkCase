@@ -1,369 +1,369 @@
 {
-  "complaints": {
-    "title": "शिकायतें",
-    "progressNoComplaint": "[ कोई शिकायत नहीं है ]",
-    "progressLoading": "शिकायत लोड",
-    "progressError": "शिकायत लोड करने में विफल"
-  },
-  "complaints.menus": {
-    "leftnav.item": "शिकायतें",
-    "topbar.item": "शिकायत"
-  },
-  "complaints.comp.main": {
-    "title": "अवलोकन"
-  },
-  "complaints.comp.info": {
-    "title": "जानकारी",
-    "complaintId": "शिकायत आईडी:",
-    "complaintNumber": "शिकायत संख्या:",
-    "courtRoomName": "कोर्ट रूम का नाम::",
-    "type.label": "प्रकार",
-    "created.label": "बनाया दिनांक",
-    "priority.label": "प्राथमिकता",
-    "assignee.label": "असाइन करने के लिए",
-    "owningGroup.label": "स्वामी समूह",
-    "dueDate.label": "नियत दिनांक"
-  },
-  "complaints.comp.actions": {
-    "title": "क्रियाएं",
-    "restrict": "प्रतिबंधित करें?",
-    "new.button": "नई शिकायत",
-    "close.button": "बंद शिकायत",
-    "subscribe.button": "सदस्यता लें",
-    "unsubscribe.button": "सदस्यता रद्द करें",
-    "claim.button": "दावा",
-    "unclaim.button": "दावा नहीं करना"
-  },
-  "complaints.comp.details": {
-    "title": "विवरण",
-    "informSaved": "शिकायत विवरण सहेजे गए",
-    "table.columns": {
-      "title": "विवरण",
-      "modified": "अंतिम परिवर्तन की तिथि",
-      "modifier": "उपयोगकर्ता पिछले बदल गया"
+    "complaints": {
+        "title": "शिकायतें",
+        "progressNoComplaint": "[ कोई शिकायत नहीं है ]",
+        "progressLoading": "शिकायत लोड",
+        "progressError": "शिकायत लोड करने में विफल"
+    },
+    "complaints.menus": {
+        "leftnav.item": "शिकायतें",
+        "topbar.item": "शिकायत"
+    },
+    "complaints.comp.main": {
+        "title": "अवलोकन"
+    },
+    "complaints.comp.info": {
+        "title": "जानकारी",
+        "complaintId": "शिकायत आईडी:",
+        "complaintNumber": "शिकायत संख्या:",
+        "courtRoomName": "कोर्ट रूम का नाम::",
+        "type.label": "प्रकार",
+        "created.label": "बनाया दिनांक",
+        "priority.label": "प्राथमिकता",
+        "assignee.label": "असाइन करने के लिए",
+        "owningGroup.label": "स्वामी समूह",
+        "dueDate.label": "नियत दिनांक"
+    },
+    "complaints.comp.actions": {
+        "title": "क्रियाएं",
+        "restrict": "प्रतिबंधित करें?",
+        "new.button": "नई शिकायत",
+        "close.button": "बंद शिकायत",
+        "subscribe.button": "सदस्यता लें",
+        "unsubscribe.button": "सदस्यता रद्द करें",
+        "claim.button": "दावा",
+        "unclaim.button": "दावा नहीं करना"
+    },
+    "complaints.comp.details": {
+        "title": "विवरण",
+        "informSaved": "शिकायत विवरण सहेजे गए",
+        "table.columns": {
+            "title": "विवरण",
+            "modified": "अंतिम परिवर्तन की तिथि",
+            "modifier": "उपयोगकर्ता पिछले बदल गया"
+        }
+    },
+    "complaints.comp.documents": {
+        "title": "दस्तावेजों",
+        "sendEmail": "ईमेल भेजें",
+        "filterInputPlaceholder": "फिल्टर",
+        "searchInputPlaceholder": "खोज",
+        "menu": {
+            "forms": {
+                "rptInvestigation%": "जांच की रिपोर्ट"
+            },
+            "correspondences": {
+                "correspondenceInvitation%": "पत्राचार निमंत्रण",
+                "approvalLetter%": "शिकायत अनुमोदन पत्र",
+                "generalRelease%": "सामान्य रिलीज़",
+                "medicalRelease%": "मेडिकल रिलीज",
+                "clearanceGranted%": "मंजूरी दी",
+                "clearanceDenied%": "मंजूरी अस्वीकृत",
+                "witnessInterview%": "गवाह साक्षात्कार अनुरोध",
+                "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
+            }
+        },
+        "newTask": "नया कार्य"
+    },
+    "complaints.comp.people": {
+        "title": "लोग",
+        "table.columns": {
+            "type": "भूमिका",
+            "firstName": "पहले दिए गए नाम",
+            "lastName": "उपनाम आखिरी नाम",
+            "organization": "संगठन",
+            "phone": "फ़ोन",
+            "location": "जगह"
+        }
+    },
+    "complaints.comp.organizations": {
+        "title": "संगठन",
+        "table.columns": {
+            "name": "संगठन का नाम",
+            "associationType": "भूमिका",
+            "type": "एक प्रकार की संस्था",
+            "identification": "मैं",
+            "value": "संगठन",
+            "contact": "प्राथमिक सम्पर्क",
+            "phone": "फ़ोन",
+            "location": "जगह"
+        },
+        "actions": {
+            "delete": "स्पष्ट",
+            "setPrimary": "प्राथमिक के रूप में सेट करें",
+            "addNew": "नया जोड़ें",
+            "addExisting": "नया जोड़ें"
+        }
+    },
+    "complaints.comp.participants": {
+        "title": "प्रतिभागियों",
+        "table.columns": {
+            "type": "मेहरबान",
+            "name": "उपनाम"
+        },
+        "dialogUserPicker": {
+            "header": "उपयोगकर्ताओं को चुनें",
+            "table.columns": {
+                "name": "उपनाम",
+                "type": "मेहरबान",
+                "title": "शीर्षक",
+                "id": "उपयोगकर्ता नाम"
+            }
+        },
+        "dialogGroupPicker": {
+            "header": "समूह चुनें",
+            "table.columns": {
+                "name": "उपनाम"
+            }
+        }
+    },
+    "complaints.comp.addresses": {
+        "title": "स्थान",
+        "table.columns": {
+            "type": "मेहरबान",
+            "streetAddress": "पता 1",
+            "streetAddress2": "पता द्वितीय",
+            "city": "शहर",
+            "state": "राज्य",
+            "zip": "पोस्ट कोड",
+            "country": "देश",
+            "created": "तारीख संकलित हुई",
+            "creator": "द्वारा जोड़ा",
+            "modified": "अंतिम संपादित",
+            "modifier": "से गृहीत किया गया"
+        },
+        "actions": {
+            "addNew": "नया जोड़ें",
+            "map": "नक्शा"
+        },
+        "modal": {
+            "addAddress": "स्थान जोड़ना",
+            "editAddress": "रिकॉर्ड संपादित करें",
+            "type.label": "पता प्रकार",
+            "type.placeholder": "पता प्रकार दर्ज करें",
+            "streetAddress.label": "पता 1",
+            "streetAddress.placeholder": "पता 1 दर्ज करें",
+            "streetAddress2.label": "पता द्वितीय",
+            "streetAddress2.placeholder": "पता 2 दर्ज करें",
+            "city.label": "शहर",
+            "city.placeholder": "शहर दर्ज करें",
+            "zip.label": "पोस्ट कोड",
+            "zip.placeholder": "ज़िप दर्ज करें",
+            "state.label": "राज्य",
+            "state.placeholder": "स्थिति दर्ज करें",
+            "country.label": "देश",
+            "country.placeholder": "देश दर्ज करें",
+            "btnCancel.text": "रद्द करना",
+            "btnOk.text": "सुरक्षित जगह",
+            "setPrimary": "प्राथमिक के रूप में सेट करें?",
+            "yes": "हाँ",
+            "no": "नहीं"
+        }
+    },
+    "complaints.comp.notes": {
+        "title": "नोट्स",
+        "table.columns": {
+            "note": "ध्यान दें",
+            "created": "बनाया था",
+            "creator": "लेखक"
+        }
+    },
+    "complaints.comp.tasks": {
+        "title": "कार्य",
+        "table.columns": {
+            "title": "शीर्षक",
+            "assignee": "रिसीवर",
+            "created": "बनाया था",
+            "priority": "प्राथमिकता",
+            "due": "देय",
+            "status": "स्थिति"
+        },
+        "table.overdue.tooltip": "कार्य अतिदेय है",
+        "table.deadline.tooltip": "समय सीमा निकट आ रही है"
+    },
+    "complaints.comp.references": {
+        "title": "संदर्भ",
+        "table.columns": {
+            "targetName": "संख्या",
+            "targetTitle": "शीर्षक",
+            "targetType": "मेहरबान",
+            "assignee": "रिसीवर",
+            "modified": "बदला हुआ",
+            "status": "स्थिति"
+        }
+    },
+    "complaints.comp.history": {
+        "title": "इतिहास",
+        "table.columns": {
+            "eventType": "कार्यक्रम नाम",
+            "eventDate": "तारीख",
+            "userId": "उपयोगकर्ता"
+        }
+    },
+    "complaints.comp.time": {
+        "title": "पहर",
+        "table.columns": {
+            "name": "फ़ार्म का नाम",
+            "user": "उपयोगकर्ता",
+            "tally": "कुल घंटे",
+            "modified": "तारीख बदलें",
+            "status": "स्थिति"
+        },
+        "formNamePrefix": "समय पत्र"
+    },
+    "complaints.comp.cost": {
+        "title": "लागत",
+        "table.columns": {
+            "name": "फ़ार्म का नाम",
+            "user": "उपयोगकर्ता",
+            "tally": "कुल लागत",
+            "modified": "तारीख बदलें",
+            "status": "स्थिति"
+        },
+        "formNamePrefix": "लागत"
+    },
+    "complaints.comp.tags": {
+        "title": "टैग",
+        "table.columns": {
+            "tag": "लेबल",
+            "created": "बनाया था",
+            "createdBy": "के द्वारा बनाई गई"
+        },
+        "modal": {
+            "title": "लेबल",
+            "search": "एक दिन की तलाश",
+            "buttons": {
+                "cancel": "रद्द करना",
+                "ok": "एक टैग जोड़ना"
+            }
+        },
+        "message": {
+            "tagExists": "इस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+            "tagAssociated": "पहले से जुड़े हुए हैं",
+            "delete": {
+                "success": "टैग सफलतापूर्वक हटाया गया",
+                "error": "टैग हटाने में त्रुटि"
+            }
+        }
+    },
+    "complaints.comp.calendar": {
+        "title": "कैलेंडर"
+    },
+    "complaints.comp.referenceSearchGrid": {
+        "title": "संदर्भ खोज"
+    },
+    "complaints.comp.addreference": {
+        "title": "संदर्भ जोड़ें",
+        "cancelButton": "रद्द करना",
+        "confirmButton": "जोड़ना",
+        "search": {
+            "placeholder": "मामले, शिकायत, फ़ाइल, कार्य के लिए खोजें",
+            "btn": "खोज"
+        },
+        "grid": {
+            "columns": {
+                "id": "मैं",
+                "name": "उपनाम",
+                "type": "मेहरबान",
+                "title": "शीर्षक",
+                "parent": "माता-पिता",
+                "assignee": "रिसीवर",
+                "modified": "बदला हुआ"
+            }
+        }
+    },
+    "complaints.comp.assigneePickerModal": {
+        "title": "क्लर्क बदलें",
+        "assigneeNamelabel": "नाम का नाम",
+        "btnCancelText": "रद्द करना",
+        "btnSaveText": "को बचाने के",
+        "searchAssigneeHeader": "खोज रिसीवर"
+    },
+    "complaints.comp.groupPickerModal": {
+        "title": "समूह बदलें",
+        "groupNamelabel": "समूह का नाम",
+        "btnCancelText": "रद्द करना",
+        "btnSaveText": "को बचाने के",
+        "searchGroupHeader": "खोज समूह"
+    },
+    "complaints.comp.approvalRouting": {
+        "title": "अनुमोदन रूटिंग",
+        "addNewTooltip": "नया अपवादक जोड़ें",
+        "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
+        "button": {
+            "save.tooltip": "परिवर्तनों को सुरक्षित करें"
+        },
+        "table.columns": {
+            "fullName": "पूरा नाम"
+        },
+        "assignee.label": "रिसीवर",
+        "owningGroup.label": "मालिक समूह",
+        "priority.label": "प्राथमिकता",
+        "startDate.label": "आरंभ करने की तिथि",
+        "dueDate.label": "जन्म दिन",
+        "state.label": "राज्य"
+    },
+    "complaints.comp.pastApprovals": {
+        "title": "पिछली अनुमोदन",
+        "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
+        "table.columns": {
+            "approvalDate": "अनुमोदन का दिनांक",
+            "approverId": "अनुमोदक",
+            "approverFullName": "अनुमोदक",
+            "approverDecision": "अनुमोदन निर्णय"
+        }
+    },
+    "complaints.userOrGroupSearch": {
+        "id": "उपयोगकर्ता खोज",
+        "title": "उपयोगकर्ता / समूह खोज",
+        "search": {
+            "btn": "खोज",
+            "placeholder": "उपयोगकर्ता या समूह खोजें"
+        },
+        "cancelButton": "रद्द करना",
+        "confirmButton": "पुष्टि करने के लिए",
+        "assigneeGridColumns": {
+            "name": "उपनाम",
+            "type": "मेहरबान",
+            "title": "शीर्षक",
+            "username": "उपयोगकर्ता नाम"
+        }
+    },
+    "complaints.tree": {
+        "nodeTypes": {
+            "details.label": "विवरण",
+            "locations.label": "स्थान",
+            "people.label": "लोग",
+            "organizations.label": "संगठन",
+            "documents.label": "दस्तावेज़",
+            "participants.label": "प्रतिभागियों को",
+            "notes.label": "टिप्पणियाँ",
+            "tasks.label": "कार्य",
+            "references.label": "सन्दर्भ",
+            "history.label": "इतिहास",
+            "time.label": "पहर",
+            "cost.label": "लागत",
+            "tags.label": "टैग",
+            "calendar.label": "कैलेंडर",
+            "approvalRouting.label": "अनुमोदन रूटिंग"
+        },
+        "filters": {
+            "opened": "सभी ओपन शिकायतें",
+            "iHaveCreated": "सभी मैंने बनाया है",
+            "iAmAssigned": "सभी को मैं नियुक्त किया गया",
+            "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
+            "closedNoFurtherAction": "सभी बंद कोई और कार्यवाही",
+            "closedReferExternal": "सभी बंद बाहरी देखें",
+            "closedOpenInvestigation": "सभी बंद खुली जांच",
+            "noFilter": "(फ़िल्टर नहीं)"
+        },
+        "sorters": {
+            "incidentDateAsc": "क्रमबद्ध घटना दिनांक एएससी",
+            "incidentDateDesc": "क्रमबद्ध घटना दिनांक दिनांक",
+            "createdDateAsc": "सॉर्ट की गई तारीख एएससी",
+            "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
+            "nameAsc": "सॉर्ट इन एएनएससी एसी",
+            "noSort": "(कोई सॉर्ट नहीं)"
+        }
     }
-  },
-  "complaints.comp.documents": {
-    "title": "दस्तावेजों",
-    "sendEmail": "ईमेल भेजें",
-    "filterInputPlaceholder": "फिल्टर",
-    "searchInputPlaceholder": "खोज",
-    "menu": {
-      "forms": {
-        "rptInvestigation%": "जांच की रिपोर्ट"
-      },
-      "correspondences": {
-        "correspondenceInvitation%": "पत्राचार निमंत्रण",
-        "approvalLetter%": "शिकायत अनुमोदन पत्र",
-        "generalRelease%": "सामान्य रिलीज़",
-        "medicalRelease%": "मेडिकल रिलीज",
-        "clearanceGranted%": "मंजूरी दी",
-        "clearanceDenied%": "मंजूरी अस्वीकृत",
-        "witnessInterview%": "गवाह साक्षात्कार अनुरोध",
-        "witnessInterview2%": "गवाह साक्षात्कार अनुरोध 2.0"
-      }
-    },
-    "newTask": "नया कार्य"
-  },
-  "complaints.comp.people": {
-    "title": "लोग",
-    "table.columns": {
-      "type": "भूमिका",
-      "firstName": "पहले दिए गए नाम",
-      "lastName": "उपनाम आखिरी नाम",
-      "organization": "संगठन",
-      "phone": "फ़ोन",
-      "location": "जगह"
-    }
-  },
-  "complaints.comp.organizations": {
-    "title": "संगठन",
-    "table.columns": {
-      "name": "संगठन का नाम",
-      "associationType": "भूमिका",
-      "type": "एक प्रकार की संस्था",
-      "identification": "मैं",
-      "value": "संगठन",
-      "contact": "प्राथमिक सम्पर्क",
-      "phone": "फ़ोन",
-      "location": "जगह"
-    },
-    "actions": {
-      "delete": "स्पष्ट",
-      "setPrimary": "प्राथमिक के रूप में सेट करें",
-      "addNew": "नया जोड़ें",
-      "addExisting": "नया जोड़ें"
-    }
-  },
-  "complaints.comp.participants": {
-    "title": "प्रतिभागियों",
-    "table.columns": {
-      "type": "मेहरबान",
-      "name": "उपनाम"
-    },
-    "dialogUserPicker": {
-      "header": "उपयोगकर्ताओं को चुनें",
-      "table.columns": {
-        "name": "उपनाम",
-        "type": "मेहरबान",
-        "title": "शीर्षक",
-        "id": "उपयोगकर्ता नाम"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "समूह चुनें",
-      "table.columns": {
-        "name": "उपनाम"
-      }
-    }
-  },
-  "complaints.comp.addresses": {
-    "title": "स्थान",
-    "table.columns": {
-      "type": "मेहरबान",
-      "streetAddress": "पता 1",
-      "streetAddress2": "पता द्वितीय",
-      "city": "शहर",
-      "state": "राज्य",
-      "zip": "पोस्ट कोड",
-      "country": "देश",
-      "created": "तारीख संकलित हुई",
-      "creator": "द्वारा जोड़ा",
-      "modified": "अंतिम संपादित",
-      "modifier": "से गृहीत किया गया"
-    },
-    "actions": {
-      "addNew": "नया जोड़ें",
-      "map": "नक्शा"
-    },
-    "modal": {
-      "addAddress": "स्थान जोड़ना",
-      "editAddress": "रिकॉर्ड संपादित करें",
-      "type.label": "पता प्रकार",
-      "type.placeholder": "पता प्रकार दर्ज करें",
-      "streetAddress.label": "पता 1",
-      "streetAddress.placeholder": "पता 1 दर्ज करें",
-      "streetAddress2.label": "पता द्वितीय",
-      "streetAddress2.placeholder": "पता 2 दर्ज करें",
-      "city.label": "शहर",
-      "city.placeholder": "शहर दर्ज करें",
-      "zip.label": "पोस्ट कोड",
-      "zip.placeholder": "ज़िप दर्ज करें",
-      "state.label": "राज्य",
-      "state.placeholder": "स्थिति दर्ज करें",
-      "country.label": "देश",
-      "country.placeholder": "देश दर्ज करें",
-      "btnCancel.text": "रद्द करना",
-      "btnOk.text": "सुरक्षित जगह",
-      "setPrimary": "प्राथमिक के रूप में सेट करें?",
-      "yes": "हाँ",
-      "no": "नहीं"
-    }
-  },
-  "complaints.comp.notes": {
-    "title": "नोट्स",
-    "table.columns": {
-      "note": "ध्यान दें",
-      "created": "बनाया था",
-      "creator": "लेखक"
-    }
-  },
-  "complaints.comp.tasks": {
-    "title": "कार्य",
-    "table.columns": {
-      "title": "शीर्षक",
-      "assignee": "रिसीवर",
-      "created": "बनाया था",
-      "priority": "प्राथमिकता",
-      "due": "देय",
-      "status": "स्थिति"
-    },
-    "table.overdue.tooltip": "कार्य अतिदेय है",
-    "table.deadline.tooltip": "समय सीमा निकट आ रही है"
-  },
-  "complaints.comp.references": {
-    "title": "संदर्भ",
-    "table.columns": {
-      "targetName": "संख्या",
-      "targetTitle": "शीर्षक",
-      "targetType": "मेहरबान",
-      "assignee": "रिसीवर",
-      "modified": "बदला हुआ",
-      "status": "स्थिति"
-    }
-  },
-  "complaints.comp.history": {
-    "title": "इतिहास",
-    "table.columns": {
-      "eventType": "कार्यक्रम नाम",
-      "eventDate": "तारीख",
-      "userId": "उपयोगकर्ता"
-    }
-  },
-  "complaints.comp.time": {
-    "title": "पहर",
-    "table.columns": {
-      "name": "फ़ार्म का नाम",
-      "user": "उपयोगकर्ता",
-      "tally": "कुल घंटे",
-      "modified": "तारीख बदलें",
-      "status": "स्थिति"
-    },
-    "formNamePrefix": "समय पत्र"
-  },
-  "complaints.comp.cost": {
-    "title": "लागत",
-    "table.columns": {
-      "name": "फ़ार्म का नाम",
-      "user": "उपयोगकर्ता",
-      "tally": "कुल लागत",
-      "modified": "तारीख बदलें",
-      "status": "स्थिति"
-    },
-    "formNamePrefix": "लागत"
-  },
-  "complaints.comp.tags": {
-    "title": "टैग",
-    "table.columns": {
-      "tag": "लेबल",
-      "created": "बनाया था",
-      "createdBy": "के द्वारा बनाई गई"
-    },
-    "modal": {
-      "title": "लेबल",
-      "search": "एक दिन की तलाश",
-      "buttons": {
-        "cancel": "रद्द करना",
-        "ok": "एक टैग जोड़ना"
-      }
-    },
-    "message": {
-      "tagExists": "इस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
-      "tagAssociated": "पहले से जुड़े हुए हैं",
-      "delete": {
-        "success": "टैग सफलतापूर्वक हटाया गया",
-        "error": "टैग हटाने में त्रुटि"
-      }
-    }
-  },
-  "complaints.comp.calendar": {
-    "title": "कैलेंडर"
-  },
-  "complaints.comp.referenceSearchGrid": {
-    "title": "संदर्भ खोज"
-  },
-  "complaints.comp.addreference": {
-    "title": "संदर्भ जोड़ें",
-    "cancelButton": "रद्द करना",
-    "confirmButton": "जोड़ना",
-    "search": {
-      "placeholder": "मामले, शिकायत, फ़ाइल, कार्य के लिए खोजें",
-      "btn": "खोज"
-    },
-    "grid": {
-      "columns": {
-        "id": "मैं",
-        "name": "उपनाम",
-        "type": "मेहरबान",
-        "title": "शीर्षक",
-        "parent": "माता-पिता",
-        "assignee": "रिसीवर",
-        "modified": "बदला हुआ"
-      }
-    }
-  },
-  "complaints.comp.assigneePickerModal": {
-    "title": "क्लर्क बदलें",
-    "assigneeNamelabel": "नाम का नाम",
-    "btnCancelText": "रद्द करना",
-    "btnSaveText": "को बचाने के",
-    "searchAssigneeHeader": "खोज रिसीवर"
-  },
-  "complaints.comp.groupPickerModal": {
-    "title": "समूह बदलें",
-    "groupNamelabel": "समूह का नाम",
-    "btnCancelText": "रद्द करना",
-    "btnSaveText": "को बचाने के",
-    "searchGroupHeader": "खोज समूह"
-  },
-  "complaints.comp.approvalRouting": {
-    "title": "अनुमोदन रूटिंग",
-    "addNewTooltip": "नया अपवादक जोड़ें",
-    "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
-    "button": {
-      "save.tooltip": "परिवर्तनों को सुरक्षित करें"
-    },
-    "table.columns": {
-      "fullName": "पूरा नाम"
-    },
-    "assignee.label": "रिसीवर",
-    "owningGroup.label": "मालिक समूह",
-    "priority.label": "प्राथमिकता",
-    "startDate.label": "आरंभ करने की तिथि",
-    "dueDate.label": "जन्म दिन",
-    "state.label": "राज्य"
-  },
-  "complaints.comp.pastApprovals": {
-    "title": "पिछली अनुमोदन",
-    "noBuckslipMessage": "कोई आकड़ा उपलब्ध नहीं है",
-    "table.columns": {
-      "approvalDate": "अनुमोदन का दिनांक",
-      "approverId": "अनुमोदक",
-      "approverFullName": "अनुमोदक",
-      "approverDecision": "अनुमोदन निर्णय"
-    }
-  },
-  "complaints.userOrGroupSearch": {
-    "id": "उपयोगकर्ता खोज",
-    "title": "उपयोगकर्ता / समूह खोज",
-    "search": {
-      "btn": "खोज",
-      "placeholder": "उपयोगकर्ता या समूह खोजें"
-    },
-    "cancelButton": "रद्द करना",
-    "confirmButton": "पुष्टि करने के लिए",
-    "assigneeGridColumns": {
-      "name": "उपनाम",
-      "type": "मेहरबान",
-      "title": "शीर्षक",
-      "username": "उपयोगकर्ता नाम"
-    }
-  },
-  "complaints.tree": {
-    "nodeTypes": {
-      "details.label": "विवरण",
-      "locations.label": "स्थान",
-      "people.label": "लोग",
-      "organizations.label": "संगठन",
-      "documents.label": "दस्तावेज़",
-      "participants.label": "प्रतिभागियों को",
-      "notes.label": "टिप्पणियाँ",
-      "tasks.label": "कार्य",
-      "references.label": "सन्दर्भ",
-      "history.label": "इतिहास",
-      "time.label": "पहर",
-      "cost.label": "लागत",
-      "tags.label": "टैग",
-      "calendar.label": "कैलेंडर",
-      "approvalRouting.label": "अनुमोदन रूटिंग"
-    },
-    "filters": {
-      "opened": "सभी ओपन शिकायतें",
-      "iHaveCreated": "सभी मैंने बनाया है",
-      "iAmAssigned": "सभी को मैं नियुक्त किया गया",
-      "iAmFollowing": "सभी मैं अनुसरण कर रहा हूँ",
-      "closedNoFurtherAction": "सभी बंद कोई और कार्यवाही",
-      "closedReferExternal": "सभी बंद बाहरी देखें",
-      "closedOpenInvestigation": "सभी बंद खुली जांच",
-      "noFilter": "(फ़िल्टर नहीं)"
-    },
-    "sorters": {
-      "incidentDateAsc": "क्रमबद्ध घटना दिनांक एएससी",
-      "incidentDateDesc": "क्रमबद्ध घटना दिनांक दिनांक",
-      "createdDateAsc": "सॉर्ट की गई तारीख एएससी",
-      "createdDateDesc": "सॉर्ट की गई दिनांक की तिथि",
-      "nameAsc": "सॉर्ट इन एएनएससी एसी",
-      "noSort": "(कोई सॉर्ट नहीं)"
-    }
-  }
 }

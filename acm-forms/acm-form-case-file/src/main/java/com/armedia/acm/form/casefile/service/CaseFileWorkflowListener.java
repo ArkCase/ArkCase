@@ -6,12 +6,17 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +27,8 @@ public class CaseFileWorkflowListener
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     public void handleNewCaseFile(CaseFile caseFile, FrevvoUploadedFiles files, RuntimeService activitiRuntimeService,
-                                  FileWorkflowBusinessRule fileWorkflowBusinessRule,
-                                  FrevvoFormAbstractService formService)
+            FileWorkflowBusinessRule fileWorkflowBusinessRule,
+            FrevvoFormAbstractService formService)
     {
         EcmFile pdfRendition = files.getPdfRendition();
 
@@ -40,7 +45,7 @@ public class CaseFileWorkflowListener
         configuration = fileWorkflowBusinessRule.applyRules(configuration);
         if (configuration.isBuckslipProcess())
         {
-            //CaseFileWorkflowListener is not handling buckslip process
+            // CaseFileWorkflowListener is not handling buckslip process
             return;
         }
         log.debug("start process? " + configuration.isStartProcess());
@@ -52,7 +57,7 @@ public class CaseFileWorkflowListener
     }
 
     private void startBusinessProcess(CaseFile caseFile, EcmFileWorkflowConfiguration configuration,
-                                      RuntimeService activitiRuntimeService, FrevvoFormAbstractService formService)
+            RuntimeService activitiRuntimeService, FrevvoFormAbstractService formService)
     {
         String processName = configuration.getProcessName();
 
@@ -91,5 +96,3 @@ public class CaseFileWorkflowListener
         log.debug("process ID: " + pi.getId());
     }
 }
-
-

@@ -8,23 +8,28 @@
 
 package org.mule.module.cmis.exception;
 
-public class CMISConnectorConnectionException extends RuntimeException {
+public class CMISConnectorConnectionException extends RuntimeException
+{
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	public CMISConnectorConnectionException() {
-		super();
-	}
+    public CMISConnectorConnectionException()
+    {
+        super();
+    }
 
-	public CMISConnectorConnectionException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public CMISConnectorConnectionException(String message, Throwable cause)
+    {
+        super(message, cause);
+    }
 
-	public CMISConnectorConnectionException(String message) {
-		super(message);
-	}
+    public CMISConnectorConnectionException(String message)
+    {
+        super(message);
+    }
 
-	public CMISConnectorConnectionException(Throwable cause) {
-		super(cause);
-	}
+    public CMISConnectorConnectionException(Throwable cause)
+    {
+        super(cause);
+    }
 }
