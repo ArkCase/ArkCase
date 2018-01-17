@@ -50,11 +50,13 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        AcmGroup acmGroup = groupDao.findByName(group.getName());
+        String groupName = group.getName().toUpperCase();
+        AcmGroup acmGroup = groupDao.findByName(groupName);
         if (acmGroup != null)
         {
             throw new AcmObjectAlreadyExistsException("Group " + group.getName() + " already exists.");
         }
+        group.setName(groupName);
         return groupDao.save(group);
     }
 
