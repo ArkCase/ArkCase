@@ -29,15 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.service.group.GroupService;
-
 @Controller
 @RequestMapping({ "/api/v1/users", "/api/latest/users" })
 public class AcmGroupAPIController
@@ -264,7 +255,7 @@ public class AcmGroupAPIController
     @RequestMapping(value = "/group/save/{subGroupId:.+}/{parentId:.+}", method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmGroup saveSubGroup(@PathVariable("subGroupId") String subGroupId, @PathVariable("parentId") String parentId)
+    public AcmGroup addGroupMember(@PathVariable("subGroupId") String subGroupId, @PathVariable("parentId") String parentId)
             throws AcmCreateObjectFailedException
     {
 
@@ -272,7 +263,7 @@ public class AcmGroupAPIController
         subGroupId = new String(Base64.getUrlDecoder().decode(subGroupId.getBytes()));
         parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
         LOG.info("Saving ad-hoc subgroup with id [{}]", subGroupId);
-        return groupService.saveAdHocSubGroup(subGroupId, parentId);
+        return groupService.addGroupMember(subGroupId, parentId);
     }
 
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
