@@ -14,6 +14,8 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             var columnDef = addEditColumn();
             var columnLdapUserTemplate = userTemplate();
             var columnLdapGroupTemplate = groupTemplate();
+            var columnPartialSyncBtn = partialSyncBtn();
+            columnDefs.push(columnPartialSyncBtn);
             columnDefs.push(columnLdapGroupTemplate);
             columnDefs.push(columnLdapUserTemplate);
             columnDefs.push(columnDef);
@@ -147,8 +149,23 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
             );
         }
 
+
+        $scope.startPartialSync = function (rowEntity) {
+            var directory = rowEntity.id;
+            ldapConfigService.startPartialSync(directory)
+                .then(function () {
+
+                }, function (error) {
+                    if (error.data.message) {
+                        messageService.error(error.data.message);
+                    } else {
+                        messageService.errorAction();
+                    }
+                });
+        };
+
         function addEditColumn() {
-            var columnDef = {
+            return {
                 name: "edit",
                 cellEditableCondition: false,
                 width: 40,
@@ -157,35 +174,45 @@ angular.module('admin').controller('Admin.LdapConfigController', ['$scope', 'Adm
                 cellTemplate: "<span><i class='fa fa-pencil fa-lg' style='cursor :pointer' " +
                 "ng-click='grid.appScope.editRow(row.entity)'></i></span>"
             };
-            return columnDef;
         }
 
         function userTemplate() {
-            var columnDef = {
+            return {
                 name: "userTemplate",
                 cellEditableCondition: false,
                 width: 40,
                 cellClass: 'text-center',
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span title='LDAP User Configuration'>" +
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.userAttributesConfig' | translate}}\">" +
                 "<i class='fa fa-user fa-lg' style='cursor :pointer' " +
                 "ng-click='grid.appScope.showUserTemplate(row.entity)'></i></span>"
             };
-            return columnDef;
         }
 
         function groupTemplate() {
-            var columnDef = {
+            return {
                 name: "addGroupTemplate",
                 cellEditableCondition: false,
                 width: 40,
                 cellClass: 'text-center',
                 headerCellTemplate: "<span></span>",
-                cellTemplate: "<span title='LDAP Group configuration'>" +
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.groupAttributesConfig' | translate}}\">" +
                 "<i class='fa fa-users fa-lg' style='cursor :pointer' " +
                 "ng-click='grid.appScope.showGroupTemplate(row.entity)'></i></span>"
             };
-            return columnDef;
+        }
+
+        function partialSyncBtn() {
+            return {
+                name: "initiatePartialSync",
+                cellEditableCondition: false,
+                width: 40,
+                cellClass: 'text-center',
+                headerCellTemplate: "<span></span>",
+                cellTemplate: "<span title=\"{{'admin.security.ldapConfig.table.action.partialSync' | translate}}\">" +
+                "<i class='fa fa-refresh fa-lg' style='cursor :pointer' " +
+                "ng-click='grid.appScope.startPartialSync(row.entity)'></i></span>"
+            };
         }
 
 //we need this because key name contains '.'
