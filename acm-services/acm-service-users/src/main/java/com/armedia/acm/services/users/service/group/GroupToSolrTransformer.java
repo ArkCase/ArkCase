@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

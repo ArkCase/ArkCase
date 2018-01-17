@@ -4,6 +4,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
 
@@ -19,11 +20,11 @@ public class AcmUserServiceImpl implements AcmUserService
 
     private ExecuteSolrQuery executeSolrQuery;
 
-
     /**
      * queries each user for given id's and returns list of users
      *
-     * @param usersIds given id's
+     * @param usersIds
+     *            given id's
      * @return List of users
      */
     @Override
@@ -34,8 +35,7 @@ public class AcmUserServiceImpl implements AcmUserService
             return null;
         }
         return usersIds.stream()
-                .map(userId ->
-                {
+                .map(userId -> {
                     AcmUser user = userDao.findByUserId(userId);
                     return user;
                 })
@@ -46,7 +46,8 @@ public class AcmUserServiceImpl implements AcmUserService
     /**
      * extracts userId from User and returns a list of id's
      *
-     * @param users given users
+     * @param users
+     *            given users
      * @return List of users id's
      */
     @Override
@@ -60,16 +61,17 @@ public class AcmUserServiceImpl implements AcmUserService
         return users.stream().map(AcmUser::getUserId).collect(Collectors.toList());
     }
 
-
     @Override
-    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows) throws MuleException
+    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException
     {
 
         String query = "object_type_s:USER AND status_lcs:VALID";
 
         String fq = String.format("fq=name_partial:%s", searchFilter);
 
-        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sortBy + " " + sortDirection, fq);
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection, fq);
     }
 
     public void setUserDao(UserDao userDao)
