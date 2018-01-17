@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,6 @@ public class CaseFileFolderStructureHandler implements PipelineHandler<CaseFile,
         // TODO: delete folder structure and maybe raise another event (deleted)?
     }
 
-
     private void createFolderStructure(CaseFile caseFile)
     {
         if (folderStructureAsString != null && !folderStructureAsString.isEmpty())
@@ -69,7 +69,8 @@ public class CaseFileFolderStructureHandler implements PipelineHandler<CaseFile,
                 JSONArray folderStructure = new JSONArray(folderStructureAsString);
                 AcmContainer container = ecmFileService.getOrCreateContainer(caseFile.getObjectType(), caseFile.getId());
                 acmFolderService.addFolderStructure(container, container.getFolder(), folderStructure);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("Cannot create folder structure.", e);
             }

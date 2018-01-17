@@ -1,8 +1,16 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.easymock.EasyMockSupport;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,11 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by manoj.dhungana on 7/23/2015.
@@ -107,7 +110,6 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
                 "        USER,0]},";
         JSONObject subFolderFacets = new JSONObject(subFolderFacetFields);
 
-
         String url = "/api/v1/service/ecm/folder/counts/" + parentObjectType + "/" + parentObjectId;
         log.info("Rest endpoint : " + url);
 
@@ -122,8 +124,8 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
                 0,
                 1,
                 "object_id_s ASC",
-                "facet.field=object_type_s&facet=true&fq=object_type_s:FILE OR object_type_s:FOLDER&fq=hidden_b:false&fl=name,object_type_s,object_id_s"
-        )).andReturn(topLevelSearchResult);
+                "facet.field=object_type_s&facet=true&fq=object_type_s:FILE OR object_type_s:FOLDER&fq=hidden_b:false&fl=name,object_type_s,object_id_s"))
+                        .andReturn(topLevelSearchResult);
 
         expect(mockSearchResults.getFacetFields(topLevelSearchResult)).andReturn(topLevelFacets);
 
@@ -147,8 +149,8 @@ public class FolderDocumentCountAPIControllerTest extends EasyMockSupport
                 0,
                 1,
                 "object_id_s ASC",
-                "facet.field=object_type_s&facet=true&fq=object_type_s:FILE OR object_type_s:FOLDER&fq=hidden_b:false&fl=name,object_type_s,id")
-        ).andReturn(subFolderSearchResult);
+                "facet.field=object_type_s&facet=true&fq=object_type_s:FILE OR object_type_s:FOLDER&fq=hidden_b:false&fl=name,object_type_s,id"))
+                        .andReturn(subFolderSearchResult);
         expect(mockSearchResults.getFacetFields(subFolderSearchResult)).andReturn(subFolderFacets);
 
         replayAll();

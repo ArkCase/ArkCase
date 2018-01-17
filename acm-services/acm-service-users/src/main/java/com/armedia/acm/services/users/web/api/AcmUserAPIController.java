@@ -97,7 +97,7 @@ public class AcmUserAPIController extends SecureLdapController
         try
         {
             AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
-            // ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
             ldapUserService.publishUserCreatedEvent(httpSession, authentication, acmUser, true);
             return acmUser;
         }

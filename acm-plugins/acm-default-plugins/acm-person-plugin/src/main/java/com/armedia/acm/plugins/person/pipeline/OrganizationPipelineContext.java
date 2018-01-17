@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.person.pipeline;
 
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+
 import org.springframework.security.core.Authentication;
 
 /**

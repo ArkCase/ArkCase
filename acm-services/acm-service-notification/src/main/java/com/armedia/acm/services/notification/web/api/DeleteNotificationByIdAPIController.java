@@ -3,6 +3,7 @@ package com.armedia.acm.services.notification.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,24 +16,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
 
-
 @Controller
 @RequestMapping({ "/api/v1/plugin/notification", "/api/latest/plugin/notification" })
-public class DeleteNotificationByIdAPIController {
+public class DeleteNotificationByIdAPIController
+{
 
     private NotificationDao notificationDao;
-    //MediaType.APPLICATION_JSON_VALUE
+    // MediaType.APPLICATION_JSON_VALUE
     private Logger log = LoggerFactory.getLogger(getClass());
+
     @RequestMapping(value = "/{notificationId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteNotificationById(
             @PathVariable("notificationId") Long id
 
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException {
-        if (log.isInfoEnabled()) {
+    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+    {
+        if (log.isInfoEnabled())
+        {
             log.info("Finding notification with ID: " + id);
         }
-        if(id != null){
+        if (id != null)
+        {
             try
             {
                 JSONObject objectToReturnJSON = new JSONObject();
@@ -52,7 +57,7 @@ public class DeleteNotificationByIdAPIController {
                 throw new AcmUserActionFailedException("Delete", "notification", id, e.getMessage(), e);
             }
         }
-        throw new AcmObjectNotFoundException ("Could not find notification", id, "", null);
+        throw new AcmObjectNotFoundException("Could not find notification", id, "", null);
     }
 
     public NotificationDao getNotificationDao()
@@ -65,7 +70,3 @@ public class DeleteNotificationByIdAPIController {
         this.notificationDao = notificationDao;
     }
 }
-
-
-
-

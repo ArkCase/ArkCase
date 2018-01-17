@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI">
-    </bean>
+    <bean id="addCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.AddCorrespondenceTemplatesAPI"></bean>
 
-    <bean id="downloadCorrespondenceTemplate"
-          class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
+    <bean id="downloadCorrespondenceTemplate" class="com.armedia.acm.plugins.admin.web.api.TemplateDownloadControllerAPI">
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
-    <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI">
-    </bean>
+    <bean id="listCorrespondenceTemplates" class="com.armedia.acm.plugins.admin.web.api.ListAllTemplatesControllerAPI"></bean>
 
-    <bean id="correspondenceQueryController"
-          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
+    <bean id="correspondenceQueryController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceQueryAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
 
-    <bean id="correspondenceTemplateController"
-          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
+    <bean id="correspondenceTemplateController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceTemplateAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
         <property name="correspondenceFolderName" value="${user.home}/.arkcase/acm/correspondenceTemplates"/>
     </bean>
 
-    <bean id="correspondenceMergeFieldController"
-          class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
+    <bean id="correspondenceMergeFieldController" class="com.armedia.acm.plugins.admin.web.api.CorrespondenceMergeFieldAPIController">
         <property name="correspondenceService" ref="correspondenceService"/>
     </bean>
-
 
     <!-- Label management API -->
-    <bean id="labelManagementRetrieveResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveResource">
+    <bean id="labelManagementRetrieveResource" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveResource">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
@@ -41,74 +32,63 @@
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementRefreshResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRefreshResource">
+    <bean id="labelManagementRefreshResource" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRefreshResource">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementUpdateResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementUpdateResource">
+    <bean id="labelManagementUpdateResource" class="com.armedia.acm.plugins.admin.web.api.LabelManagementUpdateResource">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementRetrieveAdminResource"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveAdminResource">
+    <bean id="labelManagementRetrieveAdminResource" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveAdminResource">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementRetrieveSettings"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveSettings">
+    <bean id="labelManagementRetrieveSettings" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveSettings">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementUpdateSettings"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementUpdateSettings">
+    <bean id="labelManagementUpdateSettings" class="com.armedia.acm.plugins.admin.web.api.LabelManagementUpdateSettings">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementRetrieveDefaultLanguage"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveDefaultLanguage">
+    <bean id="labelManagementRetrieveDefaultLanguage" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveDefaultLanguage">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
-    <bean id="labelManagementRetrieveNamespaces"
-          class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveNamespaces">
+    <bean id="labelManagementRetrieveNamespaces" class="com.armedia.acm.plugins.admin.web.api.LabelManagementRetrieveNamespaces">
         <property name="labelManagementService" ref="labelManagementService"/>
     </bean>
 
     <!-- Application properties management-->
     <bean id="angularPropertiesManagementRetrieveProperties"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
+        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperties">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
     <bean id="angularPropertiesManagementRetrieveProperty"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
+        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementRetrieveProperty">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
     <bean id="angularPropertiesManagementUpdateProperty"
-          class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
+        class="com.armedia.acm.plugins.admin.web.api.AngularPropertiesManagementUpdateProperty">
         <property name="jsonPropertiesManagementService" ref="angularPropertiesManagementService"/>
     </bean>
 
-    <bean id="ldapConfigurationRetrieveDirectories"
-          class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationRetrieveDirectories">
+    <bean id="ldapConfigurationRetrieveDirectories" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationRetrieveDirectories">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
     </bean>
 
-    <bean id="ldapConfigurationCreateDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationCreateDirectory">
+    <bean id="ldapConfigurationCreateDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationCreateDirectory">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
     </bean>
 
-    <bean id="ldapConfigurationDeleteDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationDeleteDirectory">
+    <bean id="ldapConfigurationDeleteDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationDeleteDirectory">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
     </bean>
 
-    <bean id="ldapConfigurationUpdateDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationUpdateDirectory">
+    <bean id="ldapConfigurationUpdateDirectory" class="com.armedia.acm.plugins.admin.web.api.LdapConfigurationUpdateDirectory">
         <property name="ldapConfigurationService" ref="ldapConfigurationService"/>
     </bean>
 
@@ -121,13 +101,11 @@
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
-    <bean id="rolesPrivilegesAddRolesPrivileges"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesAddRolesPrivileges">
+    <bean id="rolesPrivilegesAddRolesPrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesAddRolesPrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
-    <bean id="rolesPrivilegesRemoveRolesPrivileges"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRemoveRolesPrivileges">
+    <bean id="rolesPrivilegesRemoveRolesPrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRemoveRolesPrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
@@ -135,67 +113,58 @@
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
-    <bean id="rolesPrivilegesRetrievePrivileges"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrievePrivileges">
+    <bean id="rolesPrivilegesRetrievePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrievePrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
-    <bean id="rolesPrivilegesRetrieveRolePrivileges"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolePrivileges">
+    <bean id="rolesPrivilegesRetrieveRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolePrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
     <bean id="rolesPrivilegesRetrieveRolesByPrivilege"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
+        class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesRetrieveRolesByPrivilege">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
-    <bean id="rolesPrivilegesUpdateRolePrivileges"
-          class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">
+    <bean id="rolesPrivilegesUpdateRolePrivileges" class="com.armedia.acm.plugins.admin.web.api.RolesPrivilegesUpdateRolePrivileges">
         <property name="rolesPrivilegesService" ref="rolesPrivilegesService"/>
     </bean>
 
     <!-- Workflow Configuration -->
 
-    <bean id="workflowConfigurationRetrieveWorkflows"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveWorkflows">
+    <bean id="workflowConfigurationRetrieveWorkflows" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveWorkflows">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
-    <bean id="workflowConfigurationRetrieveHistory"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveHistory">
+    <bean id="workflowConfigurationRetrieveHistory" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveHistory">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
-    <bean id="workflowConfigurationRetrieveBpmnFile"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveBpmnFile">
+    <bean id="workflowConfigurationRetrieveBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationRetrieveBpmnFile">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
-    <bean id="workflowConfigurationReplaceBpmnFile"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationReplaceBpmnFile">
+    <bean id="workflowConfigurationReplaceBpmnFile" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationReplaceBpmnFile">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
-    <bean id="workflowConfigurationMakeActive"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationMakeActive">
+    <bean id="workflowConfigurationMakeActive" class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationMakeActive">
         <property name="workflowConfigurationService" ref="workflowConfigurationService"/>
     </bean>
 
     <bean id="workflowConfigurationDiagramAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
+        class="com.armedia.acm.plugins.admin.web.api.WorkflowConfigurationDiagramAPIController">
         <property name="acmBpmnService" ref="processDefinitionManagementService"/>
     </bean>
 
     <!-- Link forms Workflows -->
 
     <bean id="linkFormsWorkflowsRetrieveConfiguration"
-          class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
+        class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsRetrieveConfiguration">
         <property name="linkFormsWorkflowsService" ref="linkFormsWorkflowsService"/>
     </bean>
 
-    <bean id="linkFormsWorkflowsUpdateConfiguration"
-          class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsUpdateConfiguration">
+    <bean id="linkFormsWorkflowsUpdateConfiguration" class="com.armedia.acm.plugins.admin.web.api.LinkFormsWorkflowsUpdateConfiguration">
         <property name="linkFormsWorkflowsService" ref="linkFormsWorkflowsService"/>
     </bean>
 
@@ -219,11 +188,9 @@
     </bean>
 
     <!-- Module Configuration -->
-    <bean id="moduleConfigurationRetrieveModules"
-          class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationRetrieveModules">
+    <bean id="moduleConfigurationRetrieveModules" class="com.armedia.acm.plugins.admin.web.api.ModuleConfigurationRetrieveModules">
         <property name="moduleConfigurationService" ref="moduleConfigurationService"/>
     </bean>
-
 
     <bean id="templateUpload" class="com.armedia.acm.plugins.admin.model.TemplateUpload"/>
 
@@ -233,49 +200,40 @@
 
     <bean id="deletePlainFormAPIController" class="com.armedia.acm.plugins.admin.web.api.DeletePlainFormAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
-        <property name="plainFormPropertiesLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
+        <property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
-    <bean id="getPlainFormTargetsAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
+    <bean id="getPlainFormTargetsAPIController" class="com.armedia.acm.plugins.admin.web.api.GetPlainFormTargetsAPIController">
         <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
     </bean>
 
     <!-- CMIS configuration API -->
-    <bean id="cmisConfigurationRetrieveDirectories"
-          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
+    <bean id="cmisConfigurationRetrieveDirectories" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationRetrieveConfigs">
         <property name="cmisConfigurationPropertiesService" ref="cmisConfigurationPropertiesService"/>
     </bean>
 
-    <bean id="cmisConfigurationCreateDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationCreateConfig">
+    <bean id="cmisConfigurationCreateDirectory" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationCreateConfig">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
-    <bean id="cmisConfigurationDeleteDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationDeleteConfig">
+    <bean id="cmisConfigurationDeleteDirectory" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationDeleteConfig">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
-    <bean id="cmisConfigurationUpdateDirectory"
-          class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
+    <bean id="cmisConfigurationUpdateDirectory" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUpdateConfig">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
 
-    <bean id="googleAnalyticsConfigAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
+    <bean id="googleAnalyticsConfigAPIController" class="com.armedia.acm.plugins.admin.web.api.GoogleAnalyticsConfigAPIController">
         <property name="googleAnalyticsConfigService" ref="googleAnalyticsConfigService"/>
     </bean>
 
-    <bean id="exchangeConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
+    <bean id="exchangeConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.ExchangeConfigurationAPIController">
         <property name="exchangeConfigurationService" ref="exchangeConfigurationService"/>
     </bean>
 
-    <bean id="emailSenderConfigurationAPIController"
-          class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
+    <bean id="emailSenderConfigurationAPIController" class="com.armedia.acm.plugins.admin.web.api.EmailSenderConfigurationAPIController">
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
     </bean>
 

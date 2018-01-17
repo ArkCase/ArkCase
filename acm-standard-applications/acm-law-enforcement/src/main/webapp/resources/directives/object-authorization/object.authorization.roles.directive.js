@@ -145,43 +145,6 @@ angular.module('directives').directive('objectAuthorizationRoles',
                         }
                     };
 
-                    //unauthorize button is clicked
-                    scope.unAuthorize = function() {
-                        //don't do anything if array null or empty
-                        if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
-                            angular.forEach(scope.selectedAuthorized, function(sel) {
-                                var indexOf = scope.authorized.indexOf(sel);
-                                scope.authorized.splice(indexOf, 1);
-                                scope.notAuthorized.push(sel);
-                            });
-                            scope.authRoleChange();
-                        }
-                    };
-
-                    document.getElementById("scrollTest").addEventListener("scroll", myFunction);
-                    var temp = document.getElementById("scrollTest");
-
-                    var maxScrolled = 0;
-
-                    function myFunction() {
-                        var temp = document.getElementById("scrollTest");
-                        console.log(temp.scrollTop);
-                        console.log(temp.offsetHeight + temp.scrollTop);
-                        if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
-                            //                         maxScrolled = temp.scrollTop / 200;
-                            //                         console.log(maxScrolled);
-
-                            /*for (var k = 0; k < 20; k++) {
-                                var element = {};
-                                element.name = "test" + k;
-                                scope.data.push(element);
-                            }*/
-                            // scope.selectObject();
-                            // scope.data = [];
-                            // scope.$parent.$digest();
-                        }
-                    }
-
                     //object is selected event, call callback function
                     scope.selectObject = function() {
                         scope.authorized = [];
@@ -219,7 +182,6 @@ angular.module('directives').directive('objectAuthorizationRoles',
                 }
             };
         } ]);
-
 angular.module('directives').filter('orderObjectBy', function() {
     return function(input) {
         if (!angular.isObject(input))

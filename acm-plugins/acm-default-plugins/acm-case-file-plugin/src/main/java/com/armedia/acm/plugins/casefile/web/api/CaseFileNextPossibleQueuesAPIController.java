@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/casefile", "/api/latest/plugin/casefile"})
+@RequestMapping({ "/api/v1/plugin/casefile", "/api/latest/plugin/casefile" })
 public class CaseFileNextPossibleQueuesAPIController
 {
 
@@ -40,7 +40,7 @@ public class CaseFileNextPossibleQueuesAPIController
 
         if (caseFile == null)
         {
-            return new CaseFileNextPossibleQueuesResponse("", "", new ArrayList<String>());
+            return new CaseFileNextPossibleQueuesResponse("", "", new ArrayList<>());
         }
 
         CaseFilePipelineContext context = new CaseFilePipelineContext();

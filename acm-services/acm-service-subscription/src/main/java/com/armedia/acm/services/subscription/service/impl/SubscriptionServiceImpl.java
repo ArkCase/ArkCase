@@ -9,6 +9,7 @@ import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
+
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,7 +50,9 @@ public class SubscriptionServiceImpl implements SubscriptionService
         if (rowsEffected == SubscriptionConstants.NO_ROW_DELETED)
         {
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, false);
-        }else{
+        }
+        else
+        {
             getSubscriptionEventPublisher().publishSubscriptionDeletedEvent(userId, objectId, objectType, true);
         }
         return rowsEffected;

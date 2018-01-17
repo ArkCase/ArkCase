@@ -3,6 +3,7 @@ package com.armedia.acm.services.functionalaccess.web.api;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,7 +22,7 @@ import java.util.stream.Collectors;
  * Created by maksud.sharif on 11/17/2016.
  */
 @Controller
-@RequestMapping({"/api/v1/service/functionalaccess/groups", "/api/latest/service/functionalaccess/groups"})
+@RequestMapping({ "/api/v1/service/functionalaccess/groups", "/api/latest/service/functionalaccess/groups" })
 public class GetGroupFilteredAPIController
 {
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -31,11 +32,11 @@ public class GetGroupFilteredAPIController
     @RequestMapping(value = "/toplevel", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getTopLevelGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                    @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
-                                    @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                    @RequestParam(value = "groupSubtype", required = false, defaultValue = "") List<String> groupSubtype,
-                                    @RequestParam(value = "roleFilters", required = false, defaultValue = "") List<String> roleFilters,
-                                    Authentication auth) throws Exception
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "groupSubtype", required = false, defaultValue = "") List<String> groupSubtype,
+            @RequestParam(value = "roleFilters", required = false, defaultValue = "") List<String> roleFilters,
+            Authentication auth) throws Exception
     {
         LOG.info("Taking all top level groups from Solr.");
 
@@ -64,9 +65,9 @@ public class GetGroupFilteredAPIController
 
         LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
 
-        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort, rowQueryParameters);
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sort,
+                rowQueryParameters);
     }
-
 
     public ExecuteSolrQuery getExecuteSolrQuery()
     {

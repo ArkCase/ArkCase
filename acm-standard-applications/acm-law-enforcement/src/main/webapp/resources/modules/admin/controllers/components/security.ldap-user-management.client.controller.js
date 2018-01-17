@@ -20,7 +20,7 @@ angular.module('admin').controller(
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
-                    LookupService.getFilteredUsers().then(function(data) {
+                    LookupService.getUsers().then(function(data) {
                         _.forEach(data, function(user) {
                             var element = {};
                             element.name = user.name;
@@ -35,7 +35,7 @@ angular.module('admin').controller(
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
-                        selectedUser = angular.copy(selectedObject);
+                        selectedUser = selectedObject;
                         currentAuthGroups = [];
 
                         var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);

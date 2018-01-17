@@ -2,17 +2,6 @@ package com.armedia.acm.calendar.service.integration.exchange;
 
 import static com.armedia.acm.calendar.DateTimeAdjuster.guessTimeZone;
 
-import java.time.DayOfWeek;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.TimeZone;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEvent.Priority;
 import com.armedia.acm.calendar.service.AcmCalendarEventAttachment;
@@ -25,6 +14,17 @@ import com.armedia.acm.calendar.service.RecurrenceDetails.Monthly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.WeekOfMonth;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Weekly;
 import com.armedia.acm.calendar.service.RecurrenceDetails.Yearly;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import java.time.DayOfWeek;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.TimeZone;
 
 import microsoft.exchange.webservices.data.core.XmlElementNames;
 import microsoft.exchange.webservices.data.core.enumeration.property.Importance;

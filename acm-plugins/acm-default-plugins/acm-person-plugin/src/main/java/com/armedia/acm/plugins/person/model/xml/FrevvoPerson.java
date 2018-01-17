@@ -9,9 +9,11 @@ import java.util.List;
  * @author riste.tutureski
  *
  */
-public interface FrevvoPerson {
+public interface FrevvoPerson
+{
 
-	public String getType();
-	public List<String> getPersonIdentificationKeys();
-	
+    public String getType();
+
+    public List<String> getPersonIdentificationKeys();
+
 }

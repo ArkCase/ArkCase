@@ -244,7 +244,6 @@ public interface EcmFileService
             String sortDirection,
             int startRow,
             int maxRows,
-
             String category) throws AcmListObjectsFailedException;
 
     void declareFileAsRecord(Long fileId, Authentication authentication)

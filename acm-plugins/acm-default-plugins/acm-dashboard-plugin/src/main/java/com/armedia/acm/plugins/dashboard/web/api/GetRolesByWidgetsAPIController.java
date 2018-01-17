@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleName;
 import com.armedia.acm.plugins.dashboard.service.WidgetEventPublisher;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +28,7 @@ import java.util.List;
  * Created by marjan.stefanoski on 9/30/2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets"})
+@RequestMapping({ "/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets" })
 public class GetRolesByWidgetsAPIController
 {
 
@@ -37,7 +39,8 @@ public class GetRolesByWidgetsAPIController
 
     @RequestMapping(value = "/rolesByWidget/all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session) throws AcmWidgetException, AcmObjectNotFoundException
+    public List<RolesGroupByWidgetDto> getRolesGroupedByWidget(Authentication authentication, HttpSession session)
+            throws AcmWidgetException, AcmObjectNotFoundException
     {
         log.info("List of all, authorized and not authorized roles grouped by widget'");
 
@@ -47,13 +50,15 @@ public class GetRolesByWidgetsAPIController
             result = addNotAuthorizedRolesPerWidget(getWidgetDao().getRolesGroupByWidget());
             raiseGetEvent(authentication, session, result, true);
             return result;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             throw new AcmWidgetException("No Roles per Widgets found", e);
         }
     }
 
-    protected void raiseGetEvent(Authentication authentication, HttpSession session, List<RolesGroupByWidgetDto> rolesPerWidgets, boolean succeeded)
+    protected void raiseGetEvent(Authentication authentication, HttpSession session, List<RolesGroupByWidgetDto> rolesPerWidgets,
+            boolean succeeded)
     {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         getEventPublisher().publishGeRolesByWidgets(rolesPerWidgets, authentication, ipAddress, succeeded);
@@ -87,7 +92,7 @@ public class GetRolesByWidgetsAPIController
                 isNotAuthorized = true;
             }
             rolePerW.setWidgetNotAuthorizedRoles(notAuthorized);
-            notAuthorized = new ArrayList<WidgetRoleName>();
+            notAuthorized = new ArrayList<>();
         }
         for (Widget widget : allWidgets)
         {
@@ -105,13 +110,13 @@ public class GetRolesByWidgetsAPIController
                 RolesGroupByWidgetDto rolesGBW = new RolesGroupByWidgetDto();
                 rolesGBW.setWidgetName(widget.getWidgetName());
                 rolesGBW.setName(widgetName(widget.getWidgetName()));
-                List<WidgetRoleName> notAuth = new ArrayList<WidgetRoleName>();
+                List<WidgetRoleName> notAuth = new ArrayList<>();
                 for (AcmRole role : allRoles)
                 {
                     notAuth.add(new WidgetRoleName(role.getRoleName()));
                 }
                 rolesGBW.setWidgetNotAuthorizedRoles(notAuth);
-                rolesGBW.setWidgetAuthorizedRoles(new ArrayList<WidgetRoleName>());
+                rolesGBW.setWidgetAuthorizedRoles(new ArrayList<>());
                 tmpRolesPerWidget.add(rolesGBW);
             }
             isAddedToRolesGroupByWidgetLsit = false;
@@ -122,7 +127,7 @@ public class GetRolesByWidgetsAPIController
     private String widgetName(String camelName)
     {
         StringBuffer stringBuffer = new StringBuffer();
-        //create sentence from camelString
+        // create sentence from camelString
         for (String w : camelName.split("(?<!(^|[A-Z]))(?=[A-Z])|(?<!^)(?=[A-Z][a-z])"))
         {
             stringBuffer.append(w.substring(0, 1).toUpperCase() + w.substring(1));

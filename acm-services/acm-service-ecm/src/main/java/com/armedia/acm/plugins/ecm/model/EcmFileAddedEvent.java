@@ -2,7 +2,7 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.auth.AcmAuthenticationDetails;
 import com.armedia.acm.core.model.AcmEvent;
-import com.ctc.wstx.util.StringUtil;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.core.Authentication;
 
@@ -25,7 +25,8 @@ public class EcmFileAddedEvent extends AcmEvent
         String fileType = uploaded.getFileType();
         String ft = "";
 
-        if(StringUtils.isNotEmpty(fileType) && fileType.endsWith("_xml")){
+        if (StringUtils.isNotEmpty(fileType) && fileType.endsWith("_xml"))
+        {
             ft = ".xml";
         }
 
@@ -38,7 +39,7 @@ public class EcmFileAddedEvent extends AcmEvent
         setParentObjectType(uploaded.getContainer().getContainerObjectType());
         setParentObjectId(uploaded.getContainer().getContainerObjectId());
 
-        if ( authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+        if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
             setIpAddress(((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress());
         }

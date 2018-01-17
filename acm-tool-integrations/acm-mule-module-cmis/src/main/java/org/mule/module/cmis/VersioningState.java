@@ -11,7 +11,8 @@ package org.mule.module.cmis;
 /**
  * Enum holding all the possible versioning states
  */
-public enum VersioningState {
+public enum VersioningState
+{
     /**
      * The document MUST be created as a non-versionable document.
      */
@@ -32,14 +33,15 @@ public enum VersioningState {
      */
     CHECKEDOUT("checkedout");
 
-
     private final String value;
 
-    VersioningState(String v) {
+    VersioningState(String v)
+    {
         value = v;
     }
 
-    public String value() {
+    public String value()
+    {
         return value;
     }
 }

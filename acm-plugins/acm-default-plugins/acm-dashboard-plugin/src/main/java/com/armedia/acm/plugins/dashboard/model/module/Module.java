@@ -19,13 +19,7 @@ public class Module
     private static final long serialVersionUID = -1122137631123433851L;
 
     @Id
-    @TableGenerator(name = "acm_module_gen",
-            table = "acm_module_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_module",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_module_gen", table = "acm_module_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_module", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_module_gen")
     @Column(name = "cm_module_id")
     private Long moduleId;

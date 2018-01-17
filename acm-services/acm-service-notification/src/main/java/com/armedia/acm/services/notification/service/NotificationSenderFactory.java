@@ -33,7 +33,8 @@ public class NotificationSenderFactory implements ApplicationListener<AbstractCo
     }
 
     /**
-     * @param emailSenderConfigurationService the emailSenderConfigurationService to set
+     * @param emailSenderConfigurationService
+     *            the emailSenderConfigurationService to set
      */
     public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {

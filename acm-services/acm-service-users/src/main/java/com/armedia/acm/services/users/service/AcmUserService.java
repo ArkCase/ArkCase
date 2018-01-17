@@ -14,7 +14,7 @@ public interface AcmUserService
 {
     /**
      * queries each user for given id's and returns list of users
-     *
+     * 
      * @param usersIds
      *            given id's
      * @return List of users
@@ -23,7 +23,7 @@ public interface AcmUserService
 
     /**
      * extracts userId from User and returns a list of id's
-     *
+     * 
      * @param users
      *            given users
      * @return List of users id's

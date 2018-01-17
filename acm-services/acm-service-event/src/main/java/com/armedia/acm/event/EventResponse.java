@@ -8,7 +8,7 @@ import java.util.Map;
  * A handler for an ACM event. NOTE, all events are automatically audited; there is no special audit EventResponse.
  * Plugins configure a list of zero-to-several handlers to specify actions to be taken in reponse to certain events.
  * When an event is raised, an event manager finds all the registered handlers for that event, and routes the event
- * object to the Mule endpoint specified by the action.  The parameters specified in this EventResponse object
+ * object to the Mule endpoint specified by the action. The parameters specified in this EventResponse object
  * become inbound properties in the Mule flow.
  */
 public class EventResponse
