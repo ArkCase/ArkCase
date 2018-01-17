@@ -133,6 +133,7 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         catch (Exception e)
         {
             successResult = false;
+            log.error("LDAP Partial sync failed to complete.", e);
         }
         AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
         ldapSyncResult.setMessage(successResult ? "LDAP Partial sync completed" : "LDAP Partial sync failed to complete");
