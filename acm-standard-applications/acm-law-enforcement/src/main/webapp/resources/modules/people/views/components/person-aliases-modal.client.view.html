@@ -11,14 +11,12 @@
     <form name="aliasForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="aliasValue" translate>people.comp.aliases.modal.aliasValue</label><span
-                    class="required-asterisk">*</span>
+                <label for="aliasValue" translate>people.comp.aliases.modal.aliasValue</label><span class="required-asterisk">*</span>
                 <input id="aliasValue" class="input-md form-control" ng-model="alias.aliasValue" required="required"
-                       placeholder="{{ 'people.comp.aliases.modal.value.placeholder' | translate }}">
+                        placeholder="{{ 'people.comp.aliases.modal.value.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">
-                <label for="aliasType" translate>people.comp.aliases.modal.type</label><span
-                    class="required-asterisk">*</span>
+                <label for="aliasType" translate>people.comp.aliases.modal.type</label><span class="required-asterisk">*</span>
                 <select id="aliasType" class="input-md form-control" ng-model="alias.aliasType" required="required">
                     <option ng-repeat="option in aliasTypes" value="{{option.key}}">{{option.value | translate }}</option>
                 </select>
@@ -27,8 +25,7 @@
 
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label translate>people.comp.aliases.modal.setPrimary</label><span
-                    class="required-asterisk">*</span><br/>
+                <label translate>people.comp.aliases.modal.setPrimary</label><span class="required-asterisk">*</span><br />
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.aliases.modal.yes</translate>
@@ -43,8 +40,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="aliasDescription" translate>people.comp.aliases.modal.description</label>
-				<textarea id="aliasDescription" class="input-md form-control"
-                          ng-model="alias.description"></textarea>
+                <textarea id="aliasDescription" class="input-md form-control" ng-model="alias.description"></textarea>
 
             </div>
         </div>

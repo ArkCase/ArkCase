@@ -2,6 +2,7 @@ package com.armedia.acm.services.email.service;
 
 import com.armedia.acm.auth.web.ForgotPasswordEvent;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.springframework.context.ApplicationListener;
 
 public class OnForgotPassword implements ApplicationListener<ForgotPasswordEvent>

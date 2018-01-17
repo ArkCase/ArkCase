@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="caseFileFactory" class="com.armedia.acm.form.casefile.service.CaseFileFactory">
         <property name="acmHistoryDao" ref="acmHistoryDao"/>
@@ -10,18 +9,18 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
-        <property name="personDao" ref="acmPersonDao" />
-        <property name="personAssociationDao" ref="acmPersonAssociationDao" />
+        <property name="personDao" ref="acmPersonDao"/>
+        <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>
 
     <bean id="caseFileService" class="com.armedia.acm.form.casefile.service.CaseFileService" parent="frevvoFormService" scope="prototype">
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="saveCaseService" ref="saveCaseService"/>
-        <property name="acmHistoryDao" ref="acmHistoryDao"/>        
+        <property name="acmHistoryDao" ref="acmHistoryDao"/>
         <property name="caseFileDao" ref="caseFileDao"/>
         <property name="identificationDao" ref="acmIdentificationDao"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
-        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>        
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
         <property name="caseFolderNameFormat" value="Case (%s)"/>
     </bean>

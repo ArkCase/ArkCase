@@ -33,7 +33,6 @@ public class ActivitiUserTaskParseHandler extends AbstractBpmnParseHandler<UserT
         return UserTask.class;
     }
 
-
     public List<ActivitiListener> getListenersToAdd()
     {
         return listenersToAdd;

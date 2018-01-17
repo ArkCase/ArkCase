@@ -1,8 +1,12 @@
 package com.armedia.acm.services.users.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +19,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
  * Created by armdev on 5/28/14.
@@ -60,10 +61,9 @@ public class FindUsersWithPrivilegeAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result =
-                mockMvc.perform(get("/api/latest/users/withPrivilege/{privilege}", privilege)
-                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                        .contentType(MediaType.APPLICATION_JSON)).andReturn();
+        MvcResult result = mockMvc.perform(get("/api/latest/users/withPrivilege/{privilege}", privilege)
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .contentType(MediaType.APPLICATION_JSON)).andReturn();
 
         log.info("results: " + result.getResponse().getContentAsString());
 

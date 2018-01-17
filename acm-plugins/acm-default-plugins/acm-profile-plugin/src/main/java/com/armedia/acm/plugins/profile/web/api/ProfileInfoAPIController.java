@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.profile.model.ProfileDTO;
 import com.armedia.acm.plugins.profile.service.UserOrgService;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +21,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/profile", "/api/latest/plugin/profile"})
+@RequestMapping({ "/api/v1/plugin/profile", "/api/latest/plugin/profile" })
 public class ProfileInfoAPIController
 {
     private UserOrgService userOrgService;
@@ -36,7 +38,6 @@ public class ProfileInfoAPIController
      * Ecm file service.
      */
     private EcmFileService ecmFileService;
-
 
     @RequestMapping(value = "/get/{userId:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -74,7 +75,8 @@ public class ProfileInfoAPIController
                 {
                     os.write(buffer, 0, len);
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.error("Error downloading the signature file [{}]", ecmSignatureFileId, e);
             }

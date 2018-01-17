@@ -1,7 +1,5 @@
 package com.armedia.acm.websockets.configuration;
 
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -12,6 +10,21 @@ import org.springframework.messaging.simp.stomp.Reactor2StompCodec;
 import org.springframework.messaging.simp.stomp.StompBrokerRelayMessageHandler;
 import org.springframework.messaging.tcp.reactor.Reactor2TcpClient;
 import org.springframework.web.socket.config.annotation.DelegatingWebSocketMessageBrokerConfiguration;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import reactor.Environment;
 import reactor.core.config.ConfigurationReader;
 import reactor.core.config.PropertiesConfigurationReader;
@@ -22,20 +35,10 @@ import reactor.io.net.Spec;
 import reactor.io.net.config.SslOptions;
 import reactor.io.net.impl.netty.NettyClientSocketOptions;
 
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-
 /**
  * Since {@link DelegatingWebSocketMessageBrokerConfiguration} class does not expose the tcpClient property from
- * {@link StompBrokerRelayMessageHandler} class we cannot set SSL communication with ActiveMQ through configuration. This class modifies the
+ * {@link StompBrokerRelayMessageHandler} class we cannot set SSL communication with ActiveMQ through configuration.
+ * This class modifies the
  * bean created by setting the tcpClient property.
  * <p>
  * Created by Bojan Milenkoski on 25.7.2016
@@ -97,7 +100,8 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
 
         InetSocketAddress socketAddress = new InetSocketAddress(host, port);
 
-        EventLoopGroup eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(), new NamedDaemonThreadFactory("reactor-tcp-io"));
+        EventLoopGroup eventLoopGroup = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors(),
+                new NamedDaemonThreadFactory("reactor-tcp-io"));
         final NettyClientSocketOptions nettyClientSocketOptions = (new NettyClientSocketOptions()).eventLoopGroup(eventLoopGroup);
 
         NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>> tcpClientSpecFactory = new NetStreams.TcpClientFactory<Message<byte[]>, Message<byte[]>>()
@@ -108,7 +112,7 @@ public class StompBrokerRelayMessageHandlerBeanPostProcessor implements BeanPost
                 return spec.env(environment).codec(codec).connect(socketAddress).ssl(sslOptions).options(nettyClientSocketOptions);
             }
         };
-        handler.setTcpClient(new Reactor2TcpClient<byte[]>(tcpClientSpecFactory));
+        handler.setTcpClient(new Reactor2TcpClient<>(tcpClientSpecFactory));
     }
 
     private Supplier<TrustManager[]> getTrustManager(String trustStore, String trustStorePass, String trustStoreType)

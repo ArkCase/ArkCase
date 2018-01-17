@@ -14,6 +14,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRole;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,7 +32,6 @@ import java.util.Set;
 /**
  * Created by marjan.stefanoski on 14.01.2016.
  */
-
 
 public class DashboardPropertyReader
 {
@@ -53,8 +53,8 @@ public class DashboardPropertyReader
 
     private void init()
     {
-        isNewWidgetForAdding = Boolean.valueOf((String) dashboardPlugin.getPluginProperties().
-                get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
+        isNewWidgetForAdding = Boolean
+                .valueOf((String) dashboardPlugin.getPluginProperties().get(DashboardConstants.IS_NEW_DASHBOARD_WIDGETS_FOR_ADDING));
 
         allWidgetsInDB = getWidgetDao().getAllWidgets();
 
@@ -65,14 +65,16 @@ public class DashboardPropertyReader
         try
         {
             this.moduleNameList = getModuleNamesAndCreateList();
-        } catch (AcmDashboardException e)
+        }
+        catch (AcmDashboardException e)
         {
             log.error("Module name list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
         try
         {
             this.widgetList = readWidgetNamesAndCreateWidgetList();
-        } catch (AcmDashboardException e)
+        }
+        catch (AcmDashboardException e)
         {
             log.error("Widgets list was not populated, error occurred: [{}]", e.getMessage(), e);
         }
@@ -82,7 +84,6 @@ public class DashboardPropertyReader
             addNewWidgets();
         }
 
-
         if (isWidgetTableEmpty)
         {
             initWidgetTable();
@@ -91,7 +92,8 @@ public class DashboardPropertyReader
         try
         {
             this.dashboardWidgetsOnly = getDashboardWidgets();
-        } catch (AcmDashboardException e)
+        }
+        catch (AcmDashboardException e)
         {
             log.error("Dashboard Widgets list was not populated, error occurred: [{}] ", e.getMessage(), e);
         }
@@ -136,13 +138,13 @@ public class DashboardPropertyReader
                 }
 
                 widgetSet.addAll(Arrays.asList(retVal.split(DashboardConstants.COMMA_SPLITTER)));
-                widgetSet.forEach(widgetName ->
-                {
+                widgetSet.forEach(widgetName -> {
                     try
                     {
                         Widget widget = getWidgetDao().getWidgetByWidgetName(widgetName.trim());
                         addWidgetRoleIntoDB(widget, role);
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         log.error("Fetching widget with widget name: [{}] failed! Error msg: [{}]", widgetName, e.getMessage(), e);
                     }
@@ -167,11 +169,11 @@ public class DashboardPropertyReader
         {
             log.info("Fetching all module names from the property file");
             modulesString = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.MODULES_STRING);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmDashboardException("Error occurred while fetching module names " + e.getMessage(), e);
         }
-
 
         String[] modules;
         List<String> moduleList = new ArrayList<>();
@@ -193,7 +195,8 @@ public class DashboardPropertyReader
         try
         {
             newWidgetsString = (String) dashboardPlugin.getPluginProperties().get(DashboardConstants.WIDGETS_STRING);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmDashboardException("Error occurred while fetching widget names " + e.getMessage(), e);
         }
@@ -207,7 +210,8 @@ public class DashboardPropertyReader
         try
         {
             dashboardWidgetsString = (String) dashboardPlugin.getPluginProperties().get("acm.modules.dashboard.widgets");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmDashboardException("Error occurred while fetching dashboard widget names " + e.getMessage(), e);
         }
@@ -233,12 +237,12 @@ public class DashboardPropertyReader
 
     private void updateModuleTable()
     {
-        moduleNameList.forEach(module ->
-        {
+        moduleNameList.forEach(module -> {
             try
             {
                 moduleDao.getModuleByName(module);
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 Module m = new Module();
                 m.setModuleName(module);
@@ -247,7 +251,8 @@ public class DashboardPropertyReader
                     moduleDao.save(m);
                     log.info("Module with module name: [{}] is added! ", m.getModuleId());
                     moduleEventPublisher.publishModuleCreated(m, null, null, true);
-                } catch (Exception e1)
+                }
+                catch (Exception e1)
                 {
                     log.error("Persisting new module name failed due to error: [{}]", e1.getMessage(), e1);
                     moduleEventPublisher.publishModuleCreated(m, null, null, false);
@@ -258,14 +263,16 @@ public class DashboardPropertyReader
 
     private void addNewWidgets()
     {
-        //get all widgets added in the dashboardPlugin.properties config file;
+        // get all widgets added in the dashboardPlugin.properties config file;
         Set<Widget> setOfAllWidgetsFromPropertyFile = new HashSet<>(getWidgetList());
 
         Set<Widget> widgetsThatNeedToBeInserted = new HashSet<>();
         Set<Widget> widgetsThatNeedToBeDeleted = new HashSet<>();
 
-        //check if there are already widgets in the DB and if widgets found compare with the list from property file and
-        //made appropriate changes in the DB if needed, if widgets are not found insert all of them from the property file
+        // check if there are already widgets in the DB and if widgets found compare with the list from property file
+        // and
+        // made appropriate changes in the DB if needed, if widgets are not found insert all of them from the property
+        // file
         if (allWidgetsInDB != null)
         {
 
@@ -284,8 +291,7 @@ public class DashboardPropertyReader
             widgetsThatNeedToBeInserted.addAll(setOfAllWidgetsFromPropertyFile);
             widgetsThatNeedToBeInserted.removeAll(setOfAllWidgetsInDb);
 
-            widgetsThatNeedToBeDeleted.forEach(widget ->
-            {
+            widgetsThatNeedToBeDeleted.forEach(widget -> {
                 String widgetName = widget.getWidgetName();
                 Long widgetId = widget.getWidgetId();
 
@@ -297,7 +303,8 @@ public class DashboardPropertyReader
             });
 
             widgetsThatNeedToBeInserted.forEach(widget -> widgetDao.saveWidget(widget));
-        } else
+        }
+        else
         {
             setOfAllWidgetsFromPropertyFile.forEach(widget -> widgetDao.saveWidget(widget));
         }
@@ -309,12 +316,12 @@ public class DashboardPropertyReader
         String[] widgetNames = dashboardWidgets.split(",");
         List<String> widgetNamesList = Arrays.asList(widgetNames);
 
-        widgetNamesList.forEach(widget ->
-        {
+        widgetNamesList.forEach(widget -> {
             try
             {
                 widgetList.add(widgetDao.getWidgetByWidgetName(widget));
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.error("Fetching widget with widget name: [{}] failed! Error msg: [{}]", widget, e.getMessage(), e);
             }
@@ -327,8 +334,7 @@ public class DashboardPropertyReader
         List<UserPreference> userPreferences = userPreferenceService.findByWidgetId(widgetId);
         if (CollectionUtils.isNotEmpty(userPreferences))
         {
-            userPreferences.forEach(userPreference ->
-            {
+            userPreferences.forEach(userPreference -> {
                 String moduleName = userPreference.getModule().getModuleName();
                 try
                 {
@@ -338,7 +344,8 @@ public class DashboardPropertyReader
                     String configFiltered = removeWidgetFromDashboardConfig(dashboard.getDashboardConfig(), widgetName);
                     dashboard.setDashboardConfig(configFiltered);
                     dashboardDao.save(dashboard);
-                } catch (AcmObjectNotFoundException e)
+                }
+                catch (AcmObjectNotFoundException e)
                 {
                     log.debug("No dashboard configuration for widget {} and module {}. {}", widgetName, moduleName,
                             e.getMessage());
@@ -355,7 +362,8 @@ public class DashboardPropertyReader
         {
             JSONObject jsonConfig = new JSONObject(config);
             return DashboardService.removeWidgetsFromJson(jsonConfig, new HashSet<>(Arrays.asList(widgetName)));
-        } catch (JSONException e)
+        }
+        catch (JSONException e)
         {
             log.warn("Not valid JSON format. {}", e.getMessage());
         }

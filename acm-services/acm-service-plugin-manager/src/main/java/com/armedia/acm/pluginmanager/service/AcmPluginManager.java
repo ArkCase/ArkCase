@@ -124,8 +124,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
 
         log.info("{} plugin(s) found.", plugins.size());
 
-        plugins.forEach((key, value) ->
-        {
+        plugins.forEach((key, value) -> {
             log.debug("Registering plugin '{}' of type '{}'.", key, value.getClass().getName());
             registerPlugin(value);
         });
@@ -137,7 +136,8 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
         if (configurablePrivilegesByRole.containsKey(role))
         {
             return Collections.unmodifiableList(configurablePrivilegesByRole.get(role));
-        } else
+        }
+        else
         {
             return Collections.emptyList();
         }
@@ -214,7 +214,8 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
             // add non configurable privileges
             configurablePrivilegesByRole.putAll(privilegesByRole);
             configurableUrlPrivileges.addAll(urlPrivileges);
-        } else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
+        }
+        else if ((event instanceof ContextAddedEvent) && eventFile.equals(PLUGINS_PRIVILEGES_FOLDER_NAME))
         {
             // read all privileges
             Map<String, AcmPluginPrivileges> pluginsPrivileges = springContextHolder.getAllBeansOfType(AcmPluginPrivileges.class);
@@ -222,8 +223,7 @@ public class AcmPluginManager implements ApplicationContextAware, ApplicationLis
             log.info("{} plugins privileges(s) found.", pluginsPrivileges.size());
 
             // get privileges from configuration files located in ${user.home}/.arkcase/acm
-            pluginsPrivileges.forEach((key, value) ->
-            {
+            pluginsPrivileges.forEach((key, value) -> {
                 log.debug("Registering plugins privileges '{}'.", key);
                 registerPluginPrivileges(value);
             });

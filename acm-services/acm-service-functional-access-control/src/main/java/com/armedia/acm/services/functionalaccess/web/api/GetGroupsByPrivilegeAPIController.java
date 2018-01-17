@@ -3,6 +3,7 @@ package com.armedia.acm.services.functionalaccess.web.api;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.armedia.acm.services.users.dao.UserDao;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping(value = {"/api/v1/service/functionalaccess", "/api/latest/service/functionalaccess"})
+@RequestMapping(value = { "/api/v1/service/functionalaccess", "/api/latest/service/functionalaccess" })
 public class GetGroupsByPrivilegeAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -27,17 +28,12 @@ public class GetGroupsByPrivilegeAPIController
     private UserDao userDao;
     private FunctionalAccessService functionalAccessService;
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/groups/{privilege}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    String groupsByPrivilege(@PathVariable(value = "privilege") String privilege,
-                             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                             @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
-                             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                             Authentication auth) throws MuleException
+    @RequestMapping(method = RequestMethod.GET, value = "/groups/{privilege}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody String groupsByPrivilege(@PathVariable(value = "privilege") String privilege,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "50") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            Authentication auth) throws MuleException
     {
         if (log.isDebugEnabled())
         {

@@ -40,10 +40,14 @@ public class MaxThroughputAwareFileOutputStream extends FileOutputStream
     /**
      * Construct a new instance of the stream with calculating the maximum number of bytes to be written by this stream.
      *
-     * @param file the file to which the stream is going to write.
-     * @param size the maximum size of the resulting output file expressed in <code>SizeUnit</code>s.
-     * @param sizeUnit the size unit in which the maximum file size is represented.
-     * @throws FileNotFoundException if the file does not exist.
+     * @param file
+     *            the file to which the stream is going to write.
+     * @param size
+     *            the maximum size of the resulting output file expressed in <code>SizeUnit</code>s.
+     * @param sizeUnit
+     *            the size unit in which the maximum file size is represented.
+     * @throws FileNotFoundException
+     *             if the file does not exist.
      */
     public MaxThroughputAwareFileOutputStream(File file, long size, SizeUnit sizeUnit) throws FileNotFoundException
     {
@@ -54,8 +58,10 @@ public class MaxThroughputAwareFileOutputStream extends FileOutputStream
     /**
      * Calculates the the size in bytes.
      *
-     * @param size size expressed in <code>SizeUnit</code>s.
-     * @param sizeUnit the size unit in which the maximum file size is represented.
+     * @param size
+     *            size expressed in <code>SizeUnit</code>s.
+     * @param sizeUnit
+     *            the size unit in which the maximum file size is represented.
      * @return the calculated size in bytes.
      */
     private long calculateSizeInBytes(long size, SizeUnit sizeUnit)

@@ -56,7 +56,8 @@ public class PropertyFileManagerIT
         try (InputStream is = FileUtils.openInputStream(mockPropertiesFile))
         {
             properties.load(is);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -83,11 +84,11 @@ public class PropertyFileManagerIT
 
         Assert.assertTrue(mockPropertiesFile.exists());
 
-
         try (InputStream is = FileUtils.openInputStream(mockPropertiesFile))
         {
             properties.load(is);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -124,11 +125,11 @@ public class PropertyFileManagerIT
         try (OutputStream out = new FileOutputStream(fileName))
         {
             p.store(out, null);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
 
     }
 }
-

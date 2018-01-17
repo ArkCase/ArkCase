@@ -3,8 +3,8 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.services.labels.exception.AcmLabelManagementException;
 import com.armedia.acm.services.labels.service.LabelManagementService;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -48,7 +48,8 @@ public class LabelManagementRetrieveResource
             HttpServletResponse response) throws AcmLabelManagementException
     {
         JSONArray jsonArray = new JSONArray();
-        for (int i = 0; i < ns.length; i++) {
+        for (int i = 0; i < ns.length; i++)
+        {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("lang", lang);
             jsonObject.put("ns", ns[i]);
@@ -71,7 +72,8 @@ public class LabelManagementRetrieveResource
                 jsonResource = new JSONObject();
             }
             return jsonResource;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = String.format("Can't retrieve resource %s:%s", lang, ns);
             log.error(msg, e);

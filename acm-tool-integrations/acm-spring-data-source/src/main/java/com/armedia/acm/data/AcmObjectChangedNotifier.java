@@ -1,7 +1,12 @@
 package com.armedia.acm.data;
 
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_DELETE;
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_INSERT;
+import static com.armedia.acm.data.AcmObjectEventConstants.ACTION_UPDATE;
+
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.core.AcmParentObjectInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -10,8 +15,6 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.Date;
-
-import static com.armedia.acm.data.AcmObjectEventConstants.*;
 
 /**
  * Created by nebojsha on 06.05.2016.
@@ -35,10 +38,10 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
     {
         if (!(object instanceof AcmObject))
         {
-            //not an instance of AcmObject, nothing to do
+            // not an instance of AcmObject, nothing to do
             return;
         }
-        
+
         AcmObjectEvent objectChangedEvent = new AcmObjectEvent(action);
         updateAcmObjectInfo(objectChangedEvent, object);
         updateAcmEntityInfo(objectChangedEvent, object);
@@ -61,8 +64,10 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
     /**
      * update objectChanged with acm object info
      *
-     * @param objectChangedEvent instance of objectChangedEvent
-     * @param object             Object
+     * @param objectChangedEvent
+     *            instance of objectChangedEvent
+     * @param object
+     *            Object
      */
     private void updateAcmObjectInfo(AcmObjectEvent objectChangedEvent, Object object)
     {
@@ -76,14 +81,16 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
     /**
      * update objectChanged with acm entity info
      *
-     * @param objectChangedEvent instance of objectChangedEvent
-     * @param object             Object
+     * @param objectChangedEvent
+     *            instance of objectChangedEvent
+     * @param object
+     *            Object
      */
     private void updateAcmEntityInfo(AcmObjectEvent objectChangedEvent, Object object)
     {
         if (!(object instanceof AcmEntity))
         {
-            //not an instance of AcmEntity, nothing to do
+            // not an instance of AcmEntity, nothing to do
             return;
         }
         AcmEntity acmEntity = (AcmEntity) object;
@@ -92,20 +99,20 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
 
         switch (objectChangedEvent.getAction())
         {
-            case ACTION_UPDATE:
-                date = acmEntity.getModified();
-                userId = acmEntity.getModifier();
-                break;
-            case ACTION_INSERT:
-                date = acmEntity.getCreated();
-                userId = acmEntity.getCreator();
-                break;
-            case ACTION_DELETE:
-                date = acmEntity.getModified();
-                userId = acmEntity.getModifier();
-                break;
-            default:
-                log.warn("ACTION must be provided before AcmEntity info is chosen.");
+        case ACTION_UPDATE:
+            date = acmEntity.getModified();
+            userId = acmEntity.getModifier();
+            break;
+        case ACTION_INSERT:
+            date = acmEntity.getCreated();
+            userId = acmEntity.getCreator();
+            break;
+        case ACTION_DELETE:
+            date = acmEntity.getModified();
+            userId = acmEntity.getModifier();
+            break;
+        default:
+            log.warn("ACTION must be provided before AcmEntity info is chosen.");
         }
 
         objectChangedEvent.setDate(date);
@@ -115,14 +122,16 @@ public class AcmObjectChangedNotifier implements ApplicationListener<AcmDatabase
     /**
      * update objectChanged with parent info
      *
-     * @param objectChangedEvent instance of objectChangedEvent
-     * @param object             Object
+     * @param objectChangedEvent
+     *            instance of objectChangedEvent
+     * @param object
+     *            Object
      */
     private void updateAcmParentObjectInfo(AcmObjectEvent objectChangedEvent, Object object)
     {
         if (!(object instanceof AcmParentObjectInfo))
         {
-            //not an instance of AcmParentObjectInfo, nothing to do
+            // not an instance of AcmParentObjectInfo, nothing to do
             return;
         }
         AcmParentObjectInfo parentObjectInfo = (AcmParentObjectInfo) object;

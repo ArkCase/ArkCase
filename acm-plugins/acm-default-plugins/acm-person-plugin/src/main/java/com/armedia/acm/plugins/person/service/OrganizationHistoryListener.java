@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationEvent;
 import com.armedia.acm.plugins.person.model.PersonOrganizationConstants;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -28,7 +29,8 @@ public class OrganizationHistoryListener implements ApplicationListener<Organiza
             if (!getNonHistoryGeneratingEvents().contains(event.getEventType()))
             {
                 Organization organization = (Organization) event.getSource();
-                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), organization, organization.getId(), PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE, event.getEventDate(), event.getIpAddress());
+                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), organization, organization.getId(),
+                        PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE, event.getEventDate(), event.getIpAddress());
 
                 log.debug("Organization History added to database.");
             }

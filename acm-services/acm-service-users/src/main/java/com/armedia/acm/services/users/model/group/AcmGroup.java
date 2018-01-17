@@ -95,8 +95,10 @@ public class AcmGroup implements Serializable, AcmEntity
     private Set<AcmUser> userMembers = new HashSet<>();
 
     @JoinTable(name = "acm_group_membership", joinColumns = {
-            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false) }, inverseJoinColumns = {
-                    @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false) })
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    })
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<AcmGroup> memberGroups = new HashSet<>();
 

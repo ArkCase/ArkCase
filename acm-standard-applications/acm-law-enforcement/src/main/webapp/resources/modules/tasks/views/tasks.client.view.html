@@ -24,10 +24,8 @@
                 <div data-ui-view></div>
             </div>
 
-
             <div class="tabbed-footer">
-                <a href title="{{linksShown ? 'Hide links' : 'Show links'}}"
-                   ng-click="toggleShowLinks()" class="collapsed-button">
+                <a href title="{{linksShown ? 'Hide links' : 'Show links'}}" ng-click="toggleShowLinks()" class="collapsed-button">
                     <i x-ng-class="{'fa fa-angle-double-left' : !linksShown, 'fa fa-angle-double-right' : linksShown}"></i>
                 </a>
                 <ul ng-if="linksShown" class="nav nav-tabs overview-tabs">

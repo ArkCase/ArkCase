@@ -5,6 +5,7 @@ import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+
 import org.springframework.security.core.Authentication;
 
 /**
@@ -33,7 +34,7 @@ public class AcmEmailContentGeneratorService
     }
 
     private String generateAndSaveAuthenticationToken(Long fileId, String emailAddress, EmailWithEmbeddedLinksDTO emailDTO,
-                                                      Authentication authentication)
+            Authentication authentication)
     {
         String token = getAuthenticationTokenService().getUncachedTokenForAuthentication(authentication);
         AuthenticationToken authenticationToken = new AuthenticationToken();

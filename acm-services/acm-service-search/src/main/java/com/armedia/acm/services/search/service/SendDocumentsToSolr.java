@@ -2,7 +2,11 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.objectonverter.ObjectConverter;
-import com.armedia.acm.services.search.model.solr.*;
+import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
+import com.armedia.acm.services.search.model.solr.SolrBaseDocument;
+import com.armedia.acm.services.search.model.solr.SolrContentDocument;
+import com.armedia.acm.services.search.model.solr.SolrDeleteDocumentByIdRequest;
+import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import org.mule.api.MuleException;

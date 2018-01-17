@@ -1,5 +1,10 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.task.model.WorkflowHistoryInstance;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,10 +29,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -63,7 +64,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
 
     @Test
     public void workflowHistoryNonAdhocTest() throws Exception
-    {        
+    {
         WorkflowHistoryInstance instance = new WorkflowHistoryInstance();
         instance.setId("id");
         instance.setParticipant("participant");
@@ -71,7 +72,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
         instance.setStatus("status");
         instance.setStartDate(new Date());
         instance.setEndDate(new Date());
-        
+
         String ipAddress = "ipAddress";
         String businessProecessId = "businessProecessId";
 
@@ -84,7 +85,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/history/{id}/false", businessProecessId)
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andReturn();
 
         verifyAll();
@@ -106,10 +107,10 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
         WorkflowHistoryInstance found = foundWorkflowHistory.get(0);
         assertEquals(instance.getId(), found.getId());
     }
-    
+
     @Test
     public void workflowHistoryAdhocTest() throws Exception
-    {        
+    {
         WorkflowHistoryInstance instance = new WorkflowHistoryInstance();
         instance.setId("id");
         instance.setParticipant("participant");
@@ -117,7 +118,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
         instance.setStatus("status");
         instance.setStartDate(new Date());
         instance.setEndDate(new Date());
-        
+
         String ipAddress = "ipAddress";
         String taskId = "taskId";
 
@@ -130,7 +131,7 @@ public class WorkflowHistoryAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/history/{id}/true", taskId)
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
                 .andReturn();
 
         verifyAll();
