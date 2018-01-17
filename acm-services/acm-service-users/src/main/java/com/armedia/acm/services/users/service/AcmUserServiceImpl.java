@@ -1,7 +1,11 @@
 package com.armedia.acm.services.users.service;
 
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+import org.mule.api.MuleException;
+import org.springframework.security.core.Authentication;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +16,9 @@ import java.util.stream.Collectors;
 public class AcmUserServiceImpl implements AcmUserService
 {
     private UserDao userDao;
+
+    private ExecuteSolrQuery executeSolrQuery;
+
 
     /**
      * queries each user for given id's and returns list of users
@@ -53,8 +60,31 @@ public class AcmUserServiceImpl implements AcmUserService
         return users.stream().map(AcmUser::getUserId).collect(Collectors.toList());
     }
 
+
+    @Override
+    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows) throws MuleException
+    {
+
+        String query = "object_type_s:USER AND status_lcs:VALID";
+
+        String fq = String.format("fq=name_partial:%s", searchFilter);
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows, sortBy + " " + sortDirection, fq);
+    }
+
     public void setUserDao(UserDao userDao)
     {
         this.userDao = userDao;
     }
+
+    public ExecuteSolrQuery getExecuteSolrQuery()
+    {
+        return executeSolrQuery;
+    }
+
+    public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
+    {
+        this.executeSolrQuery = executeSolrQuery;
+    }
+
 }

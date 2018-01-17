@@ -124,7 +124,8 @@ public class ExecuteSolrQuery
             SolrDeleteDocumentsByQueryRequest deleteQueryRequest = new SolrDeleteDocumentsByQueryRequest(documentsQuery);
             String json = objectConverter.getJsonMarshaller().marshal(deleteQueryRequest);
             getMuleContextManager().dispatch(toSolrFlow, json, new HashMap<>());
-        } else
+        }
+        else
         {
             throw new IllegalArgumentException("query must not be empty or null.");
         }
