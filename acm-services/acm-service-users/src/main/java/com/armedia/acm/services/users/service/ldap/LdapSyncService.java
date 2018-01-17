@@ -1,6 +1,8 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.data.AcmServiceLdapSyncEvent;
+import com.armedia.acm.data.AcmServiceLdapSyncResult;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
@@ -11,7 +13,10 @@ import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.scheduling.annotation.Async;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -21,21 +26,28 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create multiple Spring beans, each
+ * Sync the user-related database tables with an LDAP directory. To support multiple LDAP configurations, create
+ * multiple Spring beans, each
  * with its own ldapSyncConfig.
  * <p/>
  * Both application roles and LDAP groups are synced.
  * <ul>
- * <li>Application roles drive role-based access control, and every deployment has the same application role names regardless of the LDAP
- * group names. The ldapSyncConfig includes a mapping from the logical role name to the physical LDAP group name. For each entry in this
+ * <li>Application roles drive role-based access control, and every deployment has the same application role names
+ * regardless of the LDAP
+ * group names. The ldapSyncConfig includes a mapping from the logical role name to the physical LDAP group name. For
+ * each entry in this
  * mapping, the members of the indicated LDAP group are linked to the indicated logical application role.</li>
- * <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny access to specific groups.
- * The groups could be more granular than application roles; for example, all case agents share the same application roles, but different
- * LDAP groups could represent different functional or geographic areas. So granting access at the LDAP group level could be more
- * appropriate - i.e., would restrict access to only those case agents in the appropriate functional or geographic area.</li>
+ * <li>LDAP groups are also synced, to be available for data access control; this allows users to grant or deny access
+ * to specific groups.
+ * The groups could be more granular than application roles; for example, all case agents share the same application
+ * roles, but different
+ * LDAP groups could represent different functional or geographic areas. So granting access at the LDAP group level
+ * could be more
+ * appropriate - i.e., would restrict access to only those case agents in the appropriate functional or geographic
+ * area.</li>
  * </ul>
  */
-public class LdapSyncService
+public class LdapSyncService implements ApplicationEventPublisherAware
 {
     private SpringLdapDao ldapDao;
     private AcmLdapSyncConfig ldapSyncConfig;
@@ -45,10 +57,12 @@ public class LdapSyncService
     private PropertyFileManager propertyFileManager;
     private String ldapLastSyncPropertyFileLocation;
     private LdapSyncProcessor ldapSyncProcessor;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
+    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
+    // ($HOME/.acm).
     public void ldapSync()
     {
         if (!isSyncEnabled())
@@ -72,7 +86,8 @@ public class LdapSyncService
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
 
-    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder ($HOME/.acm).
+    // this method is used by scheduled jobs in Spring beans loaded dynamically from the ACM configuration folder
+    // ($HOME/.acm).
     public void ldapPartialSync()
     {
         if (!isSyncEnabled())
@@ -81,12 +96,20 @@ public class LdapSyncService
             return;
         }
 
-        log.info("Starting partial sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
-                getLdapSyncConfig().getLdapUrl());
-
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
         Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
+        boolean isFullSync = !ldapLastSyncDate.isPresent();
+        if (isFullSync)
+        {
+            log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
+                    getLdapSyncConfig().getLdapUrl());
+        }
+        else
+        {
+            log.info("Starting partial sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
+                    getLdapSyncConfig().getLdapUrl());
+        }
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
@@ -94,16 +117,36 @@ public class LdapSyncService
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
         List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
 
-        boolean isFullSync = !ldapLastSyncDate.isPresent();
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
 
         writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
     }
 
+    @Async
+    public void initiatePartialSync(String principal)
+    {
+        boolean successResult = true;
+        try
+        {
+            ldapPartialSync();
+        }
+        catch (Exception e)
+        {
+            successResult = false;
+        }
+        AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
+        ldapSyncResult.setMessage(successResult ? "LDAP Partial sync completed" : "LDAP Partial sync failed to complete");
+        ldapSyncResult.setResult(successResult);
+        ldapSyncResult.setService("LDAP");
+        ldapSyncResult.setUser(principal);
+        applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
+    }
+
     /**
      * Try to sync user from LDAP by given username
      *
-     * @param username - username of the user
+     * @param username
+     *            - username of the user
      */
     public LdapUser ldapUserSync(String username)
     {
@@ -124,7 +167,8 @@ public class LdapSyncService
     /**
      * Try to sync user from LDAP by given dn
      *
-     * @param dn - distinguished name of the user
+     * @param dn
+     *            - distinguished name of the user
      */
     public LdapUser syncUserByDn(String dn)
     {
@@ -242,5 +286,11 @@ public class LdapSyncService
     public void setLdapSyncProcessor(LdapSyncProcessor ldapSyncProcessor)
     {
         this.ldapSyncProcessor = ldapSyncProcessor;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

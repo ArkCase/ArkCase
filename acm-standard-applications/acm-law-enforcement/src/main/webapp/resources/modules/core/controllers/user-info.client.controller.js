@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('core').controller('UserInfoController', ['$scope'
-    , 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'LookupService'
-    , function ($scope, UserInfoService, Menus, AcmLoginService, LookupService) {
+    , 'Profile.UserInfoService', 'Menus', 'Acm.LoginService', 'LookupService', 'MessageService'
+    , function ($scope, UserInfoService, Menus, AcmLoginService, LookupService, MessageService) {
 
         var appConfig = LookupService.getConfig('app').then(function (data) {
             $scope.helpUrl = data.helpUrl;
@@ -28,6 +28,10 @@ angular.module('core').controller('UserInfoController', ['$scope'
         $scope.onClickLogout = function () {
             AcmLoginService.logout();
         };
+
+        $scope.$bus.subscribe('sync-progress', function (data) {
+            MessageService.info(data.message);
+        });
 
     }
 ]);

@@ -66,4 +66,8 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="passwordValidationService" ref="passwordValidationService"/>
     </bean>
+
+    <bean id="ldapSyncAPIController" class="com.armedia.acm.services.users.web.api.LdapSyncAPIController">
+        <property name="acmContextHolder" ref="acmContextHolder"/>
+    </bean>
 </beans>
