@@ -13,10 +13,10 @@
  *
  * The Admin.DashboardConfigService provides Dashboard Config REST calls functionality
  */
-angular.module('admin').service('Admin.DashboardConfigService', function ($http) {
+angular.module('admin').service('Admin.DashboardConfigService', function($http) {
     return ({
-        getRolesByWidgets: getRolesByWidgets,
-        authorizeRolesForWidget: authorizeRolesForWidget
+        getRolesByWidgets : getRolesByWidgets,
+        authorizeRolesForWidget : authorizeRolesForWidget
     });
     /**
      * @ngdoc method
@@ -30,10 +30,11 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
      */
     function getRolesByWidgets() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
+            method : "GET",
+            url : "api/latest/plugin/dashboard/widgets/rolesByWidget/all"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -46,12 +47,13 @@ angular.module('admin').service('Admin.DashboardConfigService', function ($http)
      */
     function authorizeRolesForWidget(widget) {
         return $http({
-            method: "POST",
-            url: "api/latest/plugin/dashboard/widgets/set",
-            data: widget,
-            headers: {
-                "Content-Type": "application/json"
+            method : "POST",
+            url : "api/latest/plugin/dashboard/widgets/set",
+            data : widget,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 });

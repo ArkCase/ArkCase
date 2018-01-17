@@ -1,10 +1,13 @@
 package com.armedia.acm.auth;
 
+import static org.easymock.EasyMock.expect;
+
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,13 +15,12 @@ import org.springframework.security.core.Authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.expect;
 
 public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 {
@@ -96,7 +98,6 @@ public class AcmLoginSuccessOperationsTest extends EasyMockSupport
 
         verifyAll();
     }
-
 
     @Test
     public void addUserPrivilegesToSession() throws Exception

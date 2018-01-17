@@ -2,6 +2,7 @@ package com.armedia.acm.services.dataaccess.service.impl;
 
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -16,9 +17,9 @@ public class AcmDataAccessBatchUpdater
 
     @Transactional
     public void updateDataAccessPolicy(List<AcmAssignedObject> assignedObjects,
-                                       AcmObjectDataAccessBatchUpdateLocator locator)
+            AcmObjectDataAccessBatchUpdateLocator locator)
     {
-        for ( AcmAssignedObject assignedObject : assignedObjects )
+        for (AcmAssignedObject assignedObject : assignedObjects)
         {
             getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(assignedObject);
             locator.save(assignedObject);

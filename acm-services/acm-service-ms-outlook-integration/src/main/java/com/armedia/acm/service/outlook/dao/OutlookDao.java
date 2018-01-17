@@ -10,6 +10,12 @@ import com.armedia.acm.service.outlook.model.OutlookContactItem;
 import com.armedia.acm.service.outlook.model.OutlookFolder;
 import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
+
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+
+import java.util.List;
+
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
 import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
@@ -19,10 +25,6 @@ import microsoft.exchange.webservices.data.core.service.item.Item;
 import microsoft.exchange.webservices.data.search.FindFoldersResults;
 import microsoft.exchange.webservices.data.search.FindItemsResults;
 import microsoft.exchange.webservices.data.search.filter.SearchFilter;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-
-import java.util.List;
 
 /**
  * Created by armdev on 4/20/15.
@@ -77,66 +79,65 @@ public interface OutlookDao
             throws AcmOutlookCreateItemFailedException;
 
     void deleteItem(ExchangeService service,
-                    String itemId,
-                    DeleteMode deleteMode);
+            String itemId,
+            DeleteMode deleteMode);
 
     void deleteAppointmentItem(ExchangeService service,
-                               String itemId,
-                               boolean recurring,
-                               DeleteMode deleteMode);
+            String itemId,
+            boolean recurring,
+            DeleteMode deleteMode);
 
     OutlookFolder createFolder(ExchangeService service,
-                               String owner,
-                               WellKnownFolderName parentFolderName,
-                               OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
+            String owner,
+            WellKnownFolderName parentFolderName,
+            OutlookFolder newFolder) throws AcmOutlookItemNotFoundException, AcmOutlookCreateItemFailedException;
 
     OutlookFolder createFolder(ExchangeService service,
-                               String owner,
-                               String parentFolderId,
-                               OutlookFolder newFolder)
+            String owner,
+            String parentFolderId,
+            OutlookFolder newFolder)
             throws AcmOutlookCreateItemFailedException, AcmOutlookItemNotFoundException;
 
     void deleteFolder(ExchangeService service,
-                      String folderId,
-                      DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
-
-
-    public FindFoldersResults findFolders(ExchangeService service,
-                                          String parentFolderId,
-                                          int start,
-                                          int maxItems,
-                                          String sortProperty,
-                                          boolean sortAscending) throws AcmOutlookFindItemsFailedException;
+            String folderId,
+            DeleteMode deleteMode) throws AcmOutlookItemNotFoundException;
 
     public FindFoldersResults findFolders(ExchangeService service,
-                                          WellKnownFolderName wellKnownFolderName,
-                                          int start,
-                                          int maxItems,
-                                          String sortProperty,
-                                          boolean sortAscending) throws AcmOutlookFindItemsFailedException;
+            String parentFolderId,
+            int start,
+            int maxItems,
+            String sortProperty,
+            boolean sortAscending) throws AcmOutlookFindItemsFailedException;
+
+    public FindFoldersResults findFolders(ExchangeService service,
+            WellKnownFolderName wellKnownFolderName,
+            int start,
+            int maxItems,
+            String sortProperty,
+            boolean sortAscending) throws AcmOutlookFindItemsFailedException;
 
     void addFolderPermissions(ExchangeService service,
-                              String folderId,
-                              List<OutlookFolderPermission> permissions)
+            String folderId,
+            List<OutlookFolderPermission> permissions)
             throws AcmOutlookItemNotFoundException;
 
     void addFolderPermission(ExchangeService service,
-                             String folderId,
-                             OutlookFolderPermission permission)
+            String folderId,
+            OutlookFolderPermission permission)
             throws AcmOutlookItemNotFoundException;
 
     void removeFolderPermissions(ExchangeService service,
-                                 String folderId,
-                                 List<OutlookFolderPermission> permissions)
+            String folderId,
+            List<OutlookFolderPermission> permissions)
             throws AcmOutlookItemNotFoundException;
 
     void removeFolderPermission(ExchangeService service,
-                                String folderId,
-                                OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException;
+            String folderId,
+            OutlookFolderPermission permission) throws AcmOutlookItemNotFoundException;
 
     Folder getFolder(ExchangeService service,
-                     WellKnownFolderName wellKnownFolderName) throws AcmOutlookItemNotFoundException;
+            WellKnownFolderName wellKnownFolderName) throws AcmOutlookItemNotFoundException;
 
     Folder getFolder(ExchangeService service,
-                     String folderId) throws AcmOutlookItemNotFoundException;
+            String folderId) throws AcmOutlookItemNotFoundException;
 }

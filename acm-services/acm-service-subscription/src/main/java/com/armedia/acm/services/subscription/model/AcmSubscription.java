@@ -6,7 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.util.Date;
 
 /**
@@ -15,16 +24,11 @@ import java.util.Date;
 @Entity
 @Table(name = "acm_subscription")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmSubscription implements AcmObject, AcmEntity {
+public class AcmSubscription implements AcmObject, AcmEntity
+{
 
     @Id
-    @TableGenerator(name = "acm_subscription_gen",
-            table = "acm_subscription_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_subscription",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_subscription_gen", table = "acm_subscription_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_subscription", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_subscription_gen")
     @Column(name = "cm_subscription_id")
     private Long subscriptionId;
@@ -58,104 +62,125 @@ public class AcmSubscription implements AcmObject, AcmEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    public Long getSubscriptionId() {
+    public Long getSubscriptionId()
+    {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(Long subscriptionId) {
+    public void setSubscriptionId(Long subscriptionId)
+    {
         this.subscriptionId = subscriptionId;
     }
 
-    public Long getObjectId() {
+    public Long getObjectId()
+    {
         return objectId;
     }
 
-    public void setObjectId(Long objectId) {
+    public void setObjectId(Long objectId)
+    {
         this.objectId = objectId;
     }
 
-    public String getSubscriptionObjectType() {
+    public String getSubscriptionObjectType()
+    {
         return subscriptionObjectType;
     }
 
-    public void setSubscriptionObjectType(String subscriptionObjectType) {
+    public void setSubscriptionObjectType(String subscriptionObjectType)
+    {
         this.subscriptionObjectType = subscriptionObjectType;
     }
 
-    public String getObjectName() {
+    public String getObjectName()
+    {
         return objectName;
     }
 
-    public void setObjectName(String objectName) {
+    public void setObjectName(String objectName)
+    {
         this.objectName = objectName;
     }
 
-
-    public String getUserId() {
+    public String getUserId()
+    {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(String userId)
+    {
         this.userId = userId;
     }
 
-    public String getObjectTitle() {
+    public String getObjectTitle()
+    {
         return objectTitle;
     }
 
-    public void setObjectTitle(String objectTitle) {
+    public void setObjectTitle(String objectTitle)
+    {
         this.objectTitle = objectTitle;
     }
 
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
     @Override
     @JsonIgnore
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return SubscriptionConstants.OBJECT_TYPE;
     }
 
     @Override
     @JsonIgnore
-    public Long getId() {
+    public Long getId()
+    {
         return subscriptionId;
     }
 }

@@ -2,6 +2,7 @@ package com.armedia.acm.files.capture;
 
 import com.armedia.acm.files.FileAddedEvent;
 import com.armedia.acm.files.FileEvent;
+
 import org.springframework.context.ApplicationListener;
 
 public class CaptureFileEventListener implements ApplicationListener<FileEvent>
@@ -11,7 +12,7 @@ public class CaptureFileEventListener implements ApplicationListener<FileEvent>
     @Override
     public void onApplicationEvent(FileEvent fileEvent)
     {
-        if ( fileEvent instanceof FileAddedEvent)
+        if (fileEvent instanceof FileAddedEvent)
         {
             addedCount++;
         }

@@ -12,11 +12,13 @@
         }
     },
     "notes": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Note",
-            "description": "",
-            "value": "Add Note"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Note",
+                "description": "",
+                "value": "Add Note"
+            }
+        },
         "table": {
             "field": {
                 "note": {
@@ -47,56 +49,62 @@
             }
         }
     },
-    "cost": {"table": {
-        "field": {
-            "total-cost": {
-                "defaultValue": "Total Cost",
-                "description": "",
-                "value": "Total Cost"
+    "cost": {
+        "table": {
+            "field": {
+                "total-cost": {
+                    "defaultValue": "Total Cost",
+                    "description": "",
+                    "value": "Total Cost"
+                },
+                "modified-date": {
+                    "defaultValue": "Modified Date",
+                    "description": "",
+                    "value": "Modified Date"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "form-name": {
+                    "defaultValue": "Form Name",
+                    "description": "",
+                    "value": "Form Name"
+                },
+                "username": {
+                    "defaultValue": "Username",
+                    "description": "",
+                    "value": "Username"
+                },
+                "status": {
+                    "defaultValue": "Status",
+                    "description": "",
+                    "value": "Status"
+                }
             },
-            "modified-date": {
-                "defaultValue": "Modified Date",
-                "description": "",
-                "value": "Modified Date"
+            "label": {
+                "costsheet": {
+                    "defaultValue": "Costsheet",
+                    "description": "",
+                    "value": "Costsheet"
+                }
             },
-            "id": {
-                "defaultValue": "ID",
+            "title": {
+                "defaultValue": "Cost Tracking",
                 "description": "",
-                "value": "ID"
-            },
-            "form-name": {
-                "defaultValue": "Form Name",
+                "value": "Cost Tracking"
+            }
+        }
+    },
+    "references": {
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Reference",
                 "description": "",
-                "value": "Form Name"
-            },
-            "username": {
-                "defaultValue": "Username",
-                "description": "",
-                "value": "Username"
-            },
-            "status": {
-                "defaultValue": "Status",
-                "description": "",
-                "value": "Status"
+                "value": "Add Reference"
             }
         },
-        "label": {"costsheet": {
-            "defaultValue": "Costsheet",
-            "description": "",
-            "value": "Costsheet"
-        }},
-        "title": {
-            "defaultValue": "Cost Tracking",
-            "description": "",
-            "value": "Cost Tracking"
-        }
-    }},
-    "references": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Reference",
-            "description": "",
-            "value": "Add Reference"
-        }},
         "table": {
             "field": {
                 "modified": {
@@ -114,7 +122,7 @@
                     "description": "",
                     "value": "Number"
                 },
-                  "target-title": {
+                "target-title": {
                     "defaultValue": "Title",
                     "description": "",
                     "value": "Title"
@@ -143,11 +151,13 @@
             "description": "",
             "value": "Cancel"
         },
-        "label": {"email-address": {
-            "defaultValue": "Email Address",
-            "description": "",
-            "value": "Email Address"
-        }},
+        "label": {
+            "email-address": {
+                "defaultValue": "Email Address",
+                "description": "",
+                "value": "Email Address"
+            }
+        },
         "title": {
             "defaultValue": "Send Email",
             "description": "",
@@ -170,11 +180,13 @@
         }
     },
     "documents": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Document",
-            "description": "",
-            "value": "Add Document"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Document",
+                "description": "",
+                "value": "Add Document"
+            }
+        },
         "form-document": {
             "witness-interview-request": {
                 "defaultValue": "Witness Interview Request",
@@ -258,11 +270,13 @@
         "value": "Case Files | ACM | Ark Case Management"
     },
     "correspondence": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Correspondence",
-            "description": "",
-            "value": "Add Correspondence"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Correspondence",
+                "description": "",
+                "value": "Add Correspondence"
+            }
+        },
         "form-document": {
             "witness-interview-request": {
                 "defaultValue": "Witness Interview Request",
@@ -325,41 +339,45 @@
             }
         }
     },
-    "history": {"table": {
-        "field": {
-            "date": {
-                "defaultValue": "Date",
-                "description": "",
-                "value": "Date"
+    "history": {
+        "table": {
+            "field": {
+                "date": {
+                    "defaultValue": "Date",
+                    "description": "",
+                    "value": "Date"
+                },
+                "event-name": {
+                    "defaultValue": "Event Name",
+                    "description": "",
+                    "value": "Event Name"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "user": {
+                    "defaultValue": "User",
+                    "description": "",
+                    "value": "User"
+                }
             },
-            "event-name": {
-                "defaultValue": "Event Name",
+            "title": {
+                "defaultValue": "History",
                 "description": "",
-                "value": "Event Name"
-            },
-            "id": {
-                "defaultValue": "ID",
-                "description": "",
-                "value": "ID"
-            },
-            "user": {
-                "defaultValue": "User",
-                "description": "",
-                "value": "User"
+                "value": "History"
             }
-        },
-        "title": {
-            "defaultValue": "History",
-            "description": "",
-            "value": "History"
         }
-    }},
+    },
     "outlook-calendar": {
-        "msg": {"error-occurred": {
-            "defaultValue": "Error occurred while retrieving calendar items.",
-            "description": "",
-            "value": "Error occurred while retrieving calendar items."
-        }}
+        "msg": {
+            "error-occurred": {
+                "defaultValue": "Error occurred while retrieving calendar items.",
+                "description": "",
+                "value": "Error occurred while retrieving calendar items."
+            }
+        }
     },
     "title": {
         "defaultValue": "Case",
@@ -431,29 +449,35 @@
         }
     },
     "people": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Person",
-            "description": "",
-            "value": "Add Person"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Person",
+                "description": "",
+                "value": "Add Person"
+            }
+        },
         "table": {
             "security-tags": {
-                "msg": {"add-new-record": {
-                    "defaultValue": "Add Device",
-                    "description": "",
-                    "value": "Add Device"
-                }},
+                "msg": {
+                    "add-new-record": {
+                        "defaultValue": "Add Device",
+                        "description": "",
+                        "value": "Add Device"
+                    }
+                },
                 "table-title": {
                     "defaultValue": "Security Tags",
                     "description": "",
                     "value": "Security Tags"
                 },
                 "addresses": {
-                    "msg": {"add-new-record": {
-                        "defaultValue": "Add Location",
-                        "description": "",
-                        "value": "Add Location"
-                    }},
+                    "msg": {
+                        "add-new-record": {
+                            "defaultValue": "Add Location",
+                            "description": "",
+                            "value": "Add Location"
+                        }
+                    },
                     "table": {
                         "field": {
                             "zip": {
@@ -505,11 +529,13 @@
                     }
                 },
                 "aliases": {
-                    "msg": {"add-new-record": {
-                        "defaultValue": "Add Alias",
-                        "description": "",
-                        "value": "Add Alias"
-                    }},
+                    "msg": {
+                        "add-new-record": {
+                            "defaultValue": "Add Alias",
+                            "description": "",
+                            "value": "Add Alias"
+                        }
+                    },
                     "table": {
                         "field": {
                             "added-by": {
@@ -541,11 +567,13 @@
                     }
                 },
                 "organizations": {
-                    "msg": {"add-new-record": {
-                        "defaultValue": "Add Organization",
-                        "description": "",
-                        "value": "Add Organization"
-                    }},
+                    "msg": {
+                        "add-new-record": {
+                            "defaultValue": "Add Organization",
+                            "description": "",
+                            "value": "Add Organization"
+                        }
+                    },
                     "table": {
                         "field": {
                             "added-by": {
@@ -576,28 +604,30 @@
                         }
                     }
                 },
-                "table": {"field": {
-                    "added-by": {
-                        "defaultValue": "Added By",
-                        "description": "",
-                        "value": "Added By"
-                    },
-                    "date-added": {
-                        "defaultValue": "Date Added",
-                        "description": "",
-                        "value": "Date Added"
-                    },
-                    "type": {
-                        "defaultValue": "Type",
-                        "description": "",
-                        "value": "Type"
-                    },
-                    "value": {
-                        "defaultValue": "Value",
-                        "description": "",
-                        "value": "Value"
+                "table": {
+                    "field": {
+                        "added-by": {
+                            "defaultValue": "Added By",
+                            "description": "",
+                            "value": "Added By"
+                        },
+                        "date-added": {
+                            "defaultValue": "Date Added",
+                            "description": "",
+                            "value": "Date Added"
+                        },
+                        "type": {
+                            "defaultValue": "Type",
+                            "description": "",
+                            "value": "Type"
+                        },
+                        "value": {
+                            "defaultValue": "Value",
+                            "description": "",
+                            "value": "Value"
+                        }
                     }
-                }}
+                }
             },
             "field": {
                 "id": {
@@ -632,11 +662,13 @@
                 "value": "People "
             },
             "contact-methods": {
-                "msg": {"add-new-record": {
-                    "defaultValue": "Add Device",
-                    "description": "",
-                    "value": "Add Device"
-                }},
+                "msg": {
+                    "add-new-record": {
+                        "defaultValue": "Add Device",
+                        "description": "",
+                        "value": "Add Device"
+                    }
+                },
                 "table": {
                     "field": {
                         "added-by": {
@@ -745,59 +777,63 @@
             }
         }
     },
-    "context-menu": {"menu-title": {
-        "sub2": {
-            "defaultValue": "Sub 2",
-            "description": "",
-            "value": "Sub 2"
-        },
-        "edit": {
-            "defaultValue": "Edit",
-            "description": "",
-            "value": "Edit"
-        },
-        "more": {
-            "defaultValue": "More",
-            "description": "",
-            "value": "More"
-        },
-        "sub1": {
-            "defaultValue": "Sub 1",
-            "description": "",
-            "value": "Sub 1"
-        },
-        "copy": {
-            "defaultValue": "Copy",
-            "description": "",
-            "value": "Copy"
-        },
-        "paste": {
-            "defaultValue": "Paste",
-            "description": "",
-            "value": "Paste"
-        },
-        "menu": {
-            "defaultValue": "Menu:",
-            "description": "",
-            "value": "Menu:"
-        },
-        "delete": {
-            "defaultValue": "Delete",
-            "description": "",
-            "value": "Delete"
+    "context-menu": {
+        "menu-title": {
+            "sub2": {
+                "defaultValue": "Sub 2",
+                "description": "",
+                "value": "Sub 2"
+            },
+            "edit": {
+                "defaultValue": "Edit",
+                "description": "",
+                "value": "Edit"
+            },
+            "more": {
+                "defaultValue": "More",
+                "description": "",
+                "value": "More"
+            },
+            "sub1": {
+                "defaultValue": "Sub 1",
+                "description": "",
+                "value": "Sub 1"
+            },
+            "copy": {
+                "defaultValue": "Copy",
+                "description": "",
+                "value": "Copy"
+            },
+            "paste": {
+                "defaultValue": "Paste",
+                "description": "",
+                "value": "Paste"
+            },
+            "menu": {
+                "defaultValue": "Menu:",
+                "description": "",
+                "value": "Menu:"
+            },
+            "delete": {
+                "defaultValue": "Delete",
+                "description": "",
+                "value": "Delete"
+            }
         }
-    }},
+    },
     "create-new-folder-dialog": {
         "btn-cancel": {
             "defaultValue": "Cancel",
             "description": "",
             "value": "Cancel"
         },
-        "label": {"folder-name": {
-            "defaultValue": "Folder Name",
-            "description": "",
-            "value": "Folder Name"
-        }},
+        "label": {
+            "folder-name": {
+                "defaultValue": "Folder Name",
+                "description": "",
+                "value": "Folder Name"
+            }
+        },
         "title": {
             "defaultValue": "Create Folder",
             "description": "",
@@ -950,11 +986,13 @@
             }
         }
     },
-    "wizard": {"title": {
-        "defaultValue": "New Case File",
-        "description": "",
-        "value": "New Case File"
-    }},
+    "wizard": {
+        "title": {
+            "defaultValue": "New Case File",
+            "description": "",
+            "value": "New Case File"
+        }
+    },
     "detail": {
         "other-menu-items": {
             "defaultValue": "Other menu items",
@@ -984,56 +1022,62 @@
             "value": "(Error)"
         }
     },
-    "time": {"table": {
-        "field": {
-            "total-hours": {
-                "defaultValue": "Total Hours",
-                "description": "",
-                "value": "Total Hours"
+    "time": {
+        "table": {
+            "field": {
+                "total-hours": {
+                    "defaultValue": "Total Hours",
+                    "description": "",
+                    "value": "Total Hours"
+                },
+                "modified-date": {
+                    "defaultValue": "Modified Date",
+                    "description": "",
+                    "value": "Modified Date"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "form-name": {
+                    "defaultValue": "Form Name",
+                    "description": "",
+                    "value": "Form Name"
+                },
+                "username": {
+                    "defaultValue": "Username",
+                    "description": "",
+                    "value": "Username"
+                },
+                "status": {
+                    "defaultValue": "Status",
+                    "description": "",
+                    "value": "Status"
+                }
             },
-            "modified-date": {
-                "defaultValue": "Modified Date",
-                "description": "",
-                "value": "Modified Date"
+            "label": {
+                "timesheet": {
+                    "defaultValue": "Timesheet",
+                    "description": "",
+                    "value": "Timesheet"
+                }
             },
-            "id": {
-                "defaultValue": "ID",
+            "title": {
+                "defaultValue": "Time Tracking",
                 "description": "",
-                "value": "ID"
-            },
-            "form-name": {
-                "defaultValue": "Form Name",
+                "value": "Time Tracking"
+            }
+        }
+    },
+    "tasks": {
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Task",
                 "description": "",
-                "value": "Form Name"
-            },
-            "username": {
-                "defaultValue": "Username",
-                "description": "",
-                "value": "Username"
-            },
-            "status": {
-                "defaultValue": "Status",
-                "description": "",
-                "value": "Status"
+                "value": "Add Task"
             }
         },
-        "label": {"timesheet": {
-            "defaultValue": "Timesheet",
-            "description": "",
-            "value": "Timesheet"
-        }},
-        "title": {
-            "defaultValue": "Time Tracking",
-            "description": "",
-            "value": "Time Tracking"
-        }
-    }},
-    "tasks": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Task",
-            "description": "",
-            "value": "Add Task"
-        }},
         "buttons": {
             "complete-task-outcome": {
                 "defaultValue": "Complete Task Outcome",
@@ -1112,11 +1156,13 @@
         }
     },
     "participants": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Participant",
-            "description": "",
-            "value": "Add Participant"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Participant",
+                "description": "",
+                "value": "Add Participant"
+            }
+        },
         "table": {
             "field": {
                 "name": {

@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.ecm.model;
 /**
  * Created by marjan.stefanoski on 03.04.2015.
  */
-public interface AcmFolderConstants {
+public interface AcmFolderConstants
+{
 
     String MULE_ENDPOINT_RENAME_FOLDER = "vm://renameFolder.in";
     String MULE_ENDPOINT_ADD_NEW_FOLDER = "vm://addNewFolder.in";
@@ -31,9 +32,9 @@ public interface AcmFolderConstants {
     String EVENT_TYPE_FOLDER_MOVED = "com.armedia.acm.folder.moved";
     String EVENT_TYPE_FOLDER_COPIED = "com.armedia.acm.folder.copied";
 
-    String PARENT_FOLDER_ID="parentFolderId";
-    String ACM_FOLDER_ID ="acmFolderId";
-    String NEW_FOLDER_NAME="newFolderName";
+    String PARENT_FOLDER_ID = "parentFolderId";
+    String ACM_FOLDER_ID = "acmFolderId";
+    String NEW_FOLDER_NAME = "newFolderName";
     String DESTINATION_FOLDER_ID = "dstFolderId";
     String FOLDER_PATH = "folderPath";
 
@@ -57,7 +58,6 @@ public interface AcmFolderConstants {
     String CMIS_OBJECT_TYPE_ID_FOLDER = "cmis:folder";
     String CMIS_OBJECT_TYPE_ID_FILE = "cmis:document";
 
-    
     String FOLDER_STRUCTURE_KEY_NAME = "name";
     String FOLDER_STRUCTURE_KEY_CHILDREN = "children";
     String FOLDER_STRUCTURE_KEY_ATTACHMENT = "attachment";

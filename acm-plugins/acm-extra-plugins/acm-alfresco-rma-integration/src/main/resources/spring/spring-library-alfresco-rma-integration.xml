@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-
-    <bean id="alfrescoRmaPluginPropertiesForSpring"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="alfrescoRmaPluginPropertiesForSpring" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -39,13 +36,11 @@
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
-    <bean id="acmCaseFileStatusChangedListener"
-          class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
+    <bean id="acmCaseFileStatusChangedListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileStatusChangedListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
-    <bean id="acmCaseFileClosedListener"
-          class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileClosedListener">
+    <bean id="acmCaseFileClosedListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmCaseFileClosedListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
@@ -53,8 +48,7 @@
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
     </bean>
 
-    <bean id="acmFolderDeclarationListener"
-          class="com.armedia.acm.plugins.alfrescorma.service.AcmFolderDeclareRequestListener">
+    <bean id="acmFolderDeclarationListener" class="com.armedia.acm.plugins.alfrescorma.service.AcmFolderDeclareRequestListener">
         <property name="alfrescoRecordsService" ref="alfrescoRecordsService"/>
         <property name="acmFolderDao" ref="acmFolderDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>

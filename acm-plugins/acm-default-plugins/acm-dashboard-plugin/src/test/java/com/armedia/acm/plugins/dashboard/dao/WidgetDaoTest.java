@@ -1,18 +1,20 @@
 package com.armedia.acm.plugins.dashboard.dao;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 1/20/16.

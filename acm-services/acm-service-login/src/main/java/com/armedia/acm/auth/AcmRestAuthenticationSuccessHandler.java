@@ -16,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * By default, form login will answer a successful authentication request with a 301 MOVED PERMANENTLY status code; this makes sense in the
- * context of an actual login form which needs to redirect after login. For a RESTful web service however, the desired response for a
+ * By default, form login will answer a successful authentication request with a 301 MOVED PERMANENTLY status code; this
+ * makes sense in the
+ * context of an actual login form which needs to redirect after login. For a RESTful web service however, the desired
+ * response for a
  * successful authentication should be 200 OK.
  * <p>
  * Created by Bojan Milenkoski on 06.4.2016

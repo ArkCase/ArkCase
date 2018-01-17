@@ -17,11 +17,13 @@ public interface ObjectDataExtractingProcessor<CF, PD extends BinaryDataProvider
 {
 
     /**
-     * @param objectIds IDs of the instances of <code>CF</code> whose data should be processed for producing the binary
+     * @param objectIds
+     *            IDs of the instances of <code>CF</code> whose data should be processed for producing the binary
      *            data available from the instance of <code>PD</code>.
      * @return an instance of <code>BinaryDataProvider</code> containing the binary data that was extracted and prepared
      *         for consumption.
-     * @throws IOException if there was an error while processing the instances of <code>CF</code>.
+     * @throws IOException
+     *             if there was an error while processing the instances of <code>CF</code>.
      *
      * @see PD#getContent()
      */
@@ -31,7 +33,8 @@ public interface ObjectDataExtractingProcessor<CF, PD extends BinaryDataProvider
      * Allows for post processing of the print document before response is sent back. This might include raising events,
      * or adding additional pages to the resulting PDF for example.
      *
-     * @param dataProvider the binary data provider that was produced by <code>processObjects</code> method.
+     * @param dataProvider
+     *            the binary data provider that was produced by <code>processObjects</code> method.
      * @see ObjectDataExtractingProcessor#processObjects(List)
      */
     void postProcessDataProvider(PD dataProvider);

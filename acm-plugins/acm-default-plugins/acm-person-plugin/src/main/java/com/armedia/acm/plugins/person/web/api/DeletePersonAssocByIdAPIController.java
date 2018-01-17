@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation"})
+@RequestMapping({ "/api/v1/plugin/personAssociation", "/api/latest/plugin/personAssociation" })
 public class DeletePersonAssocByIdAPIController
 {
     private PersonAssociationDao personAssociationDao;
@@ -30,8 +30,7 @@ public class DeletePersonAssocByIdAPIController
     @RequestMapping(value = "/delete/{personAssocId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deletePersonById(
-            @PathVariable("personAssocId") Long personAssocId
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+            @PathVariable("personAssocId") Long personAssocId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         log.info("Finding person association by id:'{}'", personAssocId);
 
@@ -48,7 +47,8 @@ public class DeletePersonAssocByIdAPIController
 
                 objectToReturnJSON.put("deletedPersonAssociationId", personAssocId);
                 return objectToReturnJSON.toString();
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 throw new AcmUserActionFailedException("Delete", "personAssoc", personAssocId, e.getMessage(), e);
             }

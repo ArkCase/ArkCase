@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -52,7 +53,8 @@ public class CmisConfigurationPropertiesService
 
             return cmisJsonArr;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't read CMIS properties file", e);
             throw new AcmCmisConfigurationException("Can't retrieve CMIS properties", e);

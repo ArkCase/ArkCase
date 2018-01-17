@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmTimesheetPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
         <property name="pluginName" value="Time Tracking Service Plugin"/>
@@ -46,11 +44,9 @@
                     <property name="requiredPrivilege" ref="timesheetPrivilege"/>
                 </bean>
 
-                <bean id="getTimesheetsForObjectIdAndTypeUrl"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="getTimesheetsForObjectIdAndTypeUrl" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
-                    <property name="url"
-                              value="/api/{version}/service/timesheet/objectId/{objectId}/objectType/{objectType}"/>
+                    <property name="url" value="/api/{version}/service/timesheet/objectId/{objectId}/objectType/{objectType}"/>
                     <property name="requiredPrivilege" ref="timesheetPrivilege"/>
                 </bean>
 

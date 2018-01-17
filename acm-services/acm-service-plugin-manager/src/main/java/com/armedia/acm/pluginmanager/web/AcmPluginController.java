@@ -2,6 +2,7 @@ package com.armedia.acm.pluginmanager.web;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmUserAction;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,37 +26,36 @@ public class AcmPluginController
     private Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * REST service to get the list of accessible navigator tabs.  It is NOT used by the ACM webapp (the webapp uses
-     * JSTIL to iterate over the AcmApplication which is added to the user session at login time).  This service is to
+     * REST service to get the list of accessible navigator tabs. It is NOT used by the ACM webapp (the webapp uses
+     * JSTIL to iterate over the AcmApplication which is added to the user session at login time). This service is to
      * ensure the tab list is available via REST... since all data that appears in the UI should be REST-accessible.
      */
-    @RequestMapping(value="/navigatorPlugins", method = RequestMethod.GET, produces=MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    List<AcmUserAction> enabledNavigatorPlugins(
+    @RequestMapping(value = "/navigatorPlugins", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<AcmUserAction> enabledNavigatorPlugins(
             HttpSession userSession,
             HttpServletResponse response)
-    throws IOException
+            throws IOException
     {
         Map<String, Boolean> userPrivileges = (Map<String, Boolean>) userSession.getAttribute("acm_privileges");
         AcmApplication acmApplication = (AcmApplication) userSession.getAttribute("acm_application");
 
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
-            log.debug("User Privileges is null? " + ( userPrivileges == null ));
-            log.debug("ACM App is null? " + ( acmApplication == null));
+            log.debug("User Privileges is null? " + (userPrivileges == null));
+            log.debug("ACM App is null? " + (acmApplication == null));
         }
 
-        if ( userPrivileges == null || acmApplication == null )
+        if (userPrivileges == null || acmApplication == null)
         {
             throw new IllegalStateException("Invalid ACM session: no user privileges set");
         }
 
         List<AcmUserAction> tabs = acmApplication.getNavigatorTabs();
         List<AcmUserAction> userAccessibleTabs = new ArrayList<>();
-        for ( AcmUserAction action : tabs )
+        for (AcmUserAction action : tabs)
         {
             String requiredPrivilege = action.getRequiredPrivilege();
-            if ( userPrivileges.containsKey(requiredPrivilege) && userPrivileges.get(requiredPrivilege))
+            if (userPrivileges.containsKey(requiredPrivilege) && userPrivileges.get(requiredPrivilege))
             {
                 userAccessibleTabs.add(action);
             }

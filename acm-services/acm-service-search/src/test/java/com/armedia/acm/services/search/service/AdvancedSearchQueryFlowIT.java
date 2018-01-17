@@ -58,7 +58,8 @@ public class AdvancedSearchQueryFlowIT
                 + "Dmodifier_lcs&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Week%27%7Dmodified_date_tdt:%5BNOW"
                 + "%2FDAY-7DAY+TO+*%5D&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Month%27%7Dmodified_date_tdt:"
                 + "%5BNOW%2FDAY-1MONTH+TO+*%5D&facet.query=%7B%21key%3D%27Modify+Date%2C+Previous+Year%27%7D"
-                + "modified_date_tdt:%5BNOW%2FDAY-1YEAR+TO+*%5D&facet.field=%7B%21key%3D%27Incident+Type%27%7D" + "incident_type_lcs&facet.field=%7B%21key%3D%27Status%27%7Dstatus_lcs";
+                + "modified_date_tdt:%5BNOW%2FDAY-1YEAR+TO+*%5D&facet.field=%7B%21key%3D%27Incident+Type%27%7D"
+                + "incident_type_lcs&facet.field=%7B%21key%3D%27Status%27%7Dstatus_lcs";
 
         // String query = "Grateful Dead";
 

@@ -1,10 +1,10 @@
 package com.armedia.acm.plugins.task.web.api;
 
-import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -12,13 +12,17 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.ws.rs.QueryParam;
-import java.util.List;
+import java.util.ArrayList;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class AcmTaskAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -32,26 +36,28 @@ public class AcmTaskAPIController
         try
         {
             log.info("Trying to fetch the Future Tasks from Business Process {}", businessProcessId);
-            return new ResponseEntity<List<BuckslipFutureTask>>(getAcmTaskService().getBuckslipFutureTasks(businessProcessId), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipFutureTasks(businessProcessId),
+                    HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = "/businessProcess/{id}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory)
+    public ResponseEntity<?> getBuckslipPastTasks(@PathVariable("id") String businessProcessId,
+            @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory)
     {
         try
         {
             log.info("Trying to fetch the Past Tasks from Business Process {}", businessProcessId);
-            return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(businessProcessId, readFromHistory), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipPastTasks(businessProcessId, readFromHistory), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -62,17 +68,21 @@ public class AcmTaskAPIController
         try
         {
             log.info("Trying to fetch buckslip processes for {}, with ID {}", objectType, objectId);
-            return new ResponseEntity<List<BuckslipProcess>>(getAcmTaskService().getBuckslipProcessesForChildren(objectType, objectId), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipProcessesForChildren(objectType, objectId),
+                    HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("objectType") String objectType, @PathVariable("objectId") Long objectId, @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory, Authentication authentication)
+    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("objectType") String objectType,
+            @PathVariable("objectId") Long objectId,
+            @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory,
+            Authentication authentication)
     {
         log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
         Long businessProcessId = getAcmTaskService().getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
@@ -80,11 +90,13 @@ public class AcmTaskAPIController
         try
         {
             log.info("Trying to fetch the Past Tasks from Business Process {}", businessProcessId);
-            return new ResponseEntity<String>(getAcmTaskService().getBuckslipPastTasks(String.valueOf(businessProcessId), readFromHistory), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipPastTasks(String.valueOf(businessProcessId), readFromHistory),
+                    HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            log.debug("No history for Business Proess {}", businessProcessId);
+            return new ResponseEntity<>(new ArrayList<>().toString(), HttpStatus.OK);
         }
 
     }
@@ -96,11 +108,11 @@ public class AcmTaskAPIController
         try
         {
             log.info("Checking is the routing workflow for Business Process {} initiable", businessProcessId);
-            return new ResponseEntity<Boolean>(getAcmTaskService().isInitiatable(businessProcessId), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().isInitiatable(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -110,12 +122,12 @@ public class AcmTaskAPIController
     {
         try
         {
-            log.info("Checking is the routing workflow for Business Process {] withdrawable", businessProcessId);
-            return new ResponseEntity<Boolean>(getAcmTaskService().isWithdrawable(businessProcessId), HttpStatus.OK);
+            log.info("Checking is the routing workflow for Business Process {} withdrawable", businessProcessId);
+            return new ResponseEntity<>(getAcmTaskService().isWithdrawable(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -131,7 +143,7 @@ public class AcmTaskAPIController
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -147,7 +159,7 @@ public class AcmTaskAPIController
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -158,11 +170,11 @@ public class AcmTaskAPIController
         try
         {
             log.info("Updating buckslip process with business process name {}", buckslipProcess.getBusinessProcessName());
-            return new ResponseEntity<BuckslipProcess>(getAcmTaskService().updateBuckslipProcess(buckslipProcess), HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().updateBuckslipProcess(buckslipProcess), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
-            return new ResponseEntity<String>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

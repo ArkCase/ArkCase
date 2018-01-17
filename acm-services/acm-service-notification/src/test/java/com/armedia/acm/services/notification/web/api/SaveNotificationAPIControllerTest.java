@@ -1,10 +1,16 @@
 package com.armedia.acm.services.notification.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -26,11 +32,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
@@ -45,10 +46,8 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
     private NotificationEventPublisher mockEventPublisher;
     private Authentication mockAuthentication;
 
-
     private NotificationDao mockNotificationDao;
     private NotificationEventPublisher mockNotificationEventPublisher;
-
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -91,7 +90,6 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         incomingNotification.setType("type");
         incomingNotification.setNote("note");
 
-
         Capture<Notification> notificationToSave = new Capture<>();
         Capture<ApplicationNotificationEvent> capturedEvent = new Capture<>();
 
@@ -106,7 +104,6 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         String in = objectMapper.writeValueAsString(incomingNotification);
 
         log.debug("Input JSON: " + in);
-
 
         MvcResult result = mockMvc.perform(
                 post("/api/latest/plugin/notification")
@@ -157,7 +154,6 @@ public class SaveNotificationAPIControllerTest extends EasyMockSupport
         String in = objectMapper.writeValueAsString(incomingNotification);
 
         log.debug("Input JSON: " + in);
-
 
         MvcResult result = mockMvc.perform(
                 post("/api/latest/plugin/notification")

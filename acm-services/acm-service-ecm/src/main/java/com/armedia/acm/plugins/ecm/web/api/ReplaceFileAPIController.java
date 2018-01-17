@@ -76,7 +76,8 @@ public class ReplaceFileAPIController
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_REPLACE_FILE, EcmFileConstants.OBJECT_FILE_TYPE,
                         fileToBeReplacedId, "No stream found!.", null);
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             if (log.isErrorEnabled())
             {
@@ -90,7 +91,8 @@ public class ReplaceFileAPIController
         {
             replacedFile = getFileTransaction().updateFileTransactionEventAware(authentication, fileToBeReplaced, replacementStream);
             getFileEventPublisher().publishFileReplacedEvent(replacedFile, authentication, ipAddress, true);
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
             if (log.isErrorEnabled())
             {

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="tagUiController" class="com.armedia.acm.services.tag.web.TagUiController">
         <property name="pluginProperties" ref="tagProperties"/>
@@ -15,7 +13,7 @@
     <bean id="associateTagAPIController" class="com.armedia.acm.services.tag.web.api.AssociateTagAPIController">
         <property name="associatedTagEventPublisher" ref="associatedTagEventPublisher"/>
         <property name="associatedTagService" ref="associatedTagService"/>
-        <property name="tagService" ref="tagService" />
+        <property name="tagService" ref="tagService"/>
     </bean>
 
     <bean id="addNewTagAPIController" class="com.armedia.acm.services.tag.web.api.AddNewTagAPIController">
@@ -24,7 +22,7 @@
     </bean>
 
     <bean id="removeExistingTagAPIController" class="com.armedia.acm.services.tag.web.api.RemoveExistingTagAPIController">
-        <property name="tagService" ref="tagService" />
+        <property name="tagService" ref="tagService"/>
         <property name="tagEventPublisher" ref="tagEventPublisher"/>
     </bean>
 
@@ -38,8 +36,9 @@
         <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
 
-    <bean id="listAssociatedTagsByObjectTypeAndIdAPIController" class="com.armedia.acm.services.tag.web.api.ListAssociatedTagsByObjectTypeAndIdAPIController">
-        <property name="associatedTagService" ref="associatedTagService" />
+    <bean id="listAssociatedTagsByObjectTypeAndIdAPIController"
+        class="com.armedia.acm.services.tag.web.api.ListAssociatedTagsByObjectTypeAndIdAPIController">
+        <property name="associatedTagService" ref="associatedTagService"/>
     </bean>
 
 </beans>

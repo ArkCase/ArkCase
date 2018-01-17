@@ -3,20 +3,17 @@
 /**
  * Module dependencies.
  */
-var _ = require('lodash'),
-    glob = require('glob');
+var _ = require('lodash'), glob = require('glob');
 
 /**
  * Load app configurations
  */
-module.exports = _.extend(
-    require('./env/all')
-);
+module.exports = _.extend(require('./env/all'));
 
 /**
  * Get files by glob patterns
  */
-module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
+module.exports.getGlobbedFiles = function(globPatterns, removeRoot) {
     // For context switching
     var _this = this;
 
@@ -28,7 +25,7 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
 
     // If glob pattern is array so we use each pattern in a recursive way, otherwise we use glob
     if (_.isArray(globPatterns)) {
-        globPatterns.forEach(function (globPattern) {
+        globPatterns.forEach(function(globPattern) {
             output = _.union(output, _this.getGlobbedFiles(globPattern, removeRoot));
         });
     } else if (_.isString(globPatterns)) {
@@ -37,7 +34,7 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
         } else {
             var files = glob.sync(globPatterns);
             if (removeRoot) {
-                files = files.map(function (file) {
+                files = files.map(function(file) {
                     return file.replace(removeRoot, '');
                 });
             }
@@ -51,12 +48,12 @@ module.exports.getGlobbedFiles = function (globPatterns, removeRoot) {
 /**
  * Get the modules JavaScript files
  */
-module.exports.getJavaScriptAssets = function () {
+module.exports.getJavaScriptAssets = function() {
     var output = this.getGlobbedFiles(this.assets.lib.js.concat(this.assets.js, this.assets.lib.customJs), '');
     return output;
 };
 
-module.exports.getModulesJavaScriptAssets = function(){
+module.exports.getModulesJavaScriptAssets = function() {
     var output = [];
 
     var jsModules = this.getGlobbedFiles(this.assets.jsModules, 'modules/');
@@ -73,36 +70,35 @@ module.exports.getModulesJavaScriptAssets = function(){
     jsDirectives = _.difference(jsDirectives, jsCustomDirectives);
     jsServices = _.difference(jsServices, jsCustomServices);
 
-    _.forEach(jsModules, function (item, index, arr) {
+    _.forEach(jsModules, function(item, index, arr) {
         item = 'modules/' + item;
         arr[index] = item;
     });
 
-    _.forEach(jsCustomModules, function (item, index, arr) {
+    _.forEach(jsCustomModules, function(item, index, arr) {
         item = 'custom_modules/' + item;
         arr[index] = item;
     });
 
-    _.forEach(jsDirectives, function (item, index, arr) {
+    _.forEach(jsDirectives, function(item, index, arr) {
         item = 'directives/' + item;
         arr[index] = item;
     });
 
-    _.forEach(jsCustomDirectives, function (item, index, arr) {
+    _.forEach(jsCustomDirectives, function(item, index, arr) {
         item = 'custom_directives/' + item;
         arr[index] = item;
     });
 
-    _.forEach(jsServices, function (item, index, arr) {
+    _.forEach(jsServices, function(item, index, arr) {
         item = 'services/' + item;
         arr[index] = item;
     });
 
-    _.forEach(jsCustomServices, function (item, index, arr) {
+    _.forEach(jsCustomServices, function(item, index, arr) {
         item = 'custom_services/' + item;
         arr[index] = item;
     });
-
 
     output = output.concat(jsModules);
     output = output.concat(jsCustomModules);
@@ -116,6 +112,6 @@ module.exports.getModulesJavaScriptAssets = function(){
 /**
  * Get the modules CSS files
  */
-module.exports.getCSSAssets = function () {
+module.exports.getCSSAssets = function() {
     return this.getGlobbedFiles(this.assets.lib.css.concat(this.assets.css), '');
 };

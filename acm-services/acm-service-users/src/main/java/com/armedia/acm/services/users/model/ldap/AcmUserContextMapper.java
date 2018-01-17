@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.AcmUserState;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.ContextMapper;
@@ -44,7 +45,8 @@ public class AcmUserContextMapper implements ContextMapper
         {
             log.debug("User [{}] is disabled and won't be synced", fullName);
             user.setState(AcmUserState.DISABLED.name());
-        } else
+        }
+        else
         {
             user.setState(AcmUserState.VALID.name());
         }

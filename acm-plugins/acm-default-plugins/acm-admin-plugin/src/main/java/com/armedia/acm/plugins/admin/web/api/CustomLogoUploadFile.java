@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.CustomLogoService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,20 +17,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 /**
- * Created by sergey.kolomiets  on 6/22/15.
+ * Created by sergey.kolomiets on 6/22/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CustomLogoUploadFile
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CustomLogoService customLogoService;
 
-    @RequestMapping(
-            value = "/branding/customlogos",
-            method = RequestMethod.POST
-    )
+    @RequestMapping(value = "/branding/customlogos", method = RequestMethod.POST)
     @ResponseBody
     public String replaceFile(
             @RequestParam(value = "headerLogo", required = false) MultipartFile headerLogoFile,
@@ -64,7 +62,8 @@ public class CustomLogoUploadFile
             }
 
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update logos", e);
             throw new AcmWorkflowConfigurationException("Can't update logos. " + e.getLocalizedMessage(), e);
