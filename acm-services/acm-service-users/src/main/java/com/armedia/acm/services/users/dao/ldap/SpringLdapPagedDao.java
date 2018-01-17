@@ -1,12 +1,12 @@
 package com.armedia.acm.services.users.dao.ldap;
 
-import com.armedia.acm.services.users.model.ldap.LdapGroup;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
+import com.armedia.acm.services.users.model.ldap.LdapGroup;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.control.PagedResultsCookie;
@@ -15,6 +15,7 @@ import org.springframework.ldap.core.ContextMapper;
 import org.springframework.ldap.core.LdapTemplate;
 
 import javax.naming.directory.SearchControls;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,15 +28,14 @@ public class SpringLdapPagedDao implements SpringLdapDao
     private PagedResultsDirContextProcessorBuilder builder = new PagedResultsDirContextProcessorBuilder();
 
     private <T> List<T> fetchLdapPaged(LdapTemplate template, String searchBase, String searchFilter,
-                                       SearchControls searchControls, int pageSize, ContextMapper contextMapper)
+            SearchControls searchControls, int pageSize, ContextMapper contextMapper)
     {
         List<T> result = new ArrayList<>();
         // for the first paged-search request we pass null cookie
         PagedResultsCookie resultsCookie = null;
         while (true)
         {
-            PagedResultsDirContextProcessor pagedResultsDirContextProcessor =
-                    builder.build(pageSize, resultsCookie);
+            PagedResultsDirContextProcessor pagedResultsDirContextProcessor = builder.build(pageSize, resultsCookie);
             log.debug("Start fetching [{}] items from LDAP", pageSize);
             List<T> items = template.search(searchBase, searchFilter,
                     searchControls, contextMapper, pagedResultsDirContextProcessor);
@@ -67,7 +67,7 @@ public class SpringLdapPagedDao implements SpringLdapDao
     }
 
     public List<LdapUser> findUsers(LdapTemplate template, AcmLdapSyncConfig syncConfig,
-                                    String[] attributes, Optional<String> ldapLastSyncDate)
+            String[] attributes, Optional<String> ldapLastSyncDate)
     {
         SearchControls searchControls = new SearchControls();
         searchControls.setSearchScope(SearchControls.SUBTREE_SCOPE);
@@ -85,8 +85,9 @@ public class SpringLdapPagedDao implements SpringLdapDao
         String searchBase = syncConfig.getUserSearchBase();
 
         // Spring LDAP authentication doesn't support multiple search bases divided by "|"
-        // this is custom implementation if we want to sync users from  different search bases
-        // Note: - add new property in AcmLdapSyncConfig if you want to define multiple search bases and use that instead
+        // this is custom implementation if we want to sync users from different search bases
+        // Note: - add new property in AcmLdapSyncConfig if you want to define multiple search bases and use that
+        // instead
         // - users synced from different search base other than the one defined in property "userSearchBase" won't be
         // able to log in
         // Multiple search bases is supported in some of the upper spring security versions

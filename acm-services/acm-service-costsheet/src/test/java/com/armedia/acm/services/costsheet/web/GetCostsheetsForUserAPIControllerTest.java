@@ -3,9 +3,14 @@
  */
 package com.armedia.acm.services.costsheet.web;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.costsheet.service.CostsheetService;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.json.JSONArray;
@@ -25,10 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * @author riste.tutureski
@@ -113,7 +114,8 @@ public class GetCostsheetsForUserAPIControllerTest extends EasyMockSupport
                             .contentType(MediaType.APPLICATION_JSON)
                             .principal(mockAuthentication))
                     .andReturn();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             exception = e;
         }

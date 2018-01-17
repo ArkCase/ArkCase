@@ -269,7 +269,6 @@ public class AcmGroupAPIController
     @ResponseBody
     public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup,
             @PathVariable("parentId") String parentId) throws AcmAppErrorJsonMsg, AcmCreateObjectFailedException
-
     {
 
         // we need to decode base64 encoded group id because can contain characters which can interfere with url

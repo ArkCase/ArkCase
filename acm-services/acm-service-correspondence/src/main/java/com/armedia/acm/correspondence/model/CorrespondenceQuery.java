@@ -23,7 +23,8 @@ public class CorrespondenceQuery
     }
 
     /**
-     * @param type the type to set
+     * @param type
+     *            the type to set
      */
     public void setType(QueryType type)
     {

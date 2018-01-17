@@ -1,8 +1,15 @@
 package com.armedia.acm.services.participants.dao;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,12 +23,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -50,7 +56,8 @@ public class ParticipantDaoIT
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private String objectType = "TEST OBJECT TYPE";
-    private Long objectId = -500L;  // negative object id means we can't collide with any participant that might actually exist
+    private Long objectId = -500L; // negative object id means we can't collide with any participant that might actually
+                                   // exist
 
     @Before
     public void setUp() throws Exception
@@ -101,7 +108,6 @@ public class ParticipantDaoIT
         assertTrue(hasAccess);
     }
 
-
     @Test
     @Transactional
     public void participants()
@@ -142,7 +148,6 @@ public class ParticipantDaoIT
                 p.setParticipantType("approver");
             }
         }
-
 
         dao.saveParticipants(found);
 

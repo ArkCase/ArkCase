@@ -1,18 +1,20 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
 
 public class AcmComplaintClosedListenerTest extends EasyMockSupport
 {

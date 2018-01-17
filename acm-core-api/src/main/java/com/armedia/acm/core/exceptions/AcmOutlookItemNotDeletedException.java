@@ -3,23 +3,29 @@ package com.armedia.acm.core.exceptions;
 /**
  * Created by nebojsha on 04.05.2015.
  */
-public class AcmOutlookItemNotDeletedException extends AcmOutlookException {
-    public AcmOutlookItemNotDeletedException() {
+public class AcmOutlookItemNotDeletedException extends AcmOutlookException
+{
+    public AcmOutlookItemNotDeletedException()
+    {
     }
 
-    public AcmOutlookItemNotDeletedException(String message) {
+    public AcmOutlookItemNotDeletedException(String message)
+    {
         super(message);
     }
 
-    public AcmOutlookItemNotDeletedException(String message, Throwable cause) {
+    public AcmOutlookItemNotDeletedException(String message, Throwable cause)
+    {
         super(message, cause);
     }
 
-    public AcmOutlookItemNotDeletedException(Throwable cause) {
+    public AcmOutlookItemNotDeletedException(Throwable cause)
+    {
         super(cause);
     }
 
-    public AcmOutlookItemNotDeletedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public AcmOutlookItemNotDeletedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

@@ -5,10 +5,8 @@ package com.armedia.acm.services.search.model;
  */
 public enum SolrCore
 {
-    QUICK_SEARCH("vm://quickSearchQuery.in"),
-    ADVANCED_SEARCH("vm://advancedSearchQuery.in"),
-    ADVANCED_SUGGESTER_SEARCH("vm://advancedSuggesterQuery.in"),
-    QUICK_SUGGESTER_SEARCH("vm://quickSuggesterQuery.in");
+    QUICK_SEARCH("vm://quickSearchQuery.in"), ADVANCED_SEARCH("vm://advancedSearchQuery.in"), ADVANCED_SUGGESTER_SEARCH(
+            "vm://advancedSuggesterQuery.in"), QUICK_SUGGESTER_SEARCH("vm://quickSuggesterQuery.in");
 
     private String muleEndpointUrl;
 

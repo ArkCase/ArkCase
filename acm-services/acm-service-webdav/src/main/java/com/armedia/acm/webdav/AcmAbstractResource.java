@@ -1,15 +1,15 @@
 package com.armedia.acm.webdav;
 
-import io.milton.http.Auth;
-import io.milton.http.Request;
-import io.milton.http.http11.auth.DigestGenerator;
-import io.milton.http.http11.auth.DigestResponse;
-import io.milton.resource.DigestResource;
-import io.milton.resource.PropFindableResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+
+import io.milton.http.Auth;
+import io.milton.http.Request;
+import io.milton.http.http11.auth.DigestResponse;
+import io.milton.resource.DigestResource;
+import io.milton.resource.PropFindableResource;
 
 /**
  * Created by nebojsha on 13.08.2016.

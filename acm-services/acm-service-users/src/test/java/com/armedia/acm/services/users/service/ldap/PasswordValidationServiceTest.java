@@ -1,9 +1,13 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldMatchPattern;
 import com.armedia.acm.services.users.model.ldap.PasswordShouldNotContainUserId;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,9 +15,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class PasswordValidationServiceTest
 {
@@ -35,9 +36,9 @@ public class PasswordValidationServiceTest
         PasswordShouldMatchPattern digitRule = new PasswordShouldMatchPattern("^.*?[0-9].*$",
                 "Password must contain at least one digit (0-9)");
 
-        PasswordShouldMatchPattern specialCharRule =
-                new PasswordShouldMatchPattern("^.*?[\\Q[\\E~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-\\Q]\\E].*$",
-                        "Password must contain at least one special character");
+        PasswordShouldMatchPattern specialCharRule = new PasswordShouldMatchPattern(
+                "^.*?[\\Q[\\E~!@#$%^&*_+=`|\\(){}:;\"'<>,.?/-\\Q]\\E].*$",
+                "Password must contain at least one special character");
 
         minLengthRule = new PasswordLengthValidationRule(7,
                 "Password must be of minimum length of 7.");

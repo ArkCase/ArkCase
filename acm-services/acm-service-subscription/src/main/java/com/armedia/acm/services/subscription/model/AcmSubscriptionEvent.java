@@ -17,6 +17,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.util.Date;
 
 /**
@@ -29,13 +30,7 @@ public class AcmSubscriptionEvent implements AcmObject, AcmEntity, AcmParentObje
 {
 
     @Id
-    @TableGenerator(name = "acm_subscription_event_gen",
-            table = "acm_subscription_event_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_subscription_event",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_subscription_event_gen", table = "acm_subscription_event_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_subscription_event", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_subscription_event_gen")
     @Column(name = "cm_event_id")
     private Long subscriptionEventId;

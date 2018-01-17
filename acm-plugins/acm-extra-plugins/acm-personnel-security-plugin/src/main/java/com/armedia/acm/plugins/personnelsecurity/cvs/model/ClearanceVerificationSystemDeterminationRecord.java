@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * Represents OPM's record format for reporting clearance determinations; this flat file format is defined in
- * the fin11-02.pdf file.  This record format is used for reporting clearance events including: interim clearance
+ * the fin11-02.pdf file. This record format is used for reporting clearance events including: interim clearance
  * granted; clearance denied; and final clearance granted. After the clearance is in place, this format is also
  * used to report status changes, including: Revoked, Suspended, Revalidated, Administratively Withdrawn.
  */
@@ -52,7 +52,7 @@ public class ClearanceVerificationSystemDeterminationRecord
     /** position 82-82, A=E.O.12968, B=DCID, C=ICD704, blank */
     private String standardUsedToGrantClearance;
 
-    /** position 83-83, Y, blank.  Must be Y if clearanceException is Y. */
+    /** position 83-83, Y, blank. Must be Y if clearanceException is Y. */
     private String contactGrantingAuthority;
 
     /** position 84-84, Y, N, blank */
@@ -75,14 +75,15 @@ public class ClearanceVerificationSystemDeterminationRecord
 
     // note, must leave blanks for characters 114-167
 
-    /** position 168-169.  03 = current version of record format */
+    /** position 168-169. 03 = current version of record format */
     private String recordFormatVersion = "03";
 
-    /** position 170-170.  Must be D for new records for Denied clearances.  Must be N
-      * for new records for Interim or Final clearances.  Must be R (revoked), S (suspended), V (revalidated),
-      * or "W" for status updates records (CVS already has this record).  For all other updates (family member info,
-      * special access, exceptions, etc) must be U.
-    */
+    /**
+     * position 170-170. Must be D for new records for Denied clearances. Must be N
+     * for new records for Interim or Final clearances. Must be R (revoked), S (suspended), V (revalidated),
+     * or "W" for status updates records (CVS already has this record). For all other updates (family member info,
+     * special access, exceptions, etc) must be U.
+     */
     private String statusUpdate;
 
     public ClearanceVerificationSystemDeterminationRecord(
@@ -108,7 +109,7 @@ public class ClearanceVerificationSystemDeterminationRecord
     public String toString()
     {
 
-        if ( getClearanceType() == null )
+        if (getClearanceType() == null)
         {
             throw new IllegalStateException("Clearance Type must be D, I, or F");
         }
@@ -121,9 +122,11 @@ public class ClearanceVerificationSystemDeterminationRecord
                 getRecordType() +
                 yyyymmdd.format(getGrantedOrDeniedDate()) +
                 StringUtils.rightPad(StringUtils.defaultIfEmpty(getSubjectLastName(), StringUtils.repeat(" ", 20)), 20).substring(0, 20) +
-                ( getSubjectDateOfBirth() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getSubjectDateOfBirth()) ) +
+                (getSubjectDateOfBirth() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getSubjectDateOfBirth())) +
                 StringUtils.defaultIfEmpty(getSubjectUSPlaceOfBirth(), StringUtils.repeat(" ", 2)).substring(0, 2) +
-                StringUtils.rightPad(StringUtils.defaultIfEmpty(getSubjectNonUSPlaceOfBirth(), StringUtils.repeat(" ", 20)), 20).substring(0, 20) +
+                StringUtils.rightPad(StringUtils.defaultIfEmpty(getSubjectNonUSPlaceOfBirth(), StringUtils.repeat(" ", 20)), 20)
+                        .substring(0, 20)
+                +
                 StringUtils.defaultIfEmpty(getClearanceException(), " ") +
                 getClearanceType() +
                 StringUtils.rightPad(StringUtils.defaultIfEmpty(getAccessReported(), StringUtils.repeat(" ", 6)), 6).substring(0, 6) +
@@ -131,17 +134,15 @@ public class ClearanceVerificationSystemDeterminationRecord
                 StringUtils.defaultIfEmpty(getContactGrantingAuthority(), " ") +
                 StringUtils.defaultIfEmpty(getNonUSImmediateFamilyMembers(), " ") +
                 StringUtils.defaultIfEmpty(getEligibilityLevel(), " ") +
-                ( getEligibilityDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getEligibilityDate()) ) +
+                (getEligibilityDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getEligibilityDate())) +
                 StringUtils.rightPad(StringUtils.defaultIfEmpty(getExceptionType(), StringUtils.repeat(" ", 4)), 4).substring(0, 4) +
-                ( getAdjudicationStartDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getAdjudicationStartDate()) ) +
-                ( getStatusDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getStatusDate()) ) +
+                (getAdjudicationStartDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getAdjudicationStartDate())) +
+                (getStatusDate() == null ? StringUtils.repeat(" ", 8) : yyyymmdd.format(getStatusDate())) +
                 StringUtils.repeat(" ", 54) +
                 getRecordFormatVersion() +
                 StringUtils.defaultIfEmpty(getStatusUpdate(), " ");
 
-
     }
-
 
     public String getSsn()
     {

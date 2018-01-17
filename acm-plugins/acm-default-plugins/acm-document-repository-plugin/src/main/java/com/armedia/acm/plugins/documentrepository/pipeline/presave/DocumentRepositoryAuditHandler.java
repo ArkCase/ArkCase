@@ -32,7 +32,8 @@ public class DocumentRepositoryAuditHandler implements PipelineHandler<DocumentR
         if (existingRepo == null)
         {
             auditEvents.add("created");
-        } else
+        }
+        else
         {
             if (!existingRepo.getName().equalsIgnoreCase(updateRepo.getName()))
             {

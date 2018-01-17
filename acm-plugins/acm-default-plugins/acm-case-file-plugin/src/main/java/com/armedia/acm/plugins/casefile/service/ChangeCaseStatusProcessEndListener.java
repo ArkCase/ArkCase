@@ -3,96 +3,100 @@
  */
 package com.armedia.acm.plugins.casefile.service;
 
-import java.util.Map;
+import com.armedia.acm.activiti.AcmBusinessProcessEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
-import com.armedia.acm.activiti.AcmBusinessProcessEvent;
+import java.util.Map;
 
 /**
  * @author riste.tutureski
  *
  */
-public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent> {
+public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent>
+{
 
-	private transient final Logger log = LoggerFactory.getLogger(getClass());
-	private ChangeCaseFileStateService changeCaseFileStateService;
-	
-	@Override
-	public void onApplicationEvent(AcmBusinessProcessEvent event) 
-	{
-		boolean isChangeCaseStatusWorkflow = checkChangeCaseStatusWorkflow(event);		
-		
-		if ( isChangeCaseStatusWorkflow )
+    private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ChangeCaseFileStateService changeCaseFileStateService;
+
+    @Override
+    public void onApplicationEvent(AcmBusinessProcessEvent event)
+    {
+        boolean isChangeCaseStatusWorkflow = checkChangeCaseStatusWorkflow(event);
+
+        if (isChangeCaseStatusWorkflow)
         {
             try
             {
-            	Long caseId = (Long) event.getProcessVariables().get("CASE_FILE");
+                Long caseId = (Long) event.getProcessVariables().get("CASE_FILE");
                 Long requestId = (Long) event.getProcessVariables().get("REQUEST_ID");
                 String user = event.getUserId();
 
                 log.debug("Request: [{}]", requestId);
                 log.debug("Case file id: [{}]", caseId);
                 log.debug("User: [{}]", user);
-                
-                getChangeCaseFileStateService().handleChangeCaseStatusApproved(caseId, requestId, user, event.getEventDate(), event.getIpAddress());
+
+                getChangeCaseFileStateService().handleChangeCaseStatusApproved(caseId, requestId, user, event.getEventDate(),
+                        event.getIpAddress());
             }
-            catch ( Exception e)
+            catch (Exception e)
             {
                 log.error("Exception handling completed change case status: " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
         }
-	}
-	
-	private boolean checkChangeCaseStatusWorkflow(AcmBusinessProcessEvent event)
-	{
-		if ( ! "com.armedia.acm.activiti.businessProcess.end".equals(event.getEventType()))
+    }
+
+    private boolean checkChangeCaseStatusWorkflow(AcmBusinessProcessEvent event)
+    {
+        if (!"com.armedia.acm.activiti.businessProcess.end".equals(event.getEventType()))
         {
             log.debug("Event is not the end of a business process: [{}]", event.getEventType());
             return false;
         }
-		
-		Map<String, Object> pvars = event.getProcessVariables();
 
-        if ( !pvars.containsKey("REQUEST_TYPE"))
+        Map<String, Object> pvars = event.getProcessVariables();
+
+        if (!pvars.containsKey("REQUEST_TYPE"))
         {
             log.debug("Event does not contain a request type");
             return false;
         }
-        
-        if ( !"CHANGE_CASE_STATUS".equals(pvars.get("REQUEST_TYPE")))
+
+        if (!"CHANGE_CASE_STATUS".equals(pvars.get("REQUEST_TYPE")))
         {
             log.debug("Request type is not CHANGE_CASE_STATUS: [{}]", pvars.get("REQUEST_TYPE"));
             return false;
         }
-        
-        if ( !pvars.containsKey("reviewOutcome"))
+
+        if (!pvars.containsKey("reviewOutcome"))
         {
             log.debug("Event does not contain a review outcome");
             return false;
         }
-        
-        if ( !"APPROVE".equals(pvars.get("reviewOutcome")))
+
+        if (!"APPROVE".equals(pvars.get("reviewOutcome")))
         {
             log.debug("Request type is not APPROVE: [{}]", pvars.get("reviewOutcome"));
             return false;
         }
 
         log.debug("This event marks the end of an approved change case status.");
-		
-		return true;
-	}
 
-	public ChangeCaseFileStateService getChangeCaseFileStateService() {
-		return changeCaseFileStateService;
-	}
+        return true;
+    }
 
-	public void setChangeCaseFileStateService(
-			ChangeCaseFileStateService changeCaseFileStateService) {
-		this.changeCaseFileStateService = changeCaseFileStateService;
-	}
+    public ChangeCaseFileStateService getChangeCaseFileStateService()
+    {
+        return changeCaseFileStateService;
+    }
+
+    public void setChangeCaseFileStateService(
+            ChangeCaseFileStateService changeCaseFileStateService)
+    {
+        this.changeCaseFileStateService = changeCaseFileStateService;
+    }
 
 }

@@ -20,14 +20,14 @@ public class AcmObjectUnlockEvent extends AcmObjectLockUnlockEvent
         String eventType;
         switch (getObjectType())
         {
-            case AcmObjectLockConstants.CHECKIN_LOCK:
-                eventType = CHECKIN_TYPE;
-                break;
-            case AcmObjectLockConstants.CANCEL_LOCK:
-                eventType = CANCEL_TYPE;
-                break;
-            default:
-                eventType = EVENT_TYPE;
+        case AcmObjectLockConstants.CHECKIN_LOCK:
+            eventType = CHECKIN_TYPE;
+            break;
+        case AcmObjectLockConstants.CANCEL_LOCK:
+            eventType = CANCEL_TYPE;
+            break;
+        default:
+            eventType = EVENT_TYPE;
         }
 
         return eventType;

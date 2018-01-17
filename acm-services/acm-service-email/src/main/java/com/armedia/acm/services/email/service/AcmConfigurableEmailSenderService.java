@@ -37,7 +37,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
@@ -52,7 +51,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -72,7 +70,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendPlainEmail(java.util.stream.Stream,
      * com.armedia.acm.services.email.model.EmailBuilder, com.armedia.acm.services.email.model.EmailBodyBuilder)
      */
@@ -87,7 +84,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithAttachments(com.armedia.acm.services.
      * email.model.EmailWithAttachmentsDTO, org.springframework.security.core.Authentication,
@@ -103,7 +99,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmail(com.armedia.acm.services.email.model.
      * EmailWithAttachmentsDTO, org.springframework.security.core.Authentication,
      * com.armedia.acm.services.users.model.AcmUser)
@@ -117,7 +112,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithAttachmentsAndLinks(com.armedia.acm.
      * services.email.model.EmailWithAttachmentsAndLinksDTO, org.springframework.security.core.Authentication,
@@ -133,7 +127,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmail(com.armedia.acm.services.email.model.
      * EmailWithAttachmentsAndLinksDTO, org.springframework.security.core.Authentication,
      * com.armedia.acm.services.users.model.AcmUser)
@@ -148,7 +141,6 @@ public class AcmConfigurableEmailSenderService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithEmbeddedLinks(com.armedia.acm.services.
      * email.model.EmailWithEmbeddedLinksDTO, org.springframework.security.core.Authentication,
@@ -174,7 +166,8 @@ public class AcmConfigurableEmailSenderService
     }
 
     /**
-     * @param emailSenderMap the notificationSenderMap to set
+     * @param emailSenderMap
+     *            the notificationSenderMap to set
      */
     public void setEmailSenderMap(Map<String, AcmEmailSenderService> emailSenderMap)
     {
@@ -182,7 +175,8 @@ public class AcmConfigurableEmailSenderService
     }
 
     /**
-     * @param emailSenderConfigurationService the emailSenderConfigurationService to set
+     * @param emailSenderConfigurationService
+     *            the emailSenderConfigurationService to set
      */
     public void setEmailSenderConfigurationService(EmailSenderConfigurationServiceImpl emailSenderConfigurationService)
     {

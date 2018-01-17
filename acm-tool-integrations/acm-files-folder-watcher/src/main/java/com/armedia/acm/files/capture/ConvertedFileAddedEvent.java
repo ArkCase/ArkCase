@@ -9,4 +9,3 @@ public class ConvertedFileAddedEvent extends AbstractConvertFileEvent
         super(source);
     }
 }
-

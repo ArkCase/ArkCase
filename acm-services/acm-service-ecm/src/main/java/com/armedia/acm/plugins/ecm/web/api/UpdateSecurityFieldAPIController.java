@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -12,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//'api/v1/service/:objectType/:objectId/security-field/:securityFieldValue/'
+// 'api/v1/service/:objectType/:objectId/security-field/:securityFieldValue/'
 @Controller
-@RequestMapping({"/api/v1/service/file", "/api/latest/service/file"})
+@RequestMapping({ "/api/v1/service/file", "/api/latest/service/file" })
 
 public class UpdateSecurityFieldAPIController
 {

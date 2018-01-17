@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * The ArkCase external authentication uses this filter class to call the AcmLoginSuccessOperations class after
- * external authentication, to ensure the HTTP session is setup correctly.  It is used from
+ * external authentication, to ensure the HTTP session is setup correctly. It is used from
  * $HOME/.arkcase/acm/spring-security/spring-security-config-external.xml.
  */
 public class AcmPreAuthenticatedLoginHandler extends RequestHeaderAuthenticationFilter

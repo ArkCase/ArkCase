@@ -12,16 +12,18 @@ import net.unicon.springframework.addons.properties.ReloadablePropertiesFactoryB
  * @author riste.tutureski
  *
  */
-public class AcmReloadablePropertiesFactoryBean extends ReloadablePropertiesFactoryBean {
-	
-	 public AcmReloadablePropertiesFactoryBean() {
-		super();
-	}
+public class AcmReloadablePropertiesFactoryBean extends ReloadablePropertiesFactoryBean
+{
 
-	@Override 
-	protected Properties createProperties() throws IOException 
-	{ 
-		return (Properties) super.createInstance(); 
-	}
-	
+    public AcmReloadablePropertiesFactoryBean()
+    {
+        super();
+    }
+
+    @Override
+    protected Properties createProperties() throws IOException
+    {
+        return (Properties) super.createInstance();
+    }
+
 }

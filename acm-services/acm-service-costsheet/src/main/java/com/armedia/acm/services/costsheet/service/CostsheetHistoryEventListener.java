@@ -1,9 +1,5 @@
 package com.armedia.acm.services.costsheet.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.service.AcmDataServiceImpl;
@@ -11,40 +7,44 @@ import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetAssociatedEvent;
 import com.armedia.acm.services.costsheet.model.AcmCostsheetEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+
 public class CostsheetHistoryEventListener implements ApplicationListener<AcmCostsheetEvent>
 {
-    
-    private final Logger LOG = LoggerFactory.getLogger(getClass());    
+
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
     private AcmDataServiceImpl acmDataService;
-    private CostsheetAssociatedEventPublisher costsheetAssociatedEventPublisher;    
+    private CostsheetAssociatedEventPublisher costsheetAssociatedEventPublisher;
 
     @Override
     public void onApplicationEvent(AcmCostsheetEvent event)
-    {   
-        if(event != null && checkExecution(event.getEventType()))
+    {
+        if (event != null && checkExecution(event.getEventType()))
         {
             LOG.debug("CostsheetHistoryEventListener: Trying to add costsheet associated event to the object history");
-            
-            AcmCostsheet costsheet = (AcmCostsheet)event.getSource();
-            
+
+            AcmCostsheet costsheet = (AcmCostsheet) event.getSource();
+
             String objectType = costsheet.getParentType();
             Long objectId = costsheet.getParentId();
             String eventType = "com.armedia.acm." + objectType.replace("_", "").toLowerCase() + ".costsheet.associated";
-            
+
             AcmAbstractDao<AcmStatefulEntity> dao = getAcmDataService().getDaoByObjectType(objectType);
             AcmStatefulEntity entity = dao.find(objectId);
 
-            if(entity != null)
+            if (entity != null)
             {
-                AcmCostsheetAssociatedEvent acmCostsheetAssociatedEvent 
-                        = new AcmCostsheetAssociatedEvent(entity, objectId, objectType, eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);            
+                AcmCostsheetAssociatedEvent acmCostsheetAssociatedEvent = new AcmCostsheetAssociatedEvent(entity, objectId, objectType,
+                        eventType, event.getUserId(), event.getIpAddress(), event.getEventDate(), true);
                 getCostsheetAssociatedEventPublisher().publishEvent(acmCostsheetAssociatedEvent);
             }
         }
     }
-    
-    private boolean checkExecution(String eventType) 
-    {        
+
+    private boolean checkExecution(String eventType)
+    {
         return eventType.equals("com.armedia.acm.costsheet.save");
     }
 

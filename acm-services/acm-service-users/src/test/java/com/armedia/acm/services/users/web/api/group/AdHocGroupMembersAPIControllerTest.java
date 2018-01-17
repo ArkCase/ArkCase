@@ -1,11 +1,21 @@
 package com.armedia.acm.services.users.web.api.group;
 
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.core.Every.everyItem;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -27,18 +37,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.stream.Collectors;
-
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isIn;
-import static org.hamcrest.core.Every.everyItem;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(EasyMockRunner.class)
 public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
@@ -142,13 +144,13 @@ public class AdHocGroupMembersAPIControllerTest extends EasyMockSupport implemen
         AcmGroup acmGroup = om.readValue(result.getResponse().getContentAsString(), AcmGroup.class);
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-        String[] members = {"sally-acm"};
+        String[] members = { "sally-acm" };
         assertArrayEquals(acmGroup.getUserMemberIds().toArray(), members);
     }
 
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o,
-                                         Exception e)
+            Exception e)
     {
         log.error("An error occurred", e);
         return null;

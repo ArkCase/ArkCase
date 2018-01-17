@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +24,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-
 
 /**
  * Created by armdev on 7/28/14.
@@ -34,20 +35,14 @@ import java.util.List;
 @Entity
 @Table(name = "acm_person_alias")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-@JsonIgnoreProperties(value = {"objectType"}, allowGetters = true)
+@JsonIgnoreProperties(value = { "objectType" }, allowGetters = true)
 public class PersonAlias implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 7413755227864370548L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_person_alias_gen",
-            table = "acm_person_alias_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_person_alias",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_person_alias_gen", table = "acm_person_alias_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_person_alias", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_alias_gen")
     @Column(name = "cm_person_alias_id")
     private Long id;
@@ -89,6 +84,7 @@ public class PersonAlias implements Serializable, AcmEntity, AcmObject
         return PersonAliasConstants.OBJECT_TYPE;
     }
 
+    @Override
     @XmlTransient
     public Long getId()
     {

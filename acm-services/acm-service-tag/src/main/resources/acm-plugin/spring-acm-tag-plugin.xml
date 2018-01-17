@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="tagPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
         <property name="pluginName" value="Tag Plugin"/>
         <property name="privileges">
             <list>
-                <ref bean="acmTagModulePrivilege" />
+                <ref bean="acmTagModulePrivilege"/>
                 <ref bean="tagPrivilege"/>
             </list>
         </property>
@@ -33,8 +32,7 @@
                     <property name="url" value="/api/{version}/service/tag"/>
                     <property name="requiredPrivilege" ref="tagPrivilege"/>
                 </bean>
-                <bean id="listAssociatedTagsByObjectTypeAndId"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="listAssociatedTagsByObjectTypeAndId" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="GET"/>
                     <property name="url" value="/api/{version}/service/tag/{objectType}/{objectId}"/>
                     <property name="requiredPrivilege" ref="tagPrivilege"/>

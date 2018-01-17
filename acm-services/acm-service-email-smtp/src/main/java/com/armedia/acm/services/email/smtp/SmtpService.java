@@ -17,6 +17,7 @@ import com.armedia.acm.services.email.sender.model.EmailSenderConfigurationConst
 import com.armedia.acm.services.email.service.AcmEmailContentGeneratorService;
 import com.armedia.acm.services.email.service.AcmEmailSenderService;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 
 import javax.activation.DataHandler;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -66,7 +68,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendPlainEmail(java.util.stream.Stream,
      * com.armedia.acm.services.email.model.EmailBuilder, com.armedia.acm.services.email.model.EmailBodyBuilder)
      */
@@ -76,8 +77,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     {
         Map<String, Object> messageProps = loadSmtpAndOriginatingProperties();
 
-        emailsDataStream.forEach(emailData ->
-        {
+        emailsDataStream.forEach(emailData -> {
             emailBuilder.buildEmail(emailData, messageProps);
 
             try
@@ -99,7 +99,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithAttachments(com.armedia.acm.services.
      * email.model.EmailWithAttachmentsDTO, org.springframework.security.core.Authentication,
@@ -141,7 +140,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmail(com.armedia.acm.services.email.model.
      * EmailWithAttachmentsDTO, org.springframework.security.core.Authentication,
      * com.armedia.acm.services.users.model.AcmUser)
@@ -154,7 +152,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithAttachmentsAndLinks(com.armedia.acm.
      * services.email.model.EmailWithAttachmentsAndLinksDTO, org.springframework.security.core.Authentication,
@@ -242,7 +239,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmail(com.armedia.acm.services.email.model.
      * EmailWithAttachmentsAndLinksDTO, org.springframework.security.core.Authentication,
      * com.armedia.acm.services.users.model.AcmUser)
@@ -255,7 +251,6 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmEmailSenderService#sendEmailWithEmbeddedLinks(com.armedia.acm.services.
      * email.model.EmailWithEmbeddedLinksDTO, org.springframework.security.core.Authentication,
@@ -263,7 +258,7 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
      */
     @Override
     public List<EmailWithEmbeddedLinksResultDTO> sendEmailWithEmbeddedLinks(EmailWithEmbeddedLinksDTO in, Authentication authentication,
-                                                                            AcmUser user) throws Exception
+            AcmUser user) throws Exception
     {
         List<EmailWithEmbeddedLinksResultDTO> emailResultList = new ArrayList<>();
         Exception exception = null;
@@ -287,7 +282,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
                 LOG.error("Email message not sent ...", exception);
-            } else
+            }
+            else
             {
                 emailResultList.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
             }
@@ -336,7 +332,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param propertyFileManager the propertyFileManager to set
+     * @param propertyFileManager
+     *            the propertyFileManager to set
      */
     public void setPropertyFileManager(PropertyFileManager propertyFileManager)
     {
@@ -344,7 +341,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param emailSenderPropertyFileLocation the emailSenderPropertyFileLocation to set
+     * @param emailSenderPropertyFileLocation
+     *            the emailSenderPropertyFileLocation to set
      */
     public void setEmailSenderPropertyFileLocation(String emailSenderPropertyFileLocation)
     {
@@ -352,7 +350,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param ecmFileService the ecmFileService to set
+     * @param ecmFileService
+     *            the ecmFileService to set
      */
     public void setEcmFileService(EcmFileService ecmFileService)
     {
@@ -360,7 +359,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param muleContextManager the muleContextManager to set
+     * @param muleContextManager
+     *            the muleContextManager to set
      */
     public void setMuleContextManager(MuleContextManager muleContextManager)
     {
@@ -378,7 +378,8 @@ public class SmtpService implements AcmEmailSenderService, ApplicationEventPubli
     }
 
     /**
-     * @param flow the flow to set
+     * @param flow
+     *            the flow to set
      */
     public void setFlow(String flow)
     {

@@ -7,7 +7,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
-import java.util.Collections;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import com.armedia.acm.services.users.service.group.GroupService;
+import com.armedia.acm.services.users.service.group.LdapGroupService;
+import com.armedia.acm.spring.SpringContextHolder;
 
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -25,12 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
-import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
-import com.armedia.acm.services.users.service.group.GroupService;
-import com.armedia.acm.services.users.service.group.LdapGroupService;
-import com.armedia.acm.spring.SpringContextHolder;
+import java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LdapGroupAPIControllerTest extends EasyMockSupport

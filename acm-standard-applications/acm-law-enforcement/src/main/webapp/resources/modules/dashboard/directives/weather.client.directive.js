@@ -21,8 +21,8 @@
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
-                $scope.id = "01d";
-            });
+ $scope.id = "01d";
+ });
  </file>
  </example>
  */
@@ -32,22 +32,22 @@ angular.module("dashboard.weather").directive('weatherIcon', weatherIcon);
 function weatherIcon() {
 
     var directive = {
-        restrict: 'EA',
-        replace: true,
-        controller: WeatherIconController,
-        controllerAs: 'vm',
-        bindToController: true,
-        scope: {
-            id: '@id'
+        restrict : 'EA',
+        replace : true,
+        controller : WeatherIconController,
+        controllerAs : 'vm',
+        bindToController : true,
+        scope : {
+            id : '@id'
         },
-        template: '<div class="pull-left" "><img ng-src="{{ vm.imgurl() }}"></div>'
+        template : '<div class="pull-left" "><img ng-src="{{ vm.imgurl() }}"></div>'
     };
     return directive;
 }
 
 function WeatherIconController() {
     var vm = this;
-    vm.imgurl = function () {
+    vm.imgurl = function() {
         var baseUrl = 'assets/img/dashboard/widgets/weather/';
         return baseUrl + vm.id + ".png";
     };
