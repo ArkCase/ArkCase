@@ -239,7 +239,19 @@ angular.module('admin').controller(
                     };
 
                     $scope.$bus.subscribe('onFilter-ldapUserManagement', function(data) {
-                        if (!Util.isEmptyObject(data)) {
+                        if (Util.isObjectEmpty(data)) {
+                            LdapUserManagementService.getNUsers().then(function(response) {
+                                $scope.appUsers = [];
+                                _.forEach(response.data.response.docs, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    $scope.appUsers.push(element);
+                                });
+                                // scope.selectedObject = scope.data[0]
+                            });
+                        } else {
                             LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
                                 console.log(response);
                                 $scope.appUsers = [];
@@ -256,18 +268,6 @@ angular.module('admin').controller(
 
                             }, function() {
                                 console.log("error");
-                            });
-                        } else if (data === {}) {
-                            LookupService.getUsers().then(function(data) {
-                                $scope.appUsers = [];
-                                _.forEach(data, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    $scope.appUsers.push(element);
-                                });
-                                // scope.selectedObject = scope.data[0]
                             });
                         }
                     });
