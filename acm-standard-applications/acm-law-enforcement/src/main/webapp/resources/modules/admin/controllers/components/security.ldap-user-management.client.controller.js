@@ -11,7 +11,8 @@ angular.module('admin').controller(
                 'LookupService',
                 'MessageService',
                 'Acm.StoreService',
-                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store) {
+                'UtilService',
+                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util) {
 
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
@@ -235,5 +236,40 @@ angular.module('admin').controller(
                         }, function() {
                             MessageService.errorAction();
                         });
-                    }
+                    };
+
+                    $scope.$bus.subscribe('onFilter-ldapUserManagement', function(data) {
+                        if (!Util.isEmptyObject(data)) {
+                            LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
+                                console.log(response);
+                                $scope.appUsers = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    _.forEach(response.data.response.docs, function(user) {
+                                        var element = {};
+                                        element.name = user.name;
+                                        element.key = user.object_id_s;
+                                        element.directory = user.directory_name_s;
+                                        $scope.appUsers.push(element);
+                                    });
+                                    // scope.selectedObject = $scope.appUsers[0]
+                                }
+
+                            }, function() {
+                                console.log("error");
+                            });
+                        } else if (data === {}) {
+                            LookupService.getUsers().then(function(data) {
+                                $scope.appUsers = [];
+                                _.forEach(data, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    $scope.appUsers.push(element);
+                                });
+                                // scope.selectedObject = scope.data[0]
+                            });
+                        }
+                    });
+
                 } ]);

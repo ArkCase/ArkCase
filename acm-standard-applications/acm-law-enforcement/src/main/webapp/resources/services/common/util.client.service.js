@@ -264,6 +264,48 @@ angular
 
                                 /**
                                  * @ngdoc method
+                                 * @name isObjectEmpty
+                                 * @methodOf services.service:UtilService
+                                 *
+                                 * @param {Object} obj An object, including value
+                                 *
+                                 * @description
+                                 * Return true if 'obj' is an empty obj
+                                 */
+                                ,
+                                isObject : function(obj) {
+                                    if (obj) {
+                                        if (obj instanceof Object) {
+                                            return true;
+                                        }
+                                    }
+                                    return false;
+                                }
+
+                                /**
+                                 * @ngdoc method
+                                 * @name isObjectEmpty
+                                 * @methodOf services.service:UtilService
+                                 *
+                                 * @param {Object} obj An object, including value
+                                 *
+                                 * @description
+                                 * Return true if 'obj' is an empty obj and false if obj isn't object or obj has a property
+                                 */
+                                ,
+                                isObjectEmpty : function(obj) {
+                                    if (!this.isObject(obj)) {
+                                        return false;
+                                    }
+                                    for ( var key in obj) {
+                                        if (obj.hasOwnProperty(key))
+                                            return false;
+                                    }
+                                    return true;
+                                }
+
+                                /**
+                                 * @ngdoc method
                                  * @name isArray
                                  * @methodOf services.service:UtilService
                                  *

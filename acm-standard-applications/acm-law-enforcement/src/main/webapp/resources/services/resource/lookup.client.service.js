@@ -79,12 +79,18 @@ angular.module('services').factory(
                          *
                          * @returns {Object} An object returned by $resource
                          */
+                        /*
+                        SCROLLLLLLLLLLLLLLLL
                         ,
                         _getFilteredUsers : {
-                            url : "api/latest/plugin/search/advanced/USER?start=0&n=5",
+                            url : "api/latest/plugin/search/advanced/USER",
                             method : "GET",
-                            cache : false
-                        }
+                            cache : false,
+                            params : {
+                                n : 5,
+                                start : 0
+                            }
+                        }*/
 
                         /**
                          * @ngdoc method
@@ -148,11 +154,11 @@ angular.module('services').factory(
                      * @methodOf services.service:LookupService
                      *
                      * @description
-                     * Query filtered list of users
+                     * Query n filtered list of users
                      *
                      * @returns {Object} Promise
                      */
-                    Service.getFilteredUsers = function() {
+                    /*Service.getFilteredUsers = function() {
                         var cacheUsers = new Store.SessionData(Service.SessionCacheNames.USERS);
                         var users = cacheUsers.get();
                         return Util.serviceCall({
@@ -169,7 +175,7 @@ angular.module('services').factory(
                                 }
                             }
                         });
-                    };
+                    };*/
 
                     /**
                      * @ngdoc method

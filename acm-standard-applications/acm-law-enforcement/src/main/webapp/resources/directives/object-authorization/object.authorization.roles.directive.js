@@ -69,9 +69,8 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     onAuthRoleChange : "=",
                     objectDisplayName : "@",
                     roleDisplayName : "@",
-                    objectTitle : "@",
-                    externalServiceName : "@",
-                    externalServiceMethodName : "@"
+                    controllerName : "@?",
+                    objectTitle : "@"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
@@ -83,47 +82,18 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     }, true);
 
                     scope.filterWord = "";
+                    scope.noFilterData = true;
+                    scope.onChangeFilterWord = function() {
+                        if (Util.isEmpty(scope.filterWord)) {
+                            scope.noFilterData = true;
+                            scope.$bus.publish('onFilter-' + scope.controllerName, "");
+                        } else {
+                            scope.noFilterData = false;
+                        }
+                    };
 
                     scope.filterObjects = function() {
-                        if (!Util.isEmpty(scope.filterWord)) {
-                            var req = {
-                                method : 'GET',
-                                url : 'api/latest/ldap/getUsers/search?' + scope.filterWord,
-                                params : {
-                                    fq : scope.filterWord,
-                                    n : 1,
-                                    start : 0
-                                }
-                            };
-
-                            $http(req).then(function(response) {
-                                console.log(response);
-                                scope.data = [];
-                                _.forEach(response.data.response.docs, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    scope.data.push(element);
-                                });
-                                scope.selectedObject = scope.data[0]
-                            }, function() {
-                                console.log("error");
-                            });
-                            scope.noData = false;
-                        } else if (scope.filterWord === "") {
-                            scope.externalService = $injector.get(scope.externalServiceName);
-                            scope.externalService[scope.externalServiceMethodName]().then(function(data) {
-                                scope.data = [];
-                                _.forEach(data, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    scope.data.push(element);
-                                });
-                            });
-                        }
+                        scope.$bus.publish('onFilter-' + scope.controllerName, scope.filterWord);
                     };
 
                     //initial setup
@@ -131,6 +101,42 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.selectedAuthorized = "";
                     scope.authorized = [];
                     scope.notAuthorized = [];
+
+                    document.getElementById("scrollTest").addEventListener("scroll", myFunction);
+                    var temp = document.getElementById("scrollTest");
+
+                    var maxScrolled = 0;
+
+                    function myFunction() {
+                        var temp = document.getElementById("scrollTest");
+                        console.log(temp.scrollTop);
+                        console.log(temp.offsetHeight + temp.scrollTop);
+                        if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
+                            //                         maxScrolled = temp.scrollTop / 200;
+                            //                         console.log(maxScrolled);
+
+                            /*scope.externalMethods[scope.externalMethodTwo](scope.filterWord, scope.data.length * 2).then(
+                                    function(response) {
+                                        console.log(response);
+                                        scope.data = [];
+                                        if (!Util.isEmpty(response.data.response.docs)) {
+                                            _.forEach(response.data.response.docs, function(user) {
+                                                var element = {};
+                                                element.name = user.name;
+                                                element.key = user.object_id_s;
+                                                element.directory = user.directory_name_s;
+                                                scope.data.push(element);
+                                            });
+                                            scope.selectedObject = scope.data[0]
+                                        }
+
+                                    }, function() {
+                                        console.log("error");
+                                    });
+                             */
+                            // scope.$parent.$digest();
+                        }
+                    }
 
                     //authorize button is clicked
                     scope.authorize = function() {
