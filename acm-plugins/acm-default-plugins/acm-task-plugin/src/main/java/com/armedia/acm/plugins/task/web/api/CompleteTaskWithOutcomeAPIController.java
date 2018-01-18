@@ -48,15 +48,18 @@ public class CompleteTaskWithOutcomeAPIController
                     in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
             completed.setTaskOutcome(in.getTaskOutcome());
 
-            publishTaskCompletedEvent(authentication, httpSession, completed, true, in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
+            publishTaskCompletedEvent(authentication, httpSession, completed, true,
+                    in.getTaskOutcome() == null ? null : in.getTaskOutcome().getName());
 
             return completed;
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             publishTaskCompletedEvent(authentication, httpSession, in, false);
 
             throw new AcmUserActionFailedException("complete", "task", in.getTaskId(), e.getMessage(), e);
-        } catch (AcmUserActionFailedException e)
+        }
+        catch (AcmUserActionFailedException e)
         {
             publishTaskCompletedEvent(authentication, httpSession, in, false);
             throw e;
@@ -114,7 +117,8 @@ public class CompleteTaskWithOutcomeAPIController
         publishTaskCompletedEvent(authentication, httpSession, completed, succeeded, null);
     }
 
-    private void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed, boolean succeeded, String eventDescription)
+    private void publishTaskCompletedEvent(Authentication authentication, HttpSession httpSession, AcmTask completed, boolean succeeded,
+            String eventDescription)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "complete", authentication.getName(), succeeded, ipAddress);

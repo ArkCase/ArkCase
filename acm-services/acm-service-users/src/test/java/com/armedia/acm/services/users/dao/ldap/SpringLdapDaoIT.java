@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.dao.ldap;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -21,17 +22,15 @@ import java.util.Optional;
  * Created by dmiller on 6/28/16.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(
-        locations = {"/spring/spring-library-user-service.xml",
-                "/spring/spring-library-acm-encryption.xml",
-                "/spring/spring-library-data-source.xml",
-                "/spring/spring-library-property-file-manager.xml",
-                "/spring/spring-config-user-service-test-dummy-beans.xml",
-                "/spring/spring-library-context-holder.xml",
-                "/spring/spring-library-user-service-test-user-home-files.xml",
-                "/spring/spring-library-search.xml",
-                "/spring/spring-library-object-converter.xml"}
-)
+@ContextConfiguration(locations = { "/spring/spring-library-user-service.xml",
+        "/spring/spring-library-acm-encryption.xml",
+        "/spring/spring-library-data-source.xml",
+        "/spring/spring-library-property-file-manager.xml",
+        "/spring/spring-config-user-service-test-dummy-beans.xml",
+        "/spring/spring-library-context-holder.xml",
+        "/spring/spring-library-user-service-test-user-home-files.xml",
+        "/spring/spring-library-search.xml",
+        "/spring/spring-library-object-converter.xml" })
 
 public class SpringLdapDaoIT
 {
@@ -57,8 +56,7 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
-        result.forEach(ldapUser ->
-        {
+        result.forEach(ldapUser -> {
             log.debug("AcmUser: {} : {}", ldapUser.getUserId(), ldapUser.getDistinguishedName());
         });
     }
@@ -72,9 +70,7 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
-        result.forEach(ldapGroup ->
-                log.trace("Ldap Group: {}", ldapGroup.getName())
-        );
+        result.forEach(ldapGroup -> log.trace("Ldap Group: {}", ldapGroup.getName()));
     }
 
     @Test
@@ -97,7 +93,7 @@ public class SpringLdapDaoIT
     @Test
     public void findUsersWithSpecificAttributes()
     {
-        String[] attributes = new String[]{
+        String[] attributes = new String[] {
                 "cn", "sn", "givenName", "dn", "distinguishedname", "sAMAccountName", "mail"
         };
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
@@ -152,9 +148,7 @@ public class SpringLdapDaoIT
         long time = System.currentTimeMillis() - start;
         log.debug("Time: {}ms", time);
         log.debug("Result: {}", result.size());
-        result.forEach(ldapGroup ->
-                log.debug("Ldap Group: {}", ldapGroup.getName())
-        );
+        result.forEach(ldapGroup -> log.debug("Ldap Group: {}", ldapGroup.getName()));
     }
 
     @Test
@@ -169,4 +163,3 @@ public class SpringLdapDaoIT
         log.debug("Time: {}ms", time);
     }
 }
-

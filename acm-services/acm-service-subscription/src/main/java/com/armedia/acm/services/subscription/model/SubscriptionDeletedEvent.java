@@ -5,15 +5,18 @@ import java.util.Date;
 /**
  * Created by marjan.stefanoski on 11.02.2015.
  */
-public class SubscriptionDeletedEvent extends SubscriptionPersistenceEvent {
+public class SubscriptionDeletedEvent extends SubscriptionPersistenceEvent
+{
 
     private static final String EVENT_TYPE = "com.armedia.acm.subscription.deleted";
 
-    public SubscriptionDeletedEvent(AcmSubscription source) {
+    public SubscriptionDeletedEvent(AcmSubscription source)
+    {
         super(source);
     }
 
-    public SubscriptionDeletedEvent(String userId, Long objectId,String objectType) {
+    public SubscriptionDeletedEvent(String userId, Long objectId, String objectType)
+    {
         super(new AcmSubscription());
         setObjectType(objectType);
         setObjectId(objectId);

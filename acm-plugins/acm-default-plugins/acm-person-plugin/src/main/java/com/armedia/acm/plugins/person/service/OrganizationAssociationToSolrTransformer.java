@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +46,8 @@ public class OrganizationAssociationToSolrTransformer implements AcmObjectToSolr
 
         solrDoc.setType_lcs(organizationAssociation.getAssociationType());
 
-        solrDoc.setName(organizationAssociation.getOrganization().getOrganizationValue() + " (" + organizationAssociation.getAssociationType() + ")");
+        solrDoc.setName(organizationAssociation.getOrganization().getOrganizationValue() + " ("
+                + organizationAssociation.getAssociationType() + ")");
 
         solrDoc.setTitle_parseable(organizationAssociation.getOrganization().getOrganizationValue() + " ("
                 + organizationAssociation.getAssociationType() + ")");

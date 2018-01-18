@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="objectAssociationDescriptionType" value="VARCHAR(512)" dbms="oracle,postgresql,mssql"/>
@@ -10,9 +8,7 @@
     <changeSet id="01-create-object-association-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_object_association">
             <column name="cm_association_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_object_association"/>
+                <constraints primaryKey="true" primaryKeyName="pk_object_association"/>
             </column>
             <column name="cm_association_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -60,9 +56,7 @@
     <changeSet id="01-create-object-association-table" author="dmiller" dbms="mysql">
         <createTable tableName="acm_object_association">
             <column name="cm_association_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_object_association"/>
+                <constraints primaryKey="true" primaryKeyName="pk_object_association"/>
             </column>
             <column name="cm_association_status" type="VARCHAR(128)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -117,8 +111,7 @@
         <modifyDataType tableName="acm_object_association" columnName="cm_association_id" newDataType="${fkIdType}"/>
     </changeSet>
 
-    <changeSet id="03-1-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql"
-               failOnError="false">
+    <changeSet id="03-1-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql" failOnError="false">
         <dropDefaultValue tableName="acm_object_association" columnName="cm_association_id"/>
     </changeSet>
 
@@ -131,10 +124,8 @@
     </changeSet>
 
     <changeSet id="03-4-object-assn-switch-to-sequence-pk-mssql" author="riste.tutureski" dbms="mssql">
-        <addNotNullConstraint tableName="acm_object_association" columnName="cm_association_id"
-                              columnDataType="${fkIdType}"/>
-        <addPrimaryKey tableName="acm_object_association" columnNames="cm_association_id"
-                       constraintName="pk_object_association"/>
+        <addNotNullConstraint tableName="acm_object_association" columnName="cm_association_id" columnDataType="${fkIdType}"/>
+        <addPrimaryKey tableName="acm_object_association" columnNames="cm_association_id" constraintName="pk_object_association"/>
     </changeSet>
 
     <changeSet id="04-fix-object-id-type" author="dmiller">
@@ -187,11 +178,8 @@
     <changeSet id="10-acm-object-association-add-column" author="nebojsha.davidovikj">
         <addColumn tableName="acm_object_association">
             <column name="cm_inverse_association_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_inverse_object_association_id"
-                             referencedTableName="acm_object_association"
-                             referencedColumnNames="cm_association_id"
-                             deferrable="${deferrable}"
-                             initiallyDeferred="${initially.deferred}"/>
+                <constraints foreignKeyName="fk_inverse_object_association_id" referencedTableName="acm_object_association"
+                    referencedColumnNames="cm_association_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
     </changeSet>

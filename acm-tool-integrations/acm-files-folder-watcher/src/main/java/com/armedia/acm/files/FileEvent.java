@@ -17,7 +17,8 @@ public class FileEvent extends ApplicationEvent
     /**
      * Create a new FileEvent.
      *
-     * @param source file change event
+     * @param source
+     *            file change event
      */
     public FileEvent(FileChangeEvent source)
     {

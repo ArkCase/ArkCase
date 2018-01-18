@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.google.common.collect.ImmutableMap;
+
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -12,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Read Alfresco audit records from the Alfresco FileFolderService <code>create</code> method.  Alfresco uses the
+ * Read Alfresco audit records from the Alfresco FileFolderService <code>create</code> method. Alfresco uses the
  * FileFolderService create method to create content files (but NOT to create folders, or thumbnails... Alfresco uses
  * the NodeService to create folders and thumbnails).
  * <p>
- * For now, from the file/folder service we are interested only in new content files.  This reader ignores all other new
+ * For now, from the file/folder service we are interested only in new content files. This reader ignores all other new
  * content types.
  */
 public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAuditResponseReader
@@ -48,7 +49,8 @@ public class AlfrescoFileFolderServiceCreateAuditResponseReader implements EcmAu
 
             retval.setNodeType(alfrescoTypeToArkCaseType.get(alfrescoContentType));
 
-            // FileInfo[name=ArkCase - Infrastructure Team - Scrum - 2017-05-05.docx, isFolder=false, nodeRef=workspace:\/\/SpacesStore\/0af7fe58-885d-4f01-a9e6-0ebf994abb3f]
+            // FileInfo[name=ArkCase - Infrastructure Team - Scrum - 2017-05-05.docx, isFolder=false,
+            // nodeRef=workspace:\/\/SpacesStore\/0af7fe58-885d-4f01-a9e6-0ebf994abb3f]
             String nodeInfo = values.getString("/auditarkcasecreate/create/out/a");
 
             String nodeId = extractNodeId(nodeInfo);

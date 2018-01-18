@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ import javax.servlet.http.HttpSession;
  * Created by marjan.stefanoski on 06.04.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class DeleteFileAPIController
 {
 
@@ -37,8 +38,7 @@ public class DeleteFileAPIController
     public String deleteFile(
             @PathVariable("fileId") Long objectId,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmUserActionFailedException
+            HttpSession session) throws AcmUserActionFailedException
     {
 
         if (log.isInfoEnabled())
@@ -56,7 +56,8 @@ public class DeleteFileAPIController
             }
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, true);
             return prepareJsonReturnMsg(EcmFileConstants.SUCCESS_DELETE_MSG, objectId, source.getFileName());
-        } catch (AcmUserActionFailedException e)
+        }
+        catch (AcmUserActionFailedException e)
         {
             if (log.isErrorEnabled())
             {
@@ -64,7 +65,8 @@ public class DeleteFileAPIController
             }
             getFileEventPublisher().publishFileDeletedEvent(source, authentication, ipAddress, false);
             throw e;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             if (log.isErrorEnabled())
             {
@@ -94,7 +96,6 @@ public class DeleteFileAPIController
         objectToReturn = objectToReturnJSON.toString();
         return objectToReturn;
     }
-
 
     public FileEventPublisher getFileEventPublisher()
     {

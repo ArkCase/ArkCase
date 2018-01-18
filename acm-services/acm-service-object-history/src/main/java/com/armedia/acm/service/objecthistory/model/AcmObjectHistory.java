@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -37,13 +38,7 @@ public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity, Acm
     private static final long serialVersionUID = 9140143221014764628L;
 
     @Id
-    @TableGenerator(name = "acm_object_history_gen",
-            table = "acm_object_history_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_object_history",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_object_history_gen", table = "acm_object_history_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_object_history", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_history_gen")
     @Column(name = "cm_id")
     private Long id;
@@ -82,6 +77,7 @@ public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity, Acm
     @Column(name = "cm_modifier", insertable = true, updatable = false)
     private String modifier;
 
+    @Override
     public Long getId()
     {
         return id;
@@ -102,6 +98,7 @@ public class AcmObjectHistory implements Serializable, AcmObject, AcmEntity, Acm
         this.objectId = objectId;
     }
 
+    @Override
     public String getObjectType()
     {
         return objectType;

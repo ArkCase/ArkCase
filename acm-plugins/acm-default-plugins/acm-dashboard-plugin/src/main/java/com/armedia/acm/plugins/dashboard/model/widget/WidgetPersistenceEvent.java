@@ -11,7 +11,8 @@ public class WidgetPersistenceEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "WIDGET";
 
-    public WidgetPersistenceEvent(Widget source) {
+    public WidgetPersistenceEvent(Widget source)
+    {
         super(source);
         setObjectId(source.getWidgetId());
         setEventDate(new Date());

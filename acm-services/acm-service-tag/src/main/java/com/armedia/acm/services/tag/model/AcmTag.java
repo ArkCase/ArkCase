@@ -5,13 +5,22 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by marjan.stefanoski on 24.03.2015.
@@ -19,19 +28,14 @@ import java.util.List;
 @Entity
 @Table(name = "acm_tag")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class AcmTag implements AcmEntity, Serializable, AcmObject {
+public class AcmTag implements AcmEntity, Serializable, AcmObject
+{
 
     public static final String OBJECT_TYPE = "TAG";
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_tag_gen",
-            table = "acm_tag_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_tag",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_tag_gen", table = "acm_tag_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_tag", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_tag_gen")
     @Column(name = "cm_tag_id")
     private Long id;
@@ -59,90 +63,108 @@ public class AcmTag implements AcmEntity, Serializable, AcmObject {
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
 
-    @Column(name="cm_tag_token")
+    @Column(name = "cm_tag_token")
     private String tagToken;
 
-    public String getTagText() {
+    public String getTagText()
+    {
         return tagText;
     }
 
-    public void setTagText(String tagText) {
+    public void setTagText(String tagText)
+    {
         this.tagText = tagText;
     }
 
     @Override
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
     @Override
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
     @Override
-    public String getModifier() {
+    public String getModifier()
+    {
         return modifier;
     }
 
     @Override
-    public void setModifier(String modifier) {
+    public void setModifier(String modifier)
+    {
         this.modifier = modifier;
     }
 
     @Override
-    public Date getModified() {
+    public Date getModified()
+    {
         return modified;
     }
 
     @Override
-    public void setModified(Date modified) {
+    public void setModified(Date modified)
+    {
         this.modified = modified;
     }
 
-    public String getTagDescription() {
+    public String getTagDescription()
+    {
         return tagDescription;
     }
 
-    public void setTagDescription(String tagDescription) {
+    public void setTagDescription(String tagDescription)
+    {
         this.tagDescription = tagDescription;
     }
 
-    public String getTagName() {
+    public String getTagName()
+    {
         return tagName;
     }
 
-    public void setTagName(String tagName) {
+    public void setTagName(String tagName)
+    {
         this.tagName = tagName;
     }
 
     @JsonIgnore
-    public String getTagToken() {
+    public String getTagToken()
+    {
         return tagToken;
     }
 
-    public void setTagToken(String tagToken) {
+    public void setTagToken(String tagToken)
+    {
         this.tagToken = tagToken;
     }
 
     @JsonIgnore
     @Override
-    public String getObjectType() {
+    public String getObjectType()
+    {
         return OBJECT_TYPE;
     }
 
     @Override
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 

@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleCreatedEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRolePersistenceEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetRoleUpdatedEvent;
 import com.armedia.acm.plugins.dashboard.model.widget.WidgetUpdatedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,7 +27,6 @@ import java.util.List;
  */
 public class WidgetEventPublisher implements ApplicationEventPublisherAware
 {
-
 
     private ApplicationEventPublisher eventPublisher;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -54,7 +54,8 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware
     {
 
         log.debug("Publishing a widget event.");
-        WidgetRolePersistenceEvent widgetRolePersistenceEvent = newWidgetRole ? new WidgetRoleCreatedEvent(source) : new WidgetRoleUpdatedEvent(source);
+        WidgetRolePersistenceEvent widgetRolePersistenceEvent = newWidgetRole ? new WidgetRoleCreatedEvent(source)
+                : new WidgetRoleUpdatedEvent(source);
         widgetRolePersistenceEvent.setSucceeded(succeeded);
         if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
         {
@@ -76,7 +77,8 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(getWidgetsByUserRoles);
     }
 
-    public void publishGeRolesByWidgets(List<RolesGroupByWidgetDto> source, Authentication authentication, String ipAddress, boolean succeeded)
+    public void publishGeRolesByWidgets(List<RolesGroupByWidgetDto> source, Authentication authentication, String ipAddress,
+            boolean succeeded)
     {
 
         log.debug("Publishing a widget event. Get all Roles per Widgets Event");
@@ -89,7 +91,8 @@ public class WidgetEventPublisher implements ApplicationEventPublisherAware
         eventPublisher.publishEvent(getRolesByWidgetsEvent);
     }
 
-    public void publishSetAuthorizedWidgetRolesEvent(RolesGroupByWidgetDto source, Authentication authentication, String ipAddress, boolean succeeded)
+    public void publishSetAuthorizedWidgetRolesEvent(RolesGroupByWidgetDto source, Authentication authentication, String ipAddress,
+            boolean succeeded)
     {
 
         log.debug("Publishing a widget event. Get all Roles per Widgets Event");

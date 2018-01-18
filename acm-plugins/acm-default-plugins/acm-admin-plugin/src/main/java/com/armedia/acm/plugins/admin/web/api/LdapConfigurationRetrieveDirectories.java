@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -11,13 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LdapConfigurationRetrieveDirectories
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private LdapConfigurationService ldapConfigurationService;
-
 
     @RequestMapping(value = "/ldapconfiguration/directories", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
@@ -28,7 +28,8 @@ public class LdapConfigurationRetrieveDirectories
         try
         {
             return ldapConfigurationService.retrieveDirectoriesConfiguration();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't read LDAP properties file", e);
             throw new AcmLdapConfigurationException("Can't get LDAP properties", e);

@@ -1,9 +1,9 @@
 package com.armedia.acm.correspondence.service;
 
+import static org.junit.Assert.assertEquals;
+
 import org.jsoup.Jsoup;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by riste.tutureski on 2/28/2017.

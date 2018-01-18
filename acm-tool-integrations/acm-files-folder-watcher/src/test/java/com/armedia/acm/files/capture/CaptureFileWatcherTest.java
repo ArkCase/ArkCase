@@ -1,8 +1,15 @@
 package com.armedia.acm.files.capture;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.files.FileAddedEvent;
 import com.armedia.acm.files.FileEvent;
 import com.armedia.acm.files.FileWatcher;
+
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -24,10 +31,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(EasyMockRunner.class)
 public class CaptureFileWatcherTest extends EasyMockSupport
@@ -93,7 +96,6 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         verifyAll();
 
-
         String expected = (runningOnWindows ? "C:" : "") + fileSeparator + "temp";
 
         assertEquals(expected, unit.getWatchFolderPath());
@@ -110,7 +112,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
 
         verifyAll();
 
-        List<String> expected = new ArrayList<String>();
+        List<String> expected = new ArrayList<>();
         expected.add("pdf");
         expected.add("txt");
         expected.add("html");
@@ -122,8 +124,7 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     public void raiseEvent_whenFileIsAdded_allowed() throws Exception
     {
 
-        Capture<FileEvent> capturedEvent =
-                setupEventTest(unit.getWatchFolderPath() + fileSeparator + "file.xml", "xml");
+        Capture<FileEvent> capturedEvent = setupEventTest(unit.getWatchFolderPath() + fileSeparator + "file.xml", "xml");
 
         unit.fileCreated(mockFileChangeEvent);
 
@@ -167,7 +168,6 @@ public class CaptureFileWatcherTest extends EasyMockSupport
     private Capture<FileEvent> setupEventTest(String fileUrl, String extension) throws FileSystemException, MalformedURLException
     {
         unit.setApplicationEventPublisher(mockPublisher);
-
 
         Capture<FileEvent> capturedEvent = new Capture<>();
 

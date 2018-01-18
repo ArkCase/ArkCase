@@ -1,10 +1,11 @@
 package com.armedia.acm.service.outlook.model;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import microsoft.exchange.webservices.data.core.enumeration.permission.PermissionScope;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionLevel;
 import microsoft.exchange.webservices.data.core.enumeration.permission.folder.FolderPermissionReadAccess;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * Created by nebojsha on 09.05.2015.

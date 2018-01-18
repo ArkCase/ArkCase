@@ -1,6 +1,11 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -20,8 +25,6 @@ import org.springframework.core.io.Resource;
 
 import java.util.Calendar;
 import java.util.Date;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/17/14.
@@ -48,9 +51,9 @@ public class SaveCaseFileRulesTest
         dtconf.setInputType(DecisionTableInputType.XLS);
         kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-        if ( kbuilder.hasErrors() )
+        if (kbuilder.hasErrors())
         {
-            for (KnowledgeBuilderError error : kbuilder.getErrors() )
+            for (KnowledgeBuilderError error : kbuilder.getErrors())
             {
                 log.error("Error building rules: " + error);
             }

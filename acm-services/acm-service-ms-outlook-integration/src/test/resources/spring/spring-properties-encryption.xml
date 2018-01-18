@@ -1,24 +1,25 @@
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd" >
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="acmEncryptablePropertyEncryptionProperties" class="com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties">
-        <property name="cryptoUtils" ref="acmCryptoUtils" />
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils" />
-        <property name="propertiesEncryptionAlgorithm" value="AES" />
-        <property name="propertiesEncryptionBlockCipherMode" value="CBC" />
-        <property name="propertiesEncryptionPadding" value="PKCS5Padding" />
-        <property name="propertiesEncryptionKeySize" value="256" />
-        <property name="propertiesEncryptionIVSize" value="128" />
-        <property name="propertiesEncryptionMagicSize" value="8" />
-        <property name="propertiesEncryptionSaltSize" value="8" />
-        <property name="propertiesEncryptionPassPhraseIterations" value="1" />
-        <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="MD5" />
-        <property name="encryptedSymmetricKeyEncryptionAlgorithm" value="RSA/ECB/PKCS1Padding" />
-        <property name="encryptedSymmetricKeyFilePath" value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted" />
-        <property name="keystoreType" value="JKS" />
-        <property name="keystorePath" value="#{systemProperties['user.home']}/.arkcase/acm/private/keystore" />
-        <property name="keystorePassword" value="password" />
-        <property name="privateKeyAlias" value="armedia" />
+    <bean id="acmEncryptablePropertyEncryptionProperties"
+        class="com.armedia.acm.crypto.properties.AcmEncryptablePropertyEncryptionProperties">
+        <property name="cryptoUtils" ref="acmCryptoUtils"/>
+        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
+        <property name="propertiesEncryptionAlgorithm" value="AES"/>
+        <property name="propertiesEncryptionBlockCipherMode" value="CBC"/>
+        <property name="propertiesEncryptionPadding" value="PKCS5Padding"/>
+        <property name="propertiesEncryptionKeySize" value="256"/>
+        <property name="propertiesEncryptionIVSize" value="128"/>
+        <property name="propertiesEncryptionMagicSize" value="8"/>
+        <property name="propertiesEncryptionSaltSize" value="8"/>
+        <property name="propertiesEncryptionPassPhraseIterations" value="1"/>
+        <property name="propertiesEncryptionPassPhraseHashAlgorithm" value="MD5"/>
+        <property name="encryptedSymmetricKeyEncryptionAlgorithm" value="RSA/ECB/PKCS1Padding"/>
+        <property name="encryptedSymmetricKeyFilePath"
+            value="#{systemProperties['user.home']}/.arkcase/acm/encryption/symmetricKey.encrypted"/>
+        <property name="keystoreType" value="JKS"/>
+        <property name="keystorePath" value="#{systemProperties['user.home']}/.arkcase/acm/private/keystore"/>
+        <property name="keystorePassword" value="password"/>
+        <property name="privateKeyAlias" value="armedia"/>
     </bean>
 </beans>

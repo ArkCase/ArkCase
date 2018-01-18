@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -15,23 +16,21 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by sergey.kolomiets  on 6/9/15.
+ * Created by sergey.kolomiets on 6/9/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class WorkflowConfigurationReplaceBpmnFile
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private WorkflowConfigurationService workflowConfigurationService;
 
-    @RequestMapping(
-            value = "/workflowconfiguration/files",
-            method = RequestMethod.POST
-    )
+    @RequestMapping(value = "/workflowconfiguration/files", method = RequestMethod.POST)
     @ResponseBody
     public String replaceFile(
-            @RequestParam("file") MultipartFile file, @RequestParam("description") String description) throws IOException, AcmWorkflowConfigurationException
+            @RequestParam("file") MultipartFile file, @RequestParam("description") String description)
+            throws IOException, AcmWorkflowConfigurationException
     {
 
         try
@@ -43,7 +42,8 @@ public class WorkflowConfigurationReplaceBpmnFile
             InputStream fileInputStream = file.getInputStream();
             workflowConfigurationService.uploadBpmnFile(fileInputStream, description);
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't replace BPMN file", e);
             throw new AcmWorkflowConfigurationException("Can't replace BPMN file", e);
