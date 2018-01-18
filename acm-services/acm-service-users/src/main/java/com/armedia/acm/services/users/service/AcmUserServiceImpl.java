@@ -62,7 +62,7 @@ public class AcmUserServiceImpl implements AcmUserService
     }
 
     @Override
-    public String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+    public String getFilteredUsers(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
             throws MuleException
     {
 
@@ -72,6 +72,17 @@ public class AcmUserServiceImpl implements AcmUserService
 
         return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
                 sortBy + " " + sortDirection, fq);
+    }
+
+    @Override
+    public String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException
+    {
+
+        String query = "object_type_s:USER AND status_lcs:VALID";
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     public void setUserDao(UserDao userDao)

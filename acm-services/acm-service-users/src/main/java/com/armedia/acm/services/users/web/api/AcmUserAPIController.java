@@ -47,9 +47,9 @@ public class AcmUserAPIController extends SecureLdapController
 
     private AcmUserService acmUserService;
 
-    @RequestMapping(value = "/getUsers/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/getFilteredUsers/search", method = RequestMethod.GET)
     @ResponseBody
-    public String listFlatSearchResultsFromFolderContent(Authentication auth,
+    public String getFilteredUsers(Authentication auth,
             @RequestParam(value = "fq") String searchFilter,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
@@ -57,7 +57,20 @@ public class AcmUserAPIController extends SecureLdapController
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
             @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
     {
-        return acmUserService.test(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
+        return acmUserService.getFilteredUsers(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
+    }
+
+    @RequestMapping(value = "/getNUsers/search", method = RequestMethod.GET)
+    @ResponseBody
+    public String getNUsers(Authentication auth,
+            @RequestParam(value = "fq", required = false) String searchFilter,
+            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
+            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
+    {
+        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
     }
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -97,7 +110,7 @@ public class AcmUserAPIController extends SecureLdapController
         try
         {
             AcmUser acmUser = ldapUserService.createLdapUser(ldapUserCreateRequest, directory);
-            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            // ldapUserService.publishSetPasswordEmailEvent(acmUser);
             ldapUserService.publishUserCreatedEvent(httpSession, authentication, acmUser, true);
             return acmUser;
         }
