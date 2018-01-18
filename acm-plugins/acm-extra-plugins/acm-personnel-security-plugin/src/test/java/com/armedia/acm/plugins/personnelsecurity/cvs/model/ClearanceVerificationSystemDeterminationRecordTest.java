@@ -1,12 +1,12 @@
 package com.armedia.acm.plugins.personnelsecurity.cvs.model;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 12/5/14.
@@ -21,8 +21,8 @@ public class ClearanceVerificationSystemDeterminationRecordTest
     @Test
     public void toString_correctRecordFormat()
     {
-        ClearanceVerificationSystemDeterminationRecord record =
-                new ClearanceVerificationSystemDeterminationRecord("Garcia", new Date(), true, new Date());
+        ClearanceVerificationSystemDeterminationRecord record = new ClearanceVerificationSystemDeterminationRecord("Garcia", new Date(),
+                true, new Date());
         record.setClearanceType("F");
 
         record.setAccessReported("SAPSCI");

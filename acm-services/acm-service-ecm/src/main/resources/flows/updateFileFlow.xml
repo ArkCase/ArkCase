@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
-      xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-      version="CE-3.7.0"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+    xmlns:cmis="http://www.mulesoft.org/schema/mule/cmis" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" version="CE-3.7.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmis/current/mule-cmis.xsd">
@@ -17,11 +13,7 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             If the object ID does not represent a CMIS document while check-out/check-in, the flow returns the Mule NullPayload.
         </description>
 
-        <vm:inbound-endpoint
-                address="vm://updateFile.in"
-                exchange-pattern="request-response"
-                doc:name="Update File">
-        </vm:inbound-endpoint>
+        <vm:inbound-endpoint address="vm://updateFile.in" exchange-pattern="request-response" doc:name="Update File"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.ecm"/>
 
@@ -31,13 +23,9 @@ http://www.mulesoft.org/schema/mule/cmis http://www.mulesoft.org/schema/mule/cmi
             <cmis:check-out config-ref="#[message.inboundProperties.configRef]" documentId="#[message.inboundProperties.ecmFileId]"/>
         </enricher>
 
-        <cmis:check-in config-ref="#[message.inboundProperties.configRef]"
-                       filename="#[message.inboundProperties.fileName]"
-                       documentId="#[flowVars['object'].id]"
-                       content-ref="#[message.inboundProperties.inputStream]"
-                       checkinComment="Updating file with new version"
-                       major="true"
-                       mimeType="#[message.inboundProperties.mimeType]"/>
+        <cmis:check-in config-ref="#[message.inboundProperties.configRef]" filename="#[message.inboundProperties.fileName]"
+            documentId="#[flowVars['object'].id]" content-ref="#[message.inboundProperties.inputStream]"
+            checkinComment="Updating file with new version" major="true" mimeType="#[message.inboundProperties.mimeType]"/>
 
         <cmis:get-object-by-id config-ref="#[message.inboundProperties.configRef]" objectId="#[payload.id]"/>
 

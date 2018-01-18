@@ -62,7 +62,8 @@ public class PersonSearchByNameAndContactMethodAPIController
         if (searchArgument != null)
         {
             return searchArgument + "*";
-        } else
+        }
+        else
         {
             return "*";
         }

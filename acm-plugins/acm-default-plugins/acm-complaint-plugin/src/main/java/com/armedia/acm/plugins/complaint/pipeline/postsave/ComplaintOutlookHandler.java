@@ -93,7 +93,8 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
             String folderName = String.format("%s(%s)", complaint.getComplaintTitle(), complaint.getComplaintNumber());
             outlookContainerCalendarService.createFolder(outlookUser, complaint.getId(), ComplaintConstants.OBJECT_TYPE, folderName,
                     complaint.getContainer(), complaint.getParticipants());
-        } catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
+        }
+        catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
         {
             logger.error("Error creating calendar folder for '{}'", complaint.getComplaintNumber(), e);
         }
@@ -106,7 +107,8 @@ public class ComplaintOutlookHandler implements PipelineHandler<Complaint, Compl
             AcmContainer container = complaint.getContainer();
             outlookContainerCalendarService.updateFolderParticipants(outlookUser, container.getCalendarFolderId(),
                     complaint.getParticipants());
-        } catch (AcmOutlookItemNotFoundException e)
+        }
+        catch (AcmOutlookItemNotFoundException e)
         {
             logger.error("Error updating participants for '{}'", complaint.getComplaintNumber(), e);
         }

@@ -34,12 +34,10 @@ import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisContentAlreadyExistsException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.module.cmis.exception.CMISConnectorException;
 import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +49,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 
 import java.io.File;
@@ -258,7 +255,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         catch (IOException | MuleException e)
         {
             log.error("Could not upload file: " + e.getMessage(), e);
-            throw new AcmCreateObjectFailedException(metadata.getFileName(), e.getCause() == null ? e.getMessage() : e.getCause().getMessage(), e);
+            throw new AcmCreateObjectFailedException(metadata.getFileName(),
+                    e.getCause() == null ? e.getMessage() : e.getCause().getMessage(), e);
         }
     }
 
@@ -660,9 +658,8 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
             String sortDirection, int startRow, int maxRows, String searchFilter) throws AcmListObjectsFailedException
     {
 
-        String query = String.format(
-                "(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
-                        + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
+        String query = String.format("(object_type_s:FILE AND parent_object_type_s:%s AND parent_object_id_s:%s) OR "
+                + "(object_type_s:FOLDER AND parent_container_object_type_s:%s AND parent_container_object_id_s:%s)",
                 container.getContainerObjectType(), container.getContainerObjectId(), container.getContainerObjectType(),
                 container.getContainerObjectId());
 
@@ -1341,16 +1338,18 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         props.put(EcmFileConstants.CONFIGURATION_REFERENCE,
                 cmisConfigUtils.getCmisConfiguration(cmisRepositoryId));
         props.put(EcmFileConstants.ALL_VERSIONS, false);
-        
-        List<EcmFile> listFiles = getEcmFileDao().findByCmisFileId(cmisObject.getProperty("cmis:versionSeriesId").getFirstValue().toString());
-        
-        if (listFiles != null && !listFiles.isEmpty()) {
+
+        List<EcmFile> listFiles = getEcmFileDao()
+                .findByCmisFileId(cmisObject.getProperty("cmis:versionSeriesId").getFirstValue().toString());
+
+        if (listFiles != null && !listFiles.isEmpty())
+        {
             throw new Exception("File already exists in Arkcase, use another method for deleting Arkcase file!");
         }
         getMuleContextManager().send(EcmFileConstants.MULE_ENDPOINT_DELETE_FILE, cmisObject, props);
 
     }
-    
+
     @Override
     @PreAuthorize("hasPermission(#parentId, #parentType, 'editAttachments')")
     public void deleteFile(Long objectId, Long parentId, String parentType) throws AcmUserActionFailedException, AcmObjectNotFoundException

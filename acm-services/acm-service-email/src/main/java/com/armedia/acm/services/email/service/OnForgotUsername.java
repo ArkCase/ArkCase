@@ -4,6 +4,7 @@ import com.armedia.acm.auth.web.ForgotUsernameEvent;
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.services.email.model.EmailBodyBuilder;
 import com.armedia.acm.services.email.model.EmailBuilder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -22,7 +23,8 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     private String forgotUsernameEmailSubject;
 
     /**
-     * Formatting string to be used for producing text to inserted as a body in the forgot username email. The formatting
+     * Formatting string to be used for producing text to inserted as a body in the forgot username email. The
+     * formatting
      * string accepts the login link string twice.
      * e.g: "Proceed to login <a href='%s'>%s</a>"
      */
@@ -35,8 +37,8 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
     {
         if (forgotUsernameEvent.isSucceeded())
         {
-            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>)
-                    forgotUsernameEvent.getSource();
+            AbstractMap.SimpleImmutableEntry<String, List<String>> emailUserData = (AbstractMap.SimpleImmutableEntry<String, List<String>>) forgotUsernameEvent
+                    .getSource();
             sendUsernameEmail(emailUserData);
         }
     }
@@ -56,8 +58,7 @@ public class OnForgotUsername implements ApplicationListener<ForgotUsernameEvent
         }
     }
 
-    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) ->
-    {
+    private EmailBuilder<AbstractMap.SimpleImmutableEntry<String, List<String>>> emailBuilder = (emailUserData, messageProps) -> {
         messageProps.put("to", emailUserData.getKey());
         messageProps.put("subject", forgotUsernameEmailSubject);
     };

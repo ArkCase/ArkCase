@@ -1,5 +1,9 @@
 package com.armedia.acm.auth;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
@@ -7,8 +11,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.security.authentication.AuthenticationProvider;
 
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * This test verifies we can add and remove child contexts, and search for
@@ -36,7 +38,7 @@ public class ContextIT
         assertTrue(providers.isEmpty());
 
         childContext = new ClassPathXmlApplicationContext(
-                new String[] {"/spring/spring-library-child-context.xml"}, true, parentContext);
+                new String[] { "/spring/spring-library-child-context.xml" }, true, parentContext);
 
         providers = childContext.getBeansOfType(AuthenticationProvider.class);
         assertEquals(1, providers.size());

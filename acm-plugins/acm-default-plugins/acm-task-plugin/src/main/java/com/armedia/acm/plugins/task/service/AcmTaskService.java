@@ -17,7 +17,12 @@ import java.util.List;
 public interface AcmTaskService
 {
 
-    void copyTasks(Long fromObjectId, String fromObjectType, Long toObjectId, String toObjectType, String toObjectName, Authentication auth,
+    void copyTasks(Long fromObjectId,
+            String fromObjectType,
+            Long toObjectId,
+            String toObjectType,
+            String toObjectName,
+            Authentication auth,
             String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException;
 
     void copyTaskFilesAndFoldersToParent(AcmTask task);
@@ -26,8 +31,8 @@ public interface AcmTaskService
 
     AcmTask retrieveTask(Long id);
 
-    void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType, Long parentId)
-            throws AcmCreateObjectFailedException;
+    void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
+            Long parentId);
 
     byte[] getDiagram(Long id) throws AcmTaskException;
 

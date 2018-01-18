@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
-    
+
     <bean id="costFactory" class="com.armedia.acm.form.cost.service.CostFactory">
-    	<property name="acmCostDao" ref="acmCostDao" />
-    	<property name="acmCostsheetDao" ref="acmCostsheetDao" />
-    	<property name="userDao" ref="userJpaDao" />
-    	<property name="acmParticipantDao" ref="acmParticipantDao" />
-    	<property name="springContextHolder" ref="acmContextHolder" />
+        <property name="acmCostDao" ref="acmCostDao"/>
+        <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
     <bean id="costService" class="com.armedia.acm.form.cost.service.CostService" parent="frevvoFormService" scope="prototype">
-        <property name="costFactory" ref="costFactory"/>        
-        <property name="costsheetService" ref="costsheetService" />
+        <property name="costFactory" ref="costFactory"/>
+        <property name="costsheetService" ref="costsheetService"/>
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="acmContainerDao" ref="acmContainerFolderDao"/>
         <property name="costsheetEventPublisher" ref="costsheetEventPublisher"/>

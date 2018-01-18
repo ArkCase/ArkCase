@@ -4,22 +4,35 @@
  * @author jwu
  */
 var SearchBase = SearchBase || {
-    create: function(args) {
+    create : function(args) {
         if (Acm.isEmpty(args)) {
             args = {};
         }
 
-        if (SearchBase.Controller.create) {SearchBase.Controller.create(args);}
-        if (SearchBase.Model.create)      {SearchBase.Model.create(args);}
-        if (SearchBase.View.create)       {SearchBase.View.create(args);}
-    }
-    ,onInitialized: function() {
-        if (SearchBase.Controller.onInitialized) {SearchBase.Controller.onInitialized();}
-        if (SearchBase.Model.onInitialized)      {SearchBase.Model.onInitialized();}
-        if (SearchBase.View.onInitialized)       {SearchBase.View.onInitialized();}
+        if (SearchBase.Controller.create) {
+            SearchBase.Controller.create(args);
+        }
+        if (SearchBase.Model.create) {
+            SearchBase.Model.create(args);
+        }
+        if (SearchBase.View.create) {
+            SearchBase.View.create(args);
+        }
+    },
+    onInitialized : function() {
+        if (SearchBase.Controller.onInitialized) {
+            SearchBase.Controller.onInitialized();
+        }
+        if (SearchBase.Model.onInitialized) {
+            SearchBase.Model.onInitialized();
+        }
+        if (SearchBase.View.onInitialized) {
+            SearchBase.View.onInitialized();
+        }
     }
 
-    ,showSearchDialog: function(args) {
+    ,
+    showSearchDialog : function(args) {
         if (Acm.isEmpty(args.$edtSearch)) {
             args.$edtSearch = frevvo_jQuery("#edtPoSearch");
         }
@@ -33,7 +46,11 @@ var SearchBase = SearchBase || {
             args.$divResults = frevvo_jQuery("#divPoResults");
         }
         if (!args.jtArgs) {
-            args.jtArgs = {multiselect:true, selecting:true, selectingCheckboxes:true};
+            args.jtArgs = {
+                multiselect : true,
+                selecting : true,
+                selectingCheckboxes : true
+            };
         }
         this.create(args);
 
@@ -43,4 +60,3 @@ var SearchBase = SearchBase || {
     }
 
 };
-

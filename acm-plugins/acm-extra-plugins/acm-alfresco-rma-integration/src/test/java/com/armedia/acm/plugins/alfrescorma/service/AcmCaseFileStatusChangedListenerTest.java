@@ -1,10 +1,16 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileModifiedEvent;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -13,9 +19,6 @@ import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 import java.util.Properties;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 public class AcmCaseFileStatusChangedListenerTest extends EasyMockSupport
 {

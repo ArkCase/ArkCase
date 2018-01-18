@@ -8,7 +8,6 @@ public class AcmObjectNotFoundException extends Exception
     private String objectType;
     private Long objectId;
 
-
     public AcmObjectNotFoundException(String objectType, Long objectId, String message, Throwable cause)
     {
         super(message, cause);
@@ -49,11 +48,11 @@ public class AcmObjectNotFoundException extends Exception
     public String getMessage()
     {
         String message = "";
-        if ( getObjectId() != null && getObjectType() != null )
+        if (getObjectId() != null && getObjectType() != null)
         {
             message += "Could not retrieve " + getObjectType() + " with ID = " + getObjectId() + ".\n";
         }
-        if ( super.getMessage() != null )
+        if (super.getMessage() != null)
         {
             message += "Server encountered exception: " + super.getMessage() + "\n";
         }

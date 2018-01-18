@@ -56,7 +56,8 @@ public class DocumentUiController
         try
         {
             encodedTitle = URLEncoder.encode(title, Charsets.UTF_8.displayName());
-        } catch (UnsupportedEncodingException e)
+        }
+        catch (UnsupportedEncodingException e)
         {
             log.error("Cannot encode title=" + title + ". The original format will be used.", e);
         }

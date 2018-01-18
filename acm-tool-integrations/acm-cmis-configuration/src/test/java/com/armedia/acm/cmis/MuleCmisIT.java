@@ -1,6 +1,7 @@
 package com.armedia.acm.cmis;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mule.api.MuleMessage;

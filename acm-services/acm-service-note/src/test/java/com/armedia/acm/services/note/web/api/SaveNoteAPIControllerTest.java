@@ -1,11 +1,17 @@
 package com.armedia.acm.services.note.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -27,11 +33,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
@@ -45,10 +46,8 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
     private SaveNoteAPIController unit;
     private Authentication mockAuthentication;
 
-
     private NoteDao mockNoteDao;
     private NoteEventPublisher mockNoteEventPublisher;
-
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -104,7 +103,6 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
         log.debug("Input JSON: " + in);
 
-
         MvcResult result = mockMvc.perform(
                 post("/api/latest/plugin/note")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
@@ -134,7 +132,6 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
         incomingNote.setParentType(parentType);
         incomingNote.setParentId(parentId);
 
-
         Capture<Note> noteToSave = new Capture<>();
         Capture<ApplicationNoteEvent> capturedEvent = new Capture<>();
 
@@ -150,7 +147,6 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
 
         log.debug("Input JSON: " + in);
 
-
         MvcResult result = mockMvc.perform(
                 post("/api/latest/plugin/note")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
@@ -159,12 +155,12 @@ public class SaveNoteAPIControllerTest extends EasyMockSupport
                         .content(in))
                 .andReturn();
 
-        //log.info("results: " + result.getResponse().getContentAsString());
+        // log.info("results: " + result.getResponse().getContentAsString());
 
         verifyAll();
 
         assertEquals(incomingNote.getId(), noteToSave.getValue().getId());
-        //assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
+        // assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
     }
 
     public Note createNote(String noteType)

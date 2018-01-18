@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;
@@ -41,13 +42,7 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = 7786267451369775524L;
 
     @Id
-    @TableGenerator(name = "disposition_gen",
-            table = "acm_disposition_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_disposition",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "disposition_gen", table = "acm_disposition_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_disposition", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "disposition_gen")
     @Column(name = "cm_disposition_id")
     private Long id;
@@ -95,6 +90,7 @@ public class Disposition implements Serializable, AcmObject, AcmEntity
         return CaseFileConstants.OBJECT_TYPE_DISPOSITION;
     }
 
+    @Override
     public Long getId()
     {
         return id;

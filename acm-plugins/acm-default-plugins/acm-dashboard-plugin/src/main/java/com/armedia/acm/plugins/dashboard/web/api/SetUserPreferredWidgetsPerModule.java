@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.dashboard.web.api;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDto;
 import com.armedia.acm.plugins.dashboard.service.UserPreferenceService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpSession;
  * Created by marjan.stefanoski on 14.01.2016.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets"})
+@RequestMapping({ "/api/v1/plugin/dashboard/widgets", "/api/latest/plugin/dashboard/widgets" })
 public class SetUserPreferredWidgetsPerModule
 {
 
@@ -31,8 +32,7 @@ public class SetUserPreferredWidgetsPerModule
     public PreferredWidgetsDto setPreferredWidgets(
             @RequestBody PreferredWidgetsDto in,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmObjectNotFoundException
+            HttpSession session) throws AcmObjectNotFoundException
     {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         String userId = authentication.getName();

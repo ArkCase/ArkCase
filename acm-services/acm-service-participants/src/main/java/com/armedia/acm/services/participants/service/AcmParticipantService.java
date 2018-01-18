@@ -107,20 +107,17 @@ public class AcmParticipantService
     }
 
     public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String participantLdapId, String participantType,
-            String objectType,
-            Long objectId)
+            String objectType, Long objectId)
     {
         return getParticipantByLdapIdParticipantTypeObjectTypeObjectId(participantLdapId, participantType, objectType, objectId,
                 FlushModeType.AUTO);
     }
 
     public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String participantLdapId, String participantType,
-            String objectType,
-            Long objectId, FlushModeType flushModeType)
+            String objectType, Long objectId, FlushModeType flushModeType)
     {
         return getParticipantDao().getParticipantByLdapIdParticipantTypeObjectTypeObjectId(participantLdapId, participantType, objectType,
-                objectId,
-                flushModeType);
+                objectId, flushModeType);
     }
 
     public AcmParticipant changeParticipantRole(AcmParticipant participant, String newRole) throws AcmAccessControlException

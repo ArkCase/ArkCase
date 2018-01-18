@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,6 @@ public class CustomCssService
 
     private String customCssFile;
 
-
     public String getFile()
     {
         String fileContent = "";
@@ -27,7 +27,8 @@ public class CustomCssService
             {
                 fileContent = FileUtils.readFileToString(cssFile);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get custom CSS file [{}]", customCssFile, e);
         }
@@ -41,7 +42,8 @@ public class CustomCssService
             File cssFile = new File(customCssFile);
             FileUtils.writeStringToFile(cssFile, cssText);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update custom CSS file [{}]", customCssFile, e);
             throw new AcmCustomCssException(String.format("Can't update custom CSS file %s", customCssFile), e);

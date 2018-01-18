@@ -1,5 +1,9 @@
 package com.armedia.acm.files.capture;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import org.apache.commons.vfs2.FileObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,16 +19,14 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-folder-watcher.xml",
         "/spring-test-config-file-watcher.xml"
-        // this is needed because all beans are loaded in spring-library-folder-watcher.xml and it depends on this, also need access to
+        // this is needed because all beans are loaded in spring-library-folder-watcher.xml and it depends on this, also
+        // need access to
         // capture.properties properties
-        , "/spring/spring-library-property-file-manager.xml"
-        , "/spring/spring-library-acm-encryption.xml"
+        , "/spring/spring-library-property-file-manager.xml", "/spring/spring-library-acm-encryption.xml"
 })
 public class CaptureFileWatcherIT
 {
@@ -37,7 +39,6 @@ public class CaptureFileWatcherIT
     @Autowired
     @Qualifier(value = "captureFileEventListener")
     private CaptureFileEventListener listener;
-
 
     @Test
     public void captureFolderMonitor_allowed() throws Exception

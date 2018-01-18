@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.report.web.api;
 
 import com.armedia.acm.plugins.report.model.Report;
 import com.armedia.acm.plugins.report.service.ReportService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import java.util.Map;
  * Created by Petar Ilin <petar.ilin@armedia.com> on 03.10.2016.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/report", "/api/latest/plugin/report"})
+@RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
 public class GetAuthorizedReportsAPIController
 {
 
@@ -36,7 +37,7 @@ public class GetAuthorizedReportsAPIController
      */
     private ReportService reportService;
 
-    @RequestMapping(value = "/authorized", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/authorized", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public Map<String, String> getAuthorizedReports(Authentication auth)
     {

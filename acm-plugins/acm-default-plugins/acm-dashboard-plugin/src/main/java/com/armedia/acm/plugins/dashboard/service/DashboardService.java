@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -71,7 +72,8 @@ public class DashboardService
         if (DashboardConstants.DASHBOARD_MODULE_NAME.equals(moduleName))
         {
             return prepareDashboardStringBasedOnUserRoles(owner.getUserId(), moduleName);
-        } else
+        }
+        else
         {
             return getDashboardDao().getDashboardConfigForUserAndModuleName(owner, moduleName);
         }
@@ -100,8 +102,8 @@ public class DashboardService
 
     private String removeHashKeyValues(String dashboardConfigWithHashValues)
     {
-        //the regex ",\"\\$\\$hashKey\":\"\\w+\"" is used in replaceAll(...) method to remove
-        //all ,"$$hashKey":"00A" like strings added by  angularjs into dashboard config json string.
+        // the regex ",\"\\$\\$hashKey\":\"\\w+\"" is used in replaceAll(...) method to remove
+        // all ,"$$hashKey":"00A" like strings added by angularjs into dashboard config json string.
         return dashboardConfigWithHashValues.replaceAll(",\"\\$\\$hashKey\":\"\\w+\"", "");
     }
 
@@ -116,7 +118,8 @@ public class DashboardService
             if (moduleName.equals(DashboardConstants.DEFAULT_DASHBOARD_NAME))
             {
                 d.setDashboardConfig((String) dashboardPlugin.getPluginProperties().get(DashboardConstants.DEFAULT_DASHBOARD));
-            } else
+            }
+            else
             {
                 String defaultModuleDashboardConfig = (String) dashboardPlugin.getPluginProperties()
                         .get(DashboardConstants.DEFAULT_MODULE_DASHBOARD);
@@ -125,7 +128,8 @@ public class DashboardService
                     d.setDashboardConfig(defaultModuleDashboardConfig);
                 }
             }
-        } else
+        }
+        else
         {
             // to add <prop key="acm.deafultDashbolard">"some default long dashboard string"</prop> under
             // dashboardPluginProperties bean in spring-library-dashboard.xml and never get here?
@@ -176,7 +180,7 @@ public class DashboardService
 
     private String removeNotAuthorizedWidgets(JSONObject dashboardJSONObject, List<Widget> dashboardWidgetsOnly)
     {
-        // these 3 loops iterate over dashboard config JSON string/object, removing  widgets that are not allowed
+        // these 3 loops iterate over dashboard config JSON string/object, removing widgets that are not allowed
         // to be rendered on the UI side due to changes in widget roles relations.
 
         Set<String> dashboardWidgetNames = dashboardWidgetsOnly.stream()

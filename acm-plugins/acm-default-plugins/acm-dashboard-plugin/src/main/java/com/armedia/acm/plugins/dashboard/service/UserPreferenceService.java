@@ -1,13 +1,5 @@
 package com.armedia.acm.plugins.dashboard.service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.dashboard.dao.ModuleDao;
 import com.armedia.acm.plugins.dashboard.dao.UserPreferenceDao;
@@ -19,6 +11,14 @@ import com.armedia.acm.plugins.dashboard.model.widget.Widget;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.service.AcmUserRoleService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by marjan.stefanoski on 18.01.2016.

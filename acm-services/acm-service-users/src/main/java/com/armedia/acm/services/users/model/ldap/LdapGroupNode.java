@@ -39,8 +39,10 @@ public class LdapGroupNode
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         LdapGroupNode that = (LdapGroupNode) o;
         return Objects.equals(ldapGroup, that.ldapGroup);
     }

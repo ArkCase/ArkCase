@@ -1,8 +1,15 @@
 package com.armedia.acm.services.notification.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,14 +29,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.persistence.QueryTimeoutException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -69,10 +72,10 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         String user = "ann-acm";
 
         Notification notificationAnn = new Notification();
-        /*Notification notificationIan = new Notification();
-
-        Notification notificationEveryone = new Notification();*/
-
+        /*
+         * Notification notificationIan = new Notification();
+         * Notification notificationEveryone = new Notification();
+         */
 
         notificationAnn.setId(700L);
         notificationAnn.setCreator("testCreator");
@@ -86,40 +89,39 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         notificationAnn.setType("type");
         notificationAnn.setNote("note");
 
-        /*notificationEveryone.setId(700L);
-        notificationEveryone.setCreator("testCreator");
-        notificationEveryone.setCreated(new Date());
-        notificationEveryone.setUser("EVERYONE");
-        notificationEveryone.setStatus("status");
-        notificationEveryone.setAction("action");
-        notificationEveryone.setComment("comment");
-        notificationEveryone.setModifier("modifier");
-        notificationEveryone.setModified(new Date());
-        notificationEveryone.setData("data");
-        notificationEveryone.setAuto("auto");
-        notificationEveryone.setNote("note");
-
-        notificationIan.setId(700L);
-        notificationIan.setCreator("testCreator");
-        notificationIan.setCreated(new Date());
-        notificationIan.setUser("ian");
-        notificationIan.setStatus("status");
-        notificationIan.setAction("action");
-        notificationIan.setComment("comment");
-        notificationIan.setModifier("modifier");
-        notificationIan.setModified(new Date());
-        notificationIan.setData("data");
-        notificationIan.setAuto("auto");
-        notificationIan.setNote("note");
-*/
+        /*
+         * notificationEveryone.setId(700L);
+         * notificationEveryone.setCreator("testCreator");
+         * notificationEveryone.setCreated(new Date());
+         * notificationEveryone.setUser("EVERYONE");
+         * notificationEveryone.setStatus("status");
+         * notificationEveryone.setAction("action");
+         * notificationEveryone.setComment("comment");
+         * notificationEveryone.setModifier("modifier");
+         * notificationEveryone.setModified(new Date());
+         * notificationEveryone.setData("data");
+         * notificationEveryone.setAuto("auto");
+         * notificationEveryone.setNote("note");
+         * notificationIan.setId(700L);
+         * notificationIan.setCreator("testCreator");
+         * notificationIan.setCreated(new Date());
+         * notificationIan.setUser("ian");
+         * notificationIan.setStatus("status");
+         * notificationIan.setAction("action");
+         * notificationIan.setComment("comment");
+         * notificationIan.setModifier("modifier");
+         * notificationIan.setModified(new Date());
+         * notificationIan.setData("data");
+         * notificationIan.setAuto("auto");
+         * notificationIan.setNote("note");
+         */
 
         List<Notification> notificationList = new ArrayList<>();
         notificationList.add(notificationAnn);
-        /*notificationList.add(notificationEveryone);
-        notificationList.add(notificationIan);*/
-
-
-
+        /*
+         * notificationList.add(notificationEveryone);
+         * notificationList.add(notificationIan);
+         */
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
         expect(mockNotificationDao.listNotifications(user)).andReturn(notificationList);
@@ -147,10 +149,9 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
                 mapper.getTypeFactory().constructParametricType(List.class, Notification.class));
 
         assertNotNull(fromReturnedNotificationList);
-        assertEquals(fromReturnedNotificationList.size(),1);
+        assertEquals(fromReturnedNotificationList.size(), 1);
         assertEquals(fromReturnedNotificationList.get(0).getUser(), user);
-        //assertEquals(fromReturnedNotificationList.get(1).getUser(), user);
-
+        // assertEquals(fromReturnedNotificationList.get(1).getUser(), user);
 
         log.info("notification size : ", fromReturnedNotificationList.size());
     }
@@ -177,7 +178,6 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         List<Notification> notificationList = new ArrayList<>();
         notificationList.add(notification);
 
-
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
         expect(mockNotificationDao.listNotifications(user)).andThrow(new QueryTimeoutException("test exception"));
@@ -187,7 +187,7 @@ public class ListAllNotificationsAPIControllerTest extends EasyMockSupport
         replayAll();
 
         mockMvc.perform(
-                get("/api/v1/plugin/notification/{user}",user)
+                get("/api/v1/plugin/notification/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .session(mockHttpSession)
                         .principal(mockAuthentication))

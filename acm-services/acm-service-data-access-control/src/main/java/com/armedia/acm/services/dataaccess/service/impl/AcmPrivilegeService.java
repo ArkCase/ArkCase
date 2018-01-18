@@ -83,6 +83,7 @@ public class AcmPrivilegeService
         for (AcmParticipant ap : obj.getParticipants())
         {
             log.debug("checking type '{}', user '{}'", ap.getParticipantType(), ap.getParticipantLdapId());
+
             if (participantTypes.contains((ap.getParticipantType().toLowerCase())))
             {
                 ap.setModified(new Date());

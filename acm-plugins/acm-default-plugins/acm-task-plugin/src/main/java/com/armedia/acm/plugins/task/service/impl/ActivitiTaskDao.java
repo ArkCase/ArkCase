@@ -127,11 +127,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .includeProcessVariables().singleResult();
         if (pi == null)
         {
-            if(readFromHistory == true) {
+            if (readFromHistory == true)
+            {
                 return (T) getProcessVariableFromHistory(businessProcessId, processVariableKey);
             }
-            else {
-                throw new AcmTaskException(String.format("Can't get process variable %s for business process id %s", processVariableKey, businessProcessId));
+            else
+            {
+                throw new AcmTaskException(
+                        String.format("Can't get process variable %s for business process id %s", processVariableKey, businessProcessId));
             }
         }
         return (T) pi.getProcessVariables().get(processVariableKey);
@@ -1551,7 +1554,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         return new ArrayList<>();
     }
 
-    private <T> T getProcessVariableFromHistory(String processId, String processVariable) throws AcmTaskException {
+    private <T> T getProcessVariableFromHistory(String processId, String processVariable) throws AcmTaskException
+    {
         List<HistoricTaskInstance> historyTasks = getActivitiHistoryService()
                 .createHistoricTaskInstanceQuery()
                 .processInstanceId(processId)
@@ -1559,12 +1563,13 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                 .includeTaskLocalVariables()
                 .list();
 
-        if(historyTasks != null && historyTasks.size() > 0)
+        if (historyTasks != null && historyTasks.size() > 0)
         {
             return (T) historyTasks.get(0).getProcessVariables().get(processVariable);
         }
 
-        throw new AcmTaskException(String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
+        throw new AcmTaskException(
+                String.format("Process variable %s does not exist in the process with Id %s", processVariable, processId));
     }
 
     public RuntimeService getActivitiRuntimeService()
