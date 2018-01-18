@@ -1,6 +1,14 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,13 +27,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -57,7 +58,6 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
         personPluginProperties.setProperty("person.types", "one,two,three,four,five");
 
         unit = new GetPersonTypesAPIController();
-
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
 
@@ -96,7 +96,6 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
         // properties file; but should use properties created just for this test.
         assertEquals(5, types.length);
 
-
     }
 
     @Test
@@ -117,8 +116,6 @@ public class GetPersonTypesAPIControllerTest extends EasyMockSupport
 
         verifyAll();
 
-
     }
-
 
 }

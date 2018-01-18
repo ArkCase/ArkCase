@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.task.service;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -35,7 +36,8 @@ public class TaskHistoryListener implements ApplicationListener<AcmApplicationTa
             {
                 AcmTask task = (AcmTask) event.getSource();
 
-                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), task, task.getId(), OBJECT_TYPE, event.getEventDate(), event.getIpAddress());
+                getAcmObjectHistoryService().save(event.getUserId(), event.getEventType(), task, task.getId(), OBJECT_TYPE,
+                        event.getEventDate(), event.getIpAddress());
 
                 LOG.debug("Task History added to database.");
             }

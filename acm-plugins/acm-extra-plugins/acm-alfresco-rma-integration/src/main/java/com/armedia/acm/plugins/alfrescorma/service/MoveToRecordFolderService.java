@@ -25,7 +25,8 @@ public class MoveToRecordFolderService extends AlfrescoService<String>
     /**
      * The context must have:
      * <ul>
-     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will be moved</li>
+     * <li>Key ecmFileId: String, CMIS Version Series ID (NOT the id, the versionSeriesId) of the document which will be
+     * moved</li>
      * <li>Key recordFolderId: String, CMIS Object ID of the target folder</li>
      * </ul>
      */

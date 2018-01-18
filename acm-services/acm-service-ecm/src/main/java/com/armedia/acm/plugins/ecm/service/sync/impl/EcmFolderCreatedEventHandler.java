@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -50,7 +51,8 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             AcmFolder created = getFolderDao().save(newFolder);
 
             log.debug("Finished creating new folder with node id {}, ArkCase id {}", folderCreated.getNodeId(), created.getId());
-        } catch (PersistenceException pe)
+        }
+        catch (PersistenceException pe)
         {
             log.error("Cannot create new folder with CMIS ID {}: [{}]", folderCreated.getNodeId(), pe.getMessage(), pe);
         }
@@ -76,7 +78,8 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
             log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
             return found;
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.debug("No such folder in ArkCase: {}", folderCmisId);
             return null;

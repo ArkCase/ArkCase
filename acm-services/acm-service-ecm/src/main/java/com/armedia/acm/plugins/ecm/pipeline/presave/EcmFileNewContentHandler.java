@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,14 +45,14 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);
             }
 
         }
-
 
     }
 
@@ -75,7 +76,8 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 // Removes the document from the Alfresco content repository
                 ecmFileMuleUtils.deleteFile(entity, cmisDocument.getId());
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             { // since the rollback failed an orphan document will exist in Alfresco
                 log.error("rollback of file upload failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);

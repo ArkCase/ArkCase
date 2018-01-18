@@ -28,5 +28,4 @@ public class SimpleAuthenticationSource implements AuthenticationSource
         return credentials;
     }
 
-
 }

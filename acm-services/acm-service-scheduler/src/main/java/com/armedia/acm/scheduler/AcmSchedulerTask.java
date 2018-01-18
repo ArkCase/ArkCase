@@ -72,19 +72,20 @@ public class AcmSchedulerTask
         if (taskLastRun + howOften <= now)
         {
             log.debug("Submitting task {} for execution.", taskName);
-            taskExecutor.execute(() ->
-            {
+            taskExecutor.execute(() -> {
                 try
                 {
                     schedulableBean.executeTask();
-                } finally
+                }
+                finally
                 {
                     taskCompletedSignal.countDown();
                     log.debug("Finished executing task {}.", taskName);
                 }
             });
             taskLastRun = System.currentTimeMillis();
-        } else
+        }
+        else
         {
             taskCompletedSignal.countDown();
         }

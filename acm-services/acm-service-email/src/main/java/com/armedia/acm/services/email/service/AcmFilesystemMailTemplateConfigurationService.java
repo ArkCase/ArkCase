@@ -50,7 +50,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
         /*
          * (non-Javadoc)
-         *
          * @see
          * com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#mapException(com.armedia.acm.services.
          * email.service.AcmEmailServiceException)
@@ -81,7 +80,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper#getStatusCode()
          */
         @Override
@@ -102,7 +100,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#getTemplateConfigurations()
      */
     @Override
@@ -140,7 +137,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#updateEmailTemplate(com.armedia.acm.
      * services.email.service.EmailTemplateConfiguration, org.springframework.web.multipart.MultipartFile)
@@ -261,7 +257,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#getTemplateCandidates(java.lang.
      * String, java.lang.String, com.armedia.acm.services.email.service.EmailSource, java.util.List)
      */
@@ -281,7 +276,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#getTemplate(java.lang.String)
      */
     @Override
@@ -314,7 +308,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#deleteTemplate(java.lang.String)
      */
     @Override
@@ -357,7 +350,6 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#getExceptionMapper(com.armedia.acm.
      * services.email.service.AcmEmailServiceException)

@@ -30,7 +30,8 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Mule message notification listener sets the {@link MDC} variables to messages in session properties and sets the {@link MDC} variables
+ * Mule message notification listener sets the {@link MDC} variables to messages in session properties and sets the
+ * {@link MDC} variables
  * from them.
  * <p>
  * Created by Bojan Milenkoski on 20.1.2016.
@@ -119,7 +120,8 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY)
+                    : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setFullEventType(EVENT_TYPE + " | " + event.getMessageSourceURI());
             auditEvent.setEventResult(AuditConstants.EVENT_RESULT_SUCCESS);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_MULE_FLOW);
@@ -166,7 +168,8 @@ public class AcmMessageProcessorNotificationListener implements MessageProcessor
                 AbstractConnectedProcessor abstractConnectedProcessor = (AbstractConnectedProcessor) processor;
 
                 String repositoryId = abstractConnectedProcessor.getRepositoryId() != null
-                        ? abstractConnectedProcessor.getRepositoryId().toString() : "null";
+                        ? abstractConnectedProcessor.getRepositoryId().toString()
+                        : "null";
                 eventProperties.put("CMIS Repository Id", repositoryId);
                 String baseUrl = abstractConnectedProcessor.getBaseUrl() != null ? abstractConnectedProcessor.getBaseUrl().toString()
                         : "null";

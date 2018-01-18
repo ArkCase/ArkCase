@@ -1,9 +1,16 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.ComplaintListView;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,14 +29,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.persistence.PersistenceException;
+
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by marjan.stefanoski on 8/20/2014.
@@ -40,7 +42,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         "classpath:/spring/spring-web-acm-web.xml",
         "classpath:/spring/spring-library-complaint-plugin-test.xml"
 })
-public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport {
+public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private Authentication mockAuthentication;
@@ -74,7 +77,7 @@ public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport {
     public void retrieveListOfUserComplaints() throws Exception
     {
 
-        String userId="user";
+        String userId = "user";
         ComplaintListView complaint = new ComplaintListView();
 
         // MVC test classes must call getName() somehow
@@ -89,7 +92,7 @@ public class FindComplaintsByUserAPIControllerTest extends EasyMockSupport {
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/complaint/forUser/{user}",userId)
+                get("/api/latest/plugin/complaint/forUser/{user}", userId)
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
                 .andExpect(status().isOk())

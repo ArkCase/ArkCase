@@ -1,10 +1,18 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +27,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Created by manoj.dhungana on 7/23/2015.
@@ -75,9 +78,9 @@ public class ListFileFolderByCategoryAPIControllerTest extends EasyMockSupport
         String url = "/api/v1/service/ecm/bycategory/" + parentObjectType + "/" + parentObjectId + "?category=Correspondence";
         log.info("Rest endpoint : " + url);
 
-
         expect(mockEcmFileService.getOrCreateContainer(parentObjectType, parentObjectId)).andReturn(container).atLeastOnce();
-        expect(mockEcmFileService.listFileFolderByCategory(mockAuthentication, container, "name", "ASC", 0, 1000, category)).andReturn(acmCmisObjectList);
+        expect(mockEcmFileService.listFileFolderByCategory(mockAuthentication, container, "name", "ASC", 0, 1000, category))
+                .andReturn(acmCmisObjectList);
         expect(mockAuthentication.getName()).andReturn("userName").atLeastOnce();
 
         replayAll();

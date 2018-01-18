@@ -1,103 +1,103 @@
 {
-  "costTracking": {
-    "title": "トラック費用",
-    "progressNoCostsheet": "[ 費用シートは選択されていません ]",
-    "progressLoading": "費用シートの読み込み",
-    "progressError": "費用シートの読み込みに失敗しました"
-  },
-  "costTracking.menus": {
-    "leftnav.item": "トラック費用",
-    "topbar.item": "費用シート"
-  },
-  "costTracking.comp.main": {
-    "title": "概要"
-  },
-  "costTracking.comp.info": {
-    "title": "情報",
-    "incidentDate": "事件の日付",
-    "priority": "優先",
-    "assignedTo": "割り当て先",
-    "subjectType": "亜種類",
-    "state": "状態"
-  },
-  "costTracking.comp.actions": {
-    "title": "行動",
-    "new.button": "新しい費用シート",
-    "edit.button": "費用項目を変更する"
-  },
-  "costTracking.comp.details": {
-    "title": "詳細",
-    "informSaved": "コストシートの詳細が保存されました",
-    "table.columns": {
-      "title": "詳細",
-      "modified": "最終変更日",
-      "modifier": "ユーザー最終更新日"
-    }
-  },
-  "costTracking.comp.person": {
-    "title": "人物",
-    "table.columns": {
-      "fullName": "フルネーム",
-      "userId": "ユーザー名"
-    }
-  },
-  "costTracking.comp.summary": {
-    "title": "費用の概要",
-    "table.columns": {
-      "parentId": "識別",
-      "parentNumber": "親ID",
-      "parentType": "親タイプ",
-      "value": "総費用",
-      "title": "タイトル",
-      "description": "説明"
-    }
-  },
-  "costTracking.comp.tags": {
-    "title": "タグ",
-    "table.columns": {
-      "tag": "タグ",
-      "created": "作成日",
-      "createdBy": "によって作成された"
+    "costTracking": {
+        "title": "トラック費用",
+        "progressNoCostsheet": "[ 費用シートは選択されていません ]",
+        "progressLoading": "費用シートの読み込み",
+        "progressError": "費用シートの読み込みに失敗しました"
     },
-    "modal": {
-      "title": "タグ",
-      "search": "タグを検索する",
-      "buttons": {
-        "cancel": "キャンセル",
-        "ok": "タグ付けする"
-      }
+    "costTracking.menus": {
+        "leftnav.item": "トラック費用",
+        "topbar.item": "費用シート"
     },
-    "message": {
-      "tagExists": "その名前または説明またはテキストのタグは既に存在します",
-      "tagAssociated": "すでに関連付けられている",
-      "delete": {
-        "success": "タグを削除しました",
-        "error": "タグ削除中にエラーが発生しました"
-      }
-    }
-  },
-  "costTracking.comp.approvers": {
-    "title": "承認者",
-    "table.columns": {
-      "fullName": "フルネーム",
-      "userId": "ユーザー名"
-    }
-  },
-  "costTracking.tree": {
-    "nodeTypes": {
-      "details.label": "詳細",
-      "person.label": "人物",
-      "summary.label": "経費",
-      "tags.label": "タグ",
-      "approvers.label": "承認者"
+    "costTracking.comp.main": {
+        "title": "概要"
     },
-    "sorters": {
-      "dateAsc": "日付で並べ替え",
-      "dateDesc": "アンチ日付順",
-      "idAsc": "費用識別番号を並べ替える",
-      "idDesc": "費用識別番号を昇順で並べ替え",
-      "nameDesc": "名で並べ替え",
-      "noSort": "(注文しません)"
+    "costTracking.comp.info": {
+        "title": "情報",
+        "incidentDate": "事件の日付",
+        "priority": "優先",
+        "assignedTo": "割り当て先",
+        "subjectType": "亜種類",
+        "state": "状態"
+    },
+    "costTracking.comp.actions": {
+        "title": "行動",
+        "new.button": "新しい費用シート",
+        "edit.button": "費用項目を変更する"
+    },
+    "costTracking.comp.details": {
+        "title": "詳細",
+        "informSaved": "コストシートの詳細が保存されました",
+        "table.columns": {
+            "title": "詳細",
+            "modified": "最終変更日",
+            "modifier": "ユーザー最終更新日"
+        }
+    },
+    "costTracking.comp.person": {
+        "title": "人物",
+        "table.columns": {
+            "fullName": "フルネーム",
+            "userId": "ユーザー名"
+        }
+    },
+    "costTracking.comp.summary": {
+        "title": "費用の概要",
+        "table.columns": {
+            "parentId": "識別",
+            "parentNumber": "親ID",
+            "parentType": "親タイプ",
+            "value": "総費用",
+            "title": "タイトル",
+            "description": "説明"
+        }
+    },
+    "costTracking.comp.tags": {
+        "title": "タグ",
+        "table.columns": {
+            "tag": "タグ",
+            "created": "作成日",
+            "createdBy": "によって作成された"
+        },
+        "modal": {
+            "title": "タグ",
+            "search": "タグを検索する",
+            "buttons": {
+                "cancel": "キャンセル",
+                "ok": "タグ付けする"
+            }
+        },
+        "message": {
+            "tagExists": "その名前または説明またはテキストのタグは既に存在します",
+            "tagAssociated": "すでに関連付けられている",
+            "delete": {
+                "success": "タグを削除しました",
+                "error": "タグ削除中にエラーが発生しました"
+            }
+        }
+    },
+    "costTracking.comp.approvers": {
+        "title": "承認者",
+        "table.columns": {
+            "fullName": "フルネーム",
+            "userId": "ユーザー名"
+        }
+    },
+    "costTracking.tree": {
+        "nodeTypes": {
+            "details.label": "詳細",
+            "person.label": "人物",
+            "summary.label": "経費",
+            "tags.label": "タグ",
+            "approvers.label": "承認者"
+        },
+        "sorters": {
+            "dateAsc": "日付で並べ替え",
+            "dateDesc": "アンチ日付順",
+            "idAsc": "費用識別番号を並べ替える",
+            "idDesc": "費用識別番号を昇順で並べ替え",
+            "nameDesc": "名で並べ替え",
+            "noSort": "(注文しません)"
+        }
     }
-  }
 }

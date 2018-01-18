@@ -13,13 +13,13 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.pipeline.PipelineManager;
-import org.apache.commons.lang3.StringUtils;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.tika.exception.TikaException;
-import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -50,14 +50,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-                                      String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-                                      Document existingCmisDocument) throws MuleException, IOException
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+            Document existingCmisDocument) throws MuleException, IOException
     {
         log.debug("Creating ecm file pipeline context");
-
 
         byte[] fileBytes = IOUtils.toByteArray(fileContents);
         EcmTikaFile detectedMetadata = null;
@@ -65,7 +63,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             detectedMetadata = extractFileMetadata(fileBytes, metadata.getFileName());
-        } catch (SAXException | TikaException e)
+        }
+        catch (SAXException | TikaException e)
         {
             log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
         }
@@ -90,10 +89,12 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         {
             log.debug("Calling pipeline manager handlers");
             getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
-            if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass())) {
+            if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+            {
                 throw (MuleException) e.getCause();
             }
         }
@@ -105,7 +106,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-                                      String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
@@ -116,8 +117,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-                                      String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
-                                      String cmisFolderId, AcmContainer container, String cmisRepositoryId)
+            String fileCategory, InputStream fileInputStream, String mimeType, String fileName,
+            String cmisFolderId, AcmContainer container, String cmisRepositoryId)
             throws MuleException, IOException
     {
         Document existingCmisDocument = null;
@@ -128,11 +129,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Override
     @Deprecated
     public EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-                                      String fileCategory, InputStream fileContents, String fileContentType,
-                                      String fileName, String targetCmisFolderId, AcmContainer container,
-                                      String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
+            String fileCategory, InputStream fileContents, String fileContentType,
+            String fileName, String targetCmisFolderId, AcmContainer container,
+            String cmisRepositoryId, Document existingCmisDocument) throws MuleException, IOException
     {
-
 
         log.debug("Creating ecm file pipeline context");
 
@@ -171,12 +171,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         return Pair.of(finalMimeType, finalExtension);
     }
 
-
     /**
-     * @param filename      The extension in this file name is used as default, in case file type detection fails
-     * @param mimeType      MIME type to be used as default in case MIME type detection fails
-     * @param fileByteArray File contents
-     * @return Detected MIME type and extension for the fileByteArray, or the supplied default values if detection fails.
+     * @param filename
+     *            The extension in this file name is used as default, in case file type detection fails
+     * @param mimeType
+     *            MIME type to be used as default in case MIME type detection fails
+     * @param fileByteArray
+     *            File contents
+     * @return Detected MIME type and extension for the fileByteArray, or the supplied default values if detection
+     *         fails.
      * @deprecated Call buildMimeTypeAndExtension(EcmTikaFile, filename, mimeType) instead.
      */
     @Deprecated
@@ -191,7 +194,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
 
-        } catch (IOException | SAXException | TikaException e1)
+        }
+        catch (IOException | SAXException | TikaException e1)
         {
             finalMimeType = mimeType;
             finalExtension = getFolderAndFilesUtils().getFileNameExtension(filename);
@@ -207,14 +211,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     }
 
     protected EcmFileTransactionPipelineContext buildEcmFileTransactionPipelineContext(Authentication authentication,
-                                                                                       byte[] fileBytes,
-                                                                                       String cmisFolderId,
-                                                                                       AcmContainer container,
-                                                                                       String filename,
-                                                                                       Document existingCmisDocument,
-                                                                                       EcmTikaFile detectedFileMetadata,
-                                                                                       String ecmUniqueFilename,
-                                                                                       Object... otherArgs) throws IOException
+            byte[] fileBytes,
+            String cmisFolderId,
+            AcmContainer container,
+            String filename,
+            Document existingCmisDocument,
+            EcmTikaFile detectedFileMetadata,
+            String ecmUniqueFilename,
+            Object... otherArgs) throws IOException
     {
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
         pipelineContext.setCmisFolderId(cmisFolderId);
@@ -252,7 +256,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(pipelineContext.getFileByteArray(), ecmFile.getFileName());
-        } catch (TikaException | SAXException | IOException e1)
+        }
+        catch (TikaException | SAXException | IOException e1)
         {
             log.debug("Can not auto detect file using Tika");
             ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
@@ -270,11 +275,11 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         try
         {
             log.debug("Calling pipeline manager handlers");
-            return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () ->
-            {
+            return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> {
                 return pipelineContext.getEcmFile();
             });
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("pipeline handler call failed: {}", e.getMessage(), e);
         }
@@ -314,7 +319,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String result = getContent((ContentStream) message.getPayload());
 
             return result;
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Cannot download file: " + e.getMessage(), e);
             throw e;
@@ -333,7 +339,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             InputStream result = ((ContentStream) message.getPayload()).getStream();
 
             return result;
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Cannot download file: " + e.getMessage(), e);
             throw e;
@@ -351,17 +358,20 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             StringWriter writer = new StringWriter();
             IOUtils.copy(inputStream, writer);
             content = writer.toString();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not copy input stream to the writer: " + e.getMessage(), e);
-        } finally
+        }
+        finally
         {
             if (inputStream != null)
             {
                 try
                 {
                     inputStream.close();
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not close CMIS content stream: " + e.getMessage(), e);
                 }

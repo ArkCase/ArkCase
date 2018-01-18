@@ -71,16 +71,21 @@ public class RolesGroupByWidgetDto
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         RolesGroupByWidgetDto that = (RolesGroupByWidgetDto) o;
 
-        if (widgetName != null ? !widgetName.equals(that.widgetName) : that.widgetName != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (widgetName != null ? !widgetName.equals(that.widgetName) : that.widgetName != null)
+            return false;
+        if (name != null ? !name.equals(that.name) : that.name != null)
+            return false;
         if (widgetAuthorizedRoles != null ? !widgetAuthorizedRoles.equals(that.widgetAuthorizedRoles) : that.widgetAuthorizedRoles != null)
             return false;
-        return widgetNotAuthorizedRoles != null ? widgetNotAuthorizedRoles.equals(that.widgetNotAuthorizedRoles) : that.widgetNotAuthorizedRoles == null;
+        return widgetNotAuthorizedRoles != null ? widgetNotAuthorizedRoles.equals(that.widgetNotAuthorizedRoles)
+                : that.widgetNotAuthorizedRoles == null;
 
     }
 

@@ -3,93 +3,107 @@
  */
 package com.armedia.acm.form.config.xml;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.armedia.acm.services.users.model.AcmUser;
+
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author riste.tutureski
  *
  */
-public class OfficerUser extends AcmUser {
+public class OfficerUser extends AcmUser
+{
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String location;
-	private String phone;
-	
-	public OfficerUser()
-	{
+    private String location;
+    private String phone;
 
-	}
+    public OfficerUser()
+    {
 
-	public OfficerUser(AcmUser user){
-		setUserId(user.getUserId());
-		setFirstName(user.getFirstName());
-		setLastName(user.getLastName());
-		setMail(user.getMail());
-	}
-	
-	@XmlElement(name="officerId")
-	@Override
-	public String getUserId(){
+    }
+
+    public OfficerUser(AcmUser user)
+    {
+        setUserId(user.getUserId());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
+        setMail(user.getMail());
+    }
+
+    @XmlElement(name = "officerId")
+    @Override
+    public String getUserId()
+    {
         return super.getUserId();
     }
 
-	@Override
-    public void setUserId(String userId){
+    @Override
+    public void setUserId(String userId)
+    {
         super.setUserId(userId);
     }
-    
-	@XmlElement(name="officerFirstName")
-	@Override
-    public String getFirstName(){
+
+    @XmlElement(name = "officerFirstName")
+    @Override
+    public String getFirstName()
+    {
         return super.getFirstName();
     }
 
-	@Override
-    public void setFirstName(String firstName){
+    @Override
+    public void setFirstName(String firstName)
+    {
         super.setFirstName(firstName);
     }
 
-	@XmlElement(name="officerLastName")
-	@Override
-    public String getLastName(){
+    @XmlElement(name = "officerLastName")
+    @Override
+    public String getLastName()
+    {
         return super.getLastName();
     }
 
-	@Override
-    public void setLastName(String lastName){
+    @Override
+    public void setLastName(String lastName)
+    {
         super.setLastName(lastName);
     }
 
-	@XmlElement(name="officerEmail")
-	@Override
-    public String getMail() {
+    @XmlElement(name = "officerEmail")
+    @Override
+    public String getMail()
+    {
         return super.getMail();
     }
 
-	@Override
-    public void setMail(String mail) {
+    @Override
+    public void setMail(String mail)
+    {
         super.setMail(mail);
     }
 
-	@XmlElement(name="officerLocation")
-	public String getLocation() {
-		return location;
-	}
+    @XmlElement(name = "officerLocation")
+    public String getLocation()
+    {
+        return location;
+    }
 
-	public void setLocation(String location) {
-		this.location = location;
-	}
+    public void setLocation(String location)
+    {
+        this.location = location;
+    }
 
-	@XmlElement(name="officerPhone")
-	public String getPhone() {
-		return phone;
-	}
+    @XmlElement(name = "officerPhone")
+    public String getPhone()
+    {
+        return phone;
+    }
 
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-	
+    public void setPhone(String phone)
+    {
+        this.phone = phone;
+    }
+
 }

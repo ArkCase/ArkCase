@@ -6,12 +6,10 @@
 <div class="modal-body">
     <h3 translate>{{formTitle}}</h3>
     <ng-form name="addEventForm">
-        <div ng-if="formStep === 1" class="well-sm" ng-include="'directives/core-calendar/new-event-form-step-one.client.view.html'">
-        </div>
-        <div ng-if="formStep === 2" class="well-sm" ng-include="'directives/core-calendar/new-event-form-step-two.client.view.html'">
-        </div>
-        <div ng-if="formStep === 3" class="well-sm" ng-include="'directives/core-calendar/new-event-form-step-three.client.view.html'">
-        </div>
+        <div ng-if="formStep === 1" class="well-sm" ng-include="'directives/core-calendar/new-event-form-step-one.client.view.html'"></div>
+        <div ng-if="formStep === 2" class="well-sm" ng-include="'directives/core-calendar/new-event-form-step-two.client.view.html'"></div>
+        <div ng-if="formStep === 3" class="well-sm"
+                ng-include="'directives/core-calendar/new-event-form-step-three.client.view.html'"></div>
     </ng-form>
 </div>
 <div class="modal-footer">

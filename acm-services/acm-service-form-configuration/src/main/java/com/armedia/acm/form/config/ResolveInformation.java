@@ -3,66 +3,77 @@
  */
 package com.armedia.acm.form.config;
 
+import javax.xml.bind.annotation.XmlTransient;
+
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * @author riste.tutureski
  *
  */
-public class ResolveInformation {
+public class ResolveInformation
+{
 
-	private Long id;
-	private String number;
-	private Date date;
-	private String option;
-	private List<String> resolveOptions;
-	
-	@XmlTransient
-	public Long getId() {
-		return id;
-	}
+    private Long id;
+    private String number;
+    private Date date;
+    private String option;
+    private List<String> resolveOptions;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	@XmlTransient
-	public String getNumber() {
-		return number;
-	}
+    @XmlTransient
+    public Long getId()
+    {
+        return id;
+    }
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
 
-	@XmlTransient
-	public Date getDate() {
-		return date;
-	}
+    @XmlTransient
+    public String getNumber()
+    {
+        return number;
+    }
 
-	public void setDate(Date date) {
-		this.date = date;
-	}
+    public void setNumber(String number)
+    {
+        this.number = number;
+    }
 
-	@XmlTransient
-	public String getOption() {
-		return option;
-	}
+    @XmlTransient
+    public Date getDate()
+    {
+        return date;
+    }
 
-	public void setOption(String option) {
-		this.option = option;
-	}
+    public void setDate(Date date)
+    {
+        this.date = date;
+    }
 
-	@XmlTransient
-	public List<String> getResolveOptions() {
-		return resolveOptions;
-	}
+    @XmlTransient
+    public String getOption()
+    {
+        return option;
+    }
 
-	public void setResolveOptions(List<String> resolveOptions) {
-		this.resolveOptions = resolveOptions;
-	}
-	
+    public void setOption(String option)
+    {
+        this.option = option;
+    }
+
+    @XmlTransient
+    public List<String> getResolveOptions()
+    {
+        return resolveOptions;
+    }
+
+    public void setResolveOptions(List<String> resolveOptions)
+    {
+        this.resolveOptions = resolveOptions;
+    }
+
 }

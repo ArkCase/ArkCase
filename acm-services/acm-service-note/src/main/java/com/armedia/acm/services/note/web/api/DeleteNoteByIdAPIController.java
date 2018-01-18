@@ -6,6 +6,7 @@ import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +20,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpSession;
 
-
 @Controller
-@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
+@RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" })
 public class DeleteNoteByIdAPIController
 {
 
@@ -58,7 +58,8 @@ public class DeleteNoteByIdAPIController
                 objectToReturn = objectToReturnJSON.toString();
 
                 return objectToReturn;
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 ApplicationNoteEvent event = new ApplicationNoteEvent(note, "deleted", false, ipAddress);
                 getNoteEventPublisher().publishNoteEvent(event);
@@ -88,7 +89,3 @@ public class DeleteNoteByIdAPIController
         this.noteEventPublisher = noteEventPublisher;
     }
 }
-
-
-
-

@@ -1,10 +1,13 @@
 package com.armedia.acm.services.notification.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 public class NotificationUtilsTest extends EasyMockSupport
 {
@@ -40,6 +40,7 @@ public class NotificationUtilsTest extends EasyMockSupport
         notificationUtils.setAcmAppConfiguration(mockAcmAppConfiguration);
         notificationUtils.setNotificationProperties(mockProperties);
     }
+
     /**
      * Test when object type is TOP LEVEL (parentType = CASE_FILE, COMPLAINT or TASK)
      */
@@ -141,13 +142,11 @@ public class NotificationUtilsTest extends EasyMockSupport
                 objectType.setName("CASE_FILE");
             }
 
-
             acmObjectTypes.add(objectType);
         }
 
         runTestBuildLink(expectedLink);
     }
-
 
     public void runTestBuildLink(String expectedLink)
     {

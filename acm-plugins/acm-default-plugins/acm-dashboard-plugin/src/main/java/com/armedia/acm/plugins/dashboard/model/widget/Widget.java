@@ -22,13 +22,7 @@ public class Widget
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_widget_gen",
-            table = "acm_widget_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_widget",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_widget_gen", table = "acm_widget_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_widget", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_widget_gen")
     @Column(name = "cm_widget_id")
     private Long widgetId;
@@ -59,12 +53,15 @@ public class Widget
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         Widget widget = (Widget) o;
 
-        if (widgetName != null ? !widgetName.equals(widget.widgetName) : widget.widgetName != null) return false;
+        if (widgetName != null ? !widgetName.equals(widget.widgetName) : widget.widgetName != null)
+            return false;
 
         return true;
     }

@@ -1,50 +1,30 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="02-user-service-constraints" author="dmiller">
-        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_user_id"
-                                 constraintName="fk_user_role_user_id"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_role_name"
-                                 constraintName="fk_user_role_role_name"
-                                 referencedTableName="acm_role"
-                                 referencedColumnNames="cm_role_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_user_id" constraintName="fk_user_role_user_id"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_role" baseColumnNames="cm_role_name" constraintName="fk_user_role_role_name"
+            referencedTableName="acm_role" referencedColumnNames="cm_role_name" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="03-user-service-role-type-constraint" author="dmiller">
-        <addForeignKeyConstraint baseTableName="acm_role" baseColumnNames="cm_role_type"
-                                 constraintName="fk_role_type"
-                                 referencedTableName="acm_role_type_lu"
-                                 referencedColumnNames="cm_value"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_role" baseColumnNames="cm_role_type" constraintName="fk_role_type"
+            referencedTableName="acm_role_type_lu" referencedColumnNames="cm_value" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="04-group-membership-constraints" author="ncuculova">
-        <addForeignKeyConstraint baseTableName="acm_group_membership"
-                                 baseColumnNames="cm_group_name"
-                                 constraintName="fk_group_name"
-                                 referencedTableName="acm_group"
-                                 referencedColumnNames="cm_group_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_group_membership"
-                                 baseColumnNames="cm_member_group_name"
-                                 constraintName="fk_group_member_name"
-                                 referencedTableName="acm_group"
-                                 referencedColumnNames="cm_group_name"
-                                 initiallyDeferred="${initially.deferred}"
-                                 deferrable="${deferrable}"/>
-        <addUniqueConstraint tableName="acm_group_membership"
-                             columnNames="cm_group_name, cm_member_group_name"/>
+        <addForeignKeyConstraint baseTableName="acm_group_membership" baseColumnNames="cm_group_name" constraintName="fk_group_name"
+            referencedTableName="acm_group" referencedColumnNames="cm_group_name" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_group_membership" baseColumnNames="cm_member_group_name"
+            constraintName="fk_group_member_name" referencedTableName="acm_group" referencedColumnNames="cm_group_name"
+            initiallyDeferred="${initially.deferred}" deferrable="${deferrable}"/>
+        <addUniqueConstraint tableName="acm_group_membership" columnNames="cm_group_name, cm_member_group_name"/>
     </changeSet>
 
 </databaseChangeLog>

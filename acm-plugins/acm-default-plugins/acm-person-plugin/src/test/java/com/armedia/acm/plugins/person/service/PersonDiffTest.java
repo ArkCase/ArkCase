@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.person.service;
 
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.objectdiff.model.AcmDiff;
 import com.armedia.acm.objectdiff.service.AcmDiffService;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
@@ -7,6 +9,7 @@ import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.person.model.Identification;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +21,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -37,7 +38,6 @@ public class PersonDiffTest
     private PostalAddress defaultAddress;
     private Identification defaultIdentification;
     private PersonAlias defaultAlias;
-
 
     @Before
     public void setUp()
@@ -141,7 +141,6 @@ public class PersonDiffTest
         newPerson.getContactMethods().add(newPhone);
 
         AcmDiff diff = acmDiffService.compareObjects(oldPerson, newPerson);
-
 
         assertEquals("person", diff.getChangesAsTree().getPath());
     }

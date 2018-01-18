@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ import java.util.List;
  * Created by marjan.stefanoski on 9/3/2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/casebystatus", "/api/latest/plugin/casebystatus"})
+@RequestMapping({ "/api/v1/plugin/casebystatus", "/api/latest/plugin/casebystatus" })
 public class GetCasesByStatusAPIController
 {
 
@@ -47,14 +48,11 @@ public class GetCasesByStatusAPIController
      * @param authentication
      * @return
      */
-    @RequestMapping(
-            value = "/{timePeriod}",
-            method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "/{timePeriod}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public List<CaseByStatusDto> getCasesByStatus(
             @PathVariable("timePeriod") String timePeriod,
-            Authentication authentication
-    ) throws AcmListObjectsFailedException
+            Authentication authentication) throws AcmListObjectsFailedException
     {
         log.info("Getting cases grouped by status in a time period");
 
@@ -77,7 +75,8 @@ public class GetCasesByStatusAPIController
     /**
      * This method will return facet results in the list. The result is taken from the Solr
      *
-     * @param authentication - authentication object
+     * @param authentication
+     *            - authentication object
      * @return - list of facet results
      */
     private List<Object> retrieveFacetValues(Authentication authentication, CasesByStatusAndTimePeriod casesByStatusAndTimePeriod)
@@ -104,7 +103,8 @@ public class GetCasesByStatusAPIController
     /**
      * This method will return Solr response as String for facet search
      *
-     * @param authentication - authentication object
+     * @param authentication
+     *            - authentication object
      * @return - Solr response in string representation
      */
     private String getSolrFacetResponse(Authentication authentication, CasesByStatusAndTimePeriod casesByStatusAndTimePeriod)
@@ -115,18 +115,18 @@ public class GetCasesByStatusAPIController
         // filter by modified date
         switch (casesByStatusAndTimePeriod)
         {
-            case LAST_WEEK:
-                facetQuery += "+AND+last_modified_tdt:[NOW-7DAYS TO *]";
-                break;
-            case LAST_MONTH:
-                facetQuery += "+AND+last_modified_tdt:[NOW-1MONTH TO *]";
-                break;
-            case LAST_YEAR:
-                facetQuery += "+AND+last_modified_tdt:[NOW-1YEAR TO *]";
-                break;
-            case ALL:
-                // no filtering by modified date
-                break;
+        case LAST_WEEK:
+            facetQuery += "+AND+last_modified_tdt:[NOW-7DAYS TO *]";
+            break;
+        case LAST_MONTH:
+            facetQuery += "+AND+last_modified_tdt:[NOW-1MONTH TO *]";
+            break;
+        case LAST_YEAR:
+            facetQuery += "+AND+last_modified_tdt:[NOW-1YEAR TO *]";
+            break;
+        case ALL:
+            // no filtering by modified date
+            break;
         }
 
         facetQuery += "&rows=0&fl=id&wt=json&indent=true&facet=true&facet.mincount=1&facet.field=" + SearchConstants.PROPERTY_STATUS;
@@ -134,7 +134,8 @@ public class GetCasesByStatusAPIController
         try
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", facetQuery, e);
         }
