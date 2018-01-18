@@ -84,9 +84,10 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.filterWord = "";
                     scope.noFilterData = true;
                     scope.onChangeFilterWord = function() {
-                        if (Util.isEmpty(scope.filterWord)) {
+                        if (scope.filterWord == "") {
                             scope.noFilterData = true;
                             scope.$bus.publish('onFilter-' + scope.controllerName, "");
+
                         } else {
                             scope.noFilterData = false;
                         }

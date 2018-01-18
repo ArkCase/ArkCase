@@ -8,7 +8,8 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         removeGroupsFromUser : removeGroupsFromUser,
         cloneUser : cloneUser,
         deleteUser : deleteUser,
-        getFilteredUsersByWord : getFilteredUsersByWord
+        getFilteredUsersByWord : getFilteredUsersByWord,
+        getNUsers : getNUsers
     });
 
     function queryGroupsByDirectory(directory, n) {
@@ -89,6 +90,28 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
                 start : 0
             }
         });
+    }
 
+    /**
+     * @ngdoc method
+     * @name getFilteredUsersByWord
+     * @methodOf services.service:LookupService
+     *
+     * @description
+     * List of N users from start position 0 to end possition n POUBAV DESCRIPTION + IME NA METHOD!!!!!
+     * Default n is 20
+     *
+     * @returns {Object} An object returned by $resource
+     */
+    function getNUsers(n) {
+        var url = 'api/latest/ldap/getNUsers/search';
+        return $http({
+            method : 'GET',
+            url : url,
+            params : {
+                n : (n ? n : 20),
+                start : 0
+            }
+        });
     }
 } ]);
