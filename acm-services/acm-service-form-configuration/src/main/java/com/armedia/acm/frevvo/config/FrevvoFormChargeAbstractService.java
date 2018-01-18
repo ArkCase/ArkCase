@@ -27,7 +27,8 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
     private AcmContainerDao AcmContainerDao;
 
     /**
-     * This method will return all charge codes by type and their details (like title) Details are configured in the properties files and
+     * This method will return all charge codes by type and their details (like title) Details are configured in the
+     * properties files and
      * they are Solr properties names
      * 
      * @param formName
@@ -76,7 +77,8 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
     }
 
     /**
-     * Return Options object that keeps value-label pairs for Frevvo dropdowns This is separate method because it can be overriden in
+     * Return Options object that keeps value-label pairs for Frevvo dropdowns This is separate method because it can be
+     * overriden in
      * appropriate module
      * 
      * @param type
@@ -104,7 +106,8 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
         if (source == null)
         {
             // Take Solr response for given object type if 'source' is null.
-            // With this we are giving possibility this method to be invoked from other places where we don't have Solr response
+            // With this we are giving possibility this method to be invoked from other places where we don't have Solr
+            // response
             source = getSolrResponse(objectType);
         }
 
@@ -148,7 +151,8 @@ public abstract class FrevvoFormChargeAbstractService extends FrevvoFormAbstract
         if (source == null)
         {
             // Take Solr response for given object type if 'source' is null.
-            // With this we are giving possibility this method to be invoked from other places where we don't have Solr response
+            // With this we are giving possibility this method to be invoked from other places where we don't have Solr
+            // response
             source = getSolrResponse(objectType);
         }
 

@@ -44,6 +44,7 @@ public class ListAllParticipantsByObjectTypeAndObjectId
         }
         List<AcmParticipant> participants = getAcmParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
                 FlushModeType.COMMIT);
+
         return participants;
     }
 

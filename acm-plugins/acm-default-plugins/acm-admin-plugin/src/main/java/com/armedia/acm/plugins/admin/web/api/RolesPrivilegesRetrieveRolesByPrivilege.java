@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,10 +17,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by sergey.kolomiets  on 7/8/15.
+ * Created by sergey.kolomiets on 7/8/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesConstants
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -38,7 +39,8 @@ public class RolesPrivilegesRetrieveRolesByPrivilege implements RolePrivilegesCo
         try
         {
             return rolesPrivilegesService.retrieveRolesByPrivilege(privilegeName);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't retrieve roles", e);
             throw new AcmRolesPrivilegesException("Can't retrieve roles", e);

@@ -62,6 +62,7 @@ public class AcmParticipantEventPublisher implements ApplicationEventPublisherAw
         }
         AcmParticipantUpdatedEvent participantUpdatedEvent = new AcmParticipantUpdatedEvent(source,
                 MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY));
+
         participantUpdatedEvent.setSucceeded(succeeded);
 
         eventPublisher.publishEvent(participantUpdatedEvent);

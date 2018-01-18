@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 
             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
-    <bean id="dacServicePluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="dacServicePluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -27,22 +24,19 @@
         <property name="pluginName" value="Data Access Control Plugin"/>
     </bean>
 
-    <bean id="acmAssignmentBusinessRule"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="acmAssignmentBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-assignment-rules.xlsx"/>
     </bean>
 
-    <bean id="acmDataAccessControlBusinessRule"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+    <bean id="acmDataAccessControlBusinessRule" class="com.armedia.acm.services.dataaccess.service.impl.AcmAssignedObjectBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
     </bean>
 
     <bean id="entityParticipantsChangedEventPublisher" class="com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher" />
 
-    <bean id="dataAccessPrivilegeListener"
-          class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
+    <bean id="dataAccessPrivilegeListener" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
         <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
         <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
         <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
@@ -65,29 +59,25 @@
         <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
     </bean>
 
-    <bean id="acmDataAccessBatchUpdater"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
+    <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
         <property name="dataAccessPrivilegeListener" ref="dataAccessPrivilegeListener"/>
     </bean>
 
     <task:scheduler id="dataAccessControlTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="dataAccessControlTaskScheduler">
-        <task:scheduled
-                ref="acmDataAccessBatchPolicyUpdateService"
-                method="batchPolicyUpdate"
-                fixed-delay="${dac.batchUpdateFrequencyInMilliseconds}"/>
+        <task:scheduled ref="acmDataAccessBatchPolicyUpdateService" method="batchPolicyUpdate"
+            fixed-delay="${dac.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
 
     <bean id="acmDataAccessBatchPolicyUpdateService"
-          class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
+        class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchPolicyUpdateService">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="dataAccessBatchUpdater" ref="acmDataAccessBatchUpdater"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="batchSize" value="${dac.batchUpdateBatchSize}"/>
         <property name="batchUpdateBasedOnLastModifiedEnabled" value="${dac.batchUpdateBasedOnLastModifiedEnabled}"/>
-        <property name="lastBatchUpdatePropertyFileLocation"
-                  value="${user.home}/.arkcase/acm/dataAccessPolicyLastBatchUpdate.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/dataAccessPolicyLastBatchUpdate.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="rulesConfigurationFile" class="java.io.File">
@@ -95,9 +85,8 @@
     </bean>
     <bean id="spelExpressionParser" class="org.springframework.expression.spel.standard.SpelExpressionParser"/>
 
-    <bean id="accessControlRuleChecker"
-          class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
-          init-method="postConstruct">
+    <bean id="accessControlRuleChecker" class="com.armedia.acm.services.dataaccess.service.impl.AccessControlRuleCheckerImpl"
+        init-method="postConstruct">
         <property name="configurationFile" ref="rulesConfigurationFile"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>

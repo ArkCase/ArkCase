@@ -5,15 +5,11 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
 import com.armedia.acm.spring.SpringContextHolder;
-import groovy.ui.SystemOutputInterceptor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -25,11 +21,12 @@ public class SecureLdapController
     private Logger log = LoggerFactory.getLogger(getClass());
     private PasswordValidationService passwordValidationService;
 
-    protected void validateLdapPassword(UserDTO userDTO) throws  AcmAppErrorJsonMsg
+    protected void validateLdapPassword(UserDTO userDTO) throws AcmAppErrorJsonMsg
     {
         List<String> violations = passwordValidationService.validate(userDTO.getUserId(), userDTO.getPassword());
 
-        if(!violations.isEmpty()) {
+        if (!violations.isEmpty())
+        {
             String errorMsg = violations.stream().collect(Collectors.joining("<br/>"));
             AcmAppErrorJsonMsg e = new AcmAppErrorJsonMsg(errorMsg, null, "password", null);
             userDTO.setPassword(null);
@@ -50,8 +47,8 @@ public class SecureLdapController
 
     protected boolean isLdapManagementEnabled(String directory)
     {
-        AcmLdapAuthenticateConfig acmLdapAuthenticateConfig = acmContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class).
-                get(String.format("%s_authenticate", directory));
+        AcmLdapAuthenticateConfig acmLdapAuthenticateConfig = acmContextHolder.getAllBeansOfType(AcmLdapAuthenticateConfig.class)
+                .get(String.format("%s_authenticate", directory));
         if (acmLdapAuthenticateConfig != null)
         {
             return acmLdapAuthenticateConfig.getEnableEditingLdapUsers();
@@ -69,7 +66,8 @@ public class SecureLdapController
         this.acmContextHolder = acmContextHolder;
     }
 
-    public void setPasswordValidationService(PasswordValidationService passwordValidationService) {
+    public void setPasswordValidationService(PasswordValidationService passwordValidationService)
+    {
         this.passwordValidationService = passwordValidationService;
     }
 }

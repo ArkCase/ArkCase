@@ -49,9 +49,10 @@ public class SplitCaseServiceImpl implements SplitCaseService
 
     @Override
     @Transactional
-    public CaseFile splitCase(Authentication auth, String ipAddress, SplitCaseOptions splitCaseOptions)
-            throws PipelineProcessException, SplitCaseFileException, AcmUserActionFailedException, AcmCreateObjectFailedException,
-            AcmFolderException, AcmObjectNotFoundException
+    public CaseFile splitCase(Authentication auth,
+            String ipAddress,
+            SplitCaseOptions splitCaseOptions) throws PipelineProcessException, SplitCaseFileException, AcmUserActionFailedException,
+            AcmCreateObjectFailedException, AcmFolderException, AcmObjectNotFoundException
     {
         CaseFile original = caseFileDao.find(splitCaseOptions.getCaseFileId());
         if (original == null)

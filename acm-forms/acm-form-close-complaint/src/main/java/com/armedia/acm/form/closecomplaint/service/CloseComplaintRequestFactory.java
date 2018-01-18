@@ -4,8 +4,8 @@ import com.armedia.acm.form.closecomplaint.model.CloseComplaintForm;
 import com.armedia.acm.form.config.Item;
 import com.armedia.acm.plugins.casefile.model.Disposition;
 import com.armedia.acm.plugins.complaint.model.CloseComplaintRequest;
-
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -47,7 +47,7 @@ public class CloseComplaintRequestFactory
 
         if (form.getInformation() != null)
         {
-            //convert java.util.Date to LocalDate
+            // convert java.util.Date to LocalDate
             if (form.getInformation().getDate() != null && form.getInformation().getDate().toInstant() != null)
             {
                 disposition.setCloseDate(form.getInformation().getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());

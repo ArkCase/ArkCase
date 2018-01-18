@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-    <bean id="notificationProperties"
-          class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
+    <bean id="notificationProperties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -21,7 +19,6 @@
             </props>
         </property>
     </bean>
-
 
     <!-- Notification Service is defined under $HOME/.acm/spring folder -->
 
@@ -56,11 +53,9 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="notificationEventPublisher"
-          class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
+    <bean id="notificationEventPublisher" class="com.armedia.acm.services.notification.service.NotificationEventPublisher"/>
 
-    <bean id="notificationToSolrTransformer"
-          class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
+    <bean id="notificationToSolrTransformer" class="com.armedia.acm.services.notification.service.NotificationToSolrTransformer">
         <property name="notificationDao" ref="notificationDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="notificationUtils" ref="notificationUtils"/>
@@ -87,7 +82,6 @@
 
     <!--<bean id="authenticationTokenDao" class="com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao"/>-->
 
-
     <!--     <bean id="emailNotificationSender" class="com.armedia.acm.services.notification.service.EmailNotificationSender">
             <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
             <property name="propertyFileManager" ref="propertyFileManager" />
@@ -96,9 +90,8 @@
             <property name="authenticationTokenService" ref="authenticationTokenService"/>
             <property name="authenticationTokenDao" ref="authenticationTokenDao"/>
         </bean> -->
-        
-    <bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender"
-          abstract="true">
+
+    <bean id="baseNotificationSender" class="com.armedia.acm.services.notification.service.NotificationSender" abstract="true">
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="emailSenderPropertyFileLocation" ref="emailSenderPropertyFileLocation"/>
@@ -108,18 +101,16 @@
     </bean>
 
     <bean id="smtpNotificationSender" class="com.armedia.acm.services.notification.service.SmtpNotificationSender"
-          parent="baseNotificationSender">
+        parent="baseNotificationSender">
         <property name="emailSenderService" ref="smtpService"/>
-      </bean>
+    </bean>
 
-    <bean id="microsoftExchangeNotificationSender"
-          class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
-          parent="baseNotificationSender">
+    <bean id="microsoftExchangeNotificationSender" class="com.armedia.acm.services.notification.service.MicrosoftExchangeNotificationSender"
+        parent="baseNotificationSender">
         <property name="emailSenderService" ref="outlookService"/>
     </bean>
 
-    <bean id="notificationSenderFactory"
-          class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
+    <bean id="notificationSenderFactory" class="com.armedia.acm.services.notification.service.NotificationSenderFactory">
         <property name="emailSenderConfigurationService" ref="emailSenderConfigurationService"/>
         <property name="notificationSenderMap">
             <map>
@@ -129,8 +120,7 @@
         </property>
     </bean>
 
-    <bean id="notificationSender" factory-bean="notificationSenderFactory"
-          factory-method="getNotificationSender"/>
+    <bean id="notificationSender" factory-bean="notificationSenderFactory" factory-method="getNotificationSender"/>
 
     <bean id="notificationUtils" class="com.armedia.acm.services.notification.service.NotificationUtils">
         <property name="acmAppConfiguration" ref="acmApplication"/>

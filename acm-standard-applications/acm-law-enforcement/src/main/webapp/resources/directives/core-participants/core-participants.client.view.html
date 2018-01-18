@@ -9,16 +9,13 @@
                         ng-show="participantsInit.showReplaceChildrenParticipants">
                     <span translate>common.directive.coreParticipants.replaceFolderChildrenParticipants</span>
                 </button>
-                <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i>
+                </button>
             </div>
         </div>
     </div>
     <div class="panel-body">
-        <div ui-grid="gridOptions"
-             ui-grid-resize-columns
-             ui-grid-auto-resize
-             ui-grid-pagination
-             adjust-table-height="gridOptions.data.length"
-             class="grid"></div>
+        <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                adjust-table-height="gridOptions.data.length" class="grid"></div>
     </div>
 </div>

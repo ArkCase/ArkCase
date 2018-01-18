@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-
-    <bean id="ecmFileServiceProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="ecmFileServiceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -53,8 +50,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
-    <bean id="folderDataAccessUpdateLocator"
-          class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
+    <bean id="folderDataAccessUpdateLocator" class="com.armedia.acm.plugins.ecm.service.impl.FolderDataAccessUpdateLocator">
         <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
@@ -77,8 +73,7 @@
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
-    <bean id="ecmFileMergedContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
+    <bean id="ecmFileMergedContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergeContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
     <bean id="ecmFileNewContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileNewContentHandler">
@@ -89,25 +84,21 @@
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
     </bean>
-    <bean id="ecmFileMergedMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
+    <bean id="ecmFileMergedMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileMergedMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
 
     </bean>
-    <bean id="ecmFileSendForPdfConversionHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
+    <bean id="ecmFileSendForPdfConversionHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileSendForPdfConversionHandler">
         <property name="captureFolderService" ref="captureFolderHandler"/>
         <property name="fileTypesToBeConvertedToPDF" value="${capture.fileTypesToBeConvertedToPDF}"/>
         <property name="fileFormatsToBeConvertedToPDF" value="${capture.fileFormatsToBeConvertedToPDF}"/>
     </bean>
-    <bean id="ecmFileUpdateContentHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
+    <bean id="ecmFileUpdateContentHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateContentHandler">
         <property name="ecmFileMuleUtils" ref="ecmFileMuleUtils"/>
     </bean>
-    <bean id="ecmFileUpdateMetadataHandler"
-          class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
+    <bean id="ecmFileUpdateMetadataHandler" class="com.armedia.acm.plugins.ecm.pipeline.presave.EcmFileUpdateMetadataHandler">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="pageCountService" ref="pageCountService"/>
@@ -144,8 +135,7 @@
             </list>
         </property>
         <property name="postSaveHandlers">
-            <list>
-            </list>
+            <list></list>
         </property>
     </bean>
 
@@ -200,7 +190,6 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
-
     <bean id="ecmFileToSolrTrasnformer" class="com.armedia.acm.plugins.ecm.service.EcmFileToSolrTransformer">
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="enableContentFileIndexing" value="${solr.enableContentFileIndexing}"/>
@@ -218,7 +207,7 @@
     </bean>
 
     <bean id="fileWorkflowBusinessRule" class="com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-form-business-process-rules.xlsx"/>
     </bean>
 
@@ -266,8 +255,7 @@
 
     <bean id="pageCountService" class="com.armedia.acm.plugins.ecm.service.impl.PageCountServiceImpl"/>
 
-    <bean id="fileCreatedWorkflowHandler"
-          class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
+    <bean id="fileCreatedWorkflowHandler" class="com.armedia.acm.plugins.ecm.handler.FileCreatedBuckslipWorkflowHandler">
         <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="objectConverter" ref="objectConverter"/>

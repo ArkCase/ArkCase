@@ -4,11 +4,10 @@
             <!-- Header logo -->
             <div class="col-lg-6">
                 <h4 translate>admin.branding.logo.header.title</h4>
-                <img class="img-responsive thumbnail" id="imgCustomHeaderLogo" src="branding/headerlogo.png"/>
+                <img class="img-responsive thumbnail" id="imgCustomHeaderLogo" src="branding/headerlogo.png" />
                 <div>
                     <button name="headerLogo" accept="image/png" ng-disabled="uploadingInProgress" ngf-select
-                            data-ng-model="selectedHeaderFile"
-                            class="btn btn-sm btn-default">
+                            data-ng-model="selectedHeaderFile" class="btn btn-sm btn-default">
                         <i class="fa fa-folder-open-o"></i>
                         <span translate>admin.branding.logo.btn.chooseHeader</span>
                     </button>
@@ -19,10 +18,9 @@
             <!-- Login logo -->
             <div class="col-lg-6">
                 <h4 translate>admin.branding.logo.login.title</h4>
-                <img class="img-responsive thumbnail" id="imgCustomLoginLogo" src="branding/loginlogo.png"/>
+                <img class="img-responsive thumbnail" id="imgCustomLoginLogo" src="branding/loginlogo.png" />
                 <div>
-                    <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress"
-                            ng-model="selectedLoginFile" ngf-select
+                    <button name="loginLogo" accept="image/png" ng-disabled="uploadingInProgress" ng-model="selectedLoginFile" ngf-select
                             class="btn btn-sm btn-default">
                         <i class="fa fa-folder-open-o"></i>
                         <span translate>admin.branding.logo.btn.chooseLogin</span>
@@ -35,11 +33,10 @@
         <!-- Save button -->
         <div class="well-sm">
             <p class="text-danger" translate>
-                admin.branding.logo.warningMessage
-            </p>
+                admin.branding.logo.warningMessage </p>
 
             <button class="btn btn-sm btn-default" ng-click="saveFiles()" ng-disabled="!isFileTypeValid()">
-                <i class="fa fa-save"/>
+                <i class="fa fa-save" />
                 <span translate>admin.branding.logo.btn.saveFiles</span>
             </button>
         </div>

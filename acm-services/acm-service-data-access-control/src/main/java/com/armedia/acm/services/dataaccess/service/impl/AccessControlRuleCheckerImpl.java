@@ -76,19 +76,6 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      * configured AC entries until the first positive match. It only requires one permission to match, from the list of
      * required permissions
      *
-     * <<<<<<< HEAD
-     * 
-     * @param authentication
-     *            authentication token
-     * @param targetId
-     *            the identifier for the object instance
-     * @param targetType
-     *            target type
-     * @param permission
-     *            required permissions, separated with "|"
-     * @param solrDocument
-     *            Solr data stored for this object
-     *            =======
      * @param authentication
      *            authentication token
      * @param targetId
@@ -99,7 +86,6 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
      *            required permission
      * @param solrDocument
      *            Solr data stored for this object
-     *            >>>>>>> b0544e2e1ba71ede1ec56aa59f10fb7be9500948
      * @return true if user is allowed to access this object, false otherwise
      */
     @Override

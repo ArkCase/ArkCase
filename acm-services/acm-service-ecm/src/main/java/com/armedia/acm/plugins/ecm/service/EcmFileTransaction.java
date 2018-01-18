@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.service;
 
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleException;
 import org.springframework.security.core.Authentication;
@@ -15,23 +16,24 @@ import java.io.InputStream;
 public interface EcmFileTransaction
 {
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-                               String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
-                               Document existingCmisDocument) throws MuleException, IOException;
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
+            Document existingCmisDocument) throws MuleException, IOException;
 
     EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
-                               String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
+            String targetCmisFolderId, InputStream fileContents, EcmFile metadata)
             throws MuleException, IOException;
 
     @Deprecated
     EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType, String fileCategory,
-                               InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container, String cmisRepositoryId)
+            InputStream fileInputStream, String mimeType, String fileName, String cmisFolderId, AcmContainer container,
+            String cmisRepositoryId)
             throws MuleException, IOException;
 
     @Deprecated
     EcmFile addFileTransaction(String originalFileName, Authentication authentication, String fileType,
-                               String fileCategory, InputStream fileContents, String fileContentType, String fileName,
-                               String targetCmisFolderId, AcmContainer container, String cmisRepositoryId,
-                               Document existingCmisDocument) throws MuleException, IOException;
+            String fileCategory, InputStream fileContents, String fileContentType, String fileName,
+            String targetCmisFolderId, AcmContainer container, String cmisRepositoryId,
+            Document existingCmisDocument) throws MuleException, IOException;
 
     EcmFile updateFileTransaction(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws MuleException, IOException;

@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.mule.api.MuleMessage;
@@ -15,8 +18,6 @@ import org.springframework.core.io.Resource;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 11/7/2016.

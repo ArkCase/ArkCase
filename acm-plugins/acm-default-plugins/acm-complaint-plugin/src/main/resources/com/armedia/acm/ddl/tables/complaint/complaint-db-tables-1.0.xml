@@ -1,6 +1,4 @@
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -16,9 +14,7 @@
     <changeSet id="01-create-complaint-table" author="dmiller" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_complaint">
             <column name="cm_complaint_id" type="${idType}">
-                <constraints
-                    primaryKey="true"
-                    primaryKeyName="pk_complaint"/>
+                <constraints primaryKey="true" primaryKeyName="pk_complaint"/>
             </column>
             <column name="cm_complaint_status" type="VARCHAR(128)" defaultValue="DRAFT">
                 <constraints nullable="false"/>
@@ -70,9 +66,7 @@
     <changeSet id="01-create-complaint-table" author="dmiller" dbms="mysql">
         <createTable tableName="acm_complaint">
             <column name="cm_complaint_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_complaint"/>
+                <constraints primaryKey="true" primaryKeyName="pk_complaint"/>
             </column>
             <column name="cm_complaint_status" type="VARCHAR(128)" defaultValue="DRAFT">
                 <constraints nullable="false"/>
@@ -165,7 +159,7 @@
     </changeSet>
 
     <changeSet id="08-drop-not-null-on-priority-type-title" author="dmiller">
-        <comment>Allow creating complaint with minimal data.  These columns must be populated before it can be approved.</comment>
+        <comment>Allow creating complaint with minimal data. These columns must be populated before it can be approved.</comment>
         <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_type" columnDataType="VARCHAR(1024)"/>
         <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_priority" columnDataType="VARCHAR(128)"/>
         <dropNotNullConstraint tableName="acm_complaint" columnName="cm_complaint_title" columnDataType="VARCHAR(1024)"/>
@@ -176,18 +170,18 @@
             <column name="cm_complaint_modified"/>
         </createIndex>
     </changeSet>
-    
+
     <changeSet id="11-insert-dueDate-in-complaint" author="tsedalu">
-        <addColumn tableName="acm_complaint"> 
+        <addColumn tableName="acm_complaint">
             <column name="cm_due_date" type="${timestampType}"/>
-        </addColumn>     
+        </addColumn>
     </changeSet>
 
     <changeSet id="12-add-fields-in-acm-complaint-table" author="tsedalu">
         <addColumn tableName="acm_complaint">
             <column name="cm_tag" type="VARCHAR(1024)"/>
             <column name="cm_frequency" type="VARCHAR(1024)"/>
-            <column name="cm_location" type="VARCHAR(1024)"/>            
+            <column name="cm_location" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
 
@@ -225,11 +219,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_close_complaint_request" baseColumnNames="cm_complaint_id"
-                                 constraintName="fk_close_complaint_cmplnt_id"
-                                 referencedTableName="acm_complaint"
-                                 referencedColumnNames="cm_complaint_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_close_complaint_cmplnt_id" referencedTableName="acm_complaint" referencedColumnNames="cm_complaint_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-14-add-close-complaint-request-table" author="dmiller" dbms="mysql">
@@ -246,15 +237,13 @@
             <column name="cm_close_complaint_status" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_complaint_created" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_close_complaint_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_close_complaint_modified" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_close_complaint_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_close_complaint_modifier" type="VARCHAR(1024)">
@@ -262,18 +251,15 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_close_complaint_request" baseColumnNames="cm_complaint_id"
-                                 constraintName="fk_close_complaint_cmplnt_id"
-                                 referencedTableName="acm_complaint"
-                                 referencedColumnNames="cm_complaint_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_close_complaint_cmplnt_id" referencedTableName="acm_complaint" referencedColumnNames="cm_complaint_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
     <changeSet id="complaint-15-change-location-to-address-id" author="riste.tutureski">
-    	<dropColumn tableName="acm_complaint" columnName="cm_location"/>
-    	<addColumn tableName="acm_complaint">
-    		<column name="cm_address_id" type="${fkIdType}"/>
-    	</addColumn>
+        <dropColumn tableName="acm_complaint" columnName="cm_location"/>
+        <addColumn tableName="acm_complaint">
+            <column name="cm_address_id" type="${fkIdType}"/>
+        </addColumn>
     </changeSet>
 
     <changeSet id="complaint-16-add-restricted-flag" author="dmiller">
@@ -291,7 +277,8 @@
     </changeSet>
 
     <changeSet id="complaint-18-rename-container-id" author="dmiller">
-        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id" columnDataType="${fkIdType}"/>
+        <renameColumn tableName="acm_complaint" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
+            columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="19-object-type-in-acm-complaint-table" author="nebojsha.davidovikj">
@@ -368,17 +355,17 @@
         <sql>INSERT INTO acm_complaint_postal_address (cm_complaint_id, cm_address_id) SELECT cm_complaint_id,
             cm_address_id FROM acm_complaint WHERE cm_address_id IS NOT NULL
         </sql>
-        <sql> UPDATE acm_complaint SET cm_default_address=cm_address_id
+        <sql>UPDATE acm_complaint SET cm_default_address=cm_address_id
         </sql>
         <dropForeignKeyConstraint baseTableName="acm_complaint" constraintName="fk_complaint_address_id"/>
         <dropColumn tableName="acm_complaint" columnName="cm_address_id"/>
     </changeSet>
 
     <changeSet id="26-add-complaint-address-table-if-25-add-complaint-address-table-failed" author="bojan.milenkoski">
-         <preConditions onFail="MARK_RAN">
+        <preConditions onFail="MARK_RAN">
             <columnExists tableName="acm_complaint" columnName="cm_address_id"/>
-         </preConditions>
-         <addColumn tableName="acm_complaint">
+        </preConditions>
+        <addColumn tableName="acm_complaint">
             <column name="cm_default_address" type="${fkIdType}"/>
         </addColumn>
         <createTable tableName="acm_complaint_postal_address">
@@ -398,8 +385,8 @@
         <sql>INSERT INTO acm_complaint_postal_address (cm_complaint_id, cm_address_id) SELECT cm_complaint_id,
             cm_address_id FROM acm_complaint WHERE cm_address_id IS NOT NULL
         </sql>
-        <sql> UPDATE acm_complaint SET cm_default_address=cm_address_id
-        </sql>         
+        <sql>UPDATE acm_complaint SET cm_default_address=cm_address_id
+        </sql>
     </changeSet>
 </databaseChangeLog>
 

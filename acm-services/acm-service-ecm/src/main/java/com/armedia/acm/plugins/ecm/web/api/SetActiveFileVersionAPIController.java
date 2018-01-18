@@ -50,6 +50,7 @@ public class SetActiveFileVersionAPIController
         if (source == null)
         {
             log.error("File with fileId: {} not found in the DB", fileId);
+
             getFileEventPublisher().publishFileActiveVersionSetEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_SET_FILE_ACTIVE_VERSION, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileId, "File with fileId: " + fileId + " not found in the DB", null);
@@ -63,6 +64,7 @@ public class SetActiveFileVersionAPIController
         catch (PersistenceException e)
         {
             log.error("Exception occurred while updating active version on file with fileId: {} with error: {}", fileId, e.getMessage(), e);
+
             getFileEventPublisher().publishFileActiveVersionSetEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_SET_FILE_ACTIVE_VERSION, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileId, "Exception occurred while updating active version on file with fileId: " + fileId, e);

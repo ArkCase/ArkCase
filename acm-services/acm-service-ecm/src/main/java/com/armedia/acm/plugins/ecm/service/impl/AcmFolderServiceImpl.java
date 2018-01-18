@@ -365,7 +365,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderForMoving.setParentFolder(dstFolder);
 
             movedFolder = getFolderDao().save(folderForMoving);
-
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
@@ -428,7 +427,6 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             folderForMoving.setCmisFolderId(newFolderId);
             folderForMoving.setParentFolder(dstFolder);
             movedFolder = getFolderDao().save(folderForMoving);
-
             getFileParticipantService().setFolderParticipantsFromParentFolder(movedFolder);
             movedFolder = getFolderDao().save(movedFolder);
         }
@@ -570,10 +568,8 @@ public class AcmFolderServiceImpl implements AcmFolderService, ApplicationEventP
             acmNewFolder.setParentFolder(pFolder);
             acmNewFolder.setName(toCopyFolder.getName());
             copiedFolder = getFolderDao().save(acmNewFolder);
-
             getFileParticipantService().setFolderParticipantsFromParentFolder(copiedFolder);
             copiedFolder = getFolderDao().save(copiedFolder);
-
         }
         catch (PersistenceException | MuleException e)
         {

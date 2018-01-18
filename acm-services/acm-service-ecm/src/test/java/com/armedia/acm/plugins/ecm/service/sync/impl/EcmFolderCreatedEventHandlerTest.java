@@ -38,6 +38,7 @@ public class EcmFolderCreatedEventHandlerTest
     private EcmFileParticipantService fileParticipantService = EasyMock.createMock(EcmFileParticipantService.class);
 
     private Object[] mocks = { acmFolderDao, acmFolderService, auditPropertyEntityAdapter, fileParticipantService };
+
     private EcmEvent folderCreated;
 
     @Before

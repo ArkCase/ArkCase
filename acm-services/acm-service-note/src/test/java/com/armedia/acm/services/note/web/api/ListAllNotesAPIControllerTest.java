@@ -1,10 +1,17 @@
 package com.armedia.acm.services.note.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +31,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.persistence.QueryTimeoutException;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -65,7 +69,7 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
-    
+
     @Test
     public void listNote() throws Exception
     {
@@ -85,7 +89,6 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         List<Note> noteList = new ArrayList<>();
         noteList.add(note);
-
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
@@ -144,7 +147,6 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
         List<Note> noteList = new ArrayList<>();
         noteList.add(note);
 
-
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
         expect(mockNoteDao.listNotes(type, parentId, parentType)).andThrow(new QueryTimeoutException("test exception"));
@@ -182,7 +184,6 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         List<Note> noteList = new ArrayList<>();
         noteList.add(note);
-
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 
@@ -241,7 +242,6 @@ public class ListAllNotesAPIControllerTest extends EasyMockSupport
 
         List<Note> noteList = new ArrayList<>();
         noteList.add(note);
-
 
         mockHttpSession.setAttribute("acm_ip_address", "ipAddress");
 

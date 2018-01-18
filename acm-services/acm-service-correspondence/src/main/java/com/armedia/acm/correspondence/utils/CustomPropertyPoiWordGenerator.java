@@ -20,11 +20,11 @@ public class CustomPropertyPoiWordGenerator implements PoiWordGenerator
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * Generate the Word document via setting custom Word property values.  The template must have custom
-     * properties, one property for each template substitution variable.  Unfortunately the user must be prompted to
-     * refresh document fields before these new property values are visible.  If they are not prompted, or if they
-     * choose to click "no" instead of "yes", they see the variable names, not the values.  This is a bad user
-     * experience.  So even though this approach maintains all formatting, we can't use it.
+     * Generate the Word document via setting custom Word property values. The template must have custom
+     * properties, one property for each template substitution variable. Unfortunately the user must be prompted to
+     * refresh document fields before these new property values are visible. If they are not prompted, or if they
+     * choose to click "no" instead of "yes", they see the variable names, not the values. This is a bad user
+     * experience. So even though this approach maintains all formatting, we can't use it.
      *
      */
     @Override
@@ -35,14 +35,14 @@ public class CustomPropertyPoiWordGenerator implements PoiWordGenerator
         template = new XWPFDocument(wordTemplate.getInputStream());
         POIXMLProperties xmlProps = template.getProperties();
 
-        for ( Map.Entry<String, String> sub : substitutions.entrySet() )
+        for (Map.Entry<String, String> sub : substitutions.entrySet())
         {
-            if ( xmlProps.getCustomProperties().contains(sub.getKey()) )
+            if (xmlProps.getCustomProperties().contains(sub.getKey()))
             {
                 List<CTProperty> props = xmlProps.getCustomProperties().getUnderlyingProperties().getPropertyList();
-                for ( CTProperty prop : props )
+                for (CTProperty prop : props)
                 {
-                    if ( prop.getName().equals(sub.getKey()))
+                    if (prop.getName().equals(sub.getKey()))
                     {
                         prop.setLpwstr(sub.getValue());
                     }
@@ -50,7 +50,7 @@ public class CustomPropertyPoiWordGenerator implements PoiWordGenerator
             }
         }
 
-        // need this line to enforce that fields are updated when user opens the doc.  This is a sub-optimal UI.
+        // need this line to enforce that fields are updated when user opens the doc. This is a sub-optimal UI.
         template.enforceUpdateFields();
 
         log.debug("writing correspondence to stream: " + targetStream);
@@ -71,7 +71,6 @@ public class CustomPropertyPoiWordGenerator implements PoiWordGenerator
                 // could not close the file, not the end of the world
             }
         }
-
 
     }
 }

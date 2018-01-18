@@ -7,33 +7,20 @@
             <div class="col-sm-4 form-group">
                 <label for="familyName" translate> people.comp.editPerson.familyName </label>
                 <span class="required-asterisk">*</span>
-                <input type="text"
-                       id="familyName"
-                       ng-model="person.familyName"
-                       class="input-md form-control"
-                       required="required"
-                       placeholder="{{ 'people.comp.editPerson.familyName.placeholder' | translate }}"
-                       style="background-color: white;">
+                <input type="text" id="familyName" ng-model="person.familyName" class="input-md form-control" required="required"
+                        placeholder="{{ 'people.comp.editPerson.familyName.placeholder' | translate }}" style="background-color: white;">
             </div>
             <div class="col-sm-4">
                 <label for="middleName" class="control-label">{{ 'people.comp.editPerson.middleName' | translate}}</label>
-                <input type="text"
-                       id="middleName"
-                       ng-model="person.middleName"
-                       class="input-md form-control"
-                       placeholder="{{ 'people.comp.editPerson.middleName.placeholder' | translate }}"
-                       style="background-color: white;">
+                <input type="text" id="middleName" ng-model="person.middleName" class="input-md form-control"
+                        placeholder="{{ 'people.comp.editPerson.middleName.placeholder' | translate }}" style="background-color: white;">
             </div>
             <div class="col-sm-4">
                 <label for="givenName" class="control-label">{{ 'people.comp.editPerson.givenName' |
                     translate}}</label>
                 <span class="required-asterisk">*</span>
-                <input type="text"
-                       id="givenName"
-                       ng-model="person.givenName"
-                       class="input-md form-control"
-                       required="required"
-                       placeholder="{{ 'people.comp.editPerson.givenName.placeholder' | translate }}">
+                <input type="text" id="givenName" ng-model="person.givenName" class="input-md form-control" required="required"
+                        placeholder="{{ 'people.comp.editPerson.givenName.placeholder' | translate }}">
             </div>
         </div>
         <div id="accordion" class="panel-group">
@@ -51,13 +38,12 @@
                                 <label translate>
                                     people.comp.editPerson.identification.identificationNumber</label>
                                 <input type="text" ng-model="person.defaultIdentification.identificationNumber"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
+                                        class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>people.comp.editPerson.identification.identificationType</label>
-                                <select class="form-control"
-                                        ng-required="person.defaultIdentification.identificationNumber"
+                                <select class="form-control" ng-required="person.defaultIdentification.identificationNumber"
                                         ng-disabled="!person.defaultIdentification.identificationNumber"
                                         ng-model="person.defaultIdentification.identificationType">
                                     <option ng-repeat="option in identificationTypes" value="{{option.key}}">
@@ -71,27 +57,22 @@
                                 <label translate>
                                     people.comp.editPerson.identification.identificationIssuer</label>
                                 <input type="text" ng-model="person.defaultIdentification.identificationIssuer"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
+                                        class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.identification.identificationYearIssued</label>
                                 <p class="input-group">
-                                    <input type="text"
-                                           class="input-md form-control"
-                                           placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                           datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                           datepicker-append-to-body="false"
-                                           ng-model="person.defaultIdentification.identificationYearIssued"
-                                           is-open="defaultOpened"
-                                           close-on-date-selection="true"
-                                           show-button-bar="true"
-                                           on-open-focus="false"
-                                           close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}"/>
+                                    <input type="text" class="input-md form-control"
+                                            placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
+                                            datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                            datepicker-append-to-body="false"
+                                            ng-model="person.defaultIdentification.identificationYearIssued" is-open="defaultOpened"
+                                            close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                            close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
                                     <span class="input-group-btn">
-                                       <button type="button" class="btn btn-default"
-                                               ng-click="defaultOpened = !defaultOpened">
+                                       <button type="button" class="btn btn-default" ng-click="defaultOpened = !defaultOpened">
                                                <i class="fa fa-calendar"></i>
                                        </button>
                                 </span>
@@ -100,11 +81,9 @@
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addIdentification();"
+                                    <button type="button" class="btn btn-link form-control" ng-click="addIdentification();"
                                             ng-show="person.identifications.length < 1">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
@@ -115,15 +94,14 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationNumber</label>
-                                    <input type="text" ng-model="identification.identificationNumber"
-                                           class="input-md form-control" required="required"
-                                           placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
+                                    <input type="text" ng-model="identification.identificationNumber" class="input-md form-control"
+                                            required="required"
+                                            placeholder="{{ 'people.comp.editPerson.identification.identificationNumber.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationType</label>
-                                    <select class="form-control" required="required"
-                                            ng-disabled="!identification.identificationNumber"
+                                    <select class="form-control" required="required" ng-disabled="!identification.identificationNumber"
                                             ng-model="identification.identificationType">
                                         <option ng-repeat="option in identificationTypes" value="{{option.key}}">
                                             {{option.value | translate}}
@@ -135,26 +113,21 @@
                                 <div class="col-sm-4 form-group">
                                     <label translate>
                                         people.comp.editPerson.identification.identificationIssuer</label>
-                                    <input type="text" ng-model="identification.identificationIssuer"
-                                           class="input-md form-control"
-                                           placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
+                                    <input type="text" ng-model="identification.identificationIssuer" class="input-md form-control"
+                                            placeholder="{{ 'people.comp.editPerson.identification.identificationIssuer.placeholder' | translate }}">
                                 </div>
                                 <div class="col-sm-4 form-group">
                                     <div>
                                         <label translate>
                                             people.comp.editPerson.identification.identificationYearIssued</label>
                                         <p class="input-group">
-                                            <input type="text"
-                                                   class="input-md form-control"
-                                                   placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
-                                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                                   datepicker-append-to-body="false"
-                                                   ng-model="identification.identificationYearIssued"
-                                                   is-open="identification.opened"
-                                                   close-on-date-selection="true"
-                                                   show-button-bar="true"
-                                                   on-open-focus="false"
-                                                   close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}"/>
+                                            <input type="text" class="input-md form-control"
+                                                    placeholder="{{'people.comp.editPerson.identification.identificationYearIssued.placeholder' | translate}}"
+                                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
+                                                    datepicker-append-to-body="false" ng-model="identification.identificationYearIssued"
+                                                    is-open="identification.opened" close-on-date-selection="true" show-button-bar="true"
+                                                    on-open-focus="false"
+                                                    close-text="{{'people.comp.editPerson.identification.identificationYearIssued.close.button' | translate}}" />
                                             <span class="input-group-btn">
                                        <button type="button" class="btn btn-default"
                                                ng-click="identification.opened = !identification.opened">
@@ -174,11 +147,9 @@
                                     </div>
                                     <div class="pull-left">
                                         <label class="control-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-link form-control"
-                                                ng-click="addIdentification();"
+                                        <button type="button" class="btn btn-link form-control" ng-click="addIdentification();"
                                                 ng-show="$last">
-                                            <i class="fa fa-plus text-success"></i><span
-                                                translate>people.comp.editPerson.addAnother</span>
+                                            <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                         </button>
                                     </div>
                                 </div>
@@ -199,28 +170,24 @@
                 <div class="panel-body" data-ng-repeat="picture in pictures">
                     <div class="row">
                         <div class="col-sm-4 form-group">
-                            <label translate>people.comp.pictures.dialog.title</label><br/>
-                            <button ngf-select ng-model="userPictures[$index]" ng-hide="userPictures[$index].name"
-                                    ngf-pattern="'image/*'" ngf-accept="'image/*'"
-                                    class="btn btn-sm btn-default"><span
+                            <label translate>people.comp.pictures.dialog.title</label><br />
+                            <button ngf-select ng-model="userPictures[$index]" ng-hide="userPictures[$index].name" ngf-pattern="'image/*'"
+                                    ngf-accept="'image/*'" class="btn btn-sm btn-default"><span
                                     translate>people.comp.pictures.dialog.browse</span></button>
                             {{userPictures[$index].name}}
                         </div>
                         <div class="col-sm-4 form-group">
                             <div class="pull-left" ng-show="userPictures[$index].name">
                                 <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control"
-                                        ng-click="removePicture($index)">
+                                <button type="button" class="btn btn-link form-control" ng-click="removePicture($index)">
                                     <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
                                 </button>
                             </div>
                             <div class="pull-left">
                                 <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control"
-                                        ng-click="addEmptyPicture();"
+                                <button type="button" class="btn btn-link form-control" ng-click="addEmptyPicture();"
                                         ng-show="$last && userPictures[$index].name">
-                                    <i class="fa fa-plus text-success"></i><span
-                                        translate>people.comp.editPerson.addAnother</span>
+                                    <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                 </button>
                             </div>
                         </div>
@@ -242,31 +209,28 @@
                             <div class="col-sm-4 form-group">
                                 <label>&nbsp;</label>
                                 <input type="text" ng-model="organizationAssociation.organization.organizationValue"
-                                       ng-click="searchOrganization($index)"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
+                                        ng-click="searchOrganization($index)" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.organizations.searchExisting.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.organizations.organizationType</label>
                                 <input class="form-control" ng-disabled="true"
-                                       ng-model="organizationAssociation.personToOrganizationAssociationType">
+                                        ng-model="organizationAssociation.personToOrganizationAssociationType">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
                                     <button type="button" class="btn btn-link form-control"
-                                            ng-click="removeOrganization(organizationAssociation)"
-                                            ng-show="!$first">
+                                            ng-click="removeOrganization(organizationAssociation)" ng-show="!$first">
                                         <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
                                     </button>
                                 </div>
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addNewOrganization();" ng-disabled="!organizationAssociation.organization.organizationValue" ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addNewOrganization();"
+                                            ng-disabled="!organizationAssociation.organization.organizationValue" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
@@ -287,8 +251,7 @@
                     <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate> people.comp.editPerson.locations.country</label>
-                            <select class="form-control"
-                                    ng-model="person.defaultAddress.country">
+                            <select class="form-control" ng-model="person.defaultAddress.country">
                                 <option ng-repeat="option in countries" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -296,8 +259,7 @@
                         </div>
                         <div class="col-sm-4 form-group">
                             <label translate> people.comp.editPerson.locations.type</label>
-                            <select class="form-control"
-                                    ng-model="person.defaultAddress.type">
+                            <select class="form-control" ng-model="person.defaultAddress.type">
                                 <option ng-repeat="option in addressTypes" value="{{option.key}}">
                                     {{option.value | translate}}
                                 </option>
@@ -308,48 +270,41 @@
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress</label>
-                            <input type="text" ng-model="person.defaultAddress.streetAddress"
-                                   class="input-md form-control"
-                                   placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                            <input type="text" ng-model="person.defaultAddress.streetAddress" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.streetAddress2</label>
-                            <input type="text" ng-model="person.defaultAddress.streetAddress2"
-                                   class="input-md form-control"
-                                   placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
+                            <input type="text" ng-model="person.defaultAddress.streetAddress2" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-sm-4 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.city</label>
-                            <input type="text" ng-model="person.defaultAddress.city"
-                                   class="input-md form-control"
-                                   placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                            <input type="text" ng-model="person.defaultAddress.city" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-3 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.state</label>
-                            <input type="text" ng-model="person.defaultAddress.state"
-                                   class="input-md form-control"
-                                   placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
+                            <input type="text" ng-model="person.defaultAddress.state" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-3 form-group">
                             <label translate>
                                 people.comp.editPerson.locations.zip</label>
-                            <input type="text" ng-model="person.defaultAddress.zip"
-                                   class="input-md form-control"
-                                   placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                            <input type="text" ng-model="person.defaultAddress.zip" class="input-md form-control"
+                                    placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
                         </div>
                         <div class="col-sm-2 form-group">
                             <div class="pull-left">
                                 <label class="control-label">&nbsp;</label>
-                                <button type="button" class="btn btn-link form-control"
-                                        ng-click="addAddress();"
+                                <button type="button" class="btn btn-link form-control" ng-click="addAddress();"
                                         ng-show="person.addresses.length < 1">
-                                    <i class="fa fa-plus text-success"></i><span
-                                        translate>people.comp.editPerson.addAnother</span>
+                                    <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                 </button>
                             </div>
                         </div>
@@ -359,8 +314,7 @@
                         <div class="row">
                             <div class="col-sm-4 form-group">
                                 <label translate> people.comp.editPerson.locations.country</label>
-                                <select class="form-control"
-                                        ng-model="address.country">
+                                <select class="form-control" ng-model="address.country">
                                     <option ng-repeat="option in countries" value="{{option.key}}">
                                         {{option.value | translate}}
                                     </option>
@@ -379,55 +333,46 @@
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress</label>
-                                <input type="text" ng-model="address.streetAddress"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
+                                <input type="text" ng-model="address.streetAddress" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.streetAddress2</label>
-                                <input type="text" ng-model="address.streetAddress2"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
+                                <input type="text" ng-model="address.streetAddress2" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.locations.streetAddress2.placeholder' | translate }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.city</label>
-                                <input type="text" ng-model="address.city"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
+                                <input type="text" ng-model="address.city" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.locations.city.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.state</label>
-                                <input type="text" ng-model="address.state"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
+                                <input type="text" ng-model="address.state" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.locations.state.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-3 form-group">
                                 <label translate>
                                     people.comp.editPerson.locations.zip</label>
-                                <input type="text" ng-model="address.zip"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
+                                <input type="text" ng-model="address.zip" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.locations.zip.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-2 form-group">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="removeAddress(address)">
+                                    <button type="button" class="btn btn-link form-control" ng-click="removeAddress(address)">
                                         <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.remove</span>
                                     </button>
                                 </div>
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addAddress();"
-                                            ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                    <button type="button" class="btn btn-link form-control" ng-click="addAddress();" ng-show="$last">
+                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
@@ -440,8 +385,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts"
-                       translate>people.comp.editPerson.communicationAccounts.title</a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseCommunicationAccounts" translate>people.comp.editPerson.communicationAccounts.title</a>
                 </h4>
             </div>
             <div id="collapseCommunicationAccounts" class="panel-collapse collapse">
@@ -452,16 +396,14 @@
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input type="text"
-                                       ng-model="person['default'+capitalizeFirstLetter(caType)].value"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
+                                <input type="text" ng-model="person['default'+capitalizeFirstLetter(caType)].value"
+                                        class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.' + caType + '.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
                                 <label for="defaultPhoneSubType" class="control-label">{{'people.comp.editPerson.communicationAccounts.'
                                     + caType + 'Type' | translate}}</label>
-                                <select id="defaultPhoneSubType"
-                                        class="form-control"
+                                <select id="defaultPhoneSubType" class="form-control"
                                         ng-required="person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-disabled="!person['default'+capitalizeFirstLetter(caType)].value"
                                         ng-model="person['default'+capitalizeFirstLetter(caType)].subType">
@@ -473,32 +415,25 @@
                             <div class="col-sm-4">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addContactMethod(caType);"
+                                    <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType);"
                                             ng-show="showAddAnotherContactMethod(caType)">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <div ng-repeat="contactMethod in person.contactMethods | filter: {type:caType}"
-                             class="row">
+                        <div ng-repeat="contactMethod in person.contactMethods | filter: {type:caType}" class="row">
                             <div class="col-sm-4">
                                 <label>
                                     {{'people.comp.editPerson.communicationAccounts.' + caType |
                                     translate}} </label>
-                                <input type="text" ng-model="contactMethod.value"
-                                       required="required"
-                                       class="input-md form-control"
-                                       placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
+                                <input type="text" ng-model="contactMethod.value" required="required" class="input-md form-control"
+                                        placeholder="{{ 'people.comp.editPerson.communicationAccounts.'+ caType +'.placeholder' | translate }}">
                             </div>
                             <div class="col-sm-4">
                                 <label class="control-label">{{'people.comp.editPerson.communicationAccounts.' +
                                     caType + 'Type' | translate}}</label>
-                                <select ng-model="contactMethod.subType"
-                                        required="required"
-                                        ng-disabled="!contactMethod.value"
+                                <select ng-model="contactMethod.subType" required="required" ng-disabled="!contactMethod.value"
                                         class="form-control">
                                     <option ng-repeat="option in cmTypes[caType].subLookup" value="{{option.key}}">
                                         {{option.value | translate}}
@@ -508,18 +443,15 @@
                             <div class="col-sm-4">
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="removeContactMethod(contactMethod)">
+                                    <button type="button" class="btn btn-link form-control" ng-click="removeContactMethod(contactMethod)">
                                         <i class="fa fa-minus text-danger"></i><span translate>people.comp.editPerson.communicationAccounts.removeContactMethod</span>
                                     </button>
                                 </div>
                                 <div class="pull-left">
                                     <label class="control-label">&nbsp;</label>
-                                    <button type="button" class="btn btn-link form-control"
-                                            ng-click="addContactMethod(caType)"
+                                    <button type="button" class="btn btn-link form-control" ng-click="addContactMethod(caType)"
                                             ng-show="$last">
-                                        <i class="fa fa-plus text-success"></i><span
-                                            translate>people.comp.editPerson.addAnother</span>
+                                        <i class="fa fa-plus text-success"></i><span translate>people.comp.editPerson.addAnother</span>
                                     </button>
                                 </div>
                             </div>
@@ -542,13 +474,10 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip"
-                data-title="Cancel"
-                ng-click="cancelModal()">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate> people.comp.editPerson.cancelButton</span>
         </button>
-        <button type="submit" ng-disabled="personForm.$invalid || loading"
-                class="btn btn-primary btn-sm" data-toggle="tooltip"
+        <button type="submit" ng-disabled="personForm.$invalid || loading" class="btn btn-primary btn-sm" data-toggle="tooltip"
                 id="saveButton" data-title="Save">
             <i class="{{loadingIcon}}"></i>
             <span translate> people.comp.editPerson.saveButton</span>

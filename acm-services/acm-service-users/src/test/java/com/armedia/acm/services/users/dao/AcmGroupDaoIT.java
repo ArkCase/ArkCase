@@ -1,10 +1,13 @@
 package com.armedia.acm.services.users.dao;
 
+import static junit.framework.Assert.assertTrue;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,8 +16,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
-
-import static junit.framework.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "/spring/spring-library-data-source.xml",

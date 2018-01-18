@@ -1,83 +1,83 @@
 {
-  "id": "search",
-  "title": "Search",
-  "configurable": true,
-  "menus": [
-    {
-      "menuId": "leftnav",
-      "menuItemURL": "search",
-      "menuItemTitle": "search.menus.leftnav.item",
-      "moduleId": "search",
-      "iconClass": "fa fa-search",
-      "position": 100
-    }
-  ],
-  "components": [
-    {
-      "id": "facetedSearch",
-      "title": "Faceted Search",
-      "enabled": "true",
-      "type": "grid",
-      "enableFiltering": false,
-      "emptySearch": false,
-      "typeAheadColumn": "title_parseable",
-      "hideTypeahead": false,
-      "columnDefs": [
+    "id": "search",
+    "title": "Search",
+    "configurable": true,
+    "menus": [
         {
-          "name": "object_id_s",
-          "displayName": "search.comp.grid.columns.id",
-          "headerCellFilter": "translate",
-          "visible": false
-        },
-        {
-          "name": "name",
-          "displayName": "search.comp.grid.columns.name",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}}>{{row.entity.name}}</a>"
-        },
-        {
-          "name": "object_type_s",
-          "displayName": "search.comp.grid.columns.type",
-          "headerCellFilter": "translate",
-          "cellFilter": "mapKeyValue: grid.appScope.customization.labels"
-        },
-        {
-          "name": "title_parseable",
-          "sortField": "title_parseable_lcs",
-          "displayName": "search.comp.grid.columns.title",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
-        },
-        {
-          "name": "parent_number_lcs",
-          "displayName": "search.comp.grid.columns.parent",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
-        },
-        {
-          "name": "assignee_full_name_lcs",
-          "displayName": "search.comp.grid.columns.assignee",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "modified_date_tdt",
-          "displayName": "search.comp.grid.columns.modified",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+            "menuId": "leftnav",
+            "menuItemURL": "search",
+            "menuItemTitle": "search.menus.leftnav.item",
+            "moduleId": "search",
+            "iconClass": "fa fa-search",
+            "position": 100
         }
-      ],
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 20,
-      "start": 0,
-      "filter": "",
-      "filterName": "",
-      "reportFileName": "search",
-      "isAutoSuggestActive": true
-    }
-  ]
+    ],
+    "components": [
+        {
+            "id": "facetedSearch",
+            "title": "Faceted Search",
+            "enabled": "true",
+            "type": "grid",
+            "enableFiltering": false,
+            "emptySearch": false,
+            "typeAheadColumn": "title_parseable",
+            "hideTypeahead": false,
+            "columnDefs": [
+                {
+                    "name": "object_id_s",
+                    "displayName": "search.comp.grid.columns.id",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "name",
+                    "displayName": "search.comp.grid.columns.name",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.name}}>{{row.entity.name}}</a>"
+                },
+                {
+                    "name": "object_type_s",
+                    "displayName": "search.comp.grid.columns.type",
+                    "headerCellFilter": "translate",
+                    "cellFilter": "mapKeyValue: grid.appScope.customization.labels"
+                },
+                {
+                    "name": "title_parseable",
+                    "sortField": "title_parseable_lcs",
+                    "displayName": "search.comp.grid.columns.title",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='false' is-viewer-link='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"NOTE\" || row.entity.object_type_s == \"PERSON-ASSOCIATION\"}' title={{row.entity.title_parseable}}>{{row.entity.title_parseable}}</a>"
+                },
+                {
+                    "name": "parent_number_lcs",
+                    "displayName": "search.comp.grid.columns.parent",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a arkcase-href object-data='row.entity' is-parent='true' data-toggle='tooltip' data-placement='bottom' ng-class='{\"no-link\": row.entity.object_type_s == \"ASSOCIATED_TAG\"}' title={{row.entity.parent_number_lcs}}>{{row.entity.parent_number_lcs}}</a>"
+                },
+                {
+                    "name": "assignee_full_name_lcs",
+                    "displayName": "search.comp.grid.columns.assignee",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "modified_date_tdt",
+                    "displayName": "search.comp.grid.columns.modified",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.modified_date_tdt | date : 'short' }}</div>"
+                }
+            ],
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "start": 0,
+            "filter": "",
+            "filterName": "",
+            "reportFileName": "search",
+            "isAutoSuggestActive": true
+        }
+    ]
 }

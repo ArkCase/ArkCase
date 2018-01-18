@@ -12,12 +12,12 @@
  *
  * The Admin.CmisConfigService provides CMIS Config REST call functionality
  */
-angular.module('admin').service('Admin.CmisConfigService', function ($http) {
+angular.module('admin').service('Admin.CmisConfigService', function($http) {
     return ({
-        retrieveCmisConfigurations: retrieveCmisConfigurations,
-        createCmisConfiguration: createCmisConfiguration,
-        deleteCmisConfiguration: deleteCmisConfiguration,
-        updateCmisConfiguration: updateCmisConfiguration
+        retrieveCmisConfigurations : retrieveCmisConfigurations,
+        createCmisConfiguration : createCmisConfiguration,
+        deleteCmisConfiguration : deleteCmisConfiguration,
+        updateCmisConfiguration : updateCmisConfiguration
     });
 
     /**
@@ -34,14 +34,15 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
      */
     function createCmisConfiguration(cmisConfig) {
         return $http({
-            method: "POST",
-            url: "api/latest/plugin/admin/cmisconfiguration/config",
-            data: cmisConfig,
-            headers: {
-                "Content-Type": "application/json"
+            method : "POST",
+            url : "api/latest/plugin/admin/cmisconfiguration/config",
+            data : cmisConfig,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -58,10 +59,11 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
     function deleteCmisConfiguration(cmisId) {
         var url = 'api/latest/plugin/admin/cmisconfiguration/config/' + cmisId;
         return $http({
-            method: "DELETE",
-            url: url
+            method : "DELETE",
+            url : url
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -78,14 +80,15 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
     function updateCmisConfiguration(config) {
         var url = 'api/latest/plugin/admin/cmisconfiguration/config/' + config["cmis.id"];
         return $http({
-            method: "PUT",
-            url: url,
-            data: config,
-            headers: {
-                "Content-Type": "application/json"
+            method : "PUT",
+            url : url,
+            data : config,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -99,8 +102,9 @@ angular.module('admin').service('Admin.CmisConfigService', function ($http) {
      */
     function retrieveCmisConfigurations() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/admin/cmisconfiguration/config"
+            method : "GET",
+            url : "api/latest/plugin/admin/cmisconfiguration/config"
         });
-    };
+    }
+    ;
 });

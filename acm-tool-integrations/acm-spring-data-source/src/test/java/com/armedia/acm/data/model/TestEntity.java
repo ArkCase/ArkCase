@@ -8,7 +8,8 @@ import javax.persistence.Column;
  * Created by nebojsha on 06.08.2015.
  */
 
-public class TestEntity {
+public class TestEntity
+{
 
     @Column(name = "id")
     private Long id;
@@ -24,11 +25,13 @@ public class TestEntity {
     @Column(name = "gender")
     private String gender;
 
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         this.name = name;
     }
 }

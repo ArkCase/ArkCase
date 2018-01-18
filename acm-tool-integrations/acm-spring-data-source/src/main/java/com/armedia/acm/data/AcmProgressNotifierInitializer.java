@@ -18,7 +18,6 @@ public class AcmProgressNotifierInitializer implements ApplicationListener<Conte
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */

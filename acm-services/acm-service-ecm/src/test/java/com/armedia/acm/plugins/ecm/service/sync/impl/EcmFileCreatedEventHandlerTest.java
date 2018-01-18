@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
@@ -12,6 +20,7 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.easymock.Capture;
@@ -21,10 +30,8 @@ import org.junit.Test;
 import org.springframework.security.core.Authentication;
 
 import javax.persistence.NoResultException;
-import java.io.InputStream;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
+import java.io.InputStream;
 
 /**
  * Created by dmiller on 5/17/17.
@@ -42,8 +49,8 @@ public class EcmFileCreatedEventHandlerTest
     private ContentStream contentStream = createMock(ContentStream.class);
     private InputStream inputStream = createMock(InputStream.class);
 
-    private Object[] mocks = {acmFolderDao, acmFolderService, ecmFileDao, auditPropertyEntityAdapter, ecmFileService,
-            cmisDocument, contentStream, inputStream};
+    private Object[] mocks = { acmFolderDao, acmFolderService, ecmFileDao, auditPropertyEntityAdapter, ecmFileService,
+            cmisDocument, contentStream, inputStream };
     private EcmEvent fileCreated;
 
     @Before
@@ -157,7 +164,6 @@ public class EcmFileCreatedEventHandlerTest
 
         verify(mocks);
     }
-
 
     @Test
     public void onEcmFileCreated_ifAlreadyInArkcase_thenNoFurtherAction() throws Exception

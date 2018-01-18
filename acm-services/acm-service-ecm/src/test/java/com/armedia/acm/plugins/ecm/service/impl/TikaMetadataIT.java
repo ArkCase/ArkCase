@@ -1,6 +1,12 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
+
 import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +24,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-ecm-tika.xml"
@@ -34,7 +38,7 @@ public class TikaMetadataIT
     @Test
     public void extractMetadata() throws Exception
     {
-        // see the loop below to understand each of the values in the below arrays.  One array per test file.
+        // see the loop below to understand each of the values in the below arrays. One array per test file.
 
         Object[][] testData = {
                 {
@@ -173,7 +177,8 @@ public class TikaMetadataIT
                 assertEquals(year, multimediaCreated.get(Calendar.YEAR));
                 assertEquals(month, multimediaCreated.get(Calendar.MONTH));
                 assertEquals(day, multimediaCreated.get(Calendar.DAY_OF_MONTH));
-            } else
+            }
+            else
             {
                 assertNull(multimedia.getCreated());
             }
@@ -205,14 +210,14 @@ public class TikaMetadataIT
     @Test
     public void detectExcelFile() throws Exception
     {
-        List<Resource> resources = Arrays.asList(new ClassPathResource("office/excel_1.xls")
-                , new ClassPathResource("office/excel_2.xls")
-                , new ClassPathResource("office/excel_3.xls")
-                , new ClassPathResource("office/excel_4.xlsx"));
+        List<Resource> resources = Arrays.asList(new ClassPathResource("office/excel_1.xls"), new ClassPathResource("office/excel_2.xls"),
+                new ClassPathResource("office/excel_3.xls"), new ClassPathResource("office/excel_4.xlsx"));
 
-        List<String> expectedMimeTypes = Arrays.asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                , "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12"
-                , "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12", "application/vnd.ms-excel.sheet.binary.macroenabled.12");
+        List<String> expectedMimeTypes = Arrays.asList("application/vnd.ms-excel",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.template", "application/vnd.ms-excel.sheet.macroenabled.12",
+                "application/vnd.ms-excel.template.macroenabled.12", "application/vnd.ms-excel.addin.macroenabled.12",
+                "application/vnd.ms-excel.sheet.binary.macroenabled.12");
 
         detectExpectedMimeTypes(resources, expectedMimeTypes);
     }
@@ -240,7 +245,8 @@ public class TikaMetadataIT
     {
         List<Resource> resources = Collections.singletonList(new ClassPathResource("office/sap.docx"));
 
-        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        List<String> expectedMimeTypes = Collections
+                .singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
         detectExpectedMimeTypes(resources, expectedMimeTypes);
     }
@@ -250,7 +256,8 @@ public class TikaMetadataIT
     {
         List<Resource> resources = Collections.singletonList(new ClassPathResource("office/hds.docx"));
 
-        List<String> expectedMimeTypes = Collections.singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+        List<String> expectedMimeTypes = Collections
+                .singletonList("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
 
         detectExpectedMimeTypes(resources, expectedMimeTypes);
     }
@@ -263,13 +270,13 @@ public class TikaMetadataIT
             {
                 EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(IOUtils.toByteArray(is), resource.getFile().getName());
                 assertTrue(expectedMimeTypes.contains(file.getContentType()));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 logger.error("could not process " + resource.getFilename(), e);
                 fail("could not process " + resource.getFilename());
             }
         }
     }
-
 
 }

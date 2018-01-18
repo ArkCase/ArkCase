@@ -1,176 +1,176 @@
 {
-  "id": "frevvo",
-  "title": "Frevvo",
-  "configurable": false,
-  "menus": [],
-  "components": [],
-  "forms": [
-    {
-      "name": "new-case",
-      "formKey": "active.case.form",
-      "formDefault": "case_file"
+    "id": "frevvo",
+    "title": "Frevvo",
+    "configurable": false,
+    "menus": [],
+    "components": [],
+    "forms": [
+        {
+            "name": "new-case",
+            "formKey": "active.case.form",
+            "formDefault": "case_file"
+        },
+        {
+            "name": "edit-case",
+            "formKey": "active.case.form",
+            "formDefault": "case_file"
+        },
+        {
+            "name": "change-case-status",
+            "formKey": "active.change_status.form",
+            "formDefault": ""
+        },
+        {
+            "name": "reinvestigate",
+            "formKey": "active.case.form",
+            "formDefault": "case_file"
+        },
+        {
+            "name": "new-complaint",
+            "formKey": "active.complaint.form",
+            "formDefault": "complaint"
+        },
+        {
+            "name": "close-complaint",
+            "formKey": "active.close.complaint.form",
+            "formDefault": "close_complaint"
+        },
+        {
+            "name": "new-costsheet",
+            "formKey": "active.costsheet.form",
+            "formDefault": "costsheet"
+        },
+        {
+            "name": "edit-costsheet",
+            "formKey": "active.edit.costsheet.form",
+            "formDefault": "costsheet"
+        },
+        {
+            "name": "new-timesheet",
+            "formKey": "active.timesheet.form",
+            "formDefault": "timesheet"
+        },
+        {
+            "name": "edit-timesheet",
+            "formKey": "active.edit.timesheet.form",
+            "formDefault": "timesheet"
+        },
+        {
+            "name": "new-plainform",
+            "formKey": "active.plain_configuration.form",
+            "formDefault": "plain_configuration"
+        },
+        {
+            "name": "edit-plainform",
+            "formKey": "active.edit.plain_configuration.form",
+            "formDefault": "plain_configuration"
+        }
+    ],
+    "dialogUserPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "frevvo.dialogUserPicker.table.columns.name",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_type_s",
+                "displayName": "frevvo.dialogUserPicker.table.columns.type",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "title",
+                "displayName": "frevvo.dialogUserPicker.table.columns.title",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_id_s",
+                "displayName": "frevvo.dialogUserPicker.table.columns.id",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
     },
-    {
-      "name": "edit-case",
-      "formKey": "active.case.form",
-      "formDefault": "case_file"
+    "dialogPersonPicker": {
+        "personTypes": {
+            "initiatorType": {
+                "type": "Initiator",
+                "name": "Initiator"
+            }
+        }
     },
-    {
-      "name": "change-case-status",
-      "formKey": "active.change_status.form",
-      "formDefault": ""
+    "dialogObjectPicker": {
+        "enableFiltering": false,
+        "multiSelect": false,
+        "showFacets": false,
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.name",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_type_s",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.type",
+                "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "title_parseable",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.title",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "object_id_s",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.id",
+                "headerCellFilter": "translate"
+            }
+        ],
+        "paginationPageSizes": [
+            5,
+            10,
+            20,
+            50
+        ],
+        "paginationPageSize": 10,
+        "start": 0
     },
-    {
-      "name": "reinvestigate",
-      "formKey": "active.case.form",
-      "formDefault": "case_file"
-    },
-    {
-      "name": "new-complaint",
-      "formKey": "active.complaint.form",
-      "formDefault": "complaint"
-    },
-    {
-      "name": "close-complaint",
-      "formKey": "active.close.complaint.form",
-      "formDefault": "close_complaint"
-    },
-    {
-      "name": "new-costsheet",
-      "formKey": "active.costsheet.form",
-      "formDefault": "costsheet"
-    },
-    {
-      "name": "edit-costsheet",
-      "formKey": "active.edit.costsheet.form",
-      "formDefault": "costsheet"
-    },
-    {
-      "name": "new-timesheet",
-      "formKey": "active.timesheet.form",
-      "formDefault": "timesheet"
-    },
-    {
-      "name": "edit-timesheet",
-      "formKey": "active.edit.timesheet.form",
-      "formDefault": "timesheet"
-    },
-    {
-      "name": "new-plainform",
-      "formKey": "active.plain_configuration.form",
-      "formDefault": "plain_configuration"
-    },
-    {
-      "name": "edit-plainform",
-      "formKey": "active.edit.plain_configuration.form",
-      "formDefault": "plain_configuration"
+    "timesheetCustomPicker": {
+        "otherTypeChargeCodes": [
+            {
+                "name": "LEAP",
+                "type": "OTHER"
+            },
+            {
+                "name": "Training",
+                "type": "OTHER"
+            },
+            {
+                "name": "Conference",
+                "type": "OTHER"
+            }
+        ],
+        "columnDefs": [
+            {
+                "name": "name",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.name",
+                "headerCellFilter": "translate"
+            },
+            {
+                "name": "type",
+                "displayName": "frevvo.dialogObjectPicker.table.columns.type",
+                "headerCellFilter": "translate"
+            }
+        ]
     }
-  ],
-  "dialogUserPicker": {
-    "enableFiltering": false,
-    "multiSelect": false,
-    "showFacets": false,
-    "columnDefs": [
-      {
-        "name": "name",
-        "displayName": "frevvo.dialogUserPicker.table.columns.name",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "object_type_s",
-        "displayName": "frevvo.dialogUserPicker.table.columns.type",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "title",
-        "displayName": "frevvo.dialogUserPicker.table.columns.title",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "object_id_s",
-        "displayName": "frevvo.dialogUserPicker.table.columns.id",
-        "headerCellFilter": "translate"
-      }
-    ],
-    "paginationPageSizes": [
-      5,
-      10,
-      20,
-      50
-    ],
-    "paginationPageSize": 10,
-    "start": 0
-  },
-  "dialogPersonPicker": {
-    "personTypes" : {
-      "initiatorType" : {
-        "type": "Initiator",
-        "name": "Initiator"
-      }
-    }
-  },
-  "dialogObjectPicker": {
-    "enableFiltering": false,
-    "multiSelect": false,
-    "showFacets": false,
-    "columnDefs": [
-      {
-        "name": "name",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.name",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "object_type_s",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.type",
-        "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "title_parseable",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.title",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "object_id_s",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.id",
-        "headerCellFilter": "translate"
-      }
-    ],
-    "paginationPageSizes": [
-      5,
-      10,
-      20,
-      50
-    ],
-    "paginationPageSize": 10,
-    "start": 0
-  },
-  "timesheetCustomPicker": {
-    "otherTypeChargeCodes": [
-      {
-        "name": "LEAP",
-        "type": "OTHER"
-      },
-      {
-        "name": "Training",
-        "type": "OTHER"
-      },
-      {
-        "name": "Conference",
-        "type": "OTHER"
-      }
-    ],
-    "columnDefs": [
-      {
-        "name": "name",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.name",
-        "headerCellFilter": "translate"
-      },
-      {
-        "name": "type",
-        "displayName": "frevvo.dialogObjectPicker.table.columns.type",
-        "headerCellFilter": "translate"
-      }
-    ]
-  }
 }

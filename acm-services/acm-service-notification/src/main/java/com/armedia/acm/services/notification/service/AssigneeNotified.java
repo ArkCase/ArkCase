@@ -13,7 +13,8 @@ public class AssigneeNotified implements UsersNotified
 
     private UserDao userDao;
 
-    @Override public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
+    @Override
+    public List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType)
     {
         Notification customNotification = new Notification();
 

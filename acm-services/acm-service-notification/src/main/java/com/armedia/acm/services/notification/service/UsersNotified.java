@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface UsersNotified
 {
-	List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType);
+    List<Notification> getNotifications(Object[] notification, Long parentObjectId, String parentObjectType);
 }
