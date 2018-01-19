@@ -2,8 +2,12 @@
 
 angular.module('document-details').controller('DocumentDetailsController', ['$scope', '$stateParams', '$sce', '$q'
     , '$timeout', 'TicketService', 'ConfigService', 'LookupService', 'SnowboundService', 'Authentication', 'EcmService'
+    , 'Helper.LocaleService'
     , function ($scope, $stateParams, $sce, $q, $timeout
-        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService) {
+        , TicketService, ConfigService, LookupService, SnowboundService, Authentication, EcmService, LocaleHelper
+    ) {
+
+        new LocaleHelper.Locale({scope: $scope});
 
         $scope.acmTicket = '';
         $scope.userId = '';

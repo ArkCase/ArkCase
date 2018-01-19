@@ -1,8 +1,15 @@
 'use strict';
 
 angular.module('document-details').controller('Document.DetailsController',
-    ['$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService', 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService'
-        , function ($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService) {
+    ['$scope', '$translate', '$filter', '$modal', '$q', 'Object.LookupService', 'Organization.InfoService'
+        , 'Person.InfoService', 'EcmService', 'MessageService', 'UtilService', 'LookupService', 'ConfigService'
+        , 'Helper.LocaleService'
+        , function ($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService
+        , PersonInfoService, EcmService, MessageService, UtilService, LookupService, ConfigService
+        , LocaleHelper
+    ) {
+
+        new LocaleHelper.Locale({scope: $scope});
 
         $scope.$on('document-data', function (event, ecmFile) {
 
@@ -36,12 +43,12 @@ angular.module('document-details').controller('Document.DetailsController',
                     $scope.details.organization = response[2] != null ? response[2].organizationValue : '';
                     $scope.details.creator = $scope.get(_.find(response[0], {id: $scope.details.activeVersion.creator}), 'name');
                     $scope.details.modifier = $scope.get(_.find(response[0], {id: $scope.details.activeVersion.modifier}), 'name');
-                    $scope.details.modified = $filter('date')(_activeVersion.created, $translate.instant("common.defaultDateTimeUIFormat"));
+                    $scope.details.verModified = _activeVersion.created;
                     $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
-                    $scope.details.mediaCreated = $filter('date')(_activeVersion.mediaCreated, $translate.instant("common.defaultDateTimeUIFormat"));
+                    $scope.details.verMediaCreated = _activeVersion.mediaCreated;
 
                     $scope.saveButton.disabled = false;
-                    $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
+                    $scope.saveInProgress = false;
                 }
             );
 
@@ -58,7 +65,7 @@ angular.module('document-details').controller('Document.DetailsController',
         $scope.details = {};
         $scope.saveButton = {};
         $scope.saveButton.disabled = true;
-        $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
+        $scope.saveInProgress = false;
 
         $scope.options = {
             focus: false,
@@ -104,7 +111,7 @@ angular.module('document-details').controller('Document.DetailsController',
             }
 
             return {};
-        }
+        };
 
         $scope.setActiveVersion = function (ecmFile, activeVersion) {
             if (ecmFile && ecmFile.versions && activeVersion) {
@@ -117,7 +124,7 @@ angular.module('document-details').controller('Document.DetailsController',
             }
 
             return ecmFile;
-        }
+        };
 
         ConfigService.getModuleConfig('common').then(function (moduleConfig) {
             $scope.commonConfig = moduleConfig;
@@ -231,7 +238,7 @@ angular.module('document-details').controller('Document.DetailsController',
         // Save Details
         $scope.save = function () {
             $scope.saveButton.disabled = true;
-            $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.wait");
+            $scope.saveInProgress = true;
             $scope.details.ecmFile = $scope.setActiveVersion($scope.details.ecmFile, $scope.details.activeVersion);
 
             UtilService.serviceCall({
