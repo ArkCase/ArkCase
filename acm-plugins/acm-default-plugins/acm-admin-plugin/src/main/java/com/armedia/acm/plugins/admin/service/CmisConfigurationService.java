@@ -6,22 +6,17 @@ import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import com.armedia.acm.plugins.admin.model.CmisUrlConfig;
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+
 import org.apache.chemistry.opencmis.client.api.Repository;
 import org.apache.chemistry.opencmis.client.api.SessionFactory;
 import org.apache.chemistry.opencmis.client.runtime.SessionFactoryImpl;
 import org.apache.chemistry.opencmis.commons.SessionParameter;
 import org.apache.chemistry.opencmis.commons.enums.BindingType;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisConnectionException;
-import org.apache.chemistry.opencmis.commons.exceptions.CmisUnauthorizedException;
 import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,6 +28,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * Created by nick.ferguson on 3/22/2017.
@@ -56,8 +54,10 @@ public class CmisConfigurationService
     /**
      * Create CMIS Config config files
      *
-     * @param cmisId Config identifier
-     * @param props  Config properties data
+     * @param cmisId
+     *            Config identifier
+     * @param props
+     *            Config properties data
      * @throws AcmCmisConfigurationException
      */
     public void createCmisConfig(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
@@ -65,7 +65,9 @@ public class CmisConfigurationService
         Matcher matcher = cmisIdPattern.matcher(cmisId);
         if (!matcher.find())
         {
-            log.error("Unable to create configuration with ID '{}', ID is the wrong format. Only numbers, characters symbols and '.' are allowed", cmisId);
+            log.error(
+                    "Unable to create configuration with ID '{}', ID is the wrong format. Only numbers, characters symbols and '.' are allowed",
+                    cmisId);
             throw new AcmCmisConfigurationException("ID has wrong format. Only numbers, characters symbols and '.' are allowed");
         }
 
@@ -83,7 +85,8 @@ public class CmisConfigurationService
 
             log.debug("Attempting to create CMIS Configuration XML file");
             createCmisFile(cmisId, props);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't create CMIS config '{}' ", cmisId, e);
             log.debug("Cleaning up created files");
@@ -99,8 +102,10 @@ public class CmisConfigurationService
     /**
      * Update CMIS Config settings
      *
-     * @param cmisId Config identifier
-     * @param props  Config properties data
+     * @param cmisId
+     *            Config identifier
+     * @param props
+     *            Config properties data
      */
     public void updateCmisConfig(String cmisId, Map<String, Object> props) throws AcmCmisConfigurationException
     {
@@ -117,7 +122,8 @@ public class CmisConfigurationService
     /**
      * Delete CMIS Config
      *
-     * @param cmisId Config identifier
+     * @param cmisId
+     *            Config identifier
      * @throws AcmCmisConfigurationException
      */
     public void deleteCmisConfig(String cmisId) throws AcmCmisConfigurationException
@@ -144,8 +150,10 @@ public class CmisConfigurationService
     /**
      * Create Properties file
      *
-     * @param cmisId Config identifier
-     * @param props  Config properties data
+     * @param cmisId
+     *            Config identifier
+     * @param props
+     *            Config properties data
      * @throws AcmCmisConfigurationException
      * @throws IOException
      */
@@ -159,7 +167,8 @@ public class CmisConfigurationService
         writePropertiesFile(cmisId, props);
     }
 
-    private void writeFileFromTemplate(Map<String, Object> props, String fileTemplate, String fileName, String tempFileName) throws IOException
+    private void writeFileFromTemplate(Map<String, Object> props, String fileTemplate, String fileName, String tempFileName)
+            throws IOException
     {
         // Create Properties file
         Configuration cfg = new Configuration(Configuration.VERSION_2_3_22);
@@ -180,7 +189,8 @@ public class CmisConfigurationService
 
             log.debug("Deleting Temporary File: '{}'", tempFileName);
             deleteFileQuietly(tempFileName);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Failed to write file from template '{}' ", fileTemplate, e);
         }
@@ -204,7 +214,8 @@ public class CmisConfigurationService
             // Create Properties file
             log.debug("Attempting to write CMIS Properties file with ID '{}' ", cmisId);
             writeFileFromTemplate(props, cmisTemplatePropertiesFile, propertiesFileName, tempFileName);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Failed to write CMIS Properties file with ID '{}' ", cmisId, e);
             throw new AcmCmisConfigurationException("Can't write CMIS properties file ", e);
@@ -214,8 +225,10 @@ public class CmisConfigurationService
     /**
      * Create CMIS file
      *
-     * @param cmisId Config identifier
-     * @param props  Config properties data
+     * @param cmisId
+     *            Config identifier
+     * @param props
+     *            Config properties data
      * @throws IOException
      * @throws AcmCmisConfigurationException
      */
@@ -235,7 +248,8 @@ public class CmisConfigurationService
             log.debug("Writing CMIS XML file with ID '{}' ", cmisId);
             writeFileFromTemplate(props, cmisTemplateXmlFile, cmisFileName, tempFileName);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't create CMIS file with ID '{}' ", cmisId, e);
             throw new AcmCmisConfigurationException("Can't create CMIS file ", e);
@@ -267,7 +281,8 @@ public class CmisConfigurationService
         props.put("reconnectCount", jsonObj.getInt(CmisConfigurationConstants.CMIS_RECONNECTCOUNT));
         props.put("reconnectFrequency", jsonObj.getInt(CmisConfigurationConstants.CMIS_RECONNECTFREQUENCY));
         props.put("repositoryId", jsonObj.has(CmisConfigurationConstants.CMIS_REPOSITORYID)
-                ? jsonObj.getString(CmisConfigurationConstants.CMIS_REPOSITORYID) : "");
+                ? jsonObj.getString(CmisConfigurationConstants.CMIS_REPOSITORYID)
+                : "");
         props.put("cmisVersioningState", jsonObj.getString(CmisConfigurationConstants.CMIS_VERSIONINGSTATE));
 
         return props;
@@ -276,7 +291,7 @@ public class CmisConfigurationService
     public List<File> getPropertiesFiles()
     {
         // Get All properties files
-        String[] extensions = new String[]{"properties"};
+        String[] extensions = new String[] { "properties" };
         List<File> files = (List<File>) FileUtils.listFiles(new File(cmisConfigurationLocation), extensions, false);
         List<File> propertiesFiles = new ArrayList<>();
 
@@ -300,7 +315,8 @@ public class CmisConfigurationService
         try
         {
             FileUtils.forceDelete(new File(fileName));
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Can't delete file {} ", fileName, e);
         }
@@ -313,7 +329,8 @@ public class CmisConfigurationService
         try
         {
             FileUtils.copyFile(source, target);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Failed to copy file {} to {}", source.getName(), target.getName(), e);
         }
@@ -368,7 +385,8 @@ public class CmisConfigurationService
         return new File(fileName).exists();
     }
 
-    public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException {
+    public List<Repository> getRepositories(CmisUrlConfig cmisUrlConfig) throws AcmEncryptionException
+    {
 
         SessionFactory sessionFactory = SessionFactoryImpl.newInstance();
         Map<String, String> parameters = new HashMap<>();

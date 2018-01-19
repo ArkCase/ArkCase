@@ -46,17 +46,17 @@ public class CmisConfigurationPropertiesService
                     {
                         log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
 
-                            log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
-                            if (isPropertyNameForIntegerValue(proName))
-                            {
-                                Integer value = Integer.valueOf(prop.getProperty(proName));
-                                cmisJsonObj.put(proName, value);
-                            }
-                            else
-                            {
-                                cmisJsonObj.put(proName, prop.getProperty(proName));
-                            }
+                        log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
+                        if (isPropertyNameForIntegerValue(proName))
+                        {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
                         }
+                        else
+                        {
+                            cmisJsonObj.put(proName, prop.getProperty(proName));
+                        }
+                    }
 
                     log.debug("Finished reading property file: [{}]", propertyFile.getName());
                     cmisJsonArr.put(cmisJsonObj);
@@ -78,11 +78,14 @@ public class CmisConfigurationPropertiesService
         this.cmisConfigurationService = cmisConfigurationService;
     }
 
-    public void setPropertyNamesForIntegerValues(List<String> propertyNamesForIntegerValues) {
+    public void setPropertyNamesForIntegerValues(List<String> propertyNamesForIntegerValues)
+    {
         this.propertyNamesForIntegerValues = propertyNamesForIntegerValues;
     }
+
     private boolean isPropertyNameForIntegerValue(String propertyName)
     {
-        return propertyNamesForIntegerValues != null && propertyNamesForIntegerValues.stream().filter(item -> item.equalsIgnoreCase(propertyName)).findFirst().isPresent();
+        return propertyNamesForIntegerValues != null
+                && propertyNamesForIntegerValues.stream().filter(item -> item.equalsIgnoreCase(propertyName)).findFirst().isPresent();
     }
 }
