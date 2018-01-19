@@ -21,8 +21,7 @@ angular
 
                 $httpProvider.interceptors.push(httpInterceptor);
 
-                //$httpProvider.interceptors.push(noCacheInterceptor);
-                $httpProvider.defaults.headers.common['Cache-Control'] = 'no-cache';
+                $httpProvider.interceptors.push(noCacheInterceptor);
 
                 $httpProvider.defaults.transformResponse.splice(0, 0, function (data, headersGetter) {
                     var contentType = headersGetter()['content-type'] || '';
@@ -41,10 +40,8 @@ angular
                             // only on GET requests with no explicit
                             // cache=true
                             if (config.method == 'GET') {
-                                if (!config.cache) {
-                                    var separator = config.url
-                                        .indexOf('?') === -1 ? '?' : '&';
-                                    config.url += separator + 'noCache=' + new Date().getTime();
+                                if (config.cache === false) {
+                                    config.headers["Cache-Control"] = 'no-cache';
                                 }
                             }
                             return config;

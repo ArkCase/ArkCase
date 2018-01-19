@@ -11,10 +11,9 @@
  * LookupService contains functions to lookup data (typically static data).
  */
 
-angular.module('services').factory('Object.LookupService', ['$q', '$resource', 'Acm.StoreService', 'UtilService'
-    , 'LookupService', 'SearchService',
-    function ($q, $resource, Store, Util
-        , LookupService, SearchService) {
+angular.module('services').factory('Object.LookupService', [
+    '$q', '$resource', 'Acm.StoreService', 'UtilService', 'LookupService',
+    function ($q, $resource, Store, Util, LookupService) {
 
         var Service = $resource('api/latest/plugin', {}, {
             /**
@@ -262,17 +261,17 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *
          * @returns {Object} An array returned by $resource
          */
-        Service.getPersonTypes = function(objectType, initiator){
-            switch(objectType){
+        Service.getPersonTypes = function (objectType, initiator) {
+            switch (objectType) {
                 case "COMPLAINT":
-                    if(initiator){
+                    if (initiator) {
                         return Service.getLookupByLookupName("complaintPersonInitiatorTypes");
                     }
                     else {
                         return Service.getLookupByLookupName("complaintPersonTypes");
                     }
                 case "CASE_FILE":
-                    if(initiator){
+                    if (initiator) {
                         return Service.getLookupByLookupName("caseFilePersonInitiatorTypes");
                     }
                     else {
@@ -327,7 +326,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          * @returns {Object} An array returned by $resource
          */
         Service.getParticipantTypes = function (objectType) {
-            switch(objectType){
+            switch (objectType) {
                 case "PERSON":
                 case "ORGANIZATION":
                     return Service.getLookupByLookupName("organizationalParticipantTypes");
@@ -367,10 +366,10 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             return Service.getLookupByLookupName("contactMethodTypes");
         };
 
-        Service.getSubContactMethodType = function(type){
+        Service.getSubContactMethodType = function (type) {
             return Service.getLookupByLookupName("contactMethodTypes").then(function (contactMethodTypes) {
                 var found = _.find(contactMethodTypes, {key: type});
-                if(!Util.isArray(found)){
+                if (!Util.isArray(found)) {
                     return found.subLookup;
                 }
             });
@@ -758,7 +757,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
          *                              { isValid : true }
          */
         Service.validateLookup = function (lookupDef, lookup) {
-            switch(lookupDef.lookupType) {
+            switch (lookupDef.lookupType) {
                 case 'standardLookup' :
                     return validateStandardLookup(lookup);
                 case 'nestedLookup' :
@@ -767,7 +766,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                     return validateInverseValuesLookup(lookup);
                 default:
                     console.error("Unknown lookup type!");
-                    return { isValid : false, errorMessage: "Unknown lookup type!" };
+                    return {isValid: false, errorMessage: "Unknown lookup type!"};
             }
         };
 
@@ -775,7 +774,7 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
                 if (!lookup[i].value) {
-                    return { isValid : false, errorMessage: "Empty value found!" };
+                    return {isValid: false, errorMessage: "Empty value found!"};
                 }
             }
 
@@ -783,28 +782,31 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
                     if (lookup[i].key === lookup[j].key) {
-                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                        return {isValid: false, errorMessage: "Duplicate key found! [key : " + lookup[i].key + "]"};
                     }
                     if (lookup[i].value === lookup[j].value) {
-                        return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].value + "]" };
+                        return {
+                            isValid: false,
+                            errorMessage: "Duplicate value found! [value : " + lookup[i].value + "]"
+                        };
                     }
                 }
             }
 
-            return { isValid : true };
+            return {isValid: true};
         };
 
         function validateNestedLookup(lookup) {
             // Check empty keys or values
             for (var i = 0, len = lookup.length; i < len; i++) {
                 if (!lookup[i].value) {
-                    return { isValid : false, errorMessage: "Empty value found!" };
+                    return {isValid: false, errorMessage: "Empty value found!"};
                 }
                 // check sublookup for empty keys or values
                 if (lookup[i].subLookup) {
                     for (var j = 0, lenSub = lookup[i].subLookup.length; j < lenSub; j++) {
                         if (!lookup[i].subLookup[j].value) {
-                            return { isValid : false, errorMessage: "Empty value found!" };
+                            return {isValid: false, errorMessage: "Empty value found!"};
                         }
                     }
                 }
@@ -814,20 +816,29 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
                     if (lookup[i].key === lookup[j].key) {
-                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                        return {isValid: false, errorMessage: "Duplicate key found! [key : " + lookup[i].key + "]"};
                     }
                     if (lookup[i].value === lookup[j].value) {
-                        return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].value + "]" };
+                        return {
+                            isValid: false,
+                            errorMessage: "Duplicate value found! [value : " + lookup[i].value + "]"
+                        };
                     }
                     // check sublookup for duplicate keys or values
                     if (lookup[i].subLookup) {
                         for (var k = 0, lenSub = lookup[i].subLookup.length; k < lenSub; k++) {
                             for (var l = k + 1; l < lenSub; l++) {
                                 if (lookup[i].subLookup[k].key === lookup[i].subLookup[l].key) {
-                                    return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].subLookup[k].key + "]" };
+                                    return {
+                                        isValid: false,
+                                        errorMessage: "Duplicate key found! [key : " + lookup[i].subLookup[k].key + "]"
+                                    };
                                 }
                                 if (lookup[i].subLookup[k].value === lookup[i].subLookup[l].value) {
-                                    return { isValid : false, errorMessage: "Duplicate value found! [value : " +  lookup[i].subLookup[k].value + "]" };
+                                    return {
+                                        isValid: false,
+                                        errorMessage: "Duplicate value found! [value : " + lookup[i].subLookup[k].value + "]"
+                                    };
                                 }
                             }
                         }
@@ -835,20 +846,20 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
                 }
             }
 
-            return { isValid : true };
+            return {isValid: true};
         };
 
         function validateInverseValuesLookup(lookup) {
             // Check empty key or value
             for (var i = 0, len = lookup.length; i < len; i++) {
                 if (!lookup[i].value) {
-                    return { isValid : false, errorMessage: "Empty value found!" };
+                    return {isValid: false, errorMessage: "Empty value found!"};
                 }
                 if (!lookup[i].inverseKey) {
-                    return { isValid : false, errorMessage: "Empty inverse key found!" };
+                    return {isValid: false, errorMessage: "Empty inverse key found!"};
                 }
                 if (!lookup[i].inverseValue) {
-                    return { isValid : false, errorMessage: "Empty inverse value found!" };
+                    return {isValid: false, errorMessage: "Empty inverse value found!"};
                 }
             }
 
@@ -856,21 +867,27 @@ angular.module('services').factory('Object.LookupService', ['$q', '$resource', '
             for (var i = 0, len = lookup.length; i < len; i++) {
                 for (var j = i + 1; j < len; j++) {
                     if (lookup[i].key === lookup[j].key) {
-                        return { isValid : false, errorMessage: "Duplicate key found! [key : " +  lookup[i].key + "]" };
+                        return {isValid: false, errorMessage: "Duplicate key found! [key : " + lookup[i].key + "]"};
                     }
                     if (lookup[i].inverseKey === lookup[j].inverseKey) {
-                        return { isValid : false, errorMessage: "Duplicate inverse key found! [key : " +  lookup[i].inverseKey + "]" };
+                        return {
+                            isValid: false,
+                            errorMessage: "Duplicate inverse key found! [key : " + lookup[i].inverseKey + "]"
+                        };
                     }
                     if (lookup[i].value === lookup[j].value) {
-                        return { isValid : false, errorMessage: "Duplicate value found! [key : " +  lookup[i].value + "]" };
+                        return {isValid: false, errorMessage: "Duplicate value found! [key : " + lookup[i].value + "]"};
                     }
                     if (lookup[i].inverseValue === lookup[j].inverseValue) {
-                        return { isValid : false, errorMessage: "Duplicate inverse value found! [key : " +  lookup[i].inverseValue + "]" };
+                        return {
+                            isValid: false,
+                            errorMessage: "Duplicate inverse value found! [key : " + lookup[i].inverseValue + "]"
+                        };
                     }
                 }
             }
 
-            return { isValid : true };
+            return {isValid: true};
         };
 
         /**
