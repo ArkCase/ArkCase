@@ -1,18 +1,21 @@
 package com.armedia.acm.plugins.person.service;
 
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.PARENT_COMPANY;
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.PARTNER_COMPANY;
+import static com.armedia.acm.plugins.person.model.OrganizationConstants.SUB_COMPANY;
+import static com.armedia.acm.plugins.person.model.PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
+
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent.ObjectAssociationState;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+
 import org.springframework.context.ApplicationListener;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.armedia.acm.plugins.person.model.OrganizationConstants.*;
-import static com.armedia.acm.plugins.person.model.PersonOrganizationConstants.ORGANIZATION_OBJECT_TYPE;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 14, 2017
@@ -26,7 +29,6 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
@@ -95,7 +97,8 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
                 child = organizationDao.find(oa.getTargetId());
                 // parent is the parent in the context of the association, not the parent company!
                 parent = organizationDao.find(oa.getParentId());
-                if (parent != null && child != null && parent.getParentOrganization() != null && parent.getParentOrganization().getId() != null
+                if (parent != null && child != null && parent.getParentOrganization() != null
+                        && parent.getParentOrganization().getId() != null
                         && parent.getParentOrganization().getId().equals(child.getId()))
                 {
                     parent.setParentOrganization(null);
@@ -125,7 +128,8 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
     }
 
     /**
-     * @param organizationDao the organizationDao to set
+     * @param organizationDao
+     *            the organizationDao to set
      */
     public void setOrganizationDao(OrganizationDao organizationDao)
     {
@@ -133,7 +137,8 @@ public class OrganizationAssociationListener implements ApplicationListener<Obje
     }
 
     /**
-     * @param associationService the associationService to set
+     * @param associationService
+     *            the associationService to set
      */
     public void setAssociationService(ObjectAssociationService associationService)
     {

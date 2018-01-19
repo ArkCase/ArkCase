@@ -34,7 +34,8 @@ public interface PersonService
     Person addPersonIdentification(String key, String value, Person person);
 
     /**
-     * Add person identifications for given list of keys (field names). The values are taken from Frevvo Person object using reflection
+     * Add person identifications for given list of keys (field names). The values are taken from Frevvo Person object
+     * using reflection
      *
      * @param keys
      * @param person
@@ -67,7 +68,8 @@ public interface PersonService
     List<String> getPersonIdentificationKeys(FrevvoPerson person);
 
     /**
-     * delete existing image for given Person. If default image in person is same as we want to delete, than operation throws an exception.
+     * delete existing image for given Person. If default image in person is same as we want to delete, than operation
+     * throws an exception.
      *
      * @param personId
      *            id of the Person

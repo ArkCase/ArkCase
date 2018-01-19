@@ -1,9 +1,15 @@
 package com.armedia.acm.services.users.web.api.group;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -24,12 +30,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Base64;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import java.util.Base64;
 
 @RunWith(EasyMockRunner.class)
 public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
@@ -65,10 +67,11 @@ public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                delete("/api/latest/users/group/" + Base64.getUrlEncoder().encodeToString(group.getName().getBytes()) + "/supervisor/remove/false")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication))
+                delete("/api/latest/users/group/" + Base64.getUrlEncoder().encodeToString(group.getName().getBytes())
+                        + "/supervisor/remove/false")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .principal(mockAuthentication))
                 .andReturn();
 
         log.info("Results: {}", result.getResponse().getContentAsString());
@@ -99,11 +102,12 @@ public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                post("/api/latest/users/group/{groupId}/supervisor/save/false", Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-                        .content(content))
+                post("/api/latest/users/group/{groupId}/supervisor/save/false",
+                        Base64.getUrlEncoder().encodeToString(group.getName().getBytes()))
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .principal(mockAuthentication)
+                                .content(content))
                 .andReturn();
 
         log.info("Results: {}", result.getResponse().getContentAsString());
@@ -119,7 +123,7 @@ public class SupervisorGroupAPIControllerTest extends EasyMockSupport implements
 
     @Override
     public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o,
-                                         Exception e)
+            Exception e)
     {
         log.error("An error occurred", e);
         return null;

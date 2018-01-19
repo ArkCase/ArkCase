@@ -2,10 +2,12 @@ package com.armedia.acm.services.protecturl.service;
 
 import com.armedia.acm.services.protecturl.dao.ProtectedUrlDao;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.NoResultException;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Base64;
@@ -64,7 +66,7 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         pUrl.setValidFrom(validFrom);
         pUrl.setValidTo(validTo);
 
-        //save to database and return created protected url object
+        // save to database and return created protected url object
         ProtectedUrl protectedUrl = protectedUrlDao.save(pUrl);
         log.debug("Created protected url: [{}]", protectedUrl);
         return protectedUrl;
@@ -73,7 +75,8 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     /**
      * retrieves saved protected url for given obfuscatedUrl as attribute. If not found returns null.
      *
-     * @param obfuscatedUrl String obfuscatedUrl
+     * @param obfuscatedUrl
+     *            String obfuscatedUrl
      * @return ProtectedUrl if found, otherwise null.
      */
     @Override
@@ -83,7 +86,8 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
         try
         {
             return protectedUrlDao.findByObfuscatedUrl(obfuscatedUrl);
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             return null;
         }
@@ -92,7 +96,8 @@ public class ProtectUrlServiceImpl implements ProtectUrlService
     /**
      * retrieves saved list of protected url for given originalUrl as attribute
      *
-     * @param originalUrl String obfuscatedUrl
+     * @param originalUrl
+     *            String obfuscatedUrl
      * @return List<ProtectedUrl>
      */
     @Override

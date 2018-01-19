@@ -7,5 +7,6 @@ package com.armedia.acm.core;
 public interface AcmNotificationReceiver
 {
     String getReceiverLdapId();
+
     String getReceiverType();
 }

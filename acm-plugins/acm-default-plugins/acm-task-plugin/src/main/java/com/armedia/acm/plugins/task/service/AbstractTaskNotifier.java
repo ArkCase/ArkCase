@@ -41,7 +41,8 @@ public abstract class AbstractTaskNotifier
     private boolean notificationsEnabled;
 
     /**
-     * @param activitiTaskService the activitiTaskService to set
+     * @param activitiTaskService
+     *            the activitiTaskService to set
      */
     public void setActivitiTaskService(TaskService activitiTaskService)
     {
@@ -49,7 +50,8 @@ public abstract class AbstractTaskNotifier
     }
 
     /**
-     * @param activitiTaskDao the activitiTaskDao to set
+     * @param activitiTaskDao
+     *            the activitiTaskDao to set
      */
     public void setActivitiTaskDao(TaskDao activitiTaskDao)
     {
@@ -57,7 +59,8 @@ public abstract class AbstractTaskNotifier
     }
 
     /**
-     * @param senderFactory the senderFactory to set
+     * @param senderFactory
+     *            the senderFactory to set
      */
     public void setSenderFactory(NotificationSenderFactory senderFactory)
     {
@@ -66,7 +69,6 @@ public abstract class AbstractTaskNotifier
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
@@ -85,7 +87,8 @@ public abstract class AbstractTaskNotifier
 
                 notificationsEnabled = Boolean.parseBoolean(dueTasksNotifierProperties.getProperty("due.tasks.notification.enabled"));
 
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.error("Could not load configuration for {} from {} file.", getClass().getName(), configFile.getName(), e);
             }
@@ -130,7 +133,8 @@ public abstract class AbstractTaskNotifier
         try
         {
             senderFactory.getNotificationSender().sendPlainEmail(tasks, this::buildEmail, this::buildEmailBody);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error while trying to send task due notifications.", e);
         }

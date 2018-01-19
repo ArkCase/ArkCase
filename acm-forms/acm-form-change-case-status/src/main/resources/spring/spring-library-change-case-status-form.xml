@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-       <bean id="changeCaseStatusTaskName" class="java.lang.String">
-              <constructor-arg>
-                     <value>Request to Change Case Status '%s'</value>
-              </constructor-arg>
-       </bean>
+    <bean id="changeCaseStatusTaskName" class="java.lang.String">
+        <constructor-arg>
+            <value>Request to Change Case Status '%s'</value>
+        </constructor-arg>
+    </bean>
 
-       <bean id="changeCaseStatusWorkflowListener" class="com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusWorkflowListener">
-              <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
-              <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
-              <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
-       </bean>
+    <bean id="changeCaseStatusWorkflowListener" class="com.armedia.acm.form.changecasestatus.service.ChangeCaseStatusWorkflowListener">
+        <property name="fileWorkflowBusinessRule" ref="fileWorkflowBusinessRule"/>
+        <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
+        <property name="changeCaseStatusTaskName" ref="changeCaseStatusTaskName"/>
+    </bean>
 </beans>

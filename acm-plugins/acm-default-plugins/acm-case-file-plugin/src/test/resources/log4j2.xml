@@ -9,7 +9,7 @@
     <Loggers>
         <!-- INFO and above to console and log file; com.armedia debug and above to log file -->
         <Logger name="com.armedia.acm.drools" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
+            <AppenderRef ref="Console"/>
         </Logger>
         <Logger name="com.armedia" level="debug" additivity="false">
             <AppenderRef ref="Console"/>

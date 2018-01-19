@@ -3,10 +3,8 @@
 </div>
 
 <div>
-    <search-modal config="config"
-                  filter='"Object Type": USER'
-                  on-items-selected="onSelectAttendee"
-                  search-placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.searchAttendees.placeholder' | translate}}">
+    <search-modal config="config" filter='"Object Type": USER' on-items-selected="onSelectAttendee"
+            search-placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.searchAttendees.placeholder' | translate}}">
 
     </search-modal>
 </div>
@@ -17,7 +15,9 @@
         </label>
     </div>
     <div class="col-sm-12">
-        <tags-input ng-model="attendees" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.attendees.placeholder' | translate}}" on-tag-added="addAdditionalAttendees($tag)"></tags-input>
+        <tags-input ng-model="attendees" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                placeholder="{{'common.directive.coreCalendar.chooseEventAttendeesDialog.attendees.placeholder' | translate}}"
+                on-tag-added="addAdditionalAttendees($tag)"></tags-input>
     </div>
 </div>
 <div class="modal-footer">

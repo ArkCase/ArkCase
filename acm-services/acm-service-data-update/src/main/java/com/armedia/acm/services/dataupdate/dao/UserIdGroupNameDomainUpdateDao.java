@@ -2,6 +2,7 @@ package com.armedia.acm.services.dataupdate.dao;
 
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.metamodel.EntityType;
+
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -269,7 +271,7 @@ public class UserIdGroupNameDomainUpdateDao
 
     public int updateActHiComment(String userId, String newUserId)
     {
-        Query query = em.createNativeQuery("UPDATE arkcase.ACT_HI_COMMENT "
+        Query query = em.createNativeQuery("UPDATE ACT_HI_COMMENT "
                 + "SET USER_ID_ = ? "
                 + "WHERE USER_ID_ = ?");
         query.setParameter(1, newUserId);

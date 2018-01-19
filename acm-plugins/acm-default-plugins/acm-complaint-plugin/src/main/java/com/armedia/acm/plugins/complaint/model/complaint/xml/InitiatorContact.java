@@ -3,10 +3,6 @@
  */
 package com.armedia.acm.plugins.complaint.model.complaint.xml;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
-
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.addressable.model.xml.InitiatorContactMethod;
@@ -19,125 +15,150 @@ import com.armedia.acm.plugins.person.model.PersonAlias;
 import com.armedia.acm.plugins.person.model.xml.InitiatorOrganization;
 import com.armedia.acm.plugins.person.model.xml.InitiatorPersonAlias;
 
+import javax.xml.bind.annotation.XmlElement;
+
+import java.util.List;
+
 /**
  * @author riste.tutureski
  *
  */
-public class InitiatorContact extends Contact {
+public class InitiatorContact extends Contact
+{
 
-	@XmlElement(name="initiatorId")
-	@Override
-	public Long getId() {
-		return super.getId();
-	}
+    @XmlElement(name = "initiatorId")
+    @Override
+    public Long getId()
+    {
+        return super.getId();
+    }
 
-	public void setId(Long id) {
-		super.setId(id);
-	}
-	
-	@XmlElement(name="initiatorContactType")
-	@Override
-	public String getContactType() {
-		return super.getContactType();
-	}
+    @Override
+    public void setId(Long id)
+    {
+        super.setId(id);
+    }
 
-	@Override
-	public void setContactType(String contactType) {
-		super.setContactType(contactType);
-	}
+    @XmlElement(name = "initiatorContactType")
+    @Override
+    public String getContactType()
+    {
+        return super.getContactType();
+    }
 
-	@XmlElement(name="searchExistingInitiator", type=InitiatorSearchResult.class)
-	@Override
-	public SearchResult getSearchResult() {
-		return super.getSearchResult();
-	}
+    @Override
+    public void setContactType(String contactType)
+    {
+        super.setContactType(contactType);
+    }
 
-	@Override
-	public void setSearchResult(SearchResult searchResult) {
-		super.setSearchResult(searchResult);
-	}
+    @XmlElement(name = "searchExistingInitiator", type = InitiatorSearchResult.class)
+    @Override
+    public SearchResult getSearchResult()
+    {
+        return super.getSearchResult();
+    }
 
-	@XmlElement(name="initiatorMainInformation", type=InitiatorMainInformation.class)
-	@Override
-	public MainInformation getMainInformation() {
-		return super.getMainInformation();
-	}
+    @Override
+    public void setSearchResult(SearchResult searchResult)
+    {
+        super.setSearchResult(searchResult);
+    }
 
-	@Override
-	public void setMainInformation(MainInformation mainInformation) {
-		super.setMainInformation(mainInformation);
-	}
+    @XmlElement(name = "initiatorMainInformation", type = InitiatorMainInformation.class)
+    @Override
+    public MainInformation getMainInformation()
+    {
+        return super.getMainInformation();
+    }
 
-	@XmlElement(name="initiatorCommunicationDevice", type=InitiatorContactMethod.class)
-	@Override
-	public List<ContactMethod> getCommunicationDevice() {
-		return super.getCommunicationDevice();
-	}
+    @Override
+    public void setMainInformation(MainInformation mainInformation)
+    {
+        super.setMainInformation(mainInformation);
+    }
 
-	@Override
-	public void setCommunicationDevice(List<ContactMethod> communicationDevice) {
-		super.setCommunicationDevice(communicationDevice);
-	}
+    @XmlElement(name = "initiatorCommunicationDevice", type = InitiatorContactMethod.class)
+    @Override
+    public List<ContactMethod> getCommunicationDevice()
+    {
+        return super.getCommunicationDevice();
+    }
 
-	@XmlElement(name="initiatorOrganizationInformation", type=InitiatorOrganization.class)
-	@Override
-	public List<Organization> getOrganization() {
-		return super.getOrganization();
-	}
+    @Override
+    public void setCommunicationDevice(List<ContactMethod> communicationDevice)
+    {
+        super.setCommunicationDevice(communicationDevice);
+    }
 
-	@Override
-	public void setOrganization(List<Organization> organization) {
-		super.setOrganization(organization);
-	}
+    @XmlElement(name = "initiatorOrganizationInformation", type = InitiatorOrganization.class)
+    @Override
+    public List<Organization> getOrganization()
+    {
+        return super.getOrganization();
+    }
 
-	@XmlElement(name="initiatorLocationInformation", type=InitiatorPostalAddress.class)
-	@Override
-	public List<PostalAddress> getLocation() {
-		return super.getLocation();
-	}
+    @Override
+    public void setOrganization(List<Organization> organization)
+    {
+        super.setOrganization(organization);
+    }
 
-	@Override
-	public void setLocation(List<PostalAddress> location) {
-		super.setLocation(location);
-	}
-	
-	@XmlElement(name="initiatorAliasInformation", type=InitiatorPersonAlias.class)
-	@Override
-	public PersonAlias getAlias() {
-		return super.getAlias();
-	}
+    @XmlElement(name = "initiatorLocationInformation", type = InitiatorPostalAddress.class)
+    @Override
+    public List<PostalAddress> getLocation()
+    {
+        return super.getLocation();
+    }
 
-	@Override
-	public void setAlias(PersonAlias alias) {
-		super.setAlias(alias);
-	}
-	
-	@XmlElement(name="initiatorNotes")
-	@Override
-	public String getNotes() {
-		return super.getNotes();
-	}
+    @Override
+    public void setLocation(List<PostalAddress> location)
+    {
+        super.setLocation(location);
+    }
 
-	@Override
-	public void setNotes(String notes) {
-		super.setNotes(notes);
-	}
-	
-	@Override
-	public Contact returnBase() {
-		Contact base = new Contact();
-		
-		base.setId(getId());
-		base.setContactType(getContactType());
-		base.setSearchResult(getSearchResult());
-		base.setMainInformation(getMainInformation());
-		base.setCommunicationDevice(getCommunicationDevice());
-		base.setOrganization(getOrganization());
-		base.setLocation(getLocation());
-		base.setAlias(getAlias());
-		base.setNotes(getNotes());
-		
-		return base;
-	}
-	
+    @XmlElement(name = "initiatorAliasInformation", type = InitiatorPersonAlias.class)
+    @Override
+    public PersonAlias getAlias()
+    {
+        return super.getAlias();
+    }
+
+    @Override
+    public void setAlias(PersonAlias alias)
+    {
+        super.setAlias(alias);
+    }
+
+    @XmlElement(name = "initiatorNotes")
+    @Override
+    public String getNotes()
+    {
+        return super.getNotes();
+    }
+
+    @Override
+    public void setNotes(String notes)
+    {
+        super.setNotes(notes);
+    }
+
+    @Override
+    public Contact returnBase()
+    {
+        Contact base = new Contact();
+
+        base.setId(getId());
+        base.setContactType(getContactType());
+        base.setSearchResult(getSearchResult());
+        base.setMainInformation(getMainInformation());
+        base.setCommunicationDevice(getCommunicationDevice());
+        base.setOrganization(getOrganization());
+        base.setLocation(getLocation());
+        base.setAlias(getAlias());
+        base.setNotes(getNotes());
+
+        return base;
+    }
+
 }

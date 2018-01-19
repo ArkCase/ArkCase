@@ -9,29 +9,27 @@
  *
  * The Audit service provides functionality to audit events.
  */
-angular.module('audit').factory('AuditService', ['$http',
-    function ($http) {
-        return {
+angular.module('audit').factory('AuditService', [ '$http', function($http) {
+    return {
 
-            /**
-             * @ngdoc method
-             * @name genericAudit
-             * @methodOf audit.service:AuditService
-             *
-             * @description
-             * Generic audit with provided type
-             *
-             * @param {string} auditType audit type
-             *
-             * @returns {HttpPromise} Future info about generic Audit
-             */
-            genericAudit: function (auditType) {
-                //FIXME add some filtering here to disable or enable logging types, useful in extensions
-                return $http({
-                    method: 'POST',
-                    url: 'api/v1/plugin/audit/generic?type=' + auditType,
-                });
-            }
+        /**
+         * @ngdoc method
+         * @name genericAudit
+         * @methodOf audit.service:AuditService
+         *
+         * @description
+         * Generic audit with provided type
+         *
+         * @param {string} auditType audit type
+         *
+         * @returns {HttpPromise} Future info about generic Audit
+         */
+        genericAudit : function(auditType) {
+            //FIXME add some filtering here to disable or enable logging types, useful in extensions
+            return $http({
+                method : 'POST',
+                url : 'api/v1/plugin/audit/generic?type=' + auditType,
+            });
         }
     }
-]);
+} ]);

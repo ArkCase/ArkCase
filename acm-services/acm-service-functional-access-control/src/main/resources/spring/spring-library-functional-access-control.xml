@@ -1,27 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acm-roles-properties" class="com.armedia.acm.reloadproperties.beans.AcmReloadablePropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.arkcase/acm/applicationRoles.properties"/>
     </bean>
 
-    <bean id="functionalAccessEventPublisher"
-          class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessEventPublisher"/>
+    <bean id="functionalAccessEventPublisher" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessEventPublisher"/>
 
-    <bean id="functionalAccessService"
-          class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">
+    <bean id="functionalAccessService" class="com.armedia.acm.services.functionalaccess.service.FunctionalAccessServiceImpl">
         <property name="applicationRolesProperties" ref="acm-roles-properties"/>
         <property name="applicationRolesToGroupsProperties" ref="applicationRoleToUserGroupProperties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
-        <property name="rolesToGroupsPropertyFileLocation"
-                  value="${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
+        <property name="rolesToGroupsPropertyFileLocation" value="${user.home}/.arkcase/acm/applicationRoleToUserGroup.properties"/>
         <property name="eventPublisher" ref="functionalAccessEventPublisher"/>
         <property name="acmGroupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>
-
 
 </beans>

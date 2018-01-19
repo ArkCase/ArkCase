@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="getPersonTypesAPIController" class="com.armedia.acm.plugins.person.web.api.GetPersonTypesAPIController">
         <property name="personProperties" ref="personPluginProperties"/>
@@ -20,30 +19,26 @@
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>
 
-    <bean id="deletePersonByPersonId"
-          class="com.armedia.acm.plugins.person.web.api.DeletePersonByPersonIdAPIController">
+    <bean id="deletePersonByPersonId" class="com.armedia.acm.plugins.person.web.api.DeletePersonByPersonIdAPIController">
         <property name="personDao" ref="acmPersonDao"/>
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
     </bean>
 
-    <bean id="deletePersonAssociationByPersonId"
-          class="com.armedia.acm.plugins.person.web.api.DeletePersonAssocByIdAPIController">
+    <bean id="deletePersonAssociationByPersonId" class="com.armedia.acm.plugins.person.web.api.DeletePersonAssocByIdAPIController">
         <property name="personAssociationDao" ref="acmPersonAssociationDao"/>
         <property name="personAssociationEventPublisher" ref="personAssociationEventPublisher"/>
     </bean>
     <bean id="deleteOrganizationAssociationAPIController"
-          class="com.armedia.acm.plugins.person.web.api.DeleteOrganizationAssociationAPIController">
+        class="com.armedia.acm.plugins.person.web.api.DeleteOrganizationAssociationAPIController">
         <property name="organizationAssociationDao" ref="acmOrganizationAssociationDao"/>
         <property name="organizationAssociationEventPublisher" ref="organizationAssociationEventPublisher"/>
     </bean>
 
-    <bean id="personAssociationAPIController"
-          class="com.armedia.acm.plugins.person.web.api.PersonAssociationAPIController">
+    <bean id="personAssociationAPIController" class="com.armedia.acm.plugins.person.web.api.PersonAssociationAPIController">
         <property name="personAssociationService" ref="personAssociationService"/>
     </bean>
 
-    <bean id="organizationAssociationAPIController"
-          class="com.armedia.acm.plugins.person.web.api.OrganizationAssociationAPIController">
+    <bean id="organizationAssociationAPIController" class="com.armedia.acm.plugins.person.web.api.OrganizationAssociationAPIController">
         <property name="organizationAssociationService" ref="organizationAssociationService"/>
     </bean>
 

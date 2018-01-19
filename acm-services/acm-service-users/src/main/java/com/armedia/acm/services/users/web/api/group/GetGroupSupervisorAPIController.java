@@ -5,6 +5,7 @@ package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
@@ -27,7 +28,7 @@ import java.util.Map;
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({"/api/v1/users", "/api/latest/users"})
+@RequestMapping({ "/api/v1/users", "/api/latest/users" })
 public class GetGroupSupervisorAPIController
 {
 
@@ -39,10 +40,10 @@ public class GetGroupSupervisorAPIController
     @RequestMapping(value = "/group/{groupId}/get/supervisor", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroupSupervisors(@PathVariable("groupId") String groupId,
-                                      @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                      @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                                      @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                      Authentication auth) throws Exception
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            Authentication auth) throws Exception
     {
 
         groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
@@ -63,7 +64,8 @@ public class GetGroupSupervisorAPIController
                 try
                 {
                     supervisorId = doc.getJSONObject("supervisor_id_s");
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new IllegalStateException("There are no supervisor for group with ID = " + groupId);
                 }
@@ -78,7 +80,8 @@ public class GetGroupSupervisorAPIController
 
     private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
     {
-        String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String query = "object_id_s:" + groupId
+                + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
         if (LOG.isDebugEnabled())
         {
@@ -106,7 +109,8 @@ public class GetGroupSupervisorAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    private String getSupervisor(String groupId, JSONObject supervisorId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private String getSupervisor(String groupId, JSONObject supervisorId, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
     {
         if (supervisorId != null)
         {

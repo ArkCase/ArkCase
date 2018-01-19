@@ -1,9 +1,15 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.plugins.ecm.model.DeleteFileResult;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,11 +33,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -123,7 +124,6 @@ public class UploadTempFilesAPIControllerTest extends EasyMockSupport
         assertTrue(deleteFileResult.isSuccess());
     }
 
-
     private void closeInputStream(InputStream inputStream)
     {
         if (inputStream != null)
@@ -131,7 +131,8 @@ public class UploadTempFilesAPIControllerTest extends EasyMockSupport
             try
             {
                 inputStream.close();
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.warn("Cannot close input stream in integration test");
             }

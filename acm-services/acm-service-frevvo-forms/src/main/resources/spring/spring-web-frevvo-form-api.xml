@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-	   
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
     <bean id="frevvoFormController" class="com.armedia.acm.service.frevvo.forms.web.api.FrevvoFormController">
-		<property name="properties" ref="acm-form-properties" />
-		<property name="authenticationTokenService" ref="authenticationTokenService" />
-		<property name="acmPluginManager" ref="acmPluginManager"/>
-		<property name="userDao" ref="userJpaDao" />
-		<property name="userActionDao" ref="userActionDao" />
+        <property name="properties" ref="acm-form-properties"/>
+        <property name="authenticationTokenService" ref="authenticationTokenService"/>
+        <property name="acmPluginManager" ref="acmPluginManager"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="userActionDao" ref="userActionDao"/>
         <property name="userActionExecutor" ref="userActionExecutor"/>
-		<property name="complaintDao" ref="acmComplaintDao" />
-		<property name="caseFileDao" ref="caseFileDao" />
+        <property name="complaintDao" ref="acmComplaintDao"/>
+        <property name="caseFileDao" ref="caseFileDao"/>
         <property name="saveComplaintTransaction" ref="saveComplaintTransaction"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="closeComplaintRequestDao" ref="closeComplaintRequestDao"/>
@@ -27,10 +26,10 @@
         <property name="activitiRuntimeService" ref="activitiRuntimeService"/>
         <property name="caseFileFactory" ref="caseFileFactory"/>
         <property name="complaintEventPublisher" ref="complaintEventPublisher"/>
-        <property name="timesheetService" ref="timesheetService" />
+        <property name="timesheetService" ref="timesheetService"/>
         <property name="acmTimesheetDao" ref="acmTimesheetDao"/>
         <property name="timeFactory" ref="timeFactory"/>
-        <property name="costsheetService" ref="costsheetService" />
+        <property name="costsheetService" ref="costsheetService"/>
         <property name="acmCostsheetDao" ref="acmCostsheetDao"/>
         <property name="costFactory" ref="costFactory"/>
         <property name="searchResults" ref="searchResults"/>
@@ -42,15 +41,15 @@
         <property name="projectFactory" ref="projectFactory"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="folderAndFilesUtils" ref="folderAndFilesUtils"/>
-        <property name="frevvoService" ref="frevvoService" />
-        <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory" />
+        <property name="frevvoService" ref="frevvoService"/>
+        <property name="plainConfigurationFormFactory" ref="plainConfigurationFormFactory"/>
         <property name="plainFormPropertiesLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/acm-forms-plain.properties"/>
-        <property name="propertyFileManager" ref="propertyFileManager" />
+        <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="notificationDao" ref="notificationDao"/>
         <property name="notificationEventPublisher" ref="notificationEventPublisher"/>
         <property name="frevvoFormServiceFactory" ref="frevvoFormServiceFactory"/>
         <property name="lookupDao" ref="lookupDao"/>
         <property name="translationService" ref="translationService"/>
-	</bean>
+    </bean>
 
 </beans>

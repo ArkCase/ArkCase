@@ -23,7 +23,8 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 
 /**
- * Base class for filters that clears the {@link Authentication} object from the {@link SecurityContext}. Only used in the Single Sign-On
+ * Base class for filters that clears the {@link Authentication} object from the {@link SecurityContext}. Only used in
+ * the Single Sign-On
  * scenario.
  * <p>
  * Created by Bojan Milenkoski on 12.4.2016
@@ -56,7 +57,8 @@ abstract class AcmSamlAuthenticationCheckFilterBase extends GenericFilterBean
 
         if (!userAuthenticated())
         {
-            // all non authenticated requests should be redirected to '/samllogin' in order to save the hash in session storage on the
+            // all non authenticated requests should be redirected to '/samllogin' in order to save the hash in session
+            // storage on the
             // client browser. This is used for non-Rest calls. See: AcmSamlAuthenticationCheckFilter class
             if (!((HttpServletRequest) request).getRequestURI().equals(request.getServletContext().getContextPath() + "/samllogin")
                     && !((HttpServletRequest) request).getRequestURI().startsWith(request.getServletContext().getContextPath() + "/saml/"))

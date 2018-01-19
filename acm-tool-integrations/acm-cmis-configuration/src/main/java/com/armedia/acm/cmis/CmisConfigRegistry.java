@@ -27,8 +27,10 @@ public class CmisConfigRegistry
      * Register CMIS configuration with the registry.
      * Invoked from bean configuration files ($HOME/.arkcase/acm/cmis/mule-config-*-cmis.xml)
      *
-     * @param configId        unique configuration identifier
-     * @param versioningState versioning state value associated with this config (NONE, MINIR, MAJOR)
+     * @param configId
+     *            unique configuration identifier
+     * @param versioningState
+     *            versioning state value associated with this config (NONE, MINIR, MAJOR)
      */
     public void registerCmisConfig(String configId, String versioningState)
     {

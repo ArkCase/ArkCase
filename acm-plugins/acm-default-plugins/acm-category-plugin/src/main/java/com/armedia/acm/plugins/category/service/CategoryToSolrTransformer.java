@@ -24,7 +24,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#getObjectsModifiedSince(java.util.Date,
      * int, int)
@@ -37,7 +36,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#toSolrAdvancedSearch(java.lang.Object)
      */
     @Override
@@ -87,7 +85,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#toSolrQuickSearch(java.lang.Object)
      */
     @Override
@@ -118,7 +115,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#isAcmObjectTypeSupported(java.lang.Class)
      */
@@ -130,7 +126,6 @@ public class CategoryToSolrTransformer implements AcmObjectToSolrDocTransformer<
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#getAcmObjectTypeSupported()
      */
     @Override

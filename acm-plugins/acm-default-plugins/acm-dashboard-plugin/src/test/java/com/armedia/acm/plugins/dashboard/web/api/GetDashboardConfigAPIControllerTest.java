@@ -1,5 +1,11 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
@@ -9,6 +15,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,10 +38,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by marst on 8/1/14.
@@ -74,7 +77,6 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
         mockDashboardPlugin = createMock(AcmPlugin.class);
         mockDashboardPropertyReader = createMock(DashboardPropertyReader.class);
 
-
         unit = new GetDashboardConfigAPIController();
 
         unit.setDashboardService(mockDashboardService);
@@ -108,8 +110,7 @@ public class GetDashboardConfigAPIControllerTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
-
-        Map<String, Object> prop = new HashMap<String, Object>();
+        Map<String, Object> prop = new HashMap<>();
         prop.put("key", "value");
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);

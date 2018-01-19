@@ -1,13 +1,19 @@
 package com.armedia.acm.services.users.web.api.group;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.services.users.service.group.LdapGroupService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,13 +31,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LdapGroupAPIControllerTest extends EasyMockSupport
@@ -91,7 +90,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     }
 
-    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmObjectNotFoundException
+    private void mockBehaviour(AcmGroup group) throws Exception
     {
         when(mockLdapGroupService.deleteLdapGroup(anyString(), anyString())).thenReturn(group);
     }

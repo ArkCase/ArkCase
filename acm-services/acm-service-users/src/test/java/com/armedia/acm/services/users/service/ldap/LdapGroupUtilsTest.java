@@ -1,17 +1,18 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isIn;
+import static org.hamcrest.core.Every.everyItem;
+
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapGroupNode;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isIn;
-import static org.hamcrest.core.Every.everyItem;
 
 public class LdapGroupUtilsTest
 {
@@ -41,14 +42,14 @@ public class LdapGroupUtilsTest
         // @formatter:off
         /**
          * A ->
-         *  B ->
-         *   B1
-         *   B2
-         *  C ->
-         *   C1 ->
-         *    B1
-         *   C2 ->
-         *    A
+         * B ->
+         * B1
+         * B2
+         * C ->
+         * C1 ->
+         * B1
+         * C2 ->
+         * A
          */
         // @formatter:on
         a.setMemberGroups(groups(b, c));

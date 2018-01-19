@@ -6,6 +6,7 @@ import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 
 @Controller
-@RequestMapping({"/api/v1/service/correspondence", "/api/latest/service/correspondence"})
+@RequestMapping({ "/api/v1/service/correspondence", "/api/latest/service/correspondence" })
 public class GenerateCorrespondenceAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -46,11 +47,13 @@ public class GenerateCorrespondenceAPIController
             EcmFile retval = getCorrespondenceService().generate(authentication, templateName, parentObjectType, parentObjectId,
                     targetCmisFolderId);
             return retval;
-        } catch (AcmCreateObjectFailedException e)
+        }
+        catch (AcmCreateObjectFailedException e)
         {
             log.error("Could not add correspondence: {}", e.getMessage(), e);
             throw e;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not add correspondence: {}", e.getMessage(), e);
             throw new AcmCreateObjectFailedException("correspondence", e.getMessage(), e);

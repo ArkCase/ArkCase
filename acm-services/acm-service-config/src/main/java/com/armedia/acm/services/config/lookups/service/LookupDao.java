@@ -21,7 +21,8 @@ public interface LookupDao
     /**
      * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
      *
-     * @param name the name of the lookup to find
+     * @param name
+     *            the name of the lookup to find
      * @return the {@link AcmLookup} found
      */
     AcmLookup<?> getLookupByName(String name);

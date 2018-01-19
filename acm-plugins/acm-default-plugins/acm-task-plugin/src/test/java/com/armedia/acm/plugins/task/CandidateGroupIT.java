@@ -1,6 +1,11 @@
 package com.armedia.acm.plugins.task;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.plugins.task.model.TaskConstants;
+
 import org.activiti.engine.ActivitiTaskAlreadyClaimedException;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
@@ -23,10 +28,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-library-task-activiti-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-task-activiti-test.xml" })
 public class CandidateGroupIT
 {
     @Autowired
@@ -66,11 +69,7 @@ public class CandidateGroupIT
 
         ProcessInstance pi = rt.startProcessInstanceByKey("TaskBucketsSample", processVariables);
 
-        List<Task> userTasks = ts.
-                createTaskQuery().
-                processInstanceId(pi.getProcessInstanceId()).
-                includeProcessVariables().
-                list();
+        List<Task> userTasks = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).includeProcessVariables().list();
 
         assertEquals(1, userTasks.size());
 
@@ -97,11 +96,7 @@ public class CandidateGroupIT
 
         ProcessInstance pi = rt.startProcessInstanceByKey("TaskBucketsSample", processVariables);
 
-        List<Task> userTasks = ts.
-                createTaskQuery().
-                processInstanceId(pi.getProcessInstanceId()).
-                includeProcessVariables().
-                list();
+        List<Task> userTasks = ts.createTaskQuery().processInstanceId(pi.getProcessInstanceId()).includeProcessVariables().list();
 
         assertEquals(1, userTasks.size());
 
@@ -119,7 +114,8 @@ public class CandidateGroupIT
         {
             ts.claim(task.getId(), "bweir");
             fail("should have exception here");
-        } catch (ActivitiTaskAlreadyClaimedException e)
+        }
+        catch (ActivitiTaskAlreadyClaimedException e)
         {
             // good, this is what we wanted.
         }
@@ -128,7 +124,6 @@ public class CandidateGroupIT
 
         Task unclaimed = ts.createTaskQuery().taskId(claimed.getId()).singleResult();
         assertNull(unclaimed.getAssignee());
-
 
     }
 

@@ -1,13 +1,16 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.dataaccess.model.test.DataAccessAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 2/16/15.
@@ -24,6 +27,7 @@ public class AcmPrivilegeServiceTest
 
     /**
      * Setting access controls should not add any participants.
+     * 
      * @throws Exception
      */
     @Test
@@ -41,6 +45,7 @@ public class AcmPrivilegeServiceTest
 
     /**
      * grant a new privilege to an existing participant
+     * 
      * @throws Exception
      */
     @Test
@@ -70,6 +75,7 @@ public class AcmPrivilegeServiceTest
 
     /**
      * grant multiple privilege to multiple existing participants
+     * 
      * @throws Exception
      */
     @Test

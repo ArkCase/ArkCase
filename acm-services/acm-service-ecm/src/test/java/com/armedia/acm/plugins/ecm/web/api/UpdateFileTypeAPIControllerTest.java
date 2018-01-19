@@ -1,11 +1,19 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -29,13 +37,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 /**
  * Created by riste.tutureski on 9/14/2015.
  */
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-library-ecm-plugin-test.xml"
 })
-public class UpdateFileTypeAPIControllerTest  extends EasyMockSupport
+public class UpdateFileTypeAPIControllerTest extends EasyMockSupport
 {
     private Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -174,7 +175,9 @@ public class UpdateFileTypeAPIControllerTest  extends EasyMockSupport
 
         LOG.info("Results: {}", result.getResponse().getContentAsString());
 
-        List<EcmFile> resultList = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<EcmFile>>(){});
+        List<EcmFile> resultList = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<EcmFile>>()
+        {
+        });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertNotNull(resultList);

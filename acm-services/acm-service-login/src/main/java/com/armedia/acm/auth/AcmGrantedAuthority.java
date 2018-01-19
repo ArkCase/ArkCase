@@ -19,24 +19,30 @@ public class AcmGrantedAuthority implements GrantedAuthority
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(Object o)
+    {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
 
         AcmGrantedAuthority that = (AcmGrantedAuthority) o;
 
-        if (authority != null ? !authority.equals(that.authority) : that.authority != null) return false;
+        if (authority != null ? !authority.equals(that.authority) : that.authority != null)
+            return false;
 
         return true;
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode()
+    {
         return authority != null ? authority.hashCode() : 0;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "AcmGrantedAuthority{" +
                 "authority='" + authority + '\'' +
                 '}';
