@@ -1,10 +1,10 @@
 'use strict';
 
 angular.module('organizations').controller('Organizations.ActionsController', ['$scope', '$state', '$stateParams', '$q'
-    , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService', 'Organization.LookupService'
+    , 'UtilService', 'ConfigService', 'ObjectService', 'Authentication', 'Object.LookupService'
     , 'Object.SubscriptionService', 'Organization.InfoService', 'Helper.ObjectBrowserService', 'Object.ModelService', 'Profile.UserInfoService', '$translate'
     , function ($scope, $state, $stateParams, $q
-        , Util, ConfigService, ObjectService, Authentication, ObjectLookupService, OrganizationLookupService
+        , Util, ConfigService, ObjectService, Authentication, ObjectLookupService
         , ObjectSubscriptionService, OrganizationInfoService, HelperObjectBrowserService, ObjectModelService, UserInfoService, $translate) {
 
         new HelperObjectBrowserService.Component({
@@ -20,7 +20,7 @@ angular.module('organizations').controller('Organizations.ActionsController', ['
         });
 
         var activationMode = false;
-        
+
         var onObjectInfoRetrieved = function (objectInfo) {
             $scope.restricted = objectInfo.restricted;
             $scope.objectInfo = objectInfo;
