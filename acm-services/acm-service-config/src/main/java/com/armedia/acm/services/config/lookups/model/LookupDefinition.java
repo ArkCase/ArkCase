@@ -55,11 +55,13 @@ public class LookupDefinition
         this.lookupEntriesAsJson = lookupEntriesAsJson;
     }
 
-    public Boolean getReadonly() {
+    public Boolean getReadonly()
+    {
         return readonly;
     }
 
-    public void setReadonly(Boolean readonly) {
+    public void setReadonly(Boolean readonly)
+    {
         this.readonly = readonly;
     }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   sessionCookiePathUsesTrailingSlash: set to false, so the session cookie path does not end with /.  During SSO
   implementation, the trailing slash caused some problems:
     1. Logged in user accesses 'http://server/arkcase' (no trailing slash), they will be logged out.  That is
@@ -13,14 +12,10 @@
 <Context sessionCookiePathUsesTrailingSlash="false">
     <Resources className="org.apache.catalina.webresources.StandardRoot">
         <!-- main log4j configuration, extensions can customize it -->
-        <PreResources className="org.apache.catalina.webresources.FileResourceSet"
-                      base="${user.home}/.arkcase/acm/log4j2.xml"
-                      internalPath="/"
-                      webAppMount="/WEB-INF/classes/log4j2.xml"/>
+        <PreResources className="org.apache.catalina.webresources.FileResourceSet" base="${user.home}/.arkcase/acm/log4j2.xml"
+            internalPath="/" webAppMount="/WEB-INF/classes/log4j2.xml"/>
         <!-- map $HOME/.arkcase/custom to the root of web application -->
-        <PostResources className="org.apache.catalina.webresources.DirResourceSet"
-                       base="${user.home}/.arkcase/custom/"
-                       internalPath="/"
-                       webAppMount="/"/>
+        <PostResources className="org.apache.catalina.webresources.DirResourceSet" base="${user.home}/.arkcase/custom/" internalPath="/"
+            webAppMount="/"/>
     </Resources>
 </Context>

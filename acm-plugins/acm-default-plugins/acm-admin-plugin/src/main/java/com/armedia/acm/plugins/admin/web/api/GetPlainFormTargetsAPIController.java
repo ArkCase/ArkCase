@@ -3,8 +3,7 @@
  */
 package com.armedia.acm.plugins.admin.web.api;
 
-
-import javax.servlet.http.HttpSession;
+import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFactory;
+import javax.servlet.http.HttpSession;
 
 /**
  * @author riste.tutureski
@@ -23,34 +22,37 @@ import com.armedia.acm.form.plainconfiguration.service.PlainConfigurationFormFac
  */
 @Controller
 @RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
-public class GetPlainFormTargetsAPIController {
-	
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	
-	private PlainConfigurationFormFactory plainConfigurationFormFactory;
-	
-	@RequestMapping(value="/plainform/targets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+public class GetPlainFormTargetsAPIController
+{
+
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+
+    private PlainConfigurationFormFactory plainConfigurationFormFactory;
+
+    @RequestMapping(value = "/plainform/targets", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String[] getAllPlainFormTargets(Authentication auth,
-    						  HttpSession httpSession) throws Exception
+            HttpSession httpSession) throws Exception
     {
-		if (LOG.isInfoEnabled()) 
-		{
-			LOG.info("Taking all plain form targets.");
-		}
-		
-		String[] plainForms = getPlainConfigurationFormFactory().getKeyValueTargets();
-	
-		return plainForms;
-    }
-	
-	public PlainConfigurationFormFactory getPlainConfigurationFormFactory() {
-		return plainConfigurationFormFactory;
-	}
+        if (LOG.isInfoEnabled())
+        {
+            LOG.info("Taking all plain form targets.");
+        }
 
-	public void setPlainConfigurationFormFactory(
-			PlainConfigurationFormFactory plainConfigurationFormFactory) {
-		this.plainConfigurationFormFactory = plainConfigurationFormFactory;
-	}
+        String[] plainForms = getPlainConfigurationFormFactory().getKeyValueTargets();
+
+        return plainForms;
+    }
+
+    public PlainConfigurationFormFactory getPlainConfigurationFormFactory()
+    {
+        return plainConfigurationFormFactory;
+    }
+
+    public void setPlainConfigurationFormFactory(
+            PlainConfigurationFormFactory plainConfigurationFormFactory)
+    {
+        this.plainConfigurationFormFactory = plainConfigurationFormFactory;
+    }
 
 }

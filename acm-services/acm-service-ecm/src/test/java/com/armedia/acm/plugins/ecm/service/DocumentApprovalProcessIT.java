@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import com.armedia.acm.plugins.ecm.service.impl.MockChangeObjectStatusService;
+
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.EndEvent;
 import org.activiti.bpmn.model.FlowElement;
@@ -16,7 +21,6 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.IdentityLink;
 import org.activiti.engine.task.Task;
@@ -37,11 +41,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-ecm-activiti-test.xml" } )
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-ecm-activiti-test.xml" })
 public class DocumentApprovalProcessIT
 {
     private final String processId = "acmDocumentWorkflow";
@@ -120,7 +121,8 @@ public class DocumentApprovalProcessIT
 
         assertEquals(reviewers.size(), reviews.size());
 
-        for (int a = 0; a < reviews.size(); ++a) {
+        for (int a = 0; a < reviews.size(); ++a)
+        {
             Task task = reviews.get(a);
             ts.setVariable(task.getId(), "reviewOutcome", "APPROVE");
             ts.complete(task.getId());
@@ -130,9 +132,12 @@ public class DocumentApprovalProcessIT
 
             // when all reviewers have approved, the process will be complete and the runtime service query
             // will not find it.
-            if (shouldBeComplete) {
+            if (shouldBeComplete)
+            {
                 assertNull(current);
-            } else {
+            }
+            else
+            {
                 assertFalse(current.isEnded());
             }
         }
@@ -151,20 +156,25 @@ public class DocumentApprovalProcessIT
 
         assertEquals(reviewers.size(), reviews.size());
 
-        for (int a = 0; a < reviews.size(); ++a) {
+        for (int a = 0; a < reviews.size(); ++a)
+        {
             Task task = reviews.get(a);
             assertEquals(Arrays.asList("TEST_GROUP"), findCandidateGroups(task.getId()));
             ts.setVariable(task.getId(), "reviewOutcome", "APPROVE");
             ts.complete(task.getId());
 
-            ProcessInstance current = rt.createProcessInstanceQuery().processInstanceId(piCandidateGroups.getProcessInstanceId()).singleResult();
+            ProcessInstance current = rt.createProcessInstanceQuery().processInstanceId(piCandidateGroups.getProcessInstanceId())
+                    .singleResult();
             boolean shouldBeComplete = a == reviews.size() - 1;
 
             // when all reviewers have approved, the process will be complete and the runtime service query
             // will not find it.
-            if (shouldBeComplete) {
+            if (shouldBeComplete)
+            {
                 assertNull(current);
-            } else {
+            }
+            else
+            {
                 assertFalse(current.isEnded());
             }
         }
@@ -220,8 +230,7 @@ public class DocumentApprovalProcessIT
         ts.setVariable(rework.getId(), "reworkOutcome", "CANCEL_DOCUMENT");
         ts.complete(rework.getId());
 
-        ProcessInstance piShouldBeNull =
-                rt.createProcessInstanceQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
+        ProcessInstance piShouldBeNull = rt.createProcessInstanceQuery().processInstanceId(pi.getProcessInstanceId()).singleResult();
         assertNull(piShouldBeNull);
 
         assertEquals(1, changeObjectStatusService.getTimesCalled());
@@ -322,18 +331,15 @@ public class DocumentApprovalProcessIT
 
         List<FormProperty> formProperties = ut.getFormProperties();
 
-        for ( FormProperty fp : formProperties )
+        for (FormProperty fp : formProperties)
         {
             log.debug("fp name: " + fp.getName() + "; id: " + fp.getId());
-            for ( FormValue fv : fp.getFormValues() )
+            for (FormValue fv : fp.getFormValues())
             {
                 log.debug(fv.getId() + " = " + fv.getName());
             }
         }
     }
-
-
-
 
     private ProcessInstance createWorkflowProcess(Map<String, Object> processVariables)
     {

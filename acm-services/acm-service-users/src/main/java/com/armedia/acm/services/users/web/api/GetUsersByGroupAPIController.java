@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.web.api;
 
 import com.armedia.acm.services.users.service.group.GroupService;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,20 +18,17 @@ import java.util.Base64;
 import java.util.Optional;
 
 @Controller
-@RequestMapping(value = {"/api/v1/users", "/api/latest/users"})
+@RequestMapping(value = { "/api/v1/users", "/api/latest/users" })
 public class GetUsersByGroupAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private GroupService groupService;
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/by-group/{group}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.GET, value = "/by-group/{group}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String info(Authentication auth, @PathVariable String group,
-                       @RequestParam(value = "status", required = false) String userStatus)
+            @RequestParam(value = "status", required = false) String userStatus)
             throws MuleException
     {
 

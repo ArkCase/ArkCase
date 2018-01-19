@@ -8,13 +8,13 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 
 public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransformer<Notification>
 {
@@ -116,7 +116,6 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer#isAcmObjectTypeSupported(java.lang.Class)
      */
@@ -140,7 +139,6 @@ public class NotificationToSolrTransformer implements AcmObjectToSolrDocTransfor
         additionalProperties.put("action_date_tdt", actionDate);
         additionalProperties.put("notification_link_s", notificationLink);
     }
-
 
     public NotificationDao getNotificationDao()
     {

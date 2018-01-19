@@ -10,12 +10,13 @@ import com.armedia.acm.services.costsheet.model.AcmCost;
  * @author riste.tutureski
  *
  */
-public class AcmCostDao extends AcmAbstractDao<AcmCost> {
+public class AcmCostDao extends AcmAbstractDao<AcmCost>
+{
 
-	@Override
-	protected Class<AcmCost> getPersistenceClass() 
-	{
-		return AcmCost.class;
-	}
+    @Override
+    protected Class<AcmCost> getPersistenceClass()
+    {
+        return AcmCost.class;
+    }
 
 }

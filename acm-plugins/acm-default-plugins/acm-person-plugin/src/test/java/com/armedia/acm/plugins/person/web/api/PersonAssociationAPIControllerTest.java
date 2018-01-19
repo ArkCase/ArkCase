@@ -1,10 +1,19 @@
 package com.armedia.acm.plugins.person.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -25,14 +34,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-person-plugin-test.xml" })
 public class PersonAssociationAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -129,8 +132,10 @@ public class PersonAssociationAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).contentType(MediaType.APPLICATION_JSON)
-                .principal(mockAuthentication).content(notPersonAssociationJson)).andExpect(status().isInternalServerError()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        mockMvc.perform(post("/api/latest/plugin/personAssociation").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .principal(mockAuthentication).content(notPersonAssociationJson)).andExpect(status().isInternalServerError())
+                .andExpect(content().contentType(MediaType.TEXT_PLAIN));
 
         verifyAll();
 

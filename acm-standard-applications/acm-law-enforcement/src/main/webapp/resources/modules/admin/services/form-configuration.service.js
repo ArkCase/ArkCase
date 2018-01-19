@@ -9,10 +9,10 @@
  *
  * The Admin.FormConfigService provides Plain Forms Config REST calls functionality
  */
-angular.module('admin').service('Admin.FormConfigService', function ($http) {
+angular.module('admin').service('Admin.FormConfigService', function($http) {
     return ({
-        retrievePlainForms: retrievePlainForms,
-        deletePlainForm: deletePlainForm
+        retrievePlainForms : retrievePlainForms,
+        deletePlainForm : deletePlainForm
     });
 
     /**
@@ -27,8 +27,8 @@ angular.module('admin').service('Admin.FormConfigService', function ($http) {
      */
     function retrievePlainForms() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/admin/plainforms"
+            method : "GET",
+            url : "api/latest/plugin/admin/plainforms"
         });
     }
 
@@ -48,8 +48,8 @@ angular.module('admin').service('Admin.FormConfigService', function ($http) {
     function deletePlainForm(key, target) {
         var url = 'api/latest/plugin/admin/plainforms/' + key + "/" + target;
         return $http({
-            method: "DELETE",
-            url: url
+            method : "DELETE",
+            url : url
         });
     }
 });

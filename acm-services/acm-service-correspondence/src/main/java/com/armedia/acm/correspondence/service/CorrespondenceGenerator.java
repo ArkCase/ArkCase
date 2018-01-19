@@ -27,9 +27,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.Format;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by armdev on 12/15/14.
@@ -163,7 +166,8 @@ public class CorrespondenceGenerator
             // <FIELD_ID_NAME> is the name that will not have "_" in the name
             // <ACTION> can have two values: PLUS or MINUS (can be any case sensitive)
             // <AMOUNT> any positive integer number
-            // <UNIT> can have these values: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, YEARS (can be any case sensitive)
+            // <UNIT> can have these values: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, YEARS (can be any case
+            // sensitive)
             String id = mergeField.getFieldId();
             String[] idArray = id.split("_");
             String action = idArray.length > 1 ? idArray[1] : "";
@@ -176,9 +180,9 @@ public class CorrespondenceGenerator
                 // Maybe this is not necessary, but just to be sure that there is a PLUS or MINUS
                 amount = Math.abs(amount);
             }
-            else if ("MINUS".equalsIgnoreCase(action)  && unitInInt != 0)
+            else if ("MINUS".equalsIgnoreCase(action) && unitInInt != 0)
             {
-                amount = Math.abs(amount)*(-1);
+                amount = Math.abs(amount) * (-1);
             }
             else
             {
@@ -215,18 +219,18 @@ public class CorrespondenceGenerator
         {
             switch (str.toUpperCase())
             {
-                case "MILLISECONDS":
-                    return Calendar.MILLISECOND;
-                case "SECONDS":
-                    return Calendar.SECOND;
-                case "MINUTES":
-                    return Calendar.MINUTE;
-                case "HOURS":
-                    return Calendar.HOUR;
-                case "DAYS":
-                    return Calendar.DATE;
-                case "YEARS":
-                    return Calendar.YEAR;
+            case "MILLISECONDS":
+                return Calendar.MILLISECOND;
+            case "SECONDS":
+                return Calendar.SECOND;
+            case "MINUTES":
+                return Calendar.MINUTE;
+            case "HOURS":
+                return Calendar.HOUR;
+            case "DAYS":
+                return Calendar.DATE;
+            case "YEARS":
+                return Calendar.YEAR;
             }
         }
 

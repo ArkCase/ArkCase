@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.service.AcmFileTypesService;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,7 +52,8 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService
                 }
             }
             return fileTypes;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get file types from properties files", e);
             throw new AcmFileTypesException("Can't get file types from properties files", e);
@@ -91,7 +93,8 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService
                 }
             }
             return forms;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get forms info from properties files", e);
             throw new AcmFileTypesException("Can't get forms info from properties files", e);
@@ -121,20 +124,19 @@ public class AcmFileTypesServiceImpl implements AcmFileTypesService
 
             }
             return forms;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get forms info from properties files", e);
             throw new AcmFileTypesException("Can't get forms info from properties files", e);
         }
     }
 
-
     private boolean isFormProperty(String propName, Properties props)
     {
-        boolean result =
-                props.containsKey(String.format(PROP_FORM_NAME_TPL, propName))
-                        && props.containsKey(String.format(PROP_FORM_MODE_TPL, propName))
-                        && props.containsKey(String.format(PROP_FORM_TYPE_TPL, propName));
+        boolean result = props.containsKey(String.format(PROP_FORM_NAME_TPL, propName))
+                && props.containsKey(String.format(PROP_FORM_MODE_TPL, propName))
+                && props.containsKey(String.format(PROP_FORM_TYPE_TPL, propName));
         return result;
     }
 

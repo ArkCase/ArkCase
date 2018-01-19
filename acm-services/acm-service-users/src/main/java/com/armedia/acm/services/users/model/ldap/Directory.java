@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.model.ldap;
 import org.springframework.ldap.core.DirContextAdapter;
 
 import javax.naming.directory.BasicAttribute;
+
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,9 +12,9 @@ import java.util.function.Function;
 public enum Directory
 {
     activedirectory("yyyyMMddHHmmss.0VV", MapperUtils.convertFileTimeTimestampToDate,
-            MapperUtils.activeDirectoryPasswordToAttribute),
-    openldap("yyyyMMddHHmmssVV", MapperUtils.calculatePasswordExpirationDateByShadowAccount,
-            MapperUtils.openLdapPasswordToAttribute);
+            MapperUtils.activeDirectoryPasswordToAttribute), openldap("yyyyMMddHHmmssVV",
+                    MapperUtils.calculatePasswordExpirationDateByShadowAccount,
+                    MapperUtils.openLdapPasswordToAttribute);
 
     private final String datePattern;
     private final Function<DirContextAdapter, LocalDate> timestampToLocalDate;
@@ -21,7 +22,7 @@ public enum Directory
     private DateTimeFormatter dateTimeFormatter;
 
     Directory(String datePattern, Function<DirContextAdapter, LocalDate> timestampToLocalDate,
-              Function<String, BasicAttribute> passwordToAttribute)
+            Function<String, BasicAttribute> passwordToAttribute)
     {
         this.datePattern = datePattern;
         this.timestampToLocalDate = timestampToLocalDate;

@@ -8,6 +8,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -55,7 +56,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             {
                 Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
                 applicationRolesProperties = reloaded;
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 LOG.info("Could not read new properties; keeping the old properties.");
             }
@@ -71,7 +73,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             {
                 Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
                 applicationRolesToGroupsProperties = reloaded;
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 LOG.info("Could not read new properties; keeping the old properties.");
             }
@@ -89,7 +92,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         {
             Properties roleProperties = getApplicationRolesProperties();
             applicationRoles = Arrays.asList(roleProperties.getProperty("application.roles").split(","));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot read application roles from configuration.", e);
         }
@@ -112,7 +116,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
                     true);
             success = true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot save roles to groups mapping.", e);
             success = false;
@@ -128,7 +133,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
-                                                 String currentAssignee)
+            String currentAssignee)
     {
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = new HashSet<>();
@@ -212,7 +217,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-                                       Authentication auth) throws MuleException
+            Authentication auth) throws MuleException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
         String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
@@ -254,7 +259,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
                 if (i == groupNames.size() - 1)
                 {
                     queryGroupNames += "\"" + groupNames.get(i) + "\"";
-                } else
+                }
+                else
                 {
                     queryGroupNames += "\"" + groupNames.get(i) + "\"" + " OR ";
                 }

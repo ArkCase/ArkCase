@@ -14,34 +14,32 @@
  *
  * The Admin.BrandingCustomCss provides Branding logo calls functionality
  */
-angular.module('admin').service('Admin.BrandingLogoService', ['$http', 'Upload',
-    function (http, Upload) {
-        return ({
-            uploadLogo: uploadLogo,
+angular.module('admin').service('Admin.BrandingLogoService', [ '$http', 'Upload', function(http, Upload) {
+    return ({
+        uploadLogo : uploadLogo,
+    });
+
+    /**
+     * @ngdoc method
+     * @name uploadLogo
+     * @methodOf admin.service:Admin.BrandingLogoService
+     *
+     * @description
+     * Performs uploads logo files.
+     *
+     * @param {array} files files to be uploaded
+     *
+     * @param {array} formNames corresponding form names for each file
+     *
+     * @returns {HttpPromise} Future info about file upload progress
+     */
+    function uploadLogo(files, formNames) {
+        return Upload.upload({
+            url : 'api/latest/plugin/admin/branding/customlogos',
+            method : 'POST',
+            fileFormDataName : formNames,
+            file : files
         });
-
-
-        /**
-         * @ngdoc method
-         * @name uploadLogo
-         * @methodOf admin.service:Admin.BrandingLogoService
-         *
-         * @description
-         * Performs uploads logo files.
-         *
-         * @param {array} files files to be uploaded
-         *
-         * @param {array} formNames corresponding form names for each file
-         *
-         * @returns {HttpPromise} Future info about file upload progress
-         */
-        function uploadLogo(files, formNames) {
-            return Upload.upload({
-                url: 'api/latest/plugin/admin/branding/customlogos',
-                method: 'POST',
-                fileFormDataName: formNames,
-                file: files
-            });
-        };
-    }])
-;
+    }
+    ;
+} ]);

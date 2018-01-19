@@ -3,6 +3,10 @@
  */
 package com.armedi.acm.services.timesheet.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
@@ -10,6 +14,7 @@ import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetServiceImpl;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -28,10 +33,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author riste.tutureski
@@ -61,7 +62,7 @@ public class TimesheetServiceTest extends EasyMockSupport
         mockAcmTimesheetDao = createMock(AcmTimesheetDao.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        submissionStatusesMap = new HashMap<String, String>();
+        submissionStatusesMap = new HashMap<>();
         submissionStatusesMap.put("Save", "DRAFT");
         submissionStatusesMap.put("Submit", "IN_APPROVAL");
 
@@ -69,7 +70,6 @@ public class TimesheetServiceTest extends EasyMockSupport
         timesheetService.setExecuteSolrQuery(mockExecuteSolrQuery);
         timesheetService.setSubmissionStatusesMap(submissionStatusesMap);
     }
-
 
     @Test
     public void saveTimesheetTest() throws Exception
@@ -95,7 +95,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<AcmTimesheet>();
+        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
 
@@ -132,7 +132,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<AcmTimesheet>();
+        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
 
@@ -170,7 +170,7 @@ public class TimesheetServiceTest extends EasyMockSupport
 
         timesheet.setTimes(Arrays.asList(time1, time2));
 
-        Capture<AcmTimesheet> timesheetCapture = new Capture<AcmTimesheet>();
+        Capture<AcmTimesheet> timesheetCapture = new Capture<>();
 
         expect(mockAcmTimesheetDao.save(capture(timesheetCapture))).andReturn(timesheet);
 
@@ -228,7 +228,8 @@ public class TimesheetServiceTest extends EasyMockSupport
         String searchQuery = "*";
         String solrQuery = "object_type_s:" + objectType + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, "")).andReturn(expected);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+                .andReturn(expected);
 
         replayAll();
 
@@ -255,7 +256,8 @@ public class TimesheetServiceTest extends EasyMockSupport
         String searchQuery = "*";
         String solrQuery = "object_type_s:" + objectType + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, "")).andReturn(expected);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+                .andReturn(expected);
 
         replayAll();
 

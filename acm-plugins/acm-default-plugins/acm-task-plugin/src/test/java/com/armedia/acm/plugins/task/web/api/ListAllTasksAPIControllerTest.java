@@ -1,11 +1,18 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,13 +31,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 
 /**
  * Created by marjan.stefanoski on 8/20/2014.
@@ -78,7 +78,6 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
-
 
         expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS)).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
@@ -128,7 +127,6 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
 
-
         expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS)).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
 
@@ -176,7 +174,6 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         userTask.setTaskId(500L);
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
-
 
         expect(mockTaskDao.dueSpecificDateTasks(NumberOfDays.ONE_DAY)).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
@@ -226,7 +223,6 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
 
-
         expect(mockTaskDao.pastDueTasks()).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
 
@@ -275,7 +271,6 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         userTask.setDueDate(new Date());
         String ipAddress = "ipAddress";
 
-
         expect(mockTaskDao.allTasks()).andReturn(Arrays.asList(userTask));
         mockTaskEventPublisher.publishTaskEvent(anyObject(AcmApplicationTaskEvent.class));
 
@@ -313,5 +308,3 @@ public class ListAllTasksAPIControllerTest extends EasyMockSupport
         assertEquals(userTask.getTaskId(), found.getTaskId());
     }
 }
-
-

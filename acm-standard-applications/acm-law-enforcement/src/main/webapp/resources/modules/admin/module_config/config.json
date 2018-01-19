@@ -600,21 +600,6 @@
           "headerCellFilter": "translate"
         },
         {
-          "name": "title",
-          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.title",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "parent",
-          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.parent",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "assignee",
-          "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.assignee",
-          "headerCellFilter": "translate"
-        },
-        {
           "name": "modified_date_tdt",
           "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
           "headerCellFilter": "translate",
@@ -884,7 +869,6 @@
       ]
     }
   ],
-
   "tree": {
     "pageSize": 32,
     "filters": false,

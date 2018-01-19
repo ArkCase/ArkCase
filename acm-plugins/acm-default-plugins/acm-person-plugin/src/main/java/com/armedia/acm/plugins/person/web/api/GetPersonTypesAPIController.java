@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.person.web.api;
 
-
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
+
 import org.apache.commons.lang.StringUtils;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -14,18 +14,15 @@ import java.util.List;
 import java.util.Properties;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/person", "/api/latest/plugin/person"})
-public class GetPersonTypesAPIController {
+@RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
+public class GetPersonTypesAPIController
+{
 
     private Properties personProperties;
 
-    @RequestMapping(
-            value = "types",
-            method = RequestMethod.GET,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    List<String> getPersonTypes() throws AcmListObjectsFailedException {
+    @RequestMapping(value = "types", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<String> getPersonTypes() throws AcmListObjectsFailedException
+    {
 
         String commaSeparated = personProperties.getProperty("person.types");
         if (StringUtils.isEmpty(commaSeparated))
@@ -36,7 +33,8 @@ public class GetPersonTypesAPIController {
 
     }
 
-    public void setPersonProperties(Properties personProperties) {
+    public void setPersonProperties(Properties personProperties)
+    {
         this.personProperties = personProperties;
     }
 }

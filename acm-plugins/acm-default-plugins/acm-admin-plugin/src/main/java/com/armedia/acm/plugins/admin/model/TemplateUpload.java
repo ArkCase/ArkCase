@@ -1,12 +1,10 @@
 package com.armedia.acm.plugins.admin.model;
 
-import java.nio.file.attribute.FileTime;
-import java.util.Date;
-
 /**
  * Created by manoj.dhungana on 12/4/2014.
  */
-public class TemplateUpload {
+public class TemplateUpload
+{
     private String name;
     private String path;
     private String creator;
@@ -14,30 +12,35 @@ public class TemplateUpload {
     private String modified;
     private long id;
 
-    public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
-    public void setCreator(String creator) {
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
-    public String getCreated() {
+    public String getCreated()
+    {
         return created;
     }
 
-    public void setCreated(String created) {
+    public void setCreated(String created)
+    {
         this.created = created;
     }
 
-    public long getId() {
+    public long getId()
+    {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(long id)
+    {
         this.id = id;
     }
-
 
     public String getName()
     {
@@ -59,11 +62,13 @@ public class TemplateUpload {
         this.path = path;
     }
 
-    public String getModified() {
+    public String getModified()
+    {
         return modified;
     }
 
-    public void setModified(String modified) {
+    public void setModified(String modified)
+    {
         this.modified = modified;
     }
 

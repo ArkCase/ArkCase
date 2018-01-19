@@ -14,15 +14,15 @@ public class ConfigurationFileEventListener implements ApplicationListener<Abstr
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent abstractConfigurationFileEvent)
     {
-        if ( abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent )
+        if (abstractConfigurationFileEvent instanceof ConfigurationFileAddedEvent)
         {
             addedCount++;
         }
-        else if ( abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent )
+        else if (abstractConfigurationFileEvent instanceof ConfigurationFileChangedEvent)
         {
             changedCount++;
         }
-        else if ( abstractConfigurationFileEvent instanceof ConfigurationFileDeletedEvent )
+        else if (abstractConfigurationFileEvent instanceof ConfigurationFileDeletedEvent)
         {
             removedCount++;
         }

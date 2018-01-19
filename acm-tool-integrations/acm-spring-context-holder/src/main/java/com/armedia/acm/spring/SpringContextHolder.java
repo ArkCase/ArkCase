@@ -7,6 +7,7 @@ import com.armedia.acm.files.ConfigurationFileDeletedEvent;
 import com.armedia.acm.spring.events.ContextAddedEvent;
 import com.armedia.acm.spring.events.ContextRemovedEvent;
 import com.armedia.acm.spring.exceptions.AcmContextHolderException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -69,7 +70,8 @@ public class SpringContextHolder
                 {
                     removeContext(eventFile.getName());
                     addContextFromFile(eventFile);
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not add context from file: " + e.getMessage(), e);
                 }
@@ -80,7 +82,8 @@ public class SpringContextHolder
                 {
                     removeContext(eventFile.getParentFile().getName());
                     addContextFromFolder(eventFile.getParentFile());
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not add context from folder: " + e.getMessage(), e);
                 }
@@ -110,7 +113,8 @@ public class SpringContextHolder
                 {
                     addContextFromFile(eventFile);
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 log.error("Could not add context from file: " + e.getMessage(), e);
             }
@@ -173,14 +177,14 @@ public class SpringContextHolder
 
         List<String> configFiles = Files.walk(configFile.toPath(), 1)
                 .filter(p -> p.toFile().isFile() && p.toFile().getName().startsWith("spring-") && p.toFile().getName().endsWith("xml"))
-                .map(p ->
-                {
+                .map(p -> {
                     try
                     {
                         // the canonical path will be an absolute path. But it will start with a / on Linux,
                         // which Spring will treat as a relative path. Must start with file: to force an absolute path.
                         return "file:" + p.toFile().getCanonicalPath();
-                    } catch (IOException e)
+                    }
+                    catch (IOException e)
                     {
                         throw new UncheckedIOException(e);
                     }
@@ -214,7 +218,8 @@ public class SpringContextHolder
             AbstractApplicationContext child = new FileSystemXmlApplicationContext(filesPaths, true, toplevelContext);
             childContextMap.put(name, child);
             applicationEventPublisher.publishEvent(new ContextAddedEvent(this, name));
-        } catch (BeansException be)
+        }
+        catch (BeansException be)
         {
             log.error("Could not load Spring context from files '" + Arrays.toString(filesPaths) + "' due to " + "error '" + be.getMessage()
                     + "'", be);
@@ -252,7 +257,6 @@ public class SpringContextHolder
         {
             return toplevelContext.getBean(name, type);
         }
-
 
         T retval = null;
         for (Map.Entry<String, AbstractApplicationContext> c : childContextMap.entrySet())

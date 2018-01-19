@@ -28,8 +28,7 @@ public class AcmOutlookFolderCreator
 {
 
     @Id
-    @TableGenerator(name = "outlook_folder_creator_gen", table = "acm_outlook_folder_creator_id", pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num", pkColumnValue = "acm_outlook_folder_creator", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "outlook_folder_creator_gen", table = "acm_outlook_folder_creator_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_outlook_folder_creator", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "outlook_folder_creator_gen")
     @Column(name = "cm_outlook_folder_creator_id")
     private Long id;
@@ -123,7 +122,6 @@ public class AcmOutlookFolderCreator
 
     /*
      * (non-Javadoc)
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -140,7 +138,6 @@ public class AcmOutlookFolderCreator
 
     /*
      * (non-Javadoc)
-     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -165,7 +162,8 @@ public class AcmOutlookFolderCreator
             {
                 return false;
             }
-        } else if (!id.equals(other.id))
+        }
+        else if (!id.equals(other.id))
         {
             return false;
         }
@@ -175,7 +173,8 @@ public class AcmOutlookFolderCreator
             {
                 return false;
             }
-        } else if (!outlookObjectReferences.equals(other.outlookObjectReferences))
+        }
+        else if (!outlookObjectReferences.equals(other.outlookObjectReferences))
         {
             return false;
         }
@@ -185,7 +184,8 @@ public class AcmOutlookFolderCreator
             {
                 return false;
             }
-        } else if (!systemEmailAddress.equals(other.systemEmailAddress))
+        }
+        else if (!systemEmailAddress.equals(other.systemEmailAddress))
         {
             return false;
         }
@@ -195,7 +195,8 @@ public class AcmOutlookFolderCreator
             {
                 return false;
             }
-        } else if (!systemPassword.equals(other.systemPassword))
+        }
+        else if (!systemPassword.equals(other.systemPassword))
         {
             return false;
         }

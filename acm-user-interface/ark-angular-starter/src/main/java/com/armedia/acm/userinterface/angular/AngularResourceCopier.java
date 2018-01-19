@@ -13,6 +13,7 @@ import org.springframework.web.context.support.ServletContextResourcePatternReso
 import org.zeroturnaround.exec.stream.slf4j.Slf4jDebugOutputStream;
 
 import javax.servlet.ServletContext;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -22,7 +23,7 @@ import java.util.List;
 
 /**
  * Copy all angular resources from the base ArkCase WAR file and also from any ArkCase extension jars, run the
- * Angular front-end build tools, and copy the assembled application into the deployment folder.  Before copying any
+ * Angular front-end build tools, and copy the assembled application into the deployment folder. Before copying any
  * files to a deployment folder, remove current contents of that folder.
  * <p>
  * The ArkCase WAR file should configure the deployment folder in a Tomcat context resources element, such that
@@ -32,7 +33,7 @@ import java.util.List;
  * system path.
  * <p>
  * The resources to be copied from the war file and extension jars; the front-end commands to be run (e.g. npm,
- * bower, grunt); and the resources to be copied to the deployment folder are configured in Spring.  All resources to
+ * bower, grunt); and the resources to be copied to the deployment folder are configured in Spring. All resources to
  * be copied from the war file and extension jars must be within a top-level resources folder.
  */
 public class AngularResourceCopier implements ServletContextAware
@@ -47,7 +48,6 @@ public class AngularResourceCopier implements ServletContextAware
     private List<String> assembledFilesToCopyToDeployment;
     private List<String> frontEndCommandsToBeExecuted;
     private List<String> oldDeployFoldersToBeRemovedBeforeBuild;
-
 
     @Override
     public void setServletContext(ServletContext servletContext)
@@ -110,11 +110,11 @@ public class AngularResourceCopier implements ServletContextAware
                 copyWebappFile(tmpDir, deployFolder, assembledFile);
             }
 
-
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not copy Angular resources", e);
-            // make sure the webapp does not start... if it did start it wouldn't work right.  So better to make sure
+            // make sure the webapp does not start... if it did start it wouldn't work right. So better to make sure
             // it doesn't deploy.
             throw new RuntimeException("Could not assemble Angular webapp: " + e.getMessage(), e);
         }
@@ -177,7 +177,8 @@ public class AngularResourceCopier implements ServletContextAware
             executor.setStreamHandler(new PumpStreamHandler(debugOutputStream));
             int exitCode = executor.execute(command);
             log.debug("done with {}: exit code {}", commandLine, exitCode);
-        } finally
+        }
+        finally
         {
             if (debugOutputStream != null)
             {
@@ -191,7 +192,7 @@ public class AngularResourceCopier implements ServletContextAware
         File tmpDir = new File(getTempFolderPath());
 
         // probably safer to start fresh every time, but npm takes minutes to run :-(
-        //FileSystemUtils.deleteRecursively(tmpDir);
+        // FileSystemUtils.deleteRecursively(tmpDir);
         createFolderStructure(tmpDir);
         return tmpDir;
     }
@@ -205,7 +206,6 @@ public class AngularResourceCopier implements ServletContextAware
         copyResources(resolver, rootPath, tmpDir, moduleRoot, moduleRoot);
     }
 
-
     public void copyResources(
             ServletContextResourcePatternResolver resolver,
             String rootPath,
@@ -217,7 +217,8 @@ public class AngularResourceCopier implements ServletContextAware
         try
         {
             resources = resolver.getResources(AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot + "/**");
-        } catch (FileNotFoundException fe)
+        }
+        catch (FileNotFoundException fe)
         {
             log.debug("Not copying resources under {}, since no such resources exist.",
                     AngularResourceConstants.WAR_ANGULAR_RESOURCE_PATH + "/" + moduleRoot);
@@ -227,7 +228,8 @@ public class AngularResourceCopier implements ServletContextAware
         copyFilesFromWebapp(rootPath, tmpDir, resources, moduleRoot, targetRoot);
     }
 
-    public void copyFilesFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot) throws IOException
+    public void copyFilesFromWebapp(String rootPath, File tmpDir, Resource[] resources, String moduleRoot, String targetRoot)
+            throws IOException
     {
         File targetFile;
 
@@ -260,7 +262,8 @@ public class AngularResourceCopier implements ServletContextAware
             {
                 targetFile = new File(tmpDir, webappPath);
             }
-        } else if (r.getFile().isFile())
+        }
+        else if (r.getFile().isFile())
         {
             targetFile = determineTargetFile(rootPath, tmpDir, r, moduleRoot, targetRoot);
         }

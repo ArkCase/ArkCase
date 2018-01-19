@@ -1,26 +1,23 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
-import com.armedia.acm.plugins.casefile.model.CaseEvent;
-import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFolderDeclareRequestEvent;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
-import org.easymock.Capture;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
 
 public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
 {
@@ -52,12 +49,13 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
 
         AcmContainer acmContainer = new AcmContainer();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY)).andReturn(Boolean.FALSE);
+        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
+                .andReturn(Boolean.FALSE);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         replayAll();
-        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList,acmContainer,mockAuthentication);
+        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList, acmContainer, mockAuthentication);
         unit.onApplicationEvent(event);
 
         verifyAll();
@@ -77,7 +75,8 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
         AcmFolder acmFolder = new AcmFolder();
         acmFolder.setId(234L);
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
+                .andReturn(Boolean.TRUE);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
         expect(mockAcmFolderService.findById(acmCmisObjectList.getFolderId())).andReturn(acmFolder);
@@ -88,13 +87,11 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
                 eq(acmContainer.getContainerObjectTitle()));
         replayAll();
 
-
-        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList,acmContainer,mockAuthentication);
+        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList, acmContainer, mockAuthentication);
         event.setSucceeded(true);
         event.setUserId("user");
         event.setEventDate(new Date());
         unit.onApplicationEvent(event);
-
 
         verifyAll();
     }
@@ -109,18 +106,18 @@ public class AcmFolderDeclareRequestListenerTest extends EasyMockSupport
 
         AcmContainer acmContainer = new AcmContainer();
 
-        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY)).andReturn(Boolean.TRUE);
+        expect(mockService.checkIntegrationEnabled(AlfrescoRmaPluginConstants.FOLDER_DECLARE_REQUEST_INTEGRATION_KEY))
+                .andReturn(Boolean.TRUE);
         expect(mockAuthentication.getDetails()).andReturn("details").anyTimes();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
 
         replayAll();
 
-        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList,acmContainer,mockAuthentication);
+        EcmFolderDeclareRequestEvent event = new EcmFolderDeclareRequestEvent(acmCmisObjectList, acmContainer, mockAuthentication);
         event.setSucceeded(false);
         event.setUserId("user");
         event.setEventDate(new Date());
         unit.onApplicationEvent(event);
-
 
         verifyAll();
     }

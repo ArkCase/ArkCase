@@ -11,7 +11,8 @@ package org.mule.module.cmis;
 /**
  * Enum holding all the possible navigation options
  */
-public enum NavigationOptions {
+public enum NavigationOptions
+{
     /**
      * Returns the parent Folder
      */
@@ -27,5 +28,5 @@ public enum NavigationOptions {
     /**
      * Returns the folder tree starting with this folder.
      */
-    TREE;
+    TREE
 }

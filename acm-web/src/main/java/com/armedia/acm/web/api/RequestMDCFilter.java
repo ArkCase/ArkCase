@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Request filter that sets the RequestId, Remote address and User Id in {@link MDC}. Created by Bojan Milenkoski on 28.1.2016.
+ * Request filter that sets the RequestId, Remote address and User Id in {@link MDC}. Created by Bojan Milenkoski on
+ * 28.1.2016.
  */
 public class RequestMDCFilter implements Filter
 {

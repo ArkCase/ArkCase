@@ -3,10 +3,9 @@ package com.armedia.acm.objectonverter.adapter;
 import com.armedia.acm.objectonverter.DateFormats;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class LocalDateFrevvoAdapter extends XmlAdapter<String, LocalDate>
 {
