@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<namespace xmlns="http://www.mulesoft.org/schema/mule/tooling.attributes" xmlns:mule="http://www.mulesoft.org/schema/mule/core"
-    prefix="cmis" url="http://www.mulesoft.org/schema/mule/cmis">
+<namespace xmlns="http://www.mulesoft.org/schema/mule/tooling.attributes" prefix="cmis" url="http://www.mulesoft.org/schema/mule/cmis">
     <global-cloud-connector metaData="static" connectivityTesting="on"
         extends="http://www.mulesoft.org/schema/mule/cmis/abstractCmisConnectorGeneric" abstract="true" image="" localId="parentConfig"
         icon="" description="" caption="CMIS"></global-cloud-connector>

@@ -646,6 +646,7 @@
                     "edit": "Edite a Configuração do CMIS"
                 },
                 "dialog": {
+                    "testConnection": "pt_Test Connection",
                     "cancel": "Cancelar",
                     "ok": "Está bem"
                 },
@@ -673,10 +674,6 @@
                 "useAlfrescoExtension": {
                     "label": "Use Alfresco Extension",
                     "placeholder": "Use Alfresco Extension"
-                },
-                "endpoint": {
-                    "label": "Ponto final",
-                    "placeholder": "Ponto final"
                 },
                 "maxIdle": {
                     "label": "Idle máximo",
@@ -710,7 +707,7 @@
                     "label": "Id. Do Repositório",
                     "placeholder": "Id. Do Repositório"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "Estado de versão",
                     "placeholder": "Estado de versão"
                 }

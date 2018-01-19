@@ -656,6 +656,7 @@
                     "edit": "Edit CMIS Configuration"
                 },
                 "dialog": {
+                    "testConnection": "Test Connection",
                     "cancel": "Cancel",
                     "ok": "OK"
                 },
@@ -683,10 +684,6 @@
                 "useAlfrescoExtension": {
                     "label": "Use Alfresco Extension",
                     "placeholder": "Use Alfresco Extension"
-                },
-                "endpoint": {
-                    "label": "Endpoint",
-                    "placeholder": "Endpoint"
                 },
                 "maxIdle": {
                     "label": "Maximum Idle",
@@ -720,7 +717,7 @@
                     "label": "Repository Id",
                     "placeholder": "Repository Id"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "Versioning State",
                     "placeholder": "Versioning State"
                 }
@@ -737,7 +734,8 @@
                 "insert.success": "Successfully created new configuration row.",
                 "insert.error": "Error creating new configuration row.",
                 "update.success": "Successfully updated configuration row.",
-                "update.error": "Error updating configuration row."
+                "update.error": "Error updating configuration row.",
+                "test.conection.success": "Successfully connected."
             }
         }
     },

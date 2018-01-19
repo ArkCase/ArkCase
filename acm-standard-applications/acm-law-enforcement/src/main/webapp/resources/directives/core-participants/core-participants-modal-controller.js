@@ -30,7 +30,8 @@ angular
 
                                 if ($scope.participant.participantType == "assignee" || $scope.participant.participantType == "owner") {
                                     params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-                                    params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID &fq="groups_id_ss": ' + $scope.owningGroup;
+                                    params.filter = 'fq="object_type_s": USER &fq="status_lcs": VALID &fq="groups_id_ss": '
+                                            + $scope.owningGroup;
                                     params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
                                 } else if ($scope.participant.participantType != "owning group") {
                                     params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
