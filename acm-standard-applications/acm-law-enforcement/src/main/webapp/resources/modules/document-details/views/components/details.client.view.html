@@ -80,7 +80,7 @@
                         <label translate>documentDetails.comp.details.label.created</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.mediaCreated"
+                               value="{{details.verMediaCreated | date : locale.DATETIME_FORMATS.short}}"
                                ng-readonly="true">
                     </div>
 
@@ -89,7 +89,7 @@
                         <label translate>documentDetails.comp.details.label.modified</label>
                         <input class="form-control"
                                type="text"
-                               ng-model="details.modified"
+                               value="{{details.verModified | date : locale.DATETIME_FORMATS.short}}"
                                ng-readonly="true">
                     </div>
 
@@ -187,7 +187,8 @@
             <div class="row">
                 <div class="col-sm-12">
                     <button class="btn btn-primary col-md-4 col-xs-12" ng-click="save()" ng-disabled="saveButton.disabled">
-                        <span translate="" class="ng-scope">{{saveButton.label}}</span>
+                        <span translate="" class="ng-scope">{{saveInProgress? "documentDetails.comp.details.label.button.wait" : "documentDetails.comp.details.label.button.save"}}</span>
+
                     </button>
                 </div>
             </div>
