@@ -48,7 +48,7 @@
         <sql>
             CREATE TABLE ParticipantsAssigneeWithNoAccess (cm_participant_id bigint);
 
-            INSERT INTO ParticipantsOwnerWithNoAccess (cm_participant_id)
+            INSERT INTO ParticipantsAssigneeWithNoAccess (cm_participant_id)
             SELECT p.cm_participant_id FROM acm_participant p 
             LEFT JOIN acm_participant p1 ON p.cm_object_type=p1.cm_object_type AND p.cm_object_id=p1.cm_object_id AND p.cm_participant_ldap_id = p1.cm_participant_ldap_id
             WHERE p.cm_participant_type='assignee' AND p1.cm_participant_type='owner';

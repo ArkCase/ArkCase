@@ -27,7 +27,8 @@
     <bean id="acmFolderDao" class="com.armedia.acm.plugins.ecm.dao.AcmFolderDao"/>
     
     <bean id="fileParticipantsThreadPoolTaskExecutor" class="com.armedia.acm.web.api.MDCThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="10"/>
+        <property name="corePoolSize" value="5"/>
+        <property name="threadPriority" value="1"/>
         <property name="waitForTasksToCompleteOnShutdown" value="true"/>
     </bean>
 
