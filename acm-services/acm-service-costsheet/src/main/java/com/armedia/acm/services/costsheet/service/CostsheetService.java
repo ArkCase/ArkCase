@@ -4,6 +4,7 @@
 package com.armedia.acm.services.costsheet.service;
 
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.List;
@@ -25,9 +26,11 @@ public interface CostsheetService
 
     public List<AcmCostsheet> getByObjectIdAndType(Long objectId, String objectType, int startRow, int maxRows, String sortParams);
 
-    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String searchQuery, String userId);
+    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams,
+            String searchQuery, String userId);
 
-    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams, String userId);
+    public String getObjectsFromSolr(String objectType, Authentication authentication, int startRow, int maxRows, String sortParams,
+            String userId);
 
     public boolean checkWorkflowStartup(String type);
 

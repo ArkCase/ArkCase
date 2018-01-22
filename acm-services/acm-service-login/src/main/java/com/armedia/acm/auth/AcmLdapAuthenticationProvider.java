@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -36,8 +37,7 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
     {
         String principal = StringUtils.substringBeforeLast(authentication.getName(), "@");
 
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials());
+        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(principal, authentication.getCredentials());
 
         DirContextOperations dirContextOperations = super.doAuthentication(token);
 

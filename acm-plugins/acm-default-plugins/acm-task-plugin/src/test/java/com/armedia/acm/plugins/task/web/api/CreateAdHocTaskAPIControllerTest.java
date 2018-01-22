@@ -1,5 +1,15 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -8,6 +18,7 @@ import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -30,15 +41,8 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Date;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml" })
 public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -111,7 +115,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         expect(mockTaskDao.createAdHocTask(capture(taskSentToDao))).andReturn(found);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, "")).andReturn(solrResponse).atLeastOnce();
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
+                .andReturn(solrResponse).atLeastOnce();
 
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
@@ -120,7 +125,8 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         replayAll();
 
-        MvcResult result = mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
+        MvcResult result = mockMvc.perform(post("/api/v1/plugin/task/adHocTask")
+                .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
                 .principal(mockAuthentication).contentType(MediaType.APPLICATION_JSON).content(inJson)).andReturn();
 
         verifyAll();
@@ -169,7 +175,7 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         expect(mockExecuteSolrQuery
                 .getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 10, ""))
-                .andThrow(new DefaultMuleException("test Exception"));
+                        .andThrow(new DefaultMuleException("test Exception"));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
@@ -180,9 +186,12 @@ public class CreateAdHocTaskAPIControllerTest extends EasyMockSupport
 
         try
         {
-            mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession).principal(mockAuthentication)
-                    .contentType(MediaType.APPLICATION_JSON).content(inJson)).andExpect(status().isBadRequest()).andExpect(content().contentType(MediaType.TEXT_PLAIN));
-        } catch (Exception e)
+            mockMvc.perform(post("/api/v1/plugin/task/adHocTask").accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                    .session(mockHttpSession).principal(mockAuthentication)
+                    .contentType(MediaType.APPLICATION_JSON).content(inJson)).andExpect(status().isBadRequest())
+                    .andExpect(content().contentType(MediaType.TEXT_PLAIN));
+        }
+        catch (Exception e)
         {
             exception = e;
         }

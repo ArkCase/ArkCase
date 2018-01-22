@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.dashboard.model.Dashboard;
 import com.armedia.acm.plugins.dashboard.model.DashboardConstants;
 import com.armedia.acm.plugins.dashboard.model.DashboardDto;
@@ -8,6 +16,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -28,12 +37,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -93,10 +96,8 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
         DashboardDto dashboardDto = new DashboardDto();
         dashboardDto.setDashboardConfig("UPDATE TEST");
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(dashboardDto);
-
 
         log.debug("Input JSON: " + in);
         // MVC test classes must call getName() somehow
@@ -110,8 +111,10 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
-        expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(dashboard);
-        expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andReturn(1);
+        expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
+                .andReturn(dashboard);
+        expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
+                eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andReturn(1);
 
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(true));
 
@@ -159,17 +162,19 @@ public class SetDashboardConfigAPIControllerTest extends EasyMockSupport
 
         expect(mockDashboardPropertyReader.getModuleNameList()).andReturn(retList);
         expect(mockDashboardService.getUserByUserId(userId)).andReturn(user);
-        expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME)).andReturn(dashboard);
+        expect(mockDashboardService.getDashboardConfigForUserAndModuleName(user, DashboardConstants.DASHBOARD_MODULE_NAME))
+                .andReturn(dashboard);
 
         // With upgrading spring version, bad JSON is not the problem for entering the execution in the controller
-        expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto), eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andThrow(new RuntimeException());
+        expect(mockDashboardService.setDashboardConfigForUserAndModule(eq(user), capture(savedDashboardDto),
+                eq(DashboardConstants.DASHBOARD_MODULE_NAME))).andThrow(new RuntimeException());
         mockDashboardEventPublisher.publishDashboardEvent(capture(publishedDashboard), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("ann-acm").atLeastOnce();
 
         // when the JSON can't be converted to a Complaint POJO, Spring MVC will not even call our controller method.
-        // so we can't raise a failure event.  None of our services should be called, so there are no
+        // so we can't raise a failure event. None of our services should be called, so there are no
         // expectations.
         replayAll();
 

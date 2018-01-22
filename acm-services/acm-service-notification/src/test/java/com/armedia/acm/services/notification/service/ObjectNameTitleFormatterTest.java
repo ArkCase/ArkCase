@@ -1,14 +1,15 @@
 package com.armedia.acm.services.notification.service;
 
-import com.armedia.acm.services.notification.model.Notification;
-import com.armedia.acm.services.notification.model.NotificationConstants;
-import org.easymock.EasyMockSupport;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+
+import com.armedia.acm.services.notification.model.Notification;
+import com.armedia.acm.services.notification.model.NotificationConstants;
+
+import org.easymock.EasyMockSupport;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ObjectNameTitleFormatterTest extends EasyMockSupport
 {

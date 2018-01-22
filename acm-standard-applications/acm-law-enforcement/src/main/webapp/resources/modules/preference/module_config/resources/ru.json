@@ -1,18 +1,18 @@
 {
-  "preference": {
-    "title": "Предпочтения",
-    "menus": {
-      "usermenu.item": "Предпочтения"
-    },
-    "widgets.list": {
-      "defaultView": "Вид по умолчанию",
-      "expanded": "Расширенный",
-      "collapsed": "Рухнул",
-      "disabled": "Отключено",
-      "enabled": "Включено"
-    },
-    "modules.list": {
-      "noModules": "В системе нет модулей"
+    "preference": {
+        "title": "Предпочтения",
+        "menus": {
+            "usermenu.item": "Предпочтения"
+        },
+        "widgets.list": {
+            "defaultView": "Вид по умолчанию",
+            "expanded": "Расширенный",
+            "collapsed": "Рухнул",
+            "disabled": "Отключено",
+            "enabled": "Включено"
+        },
+        "modules.list": {
+            "noModules": "В системе нет модулей"
+        }
     }
-  }
 }

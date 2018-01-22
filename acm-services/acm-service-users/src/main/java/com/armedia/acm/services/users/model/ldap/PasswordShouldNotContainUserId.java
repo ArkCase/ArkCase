@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model.ldap;
 
 import com.armedia.acm.services.users.model.AcmUsersConstants;
+
 import org.apache.commons.lang3.StringUtils;
 
 /**

@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -40,7 +41,8 @@ public class CSVReportGenerator extends ReportGenerator
         StringBuilder sb = new StringBuilder();
 
         List<String> headers = new ArrayList<>();
-        for (String title : titles) {
+        for (String title : titles)
+        {
             headers.add(purifyForCSV(title));
         }
 
@@ -64,18 +66,22 @@ public class CSVReportGenerator extends ReportGenerator
                     if (value instanceof String)
                     {
                         sb.append(purifyForCSV(data.getString(field)));
-                    } else if (value instanceof Integer || value instanceof Long)
+                    }
+                    else if (value instanceof Integer || value instanceof Long)
                     {
                         String formattedNumber = nf.format(data.getLong(field));
                         sb.append(String.format(purifyForCSV(formattedNumber)));
-                    } else if (value instanceof Double || value instanceof Float)
+                    }
+                    else if (value instanceof Double || value instanceof Float)
                     {
                         String formattedNumber = df.format(data.getDouble(field));
                         sb.append(purifyForCSV(formattedNumber));
-                    } else if (value instanceof Boolean)
+                    }
+                    else if (value instanceof Boolean)
                     {
                         sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
-                    } else if (value instanceof JSONArray)
+                    }
+                    else if (value instanceof JSONArray)
                     {
                         JSONArray jsonArray = data.getJSONArray(field);
                         sb.append(purifyForCSV(jsonArray.toString()));
@@ -89,11 +95,11 @@ public class CSVReportGenerator extends ReportGenerator
         return sb.toString();
     }
 
+    @Override
     public String getReportContentType()
     {
         return "text/csv;charset=UTF-8";
     }
-
 
     @Override
     public String generateReportName(String name)
@@ -106,7 +112,8 @@ public class CSVReportGenerator extends ReportGenerator
      * Encloses new lines or value if contains SEPARATOR or if value contains ".
      * for more information: https://tools.ietf.org/html/rfc4180
      *
-     * @param value actual value
+     * @param value
+     *            actual value
      * @return value with enclosed new lines, separator or ". If null or empty string returns as is
      */
     private String purifyForCSV(String value)
@@ -116,17 +123,17 @@ public class CSVReportGenerator extends ReportGenerator
             return value;
         }
         boolean shouldEnclose = false;
-        //if value contains " should be escaped with another "
+        // if value contains " should be escaped with another "
         if (value.contains(QUOTES_CONSTANT))
         {
             value = value.replaceAll(REPLACE_QUOTES_PATTERN, REPLACEMENT_FOR_QUOTES_PATTERN);
             shouldEnclose = true;
         }
 
-        //enclose field with "" if contains the separator, LF or CR
+        // enclose field with "" if contains the separator, LF or CR
         if (value.contains(SearchConstants.SEPARATOR_COMMA) || value.contains(LF) || value.contains(CR) || shouldEnclose)
         {
-            //enclose the value
+            // enclose the value
             return String.format(ENCLOSE_FORMATTER, value);
         }
         return value;

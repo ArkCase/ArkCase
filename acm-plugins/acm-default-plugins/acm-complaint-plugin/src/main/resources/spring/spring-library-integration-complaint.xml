@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd"
-       xmlns:int="http://www.springframework.org/schema/integration">
+    xmlns:int="http://www.springframework.org/schema/integration">
 
     <int:channel id="complaintFilteredMailChannel"/>
 
     <bean id="complaintMailFilter" class="com.armedia.acm.services.email.filter.AcmObjectPatternMailFilter">
         <constructor-arg index="0" value="${complaint.email.regex.complaint_number}"/>
-        <constructor-arg index="1"  value="${complaint.email.regex.object_type}"/>
+        <constructor-arg index="1" value="${complaint.email.regex.object_type}"/>
     </bean>
 
     <bean id="complaintMailHandler" class="com.armedia.acm.services.email.handler.AcmObjectMailHandler">

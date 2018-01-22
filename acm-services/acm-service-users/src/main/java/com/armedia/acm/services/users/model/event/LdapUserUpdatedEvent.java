@@ -1,6 +1,7 @@
 package com.armedia.acm.services.users.model.event;
 
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.springframework.security.core.Authentication;
 
 public class LdapUserUpdatedEvent extends UserPersistenceEvent

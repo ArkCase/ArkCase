@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- minimal configuration, useful when running unit tests -->
+<?xml version="1.0" encoding="UTF-8"?><!-- minimal configuration, useful when running unit tests -->
 <Configuration>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">

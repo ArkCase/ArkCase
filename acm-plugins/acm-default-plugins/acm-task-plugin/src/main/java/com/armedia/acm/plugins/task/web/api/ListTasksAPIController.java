@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class ListTasksAPIController
 {
     private TaskDao taskDao;
@@ -32,8 +34,7 @@ public class ListTasksAPIController
     public List<AcmTask> tasksForUser(
             @PathVariable("user") String user,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmListObjectsFailedException
+            HttpSession session) throws AcmListObjectsFailedException
     {
         if (log.isInfoEnabled())
         {
@@ -45,7 +46,7 @@ public class ListTasksAPIController
         try
         {
             List<AcmTask> retval = getTaskDao().tasksForUser(user);
-            //to do: we also should get back the tasks that owner by this user
+            // to do: we also should get back the tasks that owner by this user
             for (AcmTask task : retval)
             {
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "searchResult",
@@ -55,7 +56,8 @@ public class ListTasksAPIController
             }
 
             return retval;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("List Tasks Failed: " + e.getMessage(), e);
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);

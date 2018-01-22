@@ -13,9 +13,12 @@ public class Range
     /**
      * Construct a byte range.
      *
-     * @param start Start of the byte range.
-     * @param end   End of the byte range.
-     * @param total Total length of the byte source.
+     * @param start
+     *            Start of the byte range.
+     * @param end
+     *            End of the byte range.
+     * @param total
+     *            Total length of the byte source.
      */
     public Range(long start, long end, long total)
     {

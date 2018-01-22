@@ -6,6 +6,7 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.FacetedSearchService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.solr.client.solrj.util.ClientUtils;
 import org.mule.api.MuleException;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +35,7 @@ import java.util.stream.Collectors;
  * Created by marjan.stefanoski on 17.12.2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
 public class FacetedSearchAPIController
 {
 
@@ -54,15 +56,19 @@ public class FacetedSearchAPIController
             @RequestParam(value = "filters", required = false, defaultValue = "") String[] filters,
             @RequestParam(value = "join", required = false, defaultValue = "") String joinQuery,
             @RequestParam(value = "s", required = false, defaultValue = "create_date_tdt DESC") String sortSpec,
-            @RequestParam(value = "fields", required = false,
-                    defaultValue = "parent_number_lcs, parent_type_s, modified_date_tdt") String[] exportFields,
+            @RequestParam(value = "fields", required = false, defaultValue = "parent_number_lcs, parent_type_s, modified_date_tdt") String[] exportFields,
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
-            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery, //Part of the query to NOT ESCAPE
+            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery, // Part
+                                                                                                                // of
+                                                                                                                // the
+                                                                                                                // query
+                                                                                                                // to
+                                                                                                                // NOT
+                                                                                                                // ESCAPE
             HttpServletResponse response,
-            Authentication authentication
-    ) throws MuleException, UnsupportedEncodingException
+            Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
         log.debug("User '" + authentication.getName() + "' is performing facet search for the query: '" + q + "' ");
 
@@ -74,7 +80,8 @@ public class FacetedSearchAPIController
         String filterQueries = "";
         if (filters != null)
         {
-            filterQueries = Arrays.asList(filters).stream().map(f -> getFacetedSearchService().buildSolrQuery(f)).collect(Collectors.joining("&"));
+            filterQueries = Arrays.asList(filters).stream().map(f -> getFacetedSearchService().buildSolrQuery(f))
+                    .collect(Collectors.joining("&"));
             for (String filter : filters)
             {
                 String decodedFilter = URLDecoder.decode(filter, SearchConstants.FACETED_SEARCH_ENCODING);
@@ -91,11 +98,10 @@ public class FacetedSearchAPIController
         String rowQueryParameters = facetKeys + filterQueries;
         String sort = sortSpec == null ? "" : sortSpec.trim();
 
-
         q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
         q = ClientUtils.escapeQueryChars(q);
 
-        //Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
+        // Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
         if (StringUtils.isNotEmpty(unescapedQuery))
         {
             unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
@@ -116,7 +122,6 @@ public class FacetedSearchAPIController
             maxRows = SearchConstants.MAX_RESULT_ROWS;
         }
 
-
         String results = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH,
                 query, startRow, maxRows, sort, rowQueryParameters, isParentRef, isSubscriptionSearch);
         String res = getFacetedSearchService().replaceEventTypeName(results);
@@ -129,7 +134,8 @@ public class FacetedSearchAPIController
                 {
                     exportTitles[i] = new String(exportTitles[i].getBytes("ISO-8859-1"), "UTF-8");
                 }
-            } else
+            }
+            else
             {
                 exportTitles = exportFields;
             }
@@ -141,7 +147,8 @@ public class FacetedSearchAPIController
                         export.toLowerCase()), ReportGenerator.class);
                 String content = generator.generateReport(exportFields, exportTitles, res);
                 export(generator, content, response, reportName);
-            } catch (NoSuchBeanDefinitionException e)
+            }
+            catch (NoSuchBeanDefinitionException e)
             {
                 log.error(String.format("Bean of type: %sReportGenerator is not defined", export.toLowerCase()));
                 throw new IllegalStateException(String.format("Can not export to %s!", export));
@@ -162,7 +169,8 @@ public class FacetedSearchAPIController
                     String.format("attachment; filename=\"%s\"", generator.generateReportName(reportName)));
             response.setContentLength(content.length());
             writer.write(content);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Unable to generate report document. Exception msg: '{}'", e.getMessage());
         }

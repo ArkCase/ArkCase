@@ -14,10 +14,10 @@
  *
  * The Admin.FormWorkflowsLinkService provides Form workflows link calls functionality
  */
-angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($http) {
+angular.module('admin').service('Admin.FormWorkflowsLinkService', function($http) {
     return ({
-        getFormWorkflowsData: getFormWorkflowsData,
-        saveData: saveData
+        getFormWorkflowsData : getFormWorkflowsData,
+        saveData : saveData
     });
     /**
      * @ngdoc method
@@ -31,10 +31,11 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($htt
      */
     function getFormWorkflowsData() {
         return $http({
-            method: "GET",
-            url: "api/latest/plugin/admin/linkformsworkflows/configuration"
+            method : "GET",
+            url : "api/latest/plugin/admin/linkformsworkflows/configuration"
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -50,12 +51,13 @@ angular.module('admin').service('Admin.FormWorkflowsLinkService', function ($htt
      */
     function saveData(reports) {
         return $http({
-            method: "PUT",
-            url: "api/latest/plugin/admin/linkformsworkflows/configuration",
-            data: reports,
-            headers: {
-                "Content-Type": "application/json"
+            method : "PUT",
+            url : "api/latest/plugin/admin/linkformsworkflows/configuration",
+            data : reports,
+            headers : {
+                "Content-Type" : "application/json"
             }
         });
-    };
+    }
+    ;
 });

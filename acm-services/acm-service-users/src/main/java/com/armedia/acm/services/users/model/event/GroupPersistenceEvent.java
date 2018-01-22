@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.model.event;
 
-
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 

@@ -23,7 +23,8 @@ public class DistributiveEventMulticaster implements ApplicationEventMulticaster
         if (listener.getClass().getAnnotation(AsyncApplicationListener.class) != null)
         {
             asyncEventMulticaster.addApplicationListener(listener);
-        } else
+        }
+        else
         {
             syncEventMulticaster.addApplicationListener(listener);
         }

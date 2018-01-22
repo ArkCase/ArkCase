@@ -1,8 +1,16 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
+
 import org.apache.commons.io.FileUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMock;
@@ -18,10 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 /**
  * Created by dmiller on 5/15/17.
@@ -78,7 +82,6 @@ public class AlfrescoSyncServiceTest
     public void queryAlfrescoAuditApplications() throws Exception
     {
 
-
         // generate random audit id from 10 to 10,000
         Long firstAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
         Long secondAppAuditId = Integer.valueOf(new Random().nextInt(10000 - 10) + 10).longValue();
@@ -103,7 +106,7 @@ public class AlfrescoSyncServiceTest
                 auditApplicationLastAuditIdProperties,
                 false);
 
-        // 3 events from the first audit app, and 2 events from the second.  The events should be published
+        // 3 events from the first audit app, and 2 events from the second. The events should be published
         // by order of the audit id in each event: 42, 52, 55, 57, 91
         Capture<EcmEvent> first = Capture.newInstance();
         Capture<EcmEvent> second = Capture.newInstance();
@@ -115,7 +118,6 @@ public class AlfrescoSyncServiceTest
         applicationEventPublisher.publishEvent(capture(third));
         applicationEventPublisher.publishEvent(capture(fourth));
         applicationEventPublisher.publishEvent(capture(fifth));
-
 
         replay(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
 
@@ -140,7 +142,8 @@ public class AlfrescoSyncServiceTest
         try
         {
             unit.updatePropertiesWithLastAuditId("lastAuditIdKey", emptyAuditResponse);
-        } catch (JSONException e)
+        }
+        catch (JSONException e)
         {
             System.out.println("in catch block");
             fail("Shouldn't have JSON exceptions for an empty audit response - " + e.getMessage());
@@ -148,8 +151,6 @@ public class AlfrescoSyncServiceTest
 
         verify(propertyFileManager, auditApplicationRestClient, applicationEventPublisher);
 
-
     }
-
 
 }

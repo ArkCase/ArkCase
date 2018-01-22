@@ -1,7 +1,11 @@
 package com.armedia.acm.plugins.alfrescorma.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,14 +22,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-alfresco-records-service-test.xml",
         "/spring/spring-library-alfresco-service.xml",
         "/spring/spring-library-acm-encryption.xml",
-        "/spring/spring-library-property-file-manager.xml"})
+        "/spring/spring-library-property-file-manager.xml" })
 public class DeclareRecordServiceIT
 {
     @Autowired

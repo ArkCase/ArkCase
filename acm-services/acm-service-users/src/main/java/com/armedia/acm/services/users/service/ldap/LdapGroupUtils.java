@@ -38,8 +38,10 @@ public class LdapGroupUtils
      * To find ascendants to LdapGroup we need to traverse from all groups in their descendants and
      * search for the target node. We want to avoid using `memberOf` attribute.
      *
-     * @param targetNode The node we are finding ascendants
-     * @param ldapGroups All the ldap groups
+     * @param targetNode
+     *            The node we are finding ascendants
+     * @param ldapGroups
+     *            All the ldap groups
      * @return Set of ascendants
      */
     public Set<LdapGroup> findAscendantsForLdapGroupNode(LdapGroupNode targetNode, Set<LdapGroup> ldapGroups)

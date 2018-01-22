@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmModuleConfigurationException;
 import com.armedia.acm.plugins.admin.service.ModuleConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,13 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class ModuleConfigurationRetrieveModules
 {
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private ModuleConfigurationService moduleConfigurationService;
-
 
     @RequestMapping(value = "/moduleconfiguration/modules", method = RequestMethod.GET, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
@@ -37,7 +37,8 @@ public class ModuleConfigurationRetrieveModules
         try
         {
             return moduleConfigurationService.retrieveModules();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't retrieve roles", e);
             throw new AcmModuleConfigurationException("Can't retrieve modules", e);

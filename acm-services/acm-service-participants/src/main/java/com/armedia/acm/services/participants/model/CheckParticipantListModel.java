@@ -1,6 +1,5 @@
 package com.armedia.acm.services.participants.model;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<parent>
-		<groupId>com.armedia.acm</groupId>
-		<artifactId>acm-services</artifactId>
-		<version>3.2.2</version>
-	</parent>
-  
-	<modelVersion>4.0.0</modelVersion>
-  
-	<groupId>com.armedia.acm.acm-services</groupId>
-	<artifactId>acm-service-history</artifactId>
-	<name>ACM Service: History Service</name>
-	<description>Process History</description>
-	
-	<dependencies>
-		<!-- acm -->
+    <parent>
+        <groupId>com.armedia.acm</groupId>
+        <artifactId>acm-services</artifactId>
+        <version>3.2.3</version>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.armedia.acm.acm-services</groupId>
+    <artifactId>acm-service-history</artifactId>
+    <name>ACM Service: History Service</name>
+    <description>Process History</description>
+
+    <dependencies>
+        <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
             <artifactId>acm-service-authentication-token</artifactId>
@@ -26,8 +26,8 @@
             <artifactId>acm-service-form-configuration</artifactId>
             <version>${acm.version}</version>
         </dependency>
-        
-         <!-- spring -->
+
+        <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
@@ -36,14 +36,14 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
         </dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-oxm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-context</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-oxm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
 
         <!-- spring security -->
         <dependency>
@@ -66,8 +66,8 @@
 
         <!-- json -->
         <dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-		</dependency>
-	</dependencies>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+    </dependencies>
 </project>

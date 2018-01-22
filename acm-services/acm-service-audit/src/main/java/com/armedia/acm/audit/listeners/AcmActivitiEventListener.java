@@ -5,6 +5,7 @@ import com.armedia.acm.audit.model.AuditConstants;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.AuditService;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +73,8 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
             auditEvent.setRequestId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY) == null ? null
                     : UUID.fromString(MDC.get(MDCConstants.EVENT_MDC_REQUEST_ID_KEY)));
             auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY)
+                    : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setFullEventType(EVENT_TYPE + " | " + event.getType().name());
             auditEvent.setEventResult(eventResult);
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_ACTIVITI_EVENT);
@@ -94,7 +96,6 @@ public class AcmActivitiEventListener implements ApplicationListener<SpringActiv
             auditEvent.setEventProperties(eventProperties);
 
             log.trace("Activiti AuditEvent: {}", auditEvent);
-
 
             getAuditService().audit(auditEvent);
         }

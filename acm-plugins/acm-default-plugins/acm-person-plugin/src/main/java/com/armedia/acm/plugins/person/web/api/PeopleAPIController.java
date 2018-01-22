@@ -1,12 +1,17 @@
 package com.armedia.acm.plugins.person.web.api;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
+import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
+import com.armedia.acm.plugins.person.model.Person;
+import com.armedia.acm.plugins.person.model.UploadImageRequest;
+import com.armedia.acm.plugins.person.service.PersonService;
+import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+import com.armedia.acm.services.search.model.SolrCore;
+import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +30,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.person.model.Person;
-import com.armedia.acm.plugins.person.model.UploadImageRequest;
-import com.armedia.acm.plugins.person.service.PersonService;
-import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
-import com.armedia.acm.services.search.model.SolrCore;
-import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import javax.persistence.PersistenceException;
+
+import java.io.IOException;
+import java.util.List;
 
 @Controller
-@RequestMapping(value = {"/api/v1/plugin/people", "/api/latest/plugin/people"})
+@RequestMapping(value = { "/api/v1/plugin/people", "/api/latest/plugin/people" })
 public class PeopleAPIController
 {
 

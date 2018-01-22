@@ -1,8 +1,15 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDto;
 import com.armedia.acm.plugins.dashboard.service.UserPreferenceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,10 +30,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by marjan.stefanoski on 19.01.2016.
@@ -80,7 +83,6 @@ public class GetUserPreferredWidgetsByModuleTest extends EasyMockSupport
         preferredWidgetsDto.setModuleName(moduleName);
 
         expect(mockUserPreferenceService.getPreferredWidgetsByUserAndModule(userId, moduleName)).andReturn(preferredWidgetsDto);
-
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn("marjan").atLeastOnce();
