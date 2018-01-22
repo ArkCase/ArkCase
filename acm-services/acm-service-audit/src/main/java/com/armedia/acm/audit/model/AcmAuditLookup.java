@@ -14,6 +14,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,13 +28,7 @@ public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = 2464137631399833851L;
 
     @Id
-    @TableGenerator(name = "audit_event_type_lu_gen",
-            table = "acm_audit_event_type_lu_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_audit_event_type_lu",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "audit_event_type_lu_gen", table = "acm_audit_event_type_lu_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_audit_event_type_lu", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "audit_event_type_lu_gen")
     @Column(name = "cm_id")
     private Long auditLookupId;
@@ -50,7 +45,6 @@ public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_status")
     private String auditStatus;
 
-
     @Column(name = "cm_creator", nullable = false, insertable = true, updatable = false)
     private String creator;
 
@@ -64,7 +58,6 @@ public class AcmAuditLookup implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_modified", nullable = false, insertable = true, updatable = true)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
-
 
     public Long getAuditLookupId()
     {

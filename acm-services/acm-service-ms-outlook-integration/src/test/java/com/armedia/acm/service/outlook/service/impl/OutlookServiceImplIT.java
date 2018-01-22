@@ -1,5 +1,8 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.model.OutlookCalendarItem;
 import com.armedia.acm.service.outlook.model.OutlookContactItem;
@@ -8,8 +11,7 @@ import com.armedia.acm.service.outlook.model.OutlookMailItem;
 import com.armedia.acm.service.outlook.model.OutlookResults;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,8 +22,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -102,20 +104,18 @@ public class OutlookServiceImplIT
     public void createTaskItem() throws Exception
     {
 
-
         OutlookTaskItem taskItem = new OutlookTaskItem();
         taskItem.setSubject("Task 1");
         taskItem.setBody("");
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//due to tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// due to tomorrow
         taskItem.setDueDate(new Date(tomorrow));
         taskItem.setPercentComplete(20);
         taskItem.setComplete(false);
-        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));//start next minute
+        taskItem.setStartDate(new Date(System.currentTimeMillis() + 1000 * 60));// start next minute
         assertNull(taskItem.getId());
 
         taskItem = outlookService.createOutlookTaskItem(user, WellKnownFolderName.Tasks, taskItem);
         verifyFilledItemDetails(taskItem);
-
 
         outlookService.deleteItem(user, taskItem.getId(), DeleteMode.HardDelete);
     }
@@ -148,13 +148,13 @@ public class OutlookServiceImplIT
         appointmentItem.setSubject("Subject");
         appointmentItem.setAllDayEvent(false);
 
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//start tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// start tomorrow
         appointmentItem.setStartDate(new Date(tomorrow));
-        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));//start + 1 hour
+        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));// start + 1 hour
         appointmentItem.setMeeting(false);
         appointmentItem.setRecurring(true);
         appointmentItem.setRecurringInterval(1);
-        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));//ends after 2 days
+        appointmentItem.setRecurringEndDate(new Date(tomorrow + 1000 * 60 * 60 * 48));// ends after 2 days
 
         assertNull(appointmentItem.getId());
         appointmentItem = outlookService.createOutlookAppointment(user, appointmentItem);
@@ -171,11 +171,10 @@ public class OutlookServiceImplIT
         appointmentItem.setSubject("Subject");
         appointmentItem.setAllDayEvent(false);
 
-        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;//start tomorrow
+        long tomorrow = System.currentTimeMillis() + 1000 * 60 * 60 * 24;// start tomorrow
         appointmentItem.setStartDate(new Date(tomorrow));
-        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));//start + 1 hour
+        appointmentItem.setEndDate(new Date(tomorrow + 1000 * 60 * 60));// start + 1 hour
         appointmentItem.setMeeting(false);
-
 
         assertNull(appointmentItem.getId());
         appointmentItem = outlookService.createOutlookAppointment(user, appointmentItem);
@@ -188,6 +187,5 @@ public class OutlookServiceImplIT
     {
         assertNotNull(outlookItem.getId());
     }
-
 
 }

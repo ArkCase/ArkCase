@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-populate_acm_group_membership_from_current_data" author="ncuculova" dbms="mysql">
         <preConditions>
@@ -75,7 +73,6 @@
         </update>
     </changeSet>
 
-
     <changeSet id="07-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mysql">
         <update tableName="acm_group">
             <column name="cm_group_display_name" valueComputed="SUBSTRING_INDEX(cm_group_name, '-UUID-', 1)"/>
@@ -94,7 +91,7 @@
     <changeSet id="09-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="mssql">
         <update tableName="acm_group">
             <column name="cm_group_display_name"
-                    valueComputed="SUBSTRING(cm_group_display_name,0,CHARINDEX('-UUID-',cm_group_display_name,0))"/>
+                valueComputed="SUBSTRING(cm_group_display_name,0,CHARINDEX('-UUID-',cm_group_display_name,0))"/>
             <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
     </changeSet>
@@ -105,7 +102,7 @@
     <changeSet id="11-acm-group-populate-cm-group-display-name-from-cm-group-name" author="marko.stojanoski" dbms="oracle">
         <update tableName="acm_group">
             <column name="cm_group_display_name"
-                    valueComputed="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
+                valueComputed="substr(cm_group_display_name, 1, instr(cm_group_display_name, '-UUID-') - 1)"/>
             <where>cm_group_display_name LIKE '%-UUID-%'</where>
         </update>
     </changeSet>

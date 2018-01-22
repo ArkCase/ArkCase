@@ -3,165 +3,204 @@
  */
 package com.armedia.acm.form.plainconfiguration.model;
 
-import java.util.List;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import com.armedia.acm.form.plainconfiguration.model.xml.UrlParameterItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 import com.armedia.acm.frevvo.model.FrevvoFormConstants;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import java.util.List;
+
 /**
  * @author riste.tutureski
  *
  */
-@XmlRootElement(name=FrevvoFormConstants.ELEMENT_KEY_PREFIX + FrevvoFormName.PLAIN_CONFIGURATION, namespace=FrevvoFormNamespace.PLAIN_CONFIGURATION_NAMESPACE)
-public class PlainConfigurationForm {
+@XmlRootElement(name = FrevvoFormConstants.ELEMENT_KEY_PREFIX
+        + FrevvoFormName.PLAIN_CONFIGURATION, namespace = FrevvoFormNamespace.PLAIN_CONFIGURATION_NAMESPACE)
+public class PlainConfigurationForm
+{
 
-	private String key;
-	private String formId;
-	private List<String> formOptions;
-	private String name;
-	private String type;
-	private String applicationId;
-	private String applicationName;
-	private String mode;
-	private String target;
-	private List<String> targetOptions;
-	private String description;
-	private List<UrlParameterItem> urlParameters;
-	private List<String> requiredUrlParemeters;
-	private List<String> objectPropertiesOptions;
-	private String url;
-	
-	
-	@XmlElement(name="key")
-	public String getKey() {
-		return key;
-	}
+    private String key;
+    private String formId;
+    private List<String> formOptions;
+    private String name;
+    private String type;
+    private String applicationId;
+    private String applicationName;
+    private String mode;
+    private String target;
+    private List<String> targetOptions;
+    private String description;
+    private List<UrlParameterItem> urlParameters;
+    private List<String> requiredUrlParemeters;
+    private List<String> objectPropertiesOptions;
+    private String url;
 
-	public void setKey(String key) {
-		this.key = key;
-	}
+    @XmlElement(name = "key")
+    public String getKey()
+    {
+        return key;
+    }
 
-	@XmlElement(name="formId")
-	public String getFormId() {
-		return formId;
-	}
+    public void setKey(String key)
+    {
+        this.key = key;
+    }
 
-	public void setFormId(String formId) {
-		this.formId = formId;
-	}
+    @XmlElement(name = "formId")
+    public String getFormId()
+    {
+        return formId;
+    }
 
-	@XmlTransient
-	public List<String> getFormOptions() {
-		return formOptions;
-	}
+    public void setFormId(String formId)
+    {
+        this.formId = formId;
+    }
 
-	public void setFormOptions(List<String> formOptions) {
-		this.formOptions = formOptions;
-	}
+    @XmlTransient
+    public List<String> getFormOptions()
+    {
+        return formOptions;
+    }
 
-	@XmlElement(name="name")
-	public String getName() {
-		return name;
-	}
+    public void setFormOptions(List<String> formOptions)
+    {
+        this.formOptions = formOptions;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @XmlElement(name = "name")
+    public String getName()
+    {
+        return name;
+    }
 
-	@XmlElement(name="type")
-	public String getType() {
-		return type;
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    @XmlElement(name = "type")
+    public String getType()
+    {
+        return type;
+    }
 
-	@XmlElement(name="applicationId")
-	public String getApplicationId() { return applicationId; }
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
-	public void setApplicationId(String applicationId) { this.applicationId = applicationId; }
+    @XmlElement(name = "applicationId")
+    public String getApplicationId()
+    {
+        return applicationId;
+    }
 
-	@XmlElement(name="applicationName")
-	public String getApplicationName() { return applicationName; }
+    public void setApplicationId(String applicationId)
+    {
+        this.applicationId = applicationId;
+    }
 
-	public void setApplicationName(String applicationName) { this.applicationName = applicationName; }
+    @XmlElement(name = "applicationName")
+    public String getApplicationName()
+    {
+        return applicationName;
+    }
 
-	@XmlElement(name="formMode")
-	public String getMode() {
-		return mode;
-	}
+    public void setApplicationName(String applicationName)
+    {
+        this.applicationName = applicationName;
+    }
 
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
+    @XmlElement(name = "formMode")
+    public String getMode()
+    {
+        return mode;
+    }
 
-	@XmlElement(name="target")
-	public String getTarget() {
-		return target;
-	}
+    public void setMode(String mode)
+    {
+        this.mode = mode;
+    }
 
-	public void setTarget(String target) {
-		this.target = target;
-	}
-	
-	@XmlTransient
-	public List<String> getTargetOptions() {
-		return targetOptions;
-	}
+    @XmlElement(name = "target")
+    public String getTarget()
+    {
+        return target;
+    }
 
-	public void setTargetOptions(List<String> targetOptions) {
-		this.targetOptions = targetOptions;
-	}
+    public void setTarget(String target)
+    {
+        this.target = target;
+    }
 
-	@XmlElement(name="description")
-	public String getDescription() {
-		return description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
-	@XmlElement(name="urlParametersItem")
-	public List<UrlParameterItem> getUrlParameters() {
-		return urlParameters;
-	}
-	
-	public void setUrlParameters(List<UrlParameterItem> urlParameters) {
-		this.urlParameters = urlParameters;
-	}	
-	
-	@XmlTransient
-	public List<String> getRequiredUrlParemeters() {
-		return requiredUrlParemeters;
-	}
+    @XmlTransient
+    public List<String> getTargetOptions()
+    {
+        return targetOptions;
+    }
 
-	public void setRequiredUrlParemeters(List<String> requiredUrlParemeters) {
-		this.requiredUrlParemeters = requiredUrlParemeters;
-	}
+    public void setTargetOptions(List<String> targetOptions)
+    {
+        this.targetOptions = targetOptions;
+    }
 
-	@XmlTransient
-	public List<String> getObjectPropertiesOptions() {
-		return objectPropertiesOptions;
-	}
+    @XmlElement(name = "description")
+    public String getDescription()
+    {
+        return description;
+    }
 
-	public void setObjectPropertiesOptions(List<String> objectPropertiesOptions) {
-		this.objectPropertiesOptions = objectPropertiesOptions;
-	}
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
 
-	@XmlTransient
-	public String getUrl() {
-		return url;
-	}
+    @XmlElement(name = "urlParametersItem")
+    public List<UrlParameterItem> getUrlParameters()
+    {
+        return urlParameters;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public void setUrlParameters(List<UrlParameterItem> urlParameters)
+    {
+        this.urlParameters = urlParameters;
+    }
+
+    @XmlTransient
+    public List<String> getRequiredUrlParemeters()
+    {
+        return requiredUrlParemeters;
+    }
+
+    public void setRequiredUrlParemeters(List<String> requiredUrlParemeters)
+    {
+        this.requiredUrlParemeters = requiredUrlParemeters;
+    }
+
+    @XmlTransient
+    public List<String> getObjectPropertiesOptions()
+    {
+        return objectPropertiesOptions;
+    }
+
+    public void setObjectPropertiesOptions(List<String> objectPropertiesOptions)
+    {
+        this.objectPropertiesOptions = objectPropertiesOptions;
+    }
+
+    @XmlTransient
+    public String getUrl()
+    {
+        return url;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
 }

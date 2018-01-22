@@ -1,6 +1,7 @@
 package com.armedia.acm.event.web.api;
 
 import com.armedia.acm.event.model.AcmGenericApplicationEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import javax.servlet.http.HttpSession;
+
 import java.util.Date;
 
 @Controller
-@RequestMapping({"/api/v1/service/event", "/api/latest/service/event"})
+@RequestMapping({ "/api/v1/service/event", "/api/latest/service/event" })
 public class RaiseEventAPIController implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -32,8 +33,7 @@ public class RaiseEventAPIController implements ApplicationEventPublisherAware
             @RequestParam(value = "objectId", required = true) Long objectId,
             @RequestParam(value = "docIds", required = false, defaultValue = "") String docIds,
             Authentication auth,
-            HttpSession session
-    )
+            HttpSession session)
     {
         log.info("Raising '" + eventKey + "' for '" + objectType + " " + objectId + "'");
 
@@ -44,7 +44,7 @@ public class RaiseEventAPIController implements ApplicationEventPublisherAware
 
         applicationEventPublisher.publishEvent(event);
 
-        if ( docIds != null && !docIds.trim().isEmpty() )
+        if (docIds != null && !docIds.trim().isEmpty())
         {
             createAndPublishDocumentEvents(eventKey, docIds, userId, ip);
         }
@@ -62,9 +62,9 @@ public class RaiseEventAPIController implements ApplicationEventPublisherAware
         AcmGenericApplicationEvent event;
 
         String[] docIdArray = docIds.split(",");
-        for ( String docIdString : docIdArray )
+        for (String docIdString : docIdArray)
         {
-            if ( docIdString != null && !docIdString.trim().isEmpty() )
+            if (docIdString != null && !docIdString.trim().isEmpty())
             {
                 docIdString = docIdString.trim();
 

@@ -11,9 +11,9 @@
  *
  * personPictureSrc generate link to person image
  */
-angular.module('filters').filter('personPictureSrc', function () {
-    return function (input) {
-        if (typeof(input) == "undefined") {
+angular.module('filters').filter('personPictureSrc', function() {
+    return function(input) {
+        if (typeof (input) == "undefined") {
             //TODO: add link to default image if person don't have image uploaded
             return "";
         } else {

@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
 		http://www.springframework.org/schema/integration/mail http://www.springframework.org/schema/integration/mail/spring-integration-mail.xsd
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd"
-       xmlns:int="http://www.springframework.org/schema/integration"
-       xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
-       xmlns:util="http://www.springframework.org/schema/util">
-
+    xmlns:int="http://www.springframework.org/schema/integration" xmlns:int-mail="http://www.springframework.org/schema/integration/mail"
+    xmlns:util="http://www.springframework.org/schema/util">
 
     <!-- if we add task executor in publish-subscribe-channel than all mail processing will be done async,
     that would be needed if we are dealing with lot of incoming mails-->
     <int:publish-subscribe-channel id="mailChannel"/>
 
     <int-mail:inbound-channel-adapter id="emailReceiverAdapter"
-                                      store-uri="imaps://${email.user}:${email.password}@${email.host}:${email.port}/${email.fetch.folder}"
-                                      channel="mailChannel"
-                                      auto-startup="true"
-                                      should-delete-messages="${email.should-delete-messages}"
-                                      should-mark-messages-as-read="${email.should-mark-messages-as-read}"
-                                      java-mail-properties="javaMailProperties"
-                                      max-fetch-size="1">
+        store-uri="imaps://${email.user}:${email.password}@${email.host}:${email.port}/${email.fetch.folder}" channel="mailChannel"
+        auto-startup="true" should-delete-messages="${email.should-delete-messages}"
+        should-mark-messages-as-read="${email.should-mark-messages-as-read}" java-mail-properties="javaMailProperties" max-fetch-size="1">
         <int:poller max-messages-per-poll="${email.max-messages-per-poll}" fixed-rate="${email.fixed-rate}"
-                    error-channel="mailErrorChannel"/>
+            error-channel="mailErrorChannel"/>
     </int-mail:inbound-channel-adapter>
 
     <bean id="loggingHandler" class="org.springframework.integration.handler.LoggingHandler">

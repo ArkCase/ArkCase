@@ -107,7 +107,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
         {
             // this will cause all permissions in folder to be removed
             log.warn("There are not defined participants types to include");
-        } else
+        }
+        else
         {
             for (AcmParticipant ap : participantsForObject)
             {
@@ -128,7 +129,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getFollowerAccess()));
                             break;
-                        } else
+                        }
+                        else
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.PublishingEditor);
                             break;
@@ -138,7 +140,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getAssigneeAccess()));
                             break;
-                        } else
+                        }
+                        else
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.Author);
                             break;
@@ -148,7 +151,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getApproverAccess()));
                             break;
-                        } else
+                        }
+                        else
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.Reviewer);
                             break;
@@ -158,7 +162,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.valueOf(getDefaultAccess()));
                             break;
-                        } else
+                        }
+                        else
                         {
                             outlookFolderPermission.setLevel(FolderPermissionLevel.None);
                             break;
@@ -184,7 +189,8 @@ public class OutlookContainerCalendarServiceImpl implements OutlookContainerCale
     public void setParticipantsTypesForOutlookFolder(String participantsTypesForOutlookFolder)
     {
         this.participantsTypesForOutlookFolder = !StringUtils.isEmpty(participantsTypesForOutlookFolder)
-                ? Arrays.asList(participantsTypesForOutlookFolder.trim().replaceAll(",[\\s]*", ",").split(",")) : new ArrayList<>();
+                ? Arrays.asList(participantsTypesForOutlookFolder.trim().replaceAll(",[\\s]*", ",").split(","))
+                : new ArrayList<>();
     }
 
     public void setUserDao(UserDao userDao)

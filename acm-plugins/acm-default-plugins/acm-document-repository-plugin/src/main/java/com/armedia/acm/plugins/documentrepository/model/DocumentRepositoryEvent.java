@@ -23,7 +23,6 @@ public class DocumentRepositoryEvent extends AcmEvent
         setUserId(source.getModifier());
     }
 
-
     public DocumentRepositoryEvent(DocumentRepository source, String eventStatus)
     {
 

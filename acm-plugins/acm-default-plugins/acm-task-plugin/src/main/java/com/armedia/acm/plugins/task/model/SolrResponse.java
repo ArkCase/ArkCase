@@ -1,25 +1,35 @@
 package com.armedia.acm.plugins.task.model;
 
-public class SolrResponse {
+public class SolrResponse
+{
     private ResponseHeader responseHeader;
     private Response response;
-    
-    public ResponseHeader getResponseHeader() {
+
+    public ResponseHeader getResponseHeader()
+    {
         return responseHeader;
     }
-    public void setResponseHeader(ResponseHeader responseHeader) {
+
+    public void setResponseHeader(ResponseHeader responseHeader)
+    {
         this.responseHeader = responseHeader;
     }
-    public Response getResponse() {
+
+    public Response getResponse()
+    {
         return response;
     }
-    public void setResponse(Response response) {
+
+    public void setResponse(Response response)
+    {
         this.response = response;
     }
+
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "SolrResponse [responseHeader=" + responseHeader + ", response="
                 + response + "]";
     }
-   
+
 }

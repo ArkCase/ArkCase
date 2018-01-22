@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.model.ldap;
 
-
 public class AcmLdapActionFailedException extends Exception
 {
     public AcmLdapActionFailedException(String message)

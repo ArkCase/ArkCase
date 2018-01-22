@@ -1,17 +1,20 @@
 package com.armedia.acm.plugins.admin.service;
 
+import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.PROP_APPLICATION_ROLES;
+import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.ROLE_PREFIX;
+
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TransactionRequiredException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,8 +33,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.PROP_APPLICATION_ROLES;
-import static com.armedia.acm.plugins.admin.model.RolePrivilegesConstants.ROLE_PREFIX;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
  * Created by admin on 6/3/15.
@@ -112,7 +115,8 @@ public class RolesPrivilegesService
             }
             return roles;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't load privilege's [{}] roles", privilegeName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't load privilege's '%s' roles", privilegeName), e);
@@ -122,8 +126,10 @@ public class RolesPrivilegesService
     /**
      * Update Role Privileges
      *
-     * @param roleName   Updated role name
-     * @param privileges List of role's privileges
+     * @param roleName
+     *            Updated role name
+     * @param privileges
+     *            List of role's privileges
      */
     public void updateRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -153,7 +159,8 @@ public class RolesPrivilegesService
     /**
      * Create new role
      *
-     * @param roleName new role name
+     * @param roleName
+     *            new role name
      * @throws AcmRolesPrivilegesException
      */
     @Transactional
@@ -187,7 +194,8 @@ public class RolesPrivilegesService
             try
             {
                 userDao.saveAcmRole(acmRole);
-            } catch (IllegalArgumentException | TransactionRequiredException e)
+            }
+            catch (IllegalArgumentException | TransactionRequiredException e)
             {
                 roles.remove(roleName);
                 saveRoles(roles);
@@ -263,7 +271,8 @@ public class RolesPrivilegesService
             }
             saveRolesPrivileges(rolesPrivileges);
             updateRolesPrivilegesConfig();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't add roles to privileges", e);
             throw new AcmRolesPrivilegesException("Can't add roles to privileges", e);
@@ -304,7 +313,8 @@ public class RolesPrivilegesService
             }
             saveRolesPrivileges(rolesPrivileges);
             updateRolesPrivilegesConfig();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't remove privileges from roles", e);
             throw new AcmRolesPrivilegesException("Can't remove privileges from roles", e);
@@ -328,7 +338,8 @@ public class RolesPrivilegesService
             String propRoles = props.getProperty(PROP_APPLICATION_ROLES);
             List<String> roles = new ArrayList<>(Arrays.asList(propRoles.split(",")));
             return roles;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't load roles file", e);
             throw new AcmRolesPrivilegesException("Can't load roles file", e);
@@ -357,7 +368,8 @@ public class RolesPrivilegesService
             }
 
             return priveleges;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't load privileges file", e);
             throw new AcmRolesPrivilegesException("Can't load privileges file", e);
@@ -367,7 +379,8 @@ public class RolesPrivilegesService
     /**
      * Save list of roles
      *
-     * @param roles saved roles list
+     * @param roles
+     *            saved roles list
      * @throws AcmRolesPrivilegesException
      */
     private void saveRoles(List<String> roles) throws AcmRolesPrivilegesException
@@ -379,7 +392,8 @@ public class RolesPrivilegesService
             props.setProperty(PROP_APPLICATION_ROLES, propRoles);
 
             props.store(rolesStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't save info into the roles file", e);
             throw new AcmRolesPrivilegesException("Can't save info into the roles file", e);
@@ -400,7 +414,8 @@ public class RolesPrivilegesService
             }
             return result;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't load roles privileges file", e);
             throw new AcmRolesPrivilegesException("Can't load roles privileges file", e);
@@ -410,7 +425,8 @@ public class RolesPrivilegesService
     /**
      * Load specific role's privileges
      *
-     * @param roleName Role name
+     * @param roleName
+     *            Role name
      * @return map of privileges and descriptions
      * @throws AcmRolesPrivilegesException
      */
@@ -443,7 +459,8 @@ public class RolesPrivilegesService
             }
             return rolePrivileges;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't load role [{}] privileges from file", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't load role '%s' privileges from file", roleName), e);
@@ -453,8 +470,10 @@ public class RolesPrivilegesService
     /**
      * Save role's privileges to the file
      *
-     * @param roleName   Role name
-     * @param privileges List of privileges
+     * @param roleName
+     *            Role name
+     * @param privileges
+     *            List of privileges
      */
     private void saveRolePrivileges(String roleName, List<String> privileges) throws AcmRolesPrivilegesException
     {
@@ -472,7 +491,8 @@ public class RolesPrivilegesService
                 props.store(applicationOutputStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't save role [{}] privileges to file", roleName, e);
             throw new AcmRolesPrivilegesException(String.format("Can't save role '%s' privileges to file", roleName), e);
@@ -487,7 +507,8 @@ public class RolesPrivilegesService
             props.putAll(rolesPrivileges);
             props.store(applicationStream, String.format("Updated at yyyy-MM-dd hh:mm:ss", new Date()));
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't save roles privileges to file", e);
             throw new AcmRolesPrivilegesException("Can't save roles privileges to file", e);
@@ -525,13 +546,13 @@ public class RolesPrivilegesService
             Template tmpl = cfg.getTemplate(applicationRolesPrivilegesTemplateFile);
 
             try (OutputStream applicationOutputStream = new FileOutputStream(new File(applicationRolesPrivilegesFile));
-                 Writer writer = new BufferedWriter(new OutputStreamWriter(applicationOutputStream, StandardCharsets.UTF_8)))
+                    Writer writer = new BufferedWriter(new OutputStreamWriter(applicationOutputStream, StandardCharsets.UTF_8)))
             {
                 tmpl.process(privileges, writer);
             }
 
-
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update roles privileges config file", e);
             throw new AcmRolesPrivilegesException("Can't update roles privileges config file", e);
