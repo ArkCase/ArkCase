@@ -9,16 +9,13 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.service.outlook.dao.OutlookDao;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,13 +26,16 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
-import com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.ServiceConnector;
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
-import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.service.outlook.dao.OutlookDao;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
@@ -51,8 +51,8 @@ import microsoft.exchange.webservices.data.search.FindItemsResults;
  *
  */
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"javax.management.*", "javax.net.ssl.*"})
-@PrepareForTest({CalendarFolder.class, FindItemsResults.class, Appointment.class})
+@PowerMockIgnore({ "javax.management.*", "javax.net.ssl.*" })
+@PrepareForTest({ CalendarFolder.class, FindItemsResults.class, Appointment.class })
 public class CalendarEntityHandlerTest
 {
 
