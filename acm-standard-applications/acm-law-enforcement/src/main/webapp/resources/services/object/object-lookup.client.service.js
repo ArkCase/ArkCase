@@ -553,6 +553,20 @@ angular.module('services').factory(
 
                     /**
                      * @ngdoc method
+                     * @name getCmisVersioningState
+                     * @methodOf services:Object.LookupService
+                     *
+                     * @description
+                     * Query list of identification types
+                     *
+                     * @returns {Object} An array returned by $resource
+                     */
+                    Service.getCmisVersioningState = function() {
+                        return Service.getLookupByLookupName("cmisVersioningState");
+                    };
+
+                    /**
+                     * @ngdoc method
                      * @name getOrganizationIdTypes
                      * @methodOf services:Object.LookupService
                      *

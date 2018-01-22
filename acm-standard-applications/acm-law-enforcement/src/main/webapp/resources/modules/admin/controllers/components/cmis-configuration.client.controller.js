@@ -11,7 +11,10 @@ angular.module('admin').controller(
                 'Admin.ModalDialogService',
                 'MessageService',
                 '$translate',
-                function($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate) {
+                'Object.LookupService',
+                'Dialog.BootboxService',
+                function($scope, $modal, HelperUiGridService, CmisConfigService, Util, modalDialogService, messageService, $translate,
+                        ObjectLookupService, DialogService) {
 
                     var gridHelper = new HelperUiGridService.Grid({
                         scope : $scope
@@ -43,10 +46,15 @@ angular.module('admin').controller(
                         reloadGrid();
                     });
 
+                    ObjectLookupService.getCmisVersioningState().then(function(cmisVersioningState) {
+                        $scope.cmisVersioningState = cmisVersioningState;
+                    });
+
                     $scope.showModal = function(cmisConfig, isEdit, originalConfig) {
                         var modalScope = $scope.$new();
                         modalScope.cmisConfig = cmisConfig || {};
                         modalScope.isEdit = isEdit || false;
+                        modalScope.testConnection = testConnection;
 
                         var modalInstance = $modal.open({
                             scope : modalScope,
@@ -79,6 +87,9 @@ angular.module('admin').controller(
                                                     .instant('admin.documentManagement.cmisConfiguration.messages.update.error'));
                                         })
                             } else {
+                                if (result.cmisConfig.useAlfrescoExtension != true) {
+                                    result.cmisConfig.useAlfrescoExtension = "false"
+                                }
                                 CmisConfigService.createCmisConfiguration(result.cmisConfig).then(
                                         function() {
                                             reloadGrid();
@@ -90,7 +101,23 @@ angular.module('admin').controller(
                                                     .instant('admin.documentManagement.cmisConfiguration.messages.insert.error'));
                                         });
                             }
-                        })
+                        });
+
+                        function testConnection() {
+                            var cmisUrlTest = {
+                                baseUrl : modalScope.cmisConfig.baseUrl,
+                                username : modalScope.cmisConfig.username,
+                                password : modalScope.cmisConfig.password,
+                                repositoryId : ""
+                            };
+                            CmisConfigService.urlValidation(cmisUrlTest).then(
+                                    function(response) {
+                                        DialogService.alert($translate
+                                                .instant('admin.documentManagement.cmisConfiguration.messages.test.conection.success'));
+                                    }, function(response) {
+                                        DialogService.alert(response.data.message);
+                                    });
+                        }
                     };
 
                     $scope.deleteRow = function(rowEntity) {
@@ -109,7 +136,8 @@ angular.module('admin').controller(
                                                 messageService.info($translate
                                                         .instant('admin.documentManagement.cmisConfiguration.messages.delete.success'));
                                             },
-                                            function() {
+                                            function(response) {
+
                                                 messageService.error($translate
                                                         .instant('admin.documentManagement.cmisConfiguration.messages.delete.error'));
                                             });

@@ -646,6 +646,7 @@
                     "edit": "編輯CMIS配置"
                 },
                 "dialog": {
+                    "testConnection": "zh-tw_Test Connection",
                     "cancel": "取消",
                     "ok": "確定"
                 },
@@ -673,10 +674,6 @@
                 "useAlfrescoExtension": {
                     "label": "使用Alfresco擴展",
                     "placeholder": "使用Alfresco擴展"
-                },
-                "endpoint": {
-                    "label": "端點",
-                    "placeholder": "端點"
                 },
                 "maxIdle": {
                     "label": "最大空閒",
@@ -710,7 +707,7 @@
                     "label": "存儲庫ID",
                     "placeholder": "存儲庫ID"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "版本控制狀態",
                     "placeholder": "版本控制狀態"
                 }
