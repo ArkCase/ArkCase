@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.FlushModeType;
@@ -33,6 +34,7 @@ public class GroupUUIDUpdateDao
         return findQuery.getResultList();
     }
 
+    @Transactional
     public void deleteInvalidGroups(List<AcmGroup> groups)
     {
         groups.forEach(group -> {
