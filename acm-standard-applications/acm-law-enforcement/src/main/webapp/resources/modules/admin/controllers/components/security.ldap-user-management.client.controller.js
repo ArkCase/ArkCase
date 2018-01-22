@@ -21,14 +21,15 @@ angular.module('admin').controller(
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
-                    LookupService.getUsers().then(function(data) {
-                        _.forEach(data, function(user) {
+                    LdapUserManagementService.getNUsers({}).then(function(response) {
+                        _.forEach(response.data, function(user) {
                             var element = {};
                             element.name = user.name;
                             element.key = user.object_id_s;
                             element.directory = user.directory_name_s;
                             $scope.appUsers.push(element);
                         });
+                        $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
                     });
 
                     var selectedUser;
@@ -239,31 +240,31 @@ angular.module('admin').controller(
                     };
 
                     $scope.$bus.subscribe('onFilter-ldapUserManagement', function(data) {
-                        if (Util.isObjectEmpty(data)) {
-                            LdapUserManagementService.getNUsers().then(function(response) {
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getNUsers(data).then(function(response) {
                                 $scope.appUsers = [];
-                                _.forEach(response.data.response.docs, function(user) {
+                                _.forEach(response.data, function(user) {
                                     var element = {};
                                     element.name = user.name;
                                     element.key = user.object_id_s;
                                     element.directory = user.directory_name_s;
                                     $scope.appUsers.push(element);
                                 });
-                                // scope.selectedObject = scope.data[0]
+                                // $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
                             });
                         } else {
                             LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
-                                console.log(response);
                                 $scope.appUsers = [];
-                                if (!Util.isEmpty(response.data.response.docs)) {
-                                    _.forEach(response.data.response.docs, function(user) {
+                                if (!Util.isEmpty(response.data)) {
+                                    _.forEach(response.data, function(user) {
                                         var element = {};
                                         element.name = user.name;
                                         element.key = user.object_id_s;
                                         element.directory = user.directory_name_s;
                                         $scope.appUsers.push(element);
                                     });
-                                    // scope.selectedObject = $scope.appUsers[0]
+                                    // $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
                                 }
 
                             }, function() {

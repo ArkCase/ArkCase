@@ -87,14 +87,15 @@ angular.module('directives').directive('objectAuthorizationRoles',
                         if (scope.filterWord == "") {
                             scope.noFilterData = true;
                             scope.$bus.publish('onFilter-' + scope.controllerName, "");
-
                         } else {
                             scope.noFilterData = false;
                         }
                     };
 
                     scope.filterObjects = function() {
-                        scope.$bus.publish('onFilter-' + scope.controllerName, scope.filterWord);
+                        scope.$bus.publish('onFilter-' + scope.controllerName, {
+                            "filterWord" : scope.filterWord
+                        });
                     };
 
                     //initial setup
@@ -110,32 +111,13 @@ angular.module('directives').directive('objectAuthorizationRoles',
 
                     function myFunction() {
                         var temp = document.getElementById("scrollTest");
-                        console.log(temp.scrollTop);
-                        console.log(temp.offsetHeight + temp.scrollTop);
+                        //console.log(temp.scrollTop);
+                        //console.log(temp.offsetHeight + temp.scrollTop);
                         if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
-                            //                         maxScrolled = temp.scrollTop / 200;
-                            //                         console.log(maxScrolled);
-
-                            /*scope.externalMethods[scope.externalMethodTwo](scope.filterWord, scope.data.length * 2).then(
-                                    function(response) {
-                                        console.log(response);
-                                        scope.data = [];
-                                        if (!Util.isEmpty(response.data.response.docs)) {
-                                            _.forEach(response.data.response.docs, function(user) {
-                                                var element = {};
-                                                element.name = user.name;
-                                                element.key = user.object_id_s;
-                                                element.directory = user.directory_name_s;
-                                                scope.data.push(element);
-                                            });
-                                            scope.selectedObject = scope.data[0]
-                                        }
-
-                                    }, function() {
-                                        console.log("error");
-                                    });
-                             */
-                            // scope.$parent.$digest();
+                            scope.$bus.publish('onFilter-' + scope.controllerName, {
+                                "filterWord" : scope.filterWord,
+                                "n" : scope.data.length * 2
+                            });
                         }
                     }
 

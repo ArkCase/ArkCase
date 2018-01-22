@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
@@ -9,6 +10,7 @@ import com.armedia.acm.services.users.service.AcmUserService;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
+import org.json.JSONArray;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,10 +59,14 @@ public class AcmUserAPIController extends SecureLdapController
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
             @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
     {
-        return acmUserService.getFilteredUsers(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
+        String solrResponse = acmUserService.getFilteredByNameUsers(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
+
+        return docs.toString();
     }
 
-    @RequestMapping(value = "/getNUsers/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/getNUsers/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getNUsers(Authentication auth,
             @RequestParam(value = "fq", required = false) String searchFilter,
@@ -70,7 +76,11 @@ public class AcmUserAPIController extends SecureLdapController
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
             @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
     {
-        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
+        String solrResponse = acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
+        SearchResults searchResults = new SearchResults();
+        JSONArray docs = searchResults.getDocuments(solrResponse);
+
+        return docs.toString();
     }
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

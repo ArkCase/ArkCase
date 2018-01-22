@@ -62,7 +62,8 @@ public class AcmUserServiceImpl implements AcmUserService
     }
 
     @Override
-    public String getFilteredUsers(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+    public String getFilteredByNameUsers(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow,
+            int maxRows)
             throws MuleException
     {
 

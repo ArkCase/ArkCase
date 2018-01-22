@@ -79,14 +79,14 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *
      * @returns {Object} An object returned by $resource
      */
-    function getFilteredUsersByWord(filterWord, n) {
-        var url = 'api/latest/ldap/getUsers/search';
+    function getFilteredUsersByWord(data) {
+        var url = 'api/latest/ldap/getFilteredUsers/search';
         return $http({
             method : 'GET',
             url : url,
             params : {
-                fq : filterWord,
-                n : (n ? n : 20),
+                fq : data.filterWord,
+                n : (data.n ? data.n : 20),
                 start : 0
             }
         });
@@ -94,7 +94,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
 
     /**
      * @ngdoc method
-     * @name getFilteredUsersByWord
+     * @name getNUsers
      * @methodOf services.service:LookupService
      *
      * @description
@@ -103,13 +103,13 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *
      * @returns {Object} An object returned by $resource
      */
-    function getNUsers(n) {
+    function getNUsers(data) {
         var url = 'api/latest/ldap/getNUsers/search';
         return $http({
             method : 'GET',
             url : url,
             params : {
-                n : (n ? n : 20),
+                n : (data.n ? data.n : 20),
                 start : 0
             }
         });
