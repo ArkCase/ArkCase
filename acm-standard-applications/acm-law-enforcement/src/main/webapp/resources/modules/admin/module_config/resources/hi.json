@@ -646,6 +646,7 @@
                     "edit": "CMIS कॉन्फ़िगरेशन को संपादित करें"
                 },
                 "dialog": {
+                    "testConnection": "hi_Test Connection",
                     "cancel": "रद्द करना",
                     "ok": "ठीक"
                 },
@@ -673,10 +674,6 @@
                 "useAlfrescoExtension": {
                     "label": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें",
                     "placeholder": "अल्फ्रेस्को एक्सटेंशन का उपयोग करें"
-                },
-                "endpoint": {
-                    "label": "endpoint",
-                    "placeholder": "endpoint"
                 },
                 "maxIdle": {
                     "label": "अधिकतम बेकार",
@@ -710,7 +707,7 @@
                     "label": "रिपॉजिटरी आईडी",
                     "placeholder": "रिपॉजिटरी आईडी"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "वर्जनिंग स्टेट",
                     "placeholder": "वर्जनिंग स्टेट"
                 }

@@ -600,21 +600,6 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "title",
-                    "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.title",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "parent",
-                    "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.parent",
-                    "headerCellFilter": "translate"
-                },
-                {
-                    "name": "assignee",
-                    "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.assignee",
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "modified_date_tdt",
                     "displayName": "admin.security.organizationalHierarchy.addMembersGridColumns.modified",
                     "headerCellFilter": "translate",
@@ -679,12 +664,6 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "endpoint",
-                    "displayName": "admin.documentManagement.cmisConfiguration.data.endpoint.label",
-                    "visible": true,
-                    "headerCellFilter": "translate"
-                },
-                {
                     "name": "maxIdle",
                     "displayName": "admin.documentManagement.cmisConfiguration.data.maxIdle.label",
                     "visible": false,
@@ -733,8 +712,8 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "versioningState",
-                    "displayName": "admin.documentManagement.cmisConfiguration.data.versioningState.label",
+                    "name": "cmisVersioningState",
+                    "displayName": "admin.documentManagement.cmisConfiguration.data.cmisVersioningState.label",
                     "visible": true,
                     "headerCellFilter": "translate"
                 }
