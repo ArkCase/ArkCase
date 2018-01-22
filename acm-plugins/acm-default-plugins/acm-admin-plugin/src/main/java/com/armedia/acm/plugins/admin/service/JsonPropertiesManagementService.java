@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -51,7 +52,6 @@ public class JsonPropertiesManagementService
         return props;
     }
 
-
     /**
      * Update property
      *
@@ -69,7 +69,8 @@ public class JsonPropertiesManagementService
         if (props == null)
         {
             props = newProps;
-        } else
+        }
+        else
         {
             Iterator<String> keys = newProps.keys();
             while (keys.hasNext())
@@ -98,7 +99,8 @@ public class JsonPropertiesManagementService
             String resource = FileUtils.readFileToString(file, "UTF-8");
             return new JSONObject(resource);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.warn(String.format("Can't read application properties file %s", propertiesFileLocation));
             return null;
@@ -117,7 +119,8 @@ public class JsonPropertiesManagementService
         {
             File file = FileUtils.getFile(propertiesFileLocation);
             FileUtils.writeStringToFile(file, newProps.toString(), "UTF-8");
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error(String.format("Can't update properties file %s", propertiesFileLocation));
             throw new AcmPropertiesManagementException("Can't update properties file", e);

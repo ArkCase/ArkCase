@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="msOutlookPluginPrivileges" class="com.armedia.acm.pluginmanager.model.AcmPluginPrivileges">
         <property name="pluginName" value="Microsoft Outlook Plugin"/>
@@ -47,20 +46,17 @@
                     <property name="url" value="/api/{version}/plugin/outlook/contacts"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
-                <bean id="emailWithAttachmentsUrlPost"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="emailWithAttachmentsUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/email/withattachments"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
-                <bean id="emailWithEmbeddedLinksUrlPost"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="emailWithEmbeddedLinksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/email/withembeddedlinks"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>
                 </bean>
-                <bean id="emailWithAttachmentsAndLinksUrlPost"
-                      class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
+                <bean id="emailWithAttachmentsAndLinksUrlPost" class="com.armedia.acm.pluginmanager.model.AcmPluginUrlPrivilege">
                     <property name="httpMethod" value="POST"/>
                     <property name="url" value="/api/{version}/plugin/outlook/email/withattachmentsandlinks"/>
                     <property name="requiredPrivilege" ref="acmGlobalAllowPrivilege"/>

@@ -17,6 +17,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+
 import org.apache.commons.collections.keyvalue.DefaultKeyValue;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -85,8 +86,8 @@ public class ConfigLookupDao implements LookupDao
     {
         mergedLookups = lookups;
 
-        //merge both json files
-        for (LookupType lookupType : LookupType.values())  //get lookupType
+        // merge both json files
+        for (LookupType lookupType : LookupType.values()) // get lookupType
         {
             ArrayNode jsonArrayExt = JsonPath.using(configurationWithSuppressedExceptions).parse(lookupsExt)
                     .read("$." + lookupType.getTypeName());
@@ -176,7 +177,8 @@ public class ConfigLookupDao implements LookupDao
         // validate lookup
         AcmLookup<?> lookup = getObjectConverter().getJsonUnmarshaller().unmarshall(
                 "{\"name\" : \"" + lookupDefinition.getName() + "\", \"entries\" : " + lookupDefinition.getLookupEntriesAsJson()
-                        + ", \"readonly\": " + lookupDefinition.getReadonly() + "}", lookupDefinition.getLookupType().getLookupClass());
+                        + ", \"readonly\": " + lookupDefinition.getReadonly() + "}",
+                lookupDefinition.getLookupType().getLookupClass());
         if (lookup == null)
         {
             log.error("Unmarshalling lookup entries failed. Lookup name: '{}', lookupAsJson: '{}'", lookupDefinition.getName(),
@@ -198,7 +200,8 @@ public class ConfigLookupDao implements LookupDao
         {
             updatedLookupsAsJson = JsonPath.using(configuration).parse(lookupsExt)
                     .set("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
-                            + "')].entries", lookup.getEntries()).jsonString();
+                            + "')].entries", lookup.getEntries())
+                    .jsonString();
         }
         catch (RuntimeException e)
         {
@@ -254,7 +257,7 @@ public class ConfigLookupDao implements LookupDao
 
             if (jsonArrayExt != null)
             {
-                for (int i =0 ; i < jsonArrayExt.size(); i++ )
+                for (int i = 0; i < jsonArrayExt.size(); i++)
                 {
                     JsonNode node = jsonArrayExt.get(i);
                     if (lookupName.equals(node.get("name").asText()))

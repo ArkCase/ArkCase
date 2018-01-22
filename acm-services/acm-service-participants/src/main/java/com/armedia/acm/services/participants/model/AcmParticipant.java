@@ -26,6 +26,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,13 +45,7 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     private static final long serialVersionUID = 5046781644315879063L;
 
     @Id
-    @TableGenerator(name = "acm_participant_gen",
-            table = "acm_participant_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_participant",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_participant_gen", table = "acm_participant_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_participant", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_participant_gen")
     @Column(name = "cm_participant_id")
     private Long id;
@@ -109,7 +104,6 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
             }
         }
     }
-
 
     public Long getId()
     {

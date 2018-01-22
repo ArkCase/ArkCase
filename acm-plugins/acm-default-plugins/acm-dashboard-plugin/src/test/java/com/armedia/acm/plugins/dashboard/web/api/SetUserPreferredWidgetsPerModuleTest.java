@@ -1,8 +1,17 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+
 import com.armedia.acm.plugins.dashboard.model.userPreference.PreferredWidgetsDto;
 import com.armedia.acm.plugins.dashboard.service.UserPreferenceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,10 +33,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 /**
  * Created by marjan.stefanoski on 19.01.2016.
@@ -83,7 +88,6 @@ public class SetUserPreferredWidgetsPerModuleTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         String in = objectMapper.writeValueAsString(preferredWidgetsDto);
 
-
         log.debug("Input JSON: " + in);
 
         // MVC test classes must call getName() somehow
@@ -93,7 +97,8 @@ public class SetUserPreferredWidgetsPerModuleTest extends EasyMockSupport
 
         mockHttpSession.setAttribute("acm_ip_address", "127.0.0.1");
 
-        expect(mockUserPreferenceService.updateUserPreferenceWidgets(eq(userId), capture(savedPreferredWidgetsDto), eq(ipAddr))).andReturn(preferredWidgetsDto);
+        expect(mockUserPreferenceService.updateUserPreferenceWidgets(eq(userId), capture(savedPreferredWidgetsDto), eq(ipAddr)))
+                .andReturn(preferredWidgetsDto);
 
         replayAll();
 

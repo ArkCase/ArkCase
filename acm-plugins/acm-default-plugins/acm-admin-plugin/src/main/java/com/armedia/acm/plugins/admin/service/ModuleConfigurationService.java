@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmModuleConfigurationException;
 import com.armedia.acm.plugins.admin.model.ModuleConfigurationConstants;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,6 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private String appConfigPropertiesFile;
-
 
     public List<Map<String, String>> retrieveModules() throws AcmModuleConfigurationException
     {
@@ -82,13 +82,13 @@ public class ModuleConfigurationService implements ModuleConfigurationConstants
             // Get only modules names
             return modulesInfos;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't retrieve modules", e);
             throw new AcmModuleConfigurationException("Can't retrieve modules", e);
         }
     }
-
 
     public void setAppConfigPropertiesFile(String appConfigPropertiesFile)
     {

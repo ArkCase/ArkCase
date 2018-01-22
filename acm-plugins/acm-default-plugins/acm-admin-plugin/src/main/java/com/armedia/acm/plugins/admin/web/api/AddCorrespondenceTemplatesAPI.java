@@ -73,7 +73,8 @@ public class AddCorrespondenceTemplatesAPI
                 }
             }
             retrieveTemplateDetails(authentication, pathName, templateUploadList);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -116,7 +117,8 @@ public class AddCorrespondenceTemplatesAPI
                     }
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }

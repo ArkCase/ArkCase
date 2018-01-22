@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.ecm.pipeline.EcmFileTransactionPipelineContext;
 import com.armedia.acm.plugins.ecm.utils.EcmFileMuleUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,8 @@ public class EcmFileMergeContentHandler implements PipelineHandler<EcmFile, EcmF
                 InputStream mergedFileInputStream = new ByteArrayInputStream(pipelineContext.getMergedFileByteArray());
                 Document updatedDocument = ecmFileMuleUtils.updateFile(entity, pipelineContext.getEcmFile(), mergedFileInputStream);
                 pipelineContext.setCmisDocument(updatedDocument);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("mule pre save handler failed: {}", e.getMessage(), e);
                 throw new PipelineProcessException(e);

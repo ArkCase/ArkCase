@@ -1,8 +1,5 @@
 package com.armedia.acm.calendar.service;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -12,6 +9,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.ZonedDateTimeSerializer;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
+import java.time.ZonedDateTime;
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -26,12 +26,12 @@ public class AcmCalendarEvent
 
     public static enum Priority
     {
-        LOW, NORMAL, HIGH;
+        LOW, NORMAL, HIGH
     }
 
     public static enum Sensitivity
     {
-        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL;
+        CONFIDENTIAL, PRIVATE, PERSONAL, NORMAL
     }
 
     private String eventId;

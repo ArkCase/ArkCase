@@ -1,11 +1,11 @@
 package com.armedia.acm.plugins.audit.service;
 
-
 import com.armedia.acm.audit.dao.AuditLookupDao;
 import com.armedia.acm.audit.model.AcmAuditLookup;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.plugins.audit.model.AuditConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
+
 import java.sql.SQLException;
 import java.util.Map;
 
@@ -22,7 +23,6 @@ import java.util.Map;
  */
 public class InsertEventTypeNames implements ApplicationContextAware
 {
-
 
     private AcmPlugin pluginEventType;
     private AuditLookupDao auditLookupDao;
@@ -39,7 +39,8 @@ public class InsertEventTypeNames implements ApplicationContextAware
         try
         {
             updateEventTypeNamesInTheDb();
-        } catch (SQLException e)
+        }
+        catch (SQLException e)
         {
             if (log.isErrorEnabled())
             {
@@ -47,7 +48,6 @@ public class InsertEventTypeNames implements ApplicationContextAware
             }
         }
     }
-
 
     public void updateEventTypeNamesInTheDb() throws SQLException
     {
@@ -63,13 +63,15 @@ public class InsertEventTypeNames implements ApplicationContextAware
             try
             {
                 getAuditLookupDao().deleteAllAuditsFormLookupTabel();
-            } catch (NoResultException e)
+            }
+            catch (NoResultException e)
             {
                 if (log.isInfoEnabled())
                 {
                     log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                 }
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 if (log.isInfoEnabled())
                 {
@@ -81,7 +83,8 @@ public class InsertEventTypeNames implements ApplicationContextAware
             {
                 log.info("New Audit Data inserted into acm_audit_event_type_lu table");
             }
-        } else
+        }
+        else
         {
             if (log.isInfoEnabled())
             {
@@ -114,14 +117,16 @@ public class InsertEventTypeNames implements ApplicationContextAware
                 try
                 {
                     getAuditLookupDao().save(auditLookup);
-                } catch (PersistenceException e)
+                }
+                catch (PersistenceException e)
                 {
                     if (log.isInfoEnabled())
                     {
                         log.info("No Data into acm_audit_event_type_lu table found " + e.getMessage(), e);
                     }
                     throw e;
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     if (log.isInfoEnabled())
                     {

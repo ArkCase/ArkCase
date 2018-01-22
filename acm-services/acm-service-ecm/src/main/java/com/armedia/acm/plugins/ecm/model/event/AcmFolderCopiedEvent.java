@@ -6,14 +6,17 @@ import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 /**
  * Created by marjan.stefanoski on 20.04.2015.
  */
-public class AcmFolderCopiedEvent extends AcmFolderPersistenceEvent {
+public class AcmFolderCopiedEvent extends AcmFolderPersistenceEvent
+{
 
-    public AcmFolderCopiedEvent(AcmFolder source, String userId, String ipAddress) {
+    public AcmFolderCopiedEvent(AcmFolder source, String userId, String ipAddress)
+    {
         super(source, userId, ipAddress);
     }
 
     @Override
-    public String getEventType() {
+    public String getEventType()
+    {
         return AcmFolderConstants.EVENT_TYPE_FOLDER_COPIED;
     }
 }

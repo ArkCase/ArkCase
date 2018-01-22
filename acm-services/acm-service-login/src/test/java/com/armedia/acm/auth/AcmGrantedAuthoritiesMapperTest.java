@@ -1,6 +1,10 @@
 package com.armedia.acm.auth;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,8 +19,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
-
 /**
  *
  * @author millerd
@@ -25,7 +27,7 @@ public class AcmGrantedAuthoritiesMapperTest
 {
     private AcmGrantedAuthoritiesMapper unit;
     private AcmRoleToGroupMapping roleToGroupMapping;
-    
+
     @Before
     public void setUp()
     {
@@ -33,27 +35,27 @@ public class AcmGrantedAuthoritiesMapperTest
         roleToGroupMapping = new AcmRoleToGroupMapping();
         unit.setRoleToGroupMapping(roleToGroupMapping);
     }
-    
+
     /**
-     * initBean() should set the active mapping to an empty map when the 
+     * initBean() should set the active mapping to an empty map when the
      * mapping properties are not set.
      */
     @Test
-    public void initBean_propertiesAreNotSet() 
+    public void initBean_propertiesAreNotSet()
     {
         unit.initBean();
-        
+
         assertEquals(0, unit.getActiveMapping().size());
     }
-    
+
     /**
-     * initBean() should set the active mappings to have one key for each 
-     * value from the properties, with the value for that key being the list 
-     * of keys that have that value.  The properties map logical role names 
-     * to LDAP groups (to ensure each role name is accounted for).  But we 
-     * need to map group names to roles.  So we want to reverse the properties 
-     * - make one key for each property value.  But a group might map to more 
-     * than one role.  Hence the need to have a list of roles for each group.
+     * initBean() should set the active mappings to have one key for each
+     * value from the properties, with the value for that key being the list
+     * of keys that have that value. The properties map logical role names
+     * to LDAP groups (to ensure each role name is accounted for). But we
+     * need to map group names to roles. So we want to reverse the properties
+     * - make one key for each property value. But a group might map to more
+     * than one role. Hence the need to have a list of roles for each group.
      * 
      * Also the group and role names should be normalized to upper case.
      * 
@@ -64,12 +66,12 @@ public class AcmGrantedAuthoritiesMapperTest
      * Also the roles should have "ROLE_" in front.
      * 
      * E.g., if the properties have:
-     *   - ROLE1=group1
-     *   - Role2= group2 
-     *   -  ROLE_ROLE3 =group1
+     * - ROLE1=group1
+     * - Role2= group2
+     * - ROLE_ROLE3 =group1
      * Then the active mapping should be:
-     *   - GROUP1=ROLE_ROLE1,ROLE_ROLE3
-     *   - GROUP2=ROLE_ROLE2
+     * - GROUP1=ROLE_ROLE1,ROLE_ROLE3
+     * - GROUP2=ROLE_ROLE2
      */
     @Test
     public void initBean()
@@ -80,27 +82,27 @@ public class AcmGrantedAuthoritiesMapperTest
         rolesToGroups.setProperty(" ROLE_ROLE3 ", "group1");
         rolesToGroups.setProperty("", "group5");
         rolesToGroups.setProperty("ROLE4", " ");
-       
+
         unit.setApplicationRoleToUserGroupProperties(rolesToGroups);
-        
+
         unit.initBean();
-        
+
         assertEquals(2, unit.getActiveMapping().size());
         assertTrue(unit.getActiveMapping().containsKey("GROUP1"));
         assertTrue(unit.getActiveMapping().containsKey("GROUP2"));
-        
+
         List<String> foundGroup1Roles = unit.getActiveMapping().get("GROUP1");
         assertEquals(2, foundGroup1Roles.size());
         assertTrue(foundGroup1Roles.contains("ROLE_ROLE1"));
         assertTrue(foundGroup1Roles.contains("ROLE_ROLE3"));
-        
+
         List<String> foundGroup2Roles = unit.getActiveMapping().get("GROUP2");
         assertEquals(1, foundGroup2Roles.size());
         assertTrue(foundGroup2Roles.contains("ROLE_ROLE2"));
     }
 
     /**
-     * mapAuthorities should include each role associated to each group 
+     * mapAuthorities should include each role associated to each group
      * the user has.
      */
     @Test
@@ -111,26 +113,26 @@ public class AcmGrantedAuthoritiesMapperTest
         List<String> roles1 = new ArrayList<>();
         roles1.add("ROLE_INVESTIGATOR");
         roles1.add("ROLE_INVESTIGATOR_SUPERVISOR");
-        
+
         groupsToRoles.put("GROUP1", roles1);
-        
+
         List<String> roles2 = new ArrayList<>();
         roles2.add("ROLE_ANALYST");
 
         groupsToRoles.put("GROUP2", roles2);
-        
+
         unit.setActiveMapping(groupsToRoles);
-        
+
         GrantedAuthority auth1 = new AcmGrantedAuthority("GROUP1");
-        
+
         GrantedAuthority auth2 = new AcmGrantedAuthority("GROUP2");
-        
+
         GrantedAuthority authNotMapped = new AcmGrantedAuthority("NONE");
-        
+
         List<GrantedAuthority> auths = Arrays.asList(auth1, auth2, authNotMapped);
-        
+
         Collection<? extends GrantedAuthority> found = unit.mapAuthorities(auths);
-        
+
         assertEquals(3, found.size());
         assertTrue(found.contains(new AcmGrantedAuthority("ROLE_INVESTIGATOR")));
         assertTrue(found.contains(new AcmGrantedAuthority("ROLE_INVESTIGATOR_SUPERVISOR")));
@@ -167,7 +169,6 @@ public class AcmGrantedAuthoritiesMapperTest
         assertTrue(appGroups.contains("investigator"));
         assertTrue(appGroups.contains("investigator_supervisor"));
         assertTrue(appGroups.contains("analyst"));
-
 
     }
 

@@ -1,9 +1,16 @@
 package web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
 import com.armedia.acm.services.subscription.web.api.GetUserSubscriptionAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,10 +31,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by marjan.stefanoski on 12.02.2015.
@@ -61,10 +64,10 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockGetUserSubscriptionAPIController.setSubscriptionService(mockSubscriptionService);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(mockGetUserSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(mockGetUserSubscriptionAPIController).setHandlerExceptionResolvers(exceptionResolver)
+                .build();
         mockAuthentication = createMock(Authentication.class);
     }
-
 
     @Test
     public void getUserSubscription() throws Exception
@@ -79,8 +82,8 @@ public class GetUserSubscriptionAPIControllerTest extends EasyMockSupport
         subscription.setUserId(userId);
         subscription.setObjectId(objectId);
 
-
-        expect(mockSubscriptionService.getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType)).andReturn(Arrays.asList(subscription)).anyTimes();
+        expect(mockSubscriptionService.getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType))
+                .andReturn(Arrays.asList(subscription)).anyTimes();
 
         // MVC test classes must call getName() somehow
         expect(mockAuthentication.getName()).andReturn(userId).atLeastOnce();

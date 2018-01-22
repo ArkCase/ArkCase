@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia</groupId>
@@ -485,7 +486,6 @@
         </site>
     </distributionManagement>
 
-
     <repositories>
         <repository>
             <id>central</id>
@@ -557,7 +557,6 @@
             <id>milton-repo</id>
             <url>http://dl.bintray.com/milton/Milton</url>
         </repository>
-
 
         <!-- swagger -->
         <repository>
@@ -733,7 +732,6 @@
                 <version>${maven.project-info-reports.version}</version>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -829,7 +827,6 @@
 
         </plugins>
     </build>
-
 
     <dependencyManagement>
         <dependencies>
@@ -1224,7 +1221,6 @@
                 <scope>runtime</scope>
             </dependency>
 
-
             <!-- poi -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -1561,7 +1557,6 @@
                 <version>${voodoodyne-jackson-jsog.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
@@ -1658,7 +1653,6 @@
                 <version>${eclipselink-jpa.version}</version>
             </dependency>
 
-
             <!-- bean validation -->
             <dependency>
                 <groupId>javax.validation</groupId>
@@ -1699,7 +1693,6 @@
                 <artifactId>ehcache-core</artifactId>
                 <version>${ehcache.version}</version>
             </dependency>
-
 
             <!-- logging -->
             <dependency>

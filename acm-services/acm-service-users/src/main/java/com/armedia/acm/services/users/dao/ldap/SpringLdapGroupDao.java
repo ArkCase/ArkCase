@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.DirContextAdapter;
@@ -45,8 +46,7 @@ public class SpringLdapGroupDao
             catch (Exception e)
             {
                 log.debug("Removing member with DN [{}] from LDAP group(s) failed! Rollback changes on updated ldap groups", memberDn);
-                updatedGroupDns.forEach(updatedGroupDn ->
-                {
+                updatedGroupDns.forEach(updatedGroupDn -> {
                     try
                     {
                         log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroupDn);
@@ -78,8 +78,7 @@ public class SpringLdapGroupDao
             catch (Exception e)
             {
                 log.debug("Adding member with DN [{}] to LDAP group(s) failed! Rollback changes on updated ldap groups", memberDn);
-                updatedGroupDns.forEach(updatedGroupDn ->
-                {
+                updatedGroupDns.forEach(updatedGroupDn -> {
                     try
                     {
                         log.debug("Rollback changes for Group [{}] with DN [{}]", updatedGroupDn);

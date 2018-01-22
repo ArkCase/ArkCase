@@ -1,14 +1,16 @@
 <div class="modal-header">
     <h3 ng-if="isSelectedParent">
-        <ng-switch on="editMode || isEditParent"">
-            <span ng-switch-when="true" translate>common.editOrganization.parentTitle</span>
-            <span ng-switch-default translate>common.addOrganization.parentTitle</span>
+        <ng-switch on="editMode || isEditParent"
+        ">
+        <span ng-switch-when="true" translate>common.editOrganization.parentTitle</span>
+        <span ng-switch-default translate>common.addOrganization.parentTitle</span>
         </ng-switch>
     </h3>
     <h3 ng-if="!isSelectedParent">
-        <ng-switch on="editMode || isEditParent"">
-            <span ng-switch-when="true" translate>common.editOrganization.title</span>
-            <span ng-switch-default translate>common.addOrganization.title</span>
+        <ng-switch on="editMode || isEditParent"
+        ">
+        <span ng-switch-when="true" translate>common.editOrganization.title</span>
+        <span ng-switch-default translate>common.addOrganization.title</span>
         </ng-switch>
     </h3>
 </div>
@@ -36,24 +38,23 @@
         </div>
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="organization"
-                       translate>common.addOrganization.organization.label</label><span
+                <label for="organization" translate>common.addOrganization.organization.label</label><span
                     class="required-asterisk">*</span>
-                <input id="organization" class="input-md form-control" type="text"
-                       ng-model="organizationValue" readonly ng-disabled="editMode && !isEditParent"
-                       placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
-                       ng-click="pickOrganization()" required>
+                <input id="organization" class="input-md form-control" type="text" ng-model="organizationValue" readonly
+                        ng-disabled="editMode && !isEditParent" placeholder="{{'common.addOrganization.selectExisting.label' | translate}}"
+                        ng-click="pickOrganization()" required>
                 <small ng-if="hasSubCompany" translate>common.addOrganization.notifyParentOrgWillBeChanged</small>
             </div>
             <div class="col-sm-6 form-group" ng-if="!hideAssociationTypes">
-                <label translate>common.addOrganization.type.label</label><span
-                    class="required-asterisk">*</span>
-                <select ng-show="!isSelectedParent" ng-change="notifyOrganizationParent($parent.type)" class="input-md form-control" ng-model="$parent.type" ng-options="o.value | translate for o in $parent.types"
-                        required></select>
+                <label translate>common.addOrganization.type.label</label><span class="required-asterisk">*</span>
+                <select ng-show="!isSelectedParent" ng-change="notifyOrganizationParent($parent.type)" class="input-md form-control"
+                        ng-model="$parent.type" ng-options="o.value | translate for o in $parent.types" required></select>
 
                 <ng-switch ng-show="isSelectedParent" on="!!organizationValue">
-                    <input translate ng-switch-when="true" class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.text' | translate}}"/>
-                    <input translate ng-switch-default class="input-md form-control" type="text" readonly value="{{'common.addOrganization.type.label.default.text' | translate}}"/>
+                    <input translate ng-switch-when="true" class="input-md form-control" type="text" readonly
+                            value="{{'common.addOrganization.type.label.text' | translate}}" />
+                    <input translate ng-switch-default class="input-md form-control" type="text" readonly
+                            value="{{'common.addOrganization.type.label.default.text' | translate}}" />
                 </ng-switch>
             </div>
         </div>

@@ -5,6 +5,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class FindTaskByIdAPIController
 {
     private AcmTaskService taskService;

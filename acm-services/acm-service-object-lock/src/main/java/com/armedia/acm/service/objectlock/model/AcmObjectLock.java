@@ -15,6 +15,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -40,13 +41,7 @@ public class AcmObjectLock implements Serializable, AcmEntity
     }
 
     @Id
-    @TableGenerator(name = "acm_object_lock_gen",
-            table = "acm_object_lock_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_object_lock",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_object_lock_gen", table = "acm_object_lock_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_object_lock", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_object_lock_gen")
     @Column(name = "cm_object_lock_id")
     private Long id;

@@ -1,9 +1,6 @@
 
 package org.mule.module.cmis.processors;
 
-import java.util.Arrays;
-import java.util.List;
-import javax.annotation.Generated;
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
@@ -34,129 +31,158 @@ import org.mule.module.cmis.process.ProcessAdapter;
 import org.mule.module.cmis.process.ProcessCallback;
 import org.mule.module.cmis.process.ProcessTemplate;
 
+import javax.annotation.Generated;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
- * GetObjectByPathMessageProcessor invokes the {@link org.mule.module.cmis.CMISCloudConnector#getObjectByPath(java.lang.String)} method in {@link CMISCloudConnector }. For each argument there is a field in this processor to match it.  Before invoking the actual method the processor will evaluate and transform where possible to the expected argument type.
+ * GetObjectByPathMessageProcessor invokes the
+ * {@link org.mule.module.cmis.CMISCloudConnector#getObjectByPath(java.lang.String)} method in {@link CMISCloudConnector
+ * }. For each argument there is a field in this processor to match it. Before invoking the actual method the processor
+ * will evaluate and transform where possible to the expected argument type.
  * 
  */
 @Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
 public class GetObjectByPathMessageProcessor
-    extends AbstractMessageProcessor<Object>
-    implements Disposable, Initialisable, Startable, Stoppable, MessageProcessor, OperationMetaDataEnabled
+        extends AbstractMessageProcessor<Object>
+        implements Disposable, Initialisable, Startable, Stoppable, MessageProcessor, OperationMetaDataEnabled
 {
 
     protected Object path;
     protected String _pathType;
 
     /**
-     * Obtains the expression manager from the Mule context and initialises the connector. If a target object  has not been set already it will search the Mule registry for a default one.
+     * Obtains the expression manager from the Mule context and initialises the connector. If a target object has not
+     * been set already it will search the Mule registry for a default one.
      * 
      * @throws InitialisationException
      */
     public void initialise()
-        throws InitialisationException
+            throws InitialisationException
     {
     }
 
     public void start()
-        throws MuleException
+            throws MuleException
     {
     }
 
     public void stop()
-        throws MuleException
+            throws MuleException
     {
     }
 
-    public void dispose() {
+    public void dispose()
+    {
     }
 
     /**
      * Set the Mule context
      * 
-     * @param context Mule context to set
+     * @param context
+     *            Mule context to set
      */
-    public void setMuleContext(MuleContext context) {
+    public void setMuleContext(MuleContext context)
+    {
         super.setMuleContext(context);
     }
 
     /**
      * Sets flow construct
      * 
-     * @param flowConstruct Flow construct to set
+     * @param flowConstruct
+     *            Flow construct to set
      */
-    public void setFlowConstruct(FlowConstruct flowConstruct) {
+    public void setFlowConstruct(FlowConstruct flowConstruct)
+    {
         super.setFlowConstruct(flowConstruct);
     }
 
     /**
      * Sets path
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setPath(Object value) {
+    public void setPath(Object value)
+    {
         this.path = value;
     }
 
     /**
      * Invokes the MessageProcessor.
      * 
-     * @param event MuleEvent to be processed
+     * @param event
+     *            MuleEvent to be processed
      * @throws MuleException
      */
     public MuleEvent process(final MuleEvent event)
-        throws MuleException
+            throws MuleException
     {
         Object moduleObject = null;
-        try {
+        try
+        {
             moduleObject = findOrCreate(CMISCloudConnectorConnectionManager.class, true, event);
-            final String _transformedPath = ((String) evaluateAndTransform(getMuleContext(), event, GetObjectByPathMessageProcessor.class.getDeclaredField("_pathType").getGenericType(), null, path));
+            final String _transformedPath = ((String) evaluateAndTransform(getMuleContext(), event,
+                    GetObjectByPathMessageProcessor.class.getDeclaredField("_pathType").getGenericType(), null, path));
             Object resultPayload;
-            ProcessTemplate<Object, Object> processTemplate = ((ProcessAdapter<Object> ) moduleObject).getProcessTemplate();
-            resultPayload = processTemplate.execute(new ProcessCallback<Object,Object>() {
+            ProcessTemplate<Object, Object> processTemplate = ((ProcessAdapter<Object>) moduleObject).getProcessTemplate();
+            resultPayload = processTemplate.execute(new ProcessCallback<Object, Object>()
+            {
 
-
-                public List<Class> getManagedExceptions() {
-                    return Arrays.asList(new Class[] {CMISConnectorConnectionException.class });
+                public List<Class> getManagedExceptions()
+                {
+                    return Arrays.asList(new Class[] { CMISConnectorConnectionException.class });
                 }
 
-                public boolean isProtected() {
+                public boolean isProtected()
+                {
                     return false;
                 }
 
                 public Object process(Object object)
-                    throws Exception
+                        throws Exception
                 {
                     return ((CMISCloudConnector) object).getObjectByPath(_transformedPath);
                 }
 
-            }
-            , this, event);
+            }, this, event);
             overwritePayload(event, resultPayload);
             return event;
-        } catch (MessagingException messagingException) {
+        }
+        catch (MessagingException messagingException)
+        {
             messagingException.setProcessedEvent(event);
             throw messagingException;
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             throw new MessagingException(CoreMessages.failedToInvoke("getObjectByPath"), event, e);
         }
     }
 
     @Override
-    public Result<MetaData> getInputMetaData() {
+    public Result<MetaData> getInputMetaData()
+    {
         return new DefaultResult<MetaData>(null, (Result.Status.SUCCESS));
     }
 
     @Override
-    public Result<MetaData> getOutputMetaData(MetaData inputMetadata) {
+    public Result<MetaData> getOutputMetaData(MetaData inputMetadata)
+    {
         return new DefaultResult<MetaData>(new DefaultMetaData(getPojoOrSimpleModel(CmisObject.class)));
     }
 
-    private MetaDataModel getPojoOrSimpleModel(Class clazz) {
+    private MetaDataModel getPojoOrSimpleModel(Class clazz)
+    {
         DataType dataType = DataTypeFactory.getInstance().getDataType(clazz);
-        if (DataType.POJO.equals(dataType)) {
+        if (DataType.POJO.equals(dataType))
+        {
             return new DefaultPojoMetaDataModel(clazz);
-        } else {
+        }
+        else
+        {
             return new DefaultSimpleMetaDataModel(dataType);
         }
     }

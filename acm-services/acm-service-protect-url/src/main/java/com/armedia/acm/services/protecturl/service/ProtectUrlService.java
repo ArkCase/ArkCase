@@ -1,6 +1,7 @@
 package com.armedia.acm.services.protecturl.service;
 
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -34,7 +35,8 @@ public interface ProtectUrlService
     /**
      * retrieves saved protected url for given obfuscatedUrl as attribute. If not found returns null.
      *
-     * @param obfuscatedUrl String obfuscatedUrl
+     * @param obfuscatedUrl
+     *            String obfuscatedUrl
      * @return ProtectedUrl if found, otherwise null.
      */
     ProtectedUrl getProtectedUrl(String obfuscatedUrl);
@@ -42,7 +44,8 @@ public interface ProtectUrlService
     /**
      * retrieves saved list of protected url for given originalUrl as attribute
      *
-     * @param originalUrl String obfuscatedUrl
+     * @param originalUrl
+     *            String obfuscatedUrl
      * @return List<ProtectedUrl>
      */
     List<ProtectedUrl> getProtectedUrlByOriginalUrl(String originalUrl);

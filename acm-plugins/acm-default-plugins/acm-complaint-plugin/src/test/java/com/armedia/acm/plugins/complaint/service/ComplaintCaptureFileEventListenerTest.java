@@ -1,11 +1,18 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.FileAddedEvent;
 import com.armedia.acm.files.FileConstants;
 import com.armedia.acm.files.capture.DocumentObject;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileObject;
 import org.easymock.Capture;
@@ -24,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 
 import javax.xml.bind.Unmarshaller;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -31,10 +39,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by riste.tutureski on 10/9/2015.
@@ -80,10 +84,10 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         complaintCaptureFileEventListener = createMockBuilder(ComplaintCaptureFileEventListener.class)
-                                               .addMockedMethod("getEntity")
-                                               .addMockedMethod("getFileDocuments")
-                                               .addMockedMethod("moveFileToFolder")
-                                               .addMockedMethod("saveAttachment").createMock();
+                .addMockedMethod("getEntity")
+                .addMockedMethod("getFileDocuments")
+                .addMockedMethod("moveFileToFolder")
+                .addMockedMethod("saveAttachment").createMock();
 
         complaintCaptureFileEventListener.setWatchFolder(mockWatchFolder);
         complaintCaptureFileEventListener.setWorkingFolder(mockWorkingFolder);
@@ -118,9 +122,11 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         expect(complaintCaptureFileEventListener.getEntity(mockFile)).andReturn(entity).anyTimes();
         expect(complaintCaptureFileEventListener.getFileDocuments(mockFile)).andReturn(expectedDocuments).anyTimes();
         expect(complaintCaptureFileEventListener.moveFileToFolder(mockFile, mockWorkingFolder)).andReturn(mockFile).anyTimes();
-        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockWorkingFolder)).andReturn(mockDocumentFile).anyTimes();
+        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockWorkingFolder)).andReturn(mockDocumentFile)
+                .anyTimes();
         expect(complaintCaptureFileEventListener.moveFileToFolder(mockFile, mockCompletedFolder)).andReturn(mockFile).anyTimes();
-        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockCompletedFolder)).andReturn(mockDocumentFile).anyTimes();
+        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockCompletedFolder)).andReturn(mockDocumentFile)
+                .anyTimes();
 
         mockAuditPropertyEntityAdapter.setUserId(FileConstants.XML_BATCH_USER);
         EasyMock.expectLastCall().anyTimes();
@@ -129,17 +135,20 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         Capture<Complaint> capturedComplaint2 = EasyMock.newCapture();
 
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
-        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint1), capture(capturedAuthentication))).andReturn(complaint1);
-        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint2), capture(capturedAuthentication))).andReturn(complaint1);
+        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint1), capture(capturedAuthentication)))
+                .andReturn(complaint1);
+        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint2), capture(capturedAuthentication)))
+                .andReturn(complaint1);
 
         Capture<Long> complaintId = EasyMock.newCapture();
         Capture<DocumentObject> docObject = EasyMock.newCapture();
         Capture<String> cmisFolderId = EasyMock.newCapture();
-        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject), eq("complaint"));
+        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject),
+                eq("complaint"));
         EasyMock.expectLastCall().anyTimes();
-        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject), eq("attachment"));
+        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject),
+                eq("attachment"));
         EasyMock.expectLastCall().anyTimes();
-
 
         replayAll();
 
@@ -173,9 +182,11 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         expect(complaintCaptureFileEventListener.getEntity(mockFile)).andReturn(entity).anyTimes();
         expect(complaintCaptureFileEventListener.getFileDocuments(mockFile)).andReturn(expectedDocuments).anyTimes();
         expect(complaintCaptureFileEventListener.moveFileToFolder(mockFile, mockWorkingFolder)).andReturn(mockFile).anyTimes();
-        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockWorkingFolder)).andReturn(mockDocumentFile).anyTimes();
+        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockWorkingFolder)).andReturn(mockDocumentFile)
+                .anyTimes();
         expect(complaintCaptureFileEventListener.moveFileToFolder(mockFile, mockCompletedFolder)).andReturn(mockFile).anyTimes();
-        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockCompletedFolder)).andReturn(mockDocumentFile).anyTimes();
+        expect(complaintCaptureFileEventListener.moveFileToFolder(mockDocumentFile, mockCompletedFolder)).andReturn(mockDocumentFile)
+                .anyTimes();
 
         mockAuditPropertyEntityAdapter.setUserId(FileConstants.XML_BATCH_USER);
         EasyMock.expectLastCall().anyTimes();
@@ -184,17 +195,20 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         Capture<Complaint> capturedComplaint2 = EasyMock.newCapture();
 
         Capture<Authentication> capturedAuthentication = EasyMock.newCapture();
-        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint1), capture(capturedAuthentication))).andReturn(complaint1);
-        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint2), capture(capturedAuthentication))).andReturn(complaint2);
+        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint1), capture(capturedAuthentication)))
+                .andReturn(complaint1);
+        expect(mockSavaSaveComplaintTransaction.saveComplaint(capture(capturedComplaint2), capture(capturedAuthentication)))
+                .andReturn(complaint2);
 
         Capture<Long> complaintId = EasyMock.newCapture();
         Capture<DocumentObject> docObject = EasyMock.newCapture();
         Capture<String> cmisFolderId = EasyMock.newCapture();
-        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject), eq("complaint"));
+        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject),
+                eq("complaint"));
         EasyMock.expectLastCall().anyTimes();
-        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject), eq("attachment"));
+        complaintCaptureFileEventListener.saveAttachment(capture(cmisFolderId), capture(complaintId), eq("COMPLAINT"), capture(docObject),
+                eq("attachment"));
         EasyMock.expectLastCall().anyTimes();
-
 
         replayAll();
 
@@ -242,7 +256,7 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         Map<String, DocumentObject> expectedDocuments = new HashMap<>();
 
         DynamicEntity entity = getEntity();
-        List<DynamicEntity> documentsList = entity.<List<DynamicEntity>>get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
+        List<DynamicEntity> documentsList = entity.<List<DynamicEntity>> get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
 
         DocumentObject doc1 = new DocumentObject();
         DocumentObject doc2 = new DocumentObject();
@@ -279,7 +293,7 @@ public class ComplaintCaptureFileEventListenerTest extends EasyMockSupport
         Map<String, DocumentObject> expectedDocuments = new HashMap<>();
 
         DynamicEntity entity = getEntity();
-        List<DynamicEntity> documentsList = entity.<List<DynamicEntity>>get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
+        List<DynamicEntity> documentsList = entity.<List<DynamicEntity>> get(FileConstants.XML_BATCH_DOCUMENTS_KEY);
 
         DocumentObject doc1 = new DocumentObject();
         DocumentObject doc2 = new DocumentObject();

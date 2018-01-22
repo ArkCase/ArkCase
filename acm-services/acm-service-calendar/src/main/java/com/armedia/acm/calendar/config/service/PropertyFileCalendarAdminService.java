@@ -1,5 +1,19 @@
 package com.armedia.acm.calendar.config.service;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,20 +32,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
-
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.CalendarPropertyKeys;
-import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
-import com.armedia.acm.core.exceptions.AcmEncryptionException;
-import com.armedia.acm.crypto.properties.AcmEncryptablePropertyUtils;
-
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 9, 2017
  */
@@ -49,7 +49,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
         /*
          * (non-Javadoc)
-         *
          * @see
          * com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#mapException(com.armedia.acm.
          * calendar.config.service.CalendarConfigurationException)
@@ -102,7 +101,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.calendar.config.service.CalendarConfigurationExceptionMapper#getStatusCode()
          */
         @Override
@@ -131,7 +129,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
      * context.ApplicationEventPublisher)
      */
@@ -143,7 +140,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.config.service.CalendarAdminService#readConfiguration()
      */
     @Override
@@ -213,7 +209,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.plugins.outlook.service.CalendarAdminService#writeConfiguration(com.armedia.acm.calendar.config.
      * service.CalendarConfigurationsByObjectType)
@@ -273,7 +268,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.config.service.CalendarAdminService#getExceptionMapper()
      */
     @Override
@@ -408,7 +402,6 @@ public class PropertyFileCalendarAdminService implements CalendarAdminService, I
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override

@@ -14,7 +14,7 @@ public class ListOfValuesService
 
     public List<String> lookupListOfStringValues(LookupTableDescriptor lookupTableDescriptor)
     {
-        if ( lookupTableDescriptor == null || StringUtils.isEmpty(StringUtils.trimAllWhitespace(lookupTableDescriptor.getTableName())) )
+        if (lookupTableDescriptor == null || StringUtils.isEmpty(StringUtils.trimAllWhitespace(lookupTableDescriptor.getTableName())))
         {
             throw new IllegalArgumentException("Lookup table descriptor must specify a table name.");
         }
@@ -26,7 +26,6 @@ public class ListOfValuesService
 
         return values;
     }
-
 
     public JdbcTemplate getAcmJdbcTemplate()
     {

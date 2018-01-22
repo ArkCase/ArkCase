@@ -1,86 +1,87 @@
 'use strict';
 
-angular.module('cases').controller('Cases.NewFutureTaskController', ['$scope', '$modal', 'ConfigService', 'UtilService',
-    function ($scope, $modal, ConfigService, Util) {
+angular.module('cases').controller('Cases.NewFutureTaskController',
+        [ '$scope', '$modal', 'ConfigService', 'UtilService', function($scope, $modal, ConfigService, Util) {
 
+            $scope.futureTaskConfig = null;
+            $scope.userSearchConfig = null;
 
-        $scope.futureTaskConfig = null;
-        $scope.userSearchConfig = null;
+            ConfigService.getModuleConfig("cases").then(function(moduleConfig) {
 
-        ConfigService.getModuleConfig("cases").then(function (moduleConfig) {
+                $scope.futureTaskConfig = _.find(moduleConfig.components, {
+                    id : "newFutureTask"
+                });
+                $scope.userSearchConfig = _.find(moduleConfig.components, {
+                    id : "userSearch"
+                });
 
-            $scope.futureTaskConfig = _.find(moduleConfig.components, {id: "newFutureTask"});
-            $scope.userSearchConfig = _.find(moduleConfig.components, {id: "userSearch"});
-
-            return moduleConfig;
-        });
-
-        $scope.addNewFutureTask = function(){
-            var returnUserGroup = {
-                pickedUserId: $scope.pickedUserId,
-                pickedUserName: $scope.pickedUserName,
-                pickedGroupId: $scope.pickedGroupId,
-                pickedGroupName: $scope.pickedUserName,
-                futureTaskTitle: $scope.futureTaskTitle,
-                futureTaskDetails: $scope.futureTaskDetails
-            };
-            $scope.onModalClose(returnUserGroup)
-        };
-
-        $scope.cancelModal = function(){
-            $scope.onModalDismiss();
-        }
-
-        $scope.userOrGroupSearch = function () {
-            var modalInstance = $modal.open({
-                animation: true,
-                templateUrl: 'modules/cases/views/components/case-user-search.client.view.html',
-                controller: 'Cases.UserSearchController',
-                size: 'lg',
-                resolve: {
-                    $filter: function () {
-                        return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetFilter;
-                    },
-                    $extraFilter: function () {
-                        return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetExtraFilter;
-                    },
-                    $config: function () {
-                        return $scope.userSearchConfig;
-                    }
-                }
+                return moduleConfig;
             });
 
-            modalInstance.result.then(function (chosenUserOrGroup) {
-                if (chosenUserOrGroup) {
-                    var selectedObjectType = chosenUserOrGroup.masterSelectedItem.object_type_s;
-                    if(selectedObjectType === 'USER'){ //Selected User
-                        var selectedUser = chosenUserOrGroup.masterSelectedItem;
-                        var selectedGroup = chosenUserOrGroup.detailSelectedItems;
-                        $scope.pickedUserId = selectedUser.object_id_s;
-                        $scope.pickedUserName = selectedUser.name;
-                        if(selectedGroup){
-                            $scope.pickedGroupId = selectedGroup.object_id_s;
-                            $scope.pickedGroupName =  selectedGroup.name;
+            $scope.addNewFutureTask = function() {
+                var returnUserGroup = {
+                    pickedUserId : $scope.pickedUserId,
+                    pickedUserName : $scope.pickedUserName,
+                    pickedGroupId : $scope.pickedGroupId,
+                    pickedGroupName : $scope.pickedUserName,
+                    futureTaskTitle : $scope.futureTaskTitle,
+                    futureTaskDetails : $scope.futureTaskDetails
+                };
+                $scope.onModalClose(returnUserGroup)
+            };
+
+            $scope.cancelModal = function() {
+                $scope.onModalDismiss();
+            }
+
+            $scope.userOrGroupSearch = function() {
+                var modalInstance = $modal.open({
+                    animation : true,
+                    templateUrl : 'modules/cases/views/components/case-user-search.client.view.html',
+                    controller : 'Cases.UserSearchController',
+                    size : 'lg',
+                    resolve : {
+                        $filter : function() {
+                            return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetFilter;
+                        },
+                        $extraFilter : function() {
+                            return $scope.futureTaskConfig.userOrGroupSearch.userOrGroupFacetExtraFilter;
+                        },
+                        $config : function() {
+                            return $scope.userSearchConfig;
                         }
                     }
-                    else if(selectedObjectType === 'GROUP'){ //Selected Group
-                        var selectedUser = chosenUserOrGroup.detailSelectedItems;
-                        var selectedGroup = chosenUserOrGroup.masterSelectedItem;
-                        if(selectedUser){
+                });
+
+                modalInstance.result.then(function(chosenUserOrGroup) {
+                    if (chosenUserOrGroup) {
+                        var selectedObjectType = chosenUserOrGroup.masterSelectedItem.object_type_s;
+                        if (selectedObjectType === 'USER') { //Selected User
+                            var selectedUser = chosenUserOrGroup.masterSelectedItem;
+                            var selectedGroup = chosenUserOrGroup.detailSelectedItems;
                             $scope.pickedUserId = selectedUser.object_id_s;
                             $scope.pickedUserName = selectedUser.name;
+                            if (selectedGroup) {
+                                $scope.pickedGroupId = selectedGroup.object_id_s;
+                                $scope.pickedGroupName = selectedGroup.name;
+                            }
+                        } else if (selectedObjectType === 'GROUP') { //Selected Group
+                            var selectedUser = chosenUserOrGroup.detailSelectedItems;
+                            var selectedGroup = chosenUserOrGroup.masterSelectedItem;
+                            if (selectedUser) {
+                                $scope.pickedUserId = selectedUser.object_id_s;
+                                $scope.pickedUserName = selectedUser.name;
+                            }
+                            $scope.pickedGroupId = selectedGroup.object_id_s;
+                            $scope.pickedGroupName = selectedGroup.name;
                         }
-                        $scope.pickedGroupId = selectedGroup.object_id_s;
-                        $scope.pickedGroupName = selectedGroup.name;
+
+                        return;
                     }
 
-                    return;
-                }
-
-            }, function () {
-                // Cancel button was clicked.
-                return [];
-            });
-        };
-    }
-]);
+                }, function() {
+                    // Cancel button was clicked.
+                    return [];
+                });
+            };
+        } ]);
