@@ -1,14 +1,5 @@
 package com.armedia.acm.plugins.casefile.service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
@@ -29,6 +20,15 @@ import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtens
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
 public class CaseFileEventListener implements ApplicationListener<AcmObjectHistoryEvent>
@@ -48,7 +48,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private ObjectConverter objectConverter;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
-    
+
     private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     @Override
@@ -128,6 +128,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                                 {
                                     getCalendarService().deleteFolder(user.get(), updatedCaseFile.getContainer(),
                                             DeleteMode.MoveToDeletedItems);
+                                    folderCreatorDao.deleteObjectReference(updatedCaseFile.getId(), updatedCaseFile.getObjectType());
                                 }
                             }
                             getCaseFileEventUtility().raiseCaseFileModifiedEvent(updatedCaseFile, event.getIpAddress(), "status.changed");
@@ -341,7 +342,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     }
 
     /**
-     * @param folderCreatorDao the folderCreatorDao to set
+     * @param folderCreatorDao
+     *            the folderCreatorDao to set
      */
     public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
     {
