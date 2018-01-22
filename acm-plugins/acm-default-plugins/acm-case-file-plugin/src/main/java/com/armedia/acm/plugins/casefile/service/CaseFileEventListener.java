@@ -1,5 +1,16 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -12,19 +23,11 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 
@@ -45,6 +48,8 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     private ObjectConverter objectConverter;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
+    
+    private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -112,7 +117,7 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                         if (isStatusChanged(existing, updatedCaseFile))
                         {
                             String calId = updatedCaseFile.getContainer().getCalendarFolderId();
-                            if (caseFileStatusClosed.contains(updatedCaseFile.getStatus()) && shouldDeleteCalendarFolder && calId != null)
+                            if (shouldDeleteOnClose() && calId != null && caseFileStatusClosed.contains(updatedCaseFile.getStatus()))
                             {
 
                                 // delete shared calendar if case closed
@@ -141,6 +146,21 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
                 }
             }
         }
+    }
+
+    private boolean shouldDeleteOnClose()
+    {
+        boolean purgeOption;
+        try
+        {
+            purgeOption = PurgeOptions.CLOSED.equals(
+                    calendarAdminService.readConfiguration(false).getConfiguration(CaseFileConstants.OBJECT_TYPE).getPurgeOptions());
+        }
+        catch (CalendarConfigurationException e)
+        {
+            purgeOption = true;
+        }
+        return purgeOption && shouldDeleteCalendarFolder;
     }
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
@@ -318,5 +338,13 @@ public class CaseFileEventListener implements ApplicationListener<AcmObjectHisto
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    /**
+     * @param folderCreatorDao the folderCreatorDao to set
+     */
+    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
+    {
+        this.folderCreatorDao = folderCreatorDao;
     }
 }
