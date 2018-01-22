@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.complaint.web.api;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping( { "/api/v1/plugin/complaint", "/api/latest/plugin/complaint"})
+@RequestMapping({ "/api/v1/plugin/complaint", "/api/latest/plugin/complaint" })
 public class ComplaintWorkflowAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -29,8 +30,7 @@ public class ComplaintWorkflowAPIController
             @RequestBody Complaint in,
             Authentication auth,
             HttpServletResponse response,
-            HttpSession session
-    ) throws AcmUserActionFailedException
+            HttpSession session) throws AcmUserActionFailedException
     {
         if (log.isDebugEnabled())
         {
@@ -43,7 +43,7 @@ public class ComplaintWorkflowAPIController
 
         String ipAddress = (String) session.getAttribute("acm_ip_address");
 
-        if ( isNew )
+        if (isNew)
         {
             getEventPublisher().publishComplaintWorkflowEvent(in, auth, ipAddress, false);
             throw new AcmUserActionFailedException(
@@ -54,15 +54,11 @@ public class ComplaintWorkflowAPIController
                     null);
         }
 
-
         getEventPublisher().publishComplaintWorkflowEvent(in, auth, ipAddress, true);
 
         return in;
 
     }
-
-
-
 
     public ComplaintEventPublisher getEventPublisher()
     {

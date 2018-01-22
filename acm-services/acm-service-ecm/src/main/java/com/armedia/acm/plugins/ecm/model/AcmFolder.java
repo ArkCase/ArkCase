@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -88,7 +90,8 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumns({@JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @PrePersist
@@ -269,8 +272,10 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmFolder acmFolder = (AcmFolder) o;
         return Objects.equal(id, acmFolder.id);
     }

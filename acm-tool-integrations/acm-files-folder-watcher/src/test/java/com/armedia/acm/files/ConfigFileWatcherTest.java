@@ -1,5 +1,11 @@
 package com.armedia.acm.files;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.apache.commons.vfs2.FileName;
 import org.apache.commons.vfs2.FileObject;
@@ -19,9 +25,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 2/20/14.
@@ -45,9 +48,9 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     private String fileSeparator = File.separator;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-    
+
     // for this test to pass, Windows and Linux require different file URL prefixes
-    private final String fileUrlPrefix = "file:" + ( File.separator.equals("/") ? "" : "/" );
+    private final String fileUrlPrefix = "file:" + (File.separator.equals("/") ? "" : "/");
 
     @Before
     public void setUp() throws Exception
@@ -68,10 +71,9 @@ public class ConfigFileWatcherTest extends EasyMockSupport
 
         verifyAll();
 
-
         String expected = "C:" + fileSeparator + "home" + fileSeparator + "acm";
         // cross platform canonical path names...
-        if ( "/".equals(fileSeparator) )
+        if ("/".equals(fileSeparator))
         {
             expected = "/" + expected;
         }
@@ -82,9 +84,8 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_ignoreFilesFromIgnoreFolders() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator +
-                        "ignoreFolder" + fileSeparator + "file.txt");
+        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator +
+                "ignoreFolder" + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
@@ -95,21 +96,20 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_whenFileIsAdded() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest(
+                fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileCreated(mockFileChangeEvent);
 
         verifyEventTestResults(capturedEvent);
         assertEquals(ConfigurationFileAddedEvent.class, capturedEvent.getValue().getClass());
     }
-    
 
     @Test
     public void raiseEvent_whenFileIsRemoved() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest(
+                fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileDeleted(mockFileChangeEvent);
 
@@ -120,8 +120,8 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     @Test
     public void raiseEvent_whenFileIsChanged() throws Exception
     {
-        Capture<AbstractConfigurationFileEvent> capturedEvent =
-                setupEventTest(fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
+        Capture<AbstractConfigurationFileEvent> capturedEvent = setupEventTest(
+                fileUrlPrefix + unit.getBaseFolderPath() + fileSeparator + "file.txt");
 
         unit.fileChanged(mockFileChangeEvent);
 
@@ -141,7 +141,6 @@ public class ConfigFileWatcherTest extends EasyMockSupport
     {
         unit.setApplicationEventPublisher(mockPublisher);
 
-
         Capture<AbstractConfigurationFileEvent> capturedEvent = new Capture<>();
 
         expect(mockFileChangeEvent.getFile()).andReturn(mockFileObject).atLeastOnce();
@@ -155,8 +154,7 @@ public class ConfigFileWatcherTest extends EasyMockSupport
         // if file is in one of the folders to be ignored we shouldn't raise an event
         boolean ignored = unit.ignoreThisFile(fileUrlObj);
 
-
-        if ( !ignored )
+        if (!ignored)
         {
             mockPublisher.publishEvent(capture(capturedEvent));
         }

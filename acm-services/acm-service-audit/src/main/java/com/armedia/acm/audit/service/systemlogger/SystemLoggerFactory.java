@@ -13,7 +13,8 @@ public class SystemLoggerFactory
         if (System.getProperty("os.name").startsWith("Windows"))
         {
             return windowsEventLogger;
-        } else
+        }
+        else
         {
             return syslogLogger;
         }

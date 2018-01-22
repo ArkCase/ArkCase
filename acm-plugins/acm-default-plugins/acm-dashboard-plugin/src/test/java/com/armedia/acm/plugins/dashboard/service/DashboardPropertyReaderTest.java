@@ -1,12 +1,11 @@
 package com.armedia.acm.plugins.dashboard.service;
 
+import static org.junit.Assert.assertFalse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 public class DashboardPropertyReaderTest
 {

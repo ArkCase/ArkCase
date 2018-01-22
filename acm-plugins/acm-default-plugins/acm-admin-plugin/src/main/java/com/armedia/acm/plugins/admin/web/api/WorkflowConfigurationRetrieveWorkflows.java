@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,10 +17,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by sergey.kolomiets  on 6/9/15.
+ * Created by sergey.kolomiets on 6/9/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class WorkflowConfigurationRetrieveWorkflows
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -34,7 +35,8 @@ public class WorkflowConfigurationRetrieveWorkflows
             @RequestParam(value = "start", required = false, defaultValue = "0") int start,
             @RequestParam(value = "length", required = false, defaultValue = "10") int length,
             @RequestParam(value = "orderBy", required = false, defaultValue = WorkflowConfigurationService.PROP_CREATED) String orderBy,
-            @RequestParam(value = "isAsc", required = false, defaultValue = "false") boolean isAsc) throws IOException, AcmWorkflowConfigurationException
+            @RequestParam(value = "isAsc", required = false, defaultValue = "false") boolean isAsc)
+            throws IOException, AcmWorkflowConfigurationException
     {
 
         try
@@ -42,7 +44,8 @@ public class WorkflowConfigurationRetrieveWorkflows
             List<AcmProcessDefinition> processDefinitions = workflowConfigurationService.retrieveWorkflows(start, length, orderBy, isAsc);
 
             return processDefinitions;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get workflows list", e);
             throw new AcmWorkflowConfigurationException("Can't get workflows list", e);

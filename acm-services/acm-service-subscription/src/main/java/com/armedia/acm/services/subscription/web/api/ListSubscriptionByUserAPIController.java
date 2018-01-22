@@ -46,7 +46,8 @@ public class ListSubscriptionByUserAPIController
         try
         {
             subscriptionList = getSubscriptionService().getSubscriptionsByUser(userId, startRow, maxRows);
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.debug("No Subscriptions Found for user [{}], {}", userId, e.getMessage());
             return new ArrayList<>();

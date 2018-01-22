@@ -1,103 +1,103 @@
 {
-  "costTracking": {
-    "title": "Kostenverfolgung",
-    "progressNoCostsheet": "[ Keine Daten der Kostenverfolgung ]",
-    "progressLoading": "Laden der Kostenblatt",
-    "progressError": "Fehler beim Laden der Kostenblatt"
-  },
-  "costTracking.menus": {
-    "leftnav.item": "Kostenverfolgung",
-    "topbar.item": "Kostenblatt"
-  },
-  "costTracking.comp.main": {
-    "title": "Übersicht"
-  },
-  "costTracking.comp.info": {
-    "title": "Informationen",
-    "incidentDate": "Vorfallsdatum",
-    "priority": "Priorität",
-    "assignedTo": "Zugewiesen",
-    "subjectType": "Betreff-Typ",
-    "state": "Zustand"
-  },
-  "costTracking.comp.actions": {
-    "title": "Aktionen",
-    "new.button": "Neues Kostenblatt",
-    "edit.button": "Kostenblatt bearbeiten"
-  },
-  "costTracking.comp.details": {
-    "title": "Einzelheiten",
-    "informSaved": "Kostenstellendetails gespeichert",
-    "table.columns": {
-      "title": "Einzelheiten",
-      "modified": "Datum der letzten Änderung",
-      "modifier": "Benutzer zuletzt geändert"
-    }
-  },
-  "costTracking.comp.person": {
-    "title": "Menschen",
-    "table.columns": {
-      "fullName": "Vollständiger Name",
-      "userId": "Nutzername"
-    }
-  },
-  "costTracking.comp.summary": {
-    "title": "Kosten",
-    "table.columns": {
-      "parentId": "Identifizierung",
-      "parentNumber": "Eltern ID",
-      "parentType": "Übergeordneter Typ",
-      "value": "Gesamtkosten",
-      "title": "Titel",
-      "description": "Beschreibung"
-    }
-  },
-  "costTracking.comp.tags": {
-    "title": "Etiketten",
-    "table.columns": {
-      "tag": "Etikett",
-      "created": "Erstellungsdatum",
-      "createdBy": "Erstellt von"
+    "costTracking": {
+        "title": "Kostenverfolgung",
+        "progressNoCostsheet": "[ Keine Daten der Kostenverfolgung ]",
+        "progressLoading": "Laden der Kostenblatt",
+        "progressError": "Fehler beim Laden der Kostenblatt"
     },
-    "modal": {
-      "title": "Etikett",
-      "search": "Suche nach Tag",
-      "buttons": {
-        "cancel": "Stornieren",
-        "ok": "Tag hinzufügen"
-      }
+    "costTracking.menus": {
+        "leftnav.item": "Kostenverfolgung",
+        "topbar.item": "Kostenblatt"
     },
-    "message": {
-      "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
-      "tagAssociated": "Bereits verbunden",
-      "delete": {
-        "success": "Markierung erfolgreich gelöscht",
-        "error": "Fehler beim Löschen des Tags"
-      }
-    }
-  },
-  "costTracking.comp.approvers": {
-    "title": "Genehmiger",
-    "table.columns": {
-      "fullName": "Vollständiger Name",
-      "userId": "Nutzername"
-    }
-  },
-  "costTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Einzelheiten",
-      "person.label": "Menschen",
-      "summary.label": "Kosten",
-      "tags.label": "Etiketten",
-      "approvers.label": "Genehmiger"
+    "costTracking.comp.main": {
+        "title": "Übersicht"
     },
-    "sorters": {
-      "dateAsc": "Sortieren Datum Auf",
-      "dateDesc": "Sortieren Datum Dec",
-      "idAsc": "Sortieren Kostenblatt-ID Auf",
-      "idDesc": "Sortieren Kostenblatt-ID Dec",
-      "nameDesc": "Nach Name sortieren",
-      "noSort": "(Keine Sortierung)"
+    "costTracking.comp.info": {
+        "title": "Informationen",
+        "incidentDate": "Vorfallsdatum",
+        "priority": "Priorität",
+        "assignedTo": "Zugewiesen",
+        "subjectType": "Betreff-Typ",
+        "state": "Zustand"
+    },
+    "costTracking.comp.actions": {
+        "title": "Aktionen",
+        "new.button": "Neues Kostenblatt",
+        "edit.button": "Kostenblatt bearbeiten"
+    },
+    "costTracking.comp.details": {
+        "title": "Einzelheiten",
+        "informSaved": "Kostenstellendetails gespeichert",
+        "table.columns": {
+            "title": "Einzelheiten",
+            "modified": "Datum der letzten Änderung",
+            "modifier": "Benutzer zuletzt geändert"
+        }
+    },
+    "costTracking.comp.person": {
+        "title": "Menschen",
+        "table.columns": {
+            "fullName": "Vollständiger Name",
+            "userId": "Nutzername"
+        }
+    },
+    "costTracking.comp.summary": {
+        "title": "Kosten",
+        "table.columns": {
+            "parentId": "Identifizierung",
+            "parentNumber": "Eltern ID",
+            "parentType": "Übergeordneter Typ",
+            "value": "Gesamtkosten",
+            "title": "Titel",
+            "description": "Beschreibung"
+        }
+    },
+    "costTracking.comp.tags": {
+        "title": "Etiketten",
+        "table.columns": {
+            "tag": "Etikett",
+            "created": "Erstellungsdatum",
+            "createdBy": "Erstellt von"
+        },
+        "modal": {
+            "title": "Etikett",
+            "search": "Suche nach Tag",
+            "buttons": {
+                "cancel": "Stornieren",
+                "ok": "Tag hinzufügen"
+            }
+        },
+        "message": {
+            "tagExists": "Tag mit diesem Namen oder Beschreibung oder Text existiert bereits",
+            "tagAssociated": "Bereits verbunden",
+            "delete": {
+                "success": "Markierung erfolgreich gelöscht",
+                "error": "Fehler beim Löschen des Tags"
+            }
+        }
+    },
+    "costTracking.comp.approvers": {
+        "title": "Genehmiger",
+        "table.columns": {
+            "fullName": "Vollständiger Name",
+            "userId": "Nutzername"
+        }
+    },
+    "costTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Einzelheiten",
+            "person.label": "Menschen",
+            "summary.label": "Kosten",
+            "tags.label": "Etiketten",
+            "approvers.label": "Genehmiger"
+        },
+        "sorters": {
+            "dateAsc": "Sortieren Datum Auf",
+            "dateDesc": "Sortieren Datum Dec",
+            "idAsc": "Sortieren Kostenblatt-ID Auf",
+            "idDesc": "Sortieren Kostenblatt-ID Dec",
+            "nameDesc": "Nach Name sortieren",
+            "noSort": "(Keine Sortierung)"
+        }
     }
-  }
 }

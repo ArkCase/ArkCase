@@ -1,9 +1,9 @@
 package com.armedia.acm.files.capture;
 
-import java.io.File;
-
 import org.apache.commons.vfs2.FileChangeEvent;
 import org.springframework.context.ApplicationEvent;
+
+import java.io.File;
 
 public class AbstractCaptureFileEvent extends ApplicationEvent
 {
@@ -16,11 +16,13 @@ public class AbstractCaptureFileEvent extends ApplicationEvent
 
     }
 
-    public File getCaptureFile() {
+    public File getCaptureFile()
+    {
         return captureFile;
     }
 
-    public void setCaptureFile(File captureFile) {
+    public void setCaptureFile(File captureFile)
+    {
         this.captureFile = captureFile;
     }
 

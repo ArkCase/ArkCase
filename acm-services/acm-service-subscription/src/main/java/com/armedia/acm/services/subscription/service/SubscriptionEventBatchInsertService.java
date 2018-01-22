@@ -9,6 +9,7 @@ import com.armedia.acm.services.subscription.dao.SubscriptionEventDao;
 import com.armedia.acm.services.subscription.model.AcmSubscriptionEvent;
 import com.armedia.acm.services.subscription.model.SubscriptionConstants;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.xmlbeans.SystemProperties;
 import org.slf4j.Logger;
@@ -77,11 +78,13 @@ public class SubscriptionEventBatchInsertService
                     AcmSubscriptionEvent subscriptionEventSaved = getSubscriptionEventDao().save(subscriptionEvent);
                     subscriptionEventPublisher.publishAcmSubscriptionEventCreatedEvent(subscriptionEventSaved, true);
                 }
-            } catch (AcmObjectNotFoundException e)
+            }
+            catch (AcmObjectNotFoundException e)
             {
                 log.debug("There are no new events to be added");
             }
-        } catch (ParseException e)
+        }
+        catch (ParseException e)
         {
             if (log.isErrorEnabled())
             {

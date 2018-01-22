@@ -6,6 +6,7 @@ import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 import com.armedia.acm.services.users.service.ldap.PasswordValidationService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class ResetPasswordUIController
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView setPassword(@RequestParam String token, @RequestParam String password,
-                                    @RequestParam String confirmPassword, @RequestParam String directory)
+            @RequestParam String confirmPassword, @RequestParam String directory)
     {
         ModelAndView modelAndView = getModelAndView(token, directory);
         if (StringUtils.isBlank(password) || StringUtils.isBlank(confirmPassword))
@@ -71,7 +72,8 @@ public class ResetPasswordUIController
             LdapAuthenticateService ldapAuthenticateService = acmContextHolder.getAllBeansOfType(LdapAuthenticateService.class)
                     .get(String.format("%s_ldapAuthenticateService", directory));
             ldapAuthenticateService.resetUserPassword(token, password);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Changing password failed!", e);
             return setError(modelAndView, "Changing password failed!");

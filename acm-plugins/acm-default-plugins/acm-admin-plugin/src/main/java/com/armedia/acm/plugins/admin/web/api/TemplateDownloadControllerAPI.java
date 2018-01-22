@@ -69,17 +69,20 @@ public class TemplateDownloadControllerAPI
                 }
             } while (read > 0);
             response.getOutputStream().flush();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
-        } finally
+        }
+        finally
         {
             if (fileIs != null)
             {
                 try
                 {
                     fileIs.close();
-                } catch (IOException e)
+                }
+                catch (IOException e)
                 {
                     log.error("Could not close file stream: " + e.getMessage(), e);
                 }

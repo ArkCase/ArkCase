@@ -48,7 +48,8 @@ public class AcmPluginRoleBasedAccessInterceptor extends HandlerInterceptorAdapt
             // privileges in the user session. Somehow the login success handler did not run. This is an
             // anomalous situation. Better return HTTP 403.
             throw new AcmNotAuthorizedException(request.getServletPath());
-        } else
+        }
+        else
         {
             List<AcmPluginUrlPrivilege> urlPrivileges = getAcmPluginManager().getUrlPrivileges();
             boolean hasPrivilege = determinePrivilege(method, url, userPrivileges, urlPrivileges);

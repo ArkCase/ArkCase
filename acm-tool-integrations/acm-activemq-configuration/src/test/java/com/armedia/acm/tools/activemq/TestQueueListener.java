@@ -6,6 +6,7 @@ import org.springframework.jms.annotation.JmsListener;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**

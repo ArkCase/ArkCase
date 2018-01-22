@@ -9,7 +9,7 @@
         <h4>{{dashboardWeather.weather.location.city}} ({{dashboardWeather.weather.location.country}})</h4>
         <h3>
             <span translate>dashboard.widgets.weather.label.current</span>
-             {{ dashboardWeather.weather.temp.current |
+            {{ dashboardWeather.weather.temp.current |
             temp:2:dashboardWeather.units
             }}</h3>
         min: {{ dashboardWeather.weather.temp.min | temp:2:dashboardWeather.units }}, max: {{

@@ -7,6 +7,7 @@ import com.armedia.acm.service.objectlock.model.AcmObjectLockEvent;
 import com.armedia.acm.service.objectlock.model.AcmObjectUnlockEvent;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -15,8 +16,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Created by nebojsha on 25.08.2015.
@@ -58,7 +57,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             if (existingLock.getCreator().equals(auth.getName()))
             {
                 return existingLock;
-            } else
+            }
+            else
             {
                 log.warn(
                         "[{}] not able to create object lock[objectId={}, objectType={}, lockType={}]. Reason: Object lock already exists for: [{}]",
@@ -80,7 +80,8 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
             getApplicationEventPublisher().publishEvent(event);
 
             return lock;
-        } else
+        }
+        else
         {
             return ol;
         }
@@ -123,7 +124,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getDocumentsWithLock(String objectType, Authentication auth, String lockHeldByUser, int firstRow, int maxRows,
-                                       String sort, String fqParams) throws MuleException
+            String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("{!join from=parent_ref_s to=id}object_type_s:OBJECT_LOCK ");
@@ -144,7 +145,7 @@ public class AcmObjectLockServiceImpl implements AcmObjectLockService, Applicati
 
     @Override
     public String getObjectLocks(String parentObjectType, Authentication auth, String objectId, String creator, int firstRow, int maxRows,
-                                 String sort, String fqParams) throws MuleException
+            String sort, String fqParams) throws MuleException
     {
         StringBuilder query = new StringBuilder();
         query.append("object_type_s:OBJECT_LOCK");

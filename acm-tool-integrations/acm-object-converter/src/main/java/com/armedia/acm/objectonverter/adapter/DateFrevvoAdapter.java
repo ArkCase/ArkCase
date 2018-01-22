@@ -1,36 +1,37 @@
 package com.armedia.acm.objectonverter.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.armedia.acm.objectonverter.DateFormats;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import com.armedia.acm.objectonverter.DateFormats;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class DateFrevvoAdapter extends XmlAdapter<String, Date> {
+public class DateFrevvoAdapter extends XmlAdapter<String, Date>
+{
 
-	private SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormats.FREVVO_DATE_FORMAT_MARSHAL_UNMARSHAL);
-	
-	@Override
-	public String marshal(Date date) throws Exception 
-	{
-		return getDateFormat().format(date);
-	}
+    private SimpleDateFormat dateFormat = new SimpleDateFormat(DateFormats.FREVVO_DATE_FORMAT_MARSHAL_UNMARSHAL);
 
-	@Override
-	public Date unmarshal(String date) throws Exception 
-	{
-		return getDateFormat().parse(date);
-	}
+    @Override
+    public String marshal(Date date) throws Exception
+    {
+        return getDateFormat().format(date);
+    }
 
-	public SimpleDateFormat getDateFormat() 
-	{
-		return dateFormat;
-	}
+    @Override
+    public Date unmarshal(String date) throws Exception
+    {
+        return getDateFormat().parse(date);
+    }
 
-	public void setDateFormat(SimpleDateFormat dateFormat) 
-	{
-		this.dateFormat = dateFormat;
-	}
+    public SimpleDateFormat getDateFormat()
+    {
+        return dateFormat;
+    }
+
+    public void setDateFormat(SimpleDateFormat dateFormat)
+    {
+        this.dateFormat = dateFormat;
+    }
 
 }

@@ -10,14 +10,14 @@ import java.util.Date;
 public abstract class PersonAssociationPersistenceEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "PERSON-ASSOCIATION";
-    
+
     public PersonAssociationPersistenceEvent(PersonAssociation source)
     {
         super(source);
         setObjectId(source.getId());
         setEventDate(new Date());
         setUserId(source.getModifier());
-               
+
     }
 
     @Override
@@ -26,5 +26,4 @@ public abstract class PersonAssociationPersistenceEvent extends AcmEvent
         return OBJECT_TYPE;
     }
 
-    
 }

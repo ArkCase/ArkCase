@@ -1,5 +1,12 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
@@ -7,6 +14,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -29,19 +37,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 /**
  * Created by vladimir.radeski on 11/20/2017.
  */
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-web-acm-web.xml", "classpath:/spring/spring-library-task-plugin-test.xml" })
 public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
 {
     private MockMvc mockMvc;
@@ -84,7 +85,6 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
         String ipAddress = "ipAddress";
         ArrayList<EcmFile> documentsToReview = new ArrayList<>();
 
-
         AcmTask reviewTask = new AcmTask();
         reviewTask.setAssignee("assignee");
         reviewTask.setAttachedToObjectType(attachedToObjectType);
@@ -106,13 +106,13 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         String inJson = objectMapper.writeValueAsString(reviewTask);
 
-
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         Capture<AcmTask> capturedAcmTask = EasyMock.newCapture();
 
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-        expect(mockTaskService.startReviewDocumentsWorkflow(capture(capturedAcmTask), EasyMock.eq(businessProcessName), EasyMock.eq(mockAuthentication))).andReturn(createdAcmTasks);
+        expect(mockTaskService.startReviewDocumentsWorkflow(capture(capturedAcmTask), EasyMock.eq(businessProcessName),
+                EasyMock.eq(mockAuthentication))).andReturn(createdAcmTasks);
 
         replayAll();
 
@@ -156,14 +156,14 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
         ObjectMapper objectMapper = new ObjectMapper();
         String inJson = objectMapper.writeValueAsString(reviewTask);
 
-
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
         Capture<AcmTask> capturedAcmTask = EasyMock.newCapture();
         Capture<AcmApplicationTaskEvent> capturedEvent = Capture.newInstance();
 
         expect(mockAuthentication.getName()).andReturn("user").atLeastOnce();
-        expect(mockTaskService.startReviewDocumentsWorkflow(capture(capturedAcmTask), EasyMock.eq(businessProcessName), EasyMock.eq(mockAuthentication))).andThrow(new AcmTaskException("Test Exception"));
+        expect(mockTaskService.startReviewDocumentsWorkflow(capture(capturedAcmTask), EasyMock.eq(businessProcessName),
+                EasyMock.eq(mockAuthentication))).andThrow(new AcmTaskException("Test Exception"));
         mockTaskEventPublisher.publishTaskEvent(capture(capturedEvent));
 
         replayAll();
@@ -178,7 +178,6 @@ public class CreateBusinessProcessTasksAPIControllerTest extends EasyMockSupport
                 .content(inJson)).andReturn();
 
         exception = res.getResolvedException();
-
 
         verifyAll();
 

@@ -24,18 +24,24 @@ public class NotificationUiController
         mv.setViewName("notification");
 
         Map<String, Object> props = getPluginProperties();
-        if (null != props) {
+        if (null != props)
+        {
             Object prop = props.get("search.name");
-            if (null != prop) {
+            if (null != prop)
+            {
                 mv.addObject("searchName", prop);
             }
-            try {
+            try
+            {
                 prop = props.get("search.filters");
-                if (null != prop) {
+                if (null != prop)
+                {
                     JSONArray searchFilters = new JSONArray(prop.toString());
                     mv.addObject("searchFilters", searchFilters);
                 }
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 log.error(e.getMessage());
             }
         }
@@ -43,11 +49,13 @@ public class NotificationUiController
         return mv;
     }
 
-    public Map<String, Object> getPluginProperties() {
+    public Map<String, Object> getPluginProperties()
+    {
         return pluginProperties;
     }
 
-    public void setPluginProperties(Map<String, Object> pluginProperties) {
+    public void setPluginProperties(Map<String, Object> pluginProperties)
+    {
         this.pluginProperties = pluginProperties;
     }
 }

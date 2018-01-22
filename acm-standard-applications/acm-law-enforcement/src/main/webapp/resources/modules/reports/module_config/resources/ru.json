@@ -1,48 +1,48 @@
 {
-  "reports": {
-    "title": "Отчеты",
-    "menus": {
-      "leftnav.item": "Отчеты"
+    "reports": {
+        "title": "Отчеты",
+        "menus": {
+            "leftnav.item": "Отчеты"
+        },
+        "selectReport": {
+            "label": "Отчет",
+            "placeholder": "Выберите отчет"
+        },
+        "selectState": {
+            "label": "Состояние",
+            "placeholder": "Выберите состояние"
+        },
+        "startDate": {
+            "label": "Из"
+        },
+        "endDate": {
+            "label": "к"
+        },
+        "dropdown": {
+            "turnaround": "Время выполнения реквестера",
+            "requester": "Краткое описание",
+            "pending": "Отчет о ожидающих заказах",
+            "associate": "Ассоциированный отчет о производительности",
+            "origination": "Счетчик происхождения",
+            "transfers": "Отчет о переводах",
+            "exceptions": "Отчет об исключениях (несоответствие)"
+        },
+        "datepicker": {
+            "close": "Готово",
+            "clear": "Очистить",
+            "current": "Cегодня"
+        },
+        "btn": {
+            "generateReport": "Создать отчет"
+        },
+        "checkBox": {
+            "xmlReport": "Показать как XML"
+        }
     },
-    "selectReport": {
-      "label": "Отчет",
-      "placeholder": "Выберите отчет"
+    "reports.comp.datepickers": {
+        "title": "Выбор даты"
     },
-    "selectState": {
-      "label": "Состояние",
-      "placeholder": "Выберите состояние"
-    },
-    "startDate": {
-      "label": "Из"
-    },
-    "endDate": {
-      "label": "к"
-    },
-    "dropdown": {
-      "turnaround": "Время выполнения реквестера",
-      "requester": "Краткое описание",
-      "pending": "Отчет о ожидающих заказах",
-      "associate": "Ассоциированный отчет о производительности",
-      "origination": "Счетчик происхождения",
-      "transfers": "Отчет о переводах",
-      "exceptions": "Отчет об исключениях (несоответствие)"
-    },
-    "datepicker": {
-      "close": "Готово",
-      "clear": "Очистить",
-      "current": "Cегодня"
-    },
-    "btn": {
-      "generateReport": "Создать отчет"
-    },
-    "checkBox": {
-      "xmlReport": "Показать как XML"
+    "reports.comp.reportselection": {
+        "title": "Отчеты"
     }
-  },
-  "reports.comp.datepickers": {
-    "title": "Выбор даты"
-  },
-  "reports.comp.reportselection": {
-    "title": "Отчеты"
-  }
 }

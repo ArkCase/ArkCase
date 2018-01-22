@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by sergey.kolomiets  on 6/9/15.
+ * Created by sergey.kolomiets on 6/9/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class WorkflowConfigurationRetrieveBpmnFile
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -40,7 +41,8 @@ public class WorkflowConfigurationRetrieveBpmnFile
             InputStream bpmnStream = workflowConfigurationService.retrieveBpmnFile(key, version);
             String bpmnFileContent = IOUtils.toString(bpmnStream);
             return bpmnFileContent;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get workflow BPMN file", e);
             throw new AcmWorkflowConfigurationException("Can't get workflow BPMN file", e);

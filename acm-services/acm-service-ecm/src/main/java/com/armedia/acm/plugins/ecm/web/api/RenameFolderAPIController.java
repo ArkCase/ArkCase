@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class RenameFolderAPIController
 {
 
@@ -46,7 +46,8 @@ public class RenameFolderAPIController
             getFolderEventPublisher().publishFolderRenamedEvent(renamedFolder, true,
                     container.getContainerObjectType(), container.getContainerObjectId());
             return renamedFolder;
-        } catch (AcmUserActionFailedException | AcmFolderException | AcmObjectNotFoundException e)
+        }
+        catch (AcmUserActionFailedException | AcmFolderException | AcmObjectNotFoundException e)
         {
             log.error("Exception occurred while trying to rename folder with id: {}", objectId);
             getFolderEventPublisher().publishFolderRenamedEvent(source, false, null, null);

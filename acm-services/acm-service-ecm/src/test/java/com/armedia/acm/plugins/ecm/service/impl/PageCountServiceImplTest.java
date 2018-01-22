@@ -36,13 +36,13 @@ public class PageCountServiceImplTest extends EasyMockSupport
             byte[] bytes = IOUtils.toByteArray(is);
             int numberOfPages = unit.getNumberOfPages(mimeType, bytes);
             LOGGER.debug("Number of pages found: [{}]", numberOfPages);
-        } catch (IOException | IllegalArgumentException e)
+        }
+        catch (IOException | IllegalArgumentException e)
         {
             LOGGER.error("Failed to find pageCount but shouldn't throw exception", e);
             throw e;
         }
 
     }
-
 
 }
