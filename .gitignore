@@ -9,6 +9,7 @@ atlassian-ide-plugin.xml
 
 *.project
 *.classpath
+*.tern-project
 .settings/
 .springBeans
 .externalToolBuilders/
@@ -27,4 +28,3 @@ ${user.home}
 rebel.xml
 **/rebel.xml
 .rebel.xml.bak
-.tern-project
