@@ -4,24 +4,6 @@ import static com.armedia.acm.calendar.service.integration.exchange.CalendarEnti
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.READ;
 import static com.armedia.acm.calendar.service.integration.exchange.CalendarEntityHandler.PermissionType.WRITE;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationListener;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationEvent;
@@ -46,6 +28,24 @@ import com.armedia.acm.service.outlook.model.AcmOutlookFolderCreator;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.users.model.AcmUser;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.persistence.PersistenceException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -79,7 +79,6 @@ public class ExchangeCalendarService
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#mapException(com.armedia.acm.calendar.service.
          * CalendarServiceException)
          */
@@ -110,7 +109,6 @@ public class ExchangeCalendarService
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.calendar.service.CalendarExceptionMapper#getStatusCode()
          */
         @Override
@@ -144,7 +142,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * org.springframework.context.ApplicationListener#onApplicationEvent(org.springframework.context.ApplicationEvent)
      */
@@ -156,7 +153,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -180,7 +176,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.service.CalendarService#retrieveCalendar(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String)
@@ -216,7 +211,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#listCalendars(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String, java.lang.String, int, int)
      */
@@ -254,7 +248,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.service.CalendarService#addCalendarEvent(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String,
@@ -325,7 +318,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#updateCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, com.armedia.acm.calendar.service.AcmCalendarEvent,
      * org.springframework.web.multipart.MultipartFile[])
@@ -475,7 +467,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#deleteCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, java.lang.String)
      */
@@ -532,7 +523,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#purgeEvents(java.lang.String,
      * com.armedia.acm.calendar.config.service.CalendarConfiguration)
      */
@@ -571,7 +561,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.CalendarService#getExceptionMapper(com.armedia.acm.calendar.service.
      * CalendarServiceException)
      */
@@ -694,7 +683,6 @@ public class ExchangeCalendarService
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.config.service.CalendarAdminService#verifyEmailCredentials(com.armedia.acm.calendar.
      * config.service.EmailCredentials)

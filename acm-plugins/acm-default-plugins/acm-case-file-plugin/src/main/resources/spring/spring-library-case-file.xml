@@ -35,6 +35,7 @@
         <property name="caseFileStatusClosed" value="${casefile.status.closed}"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
     <bean id="changeCaseFileStateService"

@@ -15,6 +15,7 @@ atlassian-ide-plugin.xml
 .checkstyle
 .mule/
 .configuration
+.tern-project
 
 # Package Files #
 nbactions.xml

@@ -1,18 +1,5 @@
 package com.armedia.acm.plugins.complaint.service;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
@@ -32,6 +19,19 @@ import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.utils.ParticipantUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationListener;
+
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import microsoft.exchange.webservices.data.core.enumeration.service.DeleteMode;
 

@@ -1,22 +1,5 @@
 package com.armedia.acm.service.outlook.dao.impl;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.TimeZone;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.cache.Cache;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationListener;
-
 import com.armedia.acm.core.exceptions.AcmOutlookConnectionFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookCreateItemFailedException;
 import com.armedia.acm.core.exceptions.AcmOutlookException;
@@ -36,6 +19,23 @@ import com.armedia.acm.service.outlook.model.OutlookFolderPermission;
 import com.armedia.acm.service.outlook.model.OutlookItem;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.impl.ExchangeConfigurationServiceImpl;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cache.Cache;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationListener;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.TimeZone;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
