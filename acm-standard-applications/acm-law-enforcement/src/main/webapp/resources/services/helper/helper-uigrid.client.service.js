@@ -29,7 +29,7 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
             }
             , CommonButtons: [
                 {"name": "edit", "clickFn": "editRow", "icon": "fa fa-pencil", "readOnlyFn": "isReadOnly"}
-                , {"name": "delete", "clickFn": "deleteRow", "icon": "fa fa-trash-o", "readOnlyFn": "isReadOnly"}
+                , {"name": "delete1", "clickFn": "deleteRow", "icon": "fa fa-trash-o", "readOnlyFn": "isReadOnly"}
             ]
 
             /**
@@ -657,56 +657,56 @@ angular.module('services').factory('Helper.UiGridService', ['$resource', '$q', '
              *                  contained within config. Calls were structured this way for code readability
              */
 
-            , addConfigurableButton: function (config, button) {
-                var icon, clickFn, readOnlyFn;
-                // if the config file was missing a button parameter, search the predefined buttons for the missing params
-                if (Util.isEmpty(button.icon) || Util.isEmpty(button.clickFn) || Util.isEmpty(button.readOnlyFn)) {
-                    var found = _.find(Service.CommonButtons, {name: name});
-                    if (found) {
-                        if (Util.isEmpty(icon)) {
-                            icon = found.icon;
-                        }
-                        if (Util.isEmpty(clickFn)) {
-                            clickFn = found.clickFn;
-                        }
-                        if (Util.isEmpty(readOnlyFn)) {
-                            readOnlyFn = found.readOnlyFn;
-                        }
-                    }
-                } else {
-                    // all params were found in config
-                    icon = button.icon;
-                    clickFn = button.clickFn;
-                    readOnlyFn = button.readOnlyFn;
-                }
-
-                var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs' ng-if='" + readOnlyFn + " == true'"
-                    + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
-
-                cellTemplate += "><i class='" + icon + "'></i></a>";
-
-                var columnDefs = Util.goodArray(config.columnDefs);
-                var columnDef = _.find(columnDefs, {name: "act"});
-                if (columnDef) {
-                    columnDef.cellTemplate += cellTemplate;
-
-                } else {
-                    columnDef = {
-                        name: "act"
-                        , cellEditableCondition: false
-                        //, enableFiltering: false
-                        //, enableHiding: false
-                        //, enableSorting: false
-                        //, enableColumnResizing: false
-                        , width: 50
-                        , headerCellTemplate: "<span></span>"
-                        , cellTemplate: cellTemplate
-                    };
-                    columnDefs.push(columnDef);
-                }
-
-                return this;
-            }
+            // , addConfigurableButton: function (config, button) {
+            //     var icon, clickFn, readOnlyFn;
+            //     // if the config file was missing a button parameter, search the predefined buttons for the missing params
+            //     if (Util.isEmpty(button.icon) || Util.isEmpty(button.clickFn) || Util.isEmpty(button.readOnlyFn)) {
+            //         var found = _.find(Service.CommonButtons, {name: name});
+            //         if (found) {
+            //             if (Util.isEmpty(icon)) {
+            //                 icon = found.icon;
+            //             }
+            //             if (Util.isEmpty(clickFn)) {
+            //                 clickFn = found.clickFn;
+            //             }
+            //             if (Util.isEmpty(readOnlyFn)) {
+            //                 readOnlyFn = found.readOnlyFn;
+            //             }
+            //         }
+            //     } else {
+            //         // all params were found in config
+            //         icon = button.icon;
+            //         clickFn = button.clickFn;
+            //         readOnlyFn = button.readOnlyFn;
+            //     }
+            //
+            //     var cellTemplate = "<a title='' class='inline animated btn btn-default btn-xs' ng-if='" + readOnlyFn + " == true'"
+            //         + " ng-click='grid.appScope." + clickFn + "(row.entity)'";
+            //
+            //     cellTemplate += "><i class='" + icon + "'></i></a>";
+            //
+            //     var columnDefs = Util.goodArray(config.columnDefs);
+            //     var columnDef = _.find(columnDefs, {name: "act"});
+            //     if (columnDef) {
+            //         columnDef.cellTemplate += cellTemplate;
+            //
+            //     } else {
+            //         columnDef = {
+            //             name: "act"
+            //             , cellEditableCondition: false
+            //             //, enableFiltering: false
+            //             //, enableHiding: false
+            //             //, enableSorting: false
+            //             //, enableColumnResizing: false
+            //             , width: 50
+            //             , headerCellTemplate: "<span></span>"
+            //             , cellTemplate: cellTemplate
+            //         };
+            //         columnDefs.push(columnDef);
+            //     }
+            //
+            //     return this;
+            // }
 
 
             /**
