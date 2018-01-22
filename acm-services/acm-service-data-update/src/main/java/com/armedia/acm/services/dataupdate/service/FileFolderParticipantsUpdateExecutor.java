@@ -5,8 +5,6 @@ import com.armedia.acm.plugins.ecm.dao.AcmFolderDao;
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
-import com.armedia.acm.plugins.ecm.model.AcmFolder;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -16,7 +14,6 @@ import com.armedia.acm.web.api.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.metamodel.EntityType;
 
@@ -24,7 +21,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -72,14 +68,17 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
 
                     // closed assigned object might have been merged. The participants for such object must be taken
                     // from the object with the root folder
-                    if (container.getFolder().getParentFolder() != null)
+                    if (container == null || container.getFolder() == null || container.getFolder().getParentFolder() != null)
                     {
                         continue;
                     }
 
                     List<AcmParticipant> assignedObjectParticipants = ((AcmAssignedObject) assignedAndContainerObject).getParticipants();
 
-                    log.info("Updating participants to entity: {} [{}]", ((AcmAssignedObject) assignedAndContainerObject).getObjectType(),
+                    // we don't want to change the entity
+                    daoInstance.getEm().detach(assignedAndContainerObject);
+
+                    log.info("Updating participants to entity: {}[{}]", ((AcmAssignedObject) assignedAndContainerObject).getObjectType(),
                             ((AcmAssignedObject) assignedAndContainerObject).getId());
 
                     setParticipantsAndRestrictedFlag(assignedObjectParticipants, container,
@@ -87,20 +86,7 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
                 }
             }
 
-            // if there are files or folders without participants (should not happen, but extensions might have files
-            // and folders not connected to a AcmContainerEntity), we'll let the Drools rules add some default
-            // participants
-            List<AcmFolder> folders = getFolderDao().getFoldersWithoutParticipants();
-            folders.forEach(folder -> {
-                folder.setModified(new Date());
-                getFolderDao().save(folder);
-            });
-
-            List<EcmFile> files = getFileDao().getFilesWithoutParticipants();
-            files.forEach(file -> {
-                file.setModified(new Date());
-                getFileDao().save(file);
-            });
+            log.info("Finished updating ROOT folders participants!");
         }
         catch (Exception e)
         {
@@ -108,9 +94,7 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
         }
     }
 
-    // Setting participants to individual files and folders will not break older code if we want to revert the code.
     // We execute smaller transactions, so if the update fails, we can continue after fixing the issue.
-    @Transactional
     private void setParticipantsAndRestrictedFlag(List<AcmParticipant> assignedObjectParticipants, AcmContainer container,
             boolean restricted)
     {
