@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmWorkflowConfigurationException;
 import com.armedia.acm.plugins.admin.service.WorkflowConfigurationService;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,10 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by sergey.kolomiets  on 6/9/15.
+ * Created by sergey.kolomiets on 6/9/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class WorkflowConfigurationMakeActive
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -42,7 +43,8 @@ public class WorkflowConfigurationMakeActive
             result.put("key", key);
             result.put("version", version);
             return result.toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't make workflow active", e);
             throw new AcmWorkflowConfigurationException("Can't make workflow active", e);

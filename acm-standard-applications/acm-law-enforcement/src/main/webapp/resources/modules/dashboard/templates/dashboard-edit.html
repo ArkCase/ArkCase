@@ -15,7 +15,8 @@
             <label ng-bind="translate('ADF_EDIT_DASHBOARD_STRUCTURE_LABEL')">Structure</label>
             <div class="radio" ng-repeat="(key, structure) in structures">
                 <label>
-                    <input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)" class="{{key}}">
+                    <input type="radio" value="{{key}}" ng-model="model.structure" ng-change="changeStructure(key, structure)"
+                            class="{{key}}">
                     <img src="assets/img/dashboard/{{key}}.png" alt="{{key}}">{{key}}
                 </label>
             </div>

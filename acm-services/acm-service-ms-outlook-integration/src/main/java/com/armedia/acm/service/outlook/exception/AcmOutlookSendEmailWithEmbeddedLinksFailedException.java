@@ -23,7 +23,8 @@ public class AcmOutlookSendEmailWithEmbeddedLinksFailedException extends AcmOutl
         super(cause);
     }
 
-    public AcmOutlookSendEmailWithEmbeddedLinksFailedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace)
+    public AcmOutlookSendEmailWithEmbeddedLinksFailedException(String message, Throwable cause, boolean enableSuppression,
+            boolean writableStackTrace)
     {
         super(message, cause, enableSuppression, writableStackTrace);
     }

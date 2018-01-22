@@ -8,6 +8,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.MergeCaseOptions;
 import com.armedia.acm.plugins.casefile.service.MergeCaseService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,24 +21,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Objects;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/merge-casefiles", "/api/latest/plugin/merge-casefiles"})
+@RequestMapping({ "/api/v1/plugin/merge-casefiles", "/api/latest/plugin/merge-casefiles" })
 public class MergeCaseFilesAPIController
 {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private MergeCaseService mergeCaseService;
 
-
-    @RequestMapping(method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE})
+    @RequestMapping(method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_XML_VALUE })
     @ResponseBody
     public CaseFile mergeCaseFiles(
             @RequestBody MergeCaseOptions mergeCaseOptions,
             HttpSession session,
-            Authentication auth
-    ) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException, AcmUserActionFailedException, PipelineProcessException, AcmAccessControlException
+            Authentication auth) throws MuleException, MergeCaseFilesException, AcmCreateObjectFailedException,
+            AcmUserActionFailedException, PipelineProcessException, AcmAccessControlException
     {
 
         Objects.requireNonNull(mergeCaseOptions.getSourceCaseFileId(), "Source Id should not be null");
@@ -46,7 +47,6 @@ public class MergeCaseFilesAPIController
         CaseFile targetCaseFile = mergeCaseService.mergeCases(auth, ipAddress, mergeCaseOptions);
         return targetCaseFile;
     }
-
 
     public void setMergeCaseService(MergeCaseService mergeCaseService)
     {

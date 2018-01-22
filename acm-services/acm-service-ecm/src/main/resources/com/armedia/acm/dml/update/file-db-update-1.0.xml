@@ -1,6 +1,4 @@
-<databaseChangeLog
-    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
@@ -463,9 +461,7 @@
          files are also in a complaint -->
     <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller" failOnError="false">
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
-        <addUniqueConstraint tableName="acm_file"
-                             columnNames="cm_version_series_id, cm_folder_id"
-                             constraintName="uk_file_folder"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id, cm_folder_id" constraintName="uk_file_folder"/>
     </changeSet>
 
     <!-- add rows to acm_file for files that belong to case files, where the case file was created
@@ -710,15 +706,15 @@
             )
             AND fv.cm_file_version_mime_type = 'MIMETYPE'
         </sql>
-        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type"
-                      newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type" newColumnName="cm_file_active_version_mime_type"
+            columnDataType="VARCHAR(1024)"/>
         <addColumn tableName="acm_file">
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
     </changeSet>
     <changeSet id="files-39-acm_file_version-add-mime-type" author="sasko.tanaskoski" dbms="mysql,oracle">
-        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type"
-                      newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type" newColumnName="cm_file_active_version_mime_type"
+            columnDataType="VARCHAR(1024)"/>
         <addColumn tableName="acm_file">
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>
@@ -741,8 +737,8 @@
             )
             AND acm_file_version.cm_file_version_mime_type = 'MIMETYPE'
         </sql>
-        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type"
-                      newColumnName="cm_file_active_version_mime_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_file" oldColumnName="cm_file_mime_type" newColumnName="cm_file_active_version_mime_type"
+            columnDataType="VARCHAR(1024)"/>
         <addColumn tableName="acm_file">
             <column name="cm_file_active_version_name_extension" type="VARCHAR(255)"/>
         </addColumn>

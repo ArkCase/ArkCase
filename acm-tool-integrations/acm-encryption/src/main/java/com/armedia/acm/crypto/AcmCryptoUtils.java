@@ -136,12 +136,16 @@ public interface AcmCryptoUtils
      * @param clearData
      *            The text to be encrypted
      * @param passPhrase
-     *            The pass phrase (key). This method assumes that the key is a simple pass phrase, and does not yet support RSA or more
+     *            The pass phrase (key). This method assumes that the key is a simple pass phrase, and does not yet
+     *            support RSA or more
      *            sophisticated keying.
      * @param fileName
-     *            File name. This is used in the Literal Data Packet (tag 11) which is really only important if the data is to be related to
-     *            a file to be recovered later. Because this routine does not know the source of the information, the caller can set
-     *            something here for file name use that will be carried. If this routine is being used to encrypt SOAP MIME bodies, for
+     *            File name. This is used in the Literal Data Packet (tag 11) which is really only important if the data
+     *            is to be related to
+     *            a file to be recovered later. Because this routine does not know the source of the information, the
+     *            caller can set
+     *            something here for file name use that will be carried. If this routine is being used to encrypt SOAP
+     *            MIME bodies, for
      *            example, use the file name from the MIME type, if applicable. Or anything else appropriate.
      * @param armor
      *            true if the output stream that writes data should use ASCII Armored format.

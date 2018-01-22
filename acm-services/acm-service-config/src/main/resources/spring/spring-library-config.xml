@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="acmConfigPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Config Service Plugin"/>
     </bean>
 
     <bean id="configService" class="com.armedia.acm.services.config.service.ConfigService">
-        <property name="configList" ref="configList"/>    
+        <property name="configList" ref="configList"/>
     </bean>
 
     <bean id="lookupsJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -33,8 +32,7 @@
         <property name="objectConverter" ref="objectConverter"/>
         <property name="lookups" ref="lookupsJsonConfig"/>
         <property name="lookupsExt" ref="lookupsJsonExtConfig"/>
-        <property name="lookupsExtFileLocation"
-                  value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups-ext.json"/>
+        <property name="lookupsExtFileLocation" value="#{ systemProperties ['user.home'] }/.arkcase/acm/lookups/lookups-ext.json"/>
     </bean>
 
     <bean id="objectTypesJsonConfig" class="org.apache.commons.io.IOUtils" factory-method="toString">
@@ -54,8 +52,8 @@
         </constructor-arg>
         <constructor-arg value="UTF-8"/>
     </bean>
-    
-    <bean id="languageJsonSettings"  class="org.apache.commons.io.IOUtils" factory-method="toString">
+
+    <bean id="languageJsonSettings" class="org.apache.commons.io.IOUtils" factory-method="toString">
         <constructor-arg type="java.io.InputStream">
             <bean class="java.io.FileInputStream" destroy-method="close">
                 <constructor-arg type="java.io.File" value="${user.home}/.arkcase/acm/resources/settings/settings.json"/>

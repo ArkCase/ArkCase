@@ -28,7 +28,8 @@ public abstract class FileEventListener implements ApplicationListener<FileEvent
     /**
      * Check if the event is supported for the listener.
      *
-     * @param event - raised event
+     * @param event
+     *            - raised event
      * @return - true/false
      */
     public boolean isSupported(FileEvent event)
@@ -38,17 +39,17 @@ public abstract class FileEventListener implements ApplicationListener<FileEvent
 
     public boolean isFileAddedEvent(FileEvent event)
     {
-        return event instanceof FileAddedEvent ? true: false;
+        return event instanceof FileAddedEvent ? true : false;
     }
 
     public boolean isFileChangedEvent(FileEvent event)
     {
-        return event instanceof FileChangedEvent ? true: false;
+        return event instanceof FileChangedEvent ? true : false;
     }
 
     public boolean isFileDeletedEvent(FileEvent event)
     {
-        return event instanceof FileDeletedEvent ? true: false;
+        return event instanceof FileDeletedEvent ? true : false;
     }
 
     public abstract String getEventType();

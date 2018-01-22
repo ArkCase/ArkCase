@@ -10,7 +10,8 @@ public class PipelineProcessException extends Exception
      * Constructor.
      * Create new exception with custom message
      *
-     * @param message error message
+     * @param message
+     *            error message
      */
     public PipelineProcessException(String message)
     {
@@ -21,7 +22,8 @@ public class PipelineProcessException extends Exception
      * Constructor.
      * Wrap thrown exception
      *
-     * @param exception exception to be wrapped
+     * @param exception
+     *            exception to be wrapped
      */
     public PipelineProcessException(Exception exception)
     {

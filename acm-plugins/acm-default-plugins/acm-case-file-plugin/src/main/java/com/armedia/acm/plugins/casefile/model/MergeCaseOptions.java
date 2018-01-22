@@ -3,23 +3,28 @@ package com.armedia.acm.plugins.casefile.model;
 /**
  * Created by nebojsha on 28.05.2015.
  */
-public class MergeCaseOptions {
+public class MergeCaseOptions
+{
     private Long sourceCaseFileId;
     private Long targetCaseFileId;
 
-    public Long getSourceCaseFileId() {
+    public Long getSourceCaseFileId()
+    {
         return sourceCaseFileId;
     }
 
-    public void setSourceCaseFileId(Long sourceCaseFileId) {
+    public void setSourceCaseFileId(Long sourceCaseFileId)
+    {
         this.sourceCaseFileId = sourceCaseFileId;
     }
 
-    public Long getTargetCaseFileId() {
+    public Long getTargetCaseFileId()
+    {
         return targetCaseFileId;
     }
 
-    public void setTargetCaseFileId(Long targetCaseFileId) {
+    public void setTargetCaseFileId(Long targetCaseFileId)
+    {
         this.targetCaseFileId = targetCaseFileId;
     }
 }

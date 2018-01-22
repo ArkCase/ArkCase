@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.complaint.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
 import com.armedia.acm.plugins.complaint.model.Complaint;
@@ -10,6 +18,7 @@ import com.armedia.acm.plugins.complaint.service.SaveComplaintTransaction;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -30,12 +39,6 @@ import org.springframework.transaction.CannotCreateTransactionException;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Arrays;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -205,8 +208,8 @@ public class CreateComplaintAPIControllerTest extends EasyMockSupport
 
         Capture<Complaint> found = new Capture<>();
 
-        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication))).
-                andThrow(new CannotCreateTransactionException("testException"));
+        expect(mockSaveTransaction.saveComplaint(capture(found), eq(mockAuthentication)))
+                .andThrow(new CannotCreateTransactionException("testException"));
         mockEventPublisher.publishComplaintEvent(capture(found), eq(mockAuthentication), eq(false), eq(false));
 
         // MVC test classes must call getName() somehow

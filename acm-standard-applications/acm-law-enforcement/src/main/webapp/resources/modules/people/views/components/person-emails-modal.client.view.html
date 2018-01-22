@@ -12,17 +12,15 @@
         <div class="row">
             <div class="col-sm-6 form-group">
 
-                <label for="emails"
-                       translate>people.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
+                <label for="emails" translate>people.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
 
                 <input id="emails" class="input-md form-control" type="text" ng-model="email.value" required="required"
-                       placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
+                        placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
 
             </div>
             <div class="col-sm-6 form-group">
 
-                <label for="emailTypes"
-                       translate>people.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
+                <label for="emailTypes" translate>people.comp.emails.modal.type.label</label><span class="required-asterisk">*</span>
                 <select id="emailTypes" class="input-md form-control" required="required" ng-model="email.subLookup"
                         ng-options="item.key as item.value | translate for item in emailTypes"></select>
 
@@ -31,8 +29,7 @@
         <div class="row">
             <div class="col-sm-12 form-group">
 
-                <label translate>people.comp.emails.modal.setPrimary</label><span
-                    class="required-asterisk">*</span><br/>
+                <label translate>people.comp.emails.modal.setPrimary</label><span class="required-asterisk">*</span><br />
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>people.comp.emails.modal.yes</translate>

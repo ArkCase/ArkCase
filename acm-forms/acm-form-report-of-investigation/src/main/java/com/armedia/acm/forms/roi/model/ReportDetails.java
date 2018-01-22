@@ -7,143 +7,170 @@ package com.armedia.acm.forms.roi.model;
  * @author riste.tutureski
  *
  */
-public class ReportDetails {
+public class ReportDetails
+{
 
-	private String type;
-	private Long complaintId;
-	private String complaintNumber;
-	private String complaintTitle;
-	private String complaintPriority;
-	private Long caseId;
-	private String caseNumber;
-	private String caseTitle;
-	private String summary;
-	
-	
-	/**
-	 * @return the type
-	 */
-	public String getType() {
-		return type;
-	}
+    private String type;
+    private Long complaintId;
+    private String complaintNumber;
+    private String complaintTitle;
+    private String complaintPriority;
+    private Long caseId;
+    private String caseNumber;
+    private String caseTitle;
+    private String summary;
 
-	/**
-	 * @param type the type to set
-	 */
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * @return the type
+     */
+    public String getType()
+    {
+        return type;
+    }
 
-	/**
-	 * @return the complaintId
-	 */
-	public Long getComplaintId() {
-		return complaintId;
-	}
-	
-	/**
-	 * @param complaintId the complaintId to set
-	 */
-	public void setComplaintId(Long complaintId) {
-		this.complaintId = complaintId;
-	}
-	
-	/**
-	 * @return the complaintNumber
-	 */
-	public String getComplaintNumber() {
-		return complaintNumber;
-	}
-	
-	/**
-	 * @param complaintNumber the complaintNumber to set
-	 */
-	public void setComplaintNumber(String complaintNumber) {
-		this.complaintNumber = complaintNumber;
-	}
-	
-	/**
-	 * @return the complaintTitle
-	 */
-	public String getComplaintTitle() {
-		return complaintTitle;
-	}
-	
-	/**
-	 * @param complaintTitle the complaintTitle to set
-	 */
-	public void setComplaintTitle(String complaintTitle) {
-		this.complaintTitle = complaintTitle;
-	}
-	
-	/**
-	 * @return the complaintPriority
-	 */
-	public String getComplaintPriority() {
-		return complaintPriority;
-	}
-	
-	/**
-	 * @param complaintPriority the complaintPriority to set
-	 */
-	public void setComplaintPriority(String complaintPriority) {
-		this.complaintPriority = complaintPriority;
-	}
-	
-	/**
-	 * @return the caseId
-	 */
-	public Long getCaseId() {
-		return caseId;
-	}
+    /**
+     * @param type
+     *            the type to set
+     */
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
-	/**
-	 * @param caseId the caseId to set
-	 */
-	public void setCaseId(Long caseId) {
-		this.caseId = caseId;
-	}
+    /**
+     * @return the complaintId
+     */
+    public Long getComplaintId()
+    {
+        return complaintId;
+    }
 
-	/**
-	 * @return the caseNumber
-	 */
-	public String getCaseNumber() {
-		return caseNumber;
-	}
+    /**
+     * @param complaintId
+     *            the complaintId to set
+     */
+    public void setComplaintId(Long complaintId)
+    {
+        this.complaintId = complaintId;
+    }
 
-	/**
-	 * @param caseNumber the caseNumber to set
-	 */
-	public void setCaseNumber(String caseNumber) {
-		this.caseNumber = caseNumber;
-	}
+    /**
+     * @return the complaintNumber
+     */
+    public String getComplaintNumber()
+    {
+        return complaintNumber;
+    }
 
-	/**
-	 * @return the caseTitle
-	 */
-	public String getCaseTitle() {
-		return caseTitle;
-	}
+    /**
+     * @param complaintNumber
+     *            the complaintNumber to set
+     */
+    public void setComplaintNumber(String complaintNumber)
+    {
+        this.complaintNumber = complaintNumber;
+    }
 
-	/**
-	 * @param caseTitle the caseTitle to set
-	 */
-	public void setCaseTitle(String caseTitle) {
-		this.caseTitle = caseTitle;
-	}
+    /**
+     * @return the complaintTitle
+     */
+    public String getComplaintTitle()
+    {
+        return complaintTitle;
+    }
 
-	/**
-	 * @return the summary
-	 */
-	public String getSummary() {
-		return summary;
-	}
-	
-	/**
-	 * @param summary the summary to set
-	 */
-	public void setSummary(String summary) {
-		this.summary = summary;
-	}
-	
+    /**
+     * @param complaintTitle
+     *            the complaintTitle to set
+     */
+    public void setComplaintTitle(String complaintTitle)
+    {
+        this.complaintTitle = complaintTitle;
+    }
+
+    /**
+     * @return the complaintPriority
+     */
+    public String getComplaintPriority()
+    {
+        return complaintPriority;
+    }
+
+    /**
+     * @param complaintPriority
+     *            the complaintPriority to set
+     */
+    public void setComplaintPriority(String complaintPriority)
+    {
+        this.complaintPriority = complaintPriority;
+    }
+
+    /**
+     * @return the caseId
+     */
+    public Long getCaseId()
+    {
+        return caseId;
+    }
+
+    /**
+     * @param caseId
+     *            the caseId to set
+     */
+    public void setCaseId(Long caseId)
+    {
+        this.caseId = caseId;
+    }
+
+    /**
+     * @return the caseNumber
+     */
+    public String getCaseNumber()
+    {
+        return caseNumber;
+    }
+
+    /**
+     * @param caseNumber
+     *            the caseNumber to set
+     */
+    public void setCaseNumber(String caseNumber)
+    {
+        this.caseNumber = caseNumber;
+    }
+
+    /**
+     * @return the caseTitle
+     */
+    public String getCaseTitle()
+    {
+        return caseTitle;
+    }
+
+    /**
+     * @param caseTitle
+     *            the caseTitle to set
+     */
+    public void setCaseTitle(String caseTitle)
+    {
+        this.caseTitle = caseTitle;
+    }
+
+    /**
+     * @return the summary
+     */
+    public String getSummary()
+    {
+        return summary;
+    }
+
+    /**
+     * @param summary
+     *            the summary to set
+     */
+    public void setSummary(String summary)
+    {
+        this.summary = summary;
+    }
+
 }

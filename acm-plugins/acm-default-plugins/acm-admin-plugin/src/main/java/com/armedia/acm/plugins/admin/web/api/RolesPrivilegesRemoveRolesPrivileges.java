@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmRolesPrivilegesException;
 import com.armedia.acm.plugins.admin.model.RolePrivilegesConstants;
 import com.armedia.acm.plugins.admin.service.RolesPrivilegesService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,10 +18,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by sergey.kolomiets  on 6/24/15.
+ * Created by sergey.kolomiets on 6/24/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class RolesPrivilegesRemoveRolesPrivileges implements RolePrivilegesConstants
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -42,7 +43,8 @@ public class RolesPrivilegesRemoveRolesPrivileges implements RolePrivilegesConst
             List<String> privileges = Arrays.asList(privilegesNames.split(","));
             rolesPrivilegesService.removeRolesPrivileges(roles, privileges);
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't remove roles privieges ", e);
             throw new AcmRolesPrivilegesException("Can't remove roles privileges", e);

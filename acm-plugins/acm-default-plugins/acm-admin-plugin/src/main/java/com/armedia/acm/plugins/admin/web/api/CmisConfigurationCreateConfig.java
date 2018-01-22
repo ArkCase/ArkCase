@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.model.CmisConfigurationConstants;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import java.util.HashMap;
  * Created by nick.ferguson on 3/22/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CmisConfigurationCreateConfig
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -54,7 +55,8 @@ public class CmisConfigurationCreateConfig
             cmisConfigurationService.createCmisConfig(id, props);
 
             return newCmisObject.toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't create CMIS config", e);
             throw new AcmCmisConfigurationException("Create CMIS config error", e);

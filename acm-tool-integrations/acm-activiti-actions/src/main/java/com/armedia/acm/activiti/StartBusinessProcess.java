@@ -57,8 +57,7 @@ public class StartBusinessProcess implements ApplicationEventPublisherAware
     private Map<String, Object> filterMuleAndJmsHeaders(Map<String, Object> muleHeaders)
     {
         // exclude Mule and JMS headers
-        return muleHeaders.entrySet().stream().filter(header ->
-        {
+        return muleHeaders.entrySet().stream().filter(header -> {
             return !header.getKey().startsWith("MULE_") && !header.getKey().startsWith("JMS")
                     && !header.getKey().equals("activitiRuntimeService");
         }).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));

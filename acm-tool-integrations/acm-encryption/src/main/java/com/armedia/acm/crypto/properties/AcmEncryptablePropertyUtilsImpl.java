@@ -1,6 +1,7 @@
 package com.armedia.acm.crypto.properties;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,8 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
         try
         {
             encryptedSymmetricKey = readFileBytes(encryptionProperties.getEncryptedSymmetricKeyFilePath());
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmEncryptionException(
                     "Reading encrypted symmetric key from file: " + encryptionProperties.getEncryptedSymmetricKeyFilePath() + " failed!",
@@ -60,21 +62,26 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
         {
             privateKey = getPrivateKey(encryptionProperties.getKeystorePath(), encryptionProperties.getKeystorePassword(),
                     encryptionProperties.getKeystoreType(), encryptionProperties.getPrivateKeyAlias());
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmEncryptionException("Failed to decrypt symmetric key. Reading private key from keystore file: "
                     + encryptionProperties.getKeystorePath() + " failed!", e);
-        } catch (UnrecoverableKeyException e)
+        }
+        catch (UnrecoverableKeyException e)
         {
             throw new AcmEncryptionException("Failed to recover private key from keystore.", e);
-        } catch (KeyStoreException e)
+        }
+        catch (KeyStoreException e)
         {
             throw new AcmEncryptionException("Failed to open keystore from keystore file: " + encryptionProperties.getKeystorePath(), e);
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             throw new AcmEncryptionException(
                     "Failed to open keystore from keystore file: " + encryptionProperties.getKeystorePath() + ". Check keystore type!", e);
-        } catch (CertificateException e)
+        }
+        catch (CertificateException e)
         {
             throw new AcmEncryptionException("Failed to read certificates from keystore file: " + encryptionProperties.getKeystorePath(),
                     e);
@@ -148,7 +155,8 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
                             log.debug("Decrypted property {}", prop.getKey());
                             prop.setValue(decryptedIfNecessary);
                         }
-                    } catch (AcmEncryptionException aee)
+                    }
+                    catch (AcmEncryptionException aee)
                     {
                         log.error("Could not decrypt value for property {}: {}", prop.getKey(), aee.getMessage(), aee);
                     }
@@ -179,7 +187,7 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
     }
 
     private PrivateKey getPrivateKey(final String keystorePath, final String keystorePassword, final String keyStoreType,
-                                     final String keyAlias)
+            final String keyAlias)
             throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException
     {
         log.debug("Initializing key store: {}", keystorePath);
@@ -201,7 +209,8 @@ public class AcmEncryptablePropertyUtilsImpl implements AcmEncryptablePropertyUt
     }
 
     /**
-     * @param encryptionProperties the encryptionProperties to set
+     * @param encryptionProperties
+     *            the encryptionProperties to set
      */
     public void setEncryptionProperties(AcmEncryptablePropertyEncryptionProperties encryptionProperties)
     {

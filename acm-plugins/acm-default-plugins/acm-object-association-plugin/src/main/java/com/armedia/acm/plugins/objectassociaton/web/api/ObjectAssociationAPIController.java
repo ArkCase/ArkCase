@@ -1,6 +1,10 @@
 package com.armedia.acm.plugins.objectassociaton.web.api;
 
-import java.util.Objects;
+import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
+import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.AcmObjectAssociationException;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,18 +19,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.service.AcmObjectAssociationException;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
+import java.util.Objects;
 
 /**
  * @author nebojsha.davidovikj
  */
 
 @RestController
-@RequestMapping({"/api/v1/service/objectassociations", "/api/latest/service/objectassociations"})
+@RequestMapping({ "/api/v1/service/objectassociations", "/api/latest/service/objectassociations" })
 public class ObjectAssociationAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());

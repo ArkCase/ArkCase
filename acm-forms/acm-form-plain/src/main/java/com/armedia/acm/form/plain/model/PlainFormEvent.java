@@ -19,7 +19,8 @@ public class PlainFormEvent extends ApplicationEvent
     /**
      * Create a new ApplicationEvent.
      *
-     * @param source the component that published the event (never {@code null})
+     * @param source
+     *            the component that published the event (never {@code null})
      */
     public PlainFormEvent(PlainForm source)
     {

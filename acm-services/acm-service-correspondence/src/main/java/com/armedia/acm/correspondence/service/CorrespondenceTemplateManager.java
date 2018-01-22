@@ -65,7 +65,6 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
     @Override
@@ -111,7 +110,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     List<CorrespondenceTemplate> getActiveVersionTemplates()
     {
-        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+        List<CorrespondenceTemplate> list = new ArrayList<>();
 
         templates.values().stream().forEach(versionMap -> {
             Optional<CorrespondenceTemplate> template = versionMap.values().stream().filter(ct -> ct.isTemplateVersionActive()).findFirst();
@@ -130,7 +129,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     List<CorrespondenceTemplate> getActivatedActiveVersionTemplatesByObjectType(String objectType)
     {
-        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+        List<CorrespondenceTemplate> list = new ArrayList<>();
 
         templates.values().stream().forEach(versionMap -> {
             Optional<CorrespondenceTemplate> template = versionMap.values().stream().filter(ct -> ct.isTemplateVersionActive())
@@ -168,7 +167,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
      */
     List<CorrespondenceTemplate> getAllTemplates()
     {
-        List<CorrespondenceTemplate> list = new ArrayList<CorrespondenceTemplate>();
+        List<CorrespondenceTemplate> list = new ArrayList<>();
 
         templates.values().stream().forEach(versionMap -> {
             list.addAll(versionMap.values());
@@ -376,7 +375,7 @@ public class CorrespondenceTemplateManager implements ApplicationListener<Contex
 
     private Map<String, CorrespondenceTemplate> getVersionToTemplateMap(CorrespondenceTemplate correspondenceTemplate)
     {
-        Map<String, CorrespondenceTemplate> versionToTempateMap = new HashMap<String, CorrespondenceTemplate>();
+        Map<String, CorrespondenceTemplate> versionToTempateMap = new HashMap<>();
         versionToTempateMap.put(correspondenceTemplate.getTemplateVersion(), correspondenceTemplate);
         return versionToTempateMap;
     }

@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.mule.api.MuleException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,8 +36,10 @@ public interface GroupService
     String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
-     * @param groupName  list users for this specific group
-     * @param userStatus optional value for "status_lcs" field to be included in the solr query
+     * @param groupName
+     *            list users for this specific group
+     * @param userStatus
+     *            optional value for "status_lcs" field to be included in the solr query
      * @return solr results for user members in specific group
      * @throws MuleException
      */
@@ -46,47 +49,59 @@ public interface GroupService
 
     /**
      * AcmGroups are not deleted from the system. This method sets the group with status
-     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
-     * groups, users and roles for users per the target group are removed.
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to groups, users and roles
+     * for users per the target group are removed.
      *
-     * @param groupId name of the group
+     * @param groupId
+     *            name of the group
      * @return group with updated status, ancestors and removed user and group relations
-     * @throws AcmObjectNotFoundException in case group with groupId is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupId is not found
      */
     AcmGroup markGroupDeleted(String groupId) throws AcmObjectNotFoundException;
 
     /**
      * AcmGroups are not deleted from the system. This method sets the group with status
-     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to
-     * groups, users and roles for users per the target group are removed.
+     * {@link com.armedia.acm.services.users.model.group.AcmGroupStatus#DELETE} and relations to groups, users and roles
+     * for users per the target group are removed.
      *
-     * @param groupId           name of the group
-     * @param flushInstructions if set to true there is an explicit flush before the end of the method
+     * @param groupId
+     *            name of the group
+     * @param flushInstructions
+     *            if set to true there is an explicit flush before the end of the method
      * @return group with updated status, ancestors and removed user and group relations
-     * @throws AcmObjectNotFoundException in case group with groupId is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupId is not found
      */
     AcmGroup markGroupDeleted(String groupId, boolean flushInstructions) throws AcmObjectNotFoundException;
 
     /**
-     * Removes group membership to the given parent group. In case this group is
-     * not member to any other group, the group is deleted.
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
      *
-     * @param groupName       name of the group to be removed
-     * @param parentGroupName name of the parent group
+     * @param groupName
+     *            name of the group to be removed
+     * @param parentGroupName
+     *            name of the parent group
      * @return updated AcmGroup
-     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
      */
     AcmGroup removeGroupMembership(String groupName, String parentGroupName) throws AcmObjectNotFoundException;
 
     /**
-     * Removes group membership to the given parent group. In case this group is
-     * not member to any other group, the group is deleted.
+     * Removes group membership to the given parent group. In case this group is not member to any other group, the
+     * group is deleted.
      *
-     * @param groupName         name of the group to be removed
-     * @param parentGroupName   name of the parent group
-     * @param flushInstructions if set to true there is an explicit flush before the end of the method
+     * @param groupName
+     *            name of the group to be removed
+     * @param parentGroupName
+     *            name of the parent group
+     * @param flushInstructions
+     *            if set to true there is an explicit flush before the end of the method
      * @return updated AcmGroup
-     * @throws AcmObjectNotFoundException in case group with groupName or parentGroupName is not found
+     * @throws AcmObjectNotFoundException
+     *             in case group with groupName or parentGroupName is not found
      */
     AcmGroup removeGroupMembership(String groupName, String parentGroupName, boolean flushInstructions) throws AcmObjectNotFoundException;
 
@@ -108,5 +123,31 @@ public interface GroupService
 
     AcmGroup removeUserMemberFromGroup(AcmUser user, String groupId) throws AcmObjectNotFoundException;
 
+    /**
+     * Saves new ADHOC group and adds it as member to parent group.
+     * 
+     * @param subGroup
+     *            group to be created
+     * @param parentId
+     *            name of the parent group
+     * @return new AcmGroup
+     * @throws AcmCreateObjectFailedException
+     *             in case when parent group is not found
+     * @throws AcmObjectAlreadyExistsException
+     *             in case when this group already exists
+     */
     AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId) throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException;
+
+    /**
+     * Adds group as member to parent group
+     * 
+     * @param subGroupId
+     *            member group name
+     * @param parentId
+     *            parent group name
+     * @return updated group member AcmGroup
+     * @throws AcmCreateObjectFailedException
+     *             in case when subgroup or parent group are not found
+     */
+    AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
 }

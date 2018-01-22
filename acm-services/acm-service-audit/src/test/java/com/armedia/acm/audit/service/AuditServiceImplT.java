@@ -1,15 +1,19 @@
 package com.armedia.acm.audit.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.audit.service.systemlogger.ISystemLogger;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
 
 /**
  * Created by Bojan Milenkoski on 11.1.2016.
