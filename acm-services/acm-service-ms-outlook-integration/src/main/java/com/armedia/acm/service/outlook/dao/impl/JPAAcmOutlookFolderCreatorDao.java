@@ -76,6 +76,27 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
     /*
      * (non-Javadoc)
      *
+     * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#deleteObjectReference(java.lang.Long,
+     * java.lang.String)
+     */
+    @Override
+    public void deleteObjectReference(Long objectId, String objectType)
+    {
+        try
+        {
+            AcmOutlookObjectReference reference = getOutlookObjectReference(objectId, objectType);
+            em.remove(reference);
+        }
+        catch (AcmOutlookFolderCreatorDaoException e)
+        {
+            // TODO Auto-generated catch block
+            log.debug("");
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao#getFolderCreatorForObject(java.lang.String,
      * java.lang.String)
      */

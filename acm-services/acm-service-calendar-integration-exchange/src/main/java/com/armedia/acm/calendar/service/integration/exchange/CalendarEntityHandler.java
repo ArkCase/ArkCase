@@ -32,6 +32,7 @@ import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.services.users.model.AcmUser;
 
@@ -97,6 +98,8 @@ public class CalendarEntityHandler
 
     private Object deletePermission;
 
+    private AcmOutlookFolderCreatorDao folderCreatorDao;
+
     public CalendarEntityHandler()
     {
         sortFields = new HashMap<>();
@@ -110,7 +113,8 @@ public class CalendarEntityHandler
         sortFields.put("dateTimeStart", AppointmentSchema.Start);
     }
 
-    public boolean checkPermission(Authentication auth, String objectType, String objectId, PermissionType permissionType) throws CalendarServiceException
+    boolean checkPermission(Authentication auth, String objectType, String objectId, PermissionType permissionType)
+            throws CalendarServiceException
     {
         return permissionEvaluator.hasPermission(auth, Long.parseLong(objectId), objectType, convertToPermission(permissionType));
     }
@@ -130,23 +134,23 @@ public class CalendarEntityHandler
         }
     }
 
-    public List<AcmCalendarInfo> listCalendars(ServiceConnector connector, AcmUser user, Authentication auth, String sort,
-            String sortDirection, int start, int maxItems)
+    List<AcmCalendarInfo> listCalendars(ServiceConnector connector, AcmUser user, Authentication auth, String sort, String sortDirection,
+            int start, int maxItems)
     {
         throw new UnsupportedOperationException("This operation is not supported by Exchnage.");
     }
 
-    public String getCalendarId(String objectId) throws CalendarServiceException
+    Optional<String> getCalendarId(String objectId) throws CalendarServiceException
     {
         AcmContainerEntity entity = getEntity(objectId, false);
         if (entity == null)
         {
             throw new CalendarServiceException(String.format("No calendar associated with %s with id %s.", entityType, objectId));
         }
-        return entity.getContainer().getCalendarFolderId();
+        return Optional.of(entity.getContainer().getCalendarFolderId());
     }
 
-    public List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
+    List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
             String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
 
@@ -184,8 +188,8 @@ public class CalendarEntityHandler
         }
     }
 
-    public List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
-            String sort, String sortDirection, int start, int maxItems) throws CalendarServiceException
+    List<AcmCalendarEvent> listItems(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before, String sort,
+            String sortDirection, int start, int maxItems) throws CalendarServiceException
     {
 
         log.debug("Getting calendar items for object with id: [{}] of [{}] type.", objectId, entityType);
@@ -278,7 +282,16 @@ public class CalendarEntityHandler
         CalendarFolder calendar;
         try
         {
-            calendar = CalendarFolder.bind(service, new FolderId(getCalendarId(objectId)));
+            Optional<String> calendarId = getCalendarId(objectId);
+            if (!calendarId.isPresent())
+            {
+                return new FindItemsResults<>();
+            }
+            else if (isObjectClosed(Long.valueOf(objectId)))
+            {
+                throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", entityType, objectId));
+            }
+            calendar = CalendarFolder.bind(service, new FolderId(calendarId.get()));
         }
         catch (Exception e)
         {
@@ -307,7 +320,7 @@ public class CalendarEntityHandler
      * @param purgeOptions
      * @param daysClosed
      */
-    public void purgeCalendars(ServiceConnector connector, PurgeOptions purgeOptions, Integer daysClosed)
+    void purgeCalendars(ServiceConnector connector, PurgeOptions purgeOptions, Integer daysClosed)
     {
         switch (purgeOptions)
         {
@@ -320,6 +333,18 @@ public class CalendarEntityHandler
             break;
         }
 
+    }
+
+    boolean isObjectClosed(Long objectId)
+    {
+        TypedQuery<AcmContainerEntity> query = em
+                .createQuery(String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.%s = :objectId",
+                        entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
+        query.setParameter("statuses", closedStates);
+        query.setParameter("objectId", Long.valueOf(objectId));
+        List<AcmContainerEntity> resultList = query.getResultList();
+
+        return !resultList.isEmpty();
     }
 
     private List<AcmContainerEntity> getEntities(Integer daysClosed)
@@ -400,6 +425,8 @@ public class CalendarEntityHandler
 
                 container.setCalendarFolderId(null);
                 containerEntityDao.save(container);
+
+                folderCreatorDao.deleteObjectReference(container.getContainerObjectId(), container.getContainerObjectType());
 
             }
             catch (Exception e)
@@ -490,6 +517,15 @@ public class CalendarEntityHandler
     public void setDeletePermission(Object deletePermission)
     {
         this.deletePermission = deletePermission;
+    }
+
+    /**
+     * @param folderCreatorDao
+     *            the folderCreatorDao to set
+     */
+    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
+    {
+        this.folderCreatorDao = folderCreatorDao;
     }
 
 }
