@@ -29,7 +29,7 @@ public class EcmFileWorkflowConfiguration
 
     /**
      * Output - ISO-8601 duration expression: the duration is applied to the current date, to compute the due date
-     * for any user tasks in the process.  See https://en.wikipedia.org/wiki/ISO_8601#Durations.
+     * for any user tasks in the process. See https://en.wikipedia.org/wiki/ISO_8601#Durations.
      */
     private String taskDueDateExpression;
 
@@ -44,7 +44,7 @@ public class EcmFileWorkflowConfiguration
     private String approvers;
 
     /**
-     * Output - specific type of workflow or document.  The document approval business process is used for many
+     * Output - specific type of workflow or document. The document approval business process is used for many
      * document types and use cases; this field allows a more descriptive or specific process name than the actual
      * business process name.
      *

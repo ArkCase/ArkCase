@@ -6,10 +6,10 @@ import com.armedia.acm.services.notification.exception.AcmNotificationException;
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.service.NotificationEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpSession;
 public class SaveNotificationAPIController
 {
 
-
     private NotificationDao notificationDao;
     private NotificationEventPublisher notificationEventPublisher;
 
@@ -33,20 +32,20 @@ public class SaveNotificationAPIController
     @ResponseBody
     public Notification addNotification(
             @RequestBody Notification notification,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+            HttpSession httpSession) throws AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
 
-            if(notification != null){
+            if (notification != null)
+            {
                 log.info("Notification ID : " + notification.getId());
             }
         }
 
         try
         {
-            if(notification == null)
+            if (notification == null)
             {
                 throw new AcmNotificationException("Could not save notification, missing parent type and ID");
             }
@@ -65,7 +64,6 @@ public class SaveNotificationAPIController
             newNotification.setData(notification.getData());
             newNotification.setType(notification.getType());
             newNotification.setUser(notification.getUser());
-
 
             Notification savedNotification = getNotificationDao().save(notification);
 
@@ -94,7 +92,8 @@ public class SaveNotificationAPIController
             fakeNotification.setUser(notification.getUser());
 
             publishNotificationEvent(httpSession, fakeNotification, false);
-            throw new AcmUserActionFailedException("unable to add notification from ", notification.getUser(), notification.getId(), e.getMessage(), e);
+            throw new AcmUserActionFailedException("unable to add notification from ", notification.getUser(), notification.getId(),
+                    e.getMessage(), e);
         }
     }
 
@@ -108,21 +107,25 @@ public class SaveNotificationAPIController
         getNotificationEventPublisher().publishNotificationEvent(event);
     }
 
-    public NotificationEventPublisher getNotificationEventPublisher() {
+    public NotificationEventPublisher getNotificationEventPublisher()
+    {
         return notificationEventPublisher;
     }
 
     public void setNotificationEventPublisher(
-            NotificationEventPublisher notificationEventPublisher) {
+            NotificationEventPublisher notificationEventPublisher)
+    {
         this.notificationEventPublisher = notificationEventPublisher;
     }
-    public NotificationDao getNotificationDao() {
+
+    public NotificationDao getNotificationDao()
+    {
         return notificationDao;
     }
 
-    public void setNotificationDao(NotificationDao notificationDao) {
+    public void setNotificationDao(NotificationDao notificationDao)
+    {
         this.notificationDao = notificationDao;
     }
 
 }
-

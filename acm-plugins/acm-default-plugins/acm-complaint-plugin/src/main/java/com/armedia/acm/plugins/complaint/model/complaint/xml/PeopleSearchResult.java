@@ -3,25 +3,28 @@
  */
 package com.armedia.acm.plugins.complaint.model.complaint.xml;
 
-import javax.xml.bind.annotation.XmlElement;
-
 import com.armedia.acm.plugins.complaint.model.complaint.SearchResult;
+
+import javax.xml.bind.annotation.XmlElement;
 
 /**
  * @author riste.tutureski
  *
  */
-public class PeopleSearchResult extends SearchResult {
+public class PeopleSearchResult extends SearchResult
+{
 
-	@XmlElement(name="existingPeopleResult")
-	@Override
-	public Long getId() {
-		return super.getId();
-	}
+    @XmlElement(name = "existingPeopleResult")
+    @Override
+    public Long getId()
+    {
+        return super.getId();
+    }
 
-	@Override
-	public void setId(Long id) {
-		super.setId(id);
-	}
-	
+    @Override
+    public void setId(Long id)
+    {
+        super.setId(id);
+    }
+
 }

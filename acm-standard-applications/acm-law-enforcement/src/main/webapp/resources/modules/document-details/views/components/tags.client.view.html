@@ -5,18 +5,14 @@
                 <span translate>documentDetails.comp.tags.title</span>
 
                 <div class="pull-right">
-                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i></button>
+                    <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i
+                            class="fa fa-lg fa-plus"></i></button>
                 </div>
             </div>
         </div>
         <div class="panel-body">
-            <div ui-grid="gridOptions"
-                 ng-if="gridOptions.data.length"
-                 ui-grid-resize-columns
-                 ui-grid-selection
-                 ui-grid-auto-resize
-                 ui-grid-pagination
-                 class="grid"></div>
+            <div ui-grid="gridOptions" ng-if="gridOptions.data.length" ui-grid-resize-columns ui-grid-selection ui-grid-auto-resize
+                    ui-grid-pagination class="grid"></div>
         </div>
     </div>
 </div>

@@ -70,7 +70,8 @@ public class TimeFactory extends FrevvoFormFactory
             retval.setStatus(form.getStatus());
             retval.setDetails(form.getDetails());
             retval.setParticipants(asAcmParticipants(form.getApprovers()));
-        } else
+        }
+        else
         {
             LOG.debug("The conversion process is not executed. Form is null.");
         }
@@ -110,7 +111,8 @@ public class TimeFactory extends FrevvoFormFactory
             form.setStatus(timesheet.getStatus());
             form.setDetails(timesheet.getDetails());
             form.setApprovers(asFrevvoApprovers(timesheet.getParticipants()));
-        } else
+        }
+        else
         {
             LOG.debug("The conversion process is not executed. Timesheet is null.");
         }
@@ -261,8 +263,7 @@ public class TimeFactory extends FrevvoFormFactory
         if (timesheet != null && timesheet.getTimes() != null)
         {
             Map<String, TimeItem> itemsMap = new HashMap<>();
-            timesheet.getTimes().forEach(time ->
-            {
+            timesheet.getTimes().forEach(time -> {
                 TimeItem item = itemsMap.computeIfAbsent(time.getCode(), key -> new TimeItem());
 
                 item.setObjectId(time.getObjectId());
@@ -341,26 +342,28 @@ public class TimeFactory extends FrevvoFormFactory
 
         return item;
     }
-    
-    public String getObjectTitleByObjectCode(Long objectId, String objectType) {
-        
+
+    public String getObjectTitleByObjectCode(Long objectId, String objectType)
+    {
+
         String title = "";
-        
+
         Map<String, AcmAbstractDao> daos = getSpringContextHolder().getAllBeansOfType(AcmAbstractDao.class);
-        
+
         AcmAbstractDao<AcmTitleEntity> dao = daos.values()
-            .stream()
-            .filter(Objects::nonNull)
-            .filter(item -> item.getSupportedObjectType() != null)
-            .filter(item -> item.getSupportedObjectType().equals(objectType))
-            .findFirst()
-            .orElse(null);
-        
-        if(dao != null) {
+                .stream()
+                .filter(Objects::nonNull)
+                .filter(item -> item.getSupportedObjectType() != null)
+                .filter(item -> item.getSupportedObjectType().equals(objectType))
+                .findFirst()
+                .orElse(null);
+
+        if (dao != null)
+        {
             AcmTitleEntity entityObject = dao.find(objectId);
             title = entityObject.getTitle();
-        } 
-        
+        }
+
         return title;
     }
 

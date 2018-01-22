@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.listener;
 
 import com.armedia.acm.plugins.task.model.TaskConstants;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.json.JSONArray;
@@ -100,7 +101,8 @@ public class BuckslipTaskHelper
         log.debug("past: {}, current: {}, future: {}", pastTasks, currentApprover, futureTasks);
 
         // when the approval cycle is restarted, everyone has to approve again
-        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks", newFutureTasks.toString());
+        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks",
+                newFutureTasks.toString());
     }
 
     public int getMaxTaskDurationInDays(String taskDueDateExpression)

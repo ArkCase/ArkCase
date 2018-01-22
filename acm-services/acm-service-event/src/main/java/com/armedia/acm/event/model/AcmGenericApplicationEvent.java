@@ -1,6 +1,5 @@
 package com.armedia.acm.event.model;
 
-
 import com.armedia.acm.core.model.AcmEvent;
 
 /**

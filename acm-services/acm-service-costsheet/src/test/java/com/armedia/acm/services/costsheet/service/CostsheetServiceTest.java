@@ -3,12 +3,17 @@
  */
 package com.armedia.acm.services.costsheet.service;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.services.costsheet.dao.AcmCostsheetDao;
 import com.armedia.acm.services.costsheet.model.AcmCost;
 import com.armedia.acm.services.costsheet.model.AcmCostsheet;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -27,10 +32,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author riste.tutureski
@@ -60,7 +61,7 @@ public class CostsheetServiceTest extends EasyMockSupport
         mockAcmCostsheetDao = createMock(AcmCostsheetDao.class);
         mockExecuteSolrQuery = createMock(ExecuteSolrQuery.class);
 
-        submissionStatusesMap = new HashMap<String, String>();
+        submissionStatusesMap = new HashMap<>();
         submissionStatusesMap.put("Save", "DRAFT");
         submissionStatusesMap.put("Submit", "IN_APPROVAL");
 
@@ -68,7 +69,6 @@ public class CostsheetServiceTest extends EasyMockSupport
         costsheetService.setExecuteSolrQuery(mockExecuteSolrQuery);
         costsheetService.setSubmissionStatusesMap(submissionStatusesMap);
     }
-
 
     @Test
     public void saveCostsheetTest() throws Exception
@@ -93,7 +93,7 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<AcmCostsheet>();
+        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
 
@@ -129,7 +129,7 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<AcmCostsheet>();
+        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
 
@@ -166,7 +166,7 @@ public class CostsheetServiceTest extends EasyMockSupport
 
         costsheet.setCosts(Arrays.asList(cost1, cost2));
 
-        Capture<AcmCostsheet> costsheetCapture = new Capture<AcmCostsheet>();
+        Capture<AcmCostsheet> costsheetCapture = new Capture<>();
 
         expect(mockAcmCostsheetDao.save(capture(costsheetCapture))).andReturn(costsheet);
 
@@ -223,7 +223,8 @@ public class CostsheetServiceTest extends EasyMockSupport
         String searchQuery = "*";
         String solrQuery = "object_type_s:" + objectType + " AND name:" + searchQuery + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, "")).andReturn(expected);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+                .andReturn(expected);
 
         replayAll();
 
@@ -249,7 +250,8 @@ public class CostsheetServiceTest extends EasyMockSupport
         String objectType = "COSTSHEET";
         String solrQuery = "object_type_s:" + objectType + " AND -status_s:DELETE";
 
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, "")).andReturn(expected);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, solrQuery, 0, 10, ""))
+                .andReturn(expected);
 
         replayAll();
 

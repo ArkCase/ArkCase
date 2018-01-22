@@ -31,7 +31,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public <T> Future<T> submit(Callable<T> task)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }
@@ -42,7 +42,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public Future<?> submit(Runnable task)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }
@@ -53,7 +53,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public ListenableFuture<?> submitListenable(Runnable task)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }
@@ -63,7 +63,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public <T> ListenableFuture<T> submitListenable(Callable<T> task)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }
@@ -73,7 +73,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public void execute(Runnable task)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }
@@ -83,7 +83,7 @@ public class ActivitiTaskScheduler extends ThreadPoolTaskExecutor implements App
     @Override
     public void execute(Runnable task, long startTimeout)
     {
-        if ( !initialized.get() )
+        if (!initialized.get())
         {
             throw new TaskRejectedException("Application has not started yet; not starting task: " + task);
         }

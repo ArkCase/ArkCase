@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * Created by nick.ferguson on 3/22/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CmisConfigurationDeleteConfig
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -43,7 +44,8 @@ public class CmisConfigurationDeleteConfig
             log.debug("CMIS Config with ID '{}' deleted.", cmisId);
             return cmisId;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't delete CMIS config", e);
             throw new AcmCmisConfigurationException("Delete CMIS config error", e);

@@ -9,6 +9,7 @@ atlassian-ide-plugin.xml
 
 *.project
 *.classpath
+*.tern-project
 .settings/
 .springBeans
 .externalToolBuilders/

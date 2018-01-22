@@ -1,9 +1,7 @@
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
-    
+
     <property name="cmUserIdLength" value="1024" dbms="postgresql,oracle"/>
     <property name="cmUserIdLength" value="255" dbms="mysql,mssql"/>
 
@@ -13,9 +11,7 @@
     <changeSet id="01-create-dashboard-table" author="marst">
         <createTable tableName="acm_dashboard">
             <column name="cm_dashboard_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_dashboard"/>
+                <constraints primaryKey="true" primaryKeyName="pk_dashboard"/>
             </column>
             <column name="cm_dashboard_config" type="VARCHAR(3900)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -34,9 +30,7 @@
     <changeSet id="02-create-widget-tables" author="marst">
         <createTable tableName="acm_widget">
             <column name="cm_widget_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_widget"/>
+                <constraints primaryKey="true" primaryKeyName="pk_widget"/>
             </column>
             <column name="cm_widget_name" type="VARCHAR(256)" defaultValue="ACTIVE">
                 <constraints nullable="false"/>
@@ -92,9 +86,7 @@
 
         <createTable tableName="acm_module">
             <column name="cm_module_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_module"/>
+                <constraints primaryKey="true" primaryKeyName="pk_module"/>
             </column>
             <column name="cm_module_name" type="VARCHAR(255)"/>
         </createTable>
@@ -110,9 +102,7 @@
 
         <createTable tableName="acm_user_preference">
             <column name="cm_user_preference_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_user_preference"/>
+                <constraints primaryKey="true" primaryKeyName="pk_user_preference"/>
             </column>
             <column name="cm_user" type="VARCHAR(${cmUserIdLength})"/>
             <column name="cm_module" type="${idType}"/>

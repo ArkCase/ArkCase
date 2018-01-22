@@ -1,6 +1,9 @@
 package com.armedia.acm.services.participants.model;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {

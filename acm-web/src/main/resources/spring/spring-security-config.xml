@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans:beans
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns:beans="http://www.springframework.org/schema/beans"
-    xmlns="http://www.springframework.org/schema/security"
-    xsi:schemaLocation="
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+    xmlns="http://www.springframework.org/schema/security" xsi:schemaLocation="
 
            http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
@@ -14,73 +11,34 @@
 
     <!-- common unprotected resources for all Spring profiles (authentication methods) -->
     <beans:beans>
-        <http
-                security="none"
-                pattern="/warning"/>
-        <http
-                security="none"
-                pattern="/resources/**"/>
-        <http
-                security="none"
-                pattern="/branding/**"/>
-        <http
-                security="none"
-                pattern="/protected/*"/>
-        <http
-                security="none"
-                pattern="/external/**"/>
-        <http
-                security="none"
-                pattern="/views/external/**"/>
-        <http
-                security="none"
-                pattern="/assets/css/login.css"/>
+        <http security="none" pattern="/warning"/>
+        <http security="none" pattern="/resources/**"/>
+        <http security="none" pattern="/branding/**"/>
+        <http security="none" pattern="/protected/*"/>
+        <http security="none" pattern="/external/**"/>
+        <http security="none" pattern="/views/external/**"/>
+        <http security="none" pattern="/assets/css/login.css"/>
         <!-- All lib are public, no security needed -->
-        <http
-                security="none"
-                pattern="/lib/**"/>
+        <http security="none" pattern="/lib/**"/>
     </beans:beans>
 
     <!-- no need to protect the Login page in LDAP- and Kerberos-based authentication -->
     <beans:beans profile="ldap,kerberos,mfa-okta">
-        <http
-                security="none"
-                pattern="/views/login.jsp" />
-        <http
-                security="none"
-                pattern="/login" />
-        <http
-                security="none"
-                pattern="/login.html"/>
-        <http
-                security="none"
-                pattern="/login.jsp"/>
-        <http
-                security="none"
-                pattern="/views/reset-password.jsp" />
-        <http
-                security="none"
-                pattern="/reset-password" />
-        <http
-                security="none"
-                pattern="/forgot-username" />
-        <http
-                security="none"
-                pattern="/forgot-password" />
+        <http security="none" pattern="/views/login.jsp"/>
+        <http security="none" pattern="/login"/>
+        <http security="none" pattern="/login.html"/>
+        <http security="none" pattern="/login.jsp"/>
+        <http security="none" pattern="/views/reset-password.jsp"/>
+        <http security="none" pattern="/reset-password"/>
+        <http security="none" pattern="/forgot-username"/>
+        <http security="none" pattern="/forgot-password"/>
     </beans:beans>
-
 
     <!-- no need to protect the Login page in SSO SAML-based authentication -->
     <beans:beans profile="ssoSaml">
-        <http
-                security="none"
-                pattern="/views/saml_login.jsp"/>
-        <http
-                security="none"
-                pattern="/sso/loggedout"/>
-        <http
-                security="none"
-                pattern="/samllogin"/>
+        <http security="none" pattern="/views/saml_login.jsp"/>
+        <http security="none" pattern="/sso/loggedout"/>
+        <http security="none" pattern="/samllogin"/>
     </beans:beans>
-        <!-- filter chains and other authentication related beans are loaded from acm/spring-security/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
+    <!-- filter chains and other authentication related beans are loaded from acm/spring-security/spring-security-config-*.xml and acm/spring/spring-config-*-ldap-auth.xml configuration files -->
 </beans:beans>

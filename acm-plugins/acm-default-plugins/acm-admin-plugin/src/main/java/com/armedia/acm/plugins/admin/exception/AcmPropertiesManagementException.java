@@ -30,5 +30,3 @@ public class AcmPropertiesManagementException extends Exception
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

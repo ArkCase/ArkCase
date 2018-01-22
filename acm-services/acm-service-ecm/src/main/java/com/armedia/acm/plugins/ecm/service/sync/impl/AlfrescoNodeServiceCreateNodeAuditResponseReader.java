@@ -5,16 +5,17 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.sync.EcmAuditResponseReader;
 import com.google.common.collect.ImmutableMap;
+
 import org.json.JSONObject;
 
 import java.util.Map;
 
 /**
- * Read Alfresco audit records generated from the Alfresco NodeService createNode method.  Alfresco uses the NodeService
+ * Read Alfresco audit records generated from the Alfresco NodeService createNode method. Alfresco uses the NodeService
  * to create folders, and also to create thumbnails and some other objects (but NOT to create content files... Alfresco
  * uses the FileFolderService to create content files).
  * <p>
- * For now, from the node service we are interested only in new folders.  This reader ignores all other new
+ * For now, from the node service we are interested only in new folders. This reader ignores all other new
  * content types.
  */
 public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAuditResponseReader
@@ -54,7 +55,8 @@ public class AlfrescoNodeServiceCreateNodeAuditResponseReader implements EcmAudi
             nodeName = nodeName.substring("{http://www.alfresco.org/model/content/1.0}".length());
             retval.setNodeName(nodeName);
 
-            // "\/auditarkcaseextractors\/create\/out\/a": "workspace:\/\/SpacesStore\/0d5add60-10ef-4369-bc87-f1f9b80fc448|workspace:\/\/SpacesStore\/682cd7df-3987-49da-b5c8-b54887406f08|{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail|{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib|true|-1",
+            // "\/auditarkcaseextractors\/create\/out\/a":
+            // "workspace:\/\/SpacesStore\/0d5add60-10ef-4369-bc87-f1f9b80fc448|workspace:\/\/SpacesStore\/682cd7df-3987-49da-b5c8-b54887406f08|{http:\/\/www.alfresco.org\/model\/content\/1.0}failedThumbnail|{http:\/\/www.alfresco.org\/model\/content\/1.0}doclib|true|-1",
 
             return retval;
         }

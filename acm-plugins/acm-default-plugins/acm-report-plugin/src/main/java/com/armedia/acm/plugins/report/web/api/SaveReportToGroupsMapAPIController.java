@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.report.web.api;
 
 import com.armedia.acm.plugins.report.service.ReportService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,30 +17,31 @@ import java.util.Map;
 
 @Controller
 @RequestMapping({ "/api/v1/plugin/report", "/api/latest/plugin/report" })
-public class SaveReportToGroupsMapAPIController {
+public class SaveReportToGroupsMapAPIController
+{
 
-	private Logger LOG = LoggerFactory.getLogger(getClass());
-	private ReportService reportService;
+    private Logger LOG = LoggerFactory.getLogger(getClass());
+    private ReportService reportService;
 
-	@RequestMapping(value="/reporttogroupsmap", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/reporttogroupsmap", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public boolean saveReportToGroupsMap(@RequestBody Map<String, List<String>> reportToGroupsMap, Authentication auth)
     {
-		LOG.debug("Saving reports to groups map ...");
-		
-		boolean retval = getReportService().saveReportToGroupsMap(reportToGroupsMap, auth);
+        LOG.debug("Saving reports to groups map ...");
+
+        boolean retval = getReportService().saveReportToGroupsMap(reportToGroupsMap, auth);
         LOG.debug("Successfuly saved ? " + retval);
 
-		return retval;
+        return retval;
     }
 
-	public ReportService getReportService()
-	{
-		return reportService;
-	}
+    public ReportService getReportService()
+    {
+        return reportService;
+    }
 
-	public void setReportService(ReportService reportService)
-	{
-		this.reportService = reportService;
-	}
+    public void setReportService(ReportService reportService)
+    {
+        this.reportService = reportService;
+    }
 }

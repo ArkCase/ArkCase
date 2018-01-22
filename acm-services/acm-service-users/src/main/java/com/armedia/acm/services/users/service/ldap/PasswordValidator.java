@@ -6,10 +6,12 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.services.users.model.ldap.PasswordValidation;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
 import java.util.List;
 
 public class PasswordValidator implements ConstraintValidator<PasswordValidation, UserDTO>
@@ -28,7 +30,8 @@ public class PasswordValidator implements ConstraintValidator<PasswordValidation
     {
         String userId = user.getUserId();
         String userPassword = user.getPassword();
-        if (userId == null || userPassword == null) return false;
+        if (userId == null || userPassword == null)
+            return false;
 
         context.disableDefaultConstraintViolation();
 

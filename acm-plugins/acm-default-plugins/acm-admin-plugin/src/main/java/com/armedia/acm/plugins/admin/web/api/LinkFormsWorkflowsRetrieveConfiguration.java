@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmLinkFormsWorkflowException;
 import com.armedia.acm.plugins.admin.service.LinkFormsWorkflowsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -13,10 +14,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 
 /**
- * Created by sergey.kolomiets  on 6/15/15.
+ * Created by sergey.kolomiets on 6/15/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LinkFormsWorkflowsRetrieveConfiguration
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -33,7 +34,8 @@ public class LinkFormsWorkflowsRetrieveConfiguration
         try
         {
             return linkFormsWorkflowsService.retrieveConfigurationAsJson().toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't retrieve Link Forms Workflows Configuration", e);
             throw new AcmLinkFormsWorkflowException("Can't retrieve Link Forms Workflows Configuration", e);

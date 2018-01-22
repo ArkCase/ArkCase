@@ -8,7 +8,23 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -24,13 +40,7 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
     private static final long serialVersionUID = -1154137631399833851L;
 
     @Id
-    @TableGenerator(name = "acm_note_gen",
-            table = "acm_note_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_note",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_note_gen", table = "acm_note_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_note", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_note_gen")
     @Column(name = "cm_note_id")
     private Long id;
@@ -216,18 +226,23 @@ public class Note implements Serializable, AcmObject, AcmEntity, AcmParentObject
         return parentType;
     }
 
-    public String getParentTitle() {return parentTitle; }
+    public String getParentTitle()
+    {
+        return parentTitle;
+    }
 
     public void setParentTitle(String parentTitle)
     {
         this.parentTitle = parentTitle;
     }
 
-    public String getAuthor() {
+    public String getAuthor()
+    {
         return author;
     }
 
-    public void setAuthor(String author) {
+    public void setAuthor(String author)
+    {
         this.author = author;
     }
 

@@ -33,7 +33,6 @@ public class CategoryDao extends AcmAbstractDao<Category>
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.data.AcmAbstractDao#getPersistenceClass()
      */
     @Override
