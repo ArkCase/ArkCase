@@ -895,12 +895,6 @@ angular.module('services').factory(
                                     errorMessage : "Empty value found!"
                                 };
                             }
-                            if (!lookup[i].inverseKey) {
-                                return {
-                                    isValid : false,
-                                    errorMessage : "Empty inverse key found!"
-                                };
-                            }
                             if (!lookup[i].inverseValue) {
                                 return {
                                     isValid : false,
