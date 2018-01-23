@@ -27,8 +27,6 @@ angular.module('common').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     function retrieveGridData() {
-                        //FIXME this piece of code repeat in many places where we have tasks and objectType.
-                        //we shouldn't have have TASK and ADHOC in objectType for Task
                         var objectType = $stateParams.type == "ADHOC" ? "TASK" : $stateParams.type;
                         gridHelper.retrieveAuditData(objectType, $stateParams.id);
                     }
