@@ -49,7 +49,7 @@ angular.module('complaints').controller(
                         gridHelper.disableGridScrolling(config);
                         gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                         gridHelper.setUserNameFilter(promiseUsers);
-                        gridHelper.addButton(config, "delete");
+                        gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
 
                         componentHelper.doneConfig(config);
                         return false;
@@ -104,6 +104,14 @@ angular.module('complaints').controller(
                                 $scope.$emit("report-object-updated", complaintInfo);
                                 return complaintInfo;
                             });
+                        }
+                    };
+
+                    $scope.isDeleteDisabled = function(rowEntity) {
+                        if (rowEntity.adhocTask_b === true) {
+                            return false;
+                        } else {
+                            return true;
                         }
                     };
 
