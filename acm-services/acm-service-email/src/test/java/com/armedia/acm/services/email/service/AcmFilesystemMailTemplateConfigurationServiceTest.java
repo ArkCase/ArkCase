@@ -5,7 +5,11 @@ import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -13,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.After;
@@ -40,6 +45,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -60,11 +66,17 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
 
     private static final String COMPLAINT = "COMPLAINT";
 
+    private static final String TASK = "TASK";
+
+    private static final String DOCUMENT = "DOC_REPO";
+
     private static final String TEMPLATE_NAME = "testTemplate";
 
     private static final String SEND_AS_ATTACHMENTS = "sendAsAttachments";
 
     private static final String SEND_AS_LINKS = "sendAsLinks";
+
+    private static final String SEND_AS_ATTACHMENTS_AND_LINKS = "sendAsAttachmentsAndLinks";
 
     @Mock
     private Resource templateConfigurations;
@@ -463,6 +475,76 @@ public class AcmFilesystemMailTemplateConfigurationServiceTest
     public void testDeleteTemplate()
     {
         fail("Not implemented due to interaction with the filesystem.");
+    }
+
+    /**
+     * Test method for
+     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#validateEmailTemplate(com.armedia.acm.services.email.service.EmailTemplateConfiguration)}.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testValidateEmailTemplate_Valid() throws Exception
+    {
+        // given
+        String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
+        when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
+
+        List<EmailTemplateConfiguration> configurationList = service.getTemplateConfigurations();
+
+        // Configuration that not exists and should be valid
+        EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN, Arrays.asList(TASK, DOCUMENT), EmailSource.MANUAL,
+                TEMPLATE_NAME, Arrays.asList(SEND_AS_ATTACHMENTS_AND_LINKS));
+
+        Map<String, Map<String, List<String>>> templateConfigurationsMap = service.getTemplateConfigurationsMap(configuration,
+                configurationList);
+
+        assertNotNull(templateConfigurationsMap);
+        assertTrue(templateConfigurationsMap.containsKey(CASE_FILE));
+        assertTrue(templateConfigurationsMap.get(CASE_FILE).containsKey(SEND_AS_LINKS));
+        assertTrue(templateConfigurationsMap.get(CASE_FILE).get(SEND_AS_LINKS).contains(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com"));
+
+        EmailTemplateValidationResponse reponse = service.getCollideConfiguration(configuration, templateConfigurationsMap);
+
+        assertTrue(reponse.isValidTemplate());
+        assertNull(reponse.getObjectType());
+        assertNull(reponse.getAction());
+        assertNull(reponse.getEmailPattern());
+    }
+
+    /**
+     * Test method for
+     * {@link com.armedia.acm.services.email.service.AcmFilesystemMailTemplateConfigurationService#validateEmailTemplate(com.armedia.acm.services.email.service.EmailTemplateConfiguration)}.
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testValidateEmailTemplate_NotValid() throws Exception
+    {
+        // given
+        String fileName = getClass().getClassLoader().getResource("mailTemplatesConfigurationMultipleMatchings.json").getFile();
+        when(templateConfigurations.getInputStream()).thenReturn(new FileInputStream(fileName));
+
+        List<EmailTemplateConfiguration> configurationList = service.getTemplateConfigurations();
+
+        // Configuration that exists and should not be valid
+        EmailTemplateConfiguration configuration = setupConfiguration(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com",
+                Arrays.asList(CASE_FILE), EmailSource.MANUAL, TEMPLATE_NAME, Arrays.asList(SEND_AS_LINKS));
+
+        Map<String, Map<String, List<String>>> templateConfigurationsMap = service.getTemplateConfigurationsMap(configuration,
+                configurationList);
+
+        assertNotNull(templateConfigurationsMap);
+        assertTrue(templateConfigurationsMap.containsKey(CASE_FILE));
+        assertTrue(templateConfigurationsMap.get(CASE_FILE).containsKey(SEND_AS_LINKS));
+        assertTrue(templateConfigurationsMap.get(CASE_FILE).get(SEND_AS_LINKS).contains(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com"));
+
+        EmailTemplateValidationResponse reponse = service.getCollideConfiguration(configuration, templateConfigurationsMap);
+
+        assertFalse(reponse.isValidTemplate());
+        assertThat(reponse.getObjectType(), is(CASE_FILE));
+        assertThat(reponse.getAction(), is(SEND_AS_LINKS));
+        assertThat(reponse.getEmailPattern(), is(EMAIL_PATTERN + "@" + EMAIL_PATTERN + "\\.com"));
     }
 
     /**
