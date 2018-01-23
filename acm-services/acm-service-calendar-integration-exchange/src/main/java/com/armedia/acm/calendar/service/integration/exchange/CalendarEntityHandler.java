@@ -147,7 +147,7 @@ public class CalendarEntityHandler
         {
             throw new CalendarServiceException(String.format("No calendar associated with %s with id %s.", entityType, objectId));
         }
-        return Optional.of(entity.getContainer().getCalendarFolderId());
+        return Optional.ofNullable(entity.getContainer().getCalendarFolderId());
     }
 
     List<AcmCalendarEventInfo> listItemsInfo(ExchangeService service, String objectId, ZonedDateTime after, ZonedDateTime before,
@@ -286,10 +286,6 @@ public class CalendarEntityHandler
             if (!calendarId.isPresent())
             {
                 return new FindItemsResults<>();
-            }
-            else if (isObjectClosed(Long.valueOf(objectId)))
-            {
-                throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", entityType, objectId));
             }
             calendar = CalendarFolder.bind(service, new FolderId(calendarId.get()));
         }

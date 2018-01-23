@@ -99,6 +99,10 @@ public class ExchangeCalendarService
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
             }
+            else if (exception instanceof CalendarObjectClosedException)
+            {
+                errorDetails.put("error_cause", "OBJECT_CLOSED");
+            }
             else
             {
                 errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
