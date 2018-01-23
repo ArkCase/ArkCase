@@ -107,14 +107,6 @@ angular.module('complaints').controller(
                         }
                     };
 
-                    $scope.isDeleteDisabled = function(rowEntity) {
-                        if (rowEntity.adhocTask_b === true) {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    };
-
                     $scope.onClickObjLink = function(event, rowEntity) {
                         event.preventDefault();
 
@@ -123,4 +115,9 @@ angular.module('complaints').controller(
                         var targetId = Util.goodMapValue(rowEntity, "object_id_s");
                         gridHelper.showObject(targetType, targetId);
                     };
+
+                    $scope.isDeleteDisabled = function(rowEntity) {
+                        return !rowEntity.adhocTask_b;
+                    };
+
                 } ]);
