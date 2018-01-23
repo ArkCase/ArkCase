@@ -643,9 +643,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                 }
                 , getKeyByObjWithPage: function (pageId, objNodeType, objNodeId) {
                     var subKey = objNodeType
-                            + this.TYPE_ID_SEPARATOR
-                            + objNodeId
-                        ;
+                        + this.TYPE_ID_SEPARATOR
+                        + objNodeId
+                    ;
                     return this.getKeyBySubWithPage(pageId, subKey);
                 }
                 , getKeyBySubWithPage: function (pageId, subKey) {
@@ -841,7 +841,11 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         Tree.scope.filters = Util.goodArray(treeConfig.filters);
                         treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {default: true}), "name");
                         treeInfo.filter = treeInfo.defaultFilter;
+                        Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {default: true}), "desc");
                         Tree.scope.onSelectFilter = function (filterName) {
+                            Tree.scope.nameFilter =  Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
+                                return filters.name == filterName
+                            }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
                             if (!Util.compare(treeInfo.filter, filterName)) {
                                 Tree.setNodeId(0);
@@ -856,7 +860,11 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         Tree.scope.sorters = Util.goodArray(treeConfig.sorters);
                         treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {default: true}), "name");
                         treeInfo.sorter = treeInfo.defaultSorter;
+                        Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {default: true}), "desc");
                         Tree.scope.onSelectSort = function (sorterName) {
+                            Tree.scope.nameSort= Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(sorters) {
+                                return sorters.name == sorterName
+                            }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
                             if (!Util.compare(treeInfo.sorter, sorterName)) {
                                 Tree.setNodeId(0);
