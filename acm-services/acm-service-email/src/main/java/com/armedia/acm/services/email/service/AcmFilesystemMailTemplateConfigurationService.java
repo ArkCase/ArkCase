@@ -3,6 +3,7 @@ package com.armedia.acm.services.email.service;
 import static java.util.regex.Pattern.matches;
 
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
@@ -137,6 +138,84 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
 
     /*
      * (non-Javadoc)
+     * @see com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#validateEmailTemplate()
+     */
+    @Override
+    public EmailTemplateValidationResponse validateEmailTemplate(EmailTemplateConfiguration templateData)
+            throws AcmEmailConfigurationException
+    {
+
+        List<EmailTemplateConfiguration> readConfigurationList = getTemplateConfigurations();
+
+        Map<String, Map<String, List<String>>> templateConfigurationsMap = getTemplateConfigurationsMap(templateData,
+                readConfigurationList);
+
+        EmailTemplateValidationResponse response = getCollideConfiguration(templateData, templateConfigurationsMap);
+
+        return response;
+    }
+
+    /**
+     * @param templateData
+     * @param configurationList
+     * @return
+     */
+    protected Map<String, Map<String, List<String>>> getTemplateConfigurationsMap(EmailTemplateConfiguration templateData,
+            List<EmailTemplateConfiguration> configurationList)
+    {
+        // Map<objectType, Map<action, List<emailPattern>>>
+        Map<String, Map<String, List<String>>> templateConfigurations = new HashMap<>();
+        for (EmailTemplateConfiguration configuration : configurationList)
+        {
+            if (templateData.getTemplateName() != null && !templateData.getTemplateName().equals(configuration.getTemplateName()))
+            {
+                for (String objectType : configuration.getObjectTypes())
+                {
+                    Map<String, List<String>> actionMap = templateConfigurations.computeIfAbsent(objectType, (key) -> new HashMap<>());
+                    for (String action : configuration.getActions())
+                    {
+                        List<String> patternList = actionMap.computeIfAbsent(action, (key) -> new ArrayList<>());
+                        if (!patternList.contains(configuration.getEmailPattern()))
+                        {
+                            patternList.add(configuration.getEmailPattern());
+                        }
+                    }
+                }
+            }
+        }
+        return templateConfigurations;
+    }
+
+    /**
+     * @param templateData
+     * @param templateConfigurationsMap
+     * @return
+     */
+    protected EmailTemplateValidationResponse getCollideConfiguration(EmailTemplateConfiguration templateData,
+            Map<String, Map<String, List<String>>> templateConfigurationsMap)
+    {
+        EmailTemplateValidationResponse response = new EmailTemplateValidationResponse();
+
+        for (String objectType : templateData.getObjectTypes())
+        {
+            for (String action : templateData.getActions())
+            {
+                if (templateConfigurationsMap.containsKey(objectType) && templateConfigurationsMap.get(objectType).containsKey(action)
+                        && templateConfigurationsMap.get(objectType).get(action).contains(templateData.getEmailPattern()))
+                {
+                    response.setObjectType(objectType);
+                    response.setAction(action);
+                    response.setEmailPattern(templateData.getEmailPattern());
+                    response.setValidTemplate(false);
+                    return response;
+                }
+            }
+        }
+        return response;
+    }
+
+    /*
+     * (non-Javadoc)
      * @see
      * com.armedia.acm.services.email.service.AcmMailTemplateConfigurationService#updateEmailTemplate(com.armedia.acm.
      * services.email.service.EmailTemplateConfiguration, org.springframework.web.multipart.MultipartFile)
@@ -144,6 +223,7 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     @Override
     public void updateEmailTemplate(EmailTemplateConfiguration templateData, MultipartFile template) throws AcmEmailConfigurationException
     {
+
         File templateFolder = getTemplateFolder();
 
         List<EmailTemplateConfiguration> configurations = getTemplateConfigurations(templateData);
@@ -266,10 +346,8 @@ public class AcmFilesystemMailTemplateConfigurationService implements AcmMailTem
     {
         List<EmailTemplateConfiguration> configurations = getTemplateConfigurations();
         Stream<EmailTemplateConfiguration> filteredConfigurations = configurations.stream()
-                .filter(c -> c.getObjectTypes().contains(objectType))
-                .filter(c -> c.getActions().containsAll(actions) && actions.containsAll(c.getActions()))
-                .filter(c -> c.getSource().equals(source))
-                .filter(c -> matches(c.getEmailPattern(), email));
+                .filter(c -> c.getObjectTypes().contains(objectType)).filter(c -> c.getActions().containsAll(actions))
+                .filter(c -> c.getSource().equals(source)).filter(c -> matches(c.getEmailPattern(), email));
 
         return filteredConfigurations.collect(Collectors.toList());
     }

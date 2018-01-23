@@ -802,8 +802,12 @@
                     "id": "sendAsAttachments"
                 },
                 {
-                    "name": "Send as links",
+                    "name": "Send as Links",
                     "id": "sendAsLinks"
+                },
+                {
+                    "name": "Send as Attachments and Links",
+                    "id": "sendAsAttachmentsAndLinks"
                 }
             ],
             "sources": [
