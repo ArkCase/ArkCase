@@ -843,14 +843,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         treeInfo.filter = treeInfo.defaultFilter;
                         Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {default: true}), "desc");
                         Tree.scope.onSelectFilter = function (filterName) {
-                            function findFilterName(filterName){
-                                for(var i = 0; i<Tree.scope.filters.length; i++){
-                                    if(filterName === Tree.scope.filters[i].name){
-                                        return Tree.scope.filters[i].desc;
-                                    }
-                                }
-                            }
-                            Tree.scope.nameFilter = findFilterName(filterName);
+                            Tree.scope.nameFilter =  Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
+                                return filters.name == filterName
+                            }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
                             if (!Util.compare(treeInfo.filter, filterName)) {
                                 Tree.setNodeId(0);
@@ -867,15 +862,9 @@ angular.module('directives').directive('objectTree', ['$q', '$translate', 'UtilS
                         treeInfo.sorter = treeInfo.defaultSorter;
                         Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {default: true}), "desc");
                         Tree.scope.onSelectSort = function (sorterName) {
-                            function findSorterName(sorterName){
-                                for(var i = 0; i<Tree.scope.sorters.length; i++){
-                                    if(sorterName === Tree.scope.sorters[i].name){
-                                        return Tree.scope.sorters[i].desc;
-                                    }
-                                }
-                            }
-                            Tree.scope.nameSort=findSorterName(sorterName);
-
+                            Tree.scope.nameSort= Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(sorters) {
+                                return sorters.name == sorterName
+                            }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
                             if (!Util.compare(treeInfo.sorter, sorterName)) {
                                 Tree.setNodeId(0);
