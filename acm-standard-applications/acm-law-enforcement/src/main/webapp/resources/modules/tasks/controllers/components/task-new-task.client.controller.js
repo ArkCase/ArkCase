@@ -39,8 +39,8 @@ angular.module('tasks')
                             $scope.chosenGroup = '';
 
                             $scope.options = {
-                                focus : true,
-                                dialogsInBody : true
+                                focus : true
+                            // dialogsInBody : true
                             //,height: 120
                             };
 
