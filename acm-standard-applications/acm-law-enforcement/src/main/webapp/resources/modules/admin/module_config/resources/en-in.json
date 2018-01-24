@@ -195,6 +195,7 @@
           },
           "addMembers": {
             "title": "Add Members",
+            "group.title": "Add existing group as member",
             "btn": {
               "search": "Go!",
               "cancel": "Cancel",
