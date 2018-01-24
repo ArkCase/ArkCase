@@ -74,14 +74,14 @@ angular.module('directives').directive('objectAuthorizationRoles',
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
-                    scope.$watch('data', function(newValue) {
+                    /*scope.$watch('data', function(newValue) {
                         if (newValue && newValue.length > 0) {
                             scope.selectedObject = scope.data[0];
                             scope.selectObject();
                         }
-                    }, true);
+                    }, true);*/
 
-                    scope.filterWord = "";
+                    /*scope.filterWord = "";
                     scope.noFilterData = true;
                     scope.onChangeFilterWord = function() {
                         if (scope.filterWord == "") {
@@ -96,7 +96,7 @@ angular.module('directives').directive('objectAuthorizationRoles',
                         scope.$bus.publish('onFilter-' + scope.controllerName, {
                             "filterWord" : scope.filterWord
                         });
-                    };
+                    };*/
 
                     //initial setup
                     scope.selectedNotAuthorized = "";
@@ -104,15 +104,13 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.authorized = [];
                     scope.notAuthorized = [];
 
+                    //scroll, adding scroll event on the element
                     document.getElementById("scrollTest").addEventListener("scroll", myFunction);
                     var temp = document.getElementById("scrollTest");
-
                     var maxScrolled = 0;
 
                     function myFunction() {
                         var temp = document.getElementById("scrollTest");
-                        //console.log(temp.scrollTop);
-                        //console.log(temp.offsetHeight + temp.scrollTop);
                         if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
                             scope.$bus.publish('onFilter-' + scope.controllerName, {
                                 "filterWord" : scope.filterWord,
@@ -171,6 +169,9 @@ angular.module('directives').directive('objectAuthorizationRoles',
                 }
             };
         } ]);
+
+/*              OVAJ SMENI GO SO SORT OD SOLR!!!!!!*/
+
 angular.module('directives').filter('orderObjectBy', function() {
     return function(input) {
         if (!angular.isObject(input))

@@ -4,6 +4,8 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     return ({
         queryGroupsByDirectory : queryGroupsByDirectory,
         queryAdhocGroups : queryAdhocGroups,
+        getFilteredAuthorizedGroups : getFilteredAuthorizedGroups,
+        getFilteredUnauthorizedGroups : getFilteredUnauthorizedGroups,
         addGroupsToUser : addGroupsToUser,
         removeGroupsFromUser : removeGroupsFromUser,
         cloneUser : cloneUser,
@@ -28,6 +30,29 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/groups/adhoc',
             params : {
                 n : 10000
+            }
+        });
+    }
+
+    function getFilteredAuthorizedGroups(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/getFilteredAuthorizedGroups',
+            params : {
+                n : (data.n ? data.n : 20),
+                q : data.filterWord
+            }
+        });
+    }
+
+    function getFilteredUnauthorizedGroups(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/getFilteredUnauthorizedGroups',
+            params : {
+                n : (data.n ? data.n : 20),
+                q : data.member_id,
+                fq : data.filterWord
             }
         });
     }

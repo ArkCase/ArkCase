@@ -21,6 +21,17 @@ angular.module('admin').controller(
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
+                    /*      TUKA PRAKAJ MU JA TESTDATA NAMESTO appUSers && update na notAuth i Auth     */
+                    $scope.testData = {
+                        "appUsers" : $scope.appUsers,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
+
+                    $scope.$watch('appUsers', function() {
+                        $scope.testData.appUsers = $scope.appUsers;
+                    }, true);
+
                     LdapUserManagementService.getNUsers({}).then(function(response) {
                         _.forEach(response.data, function(user) {
                             var element = {};
@@ -29,15 +40,16 @@ angular.module('admin').controller(
                             element.directory = user.directory_name_s;
                             $scope.appUsers.push(element);
                         });
-                        $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
                     });
 
+                    $scope.lastSelectedUser = "";
                     var selectedUser;
                     var currentAuthGroups;
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
                         selectedUser = selectedObject;
+                        $scope.lastSelectedUser = selectedUser;
                         currentAuthGroups = [];
 
                         var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);
@@ -239,7 +251,7 @@ angular.module('admin').controller(
                         });
                     };
 
-                    $scope.$bus.subscribe('onFilter-ldapUserManagement', function(data) {
+                    $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
@@ -251,7 +263,6 @@ angular.module('admin').controller(
                                     element.directory = user.directory_name_s;
                                     $scope.appUsers.push(element);
                                 });
-                                // $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
                             });
                         } else {
                             LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
@@ -264,7 +275,39 @@ angular.module('admin').controller(
                                         element.directory = user.directory_name_s;
                                         $scope.appUsers.push(element);
                                     });
-                                    // $scope.onObjSelect($scope.appUsers[$scope.appUsers.length - 1], [], []);
+                                }
+
+                            }, function() {
+                                console.log("error");
+                            });
+                        }
+                    });
+
+                    $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
+                        data.member_id = $scope.lastSelectedUser;
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
+                                $scope.appUsers = [];
+                                _.forEach(response.data, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    $scope.appUsers.push(element);
+                                });
+                            });
+                        } else {
+                            LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
+                                $scope.appUsers = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    _.forEach(response.data.response.docs, function(user) {
+                                        var element = {};
+                                        element.name = user.name;
+                                        element.key = user.object_id_s;
+                                        element.directory = user.directory_name_s;
+                                        $scope.appUsers.push(element);
+                                    });
                                 }
 
                             }, function() {
