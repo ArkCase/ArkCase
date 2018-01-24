@@ -852,6 +852,18 @@
                 "newValue": "新しい価値",
                 "oldValue": "古い価値"
             }
+        },
+        "client": {
+            "title": "歴史",
+            "label": {
+                "updated": "更新しました"
+            },
+            "table.columns": {
+                "eventType": "イベント名",
+                "eventDate": "日付",
+                "userId": "ユーザー",
+                "details.btn.text": "{{count}}つの変更を表示"
+            }
         }
     }
 }
