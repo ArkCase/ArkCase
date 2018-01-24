@@ -144,6 +144,15 @@ public class AcmParticipantService
         return getParticipantDao().findParticipantsForObject(objectType, objectId, flushModeType);
     }
 
+    public Boolean getOriginalRestrictedFlag(AcmAssignedObject assignedObject)
+    {
+        if (assignedObject.getId() == null)
+        {
+            return assignedObject.getRestricted();
+        }
+        return getParticipantDao().getOriginalRestrictedFlag(assignedObject);
+    }
+
     public void removeParticipant(Long participantId)
     {
         AcmParticipant participant = getParticipantDao().find(participantId);

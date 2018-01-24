@@ -47,11 +47,14 @@ public class EcmFileParticipantServiceHelper
         boolean inheritAllParticipants = participants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
+        boolean inheritNoParticipants = participants.stream()
+                .allMatch(participant -> !participant.isReplaceChildrenParticipant());
+
         // flush the session before removing participants
         getFolderDao().getEm().flush();
 
         // remove deleted participants
-        if (inheritAllParticipants && folder.getId() != null)
+        if ((inheritAllParticipants || inheritNoParticipants) && folder.getId() != null)
         {
             List<AcmFolder> subfolders = getFolderDao().findSubFolders(folder.getId(), FlushModeType.COMMIT);
             for (AcmFolder subFolder : subfolders)
@@ -101,8 +104,6 @@ public class EcmFileParticipantServiceHelper
                 }
             }
         }
-
-        getFolderDao().getEm().flush();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

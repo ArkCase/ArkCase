@@ -40,7 +40,7 @@ public class EcmFileParticipantService
     private Properties ecmFileServiceProperties;
     private EcmFileParticipantServiceHelper fileParticipantServiceHelper;
 
-    private static List<String> fileParticipantTypes = Arrays.asList("group-write", "group-read", "group-no-access", "write", "read",
+    private static List<String> fileParticipantTypes = Arrays.asList("*", "group-write", "group-read", "group-no-access", "write", "read",
             "no-access");
 
     /**
@@ -184,26 +184,36 @@ public class EcmFileParticipantService
         {
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
                     originalAssignedObjectParticipants, acmContainer.getFolder(), restricted);
-
         }
         if (acmContainer.getAttachmentFolder() != null
-                && !acmContainer.getAttachmentFolder().getId().equals(acmContainer.getFolder().getId()))
+                && (acmContainer.getFolder() == null
+                        || (acmContainer.getAttachmentFolder() != acmContainer.getFolder()
+                                && acmContainer.getAttachmentFolder().getId() != null &&
+                                !acmContainer.getAttachmentFolder().getId().equals(acmContainer.getFolder().getId()))))
         {
             inheritParticipantsFromAssignedObject(assignedObjectParticipants,
                     originalAssignedObjectParticipants, acmContainer.getAttachmentFolder(), restricted);
         }
-
-        // make sure the changes made are flushed and not overridden later
-        getFileDao().getEm().flush();
     }
 
     private void inheritParticipantsFromAssignedObject(List<AcmParticipant> assignedObjectParticipants,
             List<AcmParticipant> originalAssignedObjectParticipants, AcmFolder folder, boolean restricted)
     {
+        // filter participants without participantLdapId
+        assignedObjectParticipants = assignedObjectParticipants.stream().filter(
+                participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
+                .collect(Collectors.toList());
+        originalAssignedObjectParticipants = originalAssignedObjectParticipants.stream().filter(
+                participant -> participant.getParticipantLdapId() != null && participant.getParticipantLdapId().trim().length() > 0)
+                .collect(Collectors.toList());
+
         boolean inheritAllParticipants = assignedObjectParticipants.stream()
                 .allMatch(participant -> participant.isReplaceChildrenParticipant());
 
-        if (inheritAllParticipants)
+        boolean inheritNoParticipants = assignedObjectParticipants.stream()
+                .allMatch(participant -> !participant.isReplaceChildrenParticipant());
+
+        if (inheritAllParticipants || inheritNoParticipants)
         {
             List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
                     .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
@@ -316,8 +326,6 @@ public class EcmFileParticipantService
         // modify the instance to trigger the Solr transformers
         folder.setModified(new Date());
         AcmFolder savedFolder = getFolderService().saveFolder(folder);
-        // make sure the session is flushed so that the Drools rules have been run
-        getFolderDao().getEm().flush();
 
         return savedFolder.getParticipants();
     }

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.FlushModeType;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
@@ -26,7 +27,8 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
 
     private EcmFileParticipantService fileParticipantService;
 
-    public AcmContainer findFolderByObjectTypeAndId(String objectType, Long objectId) throws AcmObjectNotFoundException
+    public AcmContainer findFolderByObjectTypeAndId(String objectType, Long objectId, FlushModeType flushModeType)
+            throws AcmObjectNotFoundException
     {
         TypedQuery<AcmContainer> query = getEm().createQuery(EcmFileConstants.FIND_CONTAINER_QUERY, getPersistenceClass());
 
@@ -43,6 +45,11 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         {
             throw new AcmObjectNotFoundException(objectType, objectId, e.getMessage(), e);
         }
+    }
+
+    public AcmContainer findFolderByObjectTypeAndId(String objectType, Long objectId) throws AcmObjectNotFoundException
+    {
+        return findFolderByObjectTypeAndId(objectType, objectId, FlushModeType.AUTO);
     }
 
     public AcmContainer findFolderByObjectTypeIdAndRepositoryId(String objectType, Long objectId, String cmisRepositoryId)
@@ -82,7 +89,7 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         AcmContainer container = null;
         try
         {
-            container = findFolderByObjectTypeAndId(objectType, objectId);
+            container = findFolderByObjectTypeAndId(objectType, objectId, FlushModeType.COMMIT);
             log.info("Found existing folder " + container.getId() + " for object " + objectType + " id " + objectId);
         }
         catch (AcmObjectNotFoundException e)
