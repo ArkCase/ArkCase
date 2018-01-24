@@ -646,6 +646,7 @@
                     "edit": "CMIS構成の編集"
                 },
                 "dialog": {
+                    "testConnection": "ja_Test Connection",
                     "cancel": "キャンセル",
                     "ok": "[OK]"
                 },
@@ -673,10 +674,6 @@
                 "useAlfrescoExtension": {
                     "label": "Alfresco Extensionを使用する",
                     "placeholder": "Alfresco Extensionを使用する"
-                },
-                "endpoint": {
-                    "label": "終点",
-                    "placeholder": "終点"
                 },
                 "maxIdle": {
                     "label": "最大アイドル",
@@ -710,7 +707,7 @@
                     "label": "リポジトリID",
                     "placeholder": "リポジトリID"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "バージョン管理の状態",
                     "placeholder": "バージョン管理の状態"
                 }

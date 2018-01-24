@@ -856,6 +856,23 @@
                 "newValue": "Новая стоимость",
                 "oldValue": "Старая стоимость"
             }
+        },
+        "client": {
+            "title": "история",
+            "label": {
+                "updated": "обновленный"
+            },
+            "table.columns": {
+                "eventType": "Название события",
+                "eventDate": "Дата",
+                "userId": "пользователь",
+                "details.btn.text": "Просмотреть {{count}} изменения"
+            }
         }
     }
 }
+
+
+
+
+
