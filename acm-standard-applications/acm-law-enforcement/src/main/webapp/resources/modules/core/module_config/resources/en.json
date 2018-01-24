@@ -10,6 +10,11 @@
                 "no-access": "No Access",
                 "case": "Case File"
             },
+            "cmisVersioningState": {
+                "none": "NONE",
+                "minor": "MINOR",
+                "major": "MAJOR"
+            },
             "addressTypes": {
                 "business": "Business"
             },
