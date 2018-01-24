@@ -852,6 +852,18 @@
                 "newValue": "新价值",
                 "oldValue": "旧价值"
             }
+        },
+        "client": {
+            "title": "历史",
+            "label": {
+                "updated": "更新"
+            },
+            "table.columns": {
+                "eventType": "事件名称",
+                "eventDate": "事件日期",
+                "userId": "用户",
+                "details.btn.text": "查看{{count}}个更改"
+            }
         }
     }
 }
