@@ -856,6 +856,23 @@
                 "newValue": "Novo valor",
                 "oldValue": "Valor antigo"
             }
+        },
+        "client": {
+            "title": "História",
+            "label": {
+                "updated": "Atualizada"
+            },
+            "table.columns": {
+                "eventType": "Nome do evento",
+                "eventDate": "Encontro",
+                "userId": "Do utilizador",
+                "details.btn.text": "Ver {{count}} alterações"
+            }
         }
     }
 }
+
+
+
+
+

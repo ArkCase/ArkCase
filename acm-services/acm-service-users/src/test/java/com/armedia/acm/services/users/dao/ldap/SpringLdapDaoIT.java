@@ -130,7 +130,7 @@ public class SpringLdapDaoIT
     {
         LdapTemplate ldapTemplate = springLdapDao.buildLdapTemplate(acmSyncLdapConfig);
 
-        String dn = "uid=ann-acm,cn=Users,dc=armedia,dc=com";
+        String dn = "uid=ann-acm,ou=Users,dc=armedia,dc=com";
         long start = System.currentTimeMillis();
         LdapUser ldapUser = springLdapUserDao.findUserByLookup(dn, ldapTemplate, acmSyncLdapConfig);
         long time = System.currentTimeMillis() - start;

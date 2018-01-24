@@ -847,7 +847,7 @@
     },
     "common.objectHistory": {
         "modal": {
-            "title": "Historie Details",
+            "title": "Geschichte Details",
             "btn": {
                 "close": "Schließen"
             },
@@ -856,6 +856,23 @@
                 "newValue": "Neuer Wert",
                 "oldValue": "Alter Wert"
             }
+        },
+        "client": {
+            "title": "Geschichte",
+            "label": {
+                "updated": "Aktualisiert"
+            },
+            "table.columns": {
+                "eventType": "Veranstaltungsname",
+                "eventDate": "Datum",
+                "userId": "Benutzer",
+                "details.btn.text": "Zeigen Sie {{count}} Änderungen an"
+            }
         }
     }
 }
+
+
+
+
+

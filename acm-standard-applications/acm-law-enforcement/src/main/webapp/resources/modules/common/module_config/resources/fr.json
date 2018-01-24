@@ -856,6 +856,23 @@
                 "newValue": "Nouvelle valeur",
                 "oldValue": "Ancienne valeur"
             }
+        },
+        "client": {
+            "title": "Histoire",
+            "label": {
+                "updated": "Actualisé"
+            },
+            "table.columns": {
+                "eventType": "Nom de l'événement",
+                "eventDate": "Rendez-vous amoureux",
+                "userId": "Utilisateur",
+                "details.btn.text": "Voir {{count}} changements"
+            }
         }
     }
 }
+
+
+
+
+

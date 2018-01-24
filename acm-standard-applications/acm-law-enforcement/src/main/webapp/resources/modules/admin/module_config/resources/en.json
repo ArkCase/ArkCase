@@ -353,6 +353,7 @@
                 "templateName.label": "Template Name",
                 "templateName.placeholder": "Enter Template Name",
                 "emailPattern.label": "Email Pattern",
+                "emailPattern.description": "Use '.*' for all recipients, use '.+@armedia.com' for armedia.com recipients or some other regex. Please note that dot(.) should be escaped with backslash!",
                 "emailPattern.placeholder": "Enter Email Pattern",
                 "source.label": "Source",
                 "objectTypes.label": "Object Types",
@@ -361,7 +362,8 @@
                 "automated.label": "Automated",
                 "browse": "Browse",
                 "save": "Save",
-                "cancel": "Cancel"
+                "cancel": "Cancel",
+                "validationResponse": "Email Template already exists with selected parameters"
             }
         },
         "security.exchangeConfiguration": {
@@ -525,6 +527,7 @@
                 "lookupName": "Lookup Name",
                 "btnSave.text": "Save",
                 "deleteLookupMsg": "Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "Are you sure you want to delete this entry?",
                 "delete.success": "Lookup is successfully deleted",
                 "delete.error": "Lookup can't be deleted",
                 "lookupExists.error": "Lookup with this name already exists"
@@ -656,6 +659,7 @@
                     "edit": "Edit CMIS Configuration"
                 },
                 "dialog": {
+                    "testConnection": "Test Connection",
                     "cancel": "Cancel",
                     "ok": "OK"
                 },
@@ -683,10 +687,6 @@
                 "useAlfrescoExtension": {
                     "label": "Use Alfresco Extension",
                     "placeholder": "Use Alfresco Extension"
-                },
-                "endpoint": {
-                    "label": "Endpoint",
-                    "placeholder": "Endpoint"
                 },
                 "maxIdle": {
                     "label": "Maximum Idle",
@@ -720,7 +720,7 @@
                     "label": "Repository Id",
                     "placeholder": "Repository Id"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "Versioning State",
                     "placeholder": "Versioning State"
                 }
@@ -737,7 +737,8 @@
                 "insert.success": "Successfully created new configuration row.",
                 "insert.error": "Error creating new configuration row.",
                 "update.success": "Successfully updated configuration row.",
-                "update.error": "Error updating configuration row."
+                "update.error": "Error updating configuration row.",
+                "test.conection.success": "Successfully connected."
             }
         }
     },
