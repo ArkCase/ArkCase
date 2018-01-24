@@ -1,16 +1,20 @@
 package com.armedia.acm.services.participants.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
+import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.FlushModeType;
+import javax.persistence.Id;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -127,6 +131,40 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
         return retval;
     }
 
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public Boolean getOriginalRestrictedFlag(AcmAssignedObject assignedObject)
+    {
+        if (assignedObject.getId() == null)
+        {
+            return assignedObject.getRestricted();
+        }
+
+        String jpql = "SELECT e FROM " + assignedObject.getClass().getSimpleName() + " e WHERE e."
+                + getIdFieldName(assignedObject.getClass()) + " = :id AND e.restricted = :restricted";
+
+        TypedQuery<? extends AcmAssignedObject> query = getEm().createQuery(jpql, assignedObject.getClass());
+        query.setParameter("id", assignedObject.getId());
+        query.setParameter("restricted", assignedObject.getRestricted());
+        query.setFlushMode(FlushModeType.COMMIT);
+
+        List<? extends AcmAssignedObject> retval = query.getResultList();
+
+        return retval.size() == 0 ? !assignedObject.getRestricted() : assignedObject.getRestricted();
+    }
+
+    private String getIdFieldName(Class<?> clazz)
+    {
+        for (Field field : clazz.getDeclaredFields())
+        {
+            if (field.getAnnotation(Id.class) != null)
+            {
+                return field.getName();
+            }
+        }
+
+        throw new RuntimeException("Didn't find primary key database column name for class: " + clazz.getSimpleName());
+    }
+
     @Transactional
     public int removeAllOtherParticipantsForObject(String objectType, Long objectId, List<AcmParticipant> keepTheseParticipants)
     {
@@ -161,12 +199,13 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
     public AcmParticipant getParticipantByLdapIdParticipantTypeObjectTypeObjectId(String userId, String participantType, String objectType,
             Long objectId, FlushModeType flushModeType)
     {
-        Query query = getEm().createQuery(
+        TypedQuery<AcmParticipant> query = getEm().createQuery(
                 "SELECT par FROM AcmParticipant par " +
                         "WHERE par.participantType =:participantType " +
                         "AND par.objectId =:objectId " +
                         "AND par.objectType =:objectType " +
-                        "AND par.participantLdapId =:userId");
+                        "AND par.participantLdapId =:userId",
+                AcmParticipant.class);
         query.setParameter("participantType", participantType);
         query.setParameter("objectId", objectId);
         query.setParameter("objectType", objectType);

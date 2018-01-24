@@ -60,11 +60,13 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
 
     private void handleParticipantsChanged(AcmAssignedObject assignedObject)
     {
+        Boolean originalRestricted = assignedObject.getRestricted();
         List<AcmParticipant> originalParticipants = new ArrayList<>();
         if (assignedObject.getId() != null)
         {
             originalParticipants = getParticipantService().listAllParticipantsPerObjectTypeAndId(assignedObject.getObjectType(),
                     assignedObject.getId(), FlushModeType.COMMIT);
+            originalRestricted = getParticipantService().getOriginalRestrictedFlag(assignedObject);
         }
 
         // publish EntityParticipantsChangedEvent if the participants are not equal
@@ -101,10 +103,15 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
             }
         }
 
-        if (!hasEqualParticipants)
+        boolean restrictedChanged = assignedObject.getRestricted() != originalRestricted;
+
+        if (!hasEqualParticipants || restrictedChanged)
         {
             getEntityParticipantsChangedEventPublisher().publishEvent(assignedObject, originalParticipants);
         }
+
+        // remove inherit participants flag
+        assignedObject.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(false));
     }
 
     private void validateParticipantAssignmentRules(AcmAssignedObject assignedObject) throws AcmAccessControlException

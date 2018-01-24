@@ -204,7 +204,7 @@ angular.module('directives').directive(
                                                 scope.objectInfo.participants.push(participant);
                                             }
                                         }
-                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE"))) {
+                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
                                             saveObjectInfoAndRefresh();
                                         } else {
                                             refresh();

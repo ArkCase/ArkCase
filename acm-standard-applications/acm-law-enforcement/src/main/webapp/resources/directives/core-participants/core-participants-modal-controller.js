@@ -32,7 +32,8 @@ angular
                                     params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
                                     params.filter = 'fq="object_type_s": USER &fq="groups_id_ss": ' + $scope.owningGroup;
                                     params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
-                                } else if ($scope.participant.participantType != "owning group") {
+                                } else if ($scope.participant.participantType != "owning group" && $scope.participant.participantType
+                                        .lastIndexOf("group-", 0) != 0) {
                                     params.header = $translate.instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
                                     params.filter = '"Object Type": USER';
                                     params.config = Util.goodMapValue($scope.config, "dialogUserPicker");
@@ -62,9 +63,7 @@ angular
                                 modalInstance.result
                                         .then(function(selected) {
                                             if (!Util.isEmpty(selected)) {
-                                                $scope.participant.participantLdapId = ($scope.participant.participantType === "owning group" || $scope.participant.participantType
-                                                        .lastIndexOf("group-", 0) === 0) ? selected.object_display_name_s
-                                                        : selected.object_id_s;
+                                                $scope.participant.participantLdapId = selected.object_id_s;
                                                 $scope.selectedType = selected.object_type_s;
                                             }
                                         });
