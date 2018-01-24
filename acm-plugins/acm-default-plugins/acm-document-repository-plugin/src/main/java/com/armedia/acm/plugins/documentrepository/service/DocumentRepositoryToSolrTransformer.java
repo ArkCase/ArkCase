@@ -14,7 +14,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import java.util.Date;
 import java.util.List;
 
-
 public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTransformer<DocumentRepository>
 {
     private UserDao userDao;

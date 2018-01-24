@@ -9,46 +9,55 @@ import javax.xml.bind.annotation.XmlElement;
  * @author riste.tutureski
  *
  */
-public class FrevvoForm {
+public class FrevvoForm
+{
 
-	private String mode;
-	private Long containerId;
-	private Long folderId;
-	private String docUriParameters;
-	
-	@XmlElement(name="mode")
-	public String getMode() {
-		return mode;
-	}
-	
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
+    private String mode;
+    private Long containerId;
+    private Long folderId;
+    private String docUriParameters;
 
-	@XmlElement(name="containerId")
-	public Long getContainerId() {
-		return containerId;
-	}
+    @XmlElement(name = "mode")
+    public String getMode()
+    {
+        return mode;
+    }
 
-	public void setContainerId(Long containerId) {
-		this.containerId = containerId;
-	}
+    public void setMode(String mode)
+    {
+        this.mode = mode;
+    }
 
-	@XmlElement(name="folderId")
-	public Long getFolderId() {
-		return folderId;
-	}
+    @XmlElement(name = "containerId")
+    public Long getContainerId()
+    {
+        return containerId;
+    }
 
-	public void setFolderId(Long folderId) {
-		this.folderId = folderId;
-	}
+    public void setContainerId(Long containerId)
+    {
+        this.containerId = containerId;
+    }
 
-	@XmlElement(name="docUriParameters")
-	public String getDocUriParameters() {
-		return docUriParameters;
-	}
+    @XmlElement(name = "folderId")
+    public Long getFolderId()
+    {
+        return folderId;
+    }
 
-	public void setDocUriParameters(String docUriParameters) {
-		this.docUriParameters = docUriParameters;
-	}
+    public void setFolderId(Long folderId)
+    {
+        this.folderId = folderId;
+    }
+
+    @XmlElement(name = "docUriParameters")
+    public String getDocUriParameters()
+    {
+        return docUriParameters;
+    }
+
+    public void setDocUriParameters(String docUriParameters)
+    {
+        this.docUriParameters = docUriParameters;
+    }
 }

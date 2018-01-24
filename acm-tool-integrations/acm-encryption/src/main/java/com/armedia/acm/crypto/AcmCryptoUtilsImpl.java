@@ -430,7 +430,8 @@ public class AcmCryptoUtilsImpl implements AcmCryptoUtils
             deriveKeyIV(passPhrase, keySize, ivSize, saltBytes, passPhraseIterations, passPhraseHashAlgorithm, key, iv);
             // KeySpec keySpec = new PBEKeySpec("AcMd3v$".toCharArray(), saltBytes, passPhraseIterations);
             // SecretKey key = SecretKeyFactory.getInstance("PBEWithMD5AndAES").generateSecret(keySpec);
-            // AlgorithmParameterSpec paramSpec = new PBEParameterSpec(saltBytes, passPhraseIterations, new IvParameterSpec(iv));
+            // AlgorithmParameterSpec paramSpec = new PBEParameterSpec(saltBytes, passPhraseIterations, new
+            // IvParameterSpec(iv));
 
             Cipher cipher = Cipher.getInstance(encryptionAlgorithm + "/" + blockCipherMode + "/" + padding);
             cipher.init(Cipher.ENCRYPT_MODE, new SecretKeySpec(key, encryptionAlgorithm), new IvParameterSpec(iv));

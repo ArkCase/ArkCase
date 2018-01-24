@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.profile.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +22,13 @@ public class ProfileUiController
         return retval;
     }
 
-
-    public AcmPlugin getPlugin() {
+    public AcmPlugin getPlugin()
+    {
         return plugin;
     }
 
-    public void setPlugin(AcmPlugin plugin) {
+    public void setPlugin(AcmPlugin plugin)
+    {
         this.plugin = plugin;
     }
 }

@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,13 +39,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
     private static final long serialVersionUID = -6389711968453289552L;
 
     @Id
-    @TableGenerator(name = "close_complaint_request_id_gen",
-            table = "acm_close_complaint_request_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_close_complaint_request",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "close_complaint_request_id_gen", table = "acm_close_complaint_request_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_close_complaint_request", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "close_complaint_request_id_gen")
     @Column(name = "cm_close_complaint_id")
     private Long id;
@@ -104,6 +99,7 @@ public class CloseComplaintRequest implements Serializable, AcmObject, AcmEntity
         setupChildPointers();
     }
 
+    @Override
     public Long getId()
     {
         return id;

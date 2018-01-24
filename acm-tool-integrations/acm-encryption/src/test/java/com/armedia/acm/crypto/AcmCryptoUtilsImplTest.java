@@ -1,6 +1,13 @@
 package com.armedia.acm.crypto;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.core.exceptions.AcmEncryptionBadKeyOrDataException;
+
 import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -8,9 +15,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
-
 
 public class AcmCryptoUtilsImplTest
 {

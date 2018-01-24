@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.dashboard.model.widget;
 
-
 import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
@@ -12,7 +11,8 @@ public class WidgetRolePersistenceEvent extends AcmEvent
 {
     private static final String OBJECT_TYPE = "WIDGET_ROLE";
 
-    public WidgetRolePersistenceEvent(WidgetRole source) {
+    public WidgetRolePersistenceEvent(WidgetRole source)
+    {
         super(source);
         setEventDate(new Date());
     }

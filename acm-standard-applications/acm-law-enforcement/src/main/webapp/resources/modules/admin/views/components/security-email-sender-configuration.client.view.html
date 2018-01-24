@@ -34,7 +34,8 @@
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments" ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments"
+                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentAttach.checkbox
                                     </span>
@@ -46,7 +47,8 @@
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks" ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks"
+                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentHyperlink.checkbox
                                     </span>
@@ -57,11 +59,11 @@
                 </div>
             </div>
             <div class="row">
-<!--                 <div class="col-lg-12">
-                    <label translate>
-                        admin.security.emailConfiguration.emailConfigForm.serverSettings.label
-                    </label>
-                </div> -->
+                <!--                 <div class="col-lg-12">
+                                    <label translate>
+                                        admin.security.emailConfiguration.emailConfigForm.serverSettings.label
+                                    </label>
+                                </div> -->
                 <div class="well-sm">
                     <div class="row">
                         <div class="col-lg-4 form-group">
@@ -93,19 +95,27 @@
                             <label for="server" translate>
                                 admin.security.emailConfiguration.emailConfigForm.server.label
                             </label>
-                            <input type="text" name="server" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.server.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.host" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" required>
+                            <input type="text" name="server"
+                                    placeholder="{{'admin.security.emailConfiguration.emailConfigForm.server.placeholder' | translate}}"
+                                    ng-model="emailSenderConfigDataModel.host" class="form-control"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" required>
                         </div>
                         <div class="col-lg-2 form-group">
                             <label for="port" translate>
                                 admin.security.emailConfiguration.emailConfigForm.port.label
                             </label>
-                            <input type="text" name="port" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.port.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.port" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <input type="text" name="port"
+                                    placeholder="{{'admin.security.emailConfiguration.emailConfigForm.port.placeholder' | translate}}"
+                                    ng-model="emailSenderConfigDataModel.port" class="form-control"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                         </div>
                         <div class="col-lg-4 form-group">
                             <label for="encryption" translate>
                                 admin.security.emailConfiguration.emailConfigForm.encryption.label
                             </label>
-                            <select name="encryption" class="form-control" ng-model="emailSenderConfigDataModel.encryption" ng-change="changeEncryption(emailSenderConfigDataModel.encryption)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <select name="encryption" class="form-control" ng-model="emailSenderConfigDataModel.encryption"
+                                    ng-change="changeEncryption(emailSenderConfigDataModel.encryption)"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                                 <option value="" disabled selected hidden translate>
                                     admin.security.emailConfiguration.emailConfigForm.encryption.placeholder
                                 </option>
@@ -113,44 +123,57 @@
                                     {{option.label}}
                                 </option>
                             </select>
-                        </div>                                    
-                    </div>        
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-lg-3 form-group">
                             <label for="username" translate>
                                 admin.security.emailConfiguration.emailConfigForm.username.label
                             </label>
-                            <input type="text" name="username" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.username.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.username" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <input type="text" name="username"
+                                    placeholder="{{'admin.security.emailConfiguration.emailConfigForm.username.placeholder' | translate}}"
+                                    ng-model="emailSenderConfigDataModel.username" class="form-control"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                         </div>
                         <div class="col-lg-3 form-group">
                             <label for="password" translate>
                                 admin.security.emailConfiguration.emailConfigForm.password.label
                             </label>
-                            <input name="password" type="password" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.password.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.password" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'"/>
+                            <input name="password" type="password"
+                                    placeholder="{{'admin.security.emailConfiguration.emailConfigForm.password.placeholder' | translate}}"
+                                    ng-model="emailSenderConfigDataModel.password" class="form-control"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" />
                         </div>
                         <div class="col-lg-4 form-group">
                             <label for="userFrom" translate>
                                 admin.security.emailConfiguration.emailConfigForm.userFrom.label
                             </label>
-                            <input name="userFrom" type="text" placeholder="{{'admin.security.emailConfiguration.emailConfigForm.userFrom.placeholder' | translate}}" ng-model="emailSenderConfigDataModel.userFrom" class="form-control" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'"/>
+                            <input name="userFrom" type="text"
+                                    placeholder="{{'admin.security.emailConfiguration.emailConfigForm.userFrom.placeholder' | translate}}"
+                                    ng-model="emailSenderConfigDataModel.userFrom" class="form-control"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'" />
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-lg-2 form-group">
-                            <button class="btn btn-sm btn-primary form-control" name="validate" ng-click="validateSmtpConfiguration(emailSenderConfigDataModel)" ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
+                            <button class="btn btn-sm btn-primary form-control" name="validate"
+                                    ng-click="validateSmtpConfiguration(emailSenderConfigDataModel)"
+                                    ng-disabled="emailSenderConfigDataModel.type !== 'smtp'">
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.validate.button
                                 </span>
                             </button>
                         </div>
                         <div class="col-lg-4 form-group">
-                             <span class="text-danger" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && !isSmtpValid">
+                             <span class="text-danger"
+                                     ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && !isSmtpValid">
                                 <i class="fa fa-times"></i>
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.smtpNotValid
                                 </span>
                             </span>
-                            <span class="text-success" ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && isSmtpValid">
+                            <span class="text-success"
+                                    ng-if="emailSenderConfigDataModel.type === 'smtp' && isSmtpValid !== null && isSmtpValid">
                                 <i class="fa fa-check"></i>
                                 <span translate>
                                     admin.security.emailConfiguration.emailConfigForm.smtpValid

@@ -16,21 +16,17 @@
         <div class="form-group" ng-class="{ 'has-error' : error }">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.name' | translate }}</label>
             <input type="text" ng-model="group.name" class="form-control"
-                   ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal"
-                   placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'
+                    ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal" placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.namePlaceholder'
                    | translate }}" required>
             <p class="help-block" ng-show="error">
-                {{ error }}
-            </p>
+                {{ error }} </p>
             <p class="text-danger" ng-if="selectedConfig.directory.enabled == false">
-                {{ 'admin.security.organizationalHierarchy.createGroupDialog.disabledGroupWarning' | translate }}
-            </p>
+                {{ 'admin.security.organizationalHierarchy.createGroupDialog.disabledGroupWarning' | translate }} </p>
         </div>
         <div class="form-group">
             <label>{{ 'admin.security.organizationalHierarchy.createGroupDialog.description' | translate }}</label>
             <textarea type="text" ng-model="group.description" class="form-control"
-                      ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal"
-                      placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'
+                    ng-disabled="!selectedConfig.directory.enabled && addLdapGroupModal" placeholder="{{ 'admin.security.organizationalHierarchy.createGroupDialog.descriptionPlaceholder'
                       | translate }}">
         </textarea>
         </div>

@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.dashboard.service.DashboardEventPublisher;
 import com.armedia.acm.plugins.dashboard.service.DashboardPropertyReader;
 import com.armedia.acm.plugins.dashboard.service.DashboardService;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 /**
@@ -28,7 +30,7 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard"})
+@RequestMapping({ "/api/v1/plugin/dashboard", "/api/latest/plugin/dashboard" })
 public class SetDashboardConfigAPIController
 {
     private DashboardService dashboardService;
@@ -41,8 +43,7 @@ public class SetDashboardConfigAPIController
     public DashboardDto setDashboardConfig(
             @RequestBody DashboardDto updateDashboardDto,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmDashboardException
+            HttpSession session) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmDashboardException
     {
         String userId = authentication.getName();
         AcmUser user = dashboardService.getUserByUserId(userId);
@@ -51,7 +52,8 @@ public class SetDashboardConfigAPIController
         if (updateDashboardDto.getModule() != null)
         {
             moduleName = updateDashboardDto.getModule().trim();
-        } else
+        }
+        else
         {
             moduleName = DashboardConstants.DASHBOARD_MODULE_NAME;
         }
@@ -65,26 +67,27 @@ public class SetDashboardConfigAPIController
         Dashboard d = null;
         try
         {
-            //retval is the number of entities (dashboards) updated or deleted
+            // retval is the number of entities (dashboards) updated or deleted
             d = dashboardService.getDashboardConfigForUserAndModuleName(user, moduleName);
             int retval = dashboardService.setDashboardConfigForUserAndModule(user, updateDashboardDto, moduleName);
             if (retval != 1)
             {
                 log.error("Unable to update dashboard config because dashboard for user: [{}] is not found", userId);
                 throw new AcmObjectNotFoundException("dashboard", null, "Object not found", null);
-            } else
+            }
+            else
             {
                 getEventPublisher().publishDashboardEvent(d, authentication, false, true);
                 updateDashboardDto.setUpdated(true);
                 return updateDashboardDto;
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             getEventPublisher().publishDashboardEvent(d, authentication, false, false);
             throw new AcmUserActionFailedException("update", "dashboard", null, e.getMessage(), e);
         }
     }
-
 
     public DashboardEventPublisher getEventPublisher()
     {
@@ -116,5 +119,3 @@ public class SetDashboardConfigAPIController
         this.dashboardService = dashboardService;
     }
 }
-
-

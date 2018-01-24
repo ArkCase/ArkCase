@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-plugins</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,5 @@
         <module>hello-world-plugin</module>
         <module>armedia-blog-plugin</module>
     </modules>
-
 
 </project>

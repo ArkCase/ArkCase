@@ -1,98 +1,98 @@
 {
-  "timeTracking": {
-    "title": "समय ट्रैकिंग ",
-    "progressNoTimesheet": "[ कोई टाइलीशीट चयनित नहीं है ]",
-    "progressLoading": "बार-बार लोड हो रहा है",
-    "progressError": "बारसील लोड करने में विफल"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "समय ट्रैकिंग",
-    "topbar.item": "टाइम्सशीट"
-  },
-  "timeTracking.comp.main": {
-    "title": "अवलोकन"
-  },
-  "timeTracking.comp.info": {
-    "title": "जानकारी",
-    "lastModified.label": "अंतिम संशोधित"
-  },
-  "timeTracking.comp.actions": {
-    "title": "क्रियाएं",
-    "new.button": "न्यू टाइजशीट",
-    "edit.button": "टाइमशेट संपादित करें"
-  },
-  "timeTracking.comp.details": {
-    "title": "विवरण",
-    "informSaved": "टाइम्सशीट विवरण सहेजे गए",
-    "table.columns": {
-      "title": "विवरण",
-      "modified": "अंतिम संशोधित तारीख",
-      "modifier": "उपयोगकर्ता अंतिम संशोधित"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "व्यक्ति",
-    "table.columns": {
-      "fullName": "पूरा नाम",
-      "userId": "उपयोगकर्ता नाम"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "घंटे",
-    "table.columns": {
-      "code": "मूल आईडी",
-      "type": "माता पिता का प्रकार",
-      "value": "कुल घंटे",
-      "date": "तिथि चार्ज",
-      "modified": "संशोधित तिथि"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "टैग",
-    "table.columns": {
-      "tag": "टैग",
-      "created": "बनाया था",
-      "createdBy": "के द्वारा बनाई गई"
+    "timeTracking": {
+        "title": "समय ट्रैकिंग ",
+        "progressNoTimesheet": "[ कोई टाइलीशीट चयनित नहीं है ]",
+        "progressLoading": "बार-बार लोड हो रहा है",
+        "progressError": "बारसील लोड करने में विफल"
     },
-    "modal": {
-      "title": "टैग",
-      "search": "टैग के लिए खोजें",
-      "buttons": {
-        "cancel": "रद्द करना",
-        "ok": "टैग जोड़ो"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "समय ट्रैकिंग",
+        "topbar.item": "टाइम्सशीट"
     },
-    "message": {
-      "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
-      "tagAssociated": "पहले से जुड़े हुए हैं",
-      "delete": {
-        "success": "टैग सफलतापूर्वक हटाया गया",
-        "error": "टैग हटाने में त्रुटि"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "",
-    "table.columns": {
-      "fullName": "पूरा नाम",
-      "userId": "उपयोगकर्ता नाम"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "विवरण",
-      "person.label": "व्यक्ति",
-      "summary.label": "घंटे",
-      "tags.label": "टैग",
-      "approvers.label": ""
+    "timeTracking.comp.main": {
+        "title": "अवलोकन"
     },
-    "sorters": {
-      "dateAsc": "दिनांक आरोही क्रमबद्ध करें",
-      "dateDesc": "क्रमबद्ध दिनांक आरोहण",
-      "idAsc": "टाइम्सशीट आईडी आरोही क्रमबद्ध करें",
-      "idDesc": "टाइम्सशीट आईडी क्रमबद्ध करें",
-      "nameDesc": "टाइम्सशीट नाम से क्रमबद्ध करें",
-      "noSort": "(कोई सॉर्ट नहीं)"
+    "timeTracking.comp.info": {
+        "title": "जानकारी",
+        "lastModified.label": "अंतिम संशोधित"
+    },
+    "timeTracking.comp.actions": {
+        "title": "क्रियाएं",
+        "new.button": "न्यू टाइजशीट",
+        "edit.button": "टाइमशेट संपादित करें"
+    },
+    "timeTracking.comp.details": {
+        "title": "विवरण",
+        "informSaved": "टाइम्सशीट विवरण सहेजे गए",
+        "table.columns": {
+            "title": "विवरण",
+            "modified": "अंतिम संशोधित तारीख",
+            "modifier": "उपयोगकर्ता अंतिम संशोधित"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "व्यक्ति",
+        "table.columns": {
+            "fullName": "पूरा नाम",
+            "userId": "उपयोगकर्ता नाम"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "घंटे",
+        "table.columns": {
+            "code": "मूल आईडी",
+            "type": "माता पिता का प्रकार",
+            "value": "कुल घंटे",
+            "date": "तिथि चार्ज",
+            "modified": "संशोधित तिथि"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "टैग",
+        "table.columns": {
+            "tag": "टैग",
+            "created": "बनाया था",
+            "createdBy": "के द्वारा बनाई गई"
+        },
+        "modal": {
+            "title": "टैग",
+            "search": "टैग के लिए खोजें",
+            "buttons": {
+                "cancel": "रद्द करना",
+                "ok": "टैग जोड़ो"
+            }
+        },
+        "message": {
+            "tagExists": "उस नाम या वर्णन या टेक्स्ट से पहले से मौजूद है",
+            "tagAssociated": "पहले से जुड़े हुए हैं",
+            "delete": {
+                "success": "टैग सफलतापूर्वक हटाया गया",
+                "error": "टैग हटाने में त्रुटि"
+            }
+        }
+    },
+    "timeTracking.comp.approvers": {
+        "title": "",
+        "table.columns": {
+            "fullName": "पूरा नाम",
+            "userId": "उपयोगकर्ता नाम"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "विवरण",
+            "person.label": "व्यक्ति",
+            "summary.label": "घंटे",
+            "tags.label": "टैग",
+            "approvers.label": ""
+        },
+        "sorters": {
+            "dateAsc": "दिनांक आरोही क्रमबद्ध करें",
+            "dateDesc": "क्रमबद्ध दिनांक आरोहण",
+            "idAsc": "टाइम्सशीट आईडी आरोही क्रमबद्ध करें",
+            "idDesc": "टाइम्सशीट आईडी क्रमबद्ध करें",
+            "nameDesc": "टाइम्सशीट नाम से क्रमबद्ध करें",
+            "noSort": "(कोई सॉर्ट नहीं)"
+        }
     }
-  }
 }

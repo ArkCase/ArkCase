@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.chemistry.opencmis.client.api.Folder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,11 +25,10 @@ public class FindFolderService extends AlfrescoService<Folder>
     private static final String BASE_PATH = "/Sites/rm/documentLibrary/";
     private Properties alfrescoRmaPluginProperties;
 
-
     /**
-     * The context must contain either "objectType" or "folderPath" keys.  If "objectType" is present, the category
+     * The context must contain either "objectType" or "folderPath" keys. If "objectType" is present, the category
      * folder path is constructed based on the property "rma_categoryFolder_${objectType}" (this is core ArkCase
-     * behavior).  Otherwise, the category folder path is constructed by concatenating ${folderPath} onto the
+     * behavior). Otherwise, the category folder path is constructed by concatenating ${folderPath} onto the
      * RMA base path (this allows extensions to construct the path however they want).
      *
      * @param context
@@ -50,7 +50,8 @@ public class FindFolderService extends AlfrescoService<Folder>
             LOG.debug("Found object with id {} for path {}", object.getId(), fullPath);
             return object;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AlfrescoServiceException(e.getMessage(), e);
         }

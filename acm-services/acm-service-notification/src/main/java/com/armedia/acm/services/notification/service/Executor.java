@@ -9,8 +9,9 @@ import com.armedia.acm.services.notification.model.Notification;
  * @author riste.tutureski
  *
  */
-public interface Executor {
+public interface Executor
+{
 
-	Notification execute(Notification notification);
-	
+    Notification execute(Notification notification);
+
 }

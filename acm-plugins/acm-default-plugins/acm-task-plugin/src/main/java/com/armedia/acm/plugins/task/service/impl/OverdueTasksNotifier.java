@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.AbstractTaskNotifier;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.engine.task.TaskQuery;
 
 import java.time.LocalDate;
@@ -34,7 +35,8 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
     private UserDao userDao;
 
     /**
-     * @param messageSubject the messageSubject to set
+     * @param messageSubject
+     *            the messageSubject to set
      */
     public void setMessageSubject(String messageSubject)
     {
@@ -42,7 +44,8 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
     }
 
     /**
-     * @param messageBodyTemplate the messageBodyTemplate to set
+     * @param messageBodyTemplate
+     *            the messageBodyTemplate to set
      */
     public void setMessageBodyTemplate(String messageBodyTemplate)
     {
@@ -55,10 +58,9 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
     }
 
     /*
-         * (non-Javadoc)
-         *
-         * @see gov.edtrm.jsapn.alert.service.AbstractTaskNotifier#tasksDueBetween(org.activiti.engine.task.TaskQuery)
-         */
+     * (non-Javadoc)
+     * @see gov.edtrm.jsapn.alert.service.AbstractTaskNotifier#tasksDueBetween(org.activiti.engine.task.TaskQuery)
+     */
     @Override
     protected TaskQuery tasksDueBetween(TaskQuery query)
     {
@@ -83,7 +85,6 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.notification.service.EmailBuilder#buildEmail(java.lang.Object, java.util.Map)
      */
     @Override
@@ -105,7 +106,6 @@ public class OverdueTasksNotifier extends AbstractTaskNotifier
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.notification.service.EmailBodyBuilder#buildEmailBody(java.lang.Object)
      */
     @Override

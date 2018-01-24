@@ -1,9 +1,15 @@
 package com.armedia.acm.plugins.task.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -30,11 +36,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
+@ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class BuckslipActivitiIT extends EasyMockSupport
 {
     @Autowired
@@ -179,8 +182,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         }
         int expectedCurrentProcessInstances = nonConcurEndsApprovals ? 1 : 0;
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
 
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
 
@@ -205,7 +208,6 @@ public class BuckslipActivitiIT extends EasyMockSupport
         }
 
         verifyAll();
-
 
     }
 
@@ -282,15 +284,16 @@ public class BuckslipActivitiIT extends EasyMockSupport
         approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
-        // here we will set the future approver list to an empty list, so the process should stop now, intead of going on to bill.
+        // here we will set the future approver list to an empty list, so the process should stop now, intead of going
+        // on to bill.
         // we should have one more approver from the original list, but we will remove it, and the proces should end.
         strFutureTasks = "[]";
         ts.setVariable(task.getId(), "futureTasks", strFutureTasks);
 
         completeTask(task, "CONCUR");
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
         assertEquals(1, hpiList.size());
 
         // should not be a current process any more
@@ -311,7 +314,6 @@ public class BuckslipActivitiIT extends EasyMockSupport
         task.put("maxTaskDurationInDays", taskDuration);
         futureTasks.put(task);
     }
-
 
     @Test
     public void addAnApprover() throws Exception
@@ -404,8 +406,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
         completeTask(task, "CONCUR");
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
         assertEquals(1, hpiList.size());
 
         // should not be a current process any more
@@ -424,10 +426,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
     private Execution getReceiveTaskId(ProcessInstance pi, String receiveTaskId)
     {
-        return rt.createExecutionQuery().processInstanceId(pi.getProcessInstanceId()).
-                activityId(receiveTaskId).singleResult();
+        return rt.createExecutionQuery().processInstanceId(pi.getProcessInstanceId()).activityId(receiveTaskId).singleResult();
     }
-
 
     private List<Task> getTasks(ProcessInstance pi)
     {

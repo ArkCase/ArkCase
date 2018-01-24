@@ -1,7 +1,15 @@
 package com.armedia.acm.services.search.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.easymock.EasyMockSupport;
 import org.json.JSONObject;
 import org.junit.Before;
@@ -18,11 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -91,9 +94,6 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
 
         assertFalse(response.getJSONObject("response").has("owner"));
 
-
-
-
     }
 
     @Test
@@ -130,7 +130,6 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
         JSONObject response = new JSONObject(jsonString);
 
         assertFalse(response.getJSONObject("response").has("owner"));
-
 
     }
 
@@ -175,10 +174,6 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
 
         assertTrue(response.getJSONObject("response").has("owner"));
 
-
-
-
-
     }
 
     @Test
@@ -222,7 +217,6 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
 
         assertTrue(response.getJSONObject("response").has("owner"));
 
-
     }
 
     @Test
@@ -265,7 +259,6 @@ public class SearchUsersAPIControllerTest extends EasyMockSupport
         JSONObject response = new JSONObject(jsonString);
 
         assertTrue(response.getJSONObject("response").has("owner"));
-
 
     }
 }
