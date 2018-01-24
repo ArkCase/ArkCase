@@ -87,8 +87,8 @@ public class JPAAcmOutlookFolderCreatorDao implements AcmOutlookFolderCreatorDao
         }
         catch (AcmOutlookFolderCreatorDaoException e)
         {
-            // TODO Auto-generated catch block
-            log.debug("");
+            log.warn(String.format("Error while deleting 'AcmOutlookObjectReference' instance for objectId [{}] and objectType [{}].",
+                    objectId, objectType));
         }
     }
 
