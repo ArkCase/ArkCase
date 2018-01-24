@@ -31,7 +31,6 @@ public class CmisConfigurationUpdateConfig
     @RequestMapping(value = "/cmisconfiguration/config/{cmisId}", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
     public String updateConfig(
             @RequestBody String resource,
@@ -52,15 +51,13 @@ public class CmisConfigurationUpdateConfig
 
             log.debug("Attempting to update CMIS config with ID '{}'", cmisId);
             cmisConfigurationService.updateCmisConfig(cmisId, props);
-
+            return cmisObject.toString();
         }
         catch (Exception e)
         {
             log.error("Can't update CMIS config", e);
             throw new AcmCmisConfigurationException("Update CMIS config error", e);
         }
-
-        return cmisId;
     }
 
     public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)

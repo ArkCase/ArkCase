@@ -1,5 +1,7 @@
 package com.armedia.acm.services.email.service;
 
+import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,6 +18,13 @@ public interface AcmMailTemplateConfigurationService
      * @throws AcmEmailServiceException
      */
     List<EmailTemplateConfiguration> getTemplateConfigurations() throws AcmEmailConfigurationException;
+
+    /**
+     * @param templateName
+     * @return
+     * @throws AcmEmailServiceException
+     */
+    EmailTemplateValidationResponse validateEmailTemplate(EmailTemplateConfiguration templateData) throws AcmEmailConfigurationException;
 
     /**
      * @param templateData
