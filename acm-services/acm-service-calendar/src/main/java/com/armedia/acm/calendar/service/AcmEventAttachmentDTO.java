@@ -1,9 +1,9 @@
 package com.armedia.acm.calendar.service;
 
-import java.io.InputStream;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+
+import java.io.InputStream;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Nov 1, 2017

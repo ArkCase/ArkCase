@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-default-plugins</artifactId>
         <groupId>com.armedia.acm.acm-plugins</groupId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -138,7 +138,6 @@
             <artifactId>javax.el-api</artifactId>
         </dependency>
 
-
         <!-- logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -225,6 +224,5 @@
             <artifactId>easymock</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

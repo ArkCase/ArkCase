@@ -23,7 +23,7 @@ public class AcmCollectionElementModified extends AcmCollectionElementChange imp
         return acmObjectModified;
     }
 
-
+    @Override
     public List<AcmChange> getChanges()
     {
         return acmObjectModified.getChanges();

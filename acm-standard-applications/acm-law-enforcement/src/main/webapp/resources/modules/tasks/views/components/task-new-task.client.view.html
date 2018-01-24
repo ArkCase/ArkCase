@@ -8,45 +8,38 @@
                 <div class="col-sm-6 form-group">
                     <label for="assignee" translate> tasks.newTask.assignee.label </label>
                     <input type="text" id="assignee" ng-model="userOrGroupName" class="input-md form-control"
-                           placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
-                           style="background-color: white;" ng-click="userOrGroupSearch()" readonly >
+                            placeholder="{{ 'tasks.newTask.assignee.placeholder' | translate }}" id="assignee"
+                            style="background-color: white;" ng-click="userOrGroupSearch()" readonly>
                 </div>
 
                 <div class="col-sm-6 form-group">
                     <label for="candidateGroups" translate> tasks.newTask.candidateGroups.label </label>
-                    <input type="text" id="candidateGroups" ng-disabled="true" ng-model="groupName" class="input-md form-control" id="candidateGroups">
+                    <input type="text" id="candidateGroups" ng-disabled="true" ng-model="groupName" class="input-md form-control"
+                            id="candidateGroups">
                 </div>
 
                 <div class="form-group col-sm-2">
                     <label class="control-label">{{ 'tasks.newTask.associateType.label' | translate }}
 
                     </label>
-                    <select ng-model="config.data.attachedToObjectType"
-                            ng-change="updateAssocParentType()"
+                    <select ng-model="config.data.attachedToObjectType" ng-change="updateAssocParentType()"
                             ng-options="attachedToObjectType.id as attachedToObjectType.name for attachedToObjectType in config.attachedToObjectType"
-                            class="form-control input-md"
-                            ng-click="inputClear()">
+                            class="form-control input-md" ng-click="inputClear()">
                     </select>
                 </div>
                 <div class="col-sm-4 form-group">
                     <label for="associateNumber" translate> tasks.newTask.associateNumber.label </label>
                     <input type="text" id="associateNumber" ng-required="isAssocType" ng-model="config.data.attachedToObjectName"
-                           class="input-md form-control"
-                           placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
-                           id="complaintId"
-                           ng-disabled="config.data.attachedToObjectType==='' "
-                           ng-click="objectSearch()">
+                            class="input-md form-control" placeholder="{{ 'tasks.newTask.associateNumber.placeholder' | translate }}"
+                            id="complaintId" ng-disabled="config.data.attachedToObjectType==='' " ng-click="objectSearch()">
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 form-group">
                     <label for="subject" translate> tasks.newTask.subject.label </label>
                     <span class="required-asterisk">*</span>
-                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title"
-                           name="subject"
-                           class="input-md form-control"
-                           placeholder="{{ 'tasks.newTask.subject.label'  | translate }}"
-                           id="subject">
+                    <input type="text" id="subject" ng-required="true" ng-model="config.data.title" name="subject"
+                            class="input-md form-control" placeholder="{{ 'tasks.newTask.subject.label'  | translate }}" id="subject">
                 </div>
             </div>
 
@@ -56,16 +49,11 @@
                     <span class="required-asterisk">*</span>
                     <div>
                         <div class="input-group">
-                            <input type="text" id="taskStartDate" ng-required="true" class="form-control"
-                                   name="taskStartDate"
-                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                   ng-model="config.data.taskStartDate"
-                                   is-open="opened.openedStart" close-on-date-selection="true"
-                                   show-button-bar="true"
-                                   on-open-focus="false"
-                                   min-date="minStartDate"
-                                   ng-blur="startDateChanged()"
-                                   close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
+                            <input type="text" id="taskStartDate" ng-required="true" class="form-control" name="taskStartDate"
+                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="config.data.taskStartDate"
+                                    is-open="opened.openedStart" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                    min-date="minStartDate" ng-blur="startDateChanged()"
+                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
                             <span class="input-group-btn">
                               <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
                                 <i class="fa fa-calendar"></i>
@@ -79,15 +67,11 @@
                     <span class="required-asterisk">*</span>
                     <div>
                         <div class="input-group">
-                            <input type="text" id="dueDate" ng-required="true" class="form-control"
-                                   name="dueDate"
-                                   datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}"
-                                   ng-model="config.data.dueDate"
-                                   is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true"
-                                   on-open-focus="false"
-                                   min-date="minDueDate"
-                                   ng-blur="dueDateChanged()"
-                                   close-text="{{ 'tasks.newTask.datepicker.close' | translate }}"/>
+                            <input type="text" id="dueDate" ng-required="true" class="form-control" name="dueDate"
+                                    datepicker-popup="{{'common.defaultDatePickerFormat' | translate}}" ng-model="config.data.dueDate"
+                                    is-open="opened.openedEnd" close-on-date-selection="true" show-button-bar="true" on-open-focus="false"
+                                    min-date="minDueDate" ng-blur="dueDateChanged()"
+                                    close-text="{{ 'tasks.newTask.datepicker.close' | translate }}" />
                             <span class="input-group-btn">
                             <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
                               <i class="fa fa-calendar"></i>
@@ -99,8 +83,7 @@
                 <div class="form-group col-sm-2" ng-if="taskType === 'ACM_TASK'">
                     <label class="control-label">{{ 'tasks.newTask.priority.label' | translate }}
                     </label>
-                    <select ng-model="config.data.priority"
-                            ng-options="priority.id as priority.name for priority in config.priority"
+                    <select ng-model="config.data.priority" ng-options="priority.id as priority.name for priority in config.priority"
                             class="form-control input-md">
                     </select>
                 </div>
@@ -108,22 +91,18 @@
                     <label class="control-label">{{ 'tasks.newTask.businessProcessTypes.label' | translate }}
 
                     </label>
-                    <select ng-model="selectedBusinessProcessType"
-                            ng-change="updateBusinessProcessType(selectedBusinessProcessType)"
+                    <select ng-model="selectedBusinessProcessType" ng-change="updateBusinessProcessType(selectedBusinessProcessType)"
                             ng-options="businessProcessType.key as businessProcessType.value | translate for businessProcessType in businessProcessTypes"
-                            class="form-control input-md"
-                            required>
+                            class="form-control input-md" required>
                     </select>
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
                 <div class="col-sm-4 form-group">
                     <label for="percentComplete" translate> tasks.newTask.percentComplete.label </label>
-                    <input id="percentComplete" type="number" min="0" max="100"
-                           ng-model="config.data.percentComplete" class="input-md form-control"
-                           name="percentComplete"
-                           placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}"
-                           id="percentComplete">
+                    <input id="percentComplete" type="number" min="0" max="100" ng-model="config.data.percentComplete"
+                            class="input-md form-control" name="percentComplete"
+                            placeholder="{{ 'tasks.newTask.percentComplete.label' | translate }}" id="percentComplete">
                 </div>
             </div>
             <div class="row" ng-if="taskType === 'ACM_TASK'">
@@ -139,10 +118,7 @@
                     </label>
                     <fieldset id="docsToReview" class="well-sm">
                         <label ng-repeat="node in documentsToReview" class="checkbox-inline">
-                            <input
-                                    type="checkbox"
-                                    value="{{node.data.objectId}}"
-                                    ng-click="onSelectFile(node.data.objectId)"
+                            <input type="checkbox" value="{{node.data.objectId}}" ng-click="onSelectFile(node.data.objectId)"
                                     ng-checked="documentsToReviewIds.indexOf(node.data.objectId) > -1">
                             <span>
                               {{node.data.name + '' + node.data.ext}}
@@ -157,14 +133,12 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip"
-                data-title="Cancel"
-                ng-click="cancelModal()">
+        <button type="button" class="btn btn-secondary btn-sm" data-toggle="tooltip" data-title="Cancel" ng-click="cancelModal()">
             <span translate> tasks.newTask.cancelButton </span>
         </button>
-        <button type="submit" ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
-                class="btn btn-primary btn-sm" data-toggle="tooltip"
-                id="saveButton" data-title="Save">
+        <button type="submit"
+                ng-disabled="task.$invalid || saved || (taskType === 'REVIEW_DOCUMENT' && documentsToReview && documentsToReviewIds.length === 0)"
+                class="btn btn-primary btn-sm" data-toggle="tooltip" id="saveButton" data-title="Save">
             <i class="fa fa-floppy-o" ng-hide="loading"></i>
             <i class="fa fa-circle-o-notch fa-spin" ng-show="loading"></i>
             <span translate> tasks.newTask.saveButton </span>

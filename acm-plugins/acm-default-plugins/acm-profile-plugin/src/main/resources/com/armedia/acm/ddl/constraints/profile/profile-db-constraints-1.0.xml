@@ -1,26 +1,16 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="02-create-new-foreign-key-constraints" author="marst">
 
-        <addForeignKeyConstraint baseTableName="acm_user_org"
-                                 baseColumnNames="cm_user"
-                                 constraintName="fk_user"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_user" constraintName="fk_user"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
 
-        <addForeignKeyConstraint baseTableName="acm_user_org"
-                                 baseColumnNames="cm_organization"
-                                 constraintName="fk_organization"
-                                 referencedTableName="acm_organization"
-                                 referencedColumnNames="cm_organization_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_organization" constraintName="fk_organization"
+            referencedTableName="acm_organization" referencedColumnNames="cm_organization_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 
@@ -36,12 +26,9 @@
             SET cm_ecm_file_id = NULL
             WHERE cm_ecm_file_id NOT IN (SELECT cm_file_id FROM acm_file)
         </sql>
-        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_file_id"
-                                 constraintName="fk_user_org_fileid"
-                                 referencedTableName="acm_file"
-                                 referencedColumnNames="cm_file_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_file_id" constraintName="fk_user_org_fileid"
+            referencedTableName="acm_file" referencedColumnNames="cm_file_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="profile-constraints-03-container-foreign-key" author="dmiller">
@@ -52,14 +39,11 @@
                 <columnExists tableName="acm_user_org" columnName="cm_container_id"/>
             </and>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_container_id"
-                                 constraintName="fk_user_org_container"
-                                 referencedTableName="acm_container"
-                                 referencedColumnNames="cm_container_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_container_id" constraintName="fk_user_org_container"
+            referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
     <changeSet id="profile-constraint-04-container-id" author="bojan.milenkoski">
         <preConditions onFail="MARK_RAN">
             <not>
@@ -67,11 +51,8 @@
             </not>
         </preConditions>
         <addForeignKeyConstraint baseTableName="acm_user_org" baseColumnNames="cm_ecm_signature_file_id"
-                                 constraintName="fk_user_org_signature_fileid"
-                                 referencedTableName="acm_file"
-                                 referencedColumnNames="cm_file_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_user_org_signature_fileid" referencedTableName="acm_file" referencedColumnNames="cm_file_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
 </databaseChangeLog>

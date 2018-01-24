@@ -3,6 +3,7 @@ package com.armedia.acm.services.users.web.api;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,12 +23,8 @@ public class FindUsersWithPrivilegeAPIController
     private AcmPluginManager pluginManager;
     private UserDao userDao;
 
-    @RequestMapping(
-            method = RequestMethod.GET,
-            value = "/withPrivilege/{privilege}",
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody
-    List<AcmUser> withPrivilege(
+    @RequestMapping(method = RequestMethod.GET, value = "/withPrivilege/{privilege}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody List<AcmUser> withPrivilege(
             @PathVariable(value = "privilege") String privilege)
     {
         log.debug("Looking for users with privilege [{}]", privilege);

@@ -17,8 +17,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * This class is used to replace matches in the AuditEvents and other Strings with a substitution String. The text is matched against the
- * patterns set in this class. The patterns are initially loaded statically from "$user.home/.arkcase/acm/auditPatterns.properties" file.
+ * This class is used to replace matches in the AuditEvents and other Strings with a substitution String. The text is
+ * matched against the
+ * patterns set in this class. The patterns are initially loaded statically from
+ * "$user.home/.arkcase/acm/auditPatterns.properties" file.
  * This class is static and not used as a Spring bean because it is used in log4j logging.
  * <p>
  * Created by Bojan Milenkoski on 26.5.2016
@@ -76,7 +78,8 @@ public class ConfidentialDataConverter extends LogEventPatternConverter
     }
 
     /**
-     * Replaces matches in the text with a substitution String. The text is matched against the patterns set in this class.
+     * Replaces matches in the text with a substitution String. The text is matched against the patterns set in this
+     * class.
      *
      * @param text
      *            the text to convert

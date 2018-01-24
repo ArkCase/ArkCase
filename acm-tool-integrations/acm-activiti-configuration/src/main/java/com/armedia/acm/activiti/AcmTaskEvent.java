@@ -21,11 +21,11 @@ public interface AcmTaskEvent extends Serializable
     String getTaskEvent();
 
     Long getObjectId();
-    
+
     String getPriority();
-    
+
     Long getParentObjectId();
-    
+
     String getParentObjectType();
 
     String getParentObjectName();

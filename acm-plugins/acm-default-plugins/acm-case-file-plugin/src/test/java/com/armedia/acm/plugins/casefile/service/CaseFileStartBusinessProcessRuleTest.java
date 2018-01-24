@@ -1,8 +1,14 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.CaseFileStartBusinessProcessModel;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -19,8 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by dmiller on 7/7/16.
@@ -96,6 +100,5 @@ public class CaseFileStartBusinessProcessRuleTest
         assertFalse(businessProcessModel.isStartProcess());
         assertNull(businessProcessModel.getProcessName());
     }
-
 
 }

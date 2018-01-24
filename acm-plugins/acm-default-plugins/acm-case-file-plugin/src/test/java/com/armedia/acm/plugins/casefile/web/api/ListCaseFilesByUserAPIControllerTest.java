@@ -1,9 +1,18 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -27,10 +36,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 /**
  * Created by marjan.stefanoski on 10/13/2014.
  */
@@ -41,7 +46,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
         "classpath:/spring/spring-library-case-plugin-test.xml"
 })
 
-public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
+public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport
+{
 
     private MockMvc mockMvc;
     private MockHttpSession mockHttpSession;
@@ -70,14 +76,12 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         unit.setCaseFileDao(mockCaseFileDao);
         unit.setCaseFileEventUtility(mockCaseFileEventUtility);
 
-        mockMvc = MockMvcBuilders.
-                standaloneSetup(unit).
-                setHandlerExceptionResolvers(exceptionResolver).
-                build();
+        mockMvc = MockMvcBuilders.standaloneSetup(unit).setHandlerExceptionResolvers(exceptionResolver).build();
     }
 
     @Test
-    public void caseFilesByUserTest()  throws Exception  {
+    public void caseFilesByUserTest() throws Exception
+    {
 
         String user = "user";
 
@@ -88,17 +92,16 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         caseFile.setClassName(caseFile.getClass().getName());
         String ipAddress = "ipAddress";
 
-
         ObjectMapper om = new ObjectMapper();
         String caseFileJson = om.writeValueAsString(caseFile);
         log.info("caseFileJson: " + caseFileJson);
 
-
         expect(mockCaseFileDao.getNotClosedCaseFilesByUser(user)).andReturn(Arrays.asList(caseFile));
 
-        Capture<CaseFile> capturedCase = new Capture<CaseFile>();
+        Capture<CaseFile> capturedCase = new Capture<>();
 
-        mockCaseFileEventUtility.raiseEvent(capture(capturedCase), eq("search"), anyObject(Date.class), eq(ipAddress), eq(user), eq(mockAuthentication));
+        mockCaseFileEventUtility.raiseEvent(capture(capturedCase), eq("search"), anyObject(Date.class), eq(ipAddress), eq(user),
+                eq(mockAuthentication));
 
         mockHttpSession.setAttribute("acm_ip_address", ipAddress);
 
@@ -108,7 +111,7 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/casefile/forUser/{user}",user)
+                get("/api/latest/plugin/casefile/forUser/{user}", user)
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .principal(mockAuthentication)
                         .session(mockHttpSession))
@@ -132,6 +135,5 @@ public class ListCaseFilesByUserAPIControllerTest extends EasyMockSupport {
         CaseFile found = foundCases.get(0);
         assertEquals(caseFile.getId(), found.getId());
     }
-
 
 }

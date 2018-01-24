@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.dao.OrganizationAssociationDao;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
 import com.armedia.acm.plugins.person.service.OrganizationAssociationEventPublisher;
+
 import org.activiti.engine.impl.util.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/organizationAssociation", "/api/latest/plugin/organizationAssociation"})
+@RequestMapping({ "/api/v1/plugin/organizationAssociation", "/api/latest/plugin/organizationAssociation" })
 public class DeleteOrganizationAssociationAPIController
 {
     private OrganizationAssociationDao organizationAssociationDao;
@@ -29,8 +30,7 @@ public class DeleteOrganizationAssociationAPIController
     @RequestMapping(value = "/delete/{organizationAssocId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String deleteOrganizationById(
-            @PathVariable("organizationAssocId") Long organizationAssocId
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+            @PathVariable("organizationAssocId") Long organizationAssocId) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
         log.info("Finding organization association by id:'{}'", organizationAssocId);
 
@@ -47,7 +47,8 @@ public class DeleteOrganizationAssociationAPIController
 
                 objectToReturnJSON.put("deletedOrganizationAssociationId", organizationAssocId);
                 return objectToReturnJSON.toString();
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 throw new AcmUserActionFailedException("Delete", "organizationAssoc", organizationAssocId, e.getMessage(), e);
             }

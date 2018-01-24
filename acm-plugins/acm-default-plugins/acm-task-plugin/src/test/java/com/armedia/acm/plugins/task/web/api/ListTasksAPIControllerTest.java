@@ -1,10 +1,19 @@
 package com.armedia.acm.plugins.task.web.api;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +33,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import javax.persistence.PersistenceException;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -92,9 +97,9 @@ public class ListTasksAPIControllerTest extends EasyMockSupport
 
         MvcResult result = mockMvc.perform(
                 get("/api/v1/plugin/task/forUser/{user}", user)
-                .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-                .principal(mockAuthentication)
-                .session(mockHttpSession))
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                        .principal(mockAuthentication)
+                        .session(mockHttpSession))
                 .andReturn();
 
         verifyAll();

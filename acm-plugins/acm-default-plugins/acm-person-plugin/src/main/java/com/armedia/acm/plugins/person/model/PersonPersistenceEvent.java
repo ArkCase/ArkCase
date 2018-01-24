@@ -16,7 +16,7 @@ public abstract class PersonPersistenceEvent extends AcmEvent
         super(source);
         setObjectId(source.getId());
         setEventDate(new Date());
-        //if modifier is null, event is for creating new person
+        // if modifier is null, event is for creating new person
         setUserId(source.getModifier() != null ? source.getModifier() : source.getCreator());
     }
 
@@ -25,6 +25,5 @@ public abstract class PersonPersistenceEvent extends AcmEvent
     {
         return OBJECT_TYPE;
     }
-
 
 }

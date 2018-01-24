@@ -126,7 +126,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
             List<OutlookMailItem> messages = items.getItems().stream().map(this::messageFrom).collect(Collectors.toList());
             results.setItems(messages);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -155,7 +156,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
             List<OutlookTaskItem> tasks = items.getItems().stream().map(this::taskFrom).collect(Collectors.toList());
             results.setItems(tasks);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -191,7 +193,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             omi.setRead(message.getIsRead());
 
             return omi;
-        } catch (ServiceLocalException sle)
+        }
+        catch (ServiceLocalException sle)
         {
             throw new AcmOutlookFindItemsFailedException(sle.getMessage(), sle);
         }
@@ -214,7 +217,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             oti.setStartDate(task.getStartDate());
 
             return oti;
-        } catch (ServiceLocalException sle)
+        }
+        catch (ServiceLocalException sle)
         {
             throw new AcmOutlookFindItemsFailedException(sle.getMessage(), sle);
         }
@@ -239,7 +243,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             oci.setFolderId(item.getParentFolderId().getUniqueId());
 
             return oci;
-        } catch (ServiceLocalException sle)
+        }
+        catch (ServiceLocalException sle)
         {
             throw new AcmOutlookFindItemsFailedException(sle.getMessage(), sle);
         }
@@ -273,7 +278,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             }
 
             return oci;
-        } catch (ServiceLocalException sle)
+        }
+        catch (ServiceLocalException sle)
         {
             throw new AcmOutlookFindItemsFailedException(sle.getMessage(), sle);
         }
@@ -315,7 +321,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
             List<OutlookCalendarItem> appts = items.getItems().stream().map(this::calendarFrom).collect(Collectors.toList());
             results.setItems(appts);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -326,7 +333,6 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.services.email.service.AcmEmailSenderService#sendPlainEmail(java.util.stream.Stream,
      * com.armedia.acm.services.email.model.EmailBuilder, com.armedia.acm.services.email.model.EmailBodyBuilder)
      */
@@ -345,7 +351,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         if (getSendFromSystemUser())
         {
             outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
-        } else
+        }
+        else
         {
             OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
             outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
@@ -428,7 +435,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         if (getSendFromSystemUser())
         {
             outlookUser = new AcmOutlookUser(getSystemUserId(), getSystemUserEmail(), getSystemUserPass());
-        } else
+        }
+        else
         {
             OutlookDTO outlookDTO = retrieveOutlookPassword(authentication);
             outlookUser = new AcmOutlookUser(authentication.getName(), user.getMail(), outlookDTO.getOutlookPassword());
@@ -481,7 +489,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                      * attachedFiles) { outlookEventPublisher.publishFileEmailedEvent(emailedFile, authentication); }
                      */
 
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     log.error(String.format("Could not send email to %s from %s.", emailAddress, outlookUser.getEmailAddress()));
                 }
@@ -543,7 +552,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
                     results.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, true));
 
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     log.error(String.format("Could not send email to %s from %s.", emailAddress, outlookUser.getEmailAddress()));
                     results.add(new EmailWithEmbeddedLinksResultDTO(emailAddress, false));
@@ -582,7 +592,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
 
             List<OutlookContactItem> contacts = items.getItems().stream().map(this::contactFrom).collect(Collectors.toList());
             results.setItems(contacts);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -607,7 +618,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             {
                 folder = calendarItem.getFolderId() == null ? Folder.bind(service, WellKnownFolderName.Calendar)
                         : Folder.bind(service, new FolderId(calendarItem.getFolderId()));
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new AcmOutlookException("Can't bind to folder id [" + calendarItem.getFolderId() + " ]!", e);
             }
@@ -621,13 +633,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             {
                 getOutlookEventPublisher().publishCalendarEventAdded(retval, user.getUserId(), containers.get(0).getContainerObjectId(),
                         containers.get(0).getContainerObjectType());
-            } else
+            }
+            else
             {
                 log.error(String.format("Unexpected number of containers=%d returned for calendarFolderId=%d", containers.size(),
                         calendarItem.getFolderId()));
             }
 
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
 
@@ -660,12 +674,14 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             try
             {
                 folder = Folder.bind(service, folderName);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
             }
             retval = getDao().createTaskItem(service, folder, taskItem);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -688,13 +704,15 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             try
             {
                 folder = Folder.bind(service, folderName);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new AcmOutlookException("Can't bind to folder(" + folderName + ")!", e);
             }
 
             retval = getDao().createContactItem(service, folder, contactItem);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -711,7 +729,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             getDao().deleteItem(service, itemId, deleteMode);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -744,7 +763,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                     results.getItems().stream().forEach(element -> deleteItem(user, element.getId(), DeleteMode.HardDelete));
                 }
             } while (results != null && results.getItems() != null && results.getItems().size() > 0);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error while removing all items found by extended property.", e);
         }
@@ -759,7 +779,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             getDao().deleteAppointmentItem(service, appointmentId, recurring, deleteMode);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -777,7 +798,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             retval = getDao().createFolder(service, user.getEmailAddress(), parentFolderName, newFolder);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -786,7 +808,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         {
             AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreator(user.getEmailAddress(), user.getOutlookPassword());
             folderCreatorDao.recordFolderCreator(folderCreator, objectId, objectType);
-        } catch (AcmOutlookFolderCreatorDaoException e)
+        }
+        catch (AcmOutlookFolderCreatorDaoException e)
         {
             disconnectAndRetry(user, new AcmOutlookException(e));
         }
@@ -810,11 +833,13 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             try
             {
                 retval = mapFolderToOutlookFolder(folder);
-            } catch (ServiceLocalException e)
+            }
+            catch (ServiceLocalException e)
             {
                 throw new AcmOutlookConnectionFailedException("Error retrieving folder properties. ", e);
             }
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -831,7 +856,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             getDao().deleteFolder(service, folderId, deleteMode);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -846,7 +872,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             getDao().addFolderPermission(service, folderId, permission);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -861,7 +888,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         try
         {
             getDao().removeFolderPermission(service, folderId, permission);
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             disconnectAndRetry(user, e);
         }
@@ -881,7 +909,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             if (!existingFolderPermissions.contains(outlookFolderPermission))
             {
                 folderPermissionsToBeAdded.add(outlookFolderPermission);// this is new permissions and needs to be added
-            } else
+            }
+            else
             {
                 folderPermissionsToBeRemoved.remove(outlookFolderPermission);// this is existing permission and not to
                 // be removed
@@ -893,7 +922,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
             try
             {
                 addFolderPermission(user, calendarFolderId, outlookFolderPermission);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("Can't add permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
             }
@@ -907,7 +937,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
                 {
                     removeFolderPermission(user, calendarFolderId, outlookFolderPermission);
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 log.error("Can't remove permission for user email: {}, reason: ", outlookFolderPermission.getEmail(), e.getMessage());
             }

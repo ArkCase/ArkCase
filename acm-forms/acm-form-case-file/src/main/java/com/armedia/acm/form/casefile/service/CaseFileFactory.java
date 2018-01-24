@@ -18,6 +18,7 @@ import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.service.history.dao.AcmHistoryDao;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -100,16 +101,17 @@ public class CaseFileFactory extends FrevvoFormFactory
                     .findFirst()
                     .orElse(null);
 
-            if(initiatorPersonAssociation != null)
+            if (initiatorPersonAssociation != null)
                 paArray.add(initiatorPersonAssociation);
 
             for (PersonItem personItem : form.getPeople())
             {
                 Person person = getPersonDao().find(personItem.getId());
-                PersonAssociation personAssociation = (personItem.getPersonAssociationId() == null) ? new PersonAssociation() : getPersonAssociationDao().find(
-                        personItem.getPersonAssociationId());
+                PersonAssociation personAssociation = (personItem.getPersonAssociationId() == null) ? new PersonAssociation()
+                        : getPersonAssociationDao().find(
+                                personItem.getPersonAssociationId());
 
-                if(person == null)
+                if (person == null)
                     continue;
 
                 personAssociation.setPerson(person);
@@ -176,7 +178,8 @@ public class CaseFileFactory extends FrevvoFormFactory
                     form.setPeople(people);
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot convert Object to Frevvo form.", e);
         }

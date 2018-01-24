@@ -1,7 +1,6 @@
 
 package org.mule.module.cmis.connectivity;
 
-import javax.annotation.Generated;
 import org.apache.commons.pool.impl.GenericKeyedObjectPool;
 import org.mule.api.ConnectionException;
 import org.mule.api.ConnectionExceptionCode;
@@ -26,13 +25,17 @@ import org.mule.module.cmis.connection.ConnectionManager;
 import org.mule.module.cmis.process.ProcessAdapter;
 import org.mule.module.cmis.process.ProcessTemplate;
 
+import javax.annotation.Generated;
 
 /**
- * A {@code CMISCloudConnectorConnectionManager} is a wrapper around {@link CMISCloudConnector } that adds connection management capabilities to the pojo.
+ * A {@code CMISCloudConnectorConnectionManager} is a wrapper around {@link CMISCloudConnector } that adds connection
+ * management capabilities to the pojo.
  * 
  */
 @Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
-public class CMISCloudConnectorConnectionManager implements MuleContextAware, Initialisable, Testable, Capabilities, MetadataAware, ConnectionManager<CMISCloudConnectorConnectionKey, CMISCloudConnectorConnectionIdentifierAdapter> , ProcessAdapter<CMISCloudConnectorConnectionIdentifierAdapter>
+public class CMISCloudConnectorConnectionManager implements MuleContextAware, Initialisable, Testable, Capabilities, MetadataAware,
+        ConnectionManager<CMISCloudConnectorConnectionKey, CMISCloudConnectorConnectionIdentifierAdapter>,
+        ProcessAdapter<CMISCloudConnectorConnectionIdentifierAdapter>
 {
 
     /**
@@ -92,9 +95,11 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
     /**
      * Sets muleContext
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setMuleContext(MuleContext value) {
+    public void setMuleContext(MuleContext value)
+    {
         this.muleContext = value;
     }
 
@@ -102,16 +107,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves muleContext
      * 
      */
-    public MuleContext getMuleContext() {
+    public MuleContext getMuleContext()
+    {
         return this.muleContext;
     }
 
     /**
      * Sets flowConstruct
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setFlowConstruct(FlowConstruct value) {
+    public void setFlowConstruct(FlowConstruct value)
+    {
         this.flowConstruct = value;
     }
 
@@ -119,16 +127,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves flowConstruct
      * 
      */
-    public FlowConstruct getFlowConstruct() {
+    public FlowConstruct getFlowConstruct()
+    {
         return this.flowConstruct;
     }
 
     /**
      * Sets connectionPoolingProfile
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setConnectionPoolingProfile(PoolingProfile value) {
+    public void setConnectionPoolingProfile(PoolingProfile value)
+    {
         this.connectionPoolingProfile = value;
     }
 
@@ -136,16 +147,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves connectionPoolingProfile
      * 
      */
-    public PoolingProfile getConnectionPoolingProfile() {
+    public PoolingProfile getConnectionPoolingProfile()
+    {
         return this.connectionPoolingProfile;
     }
 
     /**
      * Sets retryPolicyTemplate
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setRetryPolicyTemplate(RetryPolicyTemplate value) {
+    public void setRetryPolicyTemplate(RetryPolicyTemplate value)
+    {
         this.retryPolicyTemplate = value;
     }
 
@@ -153,16 +167,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves retryPolicyTemplate
      * 
      */
-    public RetryPolicyTemplate getRetryPolicyTemplate() {
+    public RetryPolicyTemplate getRetryPolicyTemplate()
+    {
         return this.retryPolicyTemplate;
     }
 
     /**
      * Sets baseUrl
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setBaseUrl(String value) {
+    public void setBaseUrl(String value)
+    {
         this.baseUrl = value;
     }
 
@@ -170,16 +187,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves baseUrl
      * 
      */
-    public String getBaseUrl() {
+    public String getBaseUrl()
+    {
         return this.baseUrl;
     }
 
     /**
      * Sets username
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setUsername(String value) {
+    public void setUsername(String value)
+    {
         this.username = value;
     }
 
@@ -187,16 +207,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves username
      * 
      */
-    public String getUsername() {
+    public String getUsername()
+    {
         return this.username;
     }
 
     /**
      * Sets connectionTimeout
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setConnectionTimeout(String value) {
+    public void setConnectionTimeout(String value)
+    {
         this.connectionTimeout = value;
     }
 
@@ -204,16 +227,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves connectionTimeout
      * 
      */
-    public String getConnectionTimeout() {
+    public String getConnectionTimeout()
+    {
         return this.connectionTimeout;
     }
 
     /**
      * Sets useAlfrescoExtension
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setUseAlfrescoExtension(String value) {
+    public void setUseAlfrescoExtension(String value)
+    {
         this.useAlfrescoExtension = value;
     }
 
@@ -221,16 +247,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves useAlfrescoExtension
      * 
      */
-    public String getUseAlfrescoExtension() {
+    public String getUseAlfrescoExtension()
+    {
         return this.useAlfrescoExtension;
     }
 
     /**
      * Sets cxfPortProvider
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setCxfPortProvider(String value) {
+    public void setCxfPortProvider(String value)
+    {
         this.cxfPortProvider = value;
     }
 
@@ -238,16 +267,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves cxfPortProvider
      * 
      */
-    public String getCxfPortProvider() {
+    public String getCxfPortProvider()
+    {
         return this.cxfPortProvider;
     }
 
     /**
      * Sets repositoryId
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setRepositoryId(String value) {
+    public void setRepositoryId(String value)
+    {
         this.repositoryId = value;
     }
 
@@ -255,16 +287,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves repositoryId
      * 
      */
-    public String getRepositoryId() {
+    public String getRepositoryId()
+    {
         return this.repositoryId;
     }
 
     /**
      * Sets password
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setPassword(String value) {
+    public void setPassword(String value)
+    {
         this.password = value;
     }
 
@@ -272,16 +307,19 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves password
      * 
      */
-    public String getPassword() {
+    public String getPassword()
+    {
         return this.password;
     }
 
     /**
      * Sets endpoint
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setEndpoint(String value) {
+    public void setEndpoint(String value)
+    {
         this.endpoint = value;
     }
 
@@ -289,13 +327,16 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Retrieves endpoint
      * 
      */
-    public String getEndpoint() {
+    public String getEndpoint()
+    {
         return this.endpoint;
     }
 
-    public void initialise() {
+    public void initialise()
+    {
         GenericKeyedObjectPool.Config config = new GenericKeyedObjectPool.Config();
-        if (connectionPoolingProfile!= null) {
+        if (connectionPoolingProfile != null)
+        {
             config.maxIdle = connectionPoolingProfile.getMaxIdle();
             config.maxActive = connectionPoolingProfile.getMaxActive();
             config.maxWait = connectionPoolingProfile.getMaxWait();
@@ -304,25 +345,26 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
             config.minEvictableIdleTimeMillis = connectionPoolingProfile.getMinEvictionMillis();
         }
         connectionPool = new GenericKeyedObjectPool(new CMISCloudConnectorConnectionFactory(this), config);
-        if (retryPolicyTemplate == null) {
+        if (retryPolicyTemplate == null)
+        {
             retryPolicyTemplate = muleContext.getRegistry().lookupObject(MuleProperties.OBJECT_DEFAULT_RETRY_POLICY_TEMPLATE);
         }
     }
 
     public CMISCloudConnectorConnectionIdentifierAdapter acquireConnection(CMISCloudConnectorConnectionKey key)
-        throws Exception
+            throws Exception
     {
         return ((CMISCloudConnectorConnectionIdentifierAdapter) connectionPool.borrowObject(key));
     }
 
     public void releaseConnection(CMISCloudConnectorConnectionKey key, CMISCloudConnectorConnectionIdentifierAdapter connection)
-        throws Exception
+            throws Exception
     {
         connectionPool.returnObject(key, connection);
     }
 
     public void destroyConnection(CMISCloudConnectorConnectionKey key, CMISCloudConnectorConnectionIdentifierAdapter connection)
-        throws Exception
+            throws Exception
     {
         connectionPool.invalidateObject(key, connection);
     }
@@ -331,92 +373,141 @@ public class CMISCloudConnectorConnectionManager implements MuleContextAware, In
      * Returns true if this module implements such capability
      * 
      */
-    public boolean isCapableOf(Capability capability) {
-        if (capability == Capability.LIFECYCLE_CAPABLE) {
+    public boolean isCapableOf(Capability capability)
+    {
+        if (capability == Capability.LIFECYCLE_CAPABLE)
+        {
             return true;
         }
-        if (capability == Capability.CONNECTION_MANAGEMENT_CAPABLE) {
+        if (capability == Capability.CONNECTION_MANAGEMENT_CAPABLE)
+        {
             return true;
         }
         return false;
     }
 
     @Override
-    public<P >ProcessTemplate<P, CMISCloudConnectorConnectionIdentifierAdapter> getProcessTemplate() {
+    public <P> ProcessTemplate<P, CMISCloudConnectorConnectionIdentifierAdapter> getProcessTemplate()
+    {
         return new ManagedConnectionProcessTemplate(this, muleContext);
     }
 
-    public CMISCloudConnectorConnectionKey getDefaultConnectionKey() {
-        return new CMISCloudConnectorConnectionKey(getUsername(), getPassword(), getBaseUrl(), getRepositoryId(), getEndpoint(), getConnectionTimeout(), getUseAlfrescoExtension(), getCxfPortProvider());
+    public CMISCloudConnectorConnectionKey getDefaultConnectionKey()
+    {
+        return new CMISCloudConnectorConnectionKey(getUsername(), getPassword(), getBaseUrl(), getRepositoryId(), getEndpoint(),
+                getConnectionTimeout(), getUseAlfrescoExtension(), getCxfPortProvider());
     }
 
-    public String getModuleName() {
+    public String getModuleName()
+    {
         return MODULE_NAME;
     }
 
-    public String getModuleVersion() {
+    public String getModuleVersion()
+    {
         return MODULE_VERSION;
     }
 
-    public String getDevkitVersion() {
+    public String getDevkitVersion()
+    {
         return DEVKIT_VERSION;
     }
 
-    public String getDevkitBuild() {
+    public String getDevkitBuild()
+    {
         return DEVKIT_BUILD;
     }
 
-    public TestResult test() {
+    public TestResult test()
+    {
         CMISCloudConnectorConnectionIdentifierAdapter connection = null;
         DefaultTestResult result;
         CMISCloudConnectorConnectionKey key = getDefaultConnectionKey();
-        try {
+        try
+        {
             connection = acquireConnection(key);
             result = new DefaultTestResult(org.mule.common.Result.Status.SUCCESS);
-        } catch (Exception e) {
-            try {
+        }
+        catch (Exception e)
+        {
+            try
+            {
                 destroyConnection(key, connection);
-            } catch (Exception ie) {
+            }
+            catch (Exception ie)
+            {
             }
             result = ((DefaultTestResult) buildFailureTestResult(e));
-        } finally {
-            if (connection!= null) {
-                try {
+        }
+        finally
+        {
+            if (connection != null)
+            {
+                try
+                {
                     releaseConnection(key, connection);
-                } catch (Exception ie) {
+                }
+                catch (Exception ie)
+                {
                 }
             }
         }
         return result;
     }
 
-    public DefaultResult buildFailureTestResult(Exception exception) {
+    public DefaultResult buildFailureTestResult(Exception exception)
+    {
         DefaultTestResult result;
-        if (exception instanceof ConnectionException) {
+        if (exception instanceof ConnectionException)
+        {
             ConnectionExceptionCode code = ((ConnectionException) exception).getCode();
-            if (code == ConnectionExceptionCode.UNKNOWN_HOST) {
-                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNKNOWN_HOST, exception);
-            } else {
-                if (code == ConnectionExceptionCode.CANNOT_REACH) {
-                    result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.RESOURCE_UNAVAILABLE, exception);
-                } else {
-                    if (code == ConnectionExceptionCode.INCORRECT_CREDENTIALS) {
-                        result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.INVALID_CREDENTIALS, exception);
-                    } else {
-                        if (code == ConnectionExceptionCode.CREDENTIALS_EXPIRED) {
-                            result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.INVALID_CREDENTIALS, exception);
-                        } else {
-                            if (code == ConnectionExceptionCode.UNKNOWN) {
-                                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNSPECIFIED, exception);
-                            } else {
-                                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNSPECIFIED, exception);
+            if (code == ConnectionExceptionCode.UNKNOWN_HOST)
+            {
+                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNKNOWN_HOST,
+                        exception);
+            }
+            else
+            {
+                if (code == ConnectionExceptionCode.CANNOT_REACH)
+                {
+                    result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(),
+                            FailureType.RESOURCE_UNAVAILABLE, exception);
+                }
+                else
+                {
+                    if (code == ConnectionExceptionCode.INCORRECT_CREDENTIALS)
+                    {
+                        result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(),
+                                FailureType.INVALID_CREDENTIALS, exception);
+                    }
+                    else
+                    {
+                        if (code == ConnectionExceptionCode.CREDENTIALS_EXPIRED)
+                        {
+                            result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(),
+                                    FailureType.INVALID_CREDENTIALS, exception);
+                        }
+                        else
+                        {
+                            if (code == ConnectionExceptionCode.UNKNOWN)
+                            {
+                                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(),
+                                        FailureType.UNSPECIFIED, exception);
+                            }
+                            else
+                            {
+                                result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(),
+                                        FailureType.UNSPECIFIED, exception);
                             }
                         }
                     }
                 }
             }
-        } else {
-            result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNSPECIFIED, exception);
+        }
+        else
+        {
+            result = new DefaultTestResult(org.mule.common.Result.Status.FAILURE, exception.getMessage(), FailureType.UNSPECIFIED,
+                    exception);
         }
         return result;
     }
