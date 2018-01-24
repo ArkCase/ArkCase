@@ -186,8 +186,12 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
         boolean isAddressAddedOrRemoved = false;
         List<PostalAddress> existingAddresses = complaint.getAddresses();
         List<PostalAddress> updatedAddresses = updatedComplaint.getAddresses();
-        Set<Long> updatedIds = updatedAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
-        Set<Long> existingIds = existingAddresses.stream().map(PostalAddress::getId).collect(Collectors.toSet());
+        Set<Long> updatedIds = updatedAddresses.stream()
+                .map(PostalAddress::getId)
+                .collect(Collectors.toSet());
+        Set<Long> existingIds = existingAddresses.stream()
+                .map(PostalAddress::getId)
+                .collect(Collectors.toSet());
 
         if (isObjectAdded(existingIds, updatedIds))
         {
