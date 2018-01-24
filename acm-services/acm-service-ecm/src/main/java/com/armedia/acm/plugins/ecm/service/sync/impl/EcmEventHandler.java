@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;

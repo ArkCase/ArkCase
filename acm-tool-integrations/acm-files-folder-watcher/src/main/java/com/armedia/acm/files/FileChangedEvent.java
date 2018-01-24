@@ -10,7 +10,8 @@ public class FileChangedEvent extends FileEvent
     /**
      * Create a new FileChangedEvent.
      *
-     * @param source file change event
+     * @param source
+     *            file change event
      */
     public FileChangedEvent(FileChangeEvent source)
     {

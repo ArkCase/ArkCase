@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -73,7 +74,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("documentAuthor", event.getUserId());
         pvars.put("pdfRenditionId", event.getSource().getFileId());
 
-        //"documentType" is a misleading name here, but keeping it for backwards compatibility
+        // "documentType" is a misleading name here, but keeping it for backwards compatibility
         pvars.put("documentType", event.getSource().getContainer().getContainerObjectTitle());
         pvars.put("PARENT_OBJECT_NAME", event.getSource().getContainer().getContainerObjectTitle());
 
@@ -89,7 +90,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());
 
-        pvars.put("futureTasks", getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
+        pvars.put("futureTasks",
+                getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
 
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
 
@@ -98,7 +100,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
     }
 
-    private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy, int maxDurationInDays)
+    private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy,
+            int maxDurationInDays)
     {
         AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
         List<BuckslipFutureTask> futureTasks = new ArrayList<>();

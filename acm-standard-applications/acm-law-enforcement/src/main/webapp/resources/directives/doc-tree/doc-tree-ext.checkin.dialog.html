@@ -4,15 +4,15 @@
 
 <div class="modal-body">
     <!--<div>-->
-        <!--<div class="form-group">-->
-            <!--<button ngf-select="selectFiles($files)" translate-->
-                    <!--class="btn btn-sm btn-default">common.directive.docTree.comment.chooseFiles-->
-            <!--</button>-->
-        <!--</div>-->
-        <!--<ul>-->
-            <!--<li ng-if="selectedFiles.length == 0" translate>common.directive.docTree.comment.noFiles</li>-->
-            <!--<li ng-repeat="file in selectedFiles">{{file.name}}</li>-->
-        <!--</ul>-->
+    <!--<div class="form-group">-->
+    <!--<button ngf-select="selectFiles($files)" translate-->
+    <!--class="btn btn-sm btn-default">common.directive.docTree.comment.chooseFiles-->
+    <!--</button>-->
+    <!--</div>-->
+    <!--<ul>-->
+    <!--<li ng-if="selectedFiles.length == 0" translate>common.directive.docTree.comment.noFiles</li>-->
+    <!--<li ng-repeat="file in selectedFiles">{{file.name}}</li>-->
+    <!--</ul>-->
     <!--</div>-->
     <form name="notesForm">
         <div>
@@ -25,8 +25,7 @@
 </div>
 
 <div class="modal-footer">
-    <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate
-            ng-disabled="notesForm.$invalid">
+    <button type="button" class="btn btn-primary" ng-click="onClickOk()" translate ng-disabled="notesForm.$invalid">
         common.directive.docTree.comment.btnOk.text
     </button>
     <!--ng-disabled="notesForm.$invalid || selectedFiles.length == 0">-->

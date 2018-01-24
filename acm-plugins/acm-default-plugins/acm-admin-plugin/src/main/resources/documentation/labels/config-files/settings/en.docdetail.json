@@ -1,10 +1,12 @@
 {
     "notes": {
-        "msg": {"add-new-record": {
-            "defaultValue": "Add Note",
-            "description": "",
-            "value": "Add Note"
-        }},
+        "msg": {
+            "add-new-record": {
+                "defaultValue": "Add Note",
+                "description": "",
+                "value": "Add Note"
+            }
+        },
         "table": {
             "field": {
                 "note": {
@@ -35,113 +37,121 @@
             }
         }
     },
-    "version-history": {"table": {
-        "button": {"make-active": {
-            "defaultValue": "Make Active",
-            "description": "",
-            "value": "Make Active"
-        }},
-        "field": {
-            "date": {
-                "defaultValue": "Date",
-                "description": "",
-                "value": "Date"
+    "version-history": {
+        "table": {
+            "button": {
+                "make-active": {
+                    "defaultValue": "Make Active",
+                    "description": "",
+                    "value": "Make Active"
+                }
             },
-            "action": {
-                "defaultValue": "Action",
-                "description": "",
-                "value": "Action"
+            "field": {
+                "date": {
+                    "defaultValue": "Date",
+                    "description": "",
+                    "value": "Date"
+                },
+                "action": {
+                    "defaultValue": "Action",
+                    "description": "",
+                    "value": "Action"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "version": {
+                    "defaultValue": "Version",
+                    "description": "",
+                    "value": "Version"
+                },
+                "user": {
+                    "defaultValue": "User",
+                    "description": "",
+                    "value": "User"
+                }
             },
-            "id": {
-                "defaultValue": "ID",
+            "title": {
+                "defaultValue": "Version History",
                 "description": "",
-                "value": "ID"
-            },
-            "version": {
-                "defaultValue": "Version",
-                "description": "",
-                "value": "Version"
-            },
-            "user": {
-                "defaultValue": "User",
-                "description": "",
-                "value": "User"
+                "value": "Version History"
             }
         },
-        "title": {
-            "defaultValue": "Version History",
-            "description": "",
-            "value": "Version History"
+        "msg": {
+            "change-active-version-success": {
+                "defaultValue": "Request submitted.Fetching the correct document.",
+                "description": "",
+                "value": "Request submitted.Fetching the correct document."
+            },
+            "change-active-version-fail": {
+                "defaultValue": "Error setting active file version. Please try again.",
+                "description": "",
+                "value": "Error setting active file version. Please try again."
+            }
         }
     },
-    "msg":{
-        "change-active-version-success":{
-            "defaultValue": "Request submitted.Fetching the correct document.",
-            "description": "",
-            "value": "Request submitted.Fetching the correct document."
-        },
-        "change-active-version-fail":{
-            "defaultValue": "Error setting active file version. Please try again.",
-            "description": "",
-            "value": "Error setting active file version. Please try again."
-        }
-    }},
-    "event-history": {"table": {
-        "field": {
-            "date": {
-                "defaultValue": "Date",
-                "description": "",
-                "value": "Date"
+    "event-history": {
+        "table": {
+            "field": {
+                "date": {
+                    "defaultValue": "Date",
+                    "description": "",
+                    "value": "Date"
+                },
+                "event-name": {
+                    "defaultValue": "Event Name",
+                    "description": "",
+                    "value": "Event Name"
+                },
+                "id": {
+                    "defaultValue": "ID",
+                    "description": "",
+                    "value": "ID"
+                },
+                "user": {
+                    "defaultValue": "User",
+                    "description": "",
+                    "value": "User"
+                }
             },
-            "event-name": {
-                "defaultValue": "Event Name",
+            "title": {
+                "defaultValue": "Event History",
                 "description": "",
-                "value": "Event Name"
-            },
-            "id": {
-                "defaultValue": "ID",
-                "description": "",
-                "value": "ID"
-            },
-            "user": {
-                "defaultValue": "User",
-                "description": "",
-                "value": "User"
+                "value": "Event History"
             }
-        },
-        "title": {
-            "defaultValue": "Event History",
-            "description": "",
-            "value": "Event History"
         }
-    }},
-    "header": {"labels": {
-        "owner": {
-            "defaultValue": "Owner",
-            "description": "",
-            "value": "Owner"
-        },
-        "create-date": {
-            "defaultValue": "Create Date",
-            "description": "",
-            "value": "Create Date"
-        },
-        "assigned-to": {
-            "defaultValue": "Assigned To",
-            "description": "",
-            "value": "Assigned To"
-        },
-        "state": {
-            "defaultValue": "State",
-            "description": "",
-            "value": "State"
-        },
-        "type": {
-            "defaultValue": "Type",
-            "description": "",
-            "value": "Type"
+    },
+    "header": {
+        "labels": {
+            "owner": {
+                "defaultValue": "Owner",
+                "description": "",
+                "value": "Owner"
+            },
+            "create-date": {
+                "defaultValue": "Create Date",
+                "description": "",
+                "value": "Create Date"
+            },
+            "assigned-to": {
+                "defaultValue": "Assigned To",
+                "description": "",
+                "value": "Assigned To"
+            },
+            "state": {
+                "defaultValue": "State",
+                "description": "",
+                "value": "State"
+            },
+            "type": {
+                "defaultValue": "Type",
+                "description": "",
+                "value": "Type"
+            }
         }
-    }},
+    },
     "title": {
         "defaultValue": "Document Detail",
         "description": "",
@@ -215,11 +225,13 @@
         }
     },
     "participants": {
-        "msg": {"participant-and-type-empty": {
-            "defaultValue": "Please select both participant and participant type.",
-            "description": "",
-            "value": "Please select both participant and participant type."
-        }},
+        "msg": {
+            "participant-and-type-empty": {
+                "defaultValue": "Please select both participant and participant type.",
+                "description": "",
+                "value": "Please select both participant and participant type."
+            }
+        },
         "role": {
             "button": {
                 "cancel": {

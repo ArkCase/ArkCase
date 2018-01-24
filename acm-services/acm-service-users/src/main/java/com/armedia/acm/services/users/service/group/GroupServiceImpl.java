@@ -12,7 +12,9 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
+import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,14 +51,30 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        String groupName = group.getName();
+        String groupName = MapperUtils.buildGroupName(group.getName(), Optional.empty());
         AcmGroup acmGroup = groupDao.findByName(groupName);
-        if (acmGroup != null)
+        if (acmGroup != null && acmGroup.getStatus() == AcmGroupStatus.ACTIVE)
         {
-            throw new AcmObjectAlreadyExistsException("Group " + groupName + " already exists.");
+            throw new AcmObjectAlreadyExistsException("Group " + group.getName() + " already exists.");
         }
-        group.setName(MapperUtils.buildGroupName(groupName, Optional.empty()));
-        return groupDao.save(group);
+        if (acmGroup == null)
+        {
+            group.setStatus(AcmGroupStatus.ACTIVE);
+            group.setName(groupName);
+            group.setDisplayName(groupName);
+            return groupDao.save(group);
+        }
+        else
+        {
+            acmGroup.setType(AcmGroupType.ADHOC_GROUP);
+            acmGroup.setStatus(AcmGroupStatus.ACTIVE);
+            acmGroup.setDescription(group.getDescription());
+            acmGroup.setSupervisor(group.getSupervisor());
+            acmGroup.setDisplayName(groupName);
+            acmGroup.setDistinguishedName(null);
+            acmGroup.setDirectoryName(null);
+            return groupDao.save(acmGroup);
+        }
     }
 
     @Override
@@ -78,8 +96,8 @@ public class GroupServiceImpl implements GroupService
         String query = "object_type_s:GROUP AND object_sub_type_s:LDAP_GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
                 + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
-        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query,
-                0, 1000, "name asc");
+        return executeSolrQuery.getResultsByPredefinedQuery(usernamePasswordAuthenticationToken, SolrCore.ADVANCED_SEARCH, query, 0, 1000,
+                "name asc");
     }
 
     @Override
@@ -143,17 +161,14 @@ public class GroupServiceImpl implements GroupService
 
         Assert.isTrue(acmGroup.getMemberOfGroups().isEmpty());
 
+        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+
         acmGroup.setAscendantsList(null);
         acmGroup.setStatus(AcmGroupStatus.DELETE);
 
-        acmGroup.getMemberGroups()
-                .forEach(memberGroup -> memberGroup.getMemberOfGroups().remove(acmGroup));
-
-        Set<AcmGroup> descendantGroups = AcmGroupUtils.findDescendantsForAcmGroup(acmGroup);
+        acmGroup.removeMembers();
 
         acmGroup.setUserMembers(new HashSet<>());
-        acmGroup.setMemberOfGroups(new HashSet<>());
-        acmGroup.setMemberGroups(new HashSet<>());
 
         save(acmGroup);
 
@@ -200,7 +215,8 @@ public class GroupServiceImpl implements GroupService
         {
             log.debug("Group [{}] has no other parent groups, will be deleted", groupName);
             return markGroupDeleted(groupName);
-        } else
+        }
+        else
         {
             log.debug("Build ancestors string for group: [{}]", groupName);
             acmGroup.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(acmGroup));
@@ -258,7 +274,8 @@ public class GroupServiceImpl implements GroupService
             if (user != null)
             {
                 group = addUserMemberToGroup(user, groupId);
-            } else
+            }
+            else
             {
                 log.warn("User with id [{}] not found", userId);
             }
@@ -267,8 +284,7 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, boolean flushInstructions)
-            throws AcmObjectNotFoundException
+    public AcmGroup addUserMemberToGroup(AcmUser user, String groupId, boolean flushInstructions) throws AcmObjectNotFoundException
     {
         AcmGroup group = groupDao.findByName(groupId);
 
@@ -371,13 +387,29 @@ public class GroupServiceImpl implements GroupService
 
     @Override
     @Transactional
-    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
-            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
+    public AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException
+
     {
         AcmGroup parent = groupDao.findByName(parentId);
-        if (parent == null)
+        AcmGroup subGroup = groupDao.findByName(subGroupId);
+
+        if (parent == null || subGroup == null)
         {
-            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id " + parentId + " not found", null);
+            StringBuilder errorMessage = new StringBuilder();
+            if (parent == null)
+            {
+                errorMessage.append("Parent group with id [").append(parentId).append("] not found.");
+            }
+            if (subGroup == null)
+            {
+                if (errorMessage.length() > 0)
+                {
+                    errorMessage.append(" ");
+                }
+                errorMessage.append("Subgroup with id [").append(subGroupId).append("] not found.");
+            }
+
+            throw new AcmCreateObjectFailedException("GROUP", errorMessage.toString(), null);
         }
 
         // If supervisor for the subgroup is empty, get from the parent group
@@ -386,11 +418,36 @@ public class GroupServiceImpl implements GroupService
             subGroup.setSupervisor(parent.getSupervisor());
         }
 
+        parent.addGroupMember(subGroup);
+        String ancestorsStringList = AcmGroupUtils.buildAncestorsStringForAcmGroup(subGroup);
+        subGroup.setAscendantsList(ancestorsStringList);
+        Set<AcmGroup> descendants = AcmGroupUtils.findDescendantsForAcmGroup(subGroup);
+        descendants.forEach(group -> group.setAscendantsList(AcmGroupUtils.buildAncestorsStringForAcmGroup(group)));
+        return subGroup;
+    }
+
+    @Override
+    @Transactional
+    public AcmGroup saveAdHocSubGroup(AcmGroup subGroup, String parentId)
+            throws AcmCreateObjectFailedException, AcmObjectAlreadyExistsException
+    {
+        AcmGroup parent = groupDao.findByName(parentId);
+        if (parent == null)
+        {
+            throw new AcmCreateObjectFailedException("GROUP", "Parent group with id [" + parentId + "] not found", null);
+        }
+
+        // If supervisor for the subgroup is empty, get from the parent group
+        if (subGroup.getSupervisor() == null)
+        {
+            subGroup.setSupervisor(parent.getSupervisor());
+        }
+
+        String name = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
+        subGroup.setName(name);
+        subGroup.setDisplayName(name);
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
-        String groupName = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
-        subGroup.setName(groupName);
-        subGroup.setDisplayName(groupName);
         AcmGroup acmGroup = createGroup(subGroup);
         parent.addGroupMember(acmGroup);
         return acmGroup;

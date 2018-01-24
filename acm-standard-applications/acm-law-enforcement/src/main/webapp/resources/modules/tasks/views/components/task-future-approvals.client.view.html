@@ -6,13 +6,10 @@
                 <div class="pull-right">
                     <span>
                         <button tooltip="{{addNewTooltip}}" tooltip-append-to-body="true" tooltip-popup-delay="400"
-                                class="btn btn-default btn-xs"
-                                ng-hide="gridButtonReadOnly()"
-                                ng-click="userSearch()">
+                                class="btn btn-default btn-xs" ng-hide="gridButtonReadOnly()" ng-click="userSearch()">
                                 <i class="fa fa-lg fa-plus"></i></button>
-                        <button tooltip-append-to-body="true" tooltip="{{tasks.comp.approvalRouting.button.save.tooltip}}" tooltip-popup-delay="200"
-                                class="btn btn-default btn-xs"
-                                ng-disabled="!isDataChanged()"
+                        <button tooltip-append-to-body="true" tooltip="{{tasks.comp.approvalRouting.button.save.tooltip}}"
+                                tooltip-popup-delay="200" class="btn btn-default btn-xs" ng-disabled="!isDataChanged()"
                                 ng-click="saveTask()">
                                 <i class="fa fa-lg fa-save"></i></button>
                     </span>
@@ -20,16 +17,8 @@
             </div>
         </div>
         <div class="panel-body">
-            <div ui-grid="gridOptions"
-                 ui-grid-resize-columns
-                 ui-grid-auto-resize
-                 ui-grid-pagination
-                 ui-grid-edit
-                 ui-grid-cell-nav
-                 adjust-table-height="gridOptions.data.length"
-                 ng-hide="gridOptions.noData"
-                 class="grid">
-            </div>
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination ui-grid-edit ui-grid-cell-nav
+                    adjust-table-height="gridOptions.data.length" ng-hide="gridOptions.noData" class="grid"></div>
             <div class="alert" ng-if="gridOptions.noData">
                 <p class="text-center">
                     <span>{{noDataMessage}}</span>

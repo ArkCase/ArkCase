@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.dao.PersonDao;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.persistence.PersistenceException;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/person", "/api/latest/plugin/person"})
+@RequestMapping({ "/api/v1/plugin/person", "/api/latest/plugin/person" })
 public class DeletePersonByPersonIdAPIController
 {
     private PersonDao personDao;
@@ -38,7 +39,8 @@ public class DeletePersonByPersonIdAPIController
                 getPersonDao().deletePersonById(personId);
 
                 return "Deleting a person is successful";
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 throw new AcmUserActionFailedException("Delete", "person", personId, e.getMessage(), e);
             }

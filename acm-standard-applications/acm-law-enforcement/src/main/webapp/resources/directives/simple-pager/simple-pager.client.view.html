@@ -1,11 +1,9 @@
 <div class="ui-grid-pager-panel">
     <div class="ui-grid-pager-container" role="navigation">
         <div class="ui-grid-pager-control">
-            <button ng-disabled="currentPage === 1" ng-click="pageChanged(1)" type="button" role="menuitem"
-                    class="ui-grid-pager-first">
+            <button ng-disabled="currentPage === 1" ng-click="pageChanged(1)" type="button" role="menuitem" class="ui-grid-pager-first">
                 <div class="first-triangle">
-                    <div class="first-bar">
-                    </div>
+                    <div class="first-bar"></div>
                 </div>
             </button>
             <button ng-disabled="currentPage === 1" ng-click="pageChanged(currentPage-1)" type="button" role="menuitem"
@@ -14,11 +12,11 @@
             </button>
 
             <input type="number"
-                   class="ui-grid-pager-control-input ng-pristine ng-untouched ng-valid ng-valid-min ng-valid-max ng-valid-required"
-                   ng-model="currentPage" min="1" max="{{ totalPages }}" required=""
-                   ng-change="pageChanged(currentPage)"/>&nbsp;/ {{ totalPages }}
-            <button role="menuitem" type="button" class="ui-grid-pager-next"
-                    ng-disabled="currentPage === totalPages" ng-click="pageChanged(currentPage+1)">
+                    class="ui-grid-pager-control-input ng-pristine ng-untouched ng-valid ng-valid-min ng-valid-max ng-valid-required"
+                    ng-model="currentPage" min="1" max="{{ totalPages }}" required="" ng-change="pageChanged(currentPage)" />&nbsp;/ {{
+            totalPages }}
+            <button role="menuitem" type="button" class="ui-grid-pager-next" ng-disabled="currentPage === totalPages"
+                    ng-click="pageChanged(currentPage+1)">
                 <div class="last-triangle next-triangle"></div>
             </button>
             <button type="button" role="menuitem" class="ui-grid-pager-last" ng-disabled="currentPage === totalPages"
@@ -29,8 +27,7 @@
             </button>
         </div>
         <div class="ui-grid-pager-row-count-picker">
-            <select ng-model="pagerData.pageSize" ng-options="o as o for o in pagerData.pageSizes"
-                    ng-change="pageChanged()"></select>
+            <select ng-model="pagerData.pageSize" ng-options="o as o for o in pagerData.pageSizes" ng-change="pageChanged()"></select>
             <span class="ui-grid-pager-row-count-label">&nbsp; {{'common.directive.simplePager.rowCountLabel' | translate}}</span>
         </div>
     </div>

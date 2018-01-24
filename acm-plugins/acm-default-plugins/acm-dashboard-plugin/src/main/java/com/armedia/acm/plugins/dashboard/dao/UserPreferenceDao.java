@@ -4,10 +4,12 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.model.userPreference.UserPreference;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 /**
@@ -52,7 +54,6 @@ public class UserPreferenceDao extends AcmAbstractDao<UserPreference>
         }
         return results;
     }
-
 
     @Transactional
     public int deleteAllUserPreferenceByUserIdAndModuleName(String userId, String moduleName)

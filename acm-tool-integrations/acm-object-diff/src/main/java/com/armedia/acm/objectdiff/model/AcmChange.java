@@ -1,6 +1,7 @@
 package com.armedia.acm.objectdiff.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serializable;
@@ -19,7 +20,6 @@ public abstract class AcmChange implements Serializable
      * path of the parent object
      */
     private String shortPath;
-
 
     public String getAction()
     {

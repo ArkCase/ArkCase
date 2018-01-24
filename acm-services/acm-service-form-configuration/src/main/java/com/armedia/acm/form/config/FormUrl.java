@@ -1,32 +1,39 @@
 package com.armedia.acm.form.config;
 
-public interface FormUrl {
-	/**
-	 * Retrieve the form server url based on the form name.
-	 * 
-	 * @param formName
-	 * @return
-	 */
-	public String getNewFormUrl(String formName, boolean plain);
-	
-	/**
-	 * Retrieve the form server url for the PDF attachment base on the form name.
-	 * 
-	 * @param formName
-	 * @param docId
-	 * @return
-	 */
-	public String getPdfRenditionUrl(String formName, String docId);
+public interface FormUrl
+{
+    /**
+     * Retrieve the form server url based on the form name.
+     * 
+     * @param formName
+     * @return
+     */
+    public String getNewFormUrl(String formName, boolean plain);
+
+    /**
+     * Retrieve the form server url for the PDF attachment base on the form name.
+     * 
+     * @param formName
+     * @param docId
+     * @return
+     */
+    public String getPdfRenditionUrl(String formName, String docId);
 
     public String enableFrevvoFormEngine(String formName);
-    
+
     public String getProtocol();
+
     public String getHost();
+
     public String getPort();
+
     public Integer getPortAsInteger();
-    
+
     public String getInternalProtocol();
+
     public String getInternalHost();
+
     public String getInternalPort();
+
     public Integer getInternalPortAsInteger();
 }

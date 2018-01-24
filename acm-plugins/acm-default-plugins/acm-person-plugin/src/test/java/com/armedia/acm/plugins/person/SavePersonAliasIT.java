@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.person;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.person.dao.PersonDao;
 import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonAlias;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,10 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -44,7 +46,7 @@ import static org.junit.Assert.assertNotNull;
         "/spring/spring-library-organization-rules.xml",
         "/spring/spring-library-object-diff.xml",
         "/spring/spring-library-object-association-plugin.xml",
-        "/spring/spring-library-object-converter.xml"})
+        "/spring/spring-library-object-converter.xml" })
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SavePersonAliasIT
 {

@@ -1,10 +1,15 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileServiceImpl;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -25,11 +30,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by riste.tutureski on 9/14/2015.
@@ -83,15 +83,18 @@ public class GetTotalPageCountAPIControllerTest extends EasyMockSupport
                 SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":10";
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50,
+                SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50,
+                SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
 
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/service/ecm/totalpagecount/{parentObjectType}/{parentObjectId}?fileTypes={fileTypes}&mimeTypes={mimeTypes}", "CASE_FILE", 10, "authorization,abstract", "application/pdf")
-                        .principal(mockAuthentication)
-                        .contentType(MediaType.APPLICATION_JSON))
+                get("/api/latest/service/ecm/totalpagecount/{parentObjectType}/{parentObjectId}?fileTypes={fileTypes}&mimeTypes={mimeTypes}",
+                        "CASE_FILE", 10, "authorization,abstract", "application/pdf")
+                                .principal(mockAuthentication)
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andReturn();
 
         verifyAll();
@@ -120,8 +123,10 @@ public class GetTotalPageCountAPIControllerTest extends EasyMockSupport
                 SearchConstants.PROPERTY_PARENT_OBJECT_ID_I + ":10";
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50, SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 0, 50,
+                SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(searchResult);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, query, 50, 50,
+                SearchConstants.PROPERTY_OBJECT_ID_S + " DESC")).andReturn(noResultsSearchResult);
 
         replayAll();
 

@@ -52,18 +52,20 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
         {
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        } 
+        }
         else
         {
-            title = in.getEventObjectType() + " " + in.getEventObjectId() + ": " + getEventTypeProperties().getOrDefault("eventType." + in.getEventType(), "Was updated");                    
-        } 
-       
+            title = in.getEventObjectType() + " " + in.getEventObjectId() + ": "
+                    + getEventTypeProperties().getOrDefault("eventType." + in.getEventType(), "Was updated");
+        }
+
         solr.setTitle_parseable(notificationFormater.replaceSubscriptionTitle(title, in.getEventObjectType(), in.getEventObjectType()));
 
         if (in.getEventObjectId() != null)
         {
             solr.setParent_id_s(Long.toString(in.getEventObjectId()));
-        } else
+        }
+        else
         {
             solr.setParent_id_s("");
         }
@@ -112,10 +114,12 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
         if (in.getEventType() != null && getSubscriptionEventPlugin().getPluginProperties().containsKey(in.getEventType()))
         {
             title = (String) getSubscriptionEventPlugin().getPluginProperties().get(in.getEventType());
-        } else if (in.getEventType() != null)
+        }
+        else if (in.getEventType() != null)
         {
             title = "Subscription on " + in.getEventObjectType() + ":" + in.getEventObjectId() + " - " + in.getEventObjectName();
-        } else
+        }
+        else
         {
             title = "";
         }
@@ -175,7 +179,7 @@ public class SubscriptionEventToSolrTransformer implements AcmObjectToSolrDocTra
     public void setNotificationFormater(NotificationFormatter notificationFormater)
     {
         this.notificationFormater = notificationFormater;
-    }  
+    }
 
     public Map<String, Object> getEventTypeProperties()
     {

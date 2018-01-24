@@ -25,14 +25,14 @@ import java.util.List;
  * Created by manoj.dhungana on 12/8/2014.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class ListAllTemplatesControllerAPI
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     List<Object> templateUploadList = new ArrayList<>();
 
-    @RequestMapping(value = "/template/list", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(value = "/template/list", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public List<Object> listTemplates(Authentication authentication) throws Exception
     {

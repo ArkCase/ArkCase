@@ -18,6 +18,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 
 @Entity
@@ -27,13 +28,7 @@ public class UserOrg implements Serializable
     private static final long serialVersionUID = 4488531757561621833L;
 
     @Id
-    @TableGenerator(name = "acm_user_org_gen",
-            table = "acm_user_org_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_user_org",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_user_org_gen", table = "acm_user_org_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_user_org", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_user_org_gen")
     @Column(name = "cm_user_org_id")
     private Long userOrgId;
@@ -80,9 +75,8 @@ public class UserOrg implements Serializable
     @Column(name = "cm_object_type")
     private String objectType = UserOrgConstants.OBJECT_TYPE;
 
-
     /**
-     * This field is only used when the profile is created. Usually it will be null.  Use the container folder
+     * This field is only used when the profile is created. Usually it will be null. Use the container folder
      * to get the CMIS object ID of the complaint folder.
      */
     @Transient
@@ -344,6 +338,9 @@ public class UserOrg implements Serializable
         this.container = container;
     }
 
-    public String getObjectType() {return objectType;}
+    public String getObjectType()
+    {
+        return objectType;
+    }
 
 }

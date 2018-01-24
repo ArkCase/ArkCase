@@ -2,8 +2,7 @@
     <div class="clearfix" ng-show="'CASE_FILE' == objectInfo.parentObjectType">
         <div class="row">
             <div class="col-xs-6">
-                <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}})
-                </h4></div>
+                <h4><a ng-click="onClickTitle()">{{parentCaseInfo.title || "Unknown"}}</a> ({{parentCaseInfo.status}}) </h4></div>
             <div class="col-xs-6  text-right">
                 <h4>
                     <span>{{parentCaseInfo.caseNumber || 'common.value.unknown' | translate}}</span>
@@ -13,7 +12,8 @@
         <div class="row">
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentCaseInfo.caseType | translateData: 'core.lookups.categories' : lang
-                    || 'common.value.unknown' | translate}}</div>
+                    || 'common.value.unknown' | translate}}
+                </div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.subjectType.label</span>
                 </small>
@@ -26,7 +26,8 @@
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="h4 font-bold">{{parentCaseInfo.priority | translateData: 'core.lookups.priorities' : lang
-                    || 'common.value.unknown' | translate}}</div>
+                    || 'common.value.unknown' | translate}}
+                </div>
                 <small class="text-muted">
                     <span translate>tasks.comp.parentinfo.case.priority.label</span>
                 </small>
@@ -54,8 +55,7 @@
         <div class="row">
             <div class="col-xs-6">
                 <h4><a ng-click="onClickTitle()">{{parentComplaintInfo.complaintTitle || "Unknown"}}</a>
-                    ({{parentComplaintInfo.status}})
-                </h4>
+                    ({{parentComplaintInfo.status}}) </h4>
             </div>
             <div class="col-xs-6  text-right">
                 <h4>{{parentComplaintInfo.complaintNumber}}</h4>
@@ -100,8 +100,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <h4><a ng-click="onClickTitle()">{{parentCostsheetInfo.title || "Unknown"}}</a>
-                    ({{parentCostsheetInfo.status}})
-                </h4>
+                    ({{parentCostsheetInfo.status}}) </h4>
             </div>
         </div>
         <div class="row">
@@ -116,8 +115,7 @@
         <div class="row">
             <div class="col-xs-6">
                 <h4><a ng-click="onClickTitle()">{{parentTimesheetInfo.title || "Unknown"}}</a>
-                    ({{parentTimesheetInfo.status}})
-                </h4>
+                    ({{parentTimesheetInfo.status}}) </h4>
             </div>
         </div>
         <div class="row">
@@ -127,5 +125,4 @@
             </div>
         </div>
     </div>
-</div>
-</div>
+</div></div>
