@@ -1,33 +1,33 @@
 package com.armedia.acm.services.users.dao.ldap;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.users.model.ldap.AcmGroupContextMapper;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.AcmUserContextMapper;
 import com.armedia.acm.services.users.model.ldap.Directory;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.ldap.control.PagedResultsDirContextProcessor;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.AggregateDirContextProcessor;
 
 import javax.naming.directory.SearchControls;
+
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class CustomPagedLdapDaoTest extends EasyMockSupport
 {
@@ -63,7 +63,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     }
 
     /**
-     * AFDP-3185 test case.  "LDAP SyncFails on Index out of Bounds"
+     * AFDP-3185 test case. "LDAP SyncFails on Index out of Bounds"
      *
      * @throws Exception
      */
@@ -129,7 +129,7 @@ public class CustomPagedLdapDaoTest extends EasyMockSupport
     }
 
     /**
-     * AFDP-3185 test case.  "LDAP SyncFails on Index out of Bounds"
+     * AFDP-3185 test case. "LDAP SyncFails on Index out of Bounds"
      *
      * @throws Exception
      */

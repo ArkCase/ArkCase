@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.service.GoogleAnalyticsConfigService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by Petar Ilin <petar.ilin@armedia.com> on 28.03.2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class GoogleAnalyticsConfigAPIController
 {
 
@@ -56,7 +57,8 @@ public class GoogleAnalyticsConfigAPIController
     /**
      * Store Google Analytics configuration as key-value properties (used in Admin UI).
      *
-     * @param configuration JSON representation of GA settings
+     * @param configuration
+     *            JSON representation of GA settings
      * @return properties
      */
     @RequestMapping(value = "/googleAnalytics", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)

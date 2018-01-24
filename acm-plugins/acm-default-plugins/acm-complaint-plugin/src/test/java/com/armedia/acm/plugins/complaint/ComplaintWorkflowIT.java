@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.complaint;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
@@ -25,10 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:/spring/spring-library-complaint-activiti-test.xml" } )
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-complaint-activiti-test.xml" })
 public class ComplaintWorkflowIT
 {
     @Autowired
@@ -66,8 +68,9 @@ public class ComplaintWorkflowIT
     }
 
     /**
-     * Associate a workflow with a business object by setting a process variable.  Find workflows for that
+     * Associate a workflow with a business object by setting a process variable. Find workflows for that
      * business object and complete tasks associated with it.
+     * 
      * @throws Exception
      */
     @Test
@@ -97,7 +100,7 @@ public class ComplaintWorkflowIT
 
         assertEquals(approvers.size(), approvals.size());
 
-        for ( int a = 0; a < approvals.size(); ++a )
+        for (int a = 0; a < approvals.size(); ++a)
         {
             Task task = approvals.get(a);
             ts.complete(task.getId());
@@ -107,7 +110,7 @@ public class ComplaintWorkflowIT
 
             // when all approvers have finished the process will be complete and the runtime service query
             // will not find it.
-            if ( shouldBeComplete )
+            if (shouldBeComplete)
             {
                 assertNull(current);
             }
@@ -119,7 +122,6 @@ public class ComplaintWorkflowIT
         }
 
     }
-
 
     private ProcessInstance createWorkflowProcess(Long complaintId, Long badId, Map<String, Object> processVariables)
     {

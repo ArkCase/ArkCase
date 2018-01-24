@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpSession;
 
 @Controller
-@RequestMapping({"/api/v1/service/notification/email", "/api/latest/service/notification/email"})
+@RequestMapping({ "/api/v1/service/notification/email", "/api/latest/service/notification/email" })
 public class SendEmailWithAttachmentsAPIController
 {
 
@@ -42,7 +42,8 @@ public class SendEmailWithAttachmentsAPIController
         try
         {
             getNotificationSenderFactory().getNotificationSender().sendEmailWithAttachments(in, authentication, user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmUserActionFailedException(
                     "Could not send emails with attachment,among other things check your request body. Exception message is : ", null, null,

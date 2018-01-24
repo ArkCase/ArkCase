@@ -1,15 +1,22 @@
 package com.armedia.acm.services.authenticationtoken.model;
 
-
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import java.io.Serializable;
 import java.util.Date;
-
 
 @Entity
 @Table(name = "acm_authentication_token")
@@ -20,13 +27,7 @@ public class AuthenticationToken implements Serializable, AcmEntity
     private static final long serialVersionUID = -1154137631399833851L;
 
     @Id
-    @TableGenerator(name = "acm_authentication_token_gen",
-            table = "acm_authentication_token_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_authentication_token",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_authentication_token_gen", table = "acm_authentication_token_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_authentication_token", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_authentication_token_gen")
     @Column(name = "cm_authentication_token_id")
     private Long id;
@@ -61,98 +62,119 @@ public class AuthenticationToken implements Serializable, AcmEntity
     private Long fileId;
 
     @PrePersist
-    public void beforeInsert() {
+    public void beforeInsert()
+    {
         Date today = new Date();
         setCreated(today);
     }
 
-    public Long getId() {
+    public Long getId()
+    {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Long id)
+    {
         this.id = id;
     }
 
-    public String getKey() {
+    public String getKey()
+    {
         return key;
     }
 
-    public void setKey(String key) {
+    public void setKey(String key)
+    {
         this.key = key;
     }
 
-    public String getEmail() {
+    public String getEmail()
+    {
         return email;
     }
 
-    public void setEmail(String email) {
+    public void setEmail(String email)
+    {
         this.email = email;
     }
 
-    public String getPassword() {
+    public String getPassword()
+    {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(String password)
+    {
         this.password = password;
     }
 
-    public String getStatus() {
+    public String getStatus()
+    {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status)
+    {
         this.status = status;
     }
 
-    public Long getFileId() {
+    public Long getFileId()
+    {
         return fileId;
     }
 
-    public void setFileId(Long fileId) {
+    public void setFileId(Long fileId)
+    {
         this.fileId = fileId;
     }
 
     @Override
-	public String getCreator() {
+    public String getCreator()
+    {
         return creator;
     }
 
-	@Override
-    public void setCreator(String creator) {
+    @Override
+    public void setCreator(String creator)
+    {
         this.creator = creator;
     }
 
     @Override
-    public Date getCreated() {
+    public Date getCreated()
+    {
         return created;
     }
 
     @Override
-    public void setCreated(Date created) {
+    public void setCreated(Date created)
+    {
         this.created = created;
     }
 
-	@Override
-	public String getModifier() {
-		// Not used. Modifier not exist in the database
-		return null;
-	}
+    @Override
+    public String getModifier()
+    {
+        // Not used. Modifier not exist in the database
+        return null;
+    }
 
-	@Override
-	public void setModifier(String modifier) {
-		// Not used. Modifier not exist in the database
-	}
+    @Override
+    public void setModifier(String modifier)
+    {
+        // Not used. Modifier not exist in the database
+    }
 
-	@Override
-	public Date getModified() {
-		// Not used. Modified not exist in the database
-		return null;
-	}
+    @Override
+    public Date getModified()
+    {
+        // Not used. Modified not exist in the database
+        return null;
+    }
 
-	@Override
-	public void setModified(Date modified) {
-		// Not used. Modified not exist in the database
-	}
+    @Override
+    public void setModified(Date modified)
+    {
+        // Not used. Modified not exist in the database
+    }
 }

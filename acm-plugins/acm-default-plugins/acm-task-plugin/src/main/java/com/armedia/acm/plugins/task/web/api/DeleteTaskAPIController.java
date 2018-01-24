@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -23,7 +24,8 @@ import javax.servlet.http.HttpSession;
  */
 @RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 
-public class DeleteTaskAPIController {
+public class DeleteTaskAPIController
+{
     private TaskDao taskDao;
     private TaskEventPublisher taskEventPublisher;
 
@@ -35,10 +37,9 @@ public class DeleteTaskAPIController {
             @PathVariable("taskId") Long taskId,
             Authentication authentication,
             HttpSession httpSession,
-            HttpServletResponse response
-    ) throws AcmUserActionFailedException
+            HttpServletResponse response) throws AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Deleting task '" + taskId + "'");
         }
@@ -72,7 +73,6 @@ public class DeleteTaskAPIController {
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(completed, "delete", authentication.getName(), succeeded, ipAddress);
         getTaskEventPublisher().publishTaskEvent(event);
     }
-
 
     public TaskDao getTaskDao()
     {

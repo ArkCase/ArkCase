@@ -1,47 +1,47 @@
 'use strict';
 
-angular.module('reports').controller('ReportsController', ['$scope', '$q', '$window', 'UtilService', 'Util.DateService'
-    , 'ConfigService', 'LookupService', 'Reports.BuildUrl', 'Reports.Data', 'Helper.LocaleService'
-    , function ($scope, $q, $window, Util, UtilDateService
-        , ConfigService, LookupService, BuildUrl, Data, LocaleHelper
-    ) {
+angular.module('reports').controller(
+        'ReportsController',
+        [ '$scope', '$q', '$window', 'UtilService', 'Util.DateService', 'ConfigService', 'LookupService', 'Reports.BuildUrl',
+                'Reports.Data', 'Helper.LocaleService',
+                function($scope, $q, $window, Util, UtilDateService, ConfigService, LookupService, BuildUrl, Data, LocaleHelper) {
 
-        new LocaleHelper.Locale({scope: $scope});
+                    new LocaleHelper.Locale({
+                        scope : $scope
+                    });
 
-        $scope.showXmlReport = false;
-        
-        $scope.data = Data.getData();
+                    $scope.showXmlReport = false;
 
-        var promiseModuleConfig = ConfigService.getModuleConfig("reports");
+                    $scope.data = Data.getData();
 
-        // Retrieves the properties from the acm-reports-server-config.properties file
-        var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
+                    var promiseModuleConfig = ConfigService.getModuleConfig("reports");
 
-        // Retrieves the properties from the acm-reports.properties file
-        var promiseReportConfig = BuildUrl.getAuthorizedReports();
+                    // Retrieves the properties from the acm-reports-server-config.properties file
+                    var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
-        $q.all([promiseServerConfig, promiseReportConfig, promiseModuleConfig])
-            .then(function (data) {
-                var reportsConfig = data[0];
-                $scope.data.reports = data[1].data;
-                $scope.config = data[2];
+                    // Retrieves the properties from the acm-reports.properties file
+                    var promiseReportConfig = BuildUrl.getAuthorizedReports();
 
-                // On some reason reports list contains URL and PORT info
-                delete $scope.data.reports.PENTAHO_SERVER_URL;
-                delete $scope.data.reports.PENTAHO_SERVER_PORT;
-                $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
-                $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
-                $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
-                $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
-                $scope.data.reportSelected = null;
-            });
+                    $q.all([ promiseServerConfig, promiseReportConfig, promiseModuleConfig ]).then(function(data) {
+                        var reportsConfig = data[0];
+                        $scope.data.reports = data[1].data;
+                        $scope.config = data[2];
 
-        $scope.generateReport = function () {
-            if ($scope.showXmlReport) {
-                $window.open(BuildUrl.getUrl($scope.data, $scope.showXmlReport));
-            } else {
-                $scope.reportUrl = BuildUrl.getUrl($scope.data, $scope.showXmlReport);
-            }
-        };
-    }
-]);
+                        // On some reason reports list contains URL and PORT info
+                        delete $scope.data.reports.PENTAHO_SERVER_URL;
+                        delete $scope.data.reports.PENTAHO_SERVER_PORT;
+                        $scope.data.reportsHost = reportsConfig['PENTAHO_SERVER_URL'];
+                        $scope.data.reportsPort = reportsConfig['PENTAHO_SERVER_PORT'];
+                        $scope.data.reportsUser = reportsConfig['PENTAHO_SERVER_USER'];
+                        $scope.data.reportsPassword = reportsConfig['PENTAHO_SERVER_PASSWORD'];
+                        $scope.data.reportSelected = null;
+                    });
+
+                    $scope.generateReport = function() {
+                        if ($scope.showXmlReport) {
+                            $window.open(BuildUrl.getUrl($scope.data, $scope.showXmlReport));
+                        } else {
+                            $scope.reportUrl = BuildUrl.getUrl($scope.data, $scope.showXmlReport);
+                        }
+                    };
+                } ]);

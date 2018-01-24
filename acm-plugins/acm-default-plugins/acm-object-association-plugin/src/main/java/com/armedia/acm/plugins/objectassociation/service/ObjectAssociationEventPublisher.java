@@ -1,7 +1,12 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
 import com.armedia.acm.core.model.AcmEvent;
-import com.armedia.acm.plugins.objectassociation.model.*;
+import com.armedia.acm.plugins.objectassociation.model.AddReferenceEvent;
+import com.armedia.acm.plugins.objectassociation.model.DeleteReferenceEvent;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationEvent;
+import com.armedia.acm.plugins.objectassociation.model.UpdateReferenceEvent;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
@@ -41,7 +46,8 @@ public class ObjectAssociationEventPublisher implements ApplicationEventPublishe
         publishEvent(event, authentication, succeeded);
     }
 
-    public void publishObjectAssociationEvent(ObjectAssociation source, Authentication authentication, boolean succeeded, String objectAssociationState)
+    public void publishObjectAssociationEvent(ObjectAssociation source, Authentication authentication, boolean succeeded,
+            String objectAssociationState)
     {
         ObjectAssociationEvent event = new ObjectAssociationEvent(source);
         event.setAuthentication(authentication);

@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.service;
 
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.event.LdapUserDeletedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

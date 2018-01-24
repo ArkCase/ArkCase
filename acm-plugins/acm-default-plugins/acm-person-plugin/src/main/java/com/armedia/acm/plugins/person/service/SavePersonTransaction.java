@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.person.model.Person;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
@@ -28,7 +29,7 @@ public class SavePersonTransaction
         Person saved = received.getPayload(Person.class);
         MuleException e = received.getInboundProperty("saveException");
 
-        if ( e != null )
+        if (e != null)
         {
             throw e;
         }

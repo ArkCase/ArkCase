@@ -5,22 +5,22 @@ import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getN
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getParticipants;
 import static com.armedia.acm.service.outlook.service.impl.AcmEntityAdapter.getTitle;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import com.armedia.acm.calendar.service.CalendarServiceException;
+import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
+import com.armedia.acm.service.outlook.model.AcmOutlookUser;
+import com.armedia.acm.services.participants.model.AcmParticipant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.armedia.acm.calendar.service.CalendarServiceException;
-import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.ecm.model.AcmContainer;
-import com.armedia.acm.service.outlook.model.AcmOutlookUser;
-import com.armedia.acm.services.participants.model.AcmParticipant;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+
+import java.util.List;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 22, 2017

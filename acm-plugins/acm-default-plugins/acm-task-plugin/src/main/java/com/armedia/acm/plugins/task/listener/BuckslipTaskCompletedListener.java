@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.delegate.DelegateTask;
 import org.activiti.engine.delegate.JavaDelegate;
@@ -130,7 +131,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
     }
 
     private String addTask(String tasksSoFar, String approverId, String taskName, String details, String addedBy, String groupName,
-                           String taskDueDateExpression, String outcome)
+            String taskDueDateExpression, String outcome)
     {
         AcmUser user = userDao.findByUserId(approverId);
 
@@ -145,7 +146,6 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
 
         newJsonTask.put("groupName", groupName);
 
-
         ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(SearchConstants.SOLR_DATE_FORMAT);
         String approvalDate = formatter.format(date);
@@ -158,13 +158,11 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         newJsonTask.put("addedBy", addedBy);
         int maxTaskDurationInDays = getBuckslipTaskHelper().getMaxTaskDurationInDays(taskDueDateExpression);
 
-
         newJsonTask.put("maxTaskDurationInDays", maxTaskDurationInDays);
 
         jsonTasks.put(newJsonTask);
         return jsonTasks.toString();
     }
-
 
     public void setUserDao(UserDao userDao)
     {

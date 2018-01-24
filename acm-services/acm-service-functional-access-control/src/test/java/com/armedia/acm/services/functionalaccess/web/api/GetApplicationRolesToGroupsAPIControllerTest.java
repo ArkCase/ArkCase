@@ -1,8 +1,13 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.lang.StringUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -23,10 +28,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 /**
  * @author riste.tutureski
  */
@@ -40,7 +41,6 @@ public class GetApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppor
     private Authentication mockAuthentication;
 
     private FunctionalAccessService mockFunctionalAccessService;
-
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -88,7 +88,8 @@ public class GetApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppor
             resultTestData = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<HashMap<String, List<String>>>()
             {
             });
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot create map from source: " + result.getResponse().getContentAsString());
         }
@@ -129,7 +130,6 @@ public class GetApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppor
     {
         this.mockAuthentication = mockAuthentication;
     }
-
 
     public ExceptionHandlerExceptionResolver getExceptionResolver()
     {

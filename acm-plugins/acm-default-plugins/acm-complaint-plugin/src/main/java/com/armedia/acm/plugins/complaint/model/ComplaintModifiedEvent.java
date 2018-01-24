@@ -2,11 +2,11 @@ package com.armedia.acm.plugins.complaint.model;
 
 public class ComplaintModifiedEvent extends ComplaintPersistenceEvent
 {
-   
+
     private static final long serialVersionUID = 2601901328541042900L;
     private static final String EVENT_TYPE = "com.armedia.acm.complaint";
-    
-    private String eventStatus; 
+
+    private String eventStatus;
 
     public ComplaintModifiedEvent(Complaint source)
     {

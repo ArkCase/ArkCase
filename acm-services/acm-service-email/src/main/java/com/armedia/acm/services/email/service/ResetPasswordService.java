@@ -6,8 +6,10 @@ import com.armedia.acm.services.email.model.EmailBuilder;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.PasswordResetToken;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 
 import java.util.stream.Stream;
 
@@ -33,6 +35,7 @@ public class ResetPasswordService
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    @Async
     public void sendPasswordResetEmail(AcmUser user)
     {
         try
@@ -60,14 +63,12 @@ public class ResetPasswordService
         return userDao.isUserPasswordExpired(userId);
     }
 
-    private EmailBuilder<AcmUser> emailBuilder = (acmUser, messageProps) ->
-    {
+    private EmailBuilder<AcmUser> emailBuilder = (acmUser, messageProps) -> {
         messageProps.put("to", acmUser.getMail());
         messageProps.put("subject", passwordResetEmailSubject);
     };
 
-    private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) ->
-    {
+    private EmailBodyBuilder<AcmUser> emailBodyBuilder = (user) -> {
         String link = String.format(passwordResetLink, acmAppConfiguration.getBaseUrl(), user.getPasswordResetToken().getToken());
         return String.format(passwordResetEmailBodyTemplate, link, link);
     };

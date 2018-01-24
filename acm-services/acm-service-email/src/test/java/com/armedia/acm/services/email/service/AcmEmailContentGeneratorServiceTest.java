@@ -1,10 +1,16 @@
 package com.armedia.acm.services.email.service;
 
+import static junit.framework.TestCase.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
+
 import com.armedia.acm.services.authenticationtoken.dao.AuthenticationTokenDao;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationToken;
 import com.armedia.acm.services.authenticationtoken.model.AuthenticationTokenConstants;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
 import com.armedia.acm.services.email.model.EmailWithEmbeddedLinksDTO;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,11 +21,6 @@ import org.springframework.security.core.Authentication;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by manoj.dhungana on 7/17/2017.
@@ -80,12 +81,11 @@ public class AcmEmailContentGeneratorServiceTest
 
         when(mockAuthenticationTokenDao.save(any(AuthenticationToken.class))).thenReturn(authenticationToken);
 
-
-        //when
+        // when
 
         String emailContent = acmEmailContentGeneratorService.generateEmailBody(inputDTO, email, mockAuthentication);
 
-        //then
+        // then
         assertNotNull(emailContent);
         assertTrue(emailContent.contains(note));
         assertTrue(emailContent.contains(header));

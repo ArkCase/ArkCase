@@ -3,7 +3,6 @@ package com.armedia.acm.services.notification.service;
 import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 
-
 public class ObjectNameTitleFormatter implements CustomTitleFormatter
 {
     private NotificationUtils notificationUtils;
@@ -11,10 +10,9 @@ public class ObjectNameTitleFormatter implements CustomTitleFormatter
     @Override
     public String format(Notification notification)
     {
-        String parentObjectType = notification.getRelatedObjectType() != null ?
-                notification.getRelatedObjectType() : notification.getParentType();
-        Long parentObjectId = notification.getRelatedObjectId() != null ?
-                notification.getRelatedObjectId() : notification.getParentId();
+        String parentObjectType = notification.getRelatedObjectType() != null ? notification.getRelatedObjectType()
+                : notification.getParentType();
+        Long parentObjectId = notification.getRelatedObjectId() != null ? notification.getRelatedObjectId() : notification.getParentId();
         String title = notification.getTitle();
 
         if (title != null)

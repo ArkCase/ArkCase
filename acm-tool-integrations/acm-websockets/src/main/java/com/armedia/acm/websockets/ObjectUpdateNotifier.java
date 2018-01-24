@@ -30,13 +30,16 @@ public class ObjectUpdateNotifier
 
     public void initBean()
     {
-        String classNames = getObjectChangeNotificationProperties().getProperty("acm.object.changed.notification.filter.include.classNames");
+        String classNames = getObjectChangeNotificationProperties()
+                .getProperty("acm.object.changed.notification.filter.include.classNames");
         setIncludeClassNames(Arrays.asList(classNames.split(",")));
 
-        String objectTypes = getObjectChangeNotificationProperties().getProperty("acm.object.changed.notification.filter.include.object_types");
+        String objectTypes = getObjectChangeNotificationProperties()
+                .getProperty("acm.object.changed.notification.filter.include.object_types");
         setIncludeObjectTypes(Arrays.asList(objectTypes.split(",")));
 
-        String parentObjectTypes = getObjectChangeNotificationProperties().getProperty("acm.object.changed.notification.filter.include.parent_object_types");
+        String parentObjectTypes = getObjectChangeNotificationProperties()
+                .getProperty("acm.object.changed.notification.filter.include.parent_object_types");
         setIncludeParentObjectTypes(Arrays.asList(parentObjectTypes.split(",")));
 
     }
@@ -59,7 +62,8 @@ public class ObjectUpdateNotifier
             // following topics are not used/listened on client side
             // template.convertAndSend("/topic/objects/" + event.getObjectType() + "/" + event.getObjectId(), event);
             // template.convertAndSend("/topic/objects/changed/" + event.getUser(), event);
-        } else
+        }
+        else
         {
             log.debug("Object is not eligible for notifying, didn't pass the filters. {}", message);
         }

@@ -21,8 +21,10 @@ public class TranslationService
     private LabelManagementService labelManagementService;
 
     /**
-     * Returns a translated value for the given labelKey in the requested language. If there is no translated value in the requested
-     * language, the translated value of the default language is returned. If the labelKey is not found we return the labelKey as a
+     * Returns a translated value for the given labelKey in the requested language. If there is no translated value in
+     * the requested
+     * language, the translated value of the default language is returned. If the labelKey is not found we return the
+     * labelKey as a
      * translated value.
      *
      * @param labelKey
@@ -73,8 +75,10 @@ public class TranslationService
     }
 
     /**
-     * Returns a translated value for the given labelKey in the language set for the {@link AcmUser}. If there is no translated value in the
-     * user' language, the translated value of the default language is returned. If the labelKey is not found we return the labelKey as a
+     * Returns a translated value for the given labelKey in the language set for the {@link AcmUser}. If there is no
+     * translated value in the
+     * user' language, the translated value of the default language is returned. If the labelKey is not found we return
+     * the labelKey as a
      * translated value.
      *
      * @param labelKey

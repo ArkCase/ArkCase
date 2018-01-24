@@ -2,20 +2,6 @@ package com.armedia.acm.service.outlook.service.impl;
 
 import static com.armedia.acm.service.outlook.service.impl.AcmRecreateOutlookFoldersProgressNotifierMessageBuilder.OBJECT_TYPE;
 
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.core.task.TaskExecutor;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.calendar.config.service.CalendarAdminService;
 import com.armedia.acm.calendar.config.service.CalendarConfiguration;
 import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
@@ -37,6 +23,20 @@ import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.service.outlook.service.OutlookFolderRecreator;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.core.task.TaskExecutor;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Aug 1, 2017
@@ -70,7 +70,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
      * context.ApplicationEventPublisher)
      */
@@ -82,7 +81,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.config.service.CalendarAdminService#readConfiguration(boolean)
      */
     @Override
@@ -93,7 +91,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.config.service.CalendarAdminService#writeConfiguration(com.armedia.acm.calendar.config.
      * service.CalendarConfigurationsByObjectType)
@@ -106,7 +103,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.calendar.config.service.CalendarAdminService#getExceptionMapper(com.armedia.acm.calendar.config.
      * service.CalendarConfigurationException)
@@ -119,7 +115,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#getOutlookUser(java.lang.String)
      */
@@ -139,7 +134,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#getOutlookUser(java.lang.String,
      * java.lang.String)
@@ -160,7 +154,6 @@ public class OutlookCalendarAdminService implements OutlookCalendarAdminServiceE
 
     /*
      * (non-Javadoc)
-     *
      * @see
      * com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension#recreateFolders(com.armedia.acm.
      * service.outlook.model.AcmOutlookFolderCreator)

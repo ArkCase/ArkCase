@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm.acm-plugins</groupId>
         <artifactId>acm-default-plugins</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.4-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -198,6 +198,5 @@
         </dependency>
 
     </dependencies>
-
 
 </project>

@@ -316,7 +316,6 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint);
     }
 
-
     @Test
     public void testLocationIsUpdatedWhenPreviouslyIsEmpty()
     {

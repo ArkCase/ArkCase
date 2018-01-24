@@ -1,15 +1,6 @@
 
 package org.mule.module.cmis.processors;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.lang.reflect.WildcardType;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import javax.annotation.Generated;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleMessage;
@@ -22,23 +13,40 @@ import org.mule.api.transformer.TransformerMessagingException;
 import org.mule.transformer.types.DataTypeFactory;
 import org.mule.util.TemplateParser;
 
-@Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
-public abstract class AbstractExpressionEvaluator {
+import javax.annotation.Generated;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.WildcardType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+
+@Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
+public abstract class AbstractExpressionEvaluator
+{
 
     /**
      * Get all superclasses and interfaces recursively.
      * 
-     * @param classes List of classes to which to add all found super classes and interfaces.
-     * @param clazz   The class to start the search with.
+     * @param classes
+     *            List of classes to which to add all found super classes and interfaces.
+     * @param clazz
+     *            The class to start the search with.
      */
-    protected void computeClassHierarchy(Class clazz, List classes) {
-        for (Class current = clazz; (current!= null); current = current.getSuperclass()) {
-            if (classes.contains(current)) {
-                return ;
+    protected void computeClassHierarchy(Class clazz, List classes)
+    {
+        for (Class current = clazz; (current != null); current = current.getSuperclass())
+        {
+            if (classes.contains(current))
+            {
+                return;
             }
             classes.add(current);
-            for (Class currentInterface: current.getInterfaces()) {
+            for (Class currentInterface : current.getInterfaces())
+            {
                 computeClassHierarchy(currentInterface, classes);
             }
         }
@@ -47,10 +55,12 @@ public abstract class AbstractExpressionEvaluator {
     /**
      * Checks whether the specified class parameter is an instance of {@link List }
      * 
-     * @param clazz <code>Class</code> to check.
+     * @param clazz
+     *            <code>Class</code> to check.
      * @return
      */
-    protected boolean isListClass(Class clazz) {
+    protected boolean isListClass(Class clazz)
+    {
         List<Class> classes = new ArrayList<Class>();
         computeClassHierarchy(clazz, classes);
         return classes.contains(List.class);
@@ -59,131 +69,176 @@ public abstract class AbstractExpressionEvaluator {
     /**
      * Checks whether the specified class parameter is an instance of {@link Map }
      * 
-     * @param clazz <code>Class</code> to check.
+     * @param clazz
+     *            <code>Class</code> to check.
      * @return
      */
-    protected boolean isMapClass(Class clazz) {
+    protected boolean isMapClass(Class clazz)
+    {
         List<Class> classes = new ArrayList<Class>();
         computeClassHierarchy(clazz, classes);
         return classes.contains(Map.class);
     }
 
-    protected boolean isList(Type type) {
-        if ((type instanceof Class)&&isListClass(((Class) type))) {
+    protected boolean isList(Type type)
+    {
+        if ((type instanceof Class) && isListClass(((Class) type)))
+        {
             return true;
         }
-        if (type instanceof ParameterizedType) {
+        if (type instanceof ParameterizedType)
+        {
             return isList(((ParameterizedType) type).getRawType());
         }
-        if (type instanceof WildcardType) {
+        if (type instanceof WildcardType)
+        {
             Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-            return ((upperBounds.length!= 0)&&isList(upperBounds[ 0 ]));
+            return ((upperBounds.length != 0) && isList(upperBounds[0]));
         }
         return false;
     }
 
-    protected boolean isMap(Type type) {
-        if ((type instanceof Class)&&isMapClass(((Class) type))) {
+    protected boolean isMap(Type type)
+    {
+        if ((type instanceof Class) && isMapClass(((Class) type)))
+        {
             return true;
         }
-        if (type instanceof ParameterizedType) {
+        if (type instanceof ParameterizedType)
+        {
             return isMap(((ParameterizedType) type).getRawType());
         }
-        if (type instanceof WildcardType) {
+        if (type instanceof WildcardType)
+        {
             Type[] upperBounds = ((WildcardType) type).getUpperBounds();
-            return ((upperBounds.length!= 0)&&isMap(upperBounds[ 0 ]));
+            return ((upperBounds.length != 0) && isMap(upperBounds[0]));
         }
         return false;
     }
 
-    protected boolean isAssignableFrom(Type expectedType, Class clazz) {
-        if (expectedType instanceof Class) {
-            if (((Class) expectedType).isPrimitive()) {
-                if (((Class) expectedType).getName().equals("boolean")&&(clazz == Boolean.class)) {
+    protected boolean isAssignableFrom(Type expectedType, Class clazz)
+    {
+        if (expectedType instanceof Class)
+        {
+            if (((Class) expectedType).isPrimitive())
+            {
+                if (((Class) expectedType).getName().equals("boolean") && (clazz == Boolean.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("byte")&&(clazz == Byte.class)) {
+                if (((Class) expectedType).getName().equals("byte") && (clazz == Byte.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("short")&&(clazz == Short.class)) {
+                if (((Class) expectedType).getName().equals("short") && (clazz == Short.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("char")&&(clazz == Character.class)) {
+                if (((Class) expectedType).getName().equals("char") && (clazz == Character.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("int")&&(clazz == Integer.class)) {
+                if (((Class) expectedType).getName().equals("int") && (clazz == Integer.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("float")&&(clazz == Float.class)) {
+                if (((Class) expectedType).getName().equals("float") && (clazz == Float.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("long")&&(clazz == Long.class)) {
+                if (((Class) expectedType).getName().equals("long") && (clazz == Long.class))
+                {
                     return true;
                 }
-                if (((Class) expectedType).getName().equals("double")&&(clazz == Double.class)) {
+                if (((Class) expectedType).getName().equals("double") && (clazz == Double.class))
+                {
                     return true;
                 }
                 return false;
-            } else {
+            }
+            else
+            {
                 return ((Class) expectedType).isAssignableFrom(clazz);
             }
         }
-        if (expectedType instanceof ParameterizedType) {
+        if (expectedType instanceof ParameterizedType)
+        {
             return isAssignableFrom(((ParameterizedType) expectedType).getRawType(), clazz);
         }
-        if (expectedType instanceof WildcardType) {
+        if (expectedType instanceof WildcardType)
+        {
             Type[] upperBounds = ((WildcardType) expectedType).getUpperBounds();
-            if (upperBounds.length!= 0) {
-                return isAssignableFrom(upperBounds[ 0 ], clazz);
+            if (upperBounds.length != 0)
+            {
+                return isAssignableFrom(upperBounds[0], clazz);
             }
         }
         return false;
     }
 
-    protected Object evaluate(TemplateParser.PatternInfo patternInfo, ExpressionManager expressionManager, MuleMessage muleMessage, Object source) {
-        if (source instanceof String) {
+    protected Object evaluate(TemplateParser.PatternInfo patternInfo, ExpressionManager expressionManager, MuleMessage muleMessage,
+            Object source)
+    {
+        if (source instanceof String)
+        {
             String stringSource = ((String) source);
-            if (stringSource.startsWith(patternInfo.getPrefix())&&stringSource.endsWith(patternInfo.getSuffix())) {
+            if (stringSource.startsWith(patternInfo.getPrefix()) && stringSource.endsWith(patternInfo.getSuffix()))
+            {
                 return expressionManager.evaluate(stringSource, muleMessage);
-            } else {
+            }
+            else
+            {
                 return expressionManager.parse(stringSource, muleMessage);
             }
         }
         return source;
     }
 
-    protected Object evaluateAndTransform(MuleContext muleContext, MuleEvent event, Type expectedType, String expectedMimeType, Object source)
-        throws TransformerException, TransformerMessagingException
+    protected Object evaluateAndTransform(MuleContext muleContext, MuleEvent event, Type expectedType, String expectedMimeType,
+            Object source)
+            throws TransformerException, TransformerMessagingException
     {
-        if (source == null) {
+        if (source == null)
+        {
             return source;
         }
         Object target = null;
-        if (isList(source.getClass())) {
-            if (isList(expectedType)) {
+        if (isList(source.getClass()))
+        {
+            if (isList(expectedType))
+            {
                 List newList = new ArrayList();
-                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
+                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
                 ListIterator iterator = ((List) source).listIterator();
-                while (iterator.hasNext()) {
+                while (iterator.hasNext())
+                {
                     Object subTarget = iterator.next();
                     newList.add(evaluateAndTransform(muleContext, event, valueType, expectedMimeType, subTarget));
                 }
                 target = newList;
-            } else {
+            }
+            else
+            {
                 target = source;
             }
-        } else {
-            if (isMap(source.getClass())) {
-                if (isMap(expectedType)) {
+        }
+        else
+        {
+            if (isMap(source.getClass()))
+            {
+                if (isMap(expectedType))
+                {
                     Type keyType = Object.class;
                     Type valueType = Object.class;
-                    if (expectedType instanceof ParameterizedType) {
-                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
-                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 1 ];
+                    if (expectedType instanceof ParameterizedType)
+                    {
+                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
+                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[1];
                     }
                     Map map = ((Map) source);
                     Map newMap = new HashMap();
-                    for (Object entryObj: map.entrySet()) {
+                    for (Object entryObj : map.entrySet())
+                    {
                         {
                             Map.Entry entry = ((Map.Entry) entryObj);
                             Object newKey = evaluateAndTransform(muleContext, event, keyType, expectedMimeType, entry.getKey());
@@ -192,48 +247,66 @@ public abstract class AbstractExpressionEvaluator {
                         }
                     }
                     target = newMap;
-                } else {
+                }
+                else
+                {
                     target = source;
                 }
-            } else {
-                target = evaluate(TemplateParser.createMuleStyleParser().getStyle(), muleContext.getExpressionManager(), event.getMessage(), source);
+            }
+            else
+            {
+                target = evaluate(TemplateParser.createMuleStyleParser().getStyle(), muleContext.getExpressionManager(), event.getMessage(),
+                        source);
             }
         }
         return transform(muleContext, event, expectedType, expectedMimeType, target);
     }
 
-    protected Object evaluateAndTransform(MuleContext muleContext, MuleMessage muleMessage, Type expectedType, String expectedMimeType, Object source)
-        throws TransformerException, TransformerMessagingException
+    protected Object evaluateAndTransform(MuleContext muleContext, MuleMessage muleMessage, Type expectedType, String expectedMimeType,
+            Object source)
+            throws TransformerException, TransformerMessagingException
     {
-        if (source == null) {
+        if (source == null)
+        {
             return source;
         }
         Object target = null;
-        if (isList(source.getClass())) {
-            if (isList(expectedType)) {
+        if (isList(source.getClass()))
+        {
+            if (isList(expectedType))
+            {
                 List newList = new ArrayList();
-                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
+                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
                 ListIterator iterator = ((List) source).listIterator();
-                while (iterator.hasNext()) {
+                while (iterator.hasNext())
+                {
                     Object subTarget = iterator.next();
                     newList.add(evaluateAndTransform(muleContext, muleMessage, valueType, expectedMimeType, subTarget));
                 }
                 target = newList;
-            } else {
+            }
+            else
+            {
                 target = source;
             }
-        } else {
-            if (isMap(source.getClass())) {
-                if (isMap(expectedType)) {
+        }
+        else
+        {
+            if (isMap(source.getClass()))
+            {
+                if (isMap(expectedType))
+                {
                     Type keyType = Object.class;
                     Type valueType = Object.class;
-                    if (expectedType instanceof ParameterizedType) {
-                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
-                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 1 ];
+                    if (expectedType instanceof ParameterizedType)
+                    {
+                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
+                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[1];
                     }
                     Map map = ((Map) source);
                     Map newMap = new HashMap();
-                    for (Object entryObj: map.entrySet()) {
+                    for (Object entryObj : map.entrySet())
+                    {
                         {
                             Map.Entry entry = ((Map.Entry) entryObj);
                             Object newKey = evaluateAndTransform(muleContext, muleMessage, keyType, expectedMimeType, entry.getKey());
@@ -242,48 +315,65 @@ public abstract class AbstractExpressionEvaluator {
                         }
                     }
                     target = newMap;
-                } else {
+                }
+                else
+                {
                     target = source;
                 }
-            } else {
-                target = evaluate(TemplateParser.createMuleStyleParser().getStyle(), muleContext.getExpressionManager(), muleMessage, source);
+            }
+            else
+            {
+                target = evaluate(TemplateParser.createMuleStyleParser().getStyle(), muleContext.getExpressionManager(), muleMessage,
+                        source);
             }
         }
         return transform(muleContext, muleMessage, expectedType, expectedMimeType, target);
     }
 
     protected Object transform(MuleMessage muleMessage, Type expectedType, Object source)
-        throws TransformerException
+            throws TransformerException
     {
-        if (source == null) {
+        if (source == null)
+        {
             return source;
         }
         Object target = null;
-        if (isList(source.getClass())) {
-            if (isList(expectedType)) {
+        if (isList(source.getClass()))
+        {
+            if (isList(expectedType))
+            {
                 List newList = new ArrayList();
-                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
+                Type valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
                 ListIterator iterator = ((List) source).listIterator();
-                while (iterator.hasNext()) {
+                while (iterator.hasNext())
+                {
                     Object subTarget = iterator.next();
                     newList.add(transform(muleMessage, valueType, subTarget));
                 }
                 target = newList;
-            } else {
+            }
+            else
+            {
                 target = source;
             }
-        } else {
-            if (isMap(source.getClass())) {
-                if (isMap(expectedType)) {
+        }
+        else
+        {
+            if (isMap(source.getClass()))
+            {
+                if (isMap(expectedType))
+                {
                     Type keyType = Object.class;
                     Type valueType = Object.class;
-                    if (expectedType instanceof ParameterizedType) {
-                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 0 ];
-                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[ 1 ];
+                    if (expectedType instanceof ParameterizedType)
+                    {
+                        keyType = ((ParameterizedType) expectedType).getActualTypeArguments()[0];
+                        valueType = ((ParameterizedType) expectedType).getActualTypeArguments()[1];
                     }
                     Map map = ((Map) source);
                     Map newMap = new HashMap();
-                    for (Object entryObj: map.entrySet()) {
+                    for (Object entryObj : map.entrySet())
+                    {
                         {
                             Map.Entry entry = ((Map.Entry) entryObj);
                             Object newKey = transform(muleMessage, keyType, entry.getKey());
@@ -292,68 +382,93 @@ public abstract class AbstractExpressionEvaluator {
                         }
                     }
                     target = newMap;
-                } else {
+                }
+                else
+                {
                     target = source;
                 }
-            } else {
+            }
+            else
+            {
                 target = source;
             }
         }
-        if ((target!= null)&&(!isAssignableFrom(expectedType, target.getClass()))) {
+        if ((target != null) && (!isAssignableFrom(expectedType, target.getClass())))
+        {
             DataType sourceDataType = DataTypeFactory.create(target.getClass());
-            if (expectedType instanceof ParameterizedType) {
+            if (expectedType instanceof ParameterizedType)
+            {
                 expectedType = ((ParameterizedType) expectedType).getRawType();
             }
             DataType targetDataType = DataTypeFactory.create(((Class) expectedType));
             Transformer t = muleMessage.getMuleContext().getRegistry().lookupTransformer(sourceDataType, targetDataType);
             return t.transform(target);
-        } else {
+        }
+        else
+        {
             return target;
         }
     }
 
     protected Object transform(MuleContext muleContext, MuleEvent event, Type expectedType, String expectedMimeType, Object source)
-        throws TransformerException, TransformerMessagingException
+            throws TransformerException, TransformerMessagingException
     {
-        if ((source!= null)&&(!isAssignableFrom(expectedType, source.getClass()))) {
+        if ((source != null) && (!isAssignableFrom(expectedType, source.getClass())))
+        {
             DataType sourceDataType = DataTypeFactory.create(source.getClass());
             DataType targetDataType = null;
-            if (expectedType instanceof ParameterizedType) {
+            if (expectedType instanceof ParameterizedType)
+            {
                 expectedType = ((ParameterizedType) expectedType).getRawType();
             }
-            if (expectedMimeType!= null) {
+            if (expectedMimeType != null)
+            {
                 targetDataType = DataTypeFactory.create(((Class) expectedType), expectedMimeType);
-            } else {
+            }
+            else
+            {
                 targetDataType = DataTypeFactory.create(((Class) expectedType));
             }
             Transformer t = muleContext.getRegistry().lookupTransformer(sourceDataType, targetDataType);
-            if (t instanceof MessageTransformer) {
+            if (t instanceof MessageTransformer)
+            {
                 return ((MessageTransformer) t).transform(source, event);
-            } else {
+            }
+            else
+            {
                 return t.transform(source);
             }
-        } else {
+        }
+        else
+        {
             return source;
         }
     }
 
     protected Object transform(MuleContext muleContext, MuleMessage message, Type expectedType, String expectedMimeType, Object source)
-        throws TransformerException, TransformerMessagingException
+            throws TransformerException, TransformerMessagingException
     {
-        if ((source!= null)&&(!isAssignableFrom(expectedType, source.getClass()))) {
+        if ((source != null) && (!isAssignableFrom(expectedType, source.getClass())))
+        {
             DataType sourceDataType = DataTypeFactory.create(source.getClass());
             DataType targetDataType = null;
-            if (expectedType instanceof ParameterizedType) {
+            if (expectedType instanceof ParameterizedType)
+            {
                 expectedType = ((ParameterizedType) expectedType).getRawType();
             }
-            if (expectedMimeType!= null) {
+            if (expectedMimeType != null)
+            {
                 targetDataType = DataTypeFactory.create(((Class) expectedType), expectedMimeType);
-            } else {
+            }
+            else
+            {
                 targetDataType = DataTypeFactory.create(((Class) expectedType));
             }
             Transformer t = muleContext.getRegistry().lookupTransformer(sourceDataType, targetDataType);
             return t.transform(source);
-        } else {
+        }
+        else
+        {
             return source;
         }
     }

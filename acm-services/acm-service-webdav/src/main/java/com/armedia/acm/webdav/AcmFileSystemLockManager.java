@@ -61,7 +61,8 @@ public class AcmFileSystemLockManager implements LockManager
         try
         {
             lock = locks.get(resourceUniqueId);
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -74,15 +75,18 @@ public class AcmFileSystemLockManager implements LockManager
                 if (token.isExpired())
                 {
                     locks.remove(resourceUniqueId);
-                } else if (lockInfo.lockedByUser.equals(lock.lockedByUser))
+                }
+                else if (lockInfo.lockedByUser.equals(lock.lockedByUser))
                 {
                     token.setFrom(new Date());
                     return LockResult.success(token);
-                } else
+                }
+                else
                 {
                     return LockResult.failed(LockResult.FailureReason.ALREADY_LOCKED);
                 }
-            } finally
+            }
+            finally
             {
                 writeLock.unlock();
             }
@@ -122,15 +126,18 @@ public class AcmFileSystemLockManager implements LockManager
             if (lock == null)
             {
                 return LockResult.failed(LockResult.FailureReason.PRECONDITION_FAILED);
-            } else if (!lock.token.tokenId.equals(tokenId))
+            }
+            else if (!lock.token.tokenId.equals(tokenId))
             {
                 throw new NotAuthorizedException(resource);
-            } else
+            }
+            else
             {
                 lock.token.setFrom(new Date());
                 return LockResult.success(lock.token);
             }
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -148,7 +155,8 @@ public class AcmFileSystemLockManager implements LockManager
         try
         {
             lock = locks.get(resourceUniqueId);
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }
@@ -161,11 +169,13 @@ public class AcmFileSystemLockManager implements LockManager
                 if (token.isExpired() || token.tokenId.equals(tokenId))
                 {
                     locks.remove(resourceUniqueId);
-                } else if (!token.tokenId.equals(tokenId))
+                }
+                else if (!token.tokenId.equals(tokenId))
                 {
                     throw new NotAuthorizedException(resource);
                 }
-            } finally
+            }
+            finally
             {
                 writeLock.unlock();
             }
@@ -191,7 +201,8 @@ public class AcmFileSystemLockManager implements LockManager
         try
         {
             lock = locks.get(resource.getUniqueId());
-        } finally
+        }
+        finally
         {
             readLock.unlock();
         }

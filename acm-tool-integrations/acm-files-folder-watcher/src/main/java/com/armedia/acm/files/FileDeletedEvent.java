@@ -10,7 +10,8 @@ public class FileDeletedEvent extends FileEvent
     /**
      * Create a new FileDeletedEvent.
      *
-     * @param source file change event
+     * @param source
+     *            file change event
      */
     public FileDeletedEvent(FileChangeEvent source)
     {
