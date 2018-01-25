@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="caseFilePluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring 
+        <!-- note: must leave "file:" at the start of the file name for spring
             to be able to read the file; otherwise it will try to read from the classpath -->
         <property name="location" value="file:${user.home}/.arkcase/acm/caseFilePlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -75,7 +75,7 @@
     </bean>
 
     <bean id="changeCaseStatusOnBuckslipEventListener"
-          class="com.armedia.acm.plugins.casefile.listener.ChangeCaseStatusOnBuckslipEventListener">
+        class="com.armedia.acm.plugins.casefile.listener.ChangeCaseStatusOnBuckslipEventListener">
         <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
@@ -111,28 +111,28 @@
     </bean>
 
     <bean id="caseFileNextPossibleQueuesBusinessRule"
-          class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        class="com.armedia.acm.plugins.casefile.service.CaseFileNextPossibleQueuesBusinessRule"
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-next-possible-queues-rules.xlsx"/>
     </bean>
 
     <bean id="leaveCurrentQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.LeaveCurrentQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-leave-current-queue-rules.xlsx"/>
     </bean>
 
     <bean id="enterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.EnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-enter-queue-rules.xlsx"/>
     </bean>
 
     <bean id="onLeaveQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnLeaveQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-leave-queue-rules.xlsx"/>
     </bean>
 
     <bean id="onEnterQueueBusinessRule" class="com.armedia.acm.plugins.casefile.service.OnEnterQueueBusinessRule"
-          parent="simpleStatelessSingleObjectRuleManager">
+        parent="simpleStatelessSingleObjectRuleManager">
         <property name="ruleSpreadsheetFilename" value="drools-on-enter-queue-rules.xlsx"/>
     </bean>
 
