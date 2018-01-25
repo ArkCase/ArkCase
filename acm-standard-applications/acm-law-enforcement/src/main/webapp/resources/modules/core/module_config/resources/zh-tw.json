@@ -500,15 +500,26 @@
                 "concur": "同意",
                 "nonConcur": "不同意"
             },
+            "businessProcessTypes": {
+                "acmDocumentWorkflow": "ACM文檔工作流程",
+                "correctiveActionPlan": "糾正行動的計劃"
+            },
+            "reportStates": {
+                "draft": "草案",
+                "inApproval": "在審批中",
+                "active": "在使用",
+                "inActive": "待用",
+                "closed": "關閉"
+            },
             "auditReportNames": {
-                "all": "All",
-                "case_file": "Case",
-                "complaint": "Complaint",
-                "task": "Task",
-                "file": "File",
-                "document": "Document",
-                "person": "Person",
-                "organization": "Organization"
+                "all": "全部",
+                "case_file": "案件",
+                "complaint": "投訴",
+                "task": "任務",
+                "file": "文件",
+                "document": "文檔",
+                "person": "人員",
+                "organization": "組織"
             }
         },
         "userInfo": {
