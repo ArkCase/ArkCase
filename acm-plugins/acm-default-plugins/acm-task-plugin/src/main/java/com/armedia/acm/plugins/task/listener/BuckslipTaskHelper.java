@@ -107,7 +107,7 @@ public class BuckslipTaskHelper implements ApplicationEventPublisherAware
         // when the approval cycle is restarted, everyone has to approve again
         delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks",
                 newFutureTasks.toString());
-        notifyBuckslipProcessStateChanged(delegateExecution, BuckslipProcessStateEvent.BuckslipProcessState.withdrawn);
+        notifyBuckslipProcessStateChanged(delegateExecution, BuckslipProcessStateEvent.BuckslipProcessState.WITHDRAWN);
     }
 
     public int getMaxTaskDurationInDays(String taskDueDateExpression)

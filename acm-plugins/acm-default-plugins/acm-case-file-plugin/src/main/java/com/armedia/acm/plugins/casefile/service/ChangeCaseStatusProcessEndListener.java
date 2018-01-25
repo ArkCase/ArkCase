@@ -55,7 +55,7 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
         if (isBuckslipWorkflow(event))
         {
             BuckslipProcessStateEvent buckslipProcessStateEvent = new BuckslipProcessStateEvent(event.getProcessVariables());
-            buckslipProcessStateEvent.setBuckslipProcessState(BuckslipProcessStateEvent.BuckslipProcessState.completed);
+            buckslipProcessStateEvent.setBuckslipProcessState(BuckslipProcessStateEvent.BuckslipProcessState.COMPLETED);
             applicationEventPublisher.publishEvent(buckslipProcessStateEvent);
         }
     }

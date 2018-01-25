@@ -6,7 +6,7 @@ public class BuckslipProcessStateEvent extends AcmEvent
 {
     public enum BuckslipProcessState
     {
-        initialized, withdrawn, completed
+        INITIALIZED, WITHDRAWN, COMPLETED
     }
 
     private BuckslipProcessState buckslipProcessState;

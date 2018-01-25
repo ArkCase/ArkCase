@@ -2,6 +2,8 @@ package com.armedia.acm.plugins.casefile.listener;
 
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
+import com.armedia.acm.plugins.casefile.model.CaseFileConstants;
+import com.armedia.acm.plugins.casefile.model.ChangeCaseStatusConstants;
 import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 
 import org.springframework.context.ApplicationListener;
@@ -19,23 +21,23 @@ public class ChangeCaseStatusOnBuckslipEventListener implements ApplicationListe
     {
         Map<String, Object> processVariables = (Map<String, Object>) buckslipProcessStateEvent.getSource();
 
-        String parentObjectType = (String) processVariables.getOrDefault("PARENT_OBJECT_TYPE", "");
-        Long parentObjectId = (Long) processVariables.getOrDefault("PARENT_OBJECT_ID", null);
+        String parentObjectType = (String) processVariables.getOrDefault(CaseFileConstants.PARENT_OBJECT_TYPE, "");
+        Long parentObjectId = (Long) processVariables.getOrDefault(CaseFileConstants.PARENT_OBJECT_ID, null);
 
-        if ("CASE_FILE".equals(parentObjectType) && Objects.nonNull(parentObjectId))
+        if (CaseFileConstants.OBJECT_TYPE.equals(parentObjectType) && Objects.nonNull(parentObjectId))
         {
             CaseFile caseFile = getCaseFileDao().find(parentObjectId);
 
             switch (buckslipProcessStateEvent.getBuckslipProcessState())
             {
-            case initialized:
-                caseFile.setStatus("IN APPROVAL");
+            case INITIALIZED:
+                caseFile.setStatus(ChangeCaseStatusConstants.STATUS_IN_APPROVAL);
                 break;
-            case withdrawn:
-                caseFile.setStatus("DRAFT");
+            case WITHDRAWN:
+                caseFile.setStatus(ChangeCaseStatusConstants.STATUS_DRAFT);
                 break;
-            case completed:
-                caseFile.setStatus("APPROVED");
+            case COMPLETED:
+                caseFile.setStatus(ChangeCaseStatusConstants.STATUS_APPROVED);
                 break;
             }
 

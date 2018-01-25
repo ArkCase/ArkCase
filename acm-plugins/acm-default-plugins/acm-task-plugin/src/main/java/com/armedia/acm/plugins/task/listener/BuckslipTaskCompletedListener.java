@@ -42,7 +42,7 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         String futureTasks = (String) delegateExecution.getVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS);
         updateProcessVariables(futureTasks, delegateExecution);
         getBuckslipTaskHelper().notifyBuckslipProcessStateChanged(delegateExecution,
-                BuckslipProcessStateEvent.BuckslipProcessState.initialized);
+                BuckslipProcessStateEvent.BuckslipProcessState.INITIALIZED);
     }
 
     /**
