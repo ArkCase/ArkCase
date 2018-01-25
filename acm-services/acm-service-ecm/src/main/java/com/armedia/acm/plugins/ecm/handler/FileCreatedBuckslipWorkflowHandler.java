@@ -7,6 +7,8 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
 
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -31,6 +33,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private RuntimeService activitiRuntimeService;
 
     private ObjectConverter objectConverter;
+
+    private UserDao userDao;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -109,11 +113,22 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         approvers.forEach(approver -> {
             BuckslipFutureTask task = new BuckslipFutureTask();
 
+            String approverFullName;
+            String addedByFullName;
+
+            List<AcmUser> approverUsers = getUserDao().findByEmailAddress(approver);
+            List<AcmUser> addedByUser = getUserDao().findByEmailAddress(addedBy);
+
+            approverFullName = approverUsers.size() > 0 ? approverUsers.get(0).getFullName() : "";
+            addedByFullName = addedByUser.size() > 0 ? addedByUser.get(0).getFullName() : "";
+
             task.setApproverId(approver);
+            task.setApproverFullName(approverFullName);
             task.setTaskName(taskName);
             task.setGroupName(groupName);
             task.setDetails(details);
             task.setAddedBy(addedBy);
+            task.setAddedByFullName(addedByFullName);
             task.setMaxTaskDurationInDays(maxDurationInDays);
 
             futureTasks.add(task);
@@ -140,6 +155,16 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public ObjectConverter getObjectConverter()
