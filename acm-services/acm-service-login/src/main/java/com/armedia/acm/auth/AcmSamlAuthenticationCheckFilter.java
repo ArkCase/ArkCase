@@ -4,8 +4,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 
 /**
- * Filter that clears the {@link Authentication} object from the {@link SecurityContext} and causes authentication check of the user against
- * ADFS server. Only used in the Single Sign-On scenario. This filter is used for non REST calls and cause redirect to the /samllogin page
+ * Filter that clears the {@link Authentication} object from the {@link SecurityContext} and causes authentication check
+ * of the user against
+ * ADFS server. Only used in the Single Sign-On scenario. This filter is used for non REST calls and cause redirect to
+ * the /samllogin page
  * where the 'redirectURL' is set to the Angular state.
  * <p>
  * Created by Bojan Milenkoski on 14.3.2016

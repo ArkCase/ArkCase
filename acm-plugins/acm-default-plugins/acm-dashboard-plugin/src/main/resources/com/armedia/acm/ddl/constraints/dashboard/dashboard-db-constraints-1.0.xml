@@ -1,59 +1,33 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-dashboard-foreign-key" author="marst">
-        <addForeignKeyConstraint baseTableName="acm_dashboard"
-                                 baseColumnNames="cm_dashboard_owner"
-                                 constraintName="fk_dashboard_owner"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_dashboard" baseColumnNames="cm_dashboard_owner" constraintName="fk_dashboard_owner"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="02-widget-constraints" author="marst">
-        <addForeignKeyConstraint baseTableName="acm_widget_role"
-                                 baseColumnNames="cm_role_name"
-                                 constraintName="fk_widget_role_role_name"
-                                 referencedTableName="acm_role"
-                                 referencedColumnNames="cm_role_name"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_widget_role"
-                                 baseColumnNames="cm_widget_id"
-                                 constraintName="fk_widget_role_widget_id"
-                                 referencedTableName="acm_widget"
-                                 referencedColumnNames="cm_widget_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_widget_role" baseColumnNames="cm_role_name" constraintName="fk_widget_role_role_name"
+            referencedTableName="acm_role" referencedColumnNames="cm_role_name" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_widget_role" baseColumnNames="cm_widget_id" constraintName="fk_widget_role_widget_id"
+            referencedTableName="acm_widget" referencedColumnNames="cm_widget_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 
     <changeSet id="03-user-preference-contraints" author="marst">
-        <addForeignKeyConstraint baseTableName="acm_user_preference"
-                                 baseColumnNames="cm_user"
-                                 constraintName="fk_user_preference_user"
-                                 referencedTableName="acm_user"
-                                 referencedColumnNames="cm_user_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_user_preference"
-                                 baseColumnNames="cm_widget"
-                                 constraintName="fk_user_preference_widget"
-                                 referencedTableName="acm_widget"
-                                 referencedColumnNames="cm_widget_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_user_preference"
-                                 baseColumnNames="cm_module"
-                                 constraintName="fk_user_preference_module"
-                                 referencedTableName="acm_module"
-                                 referencedColumnNames="cm_module_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_preference" baseColumnNames="cm_user" constraintName="fk_user_preference_user"
+            referencedTableName="acm_user" referencedColumnNames="cm_user_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_preference" baseColumnNames="cm_widget" constraintName="fk_user_preference_widget"
+            referencedTableName="acm_widget" referencedColumnNames="cm_widget_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_user_preference" baseColumnNames="cm_module" constraintName="fk_user_preference_module"
+            referencedTableName="acm_module" referencedColumnNames="cm_module_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -24,12 +24,11 @@ public class AcmProcessEventHandler implements ApplicationEventPublisherAware
 
     public void handleProcessEvent(String eventName, ProcessInstance execution)
     {
-        if ( log.isDebugEnabled() )
+        if (log.isDebugEnabled())
         {
             log.debug("Got an Activiti event; eventName: " + eventName + "; " + "process instance id: " +
                     execution.getProcessInstanceId());
         }
-
 
         Map<String, Object> processVariables = getRuntimeService().getVariables(execution.getId());
 
@@ -48,7 +47,7 @@ public class AcmProcessEventHandler implements ApplicationEventPublisherAware
     protected String findUserThatInitiatedThisEvent(String eventName, ProcessInstance execution, Map<String, Object> processVariables)
     {
         String acmUser = "ACTIVITI_SYSTEM";
-        if ( "start".equals(eventName) )
+        if ("start".equals(eventName))
         {
             // when the process is started, the ACM_USER pvar is set to the user who started the process.
             if (processVariables != null && processVariables.containsKey("ACM_USER"))
@@ -71,7 +70,7 @@ public class AcmProcessEventHandler implements ApplicationEventPublisherAware
                 .desc()
                 .listPage(0, 1);
         String acmUser = "ACTIVITI_SYSTEM";
-        if ( !completedTasks.isEmpty() )
+        if (!completedTasks.isEmpty())
         {
             HistoricTaskInstance lastCompletedTask = completedTasks.get(0);
 

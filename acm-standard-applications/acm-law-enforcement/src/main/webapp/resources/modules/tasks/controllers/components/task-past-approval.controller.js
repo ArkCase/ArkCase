@@ -1,62 +1,76 @@
 'use strict';
 
-angular.module('cases').controller('Tasks.PastApprovalRoutingController', ['$scope', '$stateParams', '$q', '$translate', '$modal'
-    , 'UtilService', 'Util.DateService', 'ConfigService', 'ObjectService', 'LookupService', 'Object.LookupService'
-    , 'Task.InfoService', 'Helper.UiGridService', 'Helper.ObjectBrowserService', 'Authentication'
-    , 'PermissionsService', 'Profile.UserInfoService'
-    , function ($scope, $stateParams, $q, $translate, $modal
-        , Util, UtilDateService, ConfigService, ObjectService, LookupService, ObjectLookupService
-        , TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication
-        , PermissionsService, UserInfoService) {
+angular.module('cases').controller(
+        'Tasks.PastApprovalRoutingController',
+        [
+                '$scope',
+                '$stateParams',
+                '$q',
+                '$translate',
+                '$modal',
+                'UtilService',
+                'Util.DateService',
+                'ConfigService',
+                'ObjectService',
+                'LookupService',
+                'Object.LookupService',
+                'Task.InfoService',
+                'Helper.UiGridService',
+                'Helper.ObjectBrowserService',
+                'Authentication',
+                'PermissionsService',
+                'Profile.UserInfoService',
+                function($scope, $stateParams, $q, $translate, $modal, Util, UtilDateService, ConfigService, ObjectService, LookupService,
+                        ObjectLookupService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService, Authentication,
+                        PermissionsService, UserInfoService) {
 
-        $scope.pastApprovers = {};
-        $scope.gridOptions = $scope.gridOptions || {};
-        $scope.taskInfo = null;
+                    $scope.pastApprovers = {};
+                    $scope.gridOptions = $scope.gridOptions || {};
+                    $scope.taskInfo = null;
 
-        var currentUser = '';
+                    var currentUser = '';
 
-        new HelperObjectBrowserService.Component({
-            scope: $scope
-            , stateParams: $stateParams
-            , moduleId: "tasks"
-            , componentId: "pastapprovals"
-            , retrieveObjectInfo: TaskInfoService.getTaskInfo
-            , validateObjectInfo: TaskInfoService.validateTaskInfo
-            , onConfigRetrieved: function (componentConfig) {
-                return onConfigRetrieved(componentConfig);
-            }
-            , onObjectInfoRetrieved: function (objectInfo) {
-                onObjectInfoRetrieved(objectInfo);
-            }
-        });
+                    new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : "tasks",
+                        componentId : "pastapprovals",
+                        retrieveObjectInfo : TaskInfoService.getTaskInfo,
+                        validateObjectInfo : TaskInfoService.validateTaskInfo,
+                        onConfigRetrieved : function(componentConfig) {
+                            return onConfigRetrieved(componentConfig);
+                        },
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        }
+                    });
 
-        var gridHelperPastApprovers = new HelperUiGridService.Grid({scope: $scope});
+                    var gridHelperPastApprovers = new HelperUiGridService.Grid({
+                        scope : $scope
+                    });
 
-        Authentication.queryUserInfo().then(function (data) {
-            currentUser = data.userId;
-        });
+                    Authentication.queryUserInfo().then(function(data) {
+                        currentUser = data.userId;
+                    });
 
-        var onConfigRetrieved = function (config) {
-            $scope.config = config;
-            gridHelperPastApprovers.setColumnDefs(config);
-            gridHelperPastApprovers.setBasicOptions(config);
-            gridHelperPastApprovers.disableGridScrolling(config);
-        };
+                    var onConfigRetrieved = function(config) {
+                        $scope.config = config;
+                        gridHelperPastApprovers.setColumnDefs(config);
+                        gridHelperPastApprovers.setBasicOptions(config);
+                        gridHelperPastApprovers.disableGridScrolling(config);
+                    };
 
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.taskInfo = objectInfo;
 
-        var onObjectInfoRetrieved = function (objectInfo) {
-            $scope.taskInfo = objectInfo;
-
-            //set past approvers info
-            if (objectInfo.buckslipPastApprovers) {
-                $scope.gridOptions.data = angular.fromJson(objectInfo.buckslipPastApprovers);
-                $scope.gridOptions.noData = false;
-            } else {
-                $scope.gridOptions.data = [];
-                $scope.gridOptions.noData = true;
-                $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
-            }
-        };
-    }
-])
-;
+                        //set past approvers info
+                        if (objectInfo.buckslipPastApprovers) {
+                            $scope.gridOptions.data = angular.fromJson(objectInfo.buckslipPastApprovers);
+                            $scope.gridOptions.noData = false;
+                        } else {
+                            $scope.gridOptions.data = [];
+                            $scope.gridOptions.noData = true;
+                            $scope.noDataMessage = $translate.instant('tasks.comp.approvalRouting.noBuckslipMessage');
+                        }
+                    };
+                } ]);

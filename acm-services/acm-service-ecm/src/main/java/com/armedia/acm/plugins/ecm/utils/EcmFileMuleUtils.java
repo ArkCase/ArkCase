@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.utils;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.mule.api.ExceptionPayload;
@@ -29,8 +30,10 @@ public class EcmFileMuleUtils
     /**
      * Downloads the contents of the specified document from the repository
      *
-     * @param cmisRepositoryId - cmis repository id of the document to download
-     * @param cmisDocumentId   - cmis id of the document to download
+     * @param cmisRepositoryId
+     *            - cmis repository id of the document to download
+     * @param cmisDocumentId
+     *            - cmis id of the document to download
      * @return InputStream for the document contents
      */
     public InputStream downloadFile(String cmisRepositoryId, String cmisDocumentId)
@@ -44,7 +47,8 @@ public class EcmFileMuleUtils
             MuleMessage downloadResponse = getMuleContextManager().send("vm://downloadFileFlow.in", cmisDocumentId, properties);
             ContentStream contentStream = (ContentStream) downloadResponse.getPayload();
             fileContentStream = contentStream.getStream();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Failed to get document: {}", e.getMessage(), e);
         }
@@ -54,10 +58,14 @@ public class EcmFileMuleUtils
     /**
      * Adds a new file to the repository using the addFile mule flow.
      *
-     * @param newEcmFile      - contains metadata for the file whose contents will be added to the repository
-     * @param cmisFolderId    - cmis id of the folder in which the new file will be added
-     * @param fileInputStream - binary content data for the new file version
-     * @throws MuleException if the mule call to save the file to the repository fails
+     * @param newEcmFile
+     *            - contains metadata for the file whose contents will be added to the repository
+     * @param cmisFolderId
+     *            - cmis id of the folder in which the new file will be added
+     * @param fileInputStream
+     *            - binary content data for the new file version
+     * @throws MuleException
+     *             if the mule call to save the file to the repository fails
      * @returns Cmis Document object for the new repository document
      */
     public Document addFile(EcmFile newEcmFile, String cmisFolderId, InputStream fileInputStream) throws MuleException
@@ -84,10 +92,14 @@ public class EcmFileMuleUtils
     /**
      * Updates the contents of an existing repository item using the mule updateFile flow.
      *
-     * @param newEcmFile      - metadata for the new file which will replace the old version
-     * @param originalFile    - metadata for the old file whose contents will be replaced
-     * @param fileInputStream - the binary data content which will be written to the repository
-     * @throws MuleException if the mule call to replace the file contents in the repository fails
+     * @param newEcmFile
+     *            - metadata for the new file which will replace the old version
+     * @param originalFile
+     *            - metadata for the old file whose contents will be replaced
+     * @param fileInputStream
+     *            - the binary data content which will be written to the repository
+     * @throws MuleException
+     *             if the mule call to replace the file contents in the repository fails
      * @returns Cmis Document object for the updated repository document
      */
     public Document updateFile(EcmFile newEcmFile, EcmFile originalFile, InputStream fileInputStream) throws MuleException
@@ -116,9 +128,12 @@ public class EcmFileMuleUtils
     /**
      * Removes a file from the Alfresco content repository
      *
-     * @param ecmFile    - metadata for the file to delete
-     * @param cmisFileId - cmis id associated with the document which will be removed
-     * @throws Exception if the mule call to delete the document from the repository fails
+     * @param ecmFile
+     *            - metadata for the file to delete
+     * @param cmisFileId
+     *            - cmis id associated with the document which will be removed
+     * @throws Exception
+     *             if the mule call to delete the document from the repository fails
      */
     public void deleteFile(EcmFile ecmFile, String cmisFileId) throws Exception
     {

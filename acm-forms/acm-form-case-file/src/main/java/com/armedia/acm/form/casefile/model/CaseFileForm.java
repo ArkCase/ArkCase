@@ -3,193 +3,218 @@
  */
 package com.armedia.acm.form.casefile.model;
 
-import java.util.List;
-import java.util.Map;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
 import com.armedia.acm.form.config.xml.OwningGroupItem;
 import com.armedia.acm.form.config.xml.ParticipantItem;
 import com.armedia.acm.form.config.xml.PersonItem;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.frevvo.config.FrevvoFormNamespace;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author riste.tutureski
  *
  */
-@XmlRootElement(name="form_" + FrevvoFormName.CASE_FILE, namespace=FrevvoFormNamespace.CASE_FILE_NAMESPACE)
-public class CaseFileForm {
+@XmlRootElement(name = "form_" + FrevvoFormName.CASE_FILE, namespace = FrevvoFormNamespace.CASE_FILE_NAMESPACE)
+public class CaseFileForm
+{
 
-	private Long id;
-	private String caseTitle;
-	private String caseType;
-	private List<String> caseTypes;
-	private String caseNumber;
-	private String caseDescription;
-	private String cmisFolderId;
-	private List<ParticipantItem> participants;
-	private List<String> participantsTypeOptions;
-	private Map<String, String> participantsPrivilegeTypes;
-	private OwningGroupItem owningGroup;
-	private List<String> owningGroupOptions;
-	private Long initiatorId;
-	private String initiatorFullName;
-	private String initiatorType;
-	private List<PersonItem> people;
-	
-	@XmlElement(name="caseId")
-	public Long getId() {
-		return id;
-	}
-	
-	public void setId(Long id) {
-		this.id = id;
-	}
-	
-	@XmlElement(name="caseTitle")
-	public String getCaseTitle() {
-		return caseTitle;
-	}
-	
-	public void setCaseTitle(String caseTitle) {
-		this.caseTitle = caseTitle;
-	}
-	
-	@XmlElement(name="caseType")
-	public String getCaseType() {
-		return caseType;
-	}
+    private Long id;
+    private String caseTitle;
+    private String caseType;
+    private List<String> caseTypes;
+    private String caseNumber;
+    private String caseDescription;
+    private String cmisFolderId;
+    private List<ParticipantItem> participants;
+    private List<String> participantsTypeOptions;
+    private Map<String, String> participantsPrivilegeTypes;
+    private OwningGroupItem owningGroup;
+    private List<String> owningGroupOptions;
+    private Long initiatorId;
+    private String initiatorFullName;
+    private String initiatorType;
+    private List<PersonItem> people;
 
-	public void setCaseType(String caseType) {
-		this.caseType = caseType;
-	}
-	
-	@XmlTransient
-	public List<String> getCaseTypes() {
-		return caseTypes;
-	}
+    @XmlElement(name = "caseId")
+    public Long getId()
+    {
+        return id;
+    }
 
-	public void setCaseTypes(List<String> caseTypes) {
-		this.caseTypes = caseTypes;
-	}
+    public void setId(Long id)
+    {
+        this.id = id;
+    }
 
-	@XmlTransient
-	public String getCaseNumber() {
-		return caseNumber;
-	}
+    @XmlElement(name = "caseTitle")
+    public String getCaseTitle()
+    {
+        return caseTitle;
+    }
 
-	public void setCaseNumber(String caseNumber) {
-		this.caseNumber = caseNumber;
-	}
+    public void setCaseTitle(String caseTitle)
+    {
+        this.caseTitle = caseTitle;
+    }
 
-	@XmlElement(name="caseDescription")
-	public String getCaseDescription() {
-		return caseDescription;
-	}
-	
-	public void setCaseDescription(String caseDescription) {
-		this.caseDescription = caseDescription;
-	}
+    @XmlElement(name = "caseType")
+    public String getCaseType()
+    {
+        return caseType;
+    }
 
-	@XmlTransient
-	public String getCmisFolderId() {
-		return cmisFolderId;
-	}
+    public void setCaseType(String caseType)
+    {
+        this.caseType = caseType;
+    }
 
-	public void setCmisFolderId(String cmisFolderId) {
-		this.cmisFolderId = cmisFolderId;
-	}
+    @XmlTransient
+    public List<String> getCaseTypes()
+    {
+        return caseTypes;
+    }
 
-	@XmlElement(name="participantsItem", type=ParticipantItem.class)
-	public List<ParticipantItem> getParticipants() {
-		return participants;
-	}
+    public void setCaseTypes(List<String> caseTypes)
+    {
+        this.caseTypes = caseTypes;
+    }
 
-	public void setParticipants(List<ParticipantItem> participants) {
-		this.participants = participants;
-	}
+    @XmlTransient
+    public String getCaseNumber()
+    {
+        return caseNumber;
+    }
 
-	@XmlTransient
-	public List<String> getParticipantsTypeOptions() {
-		return participantsTypeOptions;
-	}
+    public void setCaseNumber(String caseNumber)
+    {
+        this.caseNumber = caseNumber;
+    }
 
-	public void setParticipantsTypeOptions(List<String> participantsTypeOptions) {
-		this.participantsTypeOptions = participantsTypeOptions;
-	}
+    @XmlElement(name = "caseDescription")
+    public String getCaseDescription()
+    {
+        return caseDescription;
+    }
 
-	@XmlTransient
-	public Map<String, String> getParticipantsPrivilegeTypes() {
-		return participantsPrivilegeTypes;
-	}
+    public void setCaseDescription(String caseDescription)
+    {
+        this.caseDescription = caseDescription;
+    }
 
-	public void setParticipantsPrivilegeTypes(
-			Map<String, String> participantsPrivilegeTypes) {
-		this.participantsPrivilegeTypes = participantsPrivilegeTypes;
-	}
+    @XmlTransient
+    public String getCmisFolderId()
+    {
+        return cmisFolderId;
+    }
 
-	@XmlElement(name="owningGroup")
-	public OwningGroupItem getOwningGroup() {
-		return owningGroup;
-	}
+    public void setCmisFolderId(String cmisFolderId)
+    {
+        this.cmisFolderId = cmisFolderId;
+    }
 
-	public void setOwningGroup(OwningGroupItem owningGroup) {
-		this.owningGroup = owningGroup;
-	}
+    @XmlElement(name = "participantsItem", type = ParticipantItem.class)
+    public List<ParticipantItem> getParticipants()
+    {
+        return participants;
+    }
 
-	@XmlTransient
-	public List<String> getOwningGroupOptions() {
-		return owningGroupOptions;
-	}
+    public void setParticipants(List<ParticipantItem> participants)
+    {
+        this.participants = participants;
+    }
 
-	public void setOwningGroupOptions(List<String> owningGroupOptions) {
-		this.owningGroupOptions = owningGroupOptions;
-	}
+    @XmlTransient
+    public List<String> getParticipantsTypeOptions()
+    {
+        return participantsTypeOptions;
+    }
 
-	@XmlElement(name="initiatorId")
-	public Long getInitiatorId()
-	{
-		return initiatorId;
-	}
+    public void setParticipantsTypeOptions(List<String> participantsTypeOptions)
+    {
+        this.participantsTypeOptions = participantsTypeOptions;
+    }
 
-	public void setInitiatorId(Long initiatorId)
-	{
-		this.initiatorId = initiatorId;
-	}
+    @XmlTransient
+    public Map<String, String> getParticipantsPrivilegeTypes()
+    {
+        return participantsPrivilegeTypes;
+    }
 
-	@XmlElement(name="initiatorFullName")
-	public String getInitiatorFullName()
-	{
-		return initiatorFullName;
-	}
+    public void setParticipantsPrivilegeTypes(
+            Map<String, String> participantsPrivilegeTypes)
+    {
+        this.participantsPrivilegeTypes = participantsPrivilegeTypes;
+    }
 
-	public void setInitiatorFullName(String initiatorFullName)
-	{
-		this.initiatorFullName = initiatorFullName;
-	}
+    @XmlElement(name = "owningGroup")
+    public OwningGroupItem getOwningGroup()
+    {
+        return owningGroup;
+    }
 
-	@XmlElement(name="initiatorType")
-	public String getInitiatorType()
-	{
-		return initiatorType;
-	}
+    public void setOwningGroup(OwningGroupItem owningGroup)
+    {
+        this.owningGroup = owningGroup;
+    }
 
-	public void setInitiatorType(String initiatorType)
-	{
-		this.initiatorType = initiatorType;
-	}
+    @XmlTransient
+    public List<String> getOwningGroupOptions()
+    {
+        return owningGroupOptions;
+    }
 
-	@XmlElement(name="peopleItem", type=PersonItem.class)
-	public List<PersonItem> getPeople()
-	{
-		return people;
-	}
+    public void setOwningGroupOptions(List<String> owningGroupOptions)
+    {
+        this.owningGroupOptions = owningGroupOptions;
+    }
 
-	public void setPeople(List<PersonItem> people)
-	{
-		this.people = people;
-	}
+    @XmlElement(name = "initiatorId")
+    public Long getInitiatorId()
+    {
+        return initiatorId;
+    }
+
+    public void setInitiatorId(Long initiatorId)
+    {
+        this.initiatorId = initiatorId;
+    }
+
+    @XmlElement(name = "initiatorFullName")
+    public String getInitiatorFullName()
+    {
+        return initiatorFullName;
+    }
+
+    public void setInitiatorFullName(String initiatorFullName)
+    {
+        this.initiatorFullName = initiatorFullName;
+    }
+
+    @XmlElement(name = "initiatorType")
+    public String getInitiatorType()
+    {
+        return initiatorType;
+    }
+
+    public void setInitiatorType(String initiatorType)
+    {
+        this.initiatorType = initiatorType;
+    }
+
+    @XmlElement(name = "peopleItem", type = PersonItem.class)
+    public List<PersonItem> getPeople()
+    {
+        return people;
+    }
+
+    public void setPeople(List<PersonItem> people)
+    {
+        this.people = people;
+    }
 }

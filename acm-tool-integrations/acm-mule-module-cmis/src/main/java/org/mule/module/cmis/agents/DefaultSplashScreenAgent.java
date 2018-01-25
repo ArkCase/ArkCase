@@ -1,10 +1,6 @@
 
 package org.mule.module.cmis.agents;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import javax.annotation.Generated;
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleContext;
 import org.mule.api.agent.Agent;
@@ -16,6 +12,11 @@ import org.mule.util.StringMessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Generated;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Agent implementation to add splash screen information for DevKit extensions at application startup
@@ -29,15 +30,18 @@ public class DefaultSplashScreenAgent implements Agent, MuleContextAware, Splash
     private MuleContext muleContext;
     private static Logger logger = LoggerFactory.getLogger(DefaultSplashScreenAgent.class);
 
-    public void setName(String name) {
+    public void setName(String name)
+    {
         throw new UnsupportedOperationException();
     }
 
-    public String getName() {
+    public String getName()
+    {
         return "DevKitSplashScreenAgent";
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return "DevKit Extension Information";
     }
 
@@ -45,7 +49,8 @@ public class DefaultSplashScreenAgent implements Agent, MuleContextAware, Splash
      * Retrieves extensionsCount
      * 
      */
-    public int getExtensionsCount() {
+    public int getExtensionsCount()
+    {
         return this.extensionsCount;
     }
 
@@ -53,34 +58,42 @@ public class DefaultSplashScreenAgent implements Agent, MuleContextAware, Splash
      * Retrieves muleContext
      * 
      */
-    public MuleContext getMuleContext() {
+    public MuleContext getMuleContext()
+    {
         return this.muleContext;
     }
 
     /**
      * Sets muleContext
      * 
-     * @param value Value to set
+     * @param value
+     *            Value to set
      */
-    public void setMuleContext(MuleContext value) {
+    public void setMuleContext(MuleContext value)
+    {
         this.muleContext = value;
     }
 
-    public void initialise() {
+    public void initialise()
+    {
     }
 
-    public void splash() {
+    public void splash()
+    {
         Registry registry = muleContext.getRegistry();
         Collection<MetadataAware> metadataAwares = registry.lookupObjects(MetadataAware.class);
         Map<Class, MetadataAware> metadataAwaresByClass = new HashMap<Class, MetadataAware>();
-        for (MetadataAware connectorMetadata: metadataAwares) {
+        for (MetadataAware connectorMetadata : metadataAwares)
+        {
             metadataAwaresByClass.put(metadataAwares.getClass(), connectorMetadata);
         }
         extensionsCount = metadataAwaresByClass.size();
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append((("DevKit Extensions ("+ Integer.toString(extensionsCount))+") used in this application \n"));
-        if (extensionsCount > 0) {
-            for (MetadataAware connectorMetadata: metadataAwaresByClass.values()) {
+        stringBuilder.append((("DevKit Extensions (" + Integer.toString(extensionsCount)) + ") used in this application \n"));
+        if (extensionsCount > 0)
+        {
+            for (MetadataAware connectorMetadata : metadataAwaresByClass.values())
+            {
                 stringBuilder.append(StringUtils.capitalise(connectorMetadata.getModuleName()));
                 stringBuilder.append(" ");
                 stringBuilder.append(connectorMetadata.getModuleVersion());
@@ -94,14 +107,17 @@ public class DefaultSplashScreenAgent implements Agent, MuleContextAware, Splash
         logger.info(StringMessageUtils.getBoilerPlate(stringBuilder.toString(), '+', 80));
     }
 
-    public void start() {
+    public void start()
+    {
         splash();
     }
 
-    public void stop() {
+    public void stop()
+    {
     }
 
-    public void dispose() {
+    public void dispose()
+    {
     }
 
 }

@@ -1,6 +1,12 @@
 package com.armedia.acm.services.users.service.ldap;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.everyItem;
+import static org.hamcrest.Matchers.isIn;
+import static org.junit.Assert.assertThat;
+
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,11 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.everyItem;
-import static org.hamcrest.Matchers.isIn;
-import static org.junit.Assert.assertThat;
 
 public class AcmRoleToGroupMappingTest
 {
@@ -57,12 +58,9 @@ public class AcmRoleToGroupMappingTest
 
         assertThat("Value set should match", actualGroups, everyItem(isIn(expectedGroups)));
 
-        roleToGroupMap.forEach((role, groupsString) ->
-                roleToGroups.get(role).forEach(group ->
-                        assertThat("String with group list should contain mapped groups",
-                                groupsString, containsString(group))
-                )
-        );
+        roleToGroupMap.forEach((role, groupsString) -> roleToGroups.get(role)
+                .forEach(group -> assertThat("String with group list should contain mapped groups",
+                        groupsString, containsString(group))));
     }
 
     @Test
@@ -73,7 +71,6 @@ public class AcmRoleToGroupMappingTest
         roleToGroupArray.put("ROLE_INVESTIGATOR_SUPERVISOR", "ACM_SUPERVISOR_DEV,ACM_INVESTIGATOR_VA,"
                 + "ACM_INVESTIGATOR_DEV,ACM_ANALYST_DEV,ACM_CALLCENTER_DEV,ACM_ADMINISTRATOR_DEV,ACM_INVESTIGATOR_MK,"
                 + "ARKCASE_ADMINISTRATOR");
-
 
         Map<String, List<String>> groupToRoles = unit.getGroupToRolesMap();
 

@@ -36,11 +36,13 @@ abstract public class AcmLookup<Entry>
         this.name = name;
     }
 
-    public boolean isReadonly() {
+    public boolean isReadonly()
+    {
         return readonly;
     }
 
-    public void setReadonly(boolean readonly) {
+    public void setReadonly(boolean readonly)
+    {
         this.readonly = readonly;
     }
 }

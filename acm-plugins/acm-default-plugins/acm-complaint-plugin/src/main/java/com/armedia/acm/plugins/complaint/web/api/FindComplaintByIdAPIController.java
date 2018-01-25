@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.service.ComplaintEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -33,10 +34,9 @@ public class FindComplaintByIdAPIController
             @PathVariable("complaintId") Long complaintId,
             Authentication authentication,
             HttpSession session,
-            HttpServletResponse response
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException
+            HttpServletResponse response) throws AcmObjectNotFoundException, AcmUserActionFailedException
     {
-        if ( log.isInfoEnabled() )
+        if (log.isInfoEnabled())
         {
             log.info("Finding complaint by id '" + complaintId + "'");
         }
@@ -45,7 +45,7 @@ public class FindComplaintByIdAPIController
         {
             Complaint found = getComplaintDao().find(complaintId);
 
-            if ( found == null )
+            if (found == null)
             {
                 throw new AcmObjectNotFoundException("complaint", complaintId, "Object Not Found", null);
             }
@@ -71,7 +71,6 @@ public class FindComplaintByIdAPIController
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         getEventPublisher().publishFindComplaintByIdEvent(found, authentication, ipAddress, succeeded);
     }
-
 
     public ComplaintDao getComplaintDao()
     {

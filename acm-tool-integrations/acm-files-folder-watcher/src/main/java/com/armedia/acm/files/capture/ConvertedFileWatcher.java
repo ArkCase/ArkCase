@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 public class ConvertedFileWatcher implements FileListener, ApplicationEventPublisherAware, ApplicationContextAware
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -44,10 +43,10 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
             log.debug("Looking for files in: " + getBaseFolder().getName());
         }
 
-        // this event just tells us when the whole application context is ready.  we don't actually need the context.
+        // this event just tells us when the whole application context is ready. we don't actually need the context.
         try
         {
-            //all this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
+            // all this because of FileTypeSelector(FileType.FILE_OR_FOLDER) returns 0 elements
             FileObject[] existingFiles = getBaseFolder().findFiles(new FileTypeSelector(FileType.FILE));
             FileObject[] existingFolders = getBaseFolder().findFiles(new FileTypeSelector(FileType.FOLDER));
 
@@ -72,7 +71,8 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
                 }
             }
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Could not find existing files: " + e.getMessage(), e);
             throw new BeanCreationException("Could not find existing files: " + e.getMessage(), e);
@@ -167,7 +167,8 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
                 File baseFile = new File(new URI(baseUrl.toString().replace(" ", "%20")));
                 setBaseFolderPath(baseFile.getCanonicalPath());
 
-            } catch (URISyntaxException | IOException e)
+            }
+            catch (URISyntaxException | IOException e)
             {
                 log.error("Something is wrong with the base folder url: " + e.getMessage(), e);
             }
@@ -194,7 +195,7 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
         this.fileExtensions = fileExtensions;
 
         // set file extensions list
-        this.fileExtensionsList = new ArrayList<String>();
+        this.fileExtensionsList = new ArrayList<>();
         setFileExtensionsList(Arrays.asList(fileExtensions.trim().split("\\s*,\\s*")));
     }
 
@@ -207,6 +208,5 @@ public class ConvertedFileWatcher implements FileListener, ApplicationEventPubli
     {
         this.fileExtensionsList = fileExtensionsList;
     }
-
 
 }

@@ -97,7 +97,6 @@ public class AcmTaskAPIController
             log.debug("No history for Business Proess {}", businessProcessId);
             return new ResponseEntity<>(new ArrayList<>().toString(), HttpStatus.OK);
         }
-
     }
 
     @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/{processVariable}/businessProcessVariable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

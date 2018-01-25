@@ -1,8 +1,8 @@
 {
-  "analytics": {
-    "title": "データ分析",
-    "menus": {
-      "leftnav.item": "データ分析"
+    "analytics": {
+        "title": "データ分析",
+        "menus": {
+            "leftnav.item": "データ分析"
+        }
     }
-  }
 }

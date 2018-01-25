@@ -1,8 +1,13 @@
 package com.armedia.acm.assignment;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.junit.Before;
@@ -19,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by armdev on 4/17/14.
@@ -114,9 +117,8 @@ public class AssignmentRulesIT
             System.out.println("id: " + ap.getParticipantLdapId());
         }
 
-        assertEquals(1, cf.getParticipants().stream().
-                filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).
-                count());
+        assertEquals(1, cf.getParticipants().stream()
+                .filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).count());
     }
 
     @Test
@@ -141,10 +143,8 @@ public class AssignmentRulesIT
         }
 
         // should still be 1
-        assertEquals(1, cf.getParticipants().stream().
-                filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).
-                count());
+        assertEquals(1, cf.getParticipants().stream()
+                .filter(ap -> ap.getParticipantLdapId().equals(cf.getCreator()) && ap.getParticipantType().equals("reader")).count());
     }
-
 
 }

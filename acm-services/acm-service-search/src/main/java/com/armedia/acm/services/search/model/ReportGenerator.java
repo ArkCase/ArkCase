@@ -1,14 +1,12 @@
 package com.armedia.acm.services.search.model;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
-import org.json.JSONObject;
-
 
 public abstract class ReportGenerator
 {
     private AcmPlugin propertyMap;
 
-    public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData );
+    public abstract String generateReport(String[] requestedFields, String[] titles, String jsonData);
 
     public abstract String generateReportName(String name);
 
