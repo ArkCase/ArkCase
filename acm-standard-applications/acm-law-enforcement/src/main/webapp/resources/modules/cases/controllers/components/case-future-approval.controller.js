@@ -68,7 +68,7 @@ angular.module('cases').controller(
                     });
 
                     Authentication.queryUserInfo().then(function(data) {
-                        currentUser = data.userId;
+                        currentUser = data.fullName;
                     });
 
                     var onConfigRetrieved = function(config) {
@@ -140,10 +140,11 @@ angular.module('cases').controller(
                         ModalDialogService.showModal(modalMetadata).then(function(result) {
                             var futureTask = {
                                 approverId : result.pickedUserId,
+                                approverFullName : result.pickedUserName,
                                 groupName : result.pickedGroupId,
                                 taskName : result.futureTaskTitle,
                                 details : result.futureTaskDetails,
-                                addedBy : currentUser
+                                addedByFullName : currentUser
                             }
                             if (!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)) {
                                 $scope.buckslipProcess.futureTasks.push(futureTask);
