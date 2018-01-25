@@ -10,32 +10,33 @@
  *
  * Contains REST calls for Admin Email Templates Configuration
  */
-angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'UtilService', 'Upload', function($resource, Util, Upload) {
-    var Service = $resource('api/latest/plugin', {}, {
-        /**
-         * @ngdoc method
-         * @name list
-         * @methodOf services:Admin.EmailSTemplatesService
-         *
-         * @description
-         * Get email templates
-         *
-         * @param {Function} onSuccess (Optional)Callback function of success query.
-         * @param {Function} onError (Optional) Callback function when fail.
-         *
-         * @returns {Object} Object returned by $resource
-         */
-        list : {
-            method : 'GET',
-            url : 'api/latest/service/email/configure/template',
-            cache : false,
-            isArray : true
-        },
+angular.module('admin').factory('Admin.EmailTemplatesService', ['$resource', 'UtilService', 'Upload',
+   '$http', function ($resource, Util, Upload, $http) {
+        var Service = $resource('api/latest/plugin', {}, {
+            /**
+             * @ngdoc method
+             * @name list
+             * @methodOf services:Admin.EmailTemplatesService
+             *
+             * @description
+             * Get email templates
+             *
+             * @param {Function} onSuccess (Optional)Callback function of success query.
+             * @param {Function} onError (Optional) Callback function when fail.
+             *
+             * @returns {Object} Object returned by $resource
+             */
+            list: {
+                method: 'GET',
+                url: 'api/latest/service/email/configure/template',
+                cache: false,
+                isArray: true
+            },
 
         /**
          * @ngdoc method
          * @name delete
-         * @methodOf services:Admin.EmailSTemplatesService
+         * @methodOf services:Admin.EmailTemplatesService
          *
          * @description
          * Delete template data
@@ -52,12 +53,12 @@ angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'U
             cache : false
         }
 
-    });
+        });
 
     /**
      * @ngdoc method
      * @name listEmailTemplates
-     * @methodOf services:Admin.EmailSTemplatesService
+     * @methodOf services:Admin.EmailTemplatesService
      *
      * @description
      * Query email templates
@@ -76,7 +77,7 @@ angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'U
     /**
      * @ngdoc method
      * @name deleteEmailTemplate
-     * @methodOf services:Admin.EmailSTemplatesService
+     * @methodOf services:Admin.EmailTemplatesService
      *
      * @description
      * Query person pictures
@@ -98,6 +99,26 @@ angular.module('admin').factory('Admin.EmailTemplatesService', [ '$resource', 'U
     };
 
     /**
+         * @ngdoc method
+         * @name validateEmailTemplate
+         * @methodOf services:Admin.EmailTemplatesService
+         *
+         * @description
+         * Validate template data
+         *
+         * @param {Object} template  Template data
+         *
+         * @returns {Object} Promise
+         */
+        Service.validateEmailTemplate = function (template) {
+            return $http({
+                url: 'api/latest/service/email/configure/template/validate',
+                method: 'PUT',
+                data: template
+            });
+        };
+
+        /**
      * @ngdoc method
      * @name saveEmailTemplate
      * @methodOf services:Admin.EmailSTemplatesService

@@ -500,15 +500,26 @@
                 "concur": "Samenvallen",
                 "nonConcur": "Niet in overeenstemming"
             },
+            "businessProcessTypes": {
+                "acmDocumentWorkflow": "ACM Dokumenten Arbeitsprozess",
+                "correctiveActionPlan": "Korrekturmaßnahmenplan"
+            },
+            "reportStates": {
+                "draft": "Entwurf",
+                "inApproval": "Mit Zustimmung",
+                "active": "Aktiv",
+                "inActive": "Inaktiv",
+                "closed": "Geschlossen"
+            },
             "auditReportNames": {
-                "all": "All",
-                "case_file": "Case",
-                "complaint": "Complaint",
-                "task": "Task",
-                "file": "File",
-                "document": "Document",
+                "all": "Alle",
+                "case_file": "Fall",
+                "complaint": "Beschwerde",
+                "task": "Aufgabe",
+                "file": "Datei",
+                "document": "Dokument",
                 "person": "Person",
-                "organization": "Organization"
+                "organization": "Organisation"
             }
         },
         "userInfo": {
