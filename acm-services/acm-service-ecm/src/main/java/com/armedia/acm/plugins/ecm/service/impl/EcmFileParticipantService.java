@@ -254,7 +254,8 @@ public class EcmFileParticipantService
             return assignedObjectParticipantType;
         }
 
-        String documentParticipantType = fileParticipantTypes.stream()
+        String documentParticipantType = fileParticipantTypes.stream().filter(fileParticipantType -> getEcmFileServiceProperties()
+                .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType) != null)
                 .filter(fileParticipantType -> Arrays.asList(getEcmFileServiceProperties()
                         .getProperty("ecm.documentsParticipantTypes.mappings." + fileParticipantType).split(","))
                         .contains(assignedObjectParticipantType))

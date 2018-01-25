@@ -139,6 +139,13 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
             return assignedObject.getRestricted();
         }
 
+        // some AcmAssignedObjects are not JPA entities (like AcmTask). So they don't contain restricted flag at all
+        if (!getEm().getMetamodel().getEntities().stream()
+                .anyMatch(entityType -> entityType.getJavaType().equals(assignedObject.getClass())))
+        {
+            return assignedObject.getRestricted();
+        }
+
         String jpql = "SELECT e FROM " + assignedObject.getClass().getSimpleName() + " e WHERE e."
                 + getIdFieldName(assignedObject.getClass()) + " = :id AND e.restricted = :restricted";
 
