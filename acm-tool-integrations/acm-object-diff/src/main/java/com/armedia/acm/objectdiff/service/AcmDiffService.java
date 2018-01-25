@@ -177,6 +177,7 @@ public class AcmDiffService
         }
 
         boolean idMatches;
+
         if (oldObj == null || newObj == null || !(idMatches = idMatches(oldObj, newObj)))
         {
             AcmObjectReplaced acmObjectReplaced = createAcmObjectReplaced(parentPath, property, oldObj, newObj);
@@ -380,7 +381,8 @@ public class AcmDiffService
     }
 
     /**
-     * AcmCollectionChange is created if some element in new Collection is added, removed or modified
+     * AcmCollectionChange is created if some element in new Collection is added, removed or modified.
+     * This method should be used only when two collections are of same type i.e. holding objects of same class
      *
      * @param oldCollection
      *            Old collection
@@ -388,9 +390,9 @@ public class AcmDiffService
      *            New Collection
      * @return AcmCollectionChange
      */
-    public AcmCollectionChange compareCollections(Collection oldCollection, Collection newCollection,
-            Map<Object, List<AcmChange>> alreadyProcessed)
+    public AcmCollectionChange compareCollections(Collection oldCollection, Collection newCollection)
     {
+        Map<Object, List<AcmChange>> alreadyProcessed = new HashMap<>();
         return compareCollections(null, null, oldCollection, newCollection, alreadyProcessed);
     }
 
