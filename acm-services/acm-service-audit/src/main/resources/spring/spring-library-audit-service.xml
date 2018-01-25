@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <bean id="auditWriter" class="com.armedia.acm.audit.listeners.AuditWriter">
@@ -13,8 +11,7 @@
 
     <bean id="auditDao" class="com.armedia.acm.audit.dao.AuditDao"/>
 
-    <bean id="auditPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="auditPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -52,10 +49,7 @@
     <!-- Task Scheduler - once a day -->
     <task:scheduler id="auditTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="auditTaskScheduler">
-        <task:scheduled
-                ref="auditService"
-                method="purgeBatchRun"
-                fixed-delay="${audit.batch.frequency}"/>
+        <task:scheduled ref="auditService" method="purgeBatchRun" fixed-delay="${audit.batch.frequency}"/>
     </task:scheduled-tasks>
 
     <bean id="auditSyslogLogger" class="com.armedia.acm.audit.service.systemlogger.SyslogLogger">
@@ -98,17 +92,14 @@
     <bean id="acmAuditDatabaseListener" class="com.armedia.acm.audit.listeners.AcmAuditDatabaseListener">
         <property name="auditService" ref="auditService"/>
         <property name="databaseChangesLoggingEnabled" value="${audit.database.changes.logging.enabled}"/>
-        <property name="databaseChangesLoggingFieldValuesEnabled"
-                  value="${audit.database.changes.logging.fieldvalues.enabled}"/>
+        <property name="databaseChangesLoggingFieldValuesEnabled" value="${audit.database.changes.logging.fieldvalues.enabled}"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
     <bean id="acmActivitiEntityEventAuditor" class="com.armedia.acm.audit.listeners.AcmActivitiEntityEventListener">
         <property name="auditService" ref="auditService"/>
-        <property name="activitiEventsLoggingEntityEventsEnabled"
-                  value="${audit.activiti.logging.entity.events.enabled}"/>
-        <property name="activitiEventsLoggingEntityEventsObjectEnabled"
-                  value="${audit.activiti.logging.entity.events.object.enabled}"/>
+        <property name="activitiEventsLoggingEntityEventsEnabled" value="${audit.activiti.logging.entity.events.enabled}"/>
+        <property name="activitiEventsLoggingEntityEventsObjectEnabled" value="${audit.activiti.logging.entity.events.object.enabled}"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>
 
@@ -118,12 +109,11 @@
     </bean>
 
     <bean name="muleAuditMessageProcessorNotificationListener"
-          class="com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener">
+        class="com.armedia.acm.audit.listeners.AcmMessageProcessorNotificationListener">
         <property name="auditService" ref="auditService"/>
         <property name="muleFlowsLoggingEnabled" value="${audit.mule.flows.logging.enabled}"/>
         <property name="muleFlowsLoggingMessageEnabled" value="${audit.mule.flows.logging.message.enabled}"/>
-        <property name="muleFlowsLoggingMessagePropertiesEnabled"
-                  value="${audit.mule.flows.logging.message.properties.enabled}"/>
+        <property name="muleFlowsLoggingMessagePropertiesEnabled" value="${audit.mule.flows.logging.message.properties.enabled}"/>
         <property name="contentTypesToLog" value="#{'${audit.contentTypesToLog}'.split(',')}"/>
     </bean>
 

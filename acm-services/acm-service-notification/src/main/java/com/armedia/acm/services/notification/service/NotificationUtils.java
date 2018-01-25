@@ -1,12 +1,12 @@
 package com.armedia.acm.services.notification.service;
 
-
 import com.armedia.acm.core.AcmApplication;
 import com.armedia.acm.core.AcmNotifiableEntity;
 import com.armedia.acm.core.AcmObjectType;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.service.AcmDataService;
 import com.armedia.acm.services.notification.model.NotificationConstants;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
@@ -45,7 +45,6 @@ public class NotificationUtils
 
         return null;
     }
-
 
     public String getNotificationParentOrRelatedObjectNumber(String objectType, Long objectId)
     {

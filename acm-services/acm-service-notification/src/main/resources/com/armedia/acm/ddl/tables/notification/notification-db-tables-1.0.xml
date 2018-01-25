@@ -1,15 +1,11 @@
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-create-notification-table" author="manojd" dbms="oracle,postgresql,mssql">
         <createTable tableName="acm_notification">
             <column name="cm_notification_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_notification"/>
+                <constraints primaryKey="true" primaryKeyName="pk_notification"/>
             </column>
             <column name="cm_notification_created" type="${timestampType}">
                 <constraints nullable="false"/>
@@ -36,9 +32,7 @@
     <changeSet id="01-create-notification-table" author="manojd" dbms="mysql">
         <createTable tableName="acm_notification">
             <column name="cm_notification_id" type="${idType}">
-                <constraints
-                        primaryKey="true"
-                        primaryKeyName="pk_notification"/>
+                <constraints primaryKey="true" primaryKeyName="pk_notification"/>
             </column>
             <column name="cm_notification_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
@@ -80,8 +74,7 @@
     </changeSet>
 
     <changeSet id="02-4-change-ID-type-mssql" author="riste.tutureski" dbms="mssql">
-        <addNotNullConstraint tableName="acm_notification" columnName="cm_notification_id"
-                              columnDataType="${fkIdType}"/>
+        <addNotNullConstraint tableName="acm_notification" columnName="cm_notification_id" columnDataType="${fkIdType}"/>
         <addPrimaryKey tableName="acm_notification" columnNames="cm_notification_id" constraintName="pk_notification"/>
     </changeSet>
 
@@ -128,12 +121,9 @@
 
     <changeSet id="06-notification-drop-not-null-constraints" author="manojd">
         <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_note" columnDataType="CLOB"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_data"
-                               columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_auto"
-                               columnDataType="VARCHAR(1024)"/>
-        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_user"
-                               columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_data" columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_auto" columnDataType="VARCHAR(1024)"/>
+        <dropNotNullConstraint tableName="acm_notification" columnName="cm_notification_user" columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
     <changeSet id="07-notification-drop-comment-column" author="manojd">
@@ -149,8 +139,8 @@
     </changeSet>
 
     <changeSet id="09-rename-auto-column-notification-table" author="riste.tutureski">
-        <renameColumn tableName="acm_notification" oldColumnName="cm_notification_auto"
-                      newColumnName="cm_notification_type" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_notification" oldColumnName="cm_notification_auto" newColumnName="cm_notification_type"
+            columnDataType="VARCHAR(1024)"/>
     </changeSet>
 
     <changeSet id="10-add-state-column-notification-table" author="riste.tutureski">

@@ -8,6 +8,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 public class AcmLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler implements ApplicationEventPublisherAware
@@ -23,7 +24,7 @@ public class AcmLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler imple
     {
         // sometimes we can get here even when there is no actual authentication (e.g. someone
         // has invoked the logout url without having actually logged in)
-        if ( authentication != null )
+        if (authentication != null)
         {
 
             AcmAuthenticationDetails details = getAuthenticationDetailsFactory().buildDetails(httpServletRequest);

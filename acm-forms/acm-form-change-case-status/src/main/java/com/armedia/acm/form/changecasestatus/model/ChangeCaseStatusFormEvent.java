@@ -3,11 +3,11 @@
  */
 package com.armedia.acm.form.changecasestatus.model;
 
-import java.util.Date;
-
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.frevvo.model.FrevvoUploadedFiles;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
+
+import java.util.Date;
 
 /**
  * @author riste.tutureski
@@ -15,32 +15,32 @@ import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
  */
 public class ChangeCaseStatusFormEvent extends AcmEvent
 {
-	
-	
-	private static final long serialVersionUID = 9214955996048509545L;
-	
-	private ChangeCaseStatus request;
-	private FrevvoUploadedFiles frevvoUploadedFiles;
+
+    private static final long serialVersionUID = 9214955996048509545L;
+
+    private ChangeCaseStatus request;
+    private FrevvoUploadedFiles frevvoUploadedFiles;
     private String caseNumber;
     private Long caseId;
     private String mode;
 
-	public ChangeCaseStatusFormEvent(String caseNumber, Long caseId, ChangeCaseStatus source,
-							  FrevvoUploadedFiles files, String mode, String userId, String ipAddress,
-							  boolean succeeded) {
-		super(source);
+    public ChangeCaseStatusFormEvent(String caseNumber, Long caseId, ChangeCaseStatus source,
+            FrevvoUploadedFiles files, String mode, String userId, String ipAddress,
+            boolean succeeded)
+    {
+        super(source);
 
-		setMode(mode);
-		setUserId(userId);
-		setEventDate(new Date());
-		
-		String event = "edit".equals(mode) ? "updated" : "created";
-		setEventType("com.armedia.acm.changeCaseStatus." + event);
-		
-		setIpAddress(ipAddress);
+        setMode(mode);
+        setUserId(userId);
+        setEventDate(new Date());
+
+        String event = "edit".equals(mode) ? "updated" : "created";
+        setEventType("com.armedia.acm.changeCaseStatus." + event);
+
+        setIpAddress(ipAddress);
         setObjectId(source.getId());
         setObjectType("CHANGE_CASE_STATUS");
-        
+
         setSucceeded(succeeded);
 
         setRequest(source);
@@ -48,47 +48,57 @@ public class ChangeCaseStatusFormEvent extends AcmEvent
 
         setCaseNumber(caseNumber);
         setCaseId(caseId);
-		
-	}
 
-	public ChangeCaseStatus getRequest() {
-		return request;
-	}
+    }
 
-	public void setRequest(ChangeCaseStatus request) {
-		this.request = request;
-	}
+    public ChangeCaseStatus getRequest()
+    {
+        return request;
+    }
 
-	public FrevvoUploadedFiles getFrevvoUploadedFiles() {
-		return frevvoUploadedFiles;
-	}
+    public void setRequest(ChangeCaseStatus request)
+    {
+        this.request = request;
+    }
 
-	public void setFrevvoUploadedFiles(FrevvoUploadedFiles frevvoUploadedFiles) {
-		this.frevvoUploadedFiles = frevvoUploadedFiles;
-	}
+    public FrevvoUploadedFiles getFrevvoUploadedFiles()
+    {
+        return frevvoUploadedFiles;
+    }
 
-	public String getCaseNumber() {
-		return caseNumber;
-	}
+    public void setFrevvoUploadedFiles(FrevvoUploadedFiles frevvoUploadedFiles)
+    {
+        this.frevvoUploadedFiles = frevvoUploadedFiles;
+    }
 
-	public void setCaseNumber(String caseNumber) {
-		this.caseNumber = caseNumber;
-	}
+    public String getCaseNumber()
+    {
+        return caseNumber;
+    }
 
-	public Long getCaseId() {
-		return caseId;
-	}
+    public void setCaseNumber(String caseNumber)
+    {
+        this.caseNumber = caseNumber;
+    }
 
-	public void setCaseId(Long caseId) {
-		this.caseId = caseId;
-	}
+    public Long getCaseId()
+    {
+        return caseId;
+    }
 
-	public String getMode() {
-		return mode;
-	}
+    public void setCaseId(Long caseId)
+    {
+        this.caseId = caseId;
+    }
 
-	public void setMode(String mode) {
-		this.mode = mode;
-	}
+    public String getMode()
+    {
+        return mode;
+    }
+
+    public void setMode(String mode)
+    {
+        this.mode = mode;
+    }
 
 }

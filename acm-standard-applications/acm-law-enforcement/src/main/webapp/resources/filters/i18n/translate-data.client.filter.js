@@ -25,24 +25,24 @@
  <file name="script.js">
  angular.module('ngView', ['$translate'])
  .config(function ($translateProvider) {
-        $translateProvider.translations('en', {
-          'foo.bar.greeting_key%': 'Hello there!'
-        });
-        $translateProvider.translations('zh-cn', {
-          'foo.bar.greeting_key%': '你好!'
-        });
-        $translateProvider.preferredLanguage('zh-cn');
-      });
+ $translateProvider.translations('en', {
+ 'foo.bar.greeting_key%': 'Hello there!'
+ });
+ $translateProvider.translations('zh-cn', {
+ 'foo.bar.greeting_key%': '你好!'
+ });
+ $translateProvider.preferredLanguage('zh-cn');
+ });
  angular.module('ngView').controller('TranslateCtrl', function ($translate) {
-        console.log($translate.data('Hello there', 'foo.bar'));
-        //console output is '你好!'
-      });
+ console.log($translate.data('Hello there', 'foo.bar'));
+ //console output is '你好!'
+ });
  </file>
  </example>
  */
-angular.module('filters').filter('translateData', ['$translate', function ($translate) {
-    return function (input, category, lang, interpolateParams) {
+angular.module('filters').filter('translateData', [ '$translate', function($translate) {
+    return function(input, category, lang, interpolateParams) {
         //Passing param 'lang' here to force Angular to evaluate filter when language changes
         return $translate.data(input, category, interpolateParams);
     };
-}]);
+} ]);

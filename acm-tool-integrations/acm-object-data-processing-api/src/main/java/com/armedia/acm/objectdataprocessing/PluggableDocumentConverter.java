@@ -28,7 +28,6 @@ public class PluggableDocumentConverter implements DocumentConverter
 
         /*
          * (non-Javadoc)
-         *
          * @see com.armedia.acm.printdocumentse.PdfConverter#convertToPdf(java.io.InputStream, java.lang.String)
          */
         @Override
@@ -51,7 +50,6 @@ public class PluggableDocumentConverter implements DocumentConverter
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.printdocuments.DocumentConverter#getOutputMimeType()
      */
     @Override
@@ -61,7 +59,8 @@ public class PluggableDocumentConverter implements DocumentConverter
     }
 
     /**
-     * @param outputMimeType the outputMimeType to set
+     * @param outputMimeType
+     *            the outputMimeType to set
      */
     public void setOutputMimeType(String outputMimeType)
     {
@@ -70,7 +69,6 @@ public class PluggableDocumentConverter implements DocumentConverter
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.printdocuments.DocumentConverter#getSupportedMimeTypes()
      */
     @Override
@@ -81,7 +79,6 @@ public class PluggableDocumentConverter implements DocumentConverter
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.printdocuments.PdfConverter#convertToPdf(java.io.InputStream, java.lang.String)
      */
     @Override
@@ -95,7 +92,8 @@ public class PluggableDocumentConverter implements DocumentConverter
     }
 
     /**
-     * @param convertеrs the convertеrRegistry to set
+     * @param convertеrs
+     *            the convertеrRegistry to set
      */
     public void setConvertеrRegistry(List<DocumentConverter> convertеrs)
     {

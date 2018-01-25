@@ -3,9 +3,11 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Organization;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 public class OrganizationDao extends AcmAbstractDao<Organization>
@@ -46,5 +48,3 @@ public class OrganizationDao extends AcmAbstractDao<Organization>
         return Organization.class;
     }
 }
-
-

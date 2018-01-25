@@ -3,6 +3,7 @@ package com.armedia.acm.auth;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,14 +29,14 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
 
     /**
      * These properties are loaded by Spring from a properties file in the user's
-     * home folder.  Default mappings are used if
+     * home folder. Default mappings are used if
      * the properties file does not exist.
      */
     private Properties applicationRoleToUserGroupProperties;
 
     /**
      * This mapping is the effective mapping used when a user logs in to see
-     * which roles they will have.  It is populated during "initBean()" method
+     * which roles they will have. It is populated during "initBean()" method
      * execution.
      */
     private Map<String, List<String>> activeMapping;
@@ -45,7 +46,7 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
     private AcmRoleToGroupMapping roleToGroupMapping;
 
     /**
-     * Read the role mapping file and set the group mapping properties.  The
+     * Read the role mapping file and set the group mapping properties. The
      * role mapping file must be a properties file with one key for each application role.
      * The value must be the group name whose members will have that role.
      */
@@ -57,7 +58,8 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
             Map<String, List<String>> groupsToRoles = roleToGroupMapping.getGroupToRolesMap();
             setActiveMapping(groupsToRoles);
             logProperties(applicationRoleToUserGroupProperties);
-        } else
+        }
+        else
         {
             log.error("role to group mapping is not configured - no one "
                     + "will be able to log in!");

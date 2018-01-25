@@ -78,7 +78,8 @@ public class CorrespondenceService
             getEventPublisher().publishCorrespondenceAdded(retval, authentication, true);
 
             return retval;
-        } finally
+        }
+        finally
         {
             if (file != null)
             {

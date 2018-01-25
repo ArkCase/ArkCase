@@ -1,9 +1,18 @@
 package com.armedia.acm.services.note.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.newCapture;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.ApplicationNoteEvent;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.service.NoteEventPublisher;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -24,10 +33,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
 import java.util.Date;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -91,8 +96,7 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
         expect(mockAuthentication.getName()).andReturn("user");
 
         replayAll();
-        //.accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
-
+        // .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
 
         MvcResult result = mockMvc.perform(
                 delete("/api/latest/plugin/note/{noteId}", noteId)
@@ -104,7 +108,6 @@ public class DeleteNoteByIdAPIControllerTest extends EasyMockSupport
         verifyAll();
         log.info("log" + result.getResponse());
         log.info("log" + result);
-
 
         log.info("log" + result.getResponse().getStatus());
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());

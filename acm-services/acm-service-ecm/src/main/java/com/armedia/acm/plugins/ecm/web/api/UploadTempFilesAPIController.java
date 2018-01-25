@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.ecm.web.api;
 import com.armedia.acm.plugins.ecm.model.DeleteFileResult;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,16 +19,17 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/ecm/temp", "/api/latest/plugin/ecm/temp"})
+@RequestMapping({ "/api/v1/plugin/ecm/temp", "/api/latest/plugin/ecm/temp" })
 public class UploadTempFilesAPIController
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private EcmFileService fileFolderService;
 
-    @RequestMapping(value = "upload", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "upload", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
     public List<EcmFile> uploadTempFiles(HttpServletRequest request, Authentication authentication, HttpSession session)
     {
@@ -41,9 +43,10 @@ public class UploadTempFilesAPIController
         return getFileFolderService().saveFilesToTempDirectory(files);
     }
 
-    @RequestMapping(value = "delete", method = RequestMethod.POST, produces = {MediaType.APPLICATION_JSON_VALUE})
+    @RequestMapping(value = "delete", method = RequestMethod.POST, produces = { MediaType.APPLICATION_JSON_VALUE })
     @ResponseBody
-    public DeleteFileResult deleteTempFile(@RequestParam(value = "fileName") String fileName, HttpServletRequest request, Authentication authentication, HttpSession session)
+    public DeleteFileResult deleteTempFile(@RequestParam(value = "fileName") String fileName, HttpServletRequest request,
+            Authentication authentication, HttpSession session)
     {
         log.debug("Deleting temp file {} by {}", fileName, authentication.getName());
         DeleteFileResult deleteFileResult = new DeleteFileResult();
@@ -55,7 +58,8 @@ public class UploadTempFilesAPIController
             deleteFileResult.setDeletedFileName(fileName);
             deleteFileResult.setSuccess(false);
             log.warn("The temp file {} was not deleted. The server file system will require manual cleanup.", fileName);
-        } else
+        }
+        else
         {
             deleteFileResult.setDeletedFileName(fileName);
             deleteFileResult.setSuccess(true);

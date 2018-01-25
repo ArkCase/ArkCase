@@ -1,8 +1,11 @@
 package com.armedia.acm.services.notification;
 
+import static org.junit.Assert.assertNotNull;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.Notification;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,8 +15,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-
-import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -52,7 +53,6 @@ public class NotificationIT
     @Autowired
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
-
     @Test
     @Transactional
     public void saveNotification() throws Exception
@@ -68,16 +68,13 @@ public class NotificationIT
         n.setData("data");
         n.setUser("user");
 
-
         Notification saved = notificationDao.save(n);
 
         assertNotNull(saved.getId());
 
         notificationDao.deleteNotificationById(saved.getId());
 
-
         log.info("Notification ID: " + saved.getId());
     }
-
 
 }

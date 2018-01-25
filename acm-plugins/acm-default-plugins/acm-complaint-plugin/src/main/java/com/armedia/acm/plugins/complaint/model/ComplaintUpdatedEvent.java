@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.complaint.model;
 
-
 public class ComplaintUpdatedEvent extends ComplaintPersistenceEvent
 {
     private static final String EVENT_TYPE = "com.armedia.acm.complaint.updated";

@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.admin.model;
 
-
 public interface LdapConfigurationProperties
 {
     String LDAP_PROP_ID = "ldapConfig.id";

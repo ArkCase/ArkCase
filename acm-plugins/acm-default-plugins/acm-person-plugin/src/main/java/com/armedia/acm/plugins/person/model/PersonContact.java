@@ -28,11 +28,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  *
@@ -50,13 +50,7 @@ public class PersonContact implements Serializable, AcmEntity
     private static final long serialVersionUID = 7413755227864370548L;
 
     @Id
-    @TableGenerator(name = "acm_person_contact_gen",
-            table = "acm_person_contact_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_person_contact",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_person_contact_gen", table = "acm_person_contact_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_person_contact", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_person_contact_gen")
     @Column(name = "cm_person_contact_id")
     private Long id;
@@ -79,34 +73,24 @@ public class PersonContact implements Serializable, AcmEntity
     @Column(name = "cm_person_contact_last_name")
     private String lastName;
 
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinTable(
-            name = "acm_person_cntct_ident",
-            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
-            }
-    )
+    @JoinTable(name = "acm_person_cntct_ident", joinColumns = {
+            @JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_identification_id", referencedColumnName = "cm_identification_id", unique = true)
+            })
     private List<Identification> identifications = new ArrayList<>();
 
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "acm_person_cntct_postal_address",
-            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id")}
-    )
+    @JoinTable(name = "acm_person_cntct_postal_address", joinColumns = {
+            @JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_address_id", referencedColumnName = "cm_address_id") })
     private List<PostalAddress> addresses = new ArrayList<>();
 
-
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "acm_person_cntct_cntct_method",
-            joinColumns = {@JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id")},
-            inverseJoinColumns = {@JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id")}
-    )
+    @JoinTable(name = "acm_person_cntct_cntct_method", joinColumns = {
+            @JoinColumn(name = "cm_person_contact_id", referencedColumnName = "cm_person_contact_id") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_contact_method_id", referencedColumnName = "cm_contact_method_id") })
     private List<ContactMethod> contactMethods = new ArrayList<>();
-
 
     @Column(name = "cm_person_contact_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)

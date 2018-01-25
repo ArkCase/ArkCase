@@ -5,32 +5,39 @@ import java.util.List;
 /**
  * Created by nebojsha on 09.05.2015.
  */
-public class OutlookFolder extends OutlookItem {
+public class OutlookFolder extends OutlookItem
+{
     private String parentId;
     private String displayName;
     private List<OutlookFolderPermission> permissions;
 
-    public String getParentId() {
+    public String getParentId()
+    {
         return parentId;
     }
 
-    public void setParentId(String parentId) {
+    public void setParentId(String parentId)
+    {
         this.parentId = parentId;
     }
 
-    public String getDisplayName() {
+    public String getDisplayName()
+    {
         return displayName;
     }
 
-    public void setDisplayName(String displayName) {
+    public void setDisplayName(String displayName)
+    {
         this.displayName = displayName;
     }
 
-    public List<OutlookFolderPermission> getPermissions() {
+    public List<OutlookFolderPermission> getPermissions()
+    {
         return permissions;
     }
 
-    public void setPermissions(List<OutlookFolderPermission> permissions) {
+    public void setPermissions(List<OutlookFolderPermission> permissions)
+    {
         this.permissions = permissions;
     }
 }

@@ -1,15 +1,17 @@
 package com.armedia.acm.service.outlook.service.impl;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.core.exceptions.AcmOutlookException;
 import com.armedia.acm.core.exceptions.AcmOutlookFindItemsFailedException;
 import com.armedia.acm.service.outlook.dao.OutlookDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookService;
-import microsoft.exchange.webservices.data.core.ExchangeService;
-import microsoft.exchange.webservices.data.core.PropertySet;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
-import microsoft.exchange.webservices.data.search.FindItemsResults;
-import microsoft.exchange.webservices.data.search.filter.SearchFilter;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,8 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.fail;
+import microsoft.exchange.webservices.data.core.ExchangeService;
+import microsoft.exchange.webservices.data.core.PropertySet;
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+import microsoft.exchange.webservices.data.search.FindItemsResults;
+import microsoft.exchange.webservices.data.search.filter.SearchFilter;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -109,7 +114,6 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortAscending),
                 eq(filter))).andReturn(new FindItemsResults<>());
 
-
         replayAll();
 
         outlookService.findTaskItems(user, 0, 5, "subject", true, null);
@@ -139,7 +143,7 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
                 eq(sortProperty),
                 eq(sortAscending),
                 eq(filter))).andThrow(new AcmOutlookFindItemsFailedException(new NullPointerException("test exception")))
-                .times(expectedRetries);
+                        .times(expectedRetries);
 
         // since we threw an exception, now it should disconnect, and then retry
         mockDao.disconnect(user);
@@ -151,7 +155,8 @@ public class OutlookServiceRetryLogicIT extends EasyMockSupport
         {
             outlookService.findTaskItems(user, 0, 5, "subject", true, null);
             fail("should have caught an exception");
-        } catch (AcmOutlookException e)
+        }
+        catch (AcmOutlookException e)
         {
             log.info("Got expected exception, test passes.");
         }

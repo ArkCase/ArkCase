@@ -15,6 +15,7 @@ import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import javax.persistence.NoResultException;
+
 import java.util.UUID;
 
 /**
@@ -46,7 +48,6 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
 
         getAuditPropertyEntityAdapter().setUserId(ecmEvent.getUserId());
 
-
         // parent folder must already be in ArkCase
         AcmFolder parentFolder = lookupArkCaseFolder(ecmEvent.getParentNodeId());
         if (parentFolder == null)
@@ -68,10 +69,8 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             return;
         }
 
-
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, ecmEvent.getUserId());
         MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
-
 
         String cmisRepositoryId = getFolderService().getCmisRepositoryId(parentFolder);
 
@@ -81,7 +80,6 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             log.error("No document to be loaded - exiting.");
             return;
         }
-
 
         try
         {
@@ -101,14 +99,13 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
                     cmisDocument);
             log.info("Added file to ArkCase with CMIS ID [{}] and ArkCase ID [{}]", ecmEvent.getNodeId(), addedToArkCase.getId());
 
-        } catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
+        }
+        catch (AcmCreateObjectFailedException | AcmUserActionFailedException e)
         {
             log.error("Could not add file with CMIS ID [{}] to ArkCase: {}", ecmEvent.getNodeId(), e.getMessage(), e);
         }
 
-
     }
-
 
     /**
      * So subtypes can set the file type as needed.
@@ -134,7 +131,8 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             {
                 return null;
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Could not lookup CMIS document for node with id {}", nodeId);
             return null;
@@ -148,7 +146,8 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             AcmContainer found = getFolderService().findContainerByFolderId(parentFolderId);
             log.debug("ArkCase has container for folder with id {}", parentFolderId);
             return found;
-        } catch (AcmObjectNotFoundException e)
+        }
+        catch (AcmObjectNotFoundException e)
         {
             log.debug("No container in ArkCase for folder: {}", parentFolderId);
             return null;
@@ -162,7 +161,8 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             EcmFile found = getFileDao().findByCmisFileIdAndFolderId(nodeId, parentFolderId);
             log.debug("ArkCase has file with CMIS ID {}: folder id is {}", nodeId, found.getId());
             return found;
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.debug("No such file in ArkCase: {}", nodeId);
             return null;
@@ -176,7 +176,8 @@ public class EcmFileCreatedEventHandler implements ApplicationListener<EcmEvent>
             AcmFolder found = getFolderDao().findByCmisFolderId(folderCmisId);
             log.debug("ArkCase has folder with CMIS ID {}: folder id is {}", folderCmisId, found.getId());
             return found;
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.debug("No such folder in ArkCase: {}", folderCmisId);
             return null;

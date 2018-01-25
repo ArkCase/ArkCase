@@ -26,7 +26,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see
      * com.armedia.acm.calendar.config.service.EmailCredentialsVerifierService#verifyEmailCredentials(java.lang.String,
      * com.armedia.acm.calendar.config.service.EmailCredentials)
@@ -40,7 +39,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see
      * com.armedia.acm.calendar.service.CalendarService#retrieveCalendar(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String)
@@ -55,7 +53,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.calendar.service.CalendarService#listCalendars(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, java.lang.String, java.lang.String, java.lang.String, int, int)
      */
@@ -69,7 +66,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see
      * com.armedia.acm.calendar.service.CalendarService#addCalendarEvent(com.armedia.acm.services.users.model.AcmUser,
      * org.springframework.security.core.Authentication, com.armedia.acm.calendar.service.AcmCalendarEvent,
@@ -85,7 +81,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.calendar.service.CalendarService#updateCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, boolean,
      * com.armedia.acm.calendar.service.AcmCalendarEvent, org.springframework.web.multipart.MultipartFile[])
@@ -100,7 +95,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.calendar.service.CalendarService#deleteCalendarEvent(com.armedia.acm.services.users.model.
      * AcmUser, org.springframework.security.core.Authentication, java.lang.String, java.lang.String, java.lang.String,
      * boolean)
@@ -115,7 +109,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.calendar.service.CalendarService#purgeEvents(java.lang.String,
      * com.armedia.acm.calendar.config.service.CalendarConfiguration)
      */
@@ -128,7 +121,6 @@ public class FakeVerifier implements CalendarService, EmailCredentialsVerifierSe
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.calendar.service.CalendarService#getExceptionMapper(com.armedia.acm.calendar.service.
      * CalendarServiceException)
      */
