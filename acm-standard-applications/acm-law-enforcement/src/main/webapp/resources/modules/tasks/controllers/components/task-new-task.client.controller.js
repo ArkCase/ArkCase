@@ -39,9 +39,7 @@ angular.module('tasks')
                             $scope.chosenGroup = '';
 
                             $scope.options = {
-                                focus : true,
-                                dialogsInBody : true
-                            //,height: 120
+                                focus : true
                             };
 
                             if ($scope.taskType === 'REVIEW_DOCUMENT') {
