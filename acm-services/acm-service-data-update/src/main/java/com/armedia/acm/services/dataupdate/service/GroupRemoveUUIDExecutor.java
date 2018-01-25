@@ -51,7 +51,7 @@ public class GroupRemoveUUIDExecutor implements AcmDataUpdateExecutor
 
         invalidateGroups(invalidGroups);
 
-        uuidUpdateDao.deleteInvalidGroups(invalidGroups);
+        uuidUpdateDao.deleteGroups(invalidGroups);
 
         List<AcmGroup> groupsWithUUID = uuidUpdateDao.findAdHocGroupsWithUUIDByStatus(AcmGroupStatus.ACTIVE);
 

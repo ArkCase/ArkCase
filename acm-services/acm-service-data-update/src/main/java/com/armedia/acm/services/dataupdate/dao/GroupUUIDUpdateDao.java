@@ -35,7 +35,7 @@ public class GroupUUIDUpdateDao
     }
 
     @Transactional
-    public void deleteInvalidGroups(List<AcmGroup> groups)
+    public void deleteGroups(List<AcmGroup> groups)
     {
         groups.forEach(group -> {
             log.debug("Deleting AcmGroup [{}]", group.getName());
