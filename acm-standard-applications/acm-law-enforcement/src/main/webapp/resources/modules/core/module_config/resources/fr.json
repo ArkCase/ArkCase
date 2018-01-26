@@ -500,15 +500,26 @@
                 "concur": "Concurrir",
                 "nonConcur": "No concurra"
             },
+            "businessProcessTypes": {
+                "acmDocumentWorkflow": "Flux de travail de document ACM",
+                "correctiveActionPlan": "Plan de mesures correctives"
+            },
+            "reportStates": {
+                "draft": "Brouillon",
+                "inApproval": "En approbation",
+                "active": "actif",
+                "inActive": "Inactif",
+                "closed": "Fermé"
+            },
             "auditReportNames": {
-                "all": "All",
-                "case_file": "Case",
-                "complaint": "Complaint",
-                "task": "Task",
-                "file": "File",
+                "all": "Tout",
+                "case_file": "Cas",
+                "complaint": "Plainte",
+                "task": "Tâche",
+                "file": "Fichier",
                 "document": "Document",
-                "person": "Person",
-                "organization": "Organization"
+                "person": "La personne",
+                "organization": "Organisation"
             }
         },
         "userInfo": {

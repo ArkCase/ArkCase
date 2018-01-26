@@ -4163,7 +4163,7 @@ angular
 
                                                                 params.header = $translate
                                                                         .instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-                                                                params.filter = '"Object Type": USER';
+                                                                params.filter = '"Object Type": USER' + '&fq="status_lcs": "VALID"';
                                                                 params.config = Util.goodMapValue(DocTree.treeConfig, "dialogUserPicker");
 
                                                                 var modalInstanceUserPicker = $modal
