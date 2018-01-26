@@ -10,6 +10,11 @@
                 "no-access": "No Access",
                 "case": "Case File"
             },
+            "cmisVersioningState": {
+                "none": "NONE",
+                "minor": "MINOR",
+                "major": "MAJOR"
+            },
             "addressTypes": {
                 "business": "Business"
             },
@@ -501,7 +506,7 @@
                 "nonConcur": "Non-Concur"
             },
             "businessProcessTypes": {
-                "acmDocumentWorkflow": "Acm Document Workflow",
+                "acmDocumentWorkflow": "ACM Document Workflow",
                 "correctiveActionPlan": "Corrective Action Plan"
             },
             "reportStates": {

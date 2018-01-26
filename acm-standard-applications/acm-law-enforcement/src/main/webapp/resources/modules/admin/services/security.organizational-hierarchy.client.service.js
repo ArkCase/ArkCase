@@ -123,6 +123,7 @@ angular.module('admin').service(
                         getSubGroupsForGroup : getSubGroupsForGroup,
                         getUsersForGroup : getUsersForGroup,
                         addAdHocGroup : addAdHocGroup,
+                        addExistingAdHocSubGroup : addExistingAdHocSubGroup,
                         saveMembers : saveMembers,
                         removeMembers : removeMembers,
                         removeGroup : removeGroup,
@@ -251,6 +252,33 @@ angular.module('admin').service(
                             method : 'POST',
                             url : url,
                             data : group,
+                            headers : {
+                                "Content-Type" : "application/json"
+                            }
+                        });
+                    }
+
+                    /**
+                     * @ngdoc method
+                     * @name addExistingAdHocSubGroup
+                     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+                     *
+                     * @description
+                     * Adds an existing Ad Hoc group as member to another Ad Hoc group
+                     *
+                     * param {String} groupId member group
+                     *
+                     * param {String} parentId parent group
+                     *
+                     * @returns {HttpPromise} Future info about ad hoc subgroup
+                     */
+                    function addExistingAdHocSubGroup(groupId, parentId) {
+                        groupId = base64.urlencode(groupId);
+                        parentId = base64.urlencode(parentId);
+                        var url = 'api/latest/users/group/save/' + groupId + '/' + parentId;
+                        return $http({
+                            method : 'POST',
+                            url : url,
                             headers : {
                                 "Content-Type" : "application/json"
                             }
@@ -470,10 +498,10 @@ angular.module('admin').service(
                         });
                     }
 
-                    function addExistingMembersToLdapGroup(ldapUsers, groupName, directoryName) {
+                    function addExistingMembersToLdapGroup(ldapUserIds, groupName, directoryName) {
                         return Util.serviceCall({
                             service : Service._addExistingMembersToLdapGroup,
-                            data : ldapUsers,
+                            data : ldapUserIds,
                             param : {
                                 groupName : base64.urlencode(groupName),
                                 directoryName : directoryName

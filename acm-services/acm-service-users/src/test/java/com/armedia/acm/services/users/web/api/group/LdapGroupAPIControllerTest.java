@@ -7,9 +7,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
-import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.users.model.group.AcmGroup;
-import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.group.GroupService;
@@ -92,7 +90,7 @@ public class LdapGroupAPIControllerTest extends EasyMockSupport
 
     }
 
-    private void mockBehaviour(AcmGroup group) throws AcmLdapActionFailedException, AcmObjectNotFoundException
+    private void mockBehaviour(AcmGroup group) throws Exception
     {
         when(mockLdapGroupService.deleteLdapGroup(anyString(), anyString())).thenReturn(group);
     }
