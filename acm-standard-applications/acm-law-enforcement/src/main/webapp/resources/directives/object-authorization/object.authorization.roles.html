@@ -4,18 +4,9 @@
             {{objectTitle}}</label>
         <!--Sort od SOLR-->
         <select ng-model="selectedObject" ng-change="selectObject()"
-                ng-options="d[objectDisplayName] | translate for d in data | orderObjectBy:'objectDisplayName'" name=""
-                size="15" id="scrollTest" class="form-control">
+                ng-options="d[objectDisplayName] | translate for d in data.appUsers | orderObjectBy:'objectDisplayName'"
+                name="" size="15" class="form-control">
         </select>
-        <!--<form class="form-inline" ng-submit="filterObjects('Choose User')">
-            <div class="form-group">
-                <input type="text" class="form-control" ng-model="filterWord" ng-change="onChangeFilterWord()"
-                        pattern=".{2,}" title="Error, 2 characters required.">
-            </div>
-            <button type="submit" class="btn btn-default" ng-disabled="noFilterData">
-                <span class="glyphicon glyphicon-search"></span> Search
-            </button>
-        </form>-->
         <object-authorization-roles-filter controller-name="ChooseUserManagement" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
@@ -23,7 +14,7 @@
                 ng-options="na[roleDisplayName] for na in notAuthorized| orderObjectBy:'roleDisplayName'" name=""
                 size="15" multiple class="form-control">
         </select>
-        <object-authorization-roles-filter controller-name="AuthorizedUserManagement" />
+        <object-authorization-roles-filter controller-name="UnauthorizedUserManagement" />
     </div>
     <div class="col-xs-1 b-r" style="text-align:center;"><br /><br /><br /><br />
         <button class="btn btn-rounded btn-sm" data-toggle="tooltip"
@@ -42,5 +33,6 @@
                 ng-options="a[roleDisplayName] for a in authorized| orderObjectBy:'roleDisplayName'" size="15" multiple
                 class="form-control">
         </select>
+        <object-authorization-roles-filter controller-name="AuthorizedUserManagement" />
     </div>
 </div>

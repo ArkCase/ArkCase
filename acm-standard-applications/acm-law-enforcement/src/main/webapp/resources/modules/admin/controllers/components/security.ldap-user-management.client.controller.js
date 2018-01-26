@@ -283,33 +283,64 @@ angular.module('admin').controller(
                         }
                     });
 
-                    $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
+                    $scope.$bus.subscribe('UnauthorizedUserManagementFilter', function(data) {
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
-                            LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
-                                $scope.appUsers = [];
-                                _.forEach(response.data, function(user) {
+                            LdapUserManagementService.getAllUnauthorizedGroups(data).then(function(response) {
+                                $scope.testData.selectedNotAuthorized = [];
+                                _.forEach(response.data.response.docs, function(user) {
                                     var element = {};
                                     element.name = user.name;
                                     element.key = user.object_id_s;
                                     element.directory = user.directory_name_s;
-                                    $scope.appUsers.push(element);
+                                    $scope.testData.selectedNotAuthorized.push(element);
                                 });
                             });
                         } else {
                             LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
-                                $scope.appUsers = [];
+                                $scope.testData.selectedNotAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
                                     _.forEach(response.data.response.docs, function(user) {
                                         var element = {};
                                         element.name = user.name;
                                         element.key = user.object_id_s;
                                         element.directory = user.directory_name_s;
-                                        $scope.appUsers.push(element);
+                                        $scope.testData.selectedNotAuthorized.push(element);
                                     });
                                 }
+                            }, function() {
+                                console.log("error");
+                            });
+                        }
+                    });
 
+                    $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
+                        data.member_id = $scope.lastSelectedUser;
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getAllAuthorizedGroups(data).then(function(response) {
+                                $scope.testData.selectedAuthorized = [];
+                                _.forEach(response.data.response.docs, function(user) {
+                                    var element = {};
+                                    element.name = user.name;
+                                    element.key = user.object_id_s;
+                                    element.directory = user.directory_name_s;
+                                    $scope.testData.selectedAuthorized.push(element);
+                                });
+                            });
+                        } else {
+                            LdapUserManagementService.getFilteredAuthorizedGroups(data).then(function(response) {
+                                $scope.testData.selectedAuthorized = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    _.forEach(response.data.response.docs, function(user) {
+                                        var element = {};
+                                        element.name = user.name;
+                                        element.key = user.object_id_s;
+                                        element.directory = user.directory_name_s;
+                                        $scope.testData.selectedAuthorized.push(element);
+                                    });
+                                }
                             }, function() {
                                 console.log("error");
                             });
