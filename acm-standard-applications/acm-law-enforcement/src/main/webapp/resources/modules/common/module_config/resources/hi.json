@@ -852,6 +852,23 @@
                 "newValue": "नया मूल्य",
                 "oldValue": "पुरानी मूल्य"
             }
+        },
+        "client": {
+            "title": "इतिहास",
+            "label": {
+                "updated": "अपडेट किया गया"
+            },
+            "table.columns": {
+                "eventType": "कार्यक्रम नाम",
+                "eventDate": "तारीख",
+                "userId": "उपयोगकर्ता",
+                "details.btn.text": "{{count}} परिवर्तन देखें"
+            }
         }
     }
 }
+
+
+
+
+
