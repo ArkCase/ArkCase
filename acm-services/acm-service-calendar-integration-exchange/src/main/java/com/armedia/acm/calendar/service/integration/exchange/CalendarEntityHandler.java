@@ -337,7 +337,7 @@ public class CalendarEntityHandler
                 .createQuery(String.format("SELECT obj FROM %s obj WHERE obj.status IN :statuses AND obj.%s = :objectId",
                         entityTypeForQuery, entityIdForQuery), AcmContainerEntity.class);
         query.setParameter("statuses", closedStates);
-        query.setParameter("objectId", Long.valueOf(objectId));
+        query.setParameter("objectId", objectId);
         List<AcmContainerEntity> resultList = query.getResultList();
 
         return !resultList.isEmpty();

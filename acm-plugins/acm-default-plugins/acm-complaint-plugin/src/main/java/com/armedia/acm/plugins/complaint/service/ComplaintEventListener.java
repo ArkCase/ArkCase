@@ -225,9 +225,12 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     private boolean isPostalAddressChanged(PostalAddress ex, PostalAddress up)
     {
-        return Objects.equals(ex.getType(), up.getType()) && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
-                && Objects.equals(ex.getCity(), up.getCity()) && Objects.equals(ex.getCountry(), up.getCountry())
-                && Objects.equals(ex.getZip(), up.getZip()) && Objects.equals(ex.getState(), up.getState());
+        return Objects.equals(ex.getType(), up.getType())
+                && Objects.equals(ex.getStreetAddress(), up.getStreetAddress())
+                && Objects.equals(ex.getCity(), up.getCity())
+                && Objects.equals(ex.getCountry(), up.getCountry())
+                && Objects.equals(ex.getZip(), up.getZip())
+                && Objects.equals(ex.getState(), up.getState());
     }
 
     private boolean isObjectAdded(Set<Long> existingIds, Set<Long> updatedIds)
