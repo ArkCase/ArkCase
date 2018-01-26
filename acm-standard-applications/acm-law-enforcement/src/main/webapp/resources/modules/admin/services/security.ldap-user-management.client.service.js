@@ -5,7 +5,9 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         queryGroupsByDirectory : queryGroupsByDirectory,
         queryAdhocGroups : queryAdhocGroups,
         getFilteredAuthorizedGroups : getFilteredAuthorizedGroups,
+        getAllAuthorizedGroups : getAllAuthorizedGroups,
         getFilteredUnauthorizedGroups : getFilteredUnauthorizedGroups,
+        getAllUnauthorizedGroups : getAllUnauthorizedGroups,
         addGroupsToUser : addGroupsToUser,
         removeGroupsFromUser : removeGroupsFromUser,
         cloneUser : cloneUser,
@@ -40,7 +42,19 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/getFilteredAuthorizedGroups',
             params : {
                 n : (data.n ? data.n : 20),
-                q : data.filterWord
+                q : data.member_id.key,
+                fq : data.filterWord
+            }
+        });
+    }
+
+    function getAllAuthorizedGroups(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/getAllAuthorizedGroups',
+            params : {
+                n : (data.n ? data.n : 20),
+                q : data.member_id.key
             }
         });
     }
@@ -51,8 +65,19 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/getFilteredUnauthorizedGroups',
             params : {
                 n : (data.n ? data.n : 20),
-                q : data.member_id,
+                q : data.member_id.key,
                 fq : data.filterWord
+            }
+        });
+    }
+
+    function getAllUnauthorizedGroups(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/getAllUnauthorizedGroups',
+            params : {
+                n : (data.n ? data.n : 20),
+                q : data.member_id.key
             }
         });
     }

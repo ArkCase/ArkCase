@@ -102,22 +102,28 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
                     scope.authorized = [];
-                    scope.notAuthorized = [];
+
+                    scope.$watch('data.selectedNotAuthorized', function() {
+                        scope.notAuthorized = Util.isArrayEmpty(scope.data.selectedNotAuthorized) ? [] : scope.data.selectedNotAuthorized;
+                    }, true);
+
+                    scope.$watch('data.selectedAuthorized', function() {
+                        scope.authorized = Util.isArrayEmpty(scope.data.selectedAuthorized) ? [] : scope.data.selectedAuthorized;
+                    }, true);
 
                     //scroll, adding scroll event on the element
-                    document.getElementById("scrollTest").addEventListener("scroll", myFunction);
-                    var temp = document.getElementById("scrollTest");
-                    var maxScrolled = 0;
+                    // document.getElementById("scrollTest").addEventListener("scroll", myFunction);
+                    /*var maxScrolled = 0;
 
-                    function myFunction() {
+                    angular.element("scrollTest").bind("scroll", function() {
                         var temp = document.getElementById("scrollTest");
                         if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
-                            scope.$bus.publish('onFilter-' + scope.controllerName, {
+                            scope.$bus.publish(scope.controllerName + "Filter", {
                                 "filterWord" : scope.filterWord,
-                                "n" : scope.data.length * 2
+                                "n" : scope.data.appUsers.length * 2
                             });
                         }
-                    }
+                    });*/
 
                     //authorize button is clicked
                     scope.authorize = function() {
