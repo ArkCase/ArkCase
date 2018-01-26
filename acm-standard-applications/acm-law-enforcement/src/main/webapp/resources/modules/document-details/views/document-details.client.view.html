@@ -4,11 +4,13 @@
             <div class="well-sm clearfix">
                 <div class="row">
                     <div class="col-sm-6 col-md-12">
-                    	<div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
-                    	<!--<small class="text-muted" translate>documentDetails.name</small>-->
+                        <div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
+                        <!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown' | translate}}</div>
+                        <div class="h4 font-bold">{{::ecmFile.creator | mapKeyValue: userList:'object_id_s':'name' || 'common.value.unknown'
+                            | translate}}
+                        </div>
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
@@ -27,7 +29,7 @@
                         <div class="h4 font-bold">{{ecmFile.status || 'common.value.unknown' | translate}}</div>
                         <small class="text-muted" translate>documentDetails.status</small>
                     </div>
-                    
+
                 </div>
 
             </div>
