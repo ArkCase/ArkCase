@@ -1,14 +1,14 @@
 package com.armedia.acm.plugins.objectassociation.service;
 
-import java.util.List;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.objectassociation.model.AcmChildObjectEntity;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 public interface ObjectAssociationService
 {

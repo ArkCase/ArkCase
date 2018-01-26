@@ -59,7 +59,8 @@ public class AcmEventResponseLauncher implements ApplicationListener<AcmEvent>
                 try
                 {
                     getMuleContextManager().dispatch(response.getAction().getTargetMuleEndpoint(), acmEvent, messageProperties);
-                } catch (MuleException e)
+                }
+                catch (MuleException e)
                 {
                     log.error("Could not dispatch Mule event: {}", e.getMessage(), e);
                 }

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.CascadeType;
@@ -24,6 +25,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Date;
@@ -87,19 +89,16 @@ public class AcmGroup implements Serializable, AcmEntity
 
     @JsonProperty("members")
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-    @JoinTable(
-            name = "acm_user_membership",
-            joinColumns = { @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") },
-            inverseJoinColumns = { @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
+    @JoinTable(name = "acm_user_membership", joinColumns = {
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name") }, inverseJoinColumns = {
+                    @JoinColumn(name = "cm_user_id", referencedColumnName = "cm_user_id") })
     private Set<AcmUser> userMembers = new HashSet<>();
 
-    @JoinTable(name = "acm_group_membership",
-            joinColumns = {
-                    @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
-            },
-            inverseJoinColumns = {
-                    @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
-            })
+    @JoinTable(name = "acm_group_membership", joinColumns = {
+            @JoinColumn(name = "cm_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "cm_member_group_name", referencedColumnName = "cm_group_name", nullable = false)
+    })
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     private Set<AcmGroup> memberGroups = new HashSet<>();
 
@@ -140,27 +139,24 @@ public class AcmGroup implements Serializable, AcmEntity
     @JsonIgnore
     public Stream<String> getUserMemberDns()
     {
-        return userMembers.stream()
-                .map(AcmUser::getDistinguishedName);
+        return userMembers.stream().map(AcmUser::getDistinguishedName);
     }
 
     @JsonIgnore
     public Stream<String> getUserMemberIds()
     {
-        return userMembers.stream()
-                .map(AcmUser::getUserId);
+        return userMembers.stream().map(AcmUser::getUserId);
     }
 
     @JsonIgnore
     public Stream<String> getGroupMemberNames()
     {
-        return memberGroups.stream()
-                .map(AcmGroup::getName);
+        return memberGroups.stream().map(AcmGroup::getName);
     }
 
     /**
-     * Because of bidirectional ManyToMany relation, this method should be used for adding
-     * userMembers to the group. Don't use getUserMembers().add(..) or getUserMembers().addAll(..)
+     * Because of bidirectional ManyToMany relation, this method should be used for adding userMembers to the group.
+     * Don't use getUserMembers().add(..) or getUserMembers().addAll(..)
      *
      * @param user
      */
@@ -171,8 +167,7 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     /**
-     * Because of bidirectional ManyToMany relation, this method should be used for removing
-     * userMembers from the group.
+     * Because of bidirectional ManyToMany relation, this method should be used for removing userMembers from the group.
      *
      * @param user
      */
@@ -185,13 +180,35 @@ public class AcmGroup implements Serializable, AcmEntity
     public void addGroupMember(AcmGroup group)
     {
         memberGroups.add(group);
-        group.getMemberOfGroups().add(this);
+        group.addToGroup(this);
     }
 
     public void removeGroupMember(AcmGroup group)
     {
         memberGroups.remove(group);
-        group.getMemberOfGroups().remove(this);
+        group.removeFromGroup(this);
+    }
+
+    public void removeMembers()
+    {
+        memberGroups.forEach(memberGroup -> memberGroup.removeFromGroup(this));
+        memberGroups.clear();
+    }
+
+    public void addToGroup(AcmGroup group)
+    {
+        memberOfGroups.add(group);
+    }
+
+    public void removeFromGroup(AcmGroup group)
+    {
+        memberOfGroups.remove(group);
+    }
+
+    public void removeAsMemberOf()
+    {
+        memberOfGroups.forEach(memberOfGroup -> memberOfGroup.removeGroupMember(this));
+        memberOfGroups.clear();
     }
 
     public String getName()
@@ -371,22 +388,25 @@ public class AcmGroup implements Serializable, AcmEntity
     }
 
     /**
-     * We will use this as pre-computed list of all ascendants found by traversing
-     * the full graph of groups and their member groups trying to find path to this group.
-     * // TODO: find better separator then `,`, maybe `;` or `:`
+     * We will use this as pre-computed list of all ascendants found by traversing the full graph of groups and their
+     * member groups trying to find path to this group. // TODO: find better separator then `,`, maybe `;` or `:`
      *
      * @return `,` separated list of all ascendants of group
      */
     @JsonIgnore
     public Stream<String> getAscendantsStream()
     {
-        if (StringUtils.isBlank(ascendantsList)) return Stream.empty();
+        if (StringUtils.isBlank(ascendantsList))
+        {
+            return Stream.empty();
+        }
         return Arrays.stream(ascendantsList.split(",")).sorted();
     }
 
     public Set<String> getAscendants()
     {
-        if (StringUtils.isBlank(ascendantsList)) return new HashSet<>();
+        if (StringUtils.isBlank(ascendantsList))
+            return new HashSet<>();
         return Arrays.stream(ascendantsList.split(","))
                 .sorted()
                 .collect(Collectors.toSet());
@@ -409,23 +429,31 @@ public class AcmGroup implements Serializable, AcmEntity
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+        {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass())
+        {
+            return false;
+        }
         AcmGroup acmGroup = (AcmGroup) o;
-        return Objects.equals(name, acmGroup.name);
+        if (name != null)
+        {
+            return name.equalsIgnoreCase(acmGroup.name);
+        }
+        return acmGroup.name == null;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name);
+        return Objects.hash(name == null ? null : name.toLowerCase());
     }
 
     @Override
     public String toString()
     {
-        return MoreObjects.toStringHelper(this)
-                .add("name", name)
-                .toString();
+        return MoreObjects.toStringHelper(this).add("name", name).toString();
     }
 }

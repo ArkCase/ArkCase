@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.activation.DataSource;
 import javax.activation.MimetypesFileTypeMap;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -31,7 +32,8 @@ public class InputStreamDataSource implements DataSource
             }
             inputStream.close();
             buffer.flush();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             LOG.error("Problem while adding attachment...", e);
         }

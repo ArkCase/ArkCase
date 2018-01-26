@@ -24,7 +24,6 @@ public class AcmMultipartResolver extends CommonsMultipartResolver
 
     /*
      * (non-Javadoc)
-     *
      * @see org.springframework.web.multipart.commons.CommonsMultipartResolver#isMultipart(javax.servlet.http.
      * HttpServletRequest)
      */

@@ -37,10 +37,13 @@ public interface DocumentConverter
     /**
      * Converts input stream of input mime type to input stream of output mime type.
      *
-     * @param sourceInputStream input stream of document with arbitrary mime type.
-     * @param mimeType the mime type of the <code>sourceInputStream</code>.
+     * @param sourceInputStream
+     *            input stream of document with arbitrary mime type.
+     * @param mimeType
+     *            the mime type of the <code>sourceInputStream</code>.
      * @return the converted input stream.
-     * @throws UnconvertableSourceException if the <code>sourceInputStream</code> can not be converted.
+     * @throws UnconvertableSourceException
+     *             if the <code>sourceInputStream</code> can not be converted.
      */
     InputStream convertStream(InputStream sourceInputStream, String mimeType) throws UnconvertableSourceException;
 

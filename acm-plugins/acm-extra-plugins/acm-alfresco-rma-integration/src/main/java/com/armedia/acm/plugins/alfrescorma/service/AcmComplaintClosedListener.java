@@ -6,6 +6,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 import com.armedia.acm.plugins.alfrescorma.model.AlfrescoRmaPluginConstants;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.plugins.complaint.model.ComplaintClosedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -15,44 +16,43 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
  * @author riste.tutureski
  *
  */
-public class AcmComplaintClosedListener implements ApplicationListener<ComplaintClosedEvent> {
+public class AcmComplaintClosedListener implements ApplicationListener<ComplaintClosedEvent>
+{
 
-	private transient Logger LOG = LoggerFactory.getLogger(getClass());
+    private transient Logger LOG = LoggerFactory.getLogger(getClass());
     private AlfrescoRecordsService alfrescoRecordsService;
 
-	@Override
-	public void onApplicationEvent(ComplaintClosedEvent event) {
+    @Override
+    public void onApplicationEvent(ComplaintClosedEvent event)
+    {
 
         boolean proceed = getAlfrescoRecordsService().checkIntegrationEnabled(AlfrescoRmaPluginConstants.COMPLAINT_CLOSE_INTEGRATION_KEY);
 
-        if ( !proceed )
+        if (!proceed)
         {
             return;
         }
 
-        if ( ! event.isSucceeded() )
+        if (!event.isSucceeded())
         {
-            if ( LOG.isTraceEnabled() )
+            if (LOG.isTraceEnabled())
             {
-            	LOG.trace("Returning - closing complaint was not successful");
+                LOG.trace("Returning - closing complaint was not successful");
             }
 
             return;
         }
-        
+
         Complaint complaint = (Complaint) event.getSource();
 
-
-        
         if (null != complaint)
         {
-			UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(event.getUserId(), event.getUserId());
             getAlfrescoRecordsService().declareAllContainerFilesAsRecords(auth, complaint.getContainer(),
                     event.getEventDate(), complaint.getComplaintNumber());
         }
-		
-	}
+
+    }
 
     public AlfrescoRecordsService getAlfrescoRecordsService()
     {

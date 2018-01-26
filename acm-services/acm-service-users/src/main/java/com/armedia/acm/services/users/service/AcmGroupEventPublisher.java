@@ -1,8 +1,8 @@
 package com.armedia.acm.services.users.service;
 
-
 import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

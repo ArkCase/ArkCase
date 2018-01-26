@@ -1,15 +1,13 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
-import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
-import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -26,8 +24,9 @@ import javax.servlet.http.HttpSession;
  * Created by marjan.stefanoski on 20.04.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
-public class MoveFolderAPIController {
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
+public class MoveFolderAPIController
+{
 
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
@@ -40,55 +39,76 @@ public class MoveFolderAPIController {
             @PathVariable("folderToMoveId") Long folderToMoveId,
             @PathVariable("dstFolderId") Long dstFolderId,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmUserActionFailedException {
-        if (log.isInfoEnabled()) {
+            HttpSession session) throws AcmUserActionFailedException
+    {
+        if (log.isInfoEnabled())
+        {
             log.info("Folder with id: " + folderToMoveId + " will be moved to the location with id: " + dstFolderId);
         }
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
         AcmFolder sourceFolderToBeMoved = getFolderService().findById(folderToMoveId);
         AcmFolder sourceDstFolder = getFolderService().findById(dstFolderId);
-        try {
+        try
+        {
             AcmFolder movedFolder = getFolderService().moveFolder(sourceFolderToBeMoved, sourceDstFolder);
-            if (log.isInfoEnabled()) {
+            if (log.isInfoEnabled())
+            {
                 log.info("Folder with id: " + folderToMoveId + " successfully moved to the location with id: " + dstFolderId);
             }
             getFolderEventPublisher().publishFolderMovedEvent(movedFolder, authentication, ipAddress, true);
             getFolderEventPublisher().publishFolderCreatedEvent(sourceDstFolder, authentication, ipAddress, true);
             return movedFolder;
-        } catch (AcmUserActionFailedException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to move folder with id: " + folderToMoveId + " to the location with id: " + dstFolderId);
+        }
+        catch (AcmUserActionFailedException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to move folder with id: " + folderToMoveId + " to the location with id: "
+                        + dstFolderId);
             }
             getFolderEventPublisher().publishFolderMovedEvent(sourceFolderToBeMoved, authentication, ipAddress, false);
             throw e;
-        } catch (AcmObjectNotFoundException e) {
-            if (log.isErrorEnabled()) {
+        }
+        catch (AcmObjectNotFoundException e)
+        {
+            if (log.isErrorEnabled())
+            {
                 log.debug("Folder with id: " + e.getObjectId() + " not found in the DB");
             }
             getFolderEventPublisher().publishFolderMovedEvent(sourceFolderToBeMoved, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderToMoveId, e.getMessage(), e);
-        } catch (AcmFolderException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Exception occurred while trying to move folder with id: " + folderToMoveId + " to the location with id:" + dstFolderId);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folderToMoveId, e.getMessage(), e);
+        }
+        catch (AcmFolderException e)
+        {
+            if (log.isErrorEnabled())
+            {
+                log.error("Exception occurred while trying to move folder with id: " + folderToMoveId + " to the location with id:"
+                        + dstFolderId);
             }
             getFolderEventPublisher().publishFolderMovedEvent(sourceFolderToBeMoved, authentication, ipAddress, false);
-            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE, folderToMoveId, "Exception occurred while trying to move the folder.", e);
+            throw new AcmUserActionFailedException(AcmFolderConstants.USER_ACTION_MOVE_FOLDER, AcmFolderConstants.OBJECT_FOLDER_TYPE,
+                    folderToMoveId, "Exception occurred while trying to move the folder.", e);
         }
     }
-    public AcmFolderService getFolderService() {
+
+    public AcmFolderService getFolderService()
+    {
         return folderService;
     }
 
-    public void setFolderService(AcmFolderService folderService) {
+    public void setFolderService(AcmFolderService folderService)
+    {
         this.folderService = folderService;
     }
 
-    public FolderEventPublisher getFolderEventPublisher() {
+    public FolderEventPublisher getFolderEventPublisher()
+    {
         return folderEventPublisher;
     }
 
-    public void setFolderEventPublisher(FolderEventPublisher folderEventPublisher) {
+    public void setFolderEventPublisher(FolderEventPublisher folderEventPublisher)
+    {
         this.folderEventPublisher = folderEventPublisher;
     }
 }

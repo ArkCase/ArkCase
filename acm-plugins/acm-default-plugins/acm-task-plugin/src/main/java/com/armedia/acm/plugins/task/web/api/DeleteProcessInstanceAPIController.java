@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import javax.servlet.http.HttpSession;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class DeleteProcessInstanceAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -36,8 +37,7 @@ public class DeleteProcessInstanceAPIController
             @PathVariable("processInstanceId") String processInstanceId,
             @RequestBody String deleteReason,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException
+            HttpSession httpSession) throws AcmUserActionFailedException
     {
         log.info("User [{}] is deleting workflow process with ID [{}]", authentication.getName(), processInstanceId);
         try
@@ -45,7 +45,8 @@ public class DeleteProcessInstanceAPIController
             String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
             getTaskDao().deleteProcessInstance(parentObjectId, processInstanceId, deleteReason, authentication, ipAddress);
 
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             log.debug("failed deleting process instance with ID [{}]", processInstanceId);
             throw new AcmUserActionFailedException("delete", "process instance", Long.valueOf(processInstanceId), e.getMessage(), e);

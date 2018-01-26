@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.utils.GenericUtils;
 import com.armedia.acm.plugins.ecm.utils.PDFUtils;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,8 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
             // Only certain file formats can be merged (PDF at this point is the only one supported)
             String fileExtension = entity.getFileExtension();
 
-            // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension application
+            // Only certain file types (authorization, abstract, etc.) are merged directly within the Bactes extension
+            // application
             boolean isFileTypeMergeable = GenericUtils.isFileTypeInList(entity.getFileType(), fileTypesToMerge);
 
             // Only certain file formats (tiff, jpg, etc.) are merged directly within the Bactes extension application
@@ -63,7 +65,8 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
-                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(), matchFile.getVersionSeriesId());
+                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(),
+                            matchFile.getVersionSeriesId());
                     if (originalFileStream == null)
                     {
                         throw new Exception("Failed to pull document " + matchFile.getFileId() + " from the repository");
@@ -71,7 +74,8 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                     // Appends the new PDF to the end of the old one
                     log.debug("merging the new document and the original");
-                    byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream, new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                    byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream,
+                            new ByteArrayInputStream(pipelineContext.getFileByteArray()));
 
                     // The merged PDF content will be available to the next pipeline stage
                     if (mergedFileByteArray != null)
@@ -79,13 +83,15 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
                         pipelineContext.setMergedFileByteArray(mergedFileByteArray);
                         pipelineContext.setIsAppend(true);
                         pipelineContext.setEcmFile(matchFile);
-                    } else
+                    }
+                    else
                     {
                         throw new Exception("The document merge failed");
                     }
                 }
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("mule pre save handler failed: {}", e.getMessage(), e);
             throw new PipelineProcessException(e);
@@ -101,8 +107,10 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
     /**
      * Obtains a PDF file from the given container with the given ArkCase type if present
      *
-     * @param containerId - unique identifier of the container in which the search will be performed
-     * @param fileType    - this type will be searched for matches in the acm container
+     * @param containerId
+     *            - unique identifier of the container in which the search will be performed
+     * @param fileType
+     *            - this type will be searched for matches in the acm container
      * @return - PDF file object matching the requested type, or null if not found
      */
     private EcmFile getDuplicateFile(Long containerId, String fileType)
@@ -115,7 +123,8 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
             // Determines if the container has a file with the same type as the new file being uploaded
             matchFile = folderAndFilesUtils.findMatchingPDFFileType(containerList, fileType);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("failed to lookup files: {}", e.getMessage(), e);
         }

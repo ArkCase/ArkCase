@@ -34,8 +34,7 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
     private static final long serialVersionUID = 2571845031587707081L;
 
     @Id
-    @TableGenerator(name = "acm_container_gen", table = "acm_container_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_container", initialValue = 100, allocationSize = 1)
+    @TableGenerator(name = "acm_container_gen", table = "acm_container_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_container", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_container_gen")
     @Column(name = "cm_container_id")
     private Long id;
@@ -260,7 +259,6 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     /*
      * (non-Javadoc)
-     *
      * @see java.lang.Object#hashCode()
      */
     @Override
@@ -285,7 +283,6 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
 
     /*
      * (non-Javadoc)
-     *
      * @see java.lang.Object#equals(java.lang.Object)
      */
     @Override
@@ -310,7 +307,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!attachmentFolder.equals(other.attachmentFolder))
+        }
+        else if (!attachmentFolder.equals(other.attachmentFolder))
         {
             return false;
         }
@@ -320,7 +318,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!calendarFolderId.equals(other.calendarFolderId))
+        }
+        else if (!calendarFolderId.equals(other.calendarFolderId))
         {
             return false;
         }
@@ -330,7 +329,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!cmisRepositoryId.equals(other.cmisRepositoryId))
+        }
+        else if (!cmisRepositoryId.equals(other.cmisRepositoryId))
         {
             return false;
         }
@@ -340,7 +340,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!containerObjectId.equals(other.containerObjectId))
+        }
+        else if (!containerObjectId.equals(other.containerObjectId))
         {
             return false;
         }
@@ -350,7 +351,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!containerObjectTitle.equals(other.containerObjectTitle))
+        }
+        else if (!containerObjectTitle.equals(other.containerObjectTitle))
         {
             return false;
         }
@@ -360,7 +362,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!containerObjectType.equals(other.containerObjectType))
+        }
+        else if (!containerObjectType.equals(other.containerObjectType))
         {
             return false;
         }
@@ -370,7 +373,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!created.equals(other.created))
+        }
+        else if (!created.equals(other.created))
         {
             return false;
         }
@@ -380,7 +384,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!creator.equals(other.creator))
+        }
+        else if (!creator.equals(other.creator))
         {
             return false;
         }
@@ -390,7 +395,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!folder.equals(other.folder))
+        }
+        else if (!folder.equals(other.folder))
         {
             return false;
         }
@@ -400,7 +406,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!id.equals(other.id))
+        }
+        else if (!id.equals(other.id))
         {
             return false;
         }
@@ -410,7 +417,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!modified.equals(other.modified))
+        }
+        else if (!modified.equals(other.modified))
         {
             return false;
         }
@@ -420,7 +428,8 @@ public class AcmContainer implements AcmEntity, Serializable, AcmObject
             {
                 return false;
             }
-        } else if (!modifier.equals(other.modifier))
+        }
+        else if (!modifier.equals(other.modifier))
         {
             return false;
         }

@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.exception;
 /**
  * Created by sergey.kolomiets on 6/19/15.
  */
-public class AcmCustomLogoException extends Exception{
+public class AcmCustomLogoException extends Exception
+{
 
     public AcmCustomLogoException()
     {
@@ -29,5 +30,3 @@ public class AcmCustomLogoException extends Exception{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

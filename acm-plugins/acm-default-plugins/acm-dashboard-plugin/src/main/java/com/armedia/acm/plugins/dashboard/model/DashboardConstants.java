@@ -29,4 +29,3 @@ public interface DashboardConstants
     String DASHBOARD_WIDGET_TYPE = "type";
 
 }
-

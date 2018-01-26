@@ -1,10 +1,10 @@
 package com.armedia.acm.services.timesheet.web;
 
-
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.services.timesheet.model.TimesheetConstants;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -27,9 +27,12 @@ public class TimesheetUiController
         retval.setViewName("timesheet");
 
         String treeSort = (String) getTimesheetService().getProperties().get(TimesheetConstants.SEARCH_TREE_SORT);
-        if(null != treeSort){
+        if (null != treeSort)
+        {
             retval.addObject("treeSort", treeSort);
-        } else {
+        }
+        else
+        {
             log.warn("Tree sort missing");
         }
 
@@ -52,12 +55,11 @@ public class TimesheetUiController
     }
 
     @RequestMapping(value = "/{timesheetId}", method = RequestMethod.GET)
-    public ModelAndView openTimesheet(Authentication auth, @PathVariable(value = "timesheetId") Long timesheetId
-    ) {
+    public ModelAndView openTimesheet(Authentication auth, @PathVariable(value = "timesheetId") Long timesheetId)
+    {
         ModelAndView retval = new ModelAndView();
         retval.setViewName("timesheet");
         retval.addObject("objId", timesheetId);
-
 
         // Frevvo form URLs
         retval.addObject("newTimesheetFormUrl", getFormUrl().getNewFormUrl(FrevvoFormName.TIMESHEET, false));
@@ -65,19 +67,23 @@ public class TimesheetUiController
 
     }
 
-    public FormUrl getFormUrl() {
+    public FormUrl getFormUrl()
+    {
         return formUrl;
     }
 
-    public void setFormUrl(FormUrl formUrl) {
+    public void setFormUrl(FormUrl formUrl)
+    {
         this.formUrl = formUrl;
     }
 
-    public TimesheetService getTimesheetService() {
+    public TimesheetService getTimesheetService()
+    {
         return timesheetService;
     }
 
-    public void setTimesheetService(TimesheetService timesheetService) {
+    public void setTimesheetService(TimesheetService timesheetService)
+    {
         this.timesheetService = timesheetService;
     }
 

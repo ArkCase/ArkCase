@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * Created by nebojsha on 09.04.2015.
  */
-public interface AcmBpmnService {
+public interface AcmBpmnService
+{
 
     public List<AcmProcessDefinition> list(String orderBy, boolean isAsc);
 
@@ -26,7 +27,8 @@ public interface AcmBpmnService {
 
     public long count();
 
-    public AcmProcessDefinition deploy(File processDefinitionFile, String fileDescription, boolean makeActive, boolean deleteFileAfterDeploy);
+    public AcmProcessDefinition deploy(File processDefinitionFile, String fileDescription, boolean makeActive,
+            boolean deleteFileAfterDeploy);
 
     public AcmProcessDefinition getActive(String processDefinitionKey);
 

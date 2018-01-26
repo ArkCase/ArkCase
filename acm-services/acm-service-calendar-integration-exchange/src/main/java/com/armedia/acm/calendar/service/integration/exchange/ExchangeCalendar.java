@@ -1,19 +1,19 @@
 package com.armedia.acm.calendar.service.integration.exchange;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.armedia.acm.calendar.service.AcmCalendar;
 import com.armedia.acm.calendar.service.AcmCalendarEvent;
 import com.armedia.acm.calendar.service.AcmCalendarEventInfo;
 import com.armedia.acm.calendar.service.AcmCalendarInfo;
 import com.armedia.acm.calendar.service.AcmEventAttachmentDTO;
 import com.armedia.acm.calendar.service.CalendarServiceException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.time.ZonedDateTime;
+import java.util.List;
 
 import microsoft.exchange.webservices.data.core.ExchangeService;
 import microsoft.exchange.webservices.data.core.PropertySet;
@@ -59,7 +59,6 @@ public class ExchangeCalendar implements AcmCalendar
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.AcmCalendar#getInfo()
      */
     @Override
@@ -81,7 +80,6 @@ public class ExchangeCalendar implements AcmCalendar
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.AcmCalendar#listItems(java.time.ZonedDateTime, java.time.ZonedDateTime,
      * java.lang.String, java.lang.String, int, int)
      */
@@ -94,7 +92,6 @@ public class ExchangeCalendar implements AcmCalendar
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.AcmCalendar#listItems(java.time.ZonedDateTime, java.time.ZonedDateTime,
      * java.lang.String, java.lang.String)
      */
@@ -107,7 +104,6 @@ public class ExchangeCalendar implements AcmCalendar
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.AcmCalendar#getEvent(java.lang.String)
      */
     @Override
@@ -164,7 +160,6 @@ public class ExchangeCalendar implements AcmCalendar
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.calendar.service.AcmCalendar#getEventAttachment(java.lang.String, java.lang.String)
      */
     @Override

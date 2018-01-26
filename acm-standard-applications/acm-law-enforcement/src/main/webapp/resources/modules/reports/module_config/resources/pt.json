@@ -1,48 +1,48 @@
 {
-  "reports": {
-    "title": "Relatórios",
-    "menus": {
-      "leftnav.item": "Relatórios"
+    "reports": {
+        "title": "Relatórios",
+        "menus": {
+            "leftnav.item": "Relatórios"
+        },
+        "selectReport": {
+            "label": "Relatório",
+            "placeholder": "Selecionar relatório"
+        },
+        "selectState": {
+            "label": "Estado",
+            "placeholder": "Selecione Estado"
+        },
+        "startDate": {
+            "label": "A partir de"
+        },
+        "endDate": {
+            "label": "Para"
+        },
+        "dropdown": {
+            "turnaround": "Turnaround Time by Requerer",
+            "requester": "Resumo do Tipo de Solicitante",
+            "pending": "Relatório de pedidos pendentes",
+            "associate": "Relatório de produtividade associado",
+            "origination": "Contagem de Origem",
+            "transfers": "Relatório de Transferências",
+            "exceptions": "Relatório de Exceções (Incumprimento)"
+        },
+        "datepicker": {
+            "close": "Feito",
+            "clear": "Claro",
+            "current": "Hoje"
+        },
+        "btn": {
+            "generateReport": "Gerar relatório"
+        },
+        "checkBox": {
+            "xmlReport": "Mostrar como XML"
+        }
     },
-    "selectReport": {
-      "label": "Relatório",
-      "placeholder": "Selecionar relatório"
+    "reports.comp.datepickers": {
+        "title": "Data Pickers"
     },
-    "selectState": {
-      "label": "Estado",
-      "placeholder": "Selecione Estado"
-    },
-    "startDate": {
-      "label": "A partir de"
-    },
-    "endDate": {
-      "label": "Para"
-    },
-    "dropdown": {
-      "turnaround": "Turnaround Time by Requerer",
-      "requester": "Resumo do Tipo de Solicitante",
-      "pending": "Relatório de pedidos pendentes",
-      "associate": "Relatório de produtividade associado",
-      "origination": "Contagem de Origem",
-      "transfers": "Relatório de Transferências",
-      "exceptions": "Relatório de Exceções (Incumprimento)"
-    },
-    "datepicker": {
-      "close": "Feito",
-      "clear": "Claro",
-      "current": "Hoje"
-    },
-    "btn": {
-      "generateReport": "Gerar relatório"
-    },
-    "checkBox": {
-      "xmlReport": "Mostrar como XML"
+    "reports.comp.reportselection": {
+        "title": "Relatórios"
     }
-  },
-  "reports.comp.datepickers": {
-    "title": "Data Pickers"
-  },
-  "reports.comp.reportselection": {
-    "title": "Relatórios"
-  }
 }

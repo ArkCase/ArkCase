@@ -4,7 +4,7 @@
 
     <groupId>com.armedia</groupId>
     <artifactId>acm</artifactId>
-    <version>3.2.3-SNAPSHOT</version>
+    <version>3.2.4-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>ArkCase Case Management System</name>
@@ -485,7 +485,6 @@
         </site>
     </distributionManagement>
 
-
     <repositories>
         <repository>
             <id>central</id>
@@ -557,7 +556,6 @@
             <id>milton-repo</id>
             <url>http://dl.bintray.com/milton/Milton</url>
         </repository>
-
 
         <!-- swagger -->
         <repository>
@@ -733,7 +731,6 @@
                 <version>${maven.project-info-reports.version}</version>
             </plugin>
 
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -829,7 +826,6 @@
 
         </plugins>
     </build>
-
 
     <dependencyManagement>
         <dependencies>
@@ -1224,7 +1220,6 @@
                 <scope>runtime</scope>
             </dependency>
 
-
             <!-- poi -->
             <dependency>
                 <groupId>org.apache.poi</groupId>
@@ -1561,7 +1556,6 @@
                 <version>${voodoodyne-jackson-jsog.version}</version>
             </dependency>
 
-
             <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
@@ -1658,7 +1652,6 @@
                 <version>${eclipselink-jpa.version}</version>
             </dependency>
 
-
             <!-- bean validation -->
             <dependency>
                 <groupId>javax.validation</groupId>
@@ -1699,7 +1692,6 @@
                 <artifactId>ehcache-core</artifactId>
                 <version>${ehcache.version}</version>
             </dependency>
-
 
             <!-- logging -->
             <dependency>

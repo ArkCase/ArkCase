@@ -1,8 +1,8 @@
 {
-  "analytics": {
-    "title": "es_Data Analytics",
-    "menus": {
-      "leftnav.item": "es_Data Analytics"
+    "analytics": {
+        "title": "es_Data Analytics",
+        "menus": {
+            "leftnav.item": "es_Data Analytics"
+        }
     }
-  }
 }

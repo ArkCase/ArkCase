@@ -27,11 +27,11 @@ public class AcmCreateObjectFailedException extends Exception
     public String getMessage()
     {
         String message = "";
-        if ( getObjectType() != null )
+        if (getObjectType() != null)
         {
             message += "Could not create " + getObjectType() + ".\n";
         }
-        if ( super.getMessage() != null )
+        if (super.getMessage() != null)
         {
             message += "Server encountered exception: " + super.getMessage() + "\n";
         }

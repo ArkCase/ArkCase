@@ -3,36 +3,39 @@ package org.mule.module.cmis.connection;
 
 import javax.annotation.Generated;
 
-
 /**
  * Exception thrown when the connection needed for executing an
- *  operation is null.
+ * operation is null.
  * 
  */
 @Generated(value = "Mule DevKit Version 3.4.0", date = "2014-05-13T04:20:32-03:00", comments = "Build 3.4.0.1555.8df15c1")
 public class UnableToAcquireConnectionException
-    extends Exception
+        extends Exception
 {
 
     /**
      * Create a new exception
      */
-    public UnableToAcquireConnectionException() {
+    public UnableToAcquireConnectionException()
+    {
     }
 
     /**
      * Create a new exception
      */
-    public UnableToAcquireConnectionException(String message) {
+    public UnableToAcquireConnectionException(String message)
+    {
         super(message);
     }
 
     /**
      * Create a new exception
      *
-     * @param throwable Inner exception
+     * @param throwable
+     *            Inner exception
      */
-    public UnableToAcquireConnectionException(Throwable throwable) {
+    public UnableToAcquireConnectionException(Throwable throwable)
+    {
         super(throwable);
     }
 }

@@ -5,6 +5,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.ClearanceVerificationSystemDeterminationRecord;
 import com.armedia.acm.plugins.personnelsecurity.cvs.model.PersonnelSecurityConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,15 +23,12 @@ public class ClearanceVerificationSystemExportService
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-
-
     public void exportDeterminationRecord(
             String adjudicatorId,
             Long caseId,
             String caseCmisFolderId,
             String subjectLastName,
-            String adjudicationOutcome
-    )
+            String adjudicationOutcome)
     {
         boolean clearanceGranted = PersonnelSecurityConstants.ADJUDICATION_OUTCOME_GRANT_CLEARANCE.equals(adjudicationOutcome);
 
@@ -43,9 +41,8 @@ public class ClearanceVerificationSystemExportService
         // ... but our system does not capture the date of birth yet.
         Date subjectDateOfBirth = null;
 
-        ClearanceVerificationSystemDeterminationRecord determinationRecord =
-                new ClearanceVerificationSystemDeterminationRecord(
-                        subjectLastName, subjectDateOfBirth, clearanceGranted, adjudicationDate);
+        ClearanceVerificationSystemDeterminationRecord determinationRecord = new ClearanceVerificationSystemDeterminationRecord(
+                subjectLastName, subjectDateOfBirth, clearanceGranted, adjudicationDate);
 
         String recordText = determinationRecord.toString();
 
@@ -70,8 +67,6 @@ public class ClearanceVerificationSystemExportService
         {
             log.error("Could not create CVS export: " + e.getMessage(), e);
         }
-
-
 
     }
 

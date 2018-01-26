@@ -15,10 +15,10 @@ public class AcmAuthentication implements Authentication
     private final String name;
 
     public AcmAuthentication(Collection<AcmGrantedAuthority> authorities,
-                             Object credentials,
-                             Object details,
-                             boolean authenticated,
-                             String userId)
+            Object credentials,
+            Object details,
+            boolean authenticated,
+            String userId)
     {
         this.authorities = authorities;
         this.credentials = credentials;

@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="caseNumberLength" value="1024" dbms="postgresql,oracle"/>
@@ -13,8 +11,7 @@
                 <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
             </column>
             <column name="cm_case_number" type="VARCHAR(${caseNumberLength})">
-                <constraints unique="true" uniqueConstraintName="uk_case_file_number"
-                             nullable="false"/>
+                <constraints unique="true" uniqueConstraintName="uk_case_file_number" nullable="false"/>
             </column>
             <column name="cm_case_type" type="VARCHAR(4000)">
                 <constraints nullable="false"/>
@@ -49,8 +46,7 @@
                 <constraints primaryKeyName="pk_acm_case_file" primaryKey="true"/>
             </column>
             <column name="cm_case_number" type="VARCHAR(${caseNumberLength})">
-                <constraints unique="true" uniqueConstraintName="uk_case_file_number"
-                             nullable="false"/>
+                <constraints unique="true" uniqueConstraintName="uk_case_file_number" nullable="false"/>
             </column>
             <column name="cm_case_type" type="VARCHAR(4000)">
                 <constraints nullable="false"/>
@@ -206,11 +202,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_close_case_request" baseColumnNames="cm_case_id"
-                                 constraintName="fk_close_case_cmplnt_id"
-                                 referencedTableName="acm_case_file"
-                                 referencedColumnNames="cm_case_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_close_case_cmplnt_id" referencedTableName="acm_case_file" referencedColumnNames="cm_case_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-09-add-close-case-request-table" author="riste.tutureski" dbms="mysql">
@@ -241,11 +234,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_close_case_request" baseColumnNames="cm_case_id"
-                                 constraintName="fk_close_case_cmplnt_id"
-                                 referencedTableName="acm_case_file"
-                                 referencedColumnNames="cm_case_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_close_case_cmplnt_id" referencedTableName="acm_case_file" referencedColumnNames="cm_case_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-10-drop-not-null-constraints" author="dmiller">
@@ -282,11 +272,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_change_case_status" baseColumnNames="cm_case_id"
-                                 constraintName="fk_change_case_status_case_id"
-                                 referencedTableName="acm_case_file"
-                                 referencedColumnNames="cm_case_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_change_case_status_case_id" referencedTableName="acm_case_file" referencedColumnNames="cm_case_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-12-add-change-case-status-table" author="riste.tutureski" dbms="mysql">
@@ -300,15 +287,13 @@
             <column name="cm_change_case_status_status" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_change_case_status_created" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_change_case_status_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_change_case_status_modified" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_change_case_status_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_change_case_status_modifier" type="VARCHAR(1024)">
@@ -316,11 +301,8 @@
             </column>
         </createTable>
         <addForeignKeyConstraint baseTableName="acm_change_case_status" baseColumnNames="cm_case_id"
-                                 constraintName="fk_change_case_status_case_id"
-                                 referencedTableName="acm_case_file"
-                                 referencedColumnNames="cm_case_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_change_case_status_case_id" referencedTableName="acm_case_file" referencedColumnNames="cm_case_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-13-add-restricted-flag" author="dmiller">
@@ -339,7 +321,7 @@
 
     <changeSet id="case-file-15-rename-container-id" author="dmiller">
         <renameColumn tableName="acm_case_file" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
-                      columnDataType="${fkIdType}"/>
+            columnDataType="${fkIdType}"/>
     </changeSet>
 
     <changeSet id="change-case-status-16-add-object-type-in-acm-change-case-status-table" author="nebojsha.davidovikj">
@@ -478,8 +460,7 @@
     <changeSet id="25-add-column-queue_id-to-acm_case_file" author="nebojsha.davidovikj">
         <addColumn tableName="acm_case_file">
             <column name="cm_queue_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id"
-                             referencedTableName="acm_queue"/>
+                <constraints foreignKeyName="fk_queue_id" referencedColumnNames="cm_queue_id" referencedTableName="acm_queue"/>
             </column>
         </addColumn>
     </changeSet>
@@ -516,11 +497,9 @@
             <column name="cm_queue_enter_date" type="${timestampType}"/>
         </addColumn>
 
-
         <addColumn tableName="acm_case_file">
             <column name="cm_response_due_date" type="${timestampType}"/>
         </addColumn>
-
 
         <addColumn tableName="acm_case_file">
             <column name="cm_previous_queue_id" type="${idType}"/>

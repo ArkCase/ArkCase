@@ -78,7 +78,8 @@ public class RetrieveBusinessProcessTasksAPIController
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, start,
                     maxRows, sort);
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", solrQuery, e);
         }
@@ -102,7 +103,8 @@ public class RetrieveBusinessProcessTasksAPIController
         try
         {
             solrResponse = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, solrQuery, 0, 1, "");
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Error while executing Solr query: {}", solrQuery, e);
         }

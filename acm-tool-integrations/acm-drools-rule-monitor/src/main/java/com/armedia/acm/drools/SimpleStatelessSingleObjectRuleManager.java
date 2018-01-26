@@ -3,6 +3,7 @@ package com.armedia.acm.drools;
 import com.armedia.acm.files.AbstractConfigurationFileEvent;
 import com.armedia.acm.files.ConfigurationFileAddedEvent;
 import com.armedia.acm.files.ConfigurationFileChangedEvent;
+
 import org.drools.decisiontable.InputType;
 import org.drools.decisiontable.SpreadsheetCompiler;
 import org.kie.api.KieBase;
@@ -36,15 +37,17 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     private KieBase kieBase;
     private String ruleFileLocation;
 
-    public KieBase getKieBase() {
-		return kieBase;
-	}
+    public KieBase getKieBase()
+    {
+        return kieBase;
+    }
 
-	public void setKieBase(KieBase kieBase) {
-		this.kieBase = kieBase;
-	}
+    public void setKieBase(KieBase kieBase)
+    {
+        this.kieBase = kieBase;
+    }
 
-	public T applyRules(T businessObject)
+    public T applyRules(T businessObject)
     {
         log.trace("Applying rules: {}", businessObject);
 
@@ -62,7 +65,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
         log.trace("Done applying rules: {}", businessObject);
 
-
         return businessObject;
     }
 
@@ -73,7 +75,7 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
         File ruleFile = new File(ruleFileName);
 
-        if ( ruleFile.exists() && ruleFile.isFile())
+        if (ruleFile.exists() && ruleFile.isFile())
         {
             updateRulesFromFile(ruleFile);
         }
@@ -87,11 +89,11 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     @Override
     public void onApplicationEvent(AbstractConfigurationFileEvent fileEvent)
     {
-        if ( fileEvent != null &&
+        if (fileEvent != null &&
                 fileEvent.getConfigFile() != null &&
-                getRuleSpreadsheetFilename().equals(fileEvent.getConfigFile().getName()) )
+                getRuleSpreadsheetFilename().equals(fileEvent.getConfigFile().getName()))
         {
-            if ( fileEvent instanceof ConfigurationFileAddedEvent ||
+            if (fileEvent instanceof ConfigurationFileAddedEvent ||
                     fileEvent instanceof ConfigurationFileChangedEvent)
             {
                 updateRulesFromFile(fileEvent.getConfigFile());
@@ -109,17 +111,16 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
         {
             String drl = sc.compile(xls.getInputStream(), InputType.XLS);
 
-
             KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
             DecisionTableConfiguration dtconf = KnowledgeBuilderFactory.newDecisionTableConfiguration();
             dtconf.setInputType(DecisionTableInputType.XLS);
-            kbuilder.add( ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf );
+            kbuilder.add(ResourceFactory.newInputStreamResource(xls.getInputStream()), ResourceType.DTABLE, dtconf);
 
-            if ( kbuilder.hasErrors() )
+            if (kbuilder.hasErrors())
             {
                 log.error("DRL with errors: {}", drl);
 
-                for (KnowledgeBuilderError error : kbuilder.getErrors() )
+                for (KnowledgeBuilderError error : kbuilder.getErrors())
                 {
                     log.error("Error building rules: {}", error);
                 }
@@ -131,9 +132,10 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
 
             setKieBase(base);
 
-            log.debug("Updated business rules from file '{}'",  getRuleSpreadsheetFilename());
+            log.debug("Updated business rules from file '{}'", getRuleSpreadsheetFilename());
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.error("Could not update rules: {}", e.getMessage(), e);
         }
@@ -148,7 +150,6 @@ public abstract class SimpleStatelessSingleObjectRuleManager<T>
     {
         this.ruleSpreadsheetFilename = ruleSpreadsheetFilename;
     }
-
 
     public void setRuleFileLocation(String ruleFileLocation)
     {

@@ -19,5 +19,5 @@ public interface CmisConfigurationConstants
     String CMIS_RECONNECTCOUNT = "cmis.reconnectCount";
     String CMIS_RECONNECTFREQUENCY = "cmis.reconnectFrequency";
     String CMIS_REPOSITORYID = "cmis.repositoryId";
-    String CMIS_VERSIONINGSTATE = "cmis.versioningState";
+    String CMIS_VERSIONINGSTATE = "cmis.cmisVersioningState";
 }

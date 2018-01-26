@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.alfrescorma.model;
 
-
 import java.io.Serializable;
 
 public class AcmRecordFolder implements Serializable

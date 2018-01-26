@@ -1,7 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
-
 import com.armedia.acm.plugins.admin.exception.AcmCustomLogoException;
+
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,6 @@ public class CustomLogoService
     private String headerLogoFile;
     private String loginLogoFile;
 
-
     /**
      * Return Header logo
      *
@@ -35,7 +34,8 @@ public class CustomLogoService
             File headerLogo = new File(brandingFilesLocation + headerLogoFile);
             byte[] result = FileUtils.readFileToByteArray(headerLogo);
             return result;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get custom Header Logo file", e);
             throw new AcmCustomLogoException("Can't get custom Header Logo file", e);
@@ -55,7 +55,8 @@ public class CustomLogoService
             File headerLogo = new File(brandingFilesLocation + loginLogoFile);
             byte[] result = FileUtils.readFileToByteArray(headerLogo);
             return result;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't get custom Login Logo file", e);
             throw new AcmCustomLogoException("Can't get custom Login Logo file", e);
@@ -70,7 +71,8 @@ public class CustomLogoService
             logoFile = new File(brandingFilesLocation + loginLogoFile);
             FileUtils.copyInputStreamToFile(loginLogoStream, logoFile);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmCustomLogoException("Can't update logo file");
         }
@@ -85,13 +87,13 @@ public class CustomLogoService
             logoFile = new File(brandingFilesLocation + headerLogoFile);
             FileUtils.copyInputStreamToFile(logoStream, logoFile);
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
 
         {
             throw new AcmCustomLogoException("Can't update logo file");
         }
     }
-
 
     public void setBrandingFilesLocation(String brandingFilesLocation)
     {

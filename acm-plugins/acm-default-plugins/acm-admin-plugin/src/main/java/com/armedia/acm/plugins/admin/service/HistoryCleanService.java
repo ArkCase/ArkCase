@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 import com.armedia.acm.services.notification.dao.NotificationDao;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.json.JSONException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -33,7 +34,8 @@ public class HistoryCleanService
         try
         {
             historyDays = jsonPropertiesManagementService.getProperties().getInt("historyDays");
-        } catch (AcmPropertiesManagementException | JSONException | NullPointerException | ClassCastException e)
+        }
+        catch (AcmPropertiesManagementException | JSONException | NullPointerException | ClassCastException e)
         {
             log.warn("History clean setting is not defined, disabling by default.");
             return;
@@ -53,11 +55,12 @@ public class HistoryCleanService
         log.info("Cleaning out notifications older than {} days...", historyDays);
         notificationDao.purgeNotifications(threshold);
 
-        //Delete notifications from solr, using same query as for database
+        // Delete notifications from solr, using same query as for database
         try
         {
             executeSolrQuery.sendSolrDeleteQuery("jms://solrAdvancedSearch.in", createDeleteNotificationSolrQuery(threshold));
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("couldn't delete notifications in solr.", e);
         }

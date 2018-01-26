@@ -33,7 +33,6 @@ public class EcmTikaFile
         version.setDurationSeconds(getDurationSeconds());
     }
 
-
     public String getContentType()
     {
         return contentType;
