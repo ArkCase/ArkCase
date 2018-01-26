@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -113,14 +114,11 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         approvers.forEach(approver -> {
             BuckslipFutureTask task = new BuckslipFutureTask();
 
-            String approverFullName;
-            String addedByFullName;
+            AcmUser approverUser = getUserDao().findByUserId(approver);
+            AcmUser addedByUser = getUserDao().findByUserId(addedBy);
 
-            List<AcmUser> approverUsers = getUserDao().findByEmailAddress(approver);
-            List<AcmUser> addedByUser = getUserDao().findByEmailAddress(addedBy);
-
-            approverFullName = approverUsers.size() > 0 ? approverUsers.get(0).getFullName() : "";
-            addedByFullName = addedByUser.size() > 0 ? addedByUser.get(0).getFullName() : "";
+            String approverFullName = Objects.nonNull(approverUser) ? approverUser.getFullName() : "";
+            String addedByFullName = Objects.nonNull(addedByUser) ? addedByUser.getFullName() : "";
 
             task.setApproverId(approver);
             task.setApproverFullName(approverFullName);
