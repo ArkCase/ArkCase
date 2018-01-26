@@ -17,6 +17,17 @@ angular.module('document-details').controller(
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
                         Authentication, EcmService) {
 
+                    $scope.viewerOnly = false;
+                    $scope.expand = function() {
+                        $scope.viewerOnly = true;
+                    };
+
+                    $scope.checkEscape = function(event) {
+                        if (27 == event.keyCode) { //27 is Escape key code
+                            $scope.viewerOnly = false;
+                        }
+                    };
+
                     $scope.acmTicket = '';
                     $scope.userId = '';
                     $scope.ecmFileProperties = {};
