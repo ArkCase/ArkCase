@@ -1,5 +1,13 @@
 package com.armedia.acm.plugins.audit.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.newCapture;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.audit.dao.AuditDao;
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
@@ -7,6 +15,7 @@ import com.armedia.acm.plugins.audit.model.AuditConstants;
 import com.armedia.acm.plugins.audit.service.ReplaceEventTypeNames;
 import com.armedia.acm.plugins.audit.web.api.GetAuditByObjectTypeAndObjectIdAPIController;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -32,13 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-library-audit-plugin-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-audit-plugin-test.xml" })
 public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         extends EasyMockSupport
 {
@@ -135,8 +139,8 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
     {
         Capture<List<String>> eventTypes = newCapture();
 
-        expect(mockAuditDao.findPagedResults(eq(objectId), eq(objectType), eq(0), eq(10), capture(eventTypes), eq(sortBy), eq(sort))).
-                andReturn(Arrays.asList(mockAuditEvent));
+        expect(mockAuditDao.findPagedResults(eq(objectId), eq(objectType), eq(0), eq(10), capture(eventTypes), eq(sortBy), eq(sort)))
+                .andReturn(Arrays.asList(mockAuditEvent));
         expect(mockAuditDao.countAll(eq(objectId), eq(objectType), capture(eventTypes))).andReturn(Arrays.asList(mockAuditEvent).size());
         expect(mockReplaceEventTypeNames.replaceNameInAcmEvent(mockAuditEvent)).andReturn(mockAuditEvent).anyTimes();
         // MVC test classes must call getName() somehow
@@ -145,15 +149,18 @@ public class GetAuditByObjectTypeAndObjectIdAPIControllerTest
         replayAll();
 
         MvcResult result = mockMvc.perform(
-                get("/api/latest/plugin/audit/{objectType}/{objectId}", objectType, objectId).accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
-                        .principal(mockAuthentication)).andReturn();
+                get("/api/latest/plugin/audit/{objectType}/{objectId}", objectType, objectId)
+                        .accept(MediaType.parseMediaType("application/json;charset=UTF-8")).session(mockHttpSession)
+                        .principal(mockAuthentication))
+                .andReturn();
 
         verifyAll();
 
         if (isEventTypesNull)
         {
             assertEquals(eventTypes.getValue(), null);
-        } else
+        }
+        else
         {
             assertEquals(eventTypes.getValue().size(), 2);
         }

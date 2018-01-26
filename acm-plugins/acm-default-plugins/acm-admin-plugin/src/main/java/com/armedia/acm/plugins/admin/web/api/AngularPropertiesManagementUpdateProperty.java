@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmPropertiesManagementException;
 import com.armedia.acm.plugins.admin.service.JsonPropertiesManagementService;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 /**
@@ -20,7 +22,7 @@ import java.io.IOException;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class AngularPropertiesManagementUpdateProperty
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -38,7 +40,8 @@ public class AngularPropertiesManagementUpdateProperty
         {
             JSONObject newProps = new JSONObject(resource);
             return jsonPropertiesManagementService.updateProperties(newProps).toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             String msg = "Can't retrieve application property";
             log.error(msg, e);

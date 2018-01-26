@@ -3,14 +3,15 @@ package com.armedia.acm.plugins.person.dao;
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.person.model.Organization;
 import com.armedia.acm.plugins.person.model.OrganizationAssociation;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.List;
 
 public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssociation>
@@ -32,12 +33,10 @@ public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssoc
                 "SELECT organization FROM OrganizationAssociation organizationAssociation, Organization organization " +
                         "WHERE organizationAssociation.parentType = :parentType " +
                         "AND organizationAssociation.parentId = :parentId " +
-                        "AND organizationAssociation.organization.organizationId = organization.organizationId"
-        );
+                        "AND organizationAssociation.organization.organizationId = organization.organizationId");
 
         organizationInAssociation.setParameter("parentType", parentType.toUpperCase());
         organizationInAssociation.setParameter("parentId", parentId);
-
 
         List<Organization> retrival = (List<Organization>) organizationInAssociation.getResultList();
 
@@ -50,14 +49,12 @@ public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssoc
         return entityManager;
     }
 
-
     public Organization findOrganizationByOrganizationAssociationId(Long organizationAssociationId)
     {
         Query organizationInAssociation = getEntityManager().createQuery(
                 "SELECT organization FROM  OrganizationAssociation organizationAssociation, Organization organization " +
                         "WHERE organizationAssociation.id = :organizationAssociationId " +
-                        "AND   organizationAssociation.organization.organizationId = organization.organizationId"
-        );
+                        "AND   organizationAssociation.organization.organizationId = organization.organizationId");
 
         organizationInAssociation.setParameter("organizationAssociationId", organizationAssociationId);
 
@@ -80,5 +77,3 @@ public class OrganizationAssociationDao extends AcmAbstractDao<OrganizationAssoc
 
     }
 }
-
-

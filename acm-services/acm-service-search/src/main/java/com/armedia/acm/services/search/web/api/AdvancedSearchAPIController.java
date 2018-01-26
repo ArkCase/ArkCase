@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.web.api;
 
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping({"/api/v1/plugin/search", "/api/latest/plugin/search"})
+@RequestMapping({ "/api/v1/plugin/search", "/api/latest/plugin/search" })
 public class AdvancedSearchAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -31,13 +32,19 @@ public class AdvancedSearchAPIController
     /**
      * Solr Advanced search, HTTP GET variant (limited query length).
      *
-     * @param query          Solr query
-     * @param sort           Solr sorting parameter
-     * @param startRow       start from
-     * @param maxRows        number of results
-     * @param authentication authentication token
+     * @param query
+     *            Solr query
+     * @param sort
+     *            Solr sorting parameter
+     * @param startRow
+     *            start from
+     * @param maxRows
+     *            number of results
+     * @param authentication
+     *            authentication token
      * @return Solr response
-     * @throws MuleException on error
+     * @throws MuleException
+     *             on error
      */
     @RequestMapping(value = "/advancedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
@@ -46,8 +53,7 @@ public class AdvancedSearchAPIController
             @RequestParam(value = "s", required = false, defaultValue = "") String sort,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-            Authentication authentication
-    ) throws MuleException
+            Authentication authentication) throws MuleException
     {
         return advancedSearch(query, sort, startRow, maxRows, authentication);
     }
@@ -66,17 +72,19 @@ public class AdvancedSearchAPIController
      * }
      * </code>
      *
-     * @param requestParams  parameter map, as explained above
-     * @param authentication authentication token
+     * @param requestParams
+     *            parameter map, as explained above
+     * @param authentication
+     *            authentication token
      * @return Solr response
-     * @throws MuleException on error
+     * @throws MuleException
+     *             on error
      */
     @RequestMapping(value = "/advancedSearch", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String advancedSearchPost(
             @RequestBody Map<String, Object> requestParams,
-            Authentication authentication
-    ) throws MuleException
+            Authentication authentication) throws MuleException
     {
         String query = (String) requestParams.get("q");
         String sort = "";
@@ -100,28 +108,36 @@ public class AdvancedSearchAPIController
     /**
      * Trigger Solr advanced search.
      *
-     * @param query          Solr query
-     * @param sort           Solr sorting parameter
-     * @param startRow       start from
-     * @param maxRows        number of results
-     * @param authentication authentication token
+     * @param query
+     *            Solr query
+     * @param sort
+     *            Solr sorting parameter
+     * @param startRow
+     *            start from
+     * @param maxRows
+     *            number of results
+     * @param authentication
+     *            authentication token
      * @return Solr response
-     * @throws MuleException on error
+     * @throws MuleException
+     *             on error
      */
     private String advancedSearch(String query, String sort, int startRow, int maxRows, Authentication authentication) throws MuleException
     {
         log.debug("User [{}] is searching for [{}]", authentication.getName(), query);
 
         // Solr wants the '+' sign in the "facet.range.gap" part of the query to be encoded
-        // It is because the '+' shouldn't be interpreted/used as a space but as '+'  on solr side and that's why need to be sent as %2B.
+        // It is because the '+' shouldn't be interpreted/used as a space but as '+' on solr side and that's why need to
+        // be sent as %2B.
         //
         //
         // Encoding the entire content of the query does not work and it is possible to brake other queries also. That's
-        // why we are replacing only the '+' sign in the "facet.range.gap=+" part of the query with "facet.range.gap=%2B".
+        // why we are replacing only the '+' sign in the "facet.range.gap=+" part of the query with
+        // "facet.range.gap=%2B".
         //
         // Example UI -> ArkCase (advancedSearch) request that is using facet.range in the query:
         //
-        //..advancedSearch?q=object_type_s:COMPLAINT+AND+creator_lcs:ann-acm%26facet.range=create_date_tdt%26facet.range.start=NOW-6MONTHS%26facet.range.end=NOW%26facet.range.gap=%2B1MONTH
+        // ..advancedSearch?q=object_type_s:COMPLAINT+AND+creator_lcs:ann-acm%26facet.range=create_date_tdt%26facet.range.start=NOW-6MONTHS%26facet.range.end=NOW%26facet.range.gap=%2B1MONTH
         //
 
         if (query.contains("facet.range.gap=+"))

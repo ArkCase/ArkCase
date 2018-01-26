@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-file-triggers" author="dmiller" runOnChange="true" dbms="oracle">
@@ -12,7 +10,7 @@
             FOR EACH ROW
             BEGIN
 
-                pkg_update_association_names.update_association_names(:NEW.cm_file_id, 'FILE', :NEW.cm_file_name);
+            pkg_update_association_names.update_association_names(:NEW.cm_file_id, 'FILE', :NEW.cm_file_name);
 
             END trg_file_update_assn_names;
         </createProcedure>
@@ -22,7 +20,7 @@
             AFTER DELETE ON acm_file
             FOR EACH ROW
             BEGIN
-                pkg_update_association_names.remove_associations(:OLD.cm_file_id, 'FILE');
+            pkg_update_association_names.remove_associations(:OLD.cm_file_id, 'FILE');
             END trg_file_delete;
         </createProcedure>
 
@@ -31,6 +29,5 @@
             DROP TRIGGER trg_file_delete;
         </rollback>
     </changeSet>
-
 
 </databaseChangeLog>

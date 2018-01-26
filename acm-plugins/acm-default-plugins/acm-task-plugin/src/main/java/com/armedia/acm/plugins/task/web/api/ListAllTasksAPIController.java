@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.task.model.AcmTasksForAPeriod;
 import com.armedia.acm.plugins.task.model.NumberOfDays;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
  * Created by marst on 8/16/14.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/task", "/api/latest/plugin/task"})
+@RequestMapping({ "/api/v1/plugin/task", "/api/latest/plugin/task" })
 public class ListAllTasksAPIController
 {
 
@@ -39,8 +41,7 @@ public class ListAllTasksAPIController
     public List<AcmTask> tasksForUser(
             @PathVariable("due") String due,
             Authentication authentication,
-            HttpSession session
-    ) throws AcmListObjectsFailedException
+            HttpSession session) throws AcmListObjectsFailedException
     {
         String ipAddress = (String) session.getAttribute("acm_ip_address");
         try
@@ -48,28 +49,28 @@ public class ListAllTasksAPIController
             List<AcmTask> retval = null;
             switch (AcmTasksForAPeriod.getTasksForPeriodByText(due))
             {
-                case ALL:
-                    if (log.isInfoEnabled())
-                    {
-                        log.info("Finding tasks assigned to all users ");
-                    }
-                    retval = getTaskDao().allTasks();
-                    break;
-                case PAST_DUE:
-                    retval = getTaskDao().pastDueTasks();
-                    break;
-                case DUE_TOMORROW:
-                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
-                    break;
-                case DUE_IN_7_DAYS:
-                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
-                    break;
-                case DUE_IN_30_DAYS:
-                    retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
-                    break;
-                default:
-                    retval = getTaskDao().allTasks();
-                    break;
+            case ALL:
+                if (log.isInfoEnabled())
+                {
+                    log.info("Finding tasks assigned to all users ");
+                }
+                retval = getTaskDao().allTasks();
+                break;
+            case PAST_DUE:
+                retval = getTaskDao().pastDueTasks();
+                break;
+            case DUE_TOMORROW:
+                retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.ONE_DAY);
+                break;
+            case DUE_IN_7_DAYS:
+                retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.SEVEN_DAYS);
+                break;
+            case DUE_IN_30_DAYS:
+                retval = getTaskDao().dueSpecificDateTasks(NumberOfDays.THIRTY_DAYS);
+                break;
+            default:
+                retval = getTaskDao().allTasks();
+                break;
             }
 
             for (AcmTask task : retval)
@@ -79,9 +80,11 @@ public class ListAllTasksAPIController
                 getTaskEventPublisher().publishTaskEvent(event);
             }
 
-            //return only tasks that are assigned to someone.
-            return retval.stream().filter(task -> !"".equals(task.getAssignee()) && task.getAssignee() != null).collect(Collectors.toList());
-        } catch (Exception e)
+            // return only tasks that are assigned to someone.
+            return retval.stream().filter(task -> !"".equals(task.getAssignee()) && task.getAssignee() != null)
+                    .collect(Collectors.toList());
+        }
+        catch (Exception e)
         {
             throw new AcmListObjectsFailedException("task", e.getMessage(), e);
         }

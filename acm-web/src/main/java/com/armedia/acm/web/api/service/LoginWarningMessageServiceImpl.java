@@ -35,7 +35,9 @@ public class LoginWarningMessageServiceImpl implements LoginWarningMessageServic
         return map;
     }
 
-    public void buildModel(Model model) {
+    @Override
+    public void buildModel(Model model)
+    {
         model.addAttribute("warningEnabled", isEnabled());
         model.addAttribute("warningMessage", getMessage());
         model.addAttribute("version", applicationMetaInfoService.getVersion());

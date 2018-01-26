@@ -11,9 +11,9 @@ import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.model.ldap.PasswordLengthValidationRule;
 import com.armedia.acm.services.users.service.RetryExecutor;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.AuthenticationException;
@@ -27,6 +27,7 @@ import javax.naming.directory.BasicAttribute;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.ModificationItem;
 import javax.naming.directory.SearchControls;
+
 import java.util.List;
 
 public class SpringLdapUserDao
@@ -57,8 +58,10 @@ public class SpringLdapUserDao
 
         if (CollectionUtils.isNotEmpty(results))
         {
-            // Return the first entity that will be found. The above search can return multiple results under one domain if
-            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case, return only the first one.
+            // Return the first entity that will be found. The above search can return multiple results under one domain
+            // if
+            // "sAMAccountName" is the same for two users. This in theory should not be the case, but just in case,
+            // return only the first one.
             return results.get(0);
         }
 
@@ -81,7 +84,8 @@ public class SpringLdapUserDao
         {
             String[] allAttributes = ArrayUtils.addAll(userSyncAttributes, config.getUserIdAttributeName(), config.getMailAttributeName());
             return (LdapUser) template.lookup(userDnStrippedBase, allAttributes, userGroupsContextMapper);
-        } else
+        }
+        else
         {
             return (LdapUser) template.lookup(userDnStrippedBase, userGroupsContextMapper);
         }

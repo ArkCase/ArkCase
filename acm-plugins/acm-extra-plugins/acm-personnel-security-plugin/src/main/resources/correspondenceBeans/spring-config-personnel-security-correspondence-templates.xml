@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-       <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="ClearanceDenied.docx"/>
-              <property name="documentType" value="Clearance Denied"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="clearanceDenied" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="ClearanceDenied.docx"/>
+        <property name="documentType" value="Clearance Denied"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT CONCAT(cf.originator.person.givenName, ' ', cf.originator.person.familyName),
        pi.identificationNumber,
        CASE WHEN ms.milestoneDate IS NULL THEN CURRENT_DATE ELSE ms.milestoneDate END
@@ -19,25 +18,25 @@ LEFT OUTER JOIN cf.originator.person.personIdentification pi ON pi.identificatio
 LEFT OUTER JOIN cf.milestones ms ON ms.milestoneName = 'Adjudicated'
 WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="ClearanceGranted.docx"/>
-              <property name="documentType" value="Clearance Granted"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="clearanceGranted" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="ClearanceGranted.docx"/>
+        <property name="documentType" value="Clearance Granted"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT CONCAT(cf.originator.person.givenName, ' ', cf.originator.person.familyName),
        pi.identificationNumber,
        CASE WHEN ms.milestoneDate IS NULL THEN CURRENT_DATE ELSE ms.milestoneDate END
@@ -46,25 +45,25 @@ LEFT OUTER JOIN cf.originator.person.personIdentification pi ON pi.identificatio
 LEFT OUTER JOIN cf.milestones ms ON ms.milestoneName = 'Adjudicated'
 WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="generalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="GeneralRelease.docx"/>
-              <property name="documentType" value="General Release"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="generalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="GeneralRelease.docx"/>
+        <property name="documentType" value="General Release"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT CONCAT(cf.originator.person.givenName, ' ', cf.originator.person.familyName),
        pi.identificationNumber,
        CASE WHEN ms.milestoneDate IS NULL THEN CURRENT_DATE ELSE ms.milestoneDate END
@@ -73,25 +72,25 @@ LEFT OUTER JOIN cf.originator.person.personIdentification pi ON pi.identificatio
 LEFT OUTER JOIN cf.milestones ms ON ms.milestoneName = 'Adjudicated'
 WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
-       <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
-              <property name="templateFilename" value="MedicalRelease.docx"/>
-              <property name="documentType" value="Medical Release"/>
-              <property name="dateFormatString" value="MM/dd/yyyy"/>
-              <property name="numberFormatString" value="###,###,###"/>
-              <property name="jpaQuery">
-                     <value>
-                            <![CDATA[
+    <bean id="medicalRelease" class="com.armedia.acm.correspondence.model.CorrespondenceTemplate">
+        <property name="templateFilename" value="MedicalRelease.docx"/>
+        <property name="documentType" value="Medical Release"/>
+        <property name="dateFormatString" value="MM/dd/yyyy"/>
+        <property name="numberFormatString" value="###,###,###"/>
+        <property name="jpaQuery">
+            <value>
+                <![CDATA[
 SELECT CONCAT(cf.originator.person.givenName, ' ', cf.originator.person.familyName),
        pi.identificationNumber,
        CASE WHEN ms.milestoneDate IS NULL THEN CURRENT_DATE ELSE ms.milestoneDate END
@@ -100,15 +99,15 @@ LEFT OUTER JOIN cf.originator.person.personIdentification pi ON pi.identificatio
 LEFT OUTER JOIN cf.milestones ms ON ms.milestoneName = 'Adjudicated'
 WHERE cf.id = ?1
                             ]]>
-                     </value>
-              </property>
-              <property name="templateSubstitutionVariables">
-                     <list>
-                            <value>Employee Name</value>
-                            <value>Employee ID</value>
-                            <value>Date</value>
-                     </list>
-              </property>
-       </bean>
+            </value>
+        </property>
+        <property name="templateSubstitutionVariables">
+            <list>
+                <value>Employee Name</value>
+                <value>Employee ID</value>
+                <value>Date</value>
+            </list>
+        </property>
+    </bean>
 
 </beans>

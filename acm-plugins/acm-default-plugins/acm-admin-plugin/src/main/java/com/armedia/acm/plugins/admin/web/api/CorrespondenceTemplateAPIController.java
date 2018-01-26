@@ -4,6 +4,7 @@ import com.armedia.acm.correspondence.model.CorrespondenceTemplate;
 import com.armedia.acm.correspondence.service.CorrespondenceService;
 import com.armedia.acm.plugins.admin.exception.CorrespondenceTemplateNotFoundException;
 import com.armedia.acm.plugins.admin.model.CorrespondenceTemplateRequestResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ import java.util.stream.Collectors;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Jan 27, 2017
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CorrespondenceTemplateAPIController
 {
 
@@ -71,7 +72,7 @@ public class CorrespondenceTemplateAPIController
     @RequestMapping(value = "/template/{templateId}/{templateFilename:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse getTemplateByIdAndFilename(@PathVariable(value = "templateId") String templateId,
-                                                                            @PathVariable(value = "templateFilename") String templateFilename)
+            @PathVariable(value = "templateFilename") String templateFilename)
     {
         return mapTemplateToResponse(correspondenceService.getTemplateByIdAndFilename(templateId, templateFilename));
     }
@@ -119,7 +120,7 @@ public class CorrespondenceTemplateAPIController
     @RequestMapping(value = "/template/{templateId}/{templateVersion:.+}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse deleteTemplateByIdAndVersion(@PathVariable(value = "templateId") String templateId,
-                                                                              @PathVariable(value = "templateVersion") String templateVersion) throws IOException
+            @PathVariable(value = "templateVersion") String templateVersion) throws IOException
     {
         File templatesDir = new File(System.getProperty("user.home") + "/.arkcase/acm/correspondenceTemplates");
         File templateFile = new File(templatesDir,
@@ -137,7 +138,7 @@ public class CorrespondenceTemplateAPIController
     @RequestMapping(value = "/template", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public CorrespondenceTemplateRequestResponse updateTemplate(@RequestBody CorrespondenceTemplateRequestResponse request,
-                                                                Authentication auth) throws IOException
+            Authentication auth) throws IOException
     {
         return mapTemplateToResponse(correspondenceService.updateTemplate(mapRequestToTemplate(request, auth)));
     }
@@ -199,7 +200,8 @@ public class CorrespondenceTemplateAPIController
     }
 
     /**
-     * @param correspondenceService the correspondenceService to set
+     * @param correspondenceService
+     *            the correspondenceService to set
      */
     public void setCorrespondenceService(CorrespondenceService correspondenceService)
     {

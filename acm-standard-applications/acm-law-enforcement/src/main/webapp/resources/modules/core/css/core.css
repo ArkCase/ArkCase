@@ -123,6 +123,17 @@ body {
     padding-top: 60px;
 }
 
+/* Adjustments to design when header and left sidebar are removed. */
+.page-content.detail-content .module-content {
+	top: -60px;
+	left: 0px;
+	padding-right: 0px;
+}
+
+.page-content.detail-content .module-content .right-sidebar{
+	top: 132px;
+}
+
 /* Left Menu (Left Column) */
 
 .leftnav-menu {

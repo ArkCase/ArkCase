@@ -5,6 +5,5 @@ package com.armedia.acm.plugins.alfrescorma.service;
  */
 public enum AlfrescoAuthenticationType
 {
-    BASIC,
-    KERBEROS
+    BASIC, KERBEROS
 }

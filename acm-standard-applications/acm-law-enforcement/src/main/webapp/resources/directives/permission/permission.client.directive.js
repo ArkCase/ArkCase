@@ -24,86 +24,90 @@
  </file>
  <file name="app.js">
  angular.module('ngAppDemo', []).controller('ngAppDemoController', function($scope, $log) {
-        $scope.createCase = function(){
-            $log.debug('Create case');
-        };
-     });
+ $scope.createCase = function(){
+ $log.debug('Create case');
+ };
+ });
  </file>
  </example>
  */
-angular.module('directives').directive('permission', ['$q', '$log', 'PermissionsService',
-    function ($q, $log, PermissionsService) {
-        return {
-            priority: 100,
-            restrict: 'A',
+angular.module('directives').directive('permission', [ '$q', '$log', 'PermissionsService', function($q, $log, PermissionsService) {
+    return {
+        priority : 100,
+        restrict : 'A',
 
-            link: {
-                pre: function (scope, element, attrs) {
-                    element.on('click', {
-                            actionName: attrs.permission,
-                            objectType: attrs.permissionObjectType,
-                            element: element
-                        },
-                        onElementClick
-                    );
-                },
+        link : {
+            pre : function(scope, element, attrs) {
+                element.on('click', {
+                    actionName : attrs.permission,
+                    objectType : attrs.permissionObjectType,
+                    element : element
+                }, onElementClick);
+            },
 
-                post: function (scope, element, attrs) {
+            post : function(scope, element, attrs) {
 
-                    // We use access to attributes value instead of isolated scope
-                    // to avoid "isolated scopes conflicts" when few directives with isolated scopes are applied to element
-                    var actionName = attrs.permission;
-                    var objectType = attrs.permissionObjectType;
-                    var permissionAction = attrs.permissionAction;
-                    var permissionProperties = null;
+                // We use access to attributes value instead of isolated scope
+                // to avoid "isolated scopes conflicts" when few directives with isolated scopes are applied to element
+                var actionName = attrs.permission;
+                var objectType = attrs.permissionObjectType;
+                var permissionAction = attrs.permissionAction;
+                var permissionProperties = null;
 
-                    scope.$watch(attrs.permissionProperties, function(value){
-                        permissionProperties = value;
-                        setPermission(element, actionName, objectType, permissionProperties, permissionAction);
-                    });
+                scope.$watch(attrs.permissionProperties, function(value) {
+                    permissionProperties = value;
+                    setPermission(element, actionName, objectType, permissionProperties, permissionAction);
+                });
 
-                    attrs.$observe('disabled', function () {
-                        setPermission(element, actionName, objectType, permissionProperties, permissionAction);
-                    });
-                }
-            }
-        };
-
-        function setPermission(element, actionName, objectType, permissionProperties, permissionAction) {
-            PermissionsService.getActionPermission(actionName, permissionProperties, {objectType: objectType})
-                .then(
-                    function success(enabled) {
-
-                        if (enabled === false) {
-                            if (permissionAction == 'hide') {
-                                element.css({'display': 'none'});
-                            } else if (permissionAction == 'show') {
-                                element.css({'display': ''});
-                            } else {
-                                element.attr('disabled', true);
-                            }
-                            element.attr('permission-disabled', true);
-                        } else {
-                            if (permissionAction == 'hide') {
-                                element.css({'display': ''});
-                            } else if (permissionAction == 'show') {
-                                element.css({'display': 'none'});
-                            } else {
-                                element.attr('disabled', false);
-                            }
-                            element.attr('permission-disabled', false);
-                        }
-                    }, function error() {
-                        $log.error('Can\'t get permission info for action ' + actionName);
-                    }
-                );
-        };
-
-        function onElementClick(e) {
-            if (e.data.element.attr('permission-disabled') === 'true') {
-                e.stopImmediatePropagation();
-                e.preventDefault();
+                attrs.$observe('disabled', function() {
+                    setPermission(element, actionName, objectType, permissionProperties, permissionAction);
+                });
             }
         }
+    };
+
+    function setPermission(element, actionName, objectType, permissionProperties, permissionAction) {
+        PermissionsService.getActionPermission(actionName, permissionProperties, {
+            objectType : objectType
+        }).then(function success(enabled) {
+
+            if (enabled === false) {
+                if (permissionAction == 'hide') {
+                    element.css({
+                        'display' : 'none'
+                    });
+                } else if (permissionAction == 'show') {
+                    element.css({
+                        'display' : ''
+                    });
+                } else {
+                    element.attr('disabled', true);
+                }
+                element.attr('permission-disabled', true);
+            } else {
+                if (permissionAction == 'hide') {
+                    element.css({
+                        'display' : ''
+                    });
+                } else if (permissionAction == 'show') {
+                    element.css({
+                        'display' : 'none'
+                    });
+                } else {
+                    element.attr('disabled', false);
+                }
+                element.attr('permission-disabled', false);
+            }
+        }, function error() {
+            $log.error('Can\'t get permission info for action ' + actionName);
+        });
     }
-]);
+    ;
+
+    function onElementClick(e) {
+        if (e.data.element.attr('permission-disabled') === 'true') {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+        }
+    }
+} ]);

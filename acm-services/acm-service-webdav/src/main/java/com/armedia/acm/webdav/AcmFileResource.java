@@ -3,17 +3,7 @@ package com.armedia.acm.webdav;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
-import io.milton.common.ContentTypeUtils;
-import io.milton.common.RangeUtils;
-import io.milton.http.Range;
-import io.milton.http.exceptions.BadRequestException;
-import io.milton.http.exceptions.ConflictException;
-import io.milton.http.exceptions.NotAuthorizedException;
-import io.milton.http.exceptions.NotFoundException;
-import io.milton.http.http11.auth.DigestResponse;
-import io.milton.resource.DigestResource;
-import io.milton.resource.PropFindableResource;
-import io.milton.resource.ReplaceableResource;
+
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
 import org.mule.api.MuleException;
@@ -27,6 +17,18 @@ import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import io.milton.common.ContentTypeUtils;
+import io.milton.common.RangeUtils;
+import io.milton.http.Range;
+import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.ConflictException;
+import io.milton.http.exceptions.NotAuthorizedException;
+import io.milton.http.exceptions.NotFoundException;
+import io.milton.http.http11.auth.DigestResponse;
+import io.milton.resource.DigestResource;
+import io.milton.resource.PropFindableResource;
+import io.milton.resource.ReplaceableResource;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -42,7 +44,7 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
     private CmisConfigUtils cmisConfigUtils;
 
     public AcmFileResource(String host, EcmFile acmFile, String fileType, String lockType, String acmTicket,
-                           AcmFileSystemResourceFactory resourceFactory, CmisConfigUtils cmisConfigUtils)
+            AcmFileSystemResourceFactory resourceFactory, CmisConfigUtils cmisConfigUtils)
     {
         super(host, resourceFactory);
         this.acmFile = acmFile;
@@ -126,18 +128,21 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
                     if (range != null)
                     {
                         RangeUtils.writeRange(fileIs, range, out);
-                    } else
+                    }
+                    else
                     {
                         IOUtils.copy(fileIs, out);
                     }
                     out.flush();
                 }
-            } else
+            }
+            else
             {
                 throw new NotFoundException("Could not locate content");
             }
 
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             LOGGER.error("Error while downloading file via Mule.", e);
         }
@@ -159,7 +164,8 @@ public class AcmFileResource extends AcmFileSystemResource implements PropFindab
         {
             getResourceFactory().getEcmFileTransaction().updateFileTransactionEventAware(
                     getResourceFactory().getSecurityManager().getAuthenticationForTicket(acmTicket), acmFile, in);
-        } catch (MuleException | IOException e)
+        }
+        catch (MuleException | IOException e)
         {
             LOGGER.error("Error while uploading file via Mule.", e);
         }

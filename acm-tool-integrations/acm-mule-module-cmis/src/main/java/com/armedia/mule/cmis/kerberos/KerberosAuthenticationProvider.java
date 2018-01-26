@@ -180,7 +180,8 @@ public class KerberosAuthenticationProvider extends AbstractAuthenticationProvid
     }
 
     /**
-     * Returns <code>true</code> if the given parameter exists in the session and is set to true, <code>false</code> otherwise.
+     * Returns <code>true</code> if the given parameter exists in the session and is set to true, <code>false</code>
+     * otherwise.
      */
     protected boolean isTrue(String parameterName)
     {

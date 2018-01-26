@@ -1,7 +1,13 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -23,10 +29,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
 /**
  * @author riste.tutureski
  */
@@ -40,7 +42,6 @@ public class SaveApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppo
     private Authentication mockAuthentication;
 
     private FunctionalAccessService mockFunctionalAccessServiceTest;
-
 
     private ExceptionHandlerExceptionResolver exceptionResolver;
 
@@ -134,7 +135,6 @@ public class SaveApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppo
         this.mockAuthentication = mockAuthentication;
     }
 
-
     public ExceptionHandlerExceptionResolver getExceptionResolver()
     {
         return exceptionResolver;
@@ -145,6 +145,5 @@ public class SaveApplicationRolesToGroupsAPIControllerTest extends EasyMockSuppo
     {
         this.exceptionResolver = exceptionResolver;
     }
-
 
 }

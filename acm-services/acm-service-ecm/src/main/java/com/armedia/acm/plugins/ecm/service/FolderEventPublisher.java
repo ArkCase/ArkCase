@@ -8,12 +8,12 @@ import com.armedia.acm.plugins.ecm.model.event.AcmFolderCreatedEvent;
 import com.armedia.acm.plugins.ecm.model.event.AcmFolderDeletedEvent;
 import com.armedia.acm.plugins.ecm.model.event.AcmFolderMovedEvent;
 import com.armedia.acm.plugins.ecm.model.event.AcmFolderRenamedEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.security.core.Authentication;
-
 
 public class FolderEventPublisher implements ApplicationEventPublisherAware
 {
@@ -70,7 +70,6 @@ public class FolderEventPublisher implements ApplicationEventPublisherAware
         folderMovedEvent.setSucceeded(succeeded);
         eventPublisher.publishEvent(folderMovedEvent);
     }
-
 
     public void publishFolderRenamedEvent(AcmFolder source, Authentication auth, String ipAddress, boolean succeeded)
     {

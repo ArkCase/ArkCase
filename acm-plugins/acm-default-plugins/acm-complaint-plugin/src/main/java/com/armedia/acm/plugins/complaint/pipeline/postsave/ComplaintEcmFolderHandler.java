@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.complaint.pipeline.ComplaintPipelineContext;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,12 +35,14 @@ public class ComplaintEcmFolderHandler implements PipelineHandler<Complaint, Com
             {
                 String folderId = ecmFileService.createFolder(entity.getEcmFolderPath());
                 entity.getContainer().getFolder().setCmisFolderId(folderId);
-            } catch (AcmCreateObjectFailedException e)
+            }
+            catch (AcmCreateObjectFailedException e)
             {
                 throw new PipelineProcessException(e);
             }
 
-        } else
+        }
+        else
         {
             log.info("There is no need to create folder");
         }

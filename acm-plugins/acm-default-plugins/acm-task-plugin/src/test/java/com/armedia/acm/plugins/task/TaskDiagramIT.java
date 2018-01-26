@@ -1,11 +1,16 @@
 package com.armedia.acm.plugins.task;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.service.impl.AcmTaskServiceImpl;
 import com.armedia.acm.plugins.task.service.impl.ActivitiTaskDao;
-import net.sf.jmimemagic.Magic;
-import net.sf.jmimemagic.MagicMatch;
-import org.activiti.engine.*;
+
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.junit.Before;
@@ -19,10 +24,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicMatch;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:/spring/spring-library-task-activiti-test.xml"})
+@ContextConfiguration(locations = { "classpath:/spring/spring-library-task-activiti-test.xml" })
 public class TaskDiagramIT
 {
     @Autowired

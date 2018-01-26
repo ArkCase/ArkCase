@@ -1,6 +1,7 @@
 package com.armedia.acm.pentaho.config;
 
 import com.armedia.acm.report.config.ReportUrl;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +71,7 @@ public class PentahoReportUrl implements ReportUrl
     @Override
     public Map<String, String> getNewReportUrlList()
     {
-        Map<String, String> urlsMap = new TreeMap<String, String>();
+        Map<String, String> urlsMap = new TreeMap<>();
         String serverFormUrl = getReportServerConfigurationProperties().get(REPORT_SERVER_URL).toString();
         String serverFormPort = getReportServerConfigurationProperties().get(REPORT_SERVER_PORT).toString();
 
