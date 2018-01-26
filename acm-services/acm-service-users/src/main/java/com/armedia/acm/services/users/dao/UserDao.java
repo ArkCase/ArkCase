@@ -5,7 +5,6 @@ import com.armedia.acm.services.config.model.AcmConfig;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserRoleState;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
@@ -174,35 +173,12 @@ public class UserDao extends AcmAbstractDao<AcmUser>
         return retval;
     }
 
-    public List<AcmUser> findUsersWithRoles(List<String> roles)
-    {
-        Query usersWithRole = getEntityManager().createQuery("SELECT user FROM AcmUser user, AcmUserRole role "
-                + "WHERE user.userId = role.userId " + "AND user.userState = :userState " + "AND role.userRoleState = :userRoleState "
-                + "AND role.roleName IN :roleNames " + "ORDER BY user.lastName, user.firstName");
-        usersWithRole.setParameter("userState", AcmUserState.VALID);
-        usersWithRole.setParameter("roleNames", roles);
-        usersWithRole.setParameter("userRoleState", AcmUserRoleState.VALID);
-
-        List<AcmUser> retval = usersWithRole.getResultList();
-
-        return retval;
-    }
-
     public void markAllUsersInvalid(String directoryName)
     {
         Query markInvalid = getEntityManager()
                 .createQuery("UPDATE AcmUser au set au.userState = :state, au.modified = :now WHERE au.userDirectoryName = :directoryName");
         markInvalid.setParameter("state", AcmUserState.INVALID);
         markInvalid.setParameter("now", new Date());
-        markInvalid.setParameter("directoryName", directoryName);
-        markInvalid.executeUpdate();
-    }
-
-    public void markAllRolesInvalid(String directoryName)
-    {
-        Query markInvalid = getEntityManager().createQuery("UPDATE AcmUserRole aur set aur.userRoleState = :state WHERE aur.userId IN "
-                + "( SELECT au.userId FROM AcmUser au WHERE au.userDirectoryName = :directoryName )");
-        markInvalid.setParameter("state", AcmUserRoleState.INVALID);
         markInvalid.setParameter("directoryName", directoryName);
         markInvalid.executeUpdate();
     }

@@ -93,7 +93,7 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/{directory:.+}/groups/{groupName:.+}/users", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<AcmUser> addUsersToGroup(@RequestBody List<AcmUser> members, @PathVariable String directory,
+    public List<AcmUser> addUsersToGroup(@RequestBody List<String> memberIds, @PathVariable String directory,
             @PathVariable String groupName)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
@@ -101,7 +101,7 @@ public class AcmUserAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.addExistingLdapUsersToGroup(members, directory, groupName);
+            return ldapUserService.addExistingLdapUsersToGroup(memberIds, directory, groupName);
         }
         catch (Exception e)
         {

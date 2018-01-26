@@ -22,6 +22,8 @@ public class CmisConfigurationPropertiesService
 
     private CmisConfigurationService cmisConfigurationService;
 
+    private List<String> propertyNamesForIntegerValues;
+
     public JSONArray retrieveProperties() throws AcmCmisConfigurationException
     {
         try
@@ -43,7 +45,17 @@ public class CmisConfigurationPropertiesService
                     for (String proName : prop.stringPropertyNames())
                     {
                         log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
-                        cmisJsonObj.put(proName, prop.getProperty(proName));
+
+                        log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
+                        if (isPropertyNameForIntegerValue(proName))
+                        {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        }
+                        else
+                        {
+                            cmisJsonObj.put(proName, prop.getProperty(proName));
+                        }
                     }
 
                     log.debug("Finished reading property file: [{}]", propertyFile.getName());
@@ -64,5 +76,16 @@ public class CmisConfigurationPropertiesService
     public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)
     {
         this.cmisConfigurationService = cmisConfigurationService;
+    }
+
+    public void setPropertyNamesForIntegerValues(List<String> propertyNamesForIntegerValues)
+    {
+        this.propertyNamesForIntegerValues = propertyNamesForIntegerValues;
+    }
+
+    private boolean isPropertyNameForIntegerValue(String propertyName)
+    {
+        return propertyNamesForIntegerValues != null
+                && propertyNamesForIntegerValues.stream().filter(item -> item.equalsIgnoreCase(propertyName)).findFirst().isPresent();
     }
 }

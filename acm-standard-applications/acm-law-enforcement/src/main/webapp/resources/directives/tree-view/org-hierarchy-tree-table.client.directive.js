@@ -21,6 +21,7 @@ angular
                                     onDeleteGroup : '=',
                                     onAddMembers : '=',
                                     onAddSubGroup : '=',
+                                    onAddExistingSubGroup : '=',
                                     onSetSupervisor : '=',
                                     config : '=',
                                     totalGroups : '=',
@@ -80,10 +81,18 @@ angular
                                                             .eq(3)
                                                             .html(
                                                                     $compile(
-                                                                            "<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' name='addSubgroup' tooltip=\"{{'admin.security.ldapConfig.addSubgroup' | translate}}\"><i class='fa fa-users'></i></button>"
-                                                                                    + "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' name='addMembers' tooltip=\"{{'admin.security.ldapConfig.addMembers' | translate}}\"><i class='fa fa-user'></i></button>"
-                                                                                    + "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' name='removeGroup' tooltip=\"{{'admin.security.ldapConfig.removeGroup' | translate}}\"><i class='fa fa-trash-o'></i></button>")
-                                                                            (scope));
+                                                                            "<button class='btn btn-link btn-xs' type='button' ng-click='pickUsersBtn($event)' "
+                                                                                    + "name='addMembers' tooltip=\"{{'admin.security.ldapConfig.addMembers' | translate}}\">"
+                                                                                    + "<i class='fa fa-user'></i></button>"
+                                                                                    + "<button class='btn btn-link btn-xs' type='button' ng-click='addSubgroup($event)' "
+                                                                                    + "name='addSubgroup' tooltip=\"{{'admin.security.ldapConfig.addSubgroup' | translate}}\">"
+                                                                                    + "<i class='fa fa-users'></i></button>"
+                                                                                    + "<button class='btn btn-link btn-xs' type='button' ng-click='addExistingSubgroup($event)' "
+                                                                                    + "name='addExistingSubgroup' tooltip=\"{{'admin.security.ldapConfig.addExistingSubgroup' | translate}}\">"
+                                                                                    + "<i class='fa fa-plus'></i></button>"
+                                                                                    + "<button class='btn btn-link btn-xs' type='button' ng-click='removeGroupBtn($event)' "
+                                                                                    + "name='removeGroup' tooltip=\"{{'admin.security.ldapConfig.removeGroup' | translate}}\">"
+                                                                                    + "<i class='fa fa-trash-o'></i></button>")(scope));
                                                     if (scope.showSupervisor) {
                                                         $tdList
                                                                 .eq(3)
@@ -182,10 +191,9 @@ angular
                                         var node = $.ui.fancytree.getNode(event);
                                         scope.onAddMembers(node.data).then(function(members) {
                                             //success
-                                            angular.forEach(members, function(member) {
-                                                node.addChildren(member);
+                                            node.setExpanded().then(function() {
+                                                node.addChildren(members);
                                             });
-                                            node.setExpanded();
                                             messageService.succsessAction();
                                         }, function() {
                                             //error
@@ -197,10 +205,9 @@ angular
                                         var node = $.ui.fancytree.getNode(event);
                                         scope.onAddExistingMembersToLdapGroup(node.data).then(function(members) {
                                             //success
-                                            angular.forEach(members, function(member) {
-                                                node.addChildren(member);
+                                            node.setExpanded().then(function() {
+                                                node.addChildren(members);
                                             });
-                                            node.setExpanded();
                                             messageService.succsessAction();
                                         }, function(error) {
                                             //error
@@ -235,8 +242,9 @@ angular
                                         }*/
 
                                         scope.onAddLdapMember(node.data).then(function(member) {
-                                            node.addChildren(member);
-                                            node.setExpanded();
+                                            node.setExpanded().then(function() {
+                                                node.addChildren(member);
+                                            });
                                             messageService.succsessAction();
                                         }, function(error) {
                                             if (error != "cancel") {
@@ -281,8 +289,23 @@ angular
                                         var node = $.ui.fancytree.getNode(event);
                                         scope.onAddSubGroup(node.data).then(function(subGroup) {
                                             //success
-                                            node.addNode(subGroup, 'firstChild');
-                                            node.setExpanded();
+                                            node.setExpanded().then(function() {
+                                                node.addNode(subGroup);
+                                            });
+                                            messageService.succsessAction();
+                                        }, function() {
+                                            //error
+                                            messageService.errorAction();
+                                        });
+                                    };
+
+                                    scope.addExistingSubgroup = function(event) {
+                                        var node = $.ui.fancytree.getNode(event);
+                                        scope.onAddExistingSubGroup(node.data).then(function(subGroup) {
+                                            //success
+                                            node.setExpanded().then(function() {
+                                                node.addNode(subGroup);
+                                            });
                                             messageService.succsessAction();
                                         }, function() {
                                             //error
@@ -294,8 +317,9 @@ angular
                                         var node = $.ui.fancytree.getNode(event);
                                         scope.onAddLdapSubgroup(node.data).then(function(subGroup) {
                                             //success
-                                            node.addNode(subGroup, 'firstChild');
-                                            node.setExpanded();
+                                            node.setExpanded().then(function() {
+                                                node.addNode(subGroup);
+                                            });
                                             messageService.succsessAction();
                                         }, function(error) {
                                             //error
