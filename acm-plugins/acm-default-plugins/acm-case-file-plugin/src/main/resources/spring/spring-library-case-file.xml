@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="caseFilePluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <!-- note: must leave "file:" at the start of the file name for spring 
+        <!-- note: must leave "file:" at the start of the file name for spring
             to be able to read the file; otherwise it will try to read from the classpath -->
         <property name="location" value="file:${user.home}/.arkcase/acm/caseFilePlugin.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -72,6 +72,11 @@
                 <value>com.armedia.acm.casefile.viewed</value>
             </list>
         </property>
+    </bean>
+
+    <bean id="changeCaseStatusOnBuckslipEventListener"
+        class="com.armedia.acm.plugins.casefile.listener.ChangeCaseStatusOnBuckslipEventListener">
+        <property name="caseFileDao" ref="caseFileDao"/>
     </bean>
 
     <bean id="caseFileDataAccessUpdateLocator" class="com.armedia.acm.plugins.casefile.service.CaseFileDataAccessUpdateLocator">
