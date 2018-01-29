@@ -165,10 +165,10 @@
             "news": {
                 "description": "顯示新聞",
                 "label": {
-                    "enterFeedUrl": "輸入Feed網址",
+                    "enterFeedUrl": "輸入來源網址",
                     "description": "顯示RSS / Atom供稿",
-                    "feedUrl": "Feed Url",
-                    "insertUrl": "請在widget配置中插入一個feed url"
+                    "feedUrl": "來源網址",
+                    "insertUrl": "請在小部件配置中插入一個來源網址"
                 },
                 "title": "新聞",
                 "noDataMessage": "目前沒有RSS /信息",
