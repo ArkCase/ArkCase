@@ -602,7 +602,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void testMergeLookupsUpdateLookupWhenDragAndDropEntries()
+    public void testOrderOfLookupEntries()
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -642,6 +642,6 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, false);
+        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
     }
 }

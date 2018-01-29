@@ -2,14 +2,7 @@
 
 angular.module('admin').controller(
         'Admin.NestedLookupSubLookupController',
-        [
-                '$scope',
-                '$translate',
-                '$modal',
-                'Object.LookupService',
-                'Helper.UiGridService',
-                'UtilService',
-                'MessageService',
+        [ '$scope', '$translate', '$modal', 'Object.LookupService', 'Helper.UiGridService', 'UtilService', 'MessageService',
                 function($scope, $translate, $modal, ObjectLookupService, HelperUiGridService, Util, MessageService) {
 
                     var gridHelper = new HelperUiGridService.Grid({
@@ -26,6 +19,7 @@ angular.module('admin').controller(
                             id : 'standardLookup'
                         });
                         var columnDefs = componentConfig.columnDefs;
+                        var rowTemplate = componentConfig.rowTemplate;
 
                         // TODO: This should be checked in the HelperUiGridService (ignore addButton with same name)
                         if (!_.findWhere(columnDefs, {
@@ -44,11 +38,7 @@ angular.module('admin').controller(
                             columnDefs : columnDefs,
                             totalItems : 0,
                             data : [],
-                            rowTemplate : '<div grid="grid" class="ui-grid-draggable-row" draggable="true">'
-                                    + '<div ng-repeat="(colRenderIndex, col) in colContainer.renderedColumns track by col.colDef.name" '
-                                    + 'class="ui-grid-cell cursor-view" '
-                                    + 'ng-class="{ \'ui-grid-row-header-cell\': col.isRowHeader, \'custom\': true }" '
-                                    + 'ui-grid-cell></div></div>',
+                            rowTemplate : rowTemplate,
                             onRegisterApi : function(gridApi) {
                                 gridApi.draggableRows.on.rowDropped($scope, function(info, dropTarget) {
                                     saveLookup();

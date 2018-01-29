@@ -1577,12 +1577,8 @@ a.primary {
     vertical-align: top !important;
 }
 
-/* For drag and drop on ui-grid */
+/*For drag and drop on ui-grid */
 .ui-grid-draggable-row {
     height: 30px;
     opacity: 1 !important;
-}
-
-.cursor-view {
-    cursor: pointer;
 }
