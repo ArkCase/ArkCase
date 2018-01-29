@@ -41,8 +41,11 @@ public interface GroupService
      * @param auth
      * @return LDAP groups
      */
-    String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
-            throws MuleException;
+    /*
+     * String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int
+     * maxRows)
+     * throws MuleException;
+     */
 
     /**
      * @param groupName
