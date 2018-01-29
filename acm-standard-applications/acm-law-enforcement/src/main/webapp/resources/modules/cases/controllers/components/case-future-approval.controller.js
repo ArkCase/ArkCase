@@ -115,6 +115,14 @@ angular.module('cases').controller(
                                     fetchBuckslipProcess(response.data[0]);
                                 }
                             });
+
+                            CaseFutureApprovalService.getBusinessProcessVariableForObject("CASE_FILE", objectInfo.id,
+                                    "nonConcurEndsApprovals", true).then(function(response) {
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.nonConcurEndsApprovals = response.data;
+                                }
+                            });
+
                         } else if (!Util.isEmpty(objectInfo.buckslipFutureTasks)) {
                             $scope.taskInfo = objectInfo;
                             CaseFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType,
