@@ -35,7 +35,7 @@
  "desc": "All Open Cases",
  "name": "all-open-cases",
  "value": "fq=-status_s:COMPLETE AND -status_s:DELETE AND -status_s:CLOSED",
- "isDefault": true
+ "default": true
  },
  {
  "desc": "All I've Created",
@@ -58,7 +58,7 @@
  "desc": "(No Sort)",
  "name": "",
  "value": "",
- "isDefault": true
+ "default": true
  }
  ],
  "nodeTypes": [
@@ -853,9 +853,9 @@ angular.module('directives').directive(
 
                         treeInfo.pageSize = Util.goodValue(treeConfig.pageSize, Tree.Info.DEFAULT_PAGE_SIZE);
                         Tree.scope.filters = Util.goodArray(treeConfig.filters);
-                        treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {isDefault: true}), "name");
+                        treeInfo.defaultFilter = Util.goodMapValue(_.find(Tree.scope.filters, {'default': true}), "name");
                         treeInfo.filter = treeInfo.defaultFilter;
-                        Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {isDefault: true}), "desc");Tree.scope.onSelectFilter = function (filterName) {Tree.scope.nameFilter =  Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
+                        Tree.scope.nameFilter = Util.goodMapValue(_.find(Tree.scope.filters, {'default': true}), "desc");Tree.scope.onSelectFilter = function (filterName) {Tree.scope.nameFilter =  Util.goodMapValue(_.find(Tree.scope.filters, function(filters) {
                                 return filters.name == filterName
                             }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
@@ -869,9 +869,9 @@ angular.module('directives').directive(
                         };
 
                         Tree.scope.sorters = Util.goodArray(treeConfig.sorters);
-                        treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {isDefault: true}), "name");
+                        treeInfo.defaultSorter = Util.goodMapValue(_.find(Tree.scope.sorters, {'default': true}), "name");
                         treeInfo.sorter = treeInfo.defaultSorter;
-                        Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {isDefault: true}), "desc");Tree.scope.onSelectSort = function (sorterName) {Tree.scope.nameSort= Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(sorters) {
+                        Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, {'default': true}), "desc");Tree.scope.onSelectSort = function (sorterName) {Tree.scope.nameSort= Tree.scope.nameSort = Util.goodMapValue(_.find(Tree.scope.sorters, function(sorters) {
                                 return sorters.name == sorterName
                             }), "desc");
                             var treeInfo = Tree.Info.getTreeInfo();
