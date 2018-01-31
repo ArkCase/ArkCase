@@ -729,28 +729,28 @@
         }
     },
     "admin.comp.securityLdapConfig": {
-        "title": "セキュリティ - Ldap設定グリッド"
+        "title": "セキュリティ - LDAP設定グリッド"
     },
     "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Correspondence Management Merge Fieldsグリッド"
+        "title": "対応管理マージフィールドグリッド"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
         "title": "対応管理マージフィールドバージョングリッド"
     },
     "admin.comp.correspondenceManagementTemplates": {
-        "title": "連絡文書管理テンプレートグリッド"
+        "title": "対応管理データファイル転送グリッド"
     },
     "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Correspondance Management Template Versionsグリッド"
+        "title": "対応管理テンプレートのバージョングリッド"
     },
     "admin.comp.labelsConfig": {
-        "title": "アプリケーション - ラベルConfig Grid"
+        "title": "アプリケーション - ラベル設定グリッド"
     },
     "admin.comp.plainFormsConfig": {
         "title": "フォーム - フォーム構成グリッド"
     },
     "admin.comp.workflowsConfig": {
-        "title": "ワークフロー - ワークフローConfigグリッド"
+        "title": "ワークフロー - ワークフロー設定グリッド"
     },
     "admin.comp.workflowsHistoryDialogConfig": {
         "title": "ワークフロー - ワークフロー設定履歴ダイアロググリッド"
