@@ -157,6 +157,9 @@ public class MapperUtils
     public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password -> new BasicAttribute("userPassword",
             password.getBytes());
 
+    public static final Function<String, BasicAttribute> openLdapCurrentPasswordToAttribute = password ->
+            new BasicAttribute("userPassword");
+
     public static String generatePassword(int minLength)
     {
         String specialChar = RandomStringUtils.random(1, "~!@#$%^?");
