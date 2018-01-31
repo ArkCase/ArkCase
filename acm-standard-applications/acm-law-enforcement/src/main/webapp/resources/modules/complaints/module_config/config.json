@@ -305,7 +305,8 @@
                         {
                             "name": "streetAddress",
                             "displayName": "complaints.comp.addresses.table.columns.streetAddress",
-                            "headerCellFilter": "translate"
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a googlemaps-href is-primary-address='true' location-data='row.entity'>{{row.entity.streetAddress}}</a>"
                         },
                         {
                             "name": "modified",
