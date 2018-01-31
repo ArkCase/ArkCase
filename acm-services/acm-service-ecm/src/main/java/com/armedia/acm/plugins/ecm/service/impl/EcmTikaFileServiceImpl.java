@@ -4,13 +4,14 @@ import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.UserDataBox;
 import com.googlecode.mp4parser.DataSource;
-import com.googlecode.mp4parser.MemoryDataSourceImpl;
+import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.boxes.apple.AppleGPSCoordinatesBox;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.config.TikaConfig;
 import org.apache.tika.detect.Detector;
 import org.apache.tika.exception.TikaException;
@@ -26,7 +27,8 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -62,9 +64,21 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     }
 
     @Override
+    @Deprecated
+    /**
+     * @deprecated use detectFileUsingTika(File, String)
+     */
     public EcmTikaFile detectFileUsingTika(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
-        Map<String, Object> metadata = extract(fileBytes, fileName);
+        File file = File.createTempFile("arkcase-detect-file-using-tika", null);
+        FileUtils.writeByteArrayToFile(file, fileBytes);
+        return detectFileUsingTika(file, fileName);
+    }
+
+    @Override
+    public EcmTikaFile detectFileUsingTika(File file, String fileName) throws IOException, SAXException, TikaException
+    {
+        Map<String, Object> metadata = extract(file, fileName);
         metadata.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(e -> logger.debug("{}: {}", e.getKey(), e.getValue()));
         EcmTikaFile retval = fromMetadata(metadata);
 
@@ -90,7 +104,18 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         return retval;
     }
 
+    @Deprecated
+    /**
+     * @deprecated Use extractIso6709Gps(File)
+     */
     protected String extractIso6709Gps(byte[] fileBytes) throws IOException
+    {
+        File file = File.createTempFile("arkcase-extract-iso-6709gps", null);
+        FileUtils.writeByteArrayToFile(file, fileBytes);
+        return extractIso6709Gps(file);
+    }
+
+    protected String extractIso6709Gps(File file) throws IOException
     {
         /*
          * mp4 files are structured in terms of boxes. The "movie box" has information about the entire movie.
@@ -100,7 +125,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
          * If present, the GPS data is stored in canonical ISO-6709 format... again, hopefully other mp4 writers also
          * store in proper canonical format.
          */
-        try (DataSource dataSource = new MemoryDataSourceImpl(fileBytes);
+        try (DataSource dataSource = new FileDataSourceImpl(file);
                 IsoFile isoFile = new IsoFile(dataSource))
         {
             UserDataBox udb = isoFile.getMovieBox().getBoxes(UserDataBox.class).stream().findFirst().orElse(null);
@@ -112,25 +137,39 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         }
     }
 
+    @Deprecated
+    /**
+     * @deprecated extract(File, String)
+     */
     protected Map<String, Object> extract(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
-        String contentType = null;
-        String extension = null;
+        File file = File.createTempFile("arkcase-extract-metadata", null);
+        FileUtils.writeByteArrayToFile(file, fileBytes);
+        return extract(file, fileName);
+    }
+
+    protected Map<String, Object> extract(File file, String fileName) throws IOException, SAXException, TikaException
+    {
+        String contentType;
+        String extension;
 
         Metadata metadata = new Metadata();
         metadata.add(Metadata.RESOURCE_NAME_KEY, fileName);
 
         TikaConfig defaultConfig = TikaConfig.getDefaultConfig();
         Detector detector = defaultConfig.getDetector();
-        TikaInputStream stream = TikaInputStream.get(fileBytes);
-        MediaType mediaType = detector.detect(stream, metadata);
-        MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
-        contentType = mediaType.toString();
-        extension = mimeType.getExtension();
+        try (InputStream fileInputStream = new FileInputStream(file))
+        {
+            TikaInputStream stream = TikaInputStream.get(fileInputStream);
+            MediaType mediaType = detector.detect(stream, metadata);
+            MimeType mimeType = defaultConfig.getMimeRepository().forName(mediaType.toString());
+            contentType = mediaType.toString();
+            extension = mimeType.getExtension();
+        }
 
         Map<String, Object> fileMetadata = null;
 
-        try (InputStream inputStream = new ByteArrayInputStream(fileBytes))
+        try (InputStream inputStream = new FileInputStream(file))
         {
 
             Parser parser = new AutoDetectParser();
@@ -196,7 +235,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
         if ("video/mp4".equals(contentType))
         {
-            gpsPoint = pointLocationFromVideo(fileBytes, fileMetadata);
+            gpsPoint = pointLocationFromVideo(file, fileMetadata);
         }
 
         // Cameras store the GPS lat and long in geo:lat and geo:long tags.
@@ -248,9 +287,17 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         extractedFromStream.put("GPS-Coordinates-Readable", pointLocation.toString());
     }
 
+    @Deprecated
     protected PointLocation pointLocationFromVideo(byte[] fileBytes, Map<String, Object> extractedFromStream) throws IOException
     {
-        String iso6709GpsCoordinates = extractIso6709Gps(fileBytes);
+        File file = File.createTempFile("arkcase-point-location-from-video", null);
+        FileUtils.writeByteArrayToFile(file, fileBytes);
+        return pointLocationFromVideo(file, extractedFromStream);
+    }
+
+    protected PointLocation pointLocationFromVideo(File file, Map<String, Object> extractedFromStream) throws IOException
+    {
+        String iso6709GpsCoordinates = extractIso6709Gps(file);
 
         if (iso6709GpsCoordinates != null)
         {

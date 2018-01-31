@@ -16,6 +16,7 @@ import com.armedia.acm.services.pipeline.PipelineManager;
 
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -27,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -57,12 +59,14 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         log.debug("Creating ecm file pipeline context");
 
-        byte[] fileBytes = IOUtils.toByteArray(fileContents);
+        File tempFileContents = File.createTempFile("arkcase-upload-temp-file", null);
+        FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
+
         EcmTikaFile detectedMetadata = null;
 
         try
         {
-            detectedMetadata = extractFileMetadata(fileBytes, metadata.getFileName());
+            detectedMetadata = extractFileMetadata(tempFileContents, metadata.getFileName());
         }
         catch (SAXException | TikaException e)
         {
@@ -77,7 +81,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
 
         EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                fileBytes, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
                 detectedMetadata, ecmUniqueFilename);
 
         String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
@@ -148,10 +152,22 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     }
 
+    @Deprecated
+    /**
+     * @deprecated use extractFileMetadata(File, String)
+     */
     protected EcmTikaFile extractFileMetadata(byte[] fileByteArray, String fileName) throws IOException,
             SAXException, TikaException
     {
-        EcmTikaFile retval = getEcmTikaFileService().detectFileUsingTika(fileByteArray, fileName);
+        File file = File.createTempFile("arkcase-extract-file-metadata", null);
+        FileUtils.writeByteArrayToFile(file, fileByteArray);
+        return extractFileMetadata(file, fileName);
+    }
+
+    protected EcmTikaFile extractFileMetadata(File file, String fileName) throws IOException,
+            SAXException, TikaException
+    {
+        EcmTikaFile retval = getEcmTikaFileService().detectFileUsingTika(file, fileName);
         return retval;
     }
 
@@ -185,12 +201,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     @Deprecated
     protected Pair<String, String> buildMimeTypeAndExtension(String filename, String mimeType, byte[] fileByteArray)
     {
+
         String finalMimeType;
         String finalExtension;
 
         try
         {
-            EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(fileByteArray, filename);
+            File file = File.createTempFile("arkcase-build-mime-type-and-extension-", null);
+            FileUtils.writeByteArrayToFile(file, fileByteArray);
+            EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, filename);
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
 
@@ -220,10 +239,26 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String ecmUniqueFilename,
             Object... otherArgs) throws IOException
     {
+        File file = File.createTempFile("arkcase-build-ecm-file-transaction-pipeline-context-", null);
+        FileUtils.writeByteArrayToFile(file, fileBytes);
+        return buildEcmFileTransactionPipelineContext(authentication, file, cmisFolderId, container, filename,
+                existingCmisDocument, detectedFileMetadata, ecmUniqueFilename, otherArgs);
+    }
+
+    protected EcmFileTransactionPipelineContext buildEcmFileTransactionPipelineContext(Authentication authentication,
+            File fileContents,
+            String cmisFolderId,
+            AcmContainer container,
+            String filename,
+            Document existingCmisDocument,
+            EcmTikaFile detectedFileMetadata,
+            String ecmUniqueFilename,
+            Object... otherArgs) throws IOException
+    {
+
         EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
         pipelineContext.setCmisFolderId(cmisFolderId);
-        // we are storing byte array so we can read this stream multiple times
-        pipelineContext.setFileByteArray(fileBytes);
+        pipelineContext.setFileContents(fileContents);
         pipelineContext.setContainer(container);
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setOriginalFileName(filename);
@@ -249,13 +284,15 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         pipelineContext.setAuthentication(authentication);
         pipelineContext.setEcmFile(ecmFile);
-        pipelineContext.setFileByteArray(IOUtils.toByteArray(fileInputStream));
+        File file = File.createTempFile("arkcase-update-file-transaction-", null);
+        FileUtils.copyInputStreamToFile(fileInputStream, file);
+        pipelineContext.setFileContents(file);
 
         EcmTikaFile ecmTikaFile = new EcmTikaFile();
 
         try
         {
-            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(pipelineContext.getFileByteArray(), ecmFile.getFileName());
+            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
         }
         catch (TikaException | SAXException | IOException e1)
         {
