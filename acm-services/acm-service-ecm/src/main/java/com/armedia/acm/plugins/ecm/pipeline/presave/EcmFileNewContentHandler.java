@@ -10,7 +10,7 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
@@ -41,7 +41,7 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
-                        new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                        new FileInputStream(pipelineContext.getFileContents()));
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);

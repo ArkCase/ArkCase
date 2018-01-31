@@ -57,7 +57,7 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
             int fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
                     pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
-                            : pipelineContext.getFileByteArray() != null ? pipelineContext.getFileByteArray().length : 0;
+                            : pipelineContext.getFileContents() != null ? (int) pipelineContext.getFileContents().length() : 0;
             version.setFileSizeBytes(Long.valueOf(fileSizeBytes));
 
             // file metadata
@@ -72,7 +72,7 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             try
             {
                 int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
-                        pipelineContext.getFileByteArray());
+                        pipelineContext.getFileContents());
                 if (pageCount > -1)
                 {
                     entity.setPageCount(pageCount);

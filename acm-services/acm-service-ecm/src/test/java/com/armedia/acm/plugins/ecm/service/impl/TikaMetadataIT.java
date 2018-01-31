@@ -156,7 +156,7 @@ public class TikaMetadataIT
 
             Resource resource = new ClassPathResource(filePath);
             EcmTikaFile multimedia = ecmTikaFileService.detectFileUsingTika(
-                    IOUtils.toByteArray(resource.getInputStream()),
+                    resource.getFile(),
                     resource.getFile().getName());
             assertEquals(mimeType, multimedia.getContentType());
             assertEquals(extension, multimedia.getNameExtension());

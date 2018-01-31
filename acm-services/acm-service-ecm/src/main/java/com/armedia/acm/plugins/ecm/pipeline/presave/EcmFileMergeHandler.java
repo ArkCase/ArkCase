@@ -13,7 +13,7 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -75,7 +75,7 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
                     // Appends the new PDF to the end of the old one
                     log.debug("merging the new document and the original");
                     byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream,
-                            new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                            new FileInputStream(pipelineContext.getFileContents()));
 
                     // The merged PDF content will be available to the next pipeline stage
                     if (mergedFileByteArray != null)
