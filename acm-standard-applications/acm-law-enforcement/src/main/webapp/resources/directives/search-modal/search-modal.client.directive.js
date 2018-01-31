@@ -202,8 +202,7 @@ angular.module('directives').directive(
                                     scope.showNoData = true;
                                 }
                                 scope.gridOptionsDetail.totalItems = data.response.numFound;
-                            }
-                            ;
+                            };
 
                             function updateFacets(facets) {
                                 if (facets) {
@@ -352,9 +351,11 @@ angular.module('directives').directive(
                                             scope.gridApi = gridApi;
 
                                             gridApi.selection.on.rowSelectionChanged(scope, function(row) {
-                                                scope.selectedDetailItem = gridApi.selection.getSelectedRows();
-                                                scope.selectedDetailItem = row.entity;
-
+                                                if(row.isSelected){
+                                                    scope.selectedDetailItem = row.entity;
+                                                } else {
+                                                    scope.selectedDetailItem = null;
+                                                }
                                             });
 
                                             gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
