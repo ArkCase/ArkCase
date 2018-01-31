@@ -155,7 +155,10 @@ public class MapperUtils
     };
 
     public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password -> new BasicAttribute("userPassword",
-            password.getBytes());
+            password);
+
+    public static final Function<String, BasicAttribute> openLdapCurrentPasswordToAttribute = password ->
+            new BasicAttribute("userPassword");
 
     public static String generatePassword(int minLength)
     {
