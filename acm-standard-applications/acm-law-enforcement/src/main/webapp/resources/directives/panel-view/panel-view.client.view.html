@@ -1,8 +1,8 @@
 <div ng-if="collapsible == 'true'" class="panel panel-success panel-grid">
-    <div class="panel-heading">
+    <div class="panel-heading" ng-click="onCollapseIconClick($event)">
         {{header}}
         <div class="pull-right" ng-if="collapsible == 'true'">
-            <a class="collapse-icon" href="#" ng-click="onCollapseIconClick($event)">
+            <a class="collapse-icon" href="#" >
                 <span ng-class="isCollapsed ? 'glyphicon glyphicon-triangle-bottom' : 'glyphicon glyphicon-triangle-top'"></span>
             </a>
         </div>
