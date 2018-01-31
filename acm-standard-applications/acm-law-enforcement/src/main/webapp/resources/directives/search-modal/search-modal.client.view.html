@@ -71,7 +71,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         {{cancel}}
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="selectedItems.length < 1">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
         {{ok}}
     </button>
 </div>
