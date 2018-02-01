@@ -9,7 +9,7 @@ angular
                         '$compile',
                         'MessageService',
                         '$http',
-                        function($q, $compile, messageService, $http) {
+                        function($q, $compile, messageService) {
                             return {
                                 restrict : 'E',
                                 scope : {
@@ -219,27 +219,6 @@ angular
 
                                     scope.addLdapUser = function(event) {
                                         var node = $.ui.fancytree.getNode(event);
-
-                                        /*for (var k = 20; k < 40; k++) {
-
-                                            var req = {
-                                                method: 'POST',
-                                                url: 'https://acm-arkcase/arkcase/api/latest/ldap/armedia/users',
-                                                data: {
-                                                    "groupNames": ["ACM_PROSECUTION@ARMEDIA.COM"],
-                                                    "userId": "DimeStef"+k,
-                                                    "firstName": "Dime"+k,
-                                                    "lastName": "Stef"+k,
-                                                    "mail": "dimitar.stefanovski@armedia.com"
-                                                }
-                                            };
-
-                                            $http(req).then(function (response) {
-                                                console.log(response);
-                                            }, function () {
-                                                console.log("error");
-                                            });
-                                        }*/
 
                                         scope.onAddLdapMember(node.data).then(function(member) {
                                             node.setExpanded().then(function() {

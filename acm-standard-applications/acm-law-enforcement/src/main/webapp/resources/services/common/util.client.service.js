@@ -264,7 +264,7 @@ angular
 
                                 /**
                                  * @ngdoc method
-                                 * @name isObjectEmpty
+                                 * @name isObject
                                  * @methodOf services.service:UtilService
                                  *
                                  * @param {Object} obj An object, including value

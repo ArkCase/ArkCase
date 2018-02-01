@@ -16,6 +16,14 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         getNUsers : getNUsers
     });
 
+    /*
+     *
+     * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+     * Description for all new endpoints
+     * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+     *
+     * */
+
     function queryGroupsByDirectory(directory, n) {
         return $http({
             method : 'GET',
