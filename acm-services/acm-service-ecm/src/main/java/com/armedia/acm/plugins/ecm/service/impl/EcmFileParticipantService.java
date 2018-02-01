@@ -218,7 +218,6 @@ public class EcmFileParticipantService
             List<AcmParticipant> fileParticipants = assignedObjectParticipants.stream()
                     .map(assignedObjectParticipant -> getDocumentParticipantFromAssignedObjectParticipant(assignedObjectParticipant))
                     .collect(Collectors.toList());
-            fileParticipants.forEach(participant -> participant.setReplaceChildrenParticipant(true));
             setFolderParticipants(folder, fileParticipants, restricted);
         }
         else
@@ -236,6 +235,7 @@ public class EcmFileParticipantService
         documentParticipant.setParticipantLdapId(participant.getParticipantLdapId());
         documentParticipant
                 .setParticipantType(getDocumentParticipantTypeFromAssignedObjectParticipantType(participant.getParticipantType()));
+        documentParticipant.setReplaceChildrenParticipant(participant.isReplaceChildrenParticipant());
         return documentParticipant;
     }
 
