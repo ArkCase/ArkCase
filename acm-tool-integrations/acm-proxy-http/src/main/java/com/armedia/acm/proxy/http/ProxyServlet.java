@@ -252,19 +252,19 @@ public class ProxyServlet extends HttpServlet
         String doForwardIPString = getConfigParam(P_FORWARDEDFOR);
         if (doForwardIPString != null)
         {
-            this.doForwardIP = Boolean.parseBoolean(doForwardIPString);
+            doForwardIP = Boolean.parseBoolean(doForwardIPString);
         }
 
         String preserveHostString = getConfigParam(P_PRESERVEHOST);
         if (preserveHostString != null)
         {
-            this.doPreserveHost = Boolean.parseBoolean(preserveHostString);
+            doPreserveHost = Boolean.parseBoolean(preserveHostString);
         }
 
         String preserveCookiesString = getConfigParam(P_PRESERVECOOKIES);
         if (preserveCookiesString != null)
         {
-            this.doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
+            doPreserveCookies = Boolean.parseBoolean(preserveCookiesString);
         }
 
         // make sure that parameters are not null
@@ -310,7 +310,7 @@ public class ProxyServlet extends HttpServlet
      * "http://hc.apache.org/httpcomponents-client-ga/httpclient/apidocs/org/apache/http/impl/client/SystemDefaultHttpClient.html">
      * SystemDefaultHttpClient</a> is used if available, otherwise it falls back to:
      * <p>
-     * 
+     *
      * <pre>
      * new DefaultHttpClient(new ThreadSafeClientConnManager(), hcParams)
      * </pre>
@@ -1206,7 +1206,7 @@ public class ProxyServlet extends HttpServlet
         {
             return new ArrayList<>();
         }
-        return Arrays.asList(csv.split(",[ ]*"));
+        return Arrays.asList(csv.split(",[ ]*")).stream().map(item -> item.trim()).collect(Collectors.toList());
     }
 
     /**
@@ -1220,16 +1220,7 @@ public class ProxyServlet extends HttpServlet
      */
     private boolean matches(String patternStr, String value)
     {
-        Pattern pattern;
-        if (compiledPatterns.containsKey(patternStr))
-        {
-            pattern = compiledPatterns.get(patternStr);
-        }
-        else
-        {
-            pattern = Pattern.compile(patternStr);
-            compiledPatterns.put(patternStr, pattern);
-        }
+        Pattern pattern = compiledPatterns.computeIfAbsent(patternStr, k -> Pattern.compile(k));
         return pattern.matcher(value).matches();
     }
 }

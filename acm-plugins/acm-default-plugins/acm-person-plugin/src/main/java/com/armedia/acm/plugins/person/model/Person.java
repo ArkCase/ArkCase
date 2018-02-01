@@ -178,6 +178,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @ManyToMany(cascade = {
             CascadeType.DETACH,
+            CascadeType.MERGE,
             CascadeType.REFRESH,
             CascadeType.REMOVE })
     @JoinTable(name = "acm_person_organization", joinColumns = {

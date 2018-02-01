@@ -65,13 +65,15 @@
                     details.activeVersion.versionMimeType.indexOf('audio/') == 0 ||
                     details.activeVersion.versionMimeType.indexOf('image/') == 0">
                         <label translate>documentDetails.comp.details.label.created</label>
-                        <input class="form-control" type="text" ng-model="details.mediaCreated" ng-readonly="true">
+                        <input class="form-control" type="text" value="{{details.verMediaCreated | date : locale.DATETIME_FORMATS.short}}"
+                                ng-readonly="true">
                     </div>
 
                     <!-- Modified date -->
                     <div class="form-group">
                         <label translate>documentDetails.comp.details.label.modified</label>
-                        <input class="form-control" type="text" ng-model="details.modified" ng-readonly="true">
+                        <input class="form-control" type="text" value="{{details.verModified | date : locale.DATETIME_FORMATS.short}}"
+                                ng-readonly="true">
                     </div>
 
                     <!-- Format -->
@@ -147,7 +149,9 @@
             <div class="row">
                 <div class="col-sm-12">
                     <button class="btn btn-primary col-md-4 col-xs-12" ng-click="save()" ng-disabled="saveButton.disabled">
-                        <span translate="" class="ng-scope">{{saveButton.label}}</span>
+                        <i class="fa fa-floppy-o" ng-hide="saveInProgress"></i>
+                        <i class="fa fa-circle-o-notch fa-spin" ng-show="saveInProgress"></i>
+                        <span translate="" class="ng-scope">{{saveInProgress? "documentDetails.comp.details.label.button.wait" : "documentDetails.comp.details.label.button.save"}}</span>
                     </button>
                 </div>
             </div>

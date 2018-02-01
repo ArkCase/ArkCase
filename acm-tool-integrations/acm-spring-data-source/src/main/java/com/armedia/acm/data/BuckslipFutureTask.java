@@ -5,10 +5,12 @@ import java.io.Serializable;
 public class BuckslipFutureTask implements Serializable
 {
     private String approverId;
+    private String approverFullName;
     private String taskName;
     private String groupName;
     private String details;
     private String addedBy;
+    private String addedByFullName;
     private int maxTaskDurationInDays = 3;
 
     public String getApproverId()
@@ -19,6 +21,16 @@ public class BuckslipFutureTask implements Serializable
     public void setApproverId(String approverId)
     {
         this.approverId = approverId;
+    }
+
+    public String getApproverFullName()
+    {
+        return approverFullName;
+    }
+
+    public void setApproverFullName(String approverFullName)
+    {
+        this.approverFullName = approverFullName;
     }
 
     public String getTaskName()
@@ -59,6 +71,16 @@ public class BuckslipFutureTask implements Serializable
     public void setAddedBy(String addedBy)
     {
         this.addedBy = addedBy;
+    }
+
+    public String getAddedByFullName()
+    {
+        return addedByFullName;
+    }
+
+    public void setAddedByFullName(String addedByFullName)
+    {
+        this.addedByFullName = addedByFullName;
     }
 
     public int getMaxTaskDurationInDays()

@@ -67,7 +67,9 @@ public class ExchangeCalendar implements AcmCalendar
         log.debug("Getting calendar info for object with id: [{}] of [{}] type.", objectId, objectType);
         try
         {
-            CalendarFolder folder = CalendarFolder.bind(service, new FolderId(handler.getCalendarId(objectId)));
+            String calendarId = handler.getCalendarId(objectId).orElseThrow(() -> new Exception(
+                    String.format("No outlook folder associated with object of type [%s] with id [%s].", objectType, objectId)));
+            CalendarFolder folder = CalendarFolder.bind(service, new FolderId(calendarId));
             // TODO: fill out the 'description' properly.
             return new AcmCalendarInfo(folder.getId().getUniqueId(), objectType, objectId, folder.getDisplayName(), "");
         }

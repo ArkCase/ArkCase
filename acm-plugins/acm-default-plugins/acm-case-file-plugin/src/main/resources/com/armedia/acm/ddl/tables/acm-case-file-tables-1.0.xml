@@ -506,4 +506,21 @@
         </addColumn>
     </changeSet>
 
+    <changeSet id="31-create-index-column-title" author="marko.stojanoski" dbms="oracle,postgresql,mssql">
+        <createIndex tableName="acm_case_file" indexName="idx_casefile_title">
+            <column name="cm_case_title"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="31-create-index-column-title" author="marko.stojanoski" dbms="mysql">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="acm_case_file" columnNames="cm_case_title"/>
+            </not>
+        </preConditions>
+        <createIndex tableName="acm_case_file" indexName="idx_casefile_title">
+            <column name="cm_case_title (128)"/>
+        </createIndex>
+    </changeSet>
+
 </databaseChangeLog>
