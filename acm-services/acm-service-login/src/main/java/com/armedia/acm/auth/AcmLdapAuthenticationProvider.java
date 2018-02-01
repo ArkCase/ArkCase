@@ -1,6 +1,10 @@
 package com.armedia.acm.auth;
 
-import javax.naming.Name;
+import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ldap.core.DirContextOperations;
@@ -9,11 +13,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
-import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+import javax.naming.Name;
 
 /**
  * Created by riste.tutureski on 4/11/2016.

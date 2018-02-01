@@ -1,6 +1,5 @@
 package com.armedia.acm.services.users.service;
 
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -14,7 +14,8 @@ public class GetWidgetsByUserRolesEvent extends AcmEvent
 
     private static final String OBJECT_TYPE = "WIDGET_LIST";
 
-    public GetWidgetsByUserRolesEvent(List<Widget> source) {
+    public GetWidgetsByUserRolesEvent(List<Widget> source)
+    {
 
         super(source);
         setEventType(EVENT_TYPE);

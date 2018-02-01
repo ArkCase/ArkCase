@@ -1,8 +1,13 @@
 package com.armedia.acm.plugins.ecm.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.apache.chemistry.opencmis.commons.data.ContentStream;
 import org.apache.commons.io.IOUtils;
@@ -26,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "/spring/spring-library-ecm-plugin-test-mule.xml",
@@ -38,7 +41,7 @@ import static org.junit.Assert.*;
         "/spring/spring-library-add-file-mule.xml",
         "/spring/spring-library-audit-service.xml",
         "/spring/spring-library-drools-rule-monitor.xml",
-        "/spring/spring-library-object-converter.xml"})
+        "/spring/spring-library-object-converter.xml" })
 public class AddFileFlowIT
 {
 
@@ -167,7 +170,8 @@ public class AddFileFlowIT
 
                 assertEquals(originalLines, downloadedLines);
             }
-        } catch (TransformerException te)
+        }
+        catch (TransformerException te)
         {
             if (te.getMessage() != null)
             {

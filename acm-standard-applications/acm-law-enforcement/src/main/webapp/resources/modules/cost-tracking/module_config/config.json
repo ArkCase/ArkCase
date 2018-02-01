@@ -1,382 +1,382 @@
 {
-  "id": "cost-tracking",
-  "title": "Cost Tracking",
-  "configurable": true,
-  "initialLinksShown": true,
-  "menus": [
-    {
-      "menuId": "leftnav",
-      "menuItemURL": "cost-tracking.main",
-      "menuItemTitle": "costTracking.menus.leftnav.item",
-      "moduleId": "cost",
-      "iconClass": "fa fa-money",
-      "position": 150
-    },
-    {
-      "menuId": "topbar",
-      "menuItemURL": "frevvo.new-costsheet",
-      "menuItemTitle": "costTracking.menus.topbar.item",
-      "moduleId": "cost",
-      "iconClass": "fa fa-money",
-      "position": 70
-    }
-  ],
-  "tree": {
-    "pageSize": 32,
-    "sorters": [
-      {
-        "desc": "costTracking.tree.sorters.dateAsc",
-        "name": "create_tdt ASC",
-        "default": true
-      },
-      {
-        "desc": "costTracking.tree.sorters.dateDesc",
-        "name": "create_tdt DESC"
-      },
-      {
-        "desc": "costTracking.tree.sorters.idAsc",
-        "name": "id ASC"
-      },
-      {
-        "desc": "costTracking.tree.sorters.idDesc",
-        "name": "id DESC"
-      },
-      {
-        "desc": "costTracking.tree.sorters.nameDesc",
-        "name": "name DESC"
-      }
+    "id": "cost-tracking",
+    "title": "Cost Tracking",
+    "configurable": true,
+    "initialLinksShown": true,
+    "menus": [
+        {
+            "menuId": "leftnav",
+            "menuItemURL": "cost-tracking.main",
+            "menuItemTitle": "costTracking.menus.leftnav.item",
+            "moduleId": "cost",
+            "iconClass": "fa fa-money",
+            "position": 150
+        },
+        {
+            "menuId": "topbar",
+            "menuItemURL": "frevvo.new-costsheet",
+            "menuItemTitle": "costTracking.menus.topbar.item",
+            "moduleId": "cost",
+            "iconClass": "fa fa-money",
+            "position": 70
+        }
     ],
-    "nodeTypes": [
-      {
-        "type": "prev",
-        "icon": "fa fa-arrow-up"
-      },
-      {
-        "type": "next",
-        "icon": "fa fa-arrow-down"
-      },
-      {
-        "type": "p/COSTSHEET",
-        "icon": "fa fa-money",
-        "components": [
-          "details",
-          "person",
-          "summary",
-          "tags",
-          "approvers"
+    "tree": {
+        "pageSize": 32,
+        "sorters": [
+            {
+                "desc": "costTracking.tree.sorters.dateAsc",
+                "name": "create_tdt ASC",
+                "default": true
+            },
+            {
+                "desc": "costTracking.tree.sorters.dateDesc",
+                "name": "create_tdt DESC"
+            },
+            {
+                "desc": "costTracking.tree.sorters.idAsc",
+                "name": "id ASC"
+            },
+            {
+                "desc": "costTracking.tree.sorters.idDesc",
+                "name": "id DESC"
+            },
+            {
+                "desc": "costTracking.tree.sorters.nameDesc",
+                "name": "name DESC"
+            }
+        ],
+        "nodeTypes": [
+            {
+                "type": "prev",
+                "icon": "fa fa-arrow-up"
+            },
+            {
+                "type": "next",
+                "icon": "fa fa-arrow-down"
+            },
+            {
+                "type": "p/COSTSHEET",
+                "icon": "fa fa-money",
+                "components": [
+                    "details",
+                    "person",
+                    "summary",
+                    "tags",
+                    "approvers"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/detail",
+                "label": "costTracking.tree.nodeTypes.details.label",
+                "icon": "fa fa-info-circle",
+                "components": [
+                    "details"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/person",
+                "label": "costTracking.tree.nodeTypes.person.label",
+                "icon": "fa fa-user",
+                "components": [
+                    "person"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/summary",
+                "label": "costTracking.tree.nodeTypes.summary.label",
+                "icon": "fa fa-money",
+                "components": [
+                    "summary"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/tags",
+                "label": "costTracking.tree.nodeTypes.tags.label",
+                "icon": "fa fa-tags",
+                "components": [
+                    "tags"
+                ]
+            },
+            {
+                "type": "p/COSTSHEET/approvers",
+                "label": "costTracking.tree.nodeTypes.approvers.label",
+                "icon": "fa fa-users",
+                "components": [
+                    "approvers"
+                ]
+            },
+            {
+                "type": "p/ERROR",
+                "icon": "fa fa-question"
+            }
         ]
-      },
-      {
-        "type": "p/COSTSHEET/detail",
-        "label": "costTracking.tree.nodeTypes.details.label",
-        "icon": "fa fa-info-circle",
-        "components": [
-          "details"
-        ]
-      },
-      {
-        "type": "p/COSTSHEET/person",
-        "label": "costTracking.tree.nodeTypes.person.label",
-        "icon": "fa fa-user",
-        "components": [
-          "person"
-        ]
-      },
-      {
-        "type": "p/COSTSHEET/summary",
-        "label": "costTracking.tree.nodeTypes.summary.label",
-        "icon": "fa fa-money",
-        "components": [
-          "summary"
-        ]
-      },
-      {
-        "type": "p/COSTSHEET/tags",
-        "label": "costTracking.tree.nodeTypes.tags.label",
-        "icon": "fa fa-tags",
-        "components": [
-          "tags"
-        ]
+    },
+    "components": [
+        {
+            "id": "main",
+            "title": "costTracking.comp.main.title",
+            "icon": "fa fa-tachometer",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false,
+            "widgets": [
+                {
+                    "id": "details",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "details",
+                            "displayName": "costTracking.comp.details.table.columns.title",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
+                        },
+                        {
+                            "name": "modified",
+                            "displayName": "costTracking.comp.details.table.columns.modified",
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
+                        },
+                        {
+                            "name": "modifier",
+                            "displayName": "costTracking.comp.details.table.columns.modifier",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "person",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "fullName",
+                            "displayName": "costTracking.comp.person.table.columns.fullName",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "userId",
+                            "displayName": "costTracking.comp.person.table.columns.userId",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                },
+                {
+                    "id": "summary",
+                    "type": "component"
+                },
+                {
+                    "id": "tags",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "tagName",
+                            "displayName": "costTracking.comp.tags.table.columns.tag",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "created",
+                            "displayName": "costTracking.comp.tags.table.columns.created",
+                            "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "creator",
+                            "displayName": "costTracking.comp.tags.table.columns.createdBy",
+                            "headerCellFilter": "translate",
+                            "lookup": "userFullNames"
+                        }
+                    ]
+                },
+                {
+                    "id": "approvers",
+                    "type": "component",
+                    "columnDefs": [
+                        {
+                            "name": "fullName",
+                            "displayName": "costTracking.comp.approvers.table.columns.fullName",
+                            "headerCellFilter": "translate"
+                        },
+                        {
+                            "name": "userId",
+                            "displayName": "costTracking.comp.approvers.table.columns.userId",
+                            "headerCellFilter": "translate"
+                        }
+                    ]
+                }
+            ]
         },
-      {
-        "type": "p/COSTSHEET/approvers",
-        "label": "costTracking.tree.nodeTypes.approvers.label",
-        "icon": "fa fa-users",
-        "components": [
-          "approvers"
-        ]
-      },
-      {
-        "type": "p/ERROR",
-        "icon": "fa fa-question"
-      }
+        {
+            "id": "info",
+            "title": "costTracking.comp.info.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "actions",
+            "title": "costTracking.comp.actions.title",
+            "enabled": false,
+            "configurable": true,
+            "type": "empty",
+            "editable": false
+        },
+        {
+            "id": "details",
+            "title": "costTracking.comp.details.title",
+            "icon": "fa fa-info-circle",
+            "enabled": true,
+            "configurable": true,
+            "type": "empty"
+        },
+        {
+            "id": "person",
+            "title": "costTracking.comp.person.title",
+            "icon": "fa fa-user",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "fullName",
+                    "displayName": "costTracking.comp.person.table.columns.fullName",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "costTracking.comp.person.table.columns.userId",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
+            "id": "summary",
+            "title": "costTracking.comp.summary.title",
+            "icon": "fa fa-money",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "parentId",
+                    "displayName": "costTracking.comp.summary.table.columns.parentId",
+                    "headerCellFilter": "translate",
+                    "visible": false
+                },
+                {
+                    "name": "parentNumber",
+                    "displayName": "costTracking.comp.summary.table.columns.parentNumber",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.parentNumber}}</a>"
+                },
+                {
+                    "name": "parentType",
+                    "displayName": "costTracking.comp.summary.table.columns.parentType",
+                    "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "value",
+                    "displayName": "costTracking.comp.summary.table.columns.value",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "title",
+                    "displayName": "costTracking.comp.summary.table.columns.title",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "description",
+                    "displayName": "costTracking.comp.summary.table.columns.description",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.description || 'N/A' }}</div>"
+                }
+            ]
+        },
+        {
+            "id": "tags",
+            "title": "costTracking.comp.tags.title",
+            "icon": "fa fa-tags",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "autoSuggestObjectType": "TAG",
+            "typeAheadColumn": "title_parseable",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "tagName",
+                    "displayName": "costTracking.comp.tags.table.columns.tag",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "costTracking.comp.tags.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "costTracking.comp.tags.table.columns.createdBy",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ],
+            "filters": "\"Object Type\": TAG",
+            "filterName": "Object Type"
+        },
+        {
+            "id": "approvers",
+            "title": "costTracking.comp.approvers.title",
+            "icon": "fa fa-users",
+            "enabled": true,
+            "configurable": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "fullName",
+                    "displayName": "costTracking.comp.approvers.table.columns.fullName",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "costTracking.comp.approvers.table.columns.userId",
+                    "headerCellFilter": "translate"
+                }
+            ]
+        }
     ]
-  },
-  "components": [
-    {
-      "id": "main",
-      "title": "costTracking.comp.main.title",
-      "icon": "fa fa-tachometer",
-      "enabled": false,
-      "configurable": true,
-      "type": "empty",
-      "editable": false,
-      "widgets": [
-        {
-          "id": "details",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "details",
-              "displayName": "costTracking.comp.details.table.columns.title",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div ng-bind-html='row.entity.details'></div>"
-            },
-            {
-              "name": "modified",
-              "displayName": "costTracking.comp.details.table.columns.modified",
-              "headerCellFilter": "translate",
-              "cellTemplate": "<div>{{ row.entity.modified | date : 'shortDate' }}</div>"
-            },
-            {
-              "name": "modifier",
-              "displayName": "costTracking.comp.details.table.columns.modifier",
-              "headerCellFilter": "translate",
-              "lookup": "userFullNames"
-            }
-          ]
-        },
-        {
-          "id": "person",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "fullName",
-              "displayName": "costTracking.comp.person.table.columns.fullName",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "userId",
-              "displayName": "costTracking.comp.person.table.columns.userId",
-              "headerCellFilter": "translate"
-            }
-          ]
-        },
-        {
-          "id": "summary",
-          "type": "component"
-        },
-        {
-          "id": "tags",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "tagName",
-              "displayName": "costTracking.comp.tags.table.columns.tag",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "created",
-              "displayName": "costTracking.comp.tags.table.columns.created",
-              "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "creator",
-              "displayName": "costTracking.comp.tags.table.columns.createdBy",
-              "headerCellFilter": "translate",
-              "lookup": "userFullNames"
-            }
-          ]
-        },
-        {
-          "id": "approvers",
-          "type": "component",
-          "columnDefs": [
-            {
-              "name": "fullName",
-              "displayName": "costTracking.comp.approvers.table.columns.fullName",
-              "headerCellFilter": "translate"
-            },
-            {
-              "name": "userId",
-              "displayName": "costTracking.comp.approvers.table.columns.userId",
-              "headerCellFilter": "translate"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "info",
-      "title": "costTracking.comp.info.title",
-      "enabled": false,
-      "configurable": true,
-      "type": "empty",
-      "editable": false
-    },
-    {
-      "id": "actions",
-      "title": "costTracking.comp.actions.title",
-      "enabled": false,
-      "configurable": true,
-      "type": "empty",
-      "editable": false
-    },
-    {
-      "id": "details",
-      "title": "costTracking.comp.details.title",
-      "icon": "fa fa-info-circle",
-      "enabled": true,
-      "configurable": true,
-      "type": "empty"
-    },
-    {
-      "id": "person",
-      "title": "costTracking.comp.person.title",
-      "icon": "fa fa-user",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "fullName",
-          "displayName": "costTracking.comp.person.table.columns.fullName",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "userId",
-          "displayName": "costTracking.comp.person.table.columns.userId",
-          "headerCellFilter": "translate"
-        }
-      ]
-    },
-    {
-      "id": "summary",
-      "title": "costTracking.comp.summary.title",
-      "icon": "fa fa-money",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "parentId",
-          "displayName": "costTracking.comp.summary.table.columns.parentId",
-          "headerCellFilter": "translate",
-          "visible": false
-        },
-        {
-          "name": "parentNumber",
-          "displayName": "costTracking.comp.summary.table.columns.parentNumber",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<a href='#' ng-click='grid.appScope.onClickObjectType($event, row.entity)'>{{row.entity.parentNumber}}</a>"
-        },
-        {
-          "name": "parentType",
-          "displayName": "costTracking.comp.summary.table.columns.parentType",
-          "cellFilter": "mapKeyValue: grid.appScope.customization.labels",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "value",
-          "displayName": "costTracking.comp.summary.table.columns.value",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "title",
-          "displayName": "costTracking.comp.summary.table.columns.title",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "description",
-          "displayName": "costTracking.comp.summary.table.columns.description",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div class='ui-grid-cell-contents'>{{ row.entity.description || 'N/A' }}</div>"
-        }
-      ]
-    },
-    {
-      "id": "tags",
-      "title": "costTracking.comp.tags.title",
-      "icon": "fa fa-tags",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "autoSuggestObjectType": "TAG",
-      "typeAheadColumn": "title_parseable",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "tagName",
-          "displayName": "costTracking.comp.tags.table.columns.tag",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "costTracking.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "creator",
-          "displayName": "costTracking.comp.tags.table.columns.createdBy",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
-        }
-      ],
-      "filters": "\"Object Type\": TAG",
-      "filterName": "Object Type"
-    },
-    {
-      "id": "approvers",
-      "title": "costTracking.comp.approvers.title",
-      "icon": "fa fa-users",
-      "enabled": true,
-      "configurable": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "fullName",
-          "displayName": "costTracking.comp.approvers.table.columns.fullName",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "userId",
-          "displayName": "costTracking.comp.approvers.table.columns.userId",
-          "headerCellFilter": "translate"
-        }
-      ]
-    }
-  ]
 }

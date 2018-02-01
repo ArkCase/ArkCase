@@ -11,6 +11,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,96 +78,84 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateAssignmentNewAssignee(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'oldAssignee' for AcmAssignments");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateAssignmentOldAssignee(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'userId' for AuditEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateAuditEventUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'author' for Note");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateNoteAuthor(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'user' for Notification");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateNotificationUser(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'participantLdapId' for AcmParticipant");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateParticipantLdapId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'signedBy' for Signature");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateSignatureSignedBy(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'subscriptionOwner' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionEventOwnerId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'eventUser' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionEventUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'userId' for SubscriptionEvent");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateSubscriptionUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'userId' for AcmUserAction");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateUserActionUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'userId' for OutlookPassword");
         newOldUserIds.forEach(
                 (newUserId, oldUserId) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateOutlookPasswordUserId(oldUserId, newUserId);
                     log.debug("For userId: [{}] affected [{}] rows", newUserId, rows);
-                }
-        );
+                });
 
         log.debug("Updating 'user' for AcmCostsheet");
         userUpdateHolderSet.forEach(holder -> {
@@ -219,17 +208,20 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
         adHocGroups.stream()
                 .filter(group -> !group.getUserMembers().isEmpty())
                 .forEach(group -> {
-                    Set<AcmUser> userMembers = group.getUserMembers();
-                    group.setUserMembers(new HashSet<>());
-                    userMembers.forEach(user -> {
-                        if (userHolderByOldId.containsKey(user.getUserId()))
-                        {
-                            AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
-                            group.addUserMember(userUpdateHolder.getNewUser());
-                            log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
-                        }
-                    });
-                    groupDao.save(group);
+                    Set<AcmUser> userMembers = new HashSet<>(group.getUserMembers());
+                    Predicate<AcmUser> userIsUpdated = user -> userHolderByOldId.containsKey(user.getUserId());
+                    userMembers.stream()
+                            .filter(userIsUpdated)
+                            .forEach(user -> {
+                                AcmUserUpdateHolder userUpdateHolder = userHolderByOldId.get(user.getUserId());
+                                group.addUserMember(userUpdateHolder.getNewUser());
+                                log.debug("Add [{}] user to [{}] group", userUpdateHolder.getNewUser().getUserId(), group.getName());
+                            });
+                    boolean isUpdated = group.getUserMembers().removeIf(userIsUpdated);
+                    if (isUpdated)
+                    {
+                        groupDao.save(group);
+                    }
                 });
 
         Map<String, String> newOldGroupName = getNewToOldGroupNames();
@@ -239,8 +231,7 @@ public class UserIdGroupNameDomainUpdateExecutor implements AcmDataUpdateExecuto
                 (newGroupName, oldGroupName) -> {
                     int rows = userIdGroupNameDomainUpdateDao.updateParticipantLdapId(oldGroupName, newGroupName);
                     log.debug("Affected [{}] rows for groupName: [{}]", rows, newGroupName);
-                }
-        );
+                });
 
         log.debug("Updating ASSIGNEE_ in ACT_HI_ACTINST table");
         newOldUserIds.forEach((newUserId, oldUserId) -> {

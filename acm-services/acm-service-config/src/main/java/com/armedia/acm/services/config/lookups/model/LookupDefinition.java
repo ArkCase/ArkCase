@@ -9,6 +9,8 @@ public class LookupDefinition
 
     private String name;
 
+    private Boolean readonly;
+
     private String lookupEntriesAsJson;
 
     public LookupDefinition()
@@ -51,5 +53,15 @@ public class LookupDefinition
     public void setLookupEntriesAsJson(String lookupEntriesAsJson)
     {
         this.lookupEntriesAsJson = lookupEntriesAsJson;
+    }
+
+    public Boolean getReadonly()
+    {
+        return readonly;
+    }
+
+    public void setReadonly(Boolean readonly)
+    {
+        this.readonly = readonly;
     }
 }

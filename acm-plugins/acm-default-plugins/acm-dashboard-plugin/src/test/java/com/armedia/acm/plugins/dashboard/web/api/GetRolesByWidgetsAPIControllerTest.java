@@ -1,5 +1,12 @@
 package com.armedia.acm.plugins.dashboard.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.dashboard.dao.WidgetDao;
 import com.armedia.acm.plugins.dashboard.model.widget.RolesGroupByWidgetDto;
 import com.armedia.acm.plugins.dashboard.model.widget.Widget;
@@ -9,6 +16,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmRole;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMock;
 import org.easymock.EasyMockSupport;
@@ -33,11 +41,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by marjan.stefanoski on 10/7/2014.
@@ -75,7 +78,6 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport
         mockHttpSession = new MockHttpSession();
         mockAuthentication = createMock(Authentication.class);
 
-
         unit = new GetRolesByWidgetsAPIController();
 
         unit.setWidgetDao(mockWidgetDao);
@@ -102,9 +104,8 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport
         AcmRole notAuthRole = new AcmRole();
         notAuthRole.setRoleName("ROLE_ADMINISTRATOR");
 
-        List<WidgetRoleName> notAuthRoles = new ArrayList<WidgetRoleName>();
+        List<WidgetRoleName> notAuthRoles = new ArrayList<>();
         notAuthRoles.add(new WidgetRoleName(notAuthRole.getRoleName()));
-
 
         RolesGroupByWidgetDto rolesGroupByWidgetDto = new RolesGroupByWidgetDto();
         rolesGroupByWidgetDto.setWidgetName(widgetName);
@@ -164,10 +165,8 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport
         Long widgetId = 500L;
         String widgetName = "TEST";
 
-
         AcmUser user = new AcmUser();
         user.setUserId("ann-acm");
-
 
         Widget returned = new Widget();
         returned.setWidgetId(widgetId);
@@ -179,10 +178,10 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport
         AcmRole userNotAuthRole = new AcmRole();
         userNotAuthRole.setRoleName("ROLE_CALLCENTER");
 
-        List<WidgetRoleName> authRoles = new ArrayList<WidgetRoleName>();
+        List<WidgetRoleName> authRoles = new ArrayList<>();
         authRoles.add(new WidgetRoleName(userAuthRole.getRoleName()));
 
-        List<WidgetRoleName> notAuthRoles = new ArrayList<WidgetRoleName>();
+        List<WidgetRoleName> notAuthRoles = new ArrayList<>();
         notAuthRoles.add(new WidgetRoleName(userNotAuthRole.getRoleName()));
 
         RolesGroupByWidgetDto rolesGroupByWidgetDto = new RolesGroupByWidgetDto();
@@ -233,7 +232,8 @@ public class GetRolesByWidgetsAPIControllerTest extends EasyMockSupport
         RolesGroupByWidgetDto rolesGroupByWidget = rolesGroupByWidgetDtos.get(0);
 
         assertEquals(rolesGroupByWidget.getWidgetName(), rolesGroupByWidgetDto.getWidgetName());
-        assertEquals(rolesGroupByWidget.getWidgetAuthorizedRoles().get(0).getName(), rolesGroupByWidgetDto.getWidgetAuthorizedRoles().get(0).getName());
+        assertEquals(rolesGroupByWidget.getWidgetAuthorizedRoles().get(0).getName(),
+                rolesGroupByWidgetDto.getWidgetAuthorizedRoles().get(0).getName());
     }
 
 }

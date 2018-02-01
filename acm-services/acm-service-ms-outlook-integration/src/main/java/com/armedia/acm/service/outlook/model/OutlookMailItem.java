@@ -1,7 +1,5 @@
 package com.armedia.acm.service.outlook.model;
 
-import microsoft.exchange.webservices.data.property.complex.EmailAddress;
-
 /**
  * Created by armdev on 4/20/15.
  */

@@ -10,29 +10,33 @@ public class PersonItem extends Item
     private String personType;
     private Long personAssociationId;
 
-    @XmlElement(name="personId")
-    @Override public Long getId()
+    @XmlElement(name = "personId")
+    @Override
+    public Long getId()
     {
         return super.getId();
     }
 
-    @Override public void setId(Long id)
+    @Override
+    public void setId(Long id)
     {
         super.setId(id);
     }
 
-    @XmlElement(name="personFullName")
-    @Override public String getValue()
+    @XmlElement(name = "personFullName")
+    @Override
+    public String getValue()
     {
         return super.getValue();
     }
 
-    @Override public void setValue(String value)
+    @Override
+    public void setValue(String value)
     {
         super.setValue(value);
     }
 
-    @XmlElement(name="personType")
+    @XmlElement(name = "personType")
     public String getPersonType()
     {
         return personType;
@@ -43,7 +47,7 @@ public class PersonItem extends Item
         this.personType = personType;
     }
 
-    @XmlElement(name="personAssociationId")
+    @XmlElement(name = "personAssociationId")
     public Long getPersonAssociationId()
     {
         return personAssociationId;

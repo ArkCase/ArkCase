@@ -7,6 +7,9 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileAddedEvent;
 import com.armedia.acm.plugins.ecm.service.impl.FileWorkflowBusinessRule;
 import com.armedia.acm.plugins.ecm.workflow.EcmFileWorkflowConfiguration;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.slf4j.Logger;
@@ -18,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +34,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     private RuntimeService activitiRuntimeService;
 
     private ObjectConverter objectConverter;
+
+    private UserDao userDao;
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
 
@@ -73,7 +79,7 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("documentAuthor", event.getUserId());
         pvars.put("pdfRenditionId", event.getSource().getFileId());
 
-        //"documentType" is a misleading name here, but keeping it for backwards compatibility
+        // "documentType" is a misleading name here, but keeping it for backwards compatibility
         pvars.put("documentType", event.getSource().getContainer().getContainerObjectTitle());
         pvars.put("PARENT_OBJECT_NAME", event.getSource().getContainer().getContainerObjectTitle());
 
@@ -89,7 +95,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         pvars.put("taskDueDateExpression", configuration.getTaskDueDateExpression());
         pvars.put("taskPriority", configuration.getTaskPriority());
 
-        pvars.put("futureTasks", getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
+        pvars.put("futureTasks",
+                getFutureTasks(approvers, configuration.getTaskName(), "", configuration.getTaskName(), event.getUserId(), 3));
 
         ProcessInstance pi = getActivitiRuntimeService().startProcessInstanceByKey(processName, pvars);
 
@@ -98,7 +105,8 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
 
     }
 
-    private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy, int maxDurationInDays)
+    private String getFutureTasks(List<String> approvers, String taskName, String groupName, String details, String addedBy,
+            int maxDurationInDays)
     {
         AcmMarshaller converter = getObjectConverter().getJsonMarshaller();
         List<BuckslipFutureTask> futureTasks = new ArrayList<>();
@@ -106,11 +114,19 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
         approvers.forEach(approver -> {
             BuckslipFutureTask task = new BuckslipFutureTask();
 
+            AcmUser approverUser = getUserDao().findByUserId(approver);
+            AcmUser addedByUser = getUserDao().findByUserId(addedBy);
+
+            String approverFullName = Objects.nonNull(approverUser) ? approverUser.getFullName() : "";
+            String addedByFullName = Objects.nonNull(addedByUser) ? addedByUser.getFullName() : "";
+
             task.setApproverId(approver);
+            task.setApproverFullName(approverFullName);
             task.setTaskName(taskName);
             task.setGroupName(groupName);
             task.setDetails(details);
             task.setAddedBy(addedBy);
+            task.setAddedByFullName(addedByFullName);
             task.setMaxTaskDurationInDays(maxDurationInDays);
 
             futureTasks.add(task);
@@ -137,6 +153,16 @@ public class FileCreatedBuckslipWorkflowHandler implements ApplicationListener<E
     public void setActivitiRuntimeService(RuntimeService activitiRuntimeService)
     {
         this.activitiRuntimeService = activitiRuntimeService;
+    }
+
+    public UserDao getUserDao()
+    {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao)
+    {
+        this.userDao = userDao;
     }
 
     public ObjectConverter getObjectConverter()

@@ -14,12 +14,12 @@
  *
  * The Admin.ModulesService provides Modules REST calls functionality
  */
-angular.module('admin').service('Admin.ModulesService', function ($http) {
+angular.module('admin').service('Admin.ModulesService', function($http) {
     return ({
-        getAppModules: getAppModules,
-        getRolesForModulePrivilege: getRolesForModulePrivilege,
-        addRolesToModule: addRolesToModule,
-        removeRolesFromModule: removeRolesFromModule
+        getAppModules : getAppModules,
+        getRolesForModulePrivilege : getRolesForModulePrivilege,
+        addRolesToModule : addRolesToModule,
+        removeRolesFromModule : removeRolesFromModule
     });
 
     /**
@@ -34,11 +34,11 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
      */
     function getAppModules() {
         return $http({
-            method: 'GET',
-            url: 'api/latest/plugin/admin/moduleconfiguration/modules'
+            method : 'GET',
+            url : 'api/latest/plugin/admin/moduleconfiguration/modules'
         });
-    };
-
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -54,10 +54,11 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
      */
     function getRolesForModulePrivilege(modulePrivilege) {
         return $http({
-            method: 'GET',
-            url: 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
+            method : 'GET',
+            url : 'api/latest/plugin/admin/rolesprivileges/privileges/' + modulePrivilege + '/roles'
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -75,14 +76,15 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
     function addRolesToModule(modulePrivilege, roles) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
-            method: 'PUT',
-            url: url,
-            data: {},
-            headers: {
-                'Content-Type': 'application/json'
+            method : 'PUT',
+            url : url,
+            data : {},
+            headers : {
+                'Content-Type' : 'application/json'
             }
         });
-    };
+    }
+    ;
 
     /**
      * @ngdoc method
@@ -100,9 +102,10 @@ angular.module('admin').service('Admin.ModulesService', function ($http) {
     function removeRolesFromModule(modulePrivilege, roles) {
         var url = 'api/latest/plugin/admin/rolesprivileges/roles/' + roles.join() + '/privileges/' + modulePrivilege;
         return $http({
-            method: 'DELETE',
-            url: url
+            method : 'DELETE',
+            url : url
         });
-    };
+    }
+    ;
 
 });

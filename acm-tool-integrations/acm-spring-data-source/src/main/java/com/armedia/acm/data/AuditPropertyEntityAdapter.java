@@ -14,7 +14,7 @@ import java.util.Date;
  * updates the entities based on business requirements, and this adapter takes care of the audit fields.
  * <p>
  * EclipseLink JPA provider raises aboutToInsert and aboutToUpdate <strong>after</strong> it has calculated the
- * change set, and <strong>only</strong> if the objects actually have changes.  That means we have to update the
+ * change set, and <strong>only</strong> if the objects actually have changes. That means we have to update the
  * EclipseLink change set directly; and we also update the POJO entity fields, so the client sees the updates.
  */
 public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
@@ -30,7 +30,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         Record record = event.getRecord();
         Object data = event.getObject();
 
-        // this method is called after JPA already computed what will be inserted.  So we have to modify the
+        // this method is called after JPA already computed what will be inserted. So we have to modify the
         // insert record directly, instead of just modifying the AcmEntity.
         if (data instanceof AcmEntity)
         {
@@ -71,7 +71,8 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
             }
 
             // note, we still have to update the object itself, so the client will have the right values
-        } else
+        }
+        else
         {
             log.trace("Entity type [{}] is NOT an AcmEntity, NOT setting insert fields.", data.getClass());
         }
@@ -91,7 +92,7 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
         Record record = event.getRecord();
         Object data = event.getObject();
 
-        // this method is called after JPA already computed what will be inserted.  So we have to modify the
+        // this method is called after JPA already computed what will be inserted. So we have to modify the
         // insert record directly, instead of just modifying the AcmEntity.
         if (data instanceof AcmEntity)
         {
@@ -117,7 +118,8 @@ public class AuditPropertyEntityAdapter extends DescriptorEventAdapter
             // note, we still have to update the object itself, so the client will have the right values
             entity.setModified(today);
             entity.setModifier(user);
-        } else
+        }
+        else
         {
             log.trace("Entity type [{}] is NOT an AcmEntity, NOT setting update fields.", data.getClass());
         }

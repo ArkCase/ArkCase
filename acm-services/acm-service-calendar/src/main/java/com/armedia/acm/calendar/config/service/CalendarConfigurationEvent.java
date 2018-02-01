@@ -25,7 +25,6 @@ public class CalendarConfigurationEvent extends AcmEvent
 
     /*
      * (non-Javadoc)
-     * 
      * @see com.armedia.acm.core.model.AcmEvent#getEventType()
      */
     @Override

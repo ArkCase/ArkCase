@@ -1,6 +1,5 @@
 package com.armedia.acm.plugins.admin.model;
 
-
 import java.util.Properties;
 
 public class LdapDirectoryConfig

@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
 import com.armedia.acm.plugins.admin.service.CmisConfigurationService;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +21,7 @@ import java.util.Map;
  * Created by nick.ferguson on 3/22/2017.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CmisConfigurationUpdateConfig
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -30,7 +31,6 @@ public class CmisConfigurationUpdateConfig
     @RequestMapping(value = "/cmisconfiguration/config/{cmisId}", method = RequestMethod.PUT, produces = {
             MediaType.APPLICATION_JSON_VALUE, MediaType.TEXT_PLAIN_VALUE
     })
-
     @ResponseBody
     public String updateConfig(
             @RequestBody String resource,
@@ -51,14 +51,13 @@ public class CmisConfigurationUpdateConfig
 
             log.debug("Attempting to update CMIS config with ID '{}'", cmisId);
             cmisConfigurationService.updateCmisConfig(cmisId, props);
-
-        } catch (Exception e)
+            return cmisObject.toString();
+        }
+        catch (Exception e)
         {
             log.error("Can't update CMIS config", e);
             throw new AcmCmisConfigurationException("Update CMIS config error", e);
         }
-
-        return cmisId;
     }
 
     public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)

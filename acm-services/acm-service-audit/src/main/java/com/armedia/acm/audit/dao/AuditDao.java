@@ -2,6 +2,7 @@ package com.armedia.acm.audit.dao;
 
 import com.armedia.acm.audit.model.AuditEvent;
 import com.armedia.acm.data.AcmAbstractDao;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +43,8 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         try
         {
             retval = update.executeUpdate();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot purge audits.", e);
         }
@@ -64,10 +67,11 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return findAudits.getResultList();
     }
 
-    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes, String sort, String direction)
+    public List<AuditEvent> findPagedResults(Long objectId, String objectType, int startRow, int maxRows, List<String> eventTypes,
+            String sort, String direction)
     {
 
-        //lets change order by string because of sql injection
+        // lets change order by string because of sql injection
         if (!direction.toUpperCase().equals("ASC"))
         {
             direction = "DESC";
@@ -76,15 +80,15 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String sortBy;
         switch (sort)
         {
-            case "eventType":
-                sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
-                break;
-            case "userId":
-                sortBy = "ae.userId";
-                break;
-            default:
-                sortBy = "ae.eventDate";
-                break;
+        case "eventType":
+            sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
+            break;
+        case "userId":
+            sortBy = "ae.userId";
+            break;
+        default:
+            sortBy = "ae.eventDate";
+            break;
         }
 
         String queryText = "SELECT ae " +
@@ -160,6 +164,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         return count.intValue();
     }
 
+    @Override
     public EntityManager getEm()
     {
         return em;

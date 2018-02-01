@@ -1,37 +1,37 @@
 {
-  "audit": {
-    "title": "Untersuchen",
-    "menus": {
-      "leftnav.item": "Untersuchen"
+    "audit": {
+        "title": "Untersuchen",
+        "menus": {
+            "leftnav.item": "Untersuchen"
+        },
+        "navigation": {
+            "label": {
+                "reportName": "Berichtsname",
+                "inputID": "Identifizierung",
+                "dateFrom": "Von",
+                "dateTo": "Zu"
+            },
+            "placeholder": {
+                "selectAudit": "ALLE",
+                "inputId": "#"
+            },
+            "checkBox": {
+                "xmlReport": "Als XML anzeigen"
+            },
+            "button": {
+                "generateAuditReport.btn": "Prüfbericht generieren"
+            }
+        },
+        "datepicker": {
+            "close": "Erledigt",
+            "clear": "Klar",
+            "current": "Heute"
+        }
     },
-    "navigation": {
-      "label": {
-        "reportName": "Berichtsname",
-        "inputID": "Identifizierung",
-        "dateFrom": "Von",
-        "dateTo": "Zu"
-      },
-      "placeholder": {
-        "selectAudit": "ALLE",
-        "inputId": "#"
-      },
-      "checkBox": {
-        "xmlReport": "Als XML anzeigen"
-      },
-      "button": {
-        "generateAuditReport.btn": "Prüfbericht generieren"
-      }
+    "audit.comp.auditselection": {
+        "title": "Untersuchen"
     },
-    "datepicker": {
-      "close": "Erledigt",
-      "clear": "Klar",
-      "current": "Heute"
+    "audit.comp.datepickers": {
+        "title": "Untersuchen"
     }
-  },
-  "audit.comp.auditselection": {
-    "title": "Untersuchen"
-  },
-  "audit.comp.datepickers": {
-    "title": "Untersuchen"
-  }
 }

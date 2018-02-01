@@ -1,9 +1,13 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
@@ -28,9 +32,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Petar Ilin <petar.ilin@armedia.com> on 06.11.2015.
@@ -575,7 +576,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         verifyAll();
     }
 
-    public void mockExpectsWhenParticipantTypesTest(AccessControlRule accessControlRule, Collection grantedAuthorities){
+    public void mockExpectsWhenParticipantTypesTest(AccessControlRule accessControlRule, Collection grantedAuthorities)
+    {
         // mock the behavior
         EasyMock.expect(accessControlRulesMock.getAccessControlRuleList()).andReturn(Arrays.asList(accessControlRule)).anyTimes();
         EasyMock.expect(accessControlRulesMock.getPropertiesMapping()).andReturn(propertiesMapping);
@@ -584,14 +586,16 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         replayAll();
     }
 
-    public Collection getGrantedAuthoritiesMockList(){
+    public Collection getGrantedAuthoritiesMockList()
+    {
         GrantedAuthority grantedAuthority1 = new SimpleGrantedAuthority("ROLE_ADMINISTRATOR");
         GrantedAuthority grantedAuthority2 = new SimpleGrantedAuthority("ROLE_ANALYST");
         GrantedAuthority grantedAuthority3 = new SimpleGrantedAuthority("ROLE_TECHNICIAN");
         return Arrays.asList(grantedAuthority1, grantedAuthority2, grantedAuthority3);
     }
 
-    public AccessControlRule getAccessControlRuleForParticipantTypesTest(){
+    public AccessControlRule getAccessControlRuleForParticipantTypesTest()
+    {
         AccessControlRule accessControlRule = new AccessControlRule();
         accessControlRule.setObjectType("CASE_FILE");
         accessControlRule.setActionName("restrictCase");

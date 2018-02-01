@@ -38,7 +38,8 @@ public class CloseComplaintRequestProcessEndHandler implements ApplicationListen
 
                 getCloseComplaintRequestService().handleCloseComplaintRequestApproved(complaintId, requestId, user,
                         acmBusinessProcessEvent.getEventDate(), acmBusinessProcessEvent.getIpAddress());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 // we want to log an exception here so we can see what went wrong. And we can't throw an
                 // exception from an event handler; plus, we want the exception to propagate, which will roll

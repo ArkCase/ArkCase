@@ -1,18 +1,11 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="case-file-constraint-01-restricted-flag" author="dmiller">
-        <addForeignKeyConstraint
-                baseTableName="acm_case_file"
-                baseColumnNames="cm_case_restricted_flag"
-                constraintName="fk_case_file_restricted_flag"
-                referencedTableName="acm_boolean_lu"
-                referencedColumnNames="cm_value"
-                deferrable="${deferrable}"
-                initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_case_file" baseColumnNames="cm_case_restricted_flag"
+            constraintName="fk_case_file_restricted_flag" referencedTableName="acm_boolean_lu" referencedColumnNames="cm_value"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="case-file-constraint-02-container-id" author="dmiller">
@@ -22,11 +15,8 @@
                 <columnExists tableName="acm_case_file" columnName="cm_container_id"/>
             </and>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_case_file" baseColumnNames="cm_container_id"
-                                 constraintName="fk_case_container_id"
-                                 referencedTableName="acm_container"
-                                 referencedColumnNames="cm_container_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_case_file" baseColumnNames="cm_container_id" constraintName="fk_case_container_id"
+            referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>

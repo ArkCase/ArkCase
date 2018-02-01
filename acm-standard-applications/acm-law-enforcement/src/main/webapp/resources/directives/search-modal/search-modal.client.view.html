@@ -6,17 +6,10 @@
     <div class="modal-search">
         <div class="modal-search-header">
             <div class="input-group">
-                <input class="form-control input-md"
-                       autofocus
-                       ng-keydown="keyUp($event)"
-                       ng-model="searchQuery"
-                       placeholder="{{searchPlaceholder}}"
-                       ng-disabled="disableSearchControls"
-                >
+                <input class="form-control input-md" autofocus ng-keydown="keyUp($event)" ng-model="searchQuery"
+                        placeholder="{{searchPlaceholder}}" ng-disabled="disableSearchControls">
                 <span class="input-group-btn">
-                        <button class="btn btn-md btn-primary"
-                                type="button"
-                                ng-click="queryExistingItems()"
+                        <button class="btn btn-md btn-primary" type="button" ng-click="queryExistingItems()"
                                 ng-disabled="disableSearchControls || (searchQuery.length < minSearchLength)">
                             {{search}}
                         </button>
@@ -29,15 +22,14 @@
             <div ng-if="config.showFacets" class="modal-left">
                 <ul class="list-unstyled">
                     <li ng-repeat="facet in facets"
-                        ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
+                            ng-if="facet.fields.length && facet.name!='Object Sub Type' && facet.name!= 'Object Type'">
                         <strong>{{facet.name}}</strong>
                         <ul class="list-unstyled">
                             <li ng-repeat="field in facet.fields">
                                 <div class="checkbox" ng-if="field.count > 0">
-                                    <label><input type="checkbox"
-                                                  ng-disabled="disableSearchControls"
-                                                  ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
-                                                  ng-click="selectFacet($event.target.checked,facet.name,field.name.nameValue)"/>{{field.name.nameFiltered}}<span
+                                    <label><input type="checkbox" ng-disabled="disableSearchControls"
+                                            ng-model="currentFacetSelection[field.name.nameValue + '|' + facet.name]"
+                                            ng-click="selectFacet($event.target.checked,facet.name,field.name.nameValue)" />{{field.name.nameFiltered}}<span
                                             class="pull-right label label-info">{{field.count}}</span></label>
                                 </div>
                             </li>
@@ -47,13 +39,8 @@
             </div>
 
             <div class="modal-right well-sm">
-                <div ui-grid="gridOptionsMaster"
-                     ui-grid-resize-columns
-                     ui-grid-pagination
-                     ui-grid-selection
-                     adjust-table-height="gridOptionsMaster.data.length"
-                     ui-grid-auto-resize
-                     class="grid">
+                <div ui-grid="gridOptionsMaster" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
+                        adjust-table-height="gridOptionsMaster.data.length" ui-grid-auto-resize class="grid">
                     <div ng-if="showNoData" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
@@ -61,15 +48,13 @@
                         &nbsp;
                     </div>
                 </div>
-                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && selectedItems.length > 0" translate>{{pickUserLabel}}</label>
-                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && selectedItems.length > 0" translate>{{pickGroupLabel}}</label>
-                <div ui-grid="gridOptionsDetail"
-                     ui-grid-resize-columns
-                     ui-grid-pagination
-                     ui-grid-selection
-                     adjust-table-height="gridOptionsDetail.data.length"
-                     ui-grid-auto-resize
-                     class="grid" ng-if="selectedItems.length > 0 && secondGrid">
+                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && selectedItems.length > 0"
+                        translate>{{pickUserLabel}}</label>
+                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && selectedItems.length > 0"
+                        translate>{{pickGroupLabel}}</label>
+                <div ui-grid="gridOptionsDetail" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
+                        adjust-table-height="gridOptionsDetail.data.length" ui-grid-auto-resize class="grid"
+                        ng-if="selectedItems.length > 0 && secondGrid">
                     <div ng-if="showNoData" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
@@ -86,8 +71,7 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         {{cancel}}
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()"
-            ng-disabled="selectedItems.length < 1">
+    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
         {{ok}}
     </button>
 </div>

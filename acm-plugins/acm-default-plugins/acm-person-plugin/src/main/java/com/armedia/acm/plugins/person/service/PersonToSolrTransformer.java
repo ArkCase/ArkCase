@@ -13,6 +13,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,13 +134,6 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         return sb.toString();
     }
 
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Person in)
-    {
-        // No implementation needed
-        return null;
-    }
-
     private void addAddresses(Person person, SolrAdvancedSearchDocument solrDoc)
     {
         List<String> addressIds = new ArrayList<>();
@@ -213,7 +207,6 @@ public class PersonToSolrTransformer implements AcmObjectToSolrDocTransformer<Pe
         solrDoc.setTitle_parseable(in.getFamilyName() + " " + in.getGivenName());
         solrDoc.setTitle_parseable_lcs(in.getFamilyName() + " " + in.getGivenName());
         solrDoc.setStatus_s(in.getStatus());
-
 
         return solrDoc;
     }

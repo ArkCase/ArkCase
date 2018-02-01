@@ -2,7 +2,6 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -100,21 +99,27 @@ public class FacetedSearchService
                             timePeriodJSONObject = timePeriodList.getJSONObject(i);
 
                             String timePeriod = URLEncoder.encode(
-                                    "{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + ", " + timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}",
+                                    "{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + ", "
+                                            + timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_DESCRIPTION) + "'}",
                                     SearchConstants.FACETED_SEARCH_ENCODING);
-                            String timePeriodValue = URLEncoder.encode(timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_VALUE), SearchConstants.FACETED_SEARCH_ENCODING);
-                            facetKeys.add(SearchConstants.FACET_QUERY + timePeriod + facetKey + SearchConstants.DOTS_SPLITTER + timePeriodValue);
+                            String timePeriodValue = URLEncoder.encode(timePeriodJSONObject.getString(SearchConstants.TIME_PERIOD_VALUE),
+                                    SearchConstants.FACETED_SEARCH_ENCODING);
+                            facetKeys.add(
+                                    SearchConstants.FACET_QUERY + timePeriod + facetKey + SearchConstants.DOTS_SPLITTER + timePeriodValue);
 
                         }
-                    } else
+                    }
+                    else
                     {
-                        String encoded = URLEncoder.encode("{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + "'}", SearchConstants.FACETED_SEARCH_ENCODING);
+                        String encoded = URLEncoder.encode("{" + SearchConstants.SOLR_FACET_NAME_CHANGE_COMMAND + "'" + e.getValue() + "'}",
+                                SearchConstants.FACETED_SEARCH_ENCODING);
                         facetKeys.add(SearchConstants.FACET_FILED + encoded + facetKey);
 
                     }
                 }
             }
-        } catch (UnsupportedEncodingException e1)
+        }
+        catch (UnsupportedEncodingException e1)
         {
 
             log.error("Encoding problem while building the facet key list: " + e1.getMessage(), e1);
@@ -154,7 +159,8 @@ public class FacetedSearchService
                 String solrFiltersSubQuery = createFacetedFiltersSubString(filter);
                 return solrFiltersSubQuery;
 
-            } catch (UnsupportedEncodingException e)
+            }
+            catch (UnsupportedEncodingException e)
             {
                 log.error("Encoding problem occur while building SOLR query for faceted search with filters: " + filter);
             }
@@ -245,6 +251,46 @@ public class FacetedSearchService
         return solrResult;
     }
 
+    /**
+     * Same as ClentUtils.escapeChars, except c == '*' and Character.isWhitespace(c) is removed
+     *
+     * @param s String to have Solr's special characters escaped
+     * @return escaped string
+     */
+    public String escapeQueryChars(String s)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++)
+        {
+            char c = s.charAt(i);
+            // These characters are part of the query syntax and must be escaped
+            if (c == '\\'
+                    || c == '+'
+                    || c == '-'
+                    || c == '!'
+                    || c == '('
+                    || c == ')'
+                    || c == ':'
+                    || c == '^'
+                    || c == '['
+                    || c == ']'
+                    || c == '\"'
+                    || c == '{'
+                    || c == '}'
+                    || c == '~'
+                    || c == '?'
+                    || c == '|'
+                    || c == '&'
+                    || c == ';'
+                    || c == '/')
+            {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
+    }
+
     private String createFacetedFiltersSubString(String filter) throws UnsupportedEncodingException
     {
         StringBuilder queryBuilder = new StringBuilder();
@@ -263,7 +309,8 @@ public class FacetedSearchService
                 String searchKey = filterSplitByQ.length > 1 ? filterSplitByQ[1] : filterSplitByDots[0];
                 buildFacetFilter(queryBuilder, propertyMap, timePeriodList, searchKey, filterSplitByDots[1]);
             }
-        } else
+        }
+        else
         {
             String[] filterSplitByQ = filter.split(SearchConstants.QUOTE_SPLITTER);
             String[] filterSplitByDots = filter.split(SearchConstants.DOTS_SPLITTER);
@@ -274,7 +321,8 @@ public class FacetedSearchService
         return queryBuilder.toString();
     }
 
-    private void buildFacetFilter(StringBuilder queryBuilder, Map<String, Object> propertyMap, JSONArray jsonArray, String searchKey, String filterSplitByDot) throws UnsupportedEncodingException
+    private void buildFacetFilter(StringBuilder queryBuilder, Map<String, Object> propertyMap, JSONArray jsonArray, String searchKey,
+            String filterSplitByDot) throws UnsupportedEncodingException
     {
         String[] allORFilters = filterSplitByDot.contains("|") ? filterSplitByDot.split(SearchConstants.PIPE_SPLITTER) : null;
 
@@ -290,23 +338,27 @@ public class FacetedSearchService
                 {
                     if (allORFilters == null)
                     {
-                        String returnedDateANDSubString = createDateANDQuerySubString(jsonArray, mapElement.getKey(), filterSplitByDot.trim());
+                        String returnedDateANDSubString = createDateANDQuerySubString(jsonArray, mapElement.getKey(),
+                                filterSplitByDot.trim());
                         queryBuilder.append(returnedDateANDSubString);
                         break;
-                    } else
+                    }
+                    else
                     {
                         String returnedDateORSubString = createDateORQuerySubString(allORFilters, jsonArray, mapElement.getKey());
                         queryBuilder.append(returnedDateORSubString);
                         break;
                     }
-                } else
+                }
+                else
                 {
                     if (allORFilters == null)
                     {
                         String returnedRegularANDSubString = createRegularANDQuerySubString(mapElement.getKey(), filterSplitByDot.trim());
                         queryBuilder.append(returnedRegularANDSubString);
                         break;
-                    } else
+                    }
+                    else
                     {
                         String returnedRegularORSubString = createRegularORQuerySubString(allORFilters, mapElement.getKey());
                         queryBuilder.append(returnedRegularORSubString);
@@ -347,13 +399,16 @@ public class FacetedSearchService
                     isFirst = false;
                     query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING)
                             + URLEncoder.encode("(" + value, SearchConstants.FACETED_SEARCH_ENCODING);
-                } else
+                }
+                else
                 {
-                    query += URLEncoder.encode(" OR ", SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
+                    query += URLEncoder.encode(" OR ", SearchConstants.FACETED_SEARCH_ENCODING)
+                            + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
                 }
             }
             query += URLEncoder.encode(")", SearchConstants.FACETED_SEARCH_ENCODING);
-        } catch (UnsupportedEncodingException e1)
+        }
+        catch (UnsupportedEncodingException e1)
         {
             log.error("Encoding problem occur while building date OR SOLR query sub-string", e1);
         }
@@ -376,12 +431,14 @@ public class FacetedSearchService
                     // field query parser.
                     query += URLEncoder.encode("_query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
                             + URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
-                } else
+                }
+                else
                 {
                     query += URLEncoder.encode(" OR _query_:\"{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
                             + URLEncoder.encode(orFilter.trim() + "\"", SearchConstants.FACETED_SEARCH_ENCODING);
                 }
-            } catch (UnsupportedEncodingException e1)
+            }
+            catch (UnsupportedEncodingException e1)
             {
                 log.error("Encoding problem occur while building regular OR SOLR query sub-string", e1);
             }
@@ -398,8 +455,10 @@ public class FacetedSearchService
         {
             // AFDP-1101 The term query parser is not what we want here; we want a field search. so use the field query
             // parser.
-            query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
-        } catch (UnsupportedEncodingException e)
+            query += URLEncoder.encode("{!field f=" + substitutionName + "}", SearchConstants.FACETED_SEARCH_ENCODING)
+                    + URLEncoder.encode(filterValue, SearchConstants.FACETED_SEARCH_ENCODING);
+        }
+        catch (UnsupportedEncodingException e)
         {
             log.error("Encoding problem occur while building regular AND SOLR query sub-string", e);
         }
@@ -420,8 +479,10 @@ public class FacetedSearchService
         }
         try
         {
-            query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING) + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
-        } catch (UnsupportedEncodingException e)
+            query += URLEncoder.encode(substitutionName + SearchConstants.DOTS_SPLITTER, SearchConstants.FACETED_SEARCH_ENCODING)
+                    + URLEncoder.encode(value, SearchConstants.FACETED_SEARCH_ENCODING);
+        }
+        catch (UnsupportedEncodingException e)
         {
             log.error("Encoding problem occur while building date AND SOLR query sub-string", e);
         }
@@ -457,10 +518,12 @@ public class FacetedSearchService
             // {!field f=object_type_facet}NOTIFICATION - meaning to include objects of type NOTIFICATION. The
             // URL-encoded version of this search term is "%21field+f%3Dobject_type_facet%7DNOTIFICATION"... so that's
             // what we exclude from the results of this stream.
-            subQuery = Arrays.stream(objectsToExcludeArray).filter((String element) -> 
-                    !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element) &&
-                    !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
-                    .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element).reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
+            subQuery = Arrays.stream(objectsToExcludeArray)
+                    .filter((String element) -> !queryParameters
+                            .contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE_FACET + "%7D" + element) &&
+                            !queryParameters.contains("%21field+f%3D" + SearchConstants.PROPERTY_OBJECT_TYPE + "%7D" + element))
+                    .map((String element) -> "-" + SearchConstants.PROPERTY_OBJECT_TYPE + ":" + element)
+                    .reduce((String left, String right) -> left + " " + SearchConstants.OPERATOR_AND + " " + right)
                     .orElse("");
         }
 

@@ -7,6 +7,7 @@ import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,13 +105,6 @@ public class GroupToSolrTransformer implements AcmObjectToSolrDocTransformer<Acm
         solr.setStatus_s(in.getStatus().name());
 
         return solr;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmGroup in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override

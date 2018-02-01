@@ -55,7 +55,8 @@
     "videogular-buffering": "~1.4.4",
     "videogular-overlay-play": "~1.4.4",
     "videogular-poster": "~1.4.4",
-    "angular-utf8-base64": "0.0.5"
+    "angular-utf8-base64": "0.0.5",
+    "ui-grid-draggable-rows": "0.2.2"
   },
   "resolutions": {
     "angular": "~1.4.7",

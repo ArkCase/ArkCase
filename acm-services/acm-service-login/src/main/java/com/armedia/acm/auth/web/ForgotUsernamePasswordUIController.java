@@ -3,6 +3,7 @@ package com.armedia.acm.auth.web;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,8 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         if (users.size() == 0)
         {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
-        } else
+        }
+        else
         {
             List<String> userAccounts = users.stream()
                     .map(AcmUser::getUserId)
@@ -55,7 +57,8 @@ public class ForgotUsernamePasswordUIController implements ApplicationEventPubli
         if (user == null || user.getUserState() != AcmUserState.VALID)
         {
             return new ResponseEntity<>("Error", HttpStatus.NOT_FOUND);
-        } else
+        }
+        else
         {
             ForgotPasswordEvent forgotPasswordEvent = new ForgotPasswordEvent(user);
             forgotPasswordEvent.setSucceeded(true);

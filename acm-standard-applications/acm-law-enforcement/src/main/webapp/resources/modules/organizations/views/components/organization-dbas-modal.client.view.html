@@ -11,23 +11,19 @@
     <form name="dbasForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="value" translate>organizations.comp.dbas.modal.value.label</label><span
-                    class="required-asterisk">*</span>
+                <label for="value" translate>organizations.comp.dbas.modal.value.label</label><span class="required-asterisk">*</span>
                 <input id="value" ng-model="dba.value" class="input-md form-control" required="required"
-                       placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
+                        placeholder="{{ 'organizations.comp.dbas.modal.value.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">
-                <label for="type" translate>organizations.comp.dbas.modal.aliasType.label</label><span
-                    class="required-asterisk">*</span>
-                <select id="type"
-                        ng-model="dba.type" class="input-md form-control" required="required"
+                <label for="type" translate>organizations.comp.dbas.modal.aliasType.label</label><span class="required-asterisk">*</span>
+                <select id="type" ng-model="dba.type" class="input-md form-control" required="required"
                         ng-options="item.key as item.value | translate for item in dbasTypes"></select>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12 form-group">
-                <label translate>organizations.comp.dbas.modal.setPrimary</label><span
-                    class="required-asterisk">*</span><br/>
+                <label translate>organizations.comp.dbas.modal.setPrimary</label><span class="required-asterisk">*</span><br />
                 <label>
                     <input type="radio" ng-model="isDefault" ng-value="true">
                     <translate>organizations.comp.dbas.modal.yes</translate>

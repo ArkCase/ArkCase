@@ -16,7 +16,8 @@ public class AcmUserServiceImpl implements AcmUserService
     /**
      * queries each user for given id's and returns list of users
      *
-     * @param usersIds given id's
+     * @param usersIds
+     *            given id's
      * @return List of users
      */
     @Override
@@ -27,8 +28,7 @@ public class AcmUserServiceImpl implements AcmUserService
             return null;
         }
         return usersIds.stream()
-                .map(userId ->
-                {
+                .map(userId -> {
                     AcmUser user = userDao.findByUserId(userId);
                     return user;
                 })
@@ -39,7 +39,8 @@ public class AcmUserServiceImpl implements AcmUserService
     /**
      * extracts userId from User and returns a list of id's
      *
-     * @param users given users
+     * @param users
+     *            given users
      * @return List of users id's
      */
     @Override

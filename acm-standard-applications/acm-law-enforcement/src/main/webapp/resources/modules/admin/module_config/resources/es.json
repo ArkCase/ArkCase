@@ -1,773 +1,770 @@
 {
-  "admin": {
-    "title": "Administración",
-    "security.title": "Seguridad",
-    "security.functionalAccessControl": "Control de acceso funcional",
-    "security.functionalAccessControl.applicationRole": "Rol de aplicación",
-    "security.ldapConfig": "Configuración LDAP",
-    "security.ldapConfig.addNewDirectory": "Agregar nuevo directorio",
-    "security.ldapConfig.addNewMember": "Agregar nuevo miembro",
-    "security.ldapConfig.addMembers": "Añadir miembros",
-    "security.ldapConfig.addSubgroup": "Agregar Subgrupo",
-    "security.ldapConfig.addExistingMembers": "Agregar miembros existentes",
-    "security.ldapConfig.addLdapSubgroup": "Agregar subgrupo LDAP",
-    "security.ldapConfig.deleteLdapGroup": "Eliminar grupo LDAP",
-    "security.ldapConfig.removeGroup": "Eliminar grupo",
-    "security.ldapConfig.addOrEditSupervisor": "Añadir / editar supervisor",
-    "security.ldapConfig.editMember": "Editar miembro",
-    "security.ldapConfig.removeMember": "Eliminar miembro",
-    "security.ldapConfig.table.ldapUrl": "LDAP URL",
-    "security.ldapConfig.table.directoryName": "Nombre del directorio",
-    "security.ldapConfig.data": {
-      "userAttributesTemplate": "Plantilla de atributos de usuario Ldap",
-      "groupAttributesTemplate": "Plantilla de atributos del grupo Ldap",
-      "addNewDirectory": "Agregar nuevo directorio",
-      "editRecord": "Editar registro",
-      "id": "CARNÉ DE IDENTIDAD",
-      "directoryType": "Seleccionar servidor de directorio",
-      "ldapUrl": "LDAP URL",
-      "base": "Base",
-      "directoryName": "Nombre del directorio",
-      "authUserDn": "Auth User Dn",
-      "authUserPassword": "Contraseña de usuario de autenticación",
-      "userSearchBase": "Base de búsqueda de usuarios",
-      "userSearchFilter": "Filtro de búsqueda de usuario",
-      "allUsersFilter": "Todos los usuarios filtran",
-      "allChangedUsersFilter": "Todos los filtros de usuarios cambiados",
-      "allUsersPageFilter": "Filtro de página de todos los usuarios",
-      "allChangedUsersPageFilter": "Todos los filtros de página de usuarios modificados",
-      "allUsersSortingAttribute": "Atributo de clasificación para usuarios",
-      "groupSearchBase": "Base de búsqueda grupal",
-      "groupSearchFilterForUser": "Filtro de búsqueda grupal para el usuario",
-      "userIdAttributeName": "Nombre de atributo de identificación de usuario",
-      "userDomain": "Dominio del usuario",
-      "userDomainNote": "(Nota: Complete el dominio del usuario para el escenario SSO. Para la autenticación LDAP déjelo en blanco)",
-      "syncPageSize": "Tamaño de página de sincronización",
-      "groupSearchFilter": "Filtro de búsqueda grupal",
-      "changedGroupSearchFilter": "Filtro de búsqueda de grupo modificado",
-      "groupsSortingAttribute": "Atributo de clasificación para grupos",
-      "groupSearchPageFilter": "Filtro de página de búsqueda de grupo",
-      "changedGroupSearchPageFilter": "Filtro de página de búsqueda de grupo modificado",
-      "enableEditingLdapUsers": "Habilitar la administración de usuarios y grupos",
-      "syncEnabled": "Habilitar sincronizar usuarios",
-      "cancel": "Cancelar",
-      "ok": "De Acuerdo"
-    },
-    "menus": {
-      "leftnav.item": "Administración"
-    },
-    "security.ldapConfig.data.placeholders": {
-      "id": "Ingrese el nombre del directorio",
-      "ldapUrl": "Ingrese la URL de conexión",
-      "base": "Ingrese el componente de dominio base (por ejemplo, dc = example, dc = com)",
-      "authUserDn": "Ingrese el DN del usuario para la autenticación (por ejemplo, cn = John Doe, ou = users, dc = example, dc = com)",
-      "authUserPassword": "Ingrese la contraseña para el usuario de autenticación",
-      "userSearchBase": "Ingrese la base de búsqueda de usuarios (por ejemplo, ou = usuarios)",
-      "userSearchFilter": "Ingrese el filtro de búsqueda para un solo usuario (por ejemplo, (& (objectClass = persona) (uid =% s))",
-      "allUsersFilter": "Ingrese el filtro de búsqueda para todos los usuarios (por ejemplo, (objectClass = persona))",
-      "allUsersPageFilter": "Introduzca un filtro que incluya el atributo de clasificación (por ejemplo, (& (objectClass = person) (uidNumber> =% s)))",
-      "allUsersSortingAttribute": "Introduzca el atributo de clasificación para los usuarios (por ejemplo, 'uidNumber')",
-      "allChangedUsersFilter": "Ingrese el filtro para todos los usuarios modificados",
-      "allChangedUsersPageFilter": "Ingrese el filtro que incluye el atributo de clasificación para todos los usuarios modificados",
-      "groupSearchBase": "Ingrese la base de búsqueda para grupos (por ejemplo, ou = grupos)",
-      "groupSearchFilterForUser": "Ingrese el filtro de búsqueda para el usuario en el grupo (por ejemplo, (& (objectClass = group) (member =% s)))",
-      "userIdAttributeName": "Ingrese el atributo utilizado para la identificación del usuario (por ejemplo, 'uid')",
-      "userDomain": "Ingrese el dominio del usuario",
-      "syncPageSize": "Ingrese el tamaño de la página",
-      "groupSearchFilter": "Ingrese el filtro de búsqueda para grupos (por ejemplo, (objectClass = group))",
-      "groupsSortingAttribute": "Introduzca el atributo para clasificar grupos (por ejemplo, 'gidNumber')",
-      "changedGroupSearchFilter": "Ingrese el filtro de búsqueda para todos los grupos modificados",
-      "changedGroupSearchPageFilter": "Ingrese el filtro que incluye el atributo de clasificación para todos los grupos modificados",
-      "groupSearchPageFilter": "Introduzca un filtro que incluya el atributo de clasificación (por ejemplo, (& (objectClass = group) (gidNumber> =% s)))",
-      "enableEditingLdapUsers": "Compruebe si se permite administrar usuarios y grupos a su DS"
-    },
-    "security.ldapConfig.messages": {
-      "delete.success": "Fila eliminada con éxito",
-      "delete.error": "Error al eliminar la fila",
-      "insert.success": "Se insertó una nueva fila con éxito.",
-      "insert.error": "Error al insertar una nueva fila.",
-      "update.success": "Fila actualizada con éxito",
-      "update.error": "Error al actualizar la fila",
-      "insert.template.success": "Plantilla creada con éxito",
-      "insert.template.error": "Error al crear la plantilla"
-    },
-    "security.ldapConfig.dialog": {
-      "cancel": "Cancelar",
-      "ok": "De Acuerdo",
-      "confirm.delete": {
-        "deleteBtn": "Borrar",
-        "cancelBtn": "Cancelar",
-        "headerText": "¿Estás seguro?",
-        "bodyText": "Este registro será eliminado. ¿Estás seguro?"
-      }
-    },
-    "admin.security.addNew": "Agregar nuevo directorio",
-    "security.organizationalHierarchy": {
-      "title": "Jerarquía organizacional",
-      "btn": {
-        "createAdHocGroup": "CreateAdHocGroup"
-      },
-      "createGroupDialog": {
-        "ldapGroup": {
-          "title": "Agregar grupo LDAP"
-        },
-        "adHocGroup": {
-          "title": "Agregar grupo Ad-Hoc"
-        },
-        "selectDirectory": "--Elegir la configuración del directorio--",
-        "disabledGroupWarning": "¡Agregar nuevos grupos LDAP no está permitido para este directorio!",
-        "name": "Nombre",
-        "namePlaceholder": "Ingrese el nombre del grupo",
-        "description": "Descripción",
-        "descriptionPlaceholder": "Ingrese la descripción",
-        "btn": {
-          "ok": "Añadir grupo",
-          "cancel": "Cancelar"
-        }
-      },
-      "addSubGroupDialog": {
-        "title": "Agregar Subgrupo a",
-        "name": "Nombre",
-        "namePlaceholder": "Ingrese el nombre del grupo",
-        "description": "Descripción",
-        "descriptionPlaceholder": "Ingrese la descripción",
-        "btn": {
-          "ok": "Agregar grupo Ad-Hoc",
-          "cancel": "Cancelar"
-        }
-      },
-      "addMembers": {
-        "title": "Añadir miembros",
-        "btn": {
-          "search": "¡Ir!",
-          "cancel": "Cancelar",
-          "ok": "Añadir",
-          "searchPlaceholder": "Ingrese para buscar miembros."
-        }
-      },
-      "createUserDialog": {
-        "addLdapMember": {
-          "title": "Agregar miembro Ldap",
-          "btn": {
+    "admin": {
+        "title": "Administración",
+        "security.title": "Seguridad",
+        "security.functionalAccessControl": "Control de acceso funcional",
+        "security.functionalAccessControl.applicationRole": "Rol de aplicación",
+        "security.ldapConfig": "Configuración LDAP",
+        "security.ldapConfig.addNewDirectory": "Agregar nuevo directorio",
+        "security.ldapConfig.addNewMember": "Agregar nuevo miembro",
+        "security.ldapConfig.addMembers": "Añadir miembros",
+        "security.ldapConfig.addSubgroup": "Agregar Subgrupo",
+        "security.ldapConfig.addExistingMembers": "Agregar miembros existentes",
+        "security.ldapConfig.addLdapSubgroup": "Agregar subgrupo LDAP",
+        "security.ldapConfig.deleteLdapGroup": "Eliminar grupo LDAP",
+        "security.ldapConfig.removeGroup": "Eliminar grupo",
+        "security.ldapConfig.addOrEditSupervisor": "Añadir / editar supervisor",
+        "security.ldapConfig.editMember": "Editar miembro",
+        "security.ldapConfig.removeMember": "Eliminar miembro",
+        "security.ldapConfig.table.ldapUrl": "LDAP URL",
+        "security.ldapConfig.table.directoryName": "Nombre del directorio",
+        "security.ldapConfig.data": {
+            "userAttributesTemplate": "Plantilla de atributos de usuario Ldap",
+            "groupAttributesTemplate": "Plantilla de atributos del grupo Ldap",
+            "addNewDirectory": "Agregar nuevo directorio",
+            "editRecord": "Editar registro",
+            "id": "CARNÉ DE IDENTIDAD",
+            "directoryType": "Seleccionar servidor de directorio",
+            "ldapUrl": "LDAP URL",
+            "base": "Base",
+            "directoryName": "Nombre del directorio",
+            "authUserDn": "Auth User Dn",
+            "authUserPassword": "Contraseña de usuario de autenticación",
+            "userSearchBase": "Base de búsqueda de usuarios",
+            "userSearchFilter": "Filtro de búsqueda de usuario",
+            "allUsersFilter": "Todos los usuarios filtran",
+            "allChangedUsersFilter": "Todos los filtros de usuarios cambiados",
+            "allUsersPageFilter": "Filtro de página de todos los usuarios",
+            "allChangedUsersPageFilter": "Todos los filtros de página de usuarios modificados",
+            "allUsersSortingAttribute": "Atributo de clasificación para usuarios",
+            "groupSearchBase": "Base de búsqueda grupal",
+            "groupSearchFilterForUser": "Filtro de búsqueda grupal para el usuario",
+            "userIdAttributeName": "Nombre de atributo de identificación de usuario",
+            "userDomain": "Dominio del usuario",
+            "userDomainNote": "(Nota: Complete el dominio del usuario para el escenario SSO. Para la autenticación LDAP déjelo en blanco)",
+            "syncPageSize": "Tamaño de página de sincronización",
+            "groupSearchFilter": "Filtro de búsqueda grupal",
+            "changedGroupSearchFilter": "Filtro de búsqueda de grupo modificado",
+            "groupsSortingAttribute": "Atributo de clasificación para grupos",
+            "groupSearchPageFilter": "Filtro de página de búsqueda de grupo",
+            "changedGroupSearchPageFilter": "Filtro de página de búsqueda de grupo modificado",
+            "enableEditingLdapUsers": "Habilitar la administración de usuarios y grupos",
+            "syncEnabled": "Habilitar sincronizar usuarios",
             "cancel": "Cancelar",
-            "ok": "Agregar usuario de Ldap"
-          },
-          "username": "Introduzca su nombre de usuario",
-          "firstName": "Ingresa el nombre",
-          "lastName": "Introduzca el apellido",
-          "email": "Ingrese correo electrónico",
-          "password": "Introducir la contraseña",
-          "confirmation": "Ingresa tu contraseña nuevamente"
+            "ok": "De Acuerdo"
         },
-        "editLdapMember": {
-          "title": "Editar miembro de Ldap",
-          "btn": {
+        "menus": {
+            "leftnav.item": "Administración"
+        },
+        "security.ldapConfig.data.placeholders": {
+            "id": "Ingrese el nombre del directorio",
+            "ldapUrl": "Ingrese la URL de conexión",
+            "base": "Ingrese el componente de dominio base (por ejemplo, dc = example, dc = com)",
+            "authUserDn": "Ingrese el DN del usuario para la autenticación (por ejemplo, cn = John Doe, ou = users, dc = example, dc = com)",
+            "authUserPassword": "Ingrese la contraseña para el usuario de autenticación",
+            "userSearchBase": "Ingrese la base de búsqueda de usuarios (por ejemplo, ou = usuarios)",
+            "userSearchFilter": "Ingrese el filtro de búsqueda para un solo usuario (por ejemplo, (& (objectClass = persona) (uid =% s))",
+            "allUsersFilter": "Ingrese el filtro de búsqueda para todos los usuarios (por ejemplo, (objectClass = persona))",
+            "allUsersPageFilter": "Introduzca un filtro que incluya el atributo de clasificación (por ejemplo, (& (objectClass = person) (uidNumber> =% s)))",
+            "allUsersSortingAttribute": "Introduzca el atributo de clasificación para los usuarios (por ejemplo, 'uidNumber')",
+            "allChangedUsersFilter": "Ingrese el filtro para todos los usuarios modificados",
+            "allChangedUsersPageFilter": "Ingrese el filtro que incluye el atributo de clasificación para todos los usuarios modificados",
+            "groupSearchBase": "Ingrese la base de búsqueda para grupos (por ejemplo, ou = grupos)",
+            "groupSearchFilterForUser": "Ingrese el filtro de búsqueda para el usuario en el grupo (por ejemplo, (& (objectClass = group) (member =% s)))",
+            "userIdAttributeName": "Ingrese el atributo utilizado para la identificación del usuario (por ejemplo, 'uid')",
+            "userDomain": "Ingrese el dominio del usuario",
+            "syncPageSize": "Ingrese el tamaño de la página",
+            "groupSearchFilter": "Ingrese el filtro de búsqueda para grupos (por ejemplo, (objectClass = group))",
+            "groupsSortingAttribute": "Introduzca el atributo para clasificar grupos (por ejemplo, 'gidNumber')",
+            "changedGroupSearchFilter": "Ingrese el filtro de búsqueda para todos los grupos modificados",
+            "changedGroupSearchPageFilter": "Ingrese el filtro que incluye el atributo de clasificación para todos los grupos modificados",
+            "groupSearchPageFilter": "Introduzca un filtro que incluya el atributo de clasificación (por ejemplo, (& (objectClass = group) (gidNumber> =% s)))",
+            "enableEditingLdapUsers": "Compruebe si se permite administrar usuarios y grupos a su DS"
+        },
+        "security.ldapConfig.messages": {
+            "delete.success": "Fila eliminada con éxito",
+            "delete.error": "Error al eliminar la fila",
+            "insert.success": "Se insertó una nueva fila con éxito.",
+            "insert.error": "Error al insertar una nueva fila.",
+            "update.success": "Fila actualizada con éxito",
+            "update.error": "Error al actualizar la fila",
+            "insert.template.success": "Plantilla creada con éxito",
+            "insert.template.error": "Error al crear la plantilla"
+        },
+        "security.ldapConfig.dialog": {
             "cancel": "Cancelar",
-            "ok": "Editar usuario de Ldap"
-          }
+            "ok": "De Acuerdo",
+            "confirm.delete": {
+                "deleteBtn": "Borrar",
+                "cancelBtn": "Cancelar",
+                "headerText": "¿Estás seguro?",
+                "bodyText": "Este registro será eliminado. ¿Estás seguro?"
+            }
         },
-        "username": "Nombre de usuario",
-        "firstName": "Nombre de pila",
-        "lastName": "Apellido",
-        "email": "Email",
-        "password": "Contraseña",
-        "confirmation": "Confirmar contraseña"
-      },
-      "addMembersGridColumns": {
-        "name": "Nombre",
-        "type": "Tipo",
-        "title": "Título",
-        "parent": "Padre",
-        "assignee": "Cesionario",
-        "modified": "Modificado"
-      },
-      "addSupervisor": {
-        "title": "Añadir supervisor",
-        "btn": {
-          "search": "¡Ir!",
-          "cancel": "Cancelar",
-          "ok": "Añadir",
-          "searchPlaceholder": "Ingrese para buscar supervisor."
+        "admin.security.addNew": "Agregar nuevo directorio",
+        "security.organizationalHierarchy": {
+            "title": "Jerarquía organizacional",
+            "btn": {
+                "createAdHocGroup": "CreateAdHocGroup"
+            },
+            "createGroupDialog": {
+                "ldapGroup": {
+                    "title": "Agregar grupo LDAP"
+                },
+                "adHocGroup": {
+                    "title": "Agregar grupo Ad-Hoc"
+                },
+                "selectDirectory": "--Elegir la configuración del directorio--",
+                "disabledGroupWarning": "¡Agregar nuevos grupos LDAP no está permitido para este directorio!",
+                "name": "Nombre",
+                "namePlaceholder": "Ingrese el nombre del grupo",
+                "description": "Descripción",
+                "descriptionPlaceholder": "Ingrese la descripción",
+                "btn": {
+                    "ok": "Añadir grupo",
+                    "cancel": "Cancelar"
+                }
+            },
+            "addSubGroupDialog": {
+                "title": "Agregar Subgrupo a",
+                "name": "Nombre",
+                "namePlaceholder": "Ingrese el nombre del grupo",
+                "description": "Descripción",
+                "descriptionPlaceholder": "Ingrese la descripción",
+                "btn": {
+                    "ok": "Agregar grupo Ad-Hoc",
+                    "cancel": "Cancelar"
+                }
+            },
+            "addMembers": {
+                "title": "Añadir miembros",
+                "btn": {
+                    "search": "¡Ir!",
+                    "cancel": "Cancelar",
+                    "ok": "Añadir",
+                    "searchPlaceholder": "Ingrese para buscar miembros."
+                }
+            },
+            "createUserDialog": {
+                "addLdapMember": {
+                    "title": "Agregar miembro Ldap",
+                    "btn": {
+                        "cancel": "Cancelar",
+                        "ok": "Agregar usuario de Ldap"
+                    },
+                    "username": "Introduzca su nombre de usuario",
+                    "firstName": "Ingresa el nombre",
+                    "lastName": "Introduzca el apellido",
+                    "email": "Ingrese correo electrónico",
+                    "password": "Introducir la contraseña",
+                    "confirmation": "Ingresa tu contraseña nuevamente"
+                },
+                "editLdapMember": {
+                    "title": "Editar miembro de Ldap",
+                    "btn": {
+                        "cancel": "Cancelar",
+                        "ok": "Editar usuario de Ldap"
+                    }
+                },
+                "username": "Nombre de usuario",
+                "firstName": "Nombre de pila",
+                "lastName": "Apellido",
+                "email": "Email",
+                "password": "Contraseña",
+                "confirmation": "Confirmar contraseña"
+            },
+            "addMembersGridColumns": {
+                "name": "Nombre",
+                "type": "Tipo",
+                "title": "Título",
+                "parent": "Padre",
+                "assignee": "Cesionario",
+                "modified": "Modificado"
+            },
+            "addSupervisor": {
+                "title": "Añadir supervisor",
+                "btn": {
+                    "search": "¡Ir!",
+                    "cancel": "Cancelar",
+                    "ok": "Añadir",
+                    "searchPlaceholder": "Ingrese para buscar supervisor."
+                }
+            },
+            "addSupervisorGridColumns": {
+                "name": "Nombre",
+                "type": "Tipo",
+                "title": "Título",
+                "parent": "Padre",
+                "assignee": "Cesionario",
+                "modified": "Modificado"
+            },
+            "dialog.group": {
+                "confirm.delete": {
+                    "cancelBtn": "Cancelar",
+                    "deleteBtn": "Borrar",
+                    "headerText": "Estás a punto de eliminar el grupo:",
+                    "bodyText": "¿Estás seguro?"
+                }
+            },
+            "dialog.member": {
+                "confirm.delete": {
+                    "cancelBtn": "Cancelar",
+                    "deleteBtn": "Borrar",
+                    "headerText": "Está a punto de eliminar miembro:",
+                    "bodyText": "¿Estás seguro?"
+                }
+            },
+            "messages": {
+                "delete": {
+                    "group": {
+                        "success": "Éxito",
+                        "error": "Error"
+                    },
+                    "member": {
+                        "success": "Éxito",
+                        "error": "Error"
+                    }
+                }
+            }
+        },
+        "security.selectPrivileges": "Crear roles / Seleccionar privilegios",
+        "security.selectPrivileges.applicationRole": "Rol de aplicación",
+        "security.selectPrivileges.createRole": "Crear rol",
+        "security.selectPrivileges.editRole": "Editar rol",
+        "security.selectPrivileges.applyChanges": "Aplicar cambios",
+        "security.selectPrivileges.enterRoleName": "Ingrese el nombre del rol en el cuadro a continuación.",
+        "security.selectPrivileges.cancel": "Cancelar",
+        "security.selectPrivileges.name": "Nombre",
+        "security.modules": "Módulos",
+        "security.modules.module": "Módulo",
+        "security.ldap.user.management": {
+            "title": "Administración de usuarios LDAP",
+            "cloneButton": "Usuario clon",
+            "deleteUserBtn": "Borrar usuario",
+            "deleteUserMsg": "¿Seguro que quieres eliminar a este usuario?",
+            "user": "Usuario"
+        },
+        "security.calendarConfiguration": {
+            "title": "Configuración del calendario",
+            "calendarConfigForm": {
+                "email.placeholder": "Introduzca la dirección de correo electrónico del sistema",
+                "password.placeholder": "Ingrese la contraseña del sistema",
+                "purge.placeholder": "Elija la opción de purga",
+                "purgeDays.placeholder": "Ingresa los días",
+                "save.button": "Salvar",
+                "validate.button": "Validar",
+                "purge.label": "Purga",
+                "email.label": "Dirección de correo electrónico del sistema",
+                "password.label": "Contraseña del sistema",
+                "purgeDays.label": "Días",
+                "emailValid": "La dirección de correo electrónico y la contraseña del sistema son válidas",
+                "emailNotValid": "La dirección de correo electrónico o la contraseña del sistema no son válidas",
+                "enableCalendarIntegration.checkbox": "Habilitar la integración del calendario",
+                "purgeOptions": {
+                    "retainIndefinitely": "Retener indefinidamente",
+                    "objectClosed": "Objeto = 'Cerrado'",
+                    "objectClosedXDays": "Objeto = 'Cerrado' + X días"
+                },
+                "configurableObjectTypes": {
+                    "cases.label": "Casos",
+                    "complaints.label": "Reclamaciones",
+                    "tasks.label": "Tareas"
+                }
+            }
+        },
+        "security.calendarCredentialsConfiguration": {
+            "title": "Configuración de credenciales de calendario",
+            "accountConfigForm": {
+                "account": "Dirección de correo electrónico del sistema",
+                "password": "Contraseña del sistema",
+                "password.placeholder": "Contraseña del sistema",
+                "save.button": "Salvar",
+                "validate.button": "Validar"
+            },
+            "modal": {
+                "title": "Anular la carpeta de Outlook",
+                "message": "Usted ha cambiado su cuenta de correo electrónico del sistema. Las carpetas de Outlook asociadas se anularán con las nuevas. Por favor confirma tu acción",
+                "confirm.button": "Confirmar",
+                "cancel.button": "Cancelar"
+            },
+            "message": {
+                "credentials.valid": "Las credenciales son válidas",
+                "credentials.invalid": "Las credenciales no son validas",
+                "credentials.error": "Se ha producido un error al verificar las credenciales",
+                "save.successful": "Creador de la carpeta de Outlook guardado con éxito",
+                "save.fail": "Creador de carpeta de Outlook no guardado"
+            }
+        },
+        "security.emailConfiguration": {
+            "title": "Política de entrega de documentos",
+            "emailConfigForm": {
+                "save.button": "Salvar",
+                "deliveryMethods.label": "Métodos de entrega",
+                "enableDocumentEmail.checkbox": "Los documentos pueden ser enviados por correo electrónico",
+                "enableDocumentAttach.checkbox": "Los documentos se pueden adjuntar a los correos electrónicos",
+                "enableDocumentHyperlink.checkbox": "Los documentos pueden enviarse como hipervínculos",
+                "serverSettings.label": "Configuración del servidor",
+                "serverType.label": "Tipo de servidor",
+                "serverType.placeholder": "Elija el tipo de servidor de correo electrónico",
+                "serverTypeOptions": {
+                    "smtp": "SMTP",
+                    "outlook": "Microsoft Exchange"
+                },
+                "serverType.configuredExchange.label": "Para más detalles, consulte la configuración de Microsoft Exchange",
+                "server.label": "Dirección del servidor",
+                "server.placeholder": "Ingrese la dirección del servidor",
+                "port.label": "Puerto",
+                "port.placeholder": "Entrar en el puerto",
+                "encryption.label": "Cifrado",
+                "encryption.placeholder": "Elija Encriptación",
+                "encryptionOptions": {
+                    "off": "APAGADO",
+                    "ssl-tls": "SSL / TLS",
+                    "starttls": "STARTTLS"
+                },
+                "username.label": "Nombre de usuario",
+                "username.placeholder": "Introduzca su nombre de usuario",
+                "password.label": "Contraseña",
+                "password.placeholder": "Introducir la contraseña",
+                "userFrom.label": "De",
+                "userFrom.placeholder": "Ingrese el campo Correo electrónico",
+                "validate.label": "Validación de SMTP",
+                "validate.button": "Validar",
+                "smtpValid": "La configuración de SMTP es válida",
+                "smtpNotValid": "La configuración de SMTP no es válida"
+            }
+        },
+        "security.emailTemplates": {
+            "title": "Plantillas de correo electrónico",
+            "table.columns": {
+                "templateName": "Nombre de la plantilla",
+                "emailPattern": "Patrón de correo electrónico",
+                "source": "Fuente",
+                "objectTypes": "Tipos de objetos",
+                "actions": "Comportamiento",
+                "modified": "Fecha modificada",
+                "modifier": "Modificado por"
+            },
+            "modal": {
+                "title": "Plantilla de correo electrónico",
+                "templateName.label": "Nombre de la plantilla",
+                "templateName.placeholder": "Introduzca el nombre de la plantilla",
+                "emailPattern.label": "Patrón de correo electrónico",
+                "emailPattern.placeholder": "Ingresar patrón de correo electrónico",
+                "source.label": "Fuente",
+                "objectTypes.label": "Tipos de objetos",
+                "actions.label": "Comportamiento",
+                "manual.label": "Manual",
+                "automated.label": "Automatizado",
+                "browse": "Vistazo",
+                "save": "Salvar",
+                "cancel": "Cancelar"
+            }
+        },
+        "security.exchangeConfiguration": {
+            "title": "Configuración de Microsoft Exchange",
+            "exchangeConfigForm": {
+                "save.button": "Salvar",
+                "enableExchangeIntegration.checkbox": "Habilitar la integración de Microsoft Exchange",
+                "exchangeServerVersion.label": "Versión de Exchange Server",
+                "exchangeServerVersion.placeholder": "Elija la versión del servidor",
+                "exchangeServerVersionOptions": {
+                    "Exchange2007": "Exchange2007",
+                    "Exchange2007_SP1": "Exchange2007_SP1",
+                    "Exchange2010": "Exchange2010",
+                    "Exchange2010_SP1": "Exchange2010_SP1",
+                    "Exchange2010_SP2": "Exchange2010_SP2",
+                    "Exchange2013": "Exchange2013",
+                    "Exchange2013_SP1": "Exchange2013_SP1"
+                },
+                "enableAutodiscovery.checkbox": "Habilitar Autodescubrimiento",
+                "clientAccessServer.label": "Servidor de acceso de cliente",
+                "clientAccessServer.description": "Antes de cambiar el nivel de acceso predeterminado, visite: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ para obtener más información",
+                "clientAccessServer.placeholder": "Ingrese el servidor de acceso de cliente",
+                "exchangeDefaultAccess.label": "Acceso predeterminado de Exchange",
+                "exchangeDefaultAccess.placeholder": "Elija acceso predeterminado de Exchange",
+                "exchangeDefaultAccessOptions": {
+                    "None": "Ninguna",
+                    "Owner": "Propietario",
+                    "PublishingEditor": "EditorialEditor",
+                    "Editor": "Editor",
+                    "PublishingAuthor": "PublicadorAutor",
+                    "Author": "Autor",
+                    "NoneditingAuthor": "NoneditingAuthor",
+                    "Reviewer": "Crítico",
+                    "Contributor": "Contribuyente",
+                    "FreeBusyTimeOnly": "FreeBusyTimeOnly",
+                    "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
+                    "Custom": "Personalizado"
+                }
+            }
+        },
+        "dashboard.title": "Tablero",
+        "dashboard.config": "Configuración del tablero",
+        "dashboard.widgets": "Widgets",
+        "reports": {
+            "title": "Informes",
+            "config": "Configuración de informes",
+            "btn": {
+                "reportDesigner": "Diseñador de informes",
+                "sync": "Sincronizar"
+            }
+        },
+        "forms.title": "Formularios",
+        "forms.config": "Configuración de formulario",
+        "workflows.title": "Flujos de trabajo",
+        "workflows.config": "Configuración de flujo de trabajo",
+        "workflows.config.bpmn.upload": "Subir",
+        "workflows.config.bpmn.addNewWorkflow": "Cargar flujo de trabajo",
+        "workflows.config.bpmn.modal": {
+            "label.description": "Descripción",
+            "label.noFileSelected": "Ningún archivo seleccionado",
+            "btnCancel.text": "Cancelar",
+            "btnOk.text": "Cargar flujo de trabajo"
+        },
+        "workflows.config.activate": {
+            "error": "¡No puedo activar este proceso!",
+            "success": "Proceso exitosamente activado."
+        },
+        "workflows.config.showHistory.dialog": {
+            "title": "Historia",
+            "body": "A continuación se muestra un historial de archivos BPMN anteriores. Para restablecer un flujo de trabajo anterior, seleccione el flujo de trabajo y haga clic en Activar",
+            "cancel": "Cancelar",
+            "activate": "Activar"
+        },
+        "workflows.config.noHistory": "es_There is no history for this workflow.",
+        "workflows.config.grid": {
+            "businessProcess": "Procesos de negocio",
+            "description": "Descripción",
+            "active": "Activo",
+            "modified": "Modificado",
+            "creator": "Autor"
+        },
+        "workflows.config.btn": {
+            "createNew": "Crear nuevo modelo",
+            "uploadNew": "Subir nuevo BPMN"
+        },
+        "workflows.config.links": {
+            "download": "Descargar",
+            "replaceFile": "Reemplazar el archivo",
+            "versionHistory": "Historial de versiones",
+            "diagram": "Diagrama de proceso"
+        },
+        "workflows.config.upload": {
+            "success": "Nueva definición de proceso correctamente cargada",
+            "error": "Error al cargar una nueva definición de proceso"
+        },
+        "workflows.config.diagram": {
+            "title": "Diagrama de proceso",
+            "error.loading": "El diagrama no se puede cargar",
+            "modal": {
+                "btnClose.text": "Cerca"
+            }
+        },
+        "formWorkflows.title": "Enlace Form / Workflow",
+        "formWorkflows.link": "Formularios de enlace / flujos de trabajo",
+        "formWorkflows.link.undo": "Deshacer",
+        "formWorkflows.link.saveChanges": "Guardar cambios",
+        "formWorkflows.link.editRole.save.success": "La configuración de Link Forms / Workflows se guardó correctamente",
+        "formWorkflows.link.editRole.save.error": "No se puede guardar la configuración de enlaces de formularios / flujos de trabajo",
+        "application": {
+            "title": "Solicitud",
+            "locale.config": {
+                "title": "Configuración de configuración regional",
+                "defaultLabel": "Configuración regional predeterminada:"
+            },
+            "labels.config": {
+                "title": "Configuración de etiqueta",
+                "progressMessage": "Actualizando etiquetas ... Por favor espere",
+                "data": {
+                    "description": "Descripción",
+                    "defaultValue": "Valor por defecto",
+                    "id": "CARNÉ DE IDENTIDAD",
+                    "value": "Valor"
+                },
+                "btnReset": {
+                    "label": "Reiniciar...",
+                    "title": "Restablecer los recursos de etiqueta a la configuración"
+                },
+                "setToDefault": {
+                    "dialog.title": "Restablecer etiquetas por defecto",
+                    "chkResetCustom.label": "Borrar las etiquetas personalizadas también?",
+                    "btnCancel.label": "Cancelar",
+                    "btnCancel.title": "Cierre el diálogo sin acción",
+                    "btnReset.label": "Restablecer",
+                    "btnReset.title": "Borrar etiquetas personalizadas y restablecerlas a los valores predeterminados",
+                    "btnRefresh.label": "Reiniciar",
+                    "btnRefresh.title": "Restablezca las etiquetas a los valores predeterminados pero mantenga las etiquetas personalizadas sin cambios",
+                    "resetCustom.confirm": "¿Seguro que quieres eliminar los recursos personalizados seleccionados?"
+                }
+            },
+            "lookups.config": {
+                "title": "Configuración de búsquedas",
+                "choose": "Elija Buscar",
+                "data": {
+                    "key": "Llave",
+                    "value": "Valor",
+                    "inverseKey": "Tecla inversa",
+                    "inverseValue": "Valor inverso"
+                },
+                "modal": {
+                    "title": "Etiqueta de búsqueda",
+                    "editEntry": "Editar entrada de búsqueda",
+                    "addEntry": "Añadir entrada de búsqueda",
+                    "key.placeholder": "Ingrese la clave de ingreso",
+                    "value.placeholder": "Ingrese el valor de entrada como clave de etiqueta",
+                    "inversekey.placeholder": "Ingrese la clave inversa de entrada",
+                    "inversevalue.placeholder": "Ingrese el valor inverso de entrada como clave de etiqueta",
+                    "btnCancel.text": "Cancelar",
+                    "btnOk.text": "Guardar entrada"
+                }
+            },
+            "module.config": {
+                "title": "Configuración del módulo"
+            },
+            "userName.config": {
+                "title": "Nombre de usuario Display Configuration",
+                "userId.label": "Use el identificador de usuario",
+                "userName.label": "Use el nombre de usuario completo",
+                "apply": "Aplicar",
+                "modal.title": "Información",
+                "modal.info": "La configuración tendrá efecto después de actualizar",
+                "modal.ok": "DE ACUERDO"
+            },
+            "login.config": {
+                "title": "Configuración de acceso",
+                "idleLimit.label": "Límite inactivo de inicio de sesión (en milisegundos)",
+                "inform": "La configuración tendrá efecto para todas las nuevas sesiones de usuario",
+                "apply.label": "Aplicar"
+            },
+            "auditHistory.config": {
+                "title": "Historial de auditoría",
+                "historyDays.label": "Mantener eventos de auditoría y notificación (en días)",
+                "inform": "Configuración guardada correctamente",
+                "apply.label": "Aplicar"
+            }
+        },
+        "branding.title": "Marca",
+        "branding.logo": "Logo",
+        "branding.logo.messages": {
+            "upload.success": "Archivos de logotipo personalizado actualizados. Actualiza la página del navegador para ver el resultado.",
+            "upload.error": "Error al subir archivos de logotipo personalizados."
+        },
+        "branding.logo.header.title": "Encabezamiento",
+        "branding.logo.login.title": "Página de inicio de sesión",
+        "branding.logo.warningMessage": "Solo el formato PNG está permitido. La proporción recomendada es de 1 a 4. La altura mínima es de 50 px.",
+        "branding.logo.btn": {
+            "chooseHeader": "Elija el logotipo del encabezado",
+            "chooseLogin": "Elija el logo de inicio",
+            "saveFiles": "Salvar"
+        },
+        "branding": {
+            "customCss": "CSS personalizado",
+            "customCss.save.success": "CSS personalizado actualizado Actualiza la página del navegador para ver el resultado.",
+            "customCss.save.error": "Error al guardar CSS personalizado.",
+            "customCss.save": "Salvar"
+        },
+        "correspondenceManagement": {
+            "title": "Gestión de correspondencia",
+            "templates": "Plantillas de correspondencia",
+            "templates.addNewTemplate": "Cargar plantilla",
+            "templates.addTemplate": "Subir",
+            "templates.versionTemplate": "Versiones",
+            "templates.deleteTemplate": "Borrar",
+            "templates.editTemplate": "Editar plantilla",
+            "templates.grid": {
+                "id": "CARNÉ DE IDENTIDAD",
+                "title": "Título",
+                "label": "Nombre para mostrar",
+                "path": "Camino",
+                "created": "Creado",
+                "modified": "Modificado",
+                "creator": "Creador",
+                "modifier": "Modificado por",
+                "activated": "Estado",
+                "objectType": "Tipo de objeto",
+                "version": "Versión",
+                "templateVersionActive": "Activo"
+            },
+            "templates.fieldNames.label": "Asignar campos a valores de la plantilla",
+            "templates.querySelect": {
+                "header.text": "Seleccionar consulta",
+                "btnCancel.text": "Cancelar",
+                "btnOk.text": "Seleccionar consulta",
+                "table.columns": {
+                    "beanId": "ID de frijol",
+                    "jpaQuery": "Consulta JPA",
+                    "objectType": "Tipo de consulta"
+                }
+            },
+            "templates.modal": {
+                "objectTypes.label": "Tipos de objetos",
+                "querySelect.label": "Seleccionar consulta",
+                "label.label": "Nombre para mostrar",
+                "btnCancel.text": "Cancelar",
+                "btnOk.text": "Cargar plantilla"
+            },
+            "templates.version.modal": {
+                "btnOk.text": "DE ACUERDO"
+            },
+            "mergefields": "Combinar configuración de campos",
+            "mergefields.saveMergeFields": "Salvar",
+            "mergefields.versionMergeFields": "Versiones",
+            "mergefields.grid": {
+                "fieldId": "CARNÉ DE IDENTIDAD",
+                "fieldValue": "Valor",
+                "fieldDescription": "Descripción"
+            },
+            "mergefields.version.grid": {
+                "mergingVersion": "Versión",
+                "modified": "Modificado",
+                "modifier": "Modificado por",
+                "mergingActiveVersion": "Activo"
+            },
+            "mergefields.version.modal": {
+                "btnLoadVersion.text": "Cargar versión",
+                "btnCancel.text": "Cancelar"
+            }
+        },
+        "forms.defaultValue": "Seleccione un objetivo",
+        "forms.addForm": "Agregar formulario simple",
+        "forms.data": {
+            "name": "Nombre del formulario",
+            "applicationName": "Nombre de la aplicación",
+            "description": "Descripción",
+            "target": "Objetivo"
+        },
+        "forms.message.delete.success": "Fila eliminada con éxito",
+        "forms.message.delete.error": "Error al eliminar la fila",
+        "documentManagement": {
+            "title": "Gestión de documentos",
+            "cmisConfiguration": "Configuración CMIS",
+            "cmisConfiguration.addNewConfig": "Agregar nueva configuración de CMIS",
+            "cmisConfiguration.addNewConfig.modal": {
+                "header": {
+                    "new": "Nueva configuración CMIS",
+                    "edit": "Editar configuración CMIS"
+                },
+                "dialog": {
+                    "testConnection": "es_Test Connection",
+                    "cancel": "Cancelar",
+                    "ok": "DE ACUERDO"
+                },
+                "guidelineMessage": {
+                    "repositoryId": "Para Alfresco: deje cmis.repositoryId en blanco. Para Documentum: establezca cmis.repositoryId en el nombre de la base de datos."
+                }
+            },
+            "cmisConfiguration.data": {
+                "id": {
+                    "label": "ID de CMIS",
+                    "placeholder": "ID de CMIS"
+                },
+                "baseUrl": {
+                    "label": "URL base",
+                    "placeholder": "URL base"
+                },
+                "username": {
+                    "label": "Nombre de usuario",
+                    "placeholder": "Nombre de usuario"
+                },
+                "password": {
+                    "label": "Contraseña",
+                    "placeholder": "Contraseña"
+                },
+                "useAlfrescoExtension": {
+                    "label": "Use la extensión Alfresco",
+                    "placeholder": "Use la extensión Alfresco"
+                },
+                "maxIdle": {
+                    "label": "Máxima inactividad",
+                    "placeholder": "Máxima inactividad"
+                },
+                "maxActive": {
+                    "label": "Máximo activo",
+                    "placeholder": "Máximo activo"
+                },
+                "maxWait": {
+                    "label": "Espera máxima",
+                    "placeholder": "Espera máxima"
+                },
+                "minEvictionMillis": {
+                    "label": "Desahucio mínimo milisegundos",
+                    "placeholder": "Desahucio mínimo milisegundos"
+                },
+                "evictionCheckIntervalMillis": {
+                    "label": "Intervalo de verificación de desalojo Millisegundos",
+                    "placeholder": "Intervalo de verificación de desalojo Millisegundos"
+                },
+                "reconnectCount": {
+                    "label": "Reconectar la cuenta",
+                    "placeholder": "Reconectar la cuenta"
+                },
+                "reconnectFrequency": {
+                    "label": "Volver a conectar la frecuencia",
+                    "placeholder": "Volver a conectar la frecuencia"
+                },
+                "repositoryId": {
+                    "label": "Id de repositorio",
+                    "placeholder": "Id de repositorio"
+                },
+                "cmisVersioningState": {
+                    "label": "Versioning State",
+                    "placeholder": "Versioning State"
+                }
+            },
+            "cmisConfiguration.deleteDialog": {
+                "cancelBtn": "Cancelar",
+                "deleteBtn": "Borrar Cofirm",
+                "headerText": "Está a punto de eliminar la configuración de CMIS:",
+                "bodyText": "¿Estás seguro?"
+            },
+            "cmisConfiguration.messages": {
+                "delete.success": "La configuración ha sido eliminada exitosamente.",
+                "delete.error": "Error al eliminar la configuración",
+                "insert.success": "Se creó con éxito una nueva fila de configuración.",
+                "insert.error": "Error al crear una nueva fila de configuración",
+                "update.success": "Fila de configuración actualizada con éxito.",
+                "update.error": "Error al actualizar la fila de configuración"
+            }
         }
-      },
-      "addSupervisorGridColumns": {
-        "name": "Nombre",
-        "type": "Tipo",
-        "title": "Título",
-        "parent": "Padre",
-        "assignee": "Cesionario",
-        "modified": "Modificado"
-      },
-      "dialog.group": {
-        "confirm.delete": {
-          "cancelBtn": "Cancelar",
-          "deleteBtn": "Borrar",
-          "headerText": "Estás a punto de eliminar el grupo:",
-          "bodyText": "¿Estás seguro?"
-        }
-      },
-      "dialog.member": {
-        "confirm.delete": {
-          "cancelBtn": "Cancelar",
-          "deleteBtn": "Borrar",
-          "headerText": "Está a punto de eliminar miembro:",
-          "bodyText": "¿Estás seguro?"
-        }
-      },
-      "messages": {
-        "delete": {
-          "group": {
-            "success": "Éxito",
-            "error": "Error"
-          },
-          "member": {
-            "success": "Éxito",
-            "error": "Error"
-          }
-        }
-      }
     },
-    "security.selectPrivileges": "Crear roles / Seleccionar privilegios",
-    "security.selectPrivileges.applicationRole": "Rol de aplicación",
-    "security.selectPrivileges.createRole": "Crear rol",
-    "security.selectPrivileges.editRole": "Editar rol",
-    "security.selectPrivileges.applyChanges": "Aplicar cambios",
-    "security.selectPrivileges.enterRoleName": "Ingrese el nombre del rol en el cuadro a continuación.",
-    "security.selectPrivileges.cancel": "Cancelar",
-    "security.selectPrivileges.name": "Nombre",
-    "security.modules": "Módulos",
-    "security.modules.module": "Módulo",
-    "security.ldap.user.management": {
-      "title": "Administración de usuarios LDAP",
-      "cloneButton": "Usuario clon",
-      "deleteUserBtn": "Borrar usuario",
-      "deleteUserMsg": "¿Seguro que quieres eliminar a este usuario?",
-      "user": "Usuario"
+    "admin.comp.securityLdapConfig": {
+        "title": "Seguridad - Cuadrícula de configuración Ldap"
     },
-    "security.calendarConfiguration": {
-      "title": "Configuración del calendario",
-      "calendarConfigForm": {
-        "email.placeholder": "Introduzca la dirección de correo electrónico del sistema",
-        "password.placeholder": "Ingrese la contraseña del sistema",
-        "purge.placeholder": "Elija la opción de purga",
-        "purgeDays.placeholder": "Ingresa los días",
-        "save.button": "Salvar",
-        "validate.button": "Validar",
-        "purge.label": "Purga",
-        "email.label": "Dirección de correo electrónico del sistema",
-        "password.label": "Contraseña del sistema",
-        "purgeDays.label": "Días",
-        "emailValid": "La dirección de correo electrónico y la contraseña del sistema son válidas",
-        "emailNotValid": "La dirección de correo electrónico o la contraseña del sistema no son válidas",
-        "enableCalendarIntegration.checkbox": "Habilitar la integración del calendario",
-        "purgeOptions": {
-          "retainIndefinitely": "Retener indefinidamente",
-          "objectClosed": "Objeto = 'Cerrado'",
-          "objectClosedXDays": "Objeto = 'Cerrado' + X días"
-        },
-        "configurableObjectTypes": {
-          "cases.label": "Casos",
-          "complaints.label": "Reclamaciones",
-          "tasks.label": "Tareas"
-        }
-      }
+    "admin.comp.correspondenceManagementMergeFields": {
+        "title": "Correspondence Management Merge Fields grid"
     },
-    "security.calendarCredentialsConfiguration": {
-      "title": "Configuración de credenciales de calendario",
-      "accountConfigForm": {
-        "account": "Dirección de correo electrónico del sistema",
-        "password": "Contraseña del sistema",
-        "password.placeholder": "Contraseña del sistema",
-        "save.button": "Salvar",
-        "validate.button": "Validar"
-      },
-      "modal": {
-        "title": "Anular la carpeta de Outlook",
-        "message": "Usted ha cambiado su cuenta de correo electrónico del sistema. Las carpetas de Outlook asociadas se anularán con las nuevas. Por favor confirma tu acción",
-        "confirm.button": "Confirmar",
-        "cancel.button": "Cancelar"
-      },
-      "message": {
-        "credentials.valid": "Las credenciales son válidas",
-        "credentials.invalid": "Las credenciales no son validas",
-        "credentials.error": "Se ha producido un error al verificar las credenciales",
-        "save.successful": "Creador de la carpeta de Outlook guardado con éxito",
-        "save.fail": "Creador de carpeta de Outlook no guardado"
-      }
+    "admin.comp.correspondenceManagementMergeFieldsVersions": {
+        "title": "Correspondence Management Merge Fields versión grilla"
     },
-    "security.emailConfiguration": {
-      "title": "Política de entrega de documentos",
-      "emailConfigForm": {
-        "save.button": "Salvar",
-        "deliveryMethods.label": "Métodos de entrega",
-        "enableDocumentEmail.checkbox": "Los documentos pueden ser enviados por correo electrónico",
-        "enableDocumentAttach.checkbox": "Los documentos se pueden adjuntar a los correos electrónicos",
-        "enableDocumentHyperlink.checkbox": "Los documentos pueden enviarse como hipervínculos",
-        "serverSettings.label": "Configuración del servidor",
-        "serverType.label": "Tipo de servidor",
-        "serverType.placeholder": "Elija el tipo de servidor de correo electrónico",
-        "serverTypeOptions": {
-          "smtp": "SMTP",
-          "outlook": "Microsoft Exchange"
-        },
-        "serverType.configuredExchange.label": "Para más detalles, consulte la configuración de Microsoft Exchange",
-        "server.label": "Dirección del servidor",
-        "server.placeholder": "Ingrese la dirección del servidor",
-        "port.label": "Puerto",
-        "port.placeholder": "Entrar en el puerto",
-        "encryption.label": "Cifrado",
-        "encryption.placeholder": "Elija Encriptación",
-        "encryptionOptions": {
-          "off": "APAGADO",
-          "ssl-tls": "SSL / TLS",
-          "starttls": "STARTTLS"
-        },
-        "username.label": "Nombre de usuario",
-        "username.placeholder": "Introduzca su nombre de usuario",
-        "password.label": "Contraseña",
-        "password.placeholder": "Introducir la contraseña",
-        "userFrom.label": "De",
-        "userFrom.placeholder": "Ingrese el campo Correo electrónico",
-        "validate.label": "Validación de SMTP",
-        "validate.button": "Validar",
-        "smtpValid": "La configuración de SMTP es válida",
-        "smtpNotValid": "La configuración de SMTP no es válida"
-      }
+    "admin.comp.correspondenceManagementTemplates": {
+        "title": "Plantilla de gestión de correspondencia grid"
     },
-    "security.emailTemplates": {
-      "title": "Plantillas de correo electrónico",
-      "table.columns": {
-        "templateName": "Nombre de la plantilla",
-        "emailPattern": "Patrón de correo electrónico",
-        "source": "Fuente",
-        "objectTypes": "Tipos de objetos",
-        "actions": "Comportamiento",
-        "modified": "Fecha modificada",
-        "modifier": "Modificado por"
-      },
-      "modal": {
-        "title": "Plantilla de correo electrónico",
-        "templateName.label": "Nombre de la plantilla",
-        "templateName.placeholder": "Introduzca el nombre de la plantilla",
-        "emailPattern.label": "Patrón de correo electrónico",
-        "emailPattern.placeholder": "Ingresar patrón de correo electrónico",
-        "source.label": "Fuente",
-        "objectTypes.label": "Tipos de objetos",
-        "actions.label": "Comportamiento",
-        "manual.label": "Manual",
-        "automated.label": "Automatizado",
-        "browse": "Vistazo",
-        "save": "Salvar",
-        "cancel": "Cancelar"
-      }
+    "admin.comp.correspondenceManagementTemplateVersions": {
+        "title": "Correspondance Management Template Versiones de la grilla"
     },
-    "security.exchangeConfiguration": {
-      "title": "Configuración de Microsoft Exchange",
-      "exchangeConfigForm": {
-        "save.button": "Salvar",
-        "enableExchangeIntegration.checkbox": "Habilitar la integración de Microsoft Exchange",
-        "exchangeServerVersion.label": "Versión de Exchange Server",
-        "exchangeServerVersion.placeholder": "Elija la versión del servidor",
-        "exchangeServerVersionOptions": {
-          "Exchange2007": "Exchange2007",
-          "Exchange2007_SP1": "Exchange2007_SP1",
-          "Exchange2010": "Exchange2010",
-          "Exchange2010_SP1": "Exchange2010_SP1",
-          "Exchange2010_SP2": "Exchange2010_SP2",
-          "Exchange2013": "Exchange2013",
-          "Exchange2013_SP1": "Exchange2013_SP1"
-        },
-        "enableAutodiscovery.checkbox": "Habilitar Autodescubrimiento",
-        "clientAccessServer.label": "Servidor de acceso de cliente",
-        "clientAccessServer.description": "Antes de cambiar el nivel de acceso predeterminado, visite: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ para obtener más información",
-        "clientAccessServer.placeholder": "Ingrese el servidor de acceso de cliente",
-        "exchangeDefaultAccess.label": "Acceso predeterminado de Exchange",
-        "exchangeDefaultAccess.placeholder": "Elija acceso predeterminado de Exchange",
-        "exchangeDefaultAccessOptions": {
-          "None": "Ninguna",
-          "Owner": "Propietario",
-          "PublishingEditor": "EditorialEditor",
-          "Editor": "Editor",
-          "PublishingAuthor": "PublicadorAutor",
-          "Author": "Autor",
-          "NoneditingAuthor": "NoneditingAuthor",
-          "Reviewer": "Crítico",
-          "Contributor": "Contribuyente",
-          "FreeBusyTimeOnly": "FreeBusyTimeOnly",
-          "FreeBusyTimeAndSubjectAndLocation": "FreeBusyTimeAndSubjectAndLocation",
-          "Custom": "Personalizado"
-        }
-      }
+    "admin.comp.labelsConfig": {
+        "title": "Aplicación - Cuadrícula de configuración de etiquetas"
     },
-    "dashboard.title": "Tablero",
-    "dashboard.config": "Configuración del tablero",
-    "dashboard.widgets": "Widgets",
-    "reports": {
-      "title": "Informes",
-      "config": "Configuración de informes",
-      "btn": {
-        "reportDesigner": "Diseñador de informes",
-        "sync": "Sincronizar"
-      }
+    "admin.comp.plainFormsConfig": {
+        "title": "Formularios: red de configuración de formularios"
     },
-    "forms.title": "Formularios",
-    "forms.config": "Configuración de formulario",
-    "workflows.title": "Flujos de trabajo",
-    "workflows.config": "Configuración de flujo de trabajo",
-    "workflows.config.bpmn.upload": "Subir",
-    "workflows.config.bpmn.addNewWorkflow": "Cargar flujo de trabajo",
-    "workflows.config.bpmn.modal": {
-      "label.description": "Descripción",
-      "label.noFileSelected": "Ningún archivo seleccionado",
-      "btnCancel.text": "Cancelar",
-      "btnOk.text": "Cargar flujo de trabajo"
+    "admin.comp.workflowsConfig": {
+        "title": "Workflows - Cuadrícula de configuración de flujos de trabajo"
     },
-    "workflows.config.activate": {
-      "error": "¡No puedo activar este proceso!",
-      "success": "Proceso exitosamente activado."
+    "admin.comp.workflowsHistoryDialogConfig": {
+        "title": "Flujos de trabajo: cuadrícula de diálogo de historial de configuración de flujos de trabajo"
     },
-    "workflows.config.showHistory.dialog": {
-      "title": "Historia",
-      "body": "A continuación se muestra un historial de archivos BPMN anteriores. Para restablecer un flujo de trabajo anterior, seleccione el flujo de trabajo y haga clic en Activar",
-      "cancel": "Cancelar",
-      "activate": "Activar"
+    "admin.comp.usersPicker": {
+        "title": "Seleccionar usuarios"
     },
-    "workflows.config.noHistory": "es_There is no history for this workflow.",
-    "workflows.config.grid": {
-      "businessProcess": "Procesos de negocio",
-      "description": "Descripción",
-      "active": "Activo",
-      "modified": "Modificado",
-      "creator": "Autor"
+    "admin.comp.orgHierarchy": {
+        "title": "Jerarquía de la organización"
     },
-    "workflows.config.btn": {
-      "createNew": "Crear nuevo modelo",
-      "uploadNew": "Subir nuevo BPMN"
+    "admin.comp.cmisConfiguration": {
+        "title": "Cuadrícula de configuración CMIS"
     },
-    "workflows.config.links": {
-      "download": "Descargar",
-      "replaceFile": "Reemplazar el archivo",
-      "versionHistory": "Historial de versiones",
-      "diagram": "Diagrama de proceso"
-    },
-    "workflows.config.upload": {
-      "success": "Nueva definición de proceso correctamente cargada",
-      "error": "Error al cargar una nueva definición de proceso"
-    },
-    "workflows.config.diagram": {
-      "title": "Diagrama de proceso",
-      "error.loading": "El diagrama no se puede cargar",
-      "modal": {
-        "btnClose.text": "Cerca"
-      }
-    },
-    "formWorkflows.title": "Enlace Form / Workflow",
-    "formWorkflows.link": "Formularios de enlace / flujos de trabajo",
-    "formWorkflows.link.undo": "Deshacer",
-    "formWorkflows.link.saveChanges": "Guardar cambios",
-    "formWorkflows.link.editRole.save.success": "La configuración de Link Forms / Workflows se guardó correctamente",
-    "formWorkflows.link.editRole.save.error": "No se puede guardar la configuración de enlaces de formularios / flujos de trabajo",
-    "application": {
-      "title": "Solicitud",
-      "locale.config": {
-        "title": "Configuración de configuración regional",
-        "defaultLabel": "Configuración regional predeterminada:"
-      },
-      "labels.config": {
-        "title": "Configuración de etiqueta",
-        "progressMessage": "Actualizando etiquetas ... Por favor espere",
-        "data": {
-          "description": "Descripción",
-          "defaultValue": "Valor por defecto",
-          "id": "CARNÉ DE IDENTIDAD",
-          "value": "Valor"
-        },
-        "btnReset": {
-          "label": "Reiniciar...",
-          "title": "Restablecer los recursos de etiqueta a la configuración"
-        },
-        "setToDefault": {
-          "dialog.title": "Restablecer etiquetas por defecto",
-          "chkResetCustom.label": "Borrar las etiquetas personalizadas también?",
-          "btnCancel.label": "Cancelar",
-          "btnCancel.title": "Cierre el diálogo sin acción",
-          "btnReset.label": "Restablecer",
-          "btnReset.title": "Borrar etiquetas personalizadas y restablecerlas a los valores predeterminados",
-          "btnRefresh.label": "Reiniciar",
-          "btnRefresh.title": "Restablezca las etiquetas a los valores predeterminados pero mantenga las etiquetas personalizadas sin cambios",
-          "resetCustom.confirm": "¿Seguro que quieres eliminar los recursos personalizados seleccionados?"
-        }
-      },
-      "lookups.config": {
-        "title": "Configuración de búsquedas",
-        "choose": "Elija Buscar",
-        "data": {
-          "key": "Llave",
-          "value": "Valor",
-          "inverseKey": "Tecla inversa",
-          "inverseValue": "Valor inverso"
-        },
-        "modal": {
-          "title": "Etiqueta de búsqueda",
-          "editEntry": "Editar entrada de búsqueda",
-          "addEntry": "Añadir entrada de búsqueda",
-          "key.placeholder": "Ingrese la clave de ingreso",
-          "value.placeholder": "Ingrese el valor de entrada como clave de etiqueta",
-          "inversekey.placeholder": "Ingrese la clave inversa de entrada",
-          "inversevalue.placeholder": "Ingrese el valor inverso de entrada como clave de etiqueta",
-          "btnCancel.text": "Cancelar",
-          "btnOk.text": "Guardar entrada"
-        }
-      },
-      "module.config": {
-        "title": "Configuración del módulo"
-      },
-      "userName.config": {
-        "title": "Nombre de usuario Display Configuration",
-        "userId.label": "Use el identificador de usuario",
-        "userName.label": "Use el nombre de usuario completo",
-        "apply": "Aplicar",
-        "modal.title": "Información",
-        "modal.info": "La configuración tendrá efecto después de actualizar",
-        "modal.ok": "DE ACUERDO"
-      },
-      "login.config": {
-        "title": "Configuración de acceso",
-        "idleLimit.label": "Límite inactivo de inicio de sesión (en milisegundos)",
-        "inform": "La configuración tendrá efecto para todas las nuevas sesiones de usuario",
-        "apply.label": "Aplicar"
-      },
-      "auditHistory.config": {
-        "title": "Historial de auditoría",
-        "historyDays.label": "Mantener eventos de auditoría y notificación (en días)",
-        "inform": "Configuración guardada correctamente",
-        "apply.label": "Aplicar"
-      }
-    },
-    "branding.title": "Marca",
-    "branding.logo": "Logo",
-    "branding.logo.messages": {
-      "upload.success": "Archivos de logotipo personalizado actualizados. Actualiza la página del navegador para ver el resultado.",
-      "upload.error": "Error al subir archivos de logotipo personalizados."
-    },
-    "branding.logo.header.title": "Encabezamiento",
-    "branding.logo.login.title": "Página de inicio de sesión",
-    "branding.logo.warningMessage": "Solo el formato PNG está permitido. La proporción recomendada es de 1 a 4. La altura mínima es de 50 px.",
-    "branding.logo.btn": {
-      "chooseHeader": "Elija el logotipo del encabezado",
-      "chooseLogin": "Elija el logo de inicio",
-      "saveFiles": "Salvar"
-    },
-    "branding": {
-      "customCss": "CSS personalizado",
-      "customCss.save.success": "CSS personalizado actualizado Actualiza la página del navegador para ver el resultado.",
-      "customCss.save.error": "Error al guardar CSS personalizado.",
-      "customCss.save": "Salvar"
-    },
-    "correspondenceManagement": {
-      "title": "Gestión de correspondencia",
-      "templates": "Plantillas de correspondencia",
-      "templates.addNewTemplate": "Cargar plantilla",
-      "templates.addTemplate": "Subir",
-      "templates.versionTemplate": "Versiones",
-      "templates.deleteTemplate": "Borrar",
-      "templates.editTemplate": "Editar plantilla",
-      "templates.grid": {
-        "id": "CARNÉ DE IDENTIDAD",
-        "title": "Título",
-        "label": "Nombre para mostrar",
-        "path": "Camino",
-        "created": "Creado",
-        "modified": "Modificado",
-        "creator": "Creador",
-        "modifier": "Modificado por",
-        "activated": "Estado",
-        "objectType": "Tipo de objeto",
-        "version": "Versión",
-        "templateVersionActive": "Activo"
-      },
-      "templates.fieldNames.label": "Asignar campos a valores de la plantilla",
-      "templates.querySelect": {
-        "header.text": "Seleccionar consulta",
-        "btnCancel.text": "Cancelar",
-        "btnOk.text": "Seleccionar consulta",
-        "table.columns": {
-          "beanId": "ID de frijol",
-          "jpaQuery": "Consulta JPA",
-          "objectType": "Tipo de consulta"
-        }
-      },
-      "templates.modal": {
-        "objectTypes.label": "Tipos de objetos",
-        "querySelect.label": "Seleccionar consulta",
-        "label.label": "Nombre para mostrar",
-        "btnCancel.text": "Cancelar",
-        "btnOk.text": "Cargar plantilla"
-      },
-      "templates.version.modal": {
-        "btnOk.text": "DE ACUERDO"
-      },
-      "mergefields": "Combinar configuración de campos",
-      "mergefields.saveMergeFields": "Salvar",
-      "mergefields.versionMergeFields": "Versiones",
-      "mergefields.grid": {
-        "fieldId": "CARNÉ DE IDENTIDAD",
-        "fieldValue": "Valor",
-        "fieldDescription": "Descripción"
-      },
-      "mergefields.version.grid": {
-        "mergingVersion": "Versión",
-        "modified": "Modificado",
-        "modifier": "Modificado por",
-        "mergingActiveVersion": "Activo"
-      },
-      "mergefields.version.modal": {
-        "btnLoadVersion.text": "Cargar versión",
-        "btnCancel.text": "Cancelar"
-      }
-    },
-    "forms.defaultValue": "Seleccione un objetivo",
-    "forms.addForm": "Agregar formulario simple",
-    "forms.data": {
-      "name": "Nombre del formulario",
-      "applicationName": "Nombre de la aplicación",
-      "description": "Descripción",
-      "target": "Objetivo"
-    },
-    "forms.message.delete.success": "Fila eliminada con éxito",
-    "forms.message.delete.error": "Error al eliminar la fila",
-    "documentManagement": {
-      "title": "Gestión de documentos",
-      "cmisConfiguration": "Configuración CMIS",
-      "cmisConfiguration.addNewConfig": "Agregar nueva configuración de CMIS",
-      "cmisConfiguration.addNewConfig.modal": {
-        "header": {
-          "new": "Nueva configuración CMIS",
-          "edit": "Editar configuración CMIS"
-        },
-        "dialog": {
-          "cancel": "Cancelar",
-          "ok": "DE ACUERDO"
-        },
-        "guidelineMessage": {
-          "repositoryId": "Para Alfresco: deje cmis.repositoryId en blanco. Para Documentum: establezca cmis.repositoryId en el nombre de la base de datos."
-        }
-      },
-      "cmisConfiguration.data": {
-        "id": {
-          "label": "ID de CMIS",
-          "placeholder": "ID de CMIS"
-        },
-        "baseUrl": {
-          "label": "URL base",
-          "placeholder": "URL base"
-        },
-        "username": {
-          "label": "Nombre de usuario",
-          "placeholder": "Nombre de usuario"
-        },
-        "password": {
-          "label": "Contraseña",
-          "placeholder": "Contraseña"
-        },
-        "useAlfrescoExtension": {
-          "label": "Use la extensión Alfresco",
-          "placeholder": "Use la extensión Alfresco"
-        },
-        "endpoint": {
-          "label": "Punto final",
-          "placeholder": "Punto final"
-        },
-        "maxIdle": {
-          "label": "Máxima inactividad",
-          "placeholder": "Máxima inactividad"
-        },
-        "maxActive": {
-          "label": "Máximo activo",
-          "placeholder": "Máximo activo"
-        },
-        "maxWait": {
-          "label": "Espera máxima",
-          "placeholder": "Espera máxima"
-        },
-        "minEvictionMillis": {
-          "label": "Desahucio mínimo milisegundos",
-          "placeholder": "Desahucio mínimo milisegundos"
-        },
-        "evictionCheckIntervalMillis": {
-          "label": "Intervalo de verificación de desalojo Millisegundos",
-          "placeholder": "Intervalo de verificación de desalojo Millisegundos"
-        },
-        "reconnectCount": {
-          "label": "Reconectar la cuenta",
-          "placeholder": "Reconectar la cuenta"
-        },
-        "reconnectFrequency": {
-          "label": "Volver a conectar la frecuencia",
-          "placeholder": "Volver a conectar la frecuencia"
-        },
-        "repositoryId": {
-          "label": "Id de repositorio",
-          "placeholder": "Id de repositorio"
-        },
-        "versioningState": {
-          "label": "Versioning State",
-          "placeholder": "Versioning State"
-        }
-      },
-      "cmisConfiguration.deleteDialog": {
-        "cancelBtn": "Cancelar",
-        "deleteBtn": "Borrar Cofirm",
-        "headerText": "Está a punto de eliminar la configuración de CMIS:",
-        "bodyText": "¿Estás seguro?"
-      },
-      "cmisConfiguration.messages": {
-        "delete.success": "La configuración ha sido eliminada exitosamente.",
-        "delete.error": "Error al eliminar la configuración",
-        "insert.success": "Se creó con éxito una nueva fila de configuración.",
-        "insert.error": "Error al crear una nueva fila de configuración",
-        "update.success": "Fila de configuración actualizada con éxito.",
-        "update.error": "Error al actualizar la fila de configuración"
-      }
+    "admin.comp.emailTemplates": {
+        "title": "Plantillas de correo electrónico"
     }
-  },
-  "admin.comp.securityLdapConfig": {
-    "title": "Seguridad - Cuadrícula de configuración Ldap"
-  },
-  "admin.comp.correspondenceManagementMergeFields": {
-    "title": "Correspondence Management Merge Fields grid"
-  },
-  "admin.comp.correspondenceManagementMergeFieldsVersions": {
-    "title": "Correspondence Management Merge Fields versión grilla"
-  },
-  "admin.comp.correspondenceManagementTemplates": {
-    "title": "Plantilla de gestión de correspondencia grid"
-  },
-  "admin.comp.correspondenceManagementTemplateVersions": {
-    "title": "Correspondance Management Template Versiones de la grilla"
-  },
-  "admin.comp.labelsConfig": {
-    "title": "Aplicación - Cuadrícula de configuración de etiquetas"
-  },
-  "admin.comp.plainFormsConfig": {
-    "title": "Formularios: red de configuración de formularios"
-  },
-  "admin.comp.workflowsConfig": {
-    "title": "Workflows - Cuadrícula de configuración de flujos de trabajo"
-  },
-  "admin.comp.workflowsHistoryDialogConfig": {
-    "title": "Flujos de trabajo: cuadrícula de diálogo de historial de configuración de flujos de trabajo"
-  },
-  "admin.comp.usersPicker": {
-    "title": "Seleccionar usuarios"
-  },
-  "admin.comp.orgHierarchy": {
-    "title": "Jerarquía de la organización"
-  },
-  "admin.comp.cmisConfiguration": {
-    "title": "Cuadrícula de configuración CMIS"
-  },
-  "admin.comp.emailTemplates": {
-    "title": "Plantillas de correo electrónico"
-  }
 }

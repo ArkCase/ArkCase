@@ -1,10 +1,19 @@
 package com.armedia.acm.auth;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
@@ -25,14 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 /**
  * Created by dmiller on 2/7/14.
@@ -86,7 +87,7 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
                 true, user.getUserId());
 
         Set<AcmGrantedAuthority> authsGroups = new HashSet<>(Arrays.asList(new AcmGrantedAuthority("ADHOC_ADMINISTRATOR"),
-                        new AcmGrantedAuthority("LDAP_ADMINISTRATOR")));
+                new AcmGrantedAuthority("LDAP_ADMINISTRATOR")));
 
         AcmGroup ldapGroup = new AcmGroup();
         ldapGroup.setName("LDAP_ADMINISTRATOR");
@@ -126,21 +127,24 @@ public class AcmAuthenticationManagerTest extends EasyMockSupport
         expect(mockFirstProvider.authenticate(mockAuthentication)).andThrow(firstException);
         expect(mockSecondProvider.authenticate(mockAuthentication)).andReturn(null);
         expect(mockAuthentication.getName()).andReturn(null);
-        mockEventPublisher.publishAuthenticationFailure(firstException, mockAuthentication);
-
-        replayAll();
+        Capture<AuthenticationException> captureCustomException = Capture.newInstance();
+        mockEventPublisher.publishAuthenticationFailure(capture(captureCustomException), eq(mockAuthentication));
+        expectLastCall().once();
 
         try
         {
+            replayAll();
             unit.authenticate(mockAuthentication);
+            verifyAll();
             fail("should have gotten an exception");
+
         }
         catch (AuthenticationException ae)
         {
-            assertEquals(firstException, ae);
+            assertEquals(captureCustomException.getValue(), ae);
+
         }
 
-        verifyAll();
     }
 
     @Test(expected = AuthenticationServiceException.class)

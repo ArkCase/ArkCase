@@ -1,7 +1,7 @@
 package com.armedia.acm.auth;
 
-
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
@@ -30,7 +30,7 @@ public class AcmAuditPropertyInterceptor extends HandlerInterceptorAdapter
 
         if (session == null)
         {
-            // no session yet - login must not have completed?  Anyway, proceed with the next handler.
+            // no session yet - login must not have completed? Anyway, proceed with the next handler.
             return true;
         }
 
