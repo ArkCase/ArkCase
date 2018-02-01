@@ -42,7 +42,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Feb 9, 2017
- * 
+ *
  */
 @Controller
 @RequestMapping({ "/api/service/category/v1", "/api/service/category/latest" })
