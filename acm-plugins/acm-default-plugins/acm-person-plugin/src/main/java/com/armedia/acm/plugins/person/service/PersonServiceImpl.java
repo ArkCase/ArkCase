@@ -243,11 +243,7 @@ public class PersonServiceImpl implements PersonService
                 throw new AcmFileTypesException("File is not a type of an image, got " + ecmTikaFile.getContentType());
             }
         }
-        catch (SAXException e)
-        {
-            throw new AcmFileTypesException("Error parsing contentType", e);
-        }
-        catch (TikaException e)
+        catch (SAXException | TikaException e)
         {
             throw new AcmFileTypesException("Error parsing contentType", e);
         }

@@ -26,9 +26,17 @@ public class PageCountServiceImpl implements PageCountService
      */
     public int getNumberOfPages(String mimeType, byte[] data) throws IOException
     {
-        File file = File.createTempFile("arkcase-get-number-of-pages-", null);
-        FileUtils.writeByteArrayToFile(file, data);
-        return getNumberOfPages(mimeType, file);
+        File file = null;
+        try
+        {
+            File.createTempFile("arkcase-get-number-of-pages-", null);
+            FileUtils.writeByteArrayToFile(file, data);
+            return getNumberOfPages(mimeType, file);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     @Override

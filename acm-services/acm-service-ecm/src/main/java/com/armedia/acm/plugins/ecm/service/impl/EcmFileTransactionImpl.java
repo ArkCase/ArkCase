@@ -50,8 +50,6 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     private PipelineManager<EcmFile, EcmFileTransactionPipelineContext> ecmFileUpdatePipelineManager;
     private CmisConfigUtils cmisConfigUtils;
 
-    private Logger log = LoggerFactory.getLogger(getClass());
-
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
             String targetCmisFolderId, InputStream fileContents, EcmFile metadata,
@@ -59,54 +57,63 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     {
         log.debug("Creating ecm file pipeline context");
 
-        File tempFileContents = File.createTempFile("arkcase-upload-temp-file", null);
-        FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
-
-        EcmTikaFile detectedMetadata = null;
-
+        File tempFileContents = null;
         try
         {
-            detectedMetadata = extractFileMetadata(tempFileContents, metadata.getFileName());
-        }
-        catch (SAXException | TikaException e)
-        {
-            log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
-        }
+            File.createTempFile("arkcase-upload-temp-file-", null);
+            FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
 
-        Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
-                metadata.getFileActiveVersionMimeType());
-        String finalMimeType = mimeTypeAndExtension.getLeft();
-        String finalExtension = mimeTypeAndExtension.getRight();
+            EcmTikaFile detectedMetadata = null;
 
-        ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
-
-        EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
-                tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
-                detectedMetadata, ecmUniqueFilename);
-
-        String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
-        metadata.setFileName(fileName);
-        metadata.setFileActiveVersionMimeType(finalMimeType);
-        metadata.setFileActiveVersionNameExtension(finalExtension);
-
-        try
-        {
-            log.debug("Calling pipeline manager handlers");
-            getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
-        }
-        catch (Exception e)
-        {
-            log.error("pipeline handler call failed: {}", e.getMessage(), e);
-            if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+            try
             {
-                throw (MuleException) e.getCause();
+                detectedMetadata = extractFileMetadata(tempFileContents, metadata.getFileName());
             }
-        }
+            catch (SAXException | TikaException e)
+            {
+                log.error("Could not extract metadata with Tika: [{}]", e.getMessage(), e);
+            }
 
-        log.debug("Returning from addFileTransaction method");
-        return pipelineContext.getEcmFile();
+            Pair<String, String> mimeTypeAndExtension = buildMimeTypeAndExtension(detectedMetadata, ecmUniqueFilename,
+                    metadata.getFileActiveVersionMimeType());
+            String finalMimeType = mimeTypeAndExtension.getLeft();
+            String finalExtension = mimeTypeAndExtension.getRight();
+
+            ecmUniqueFilename = getFolderAndFilesUtils().getBaseFileName(ecmUniqueFilename, finalExtension);
+
+            EcmFileTransactionPipelineContext pipelineContext = buildEcmFileTransactionPipelineContext(authentication,
+                    tempFileContents, targetCmisFolderId, container, metadata.getFileName(), existingCmisDocument,
+                    detectedMetadata, ecmUniqueFilename);
+
+            String fileName = getFolderAndFilesUtils().getBaseFileName(metadata.getFileName(), finalExtension);
+            metadata.setFileName(fileName);
+            metadata.setFileActiveVersionMimeType(finalMimeType);
+            metadata.setFileActiveVersionNameExtension(finalExtension);
+
+            try
+            {
+                log.debug("Calling pipeline manager handlers");
+                getEcmFileUploadPipelineManager().executeOperation(metadata, pipelineContext, () -> metadata);
+            }
+            catch (Exception e)
+            {
+                log.error("pipeline handler call failed: {}", e.getMessage(), e);
+                if (e.getCause() != null && MuleException.class.isAssignableFrom(e.getCause().getClass()))
+                {
+                    throw (MuleException) e.getCause();
+                }
+            }
+            log.debug("Returning from addFileTransaction method");
+            return pipelineContext.getEcmFile();
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(tempFileContents);
+        }
 
     }
+
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public EcmFile addFileTransaction(Authentication authentication, String ecmUniqueFilename, AcmContainer container,
@@ -159,9 +166,17 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     protected EcmTikaFile extractFileMetadata(byte[] fileByteArray, String fileName) throws IOException,
             SAXException, TikaException
     {
-        File file = File.createTempFile("arkcase-extract-file-metadata", null);
-        FileUtils.writeByteArrayToFile(file, fileByteArray);
-        return extractFileMetadata(file, fileName);
+        File file = null;
+        try
+        {
+            File.createTempFile("arkcase-extract-file-metadata-", null);
+            FileUtils.writeByteArrayToFile(file, fileByteArray);
+            return extractFileMetadata(file, fileName);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     protected EcmTikaFile extractFileMetadata(File file, String fileName) throws IOException,
@@ -204,20 +219,24 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
         String finalMimeType;
         String finalExtension;
+        File file = null;
 
         try
         {
-            File file = File.createTempFile("arkcase-build-mime-type-and-extension-", null);
+            file = File.createTempFile("arkcase-build-mime-type-and-extension-", null);
             FileUtils.writeByteArrayToFile(file, fileByteArray);
             EcmTikaFile ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, filename);
             finalMimeType = ecmTikaFile.getContentType();
             finalExtension = ecmTikaFile.getNameExtension();
-
         }
         catch (IOException | SAXException | TikaException e1)
         {
             finalMimeType = mimeType;
             finalExtension = getFolderAndFilesUtils().getFileNameExtension(filename);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
         }
 
         // do not change content type in case of freevo
@@ -239,6 +258,8 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             String ecmUniqueFilename,
             Object... otherArgs) throws IOException
     {
+        // don't delete this file at the end of this method, since it is part of the returned
+        // EcmFileTransactionPipelineContext
         File file = File.createTempFile("arkcase-build-ecm-file-transaction-pipeline-context-", null);
         FileUtils.writeByteArrayToFile(file, fileBytes);
         return buildEcmFileTransactionPipelineContext(authentication, file, cmisFolderId, container, filename,
@@ -270,55 +291,61 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile updateFileTransaction(Authentication authentication, final EcmFile ecmFile, InputStream fileInputStream)
-            throws MuleException, IOException
+            throws IOException
     {
-
-        if (ecmFile.getFileActiveVersionNameExtension() != null
-                && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
-        {
-            ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
-        }
-
-        log.debug("Creating ecm file pipeline context");
-        EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
-
-        pipelineContext.setAuthentication(authentication);
-        pipelineContext.setEcmFile(ecmFile);
-        File file = File.createTempFile("arkcase-update-file-transaction-", null);
-        FileUtils.copyInputStreamToFile(fileInputStream, file);
-        pipelineContext.setFileContents(file);
-
-        EcmTikaFile ecmTikaFile = new EcmTikaFile();
-
+        File file = null;
         try
         {
-            ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
-        }
-        catch (TikaException | SAXException | IOException e1)
-        {
-            log.debug("Can not auto detect file using Tika");
-            ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
-            ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
-        }
 
-        pipelineContext.setDetectedFileMetadata(ecmTikaFile);
+            if (ecmFile.getFileActiveVersionNameExtension() != null
+                    && ecmFile.getFileName().endsWith(ecmFile.getFileActiveVersionNameExtension()))
+            {
+                ecmFile.setFileName(getFolderAndFilesUtils().getBaseFileName(ecmFile.getFileName()));
+            }
 
-        if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
-        {
-            ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
-        }
-        ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
+            log.debug("Creating ecm file pipeline context");
+            EcmFileTransactionPipelineContext pipelineContext = new EcmFileTransactionPipelineContext();
 
-        try
-        {
-            log.debug("Calling pipeline manager handlers");
-            return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> {
-                return pipelineContext.getEcmFile();
-            });
+            pipelineContext.setAuthentication(authentication);
+            pipelineContext.setEcmFile(ecmFile);
+            file = File.createTempFile("arkcase-update-file-transaction-", null);
+            FileUtils.copyInputStreamToFile(fileInputStream, file);
+            pipelineContext.setFileContents(file);
+
+            EcmTikaFile ecmTikaFile = new EcmTikaFile();
+
+            try
+            {
+                ecmTikaFile = getEcmTikaFileService().detectFileUsingTika(file, ecmFile.getFileName());
+            }
+            catch (TikaException | SAXException | IOException e1)
+            {
+                log.debug("Can not auto detect file using Tika");
+                ecmTikaFile.setContentType(ecmFile.getFileActiveVersionMimeType());
+                ecmTikaFile.setNameExtension(getFolderAndFilesUtils().getFileNameExtension(ecmFile.getFileName()));
+            }
+
+            pipelineContext.setDetectedFileMetadata(ecmTikaFile);
+
+            if (!ecmFile.getFileActiveVersionMimeType().contains("frevvo"))
+            {
+                ecmFile.setFileActiveVersionMimeType(ecmTikaFile.getContentType());
+            }
+            ecmFile.setFileActiveVersionNameExtension(ecmTikaFile.getNameExtension());
+
+            try
+            {
+                log.debug("Calling pipeline manager handlers");
+                return getEcmFileUpdatePipelineManager().executeOperation(ecmFile, pipelineContext, () -> pipelineContext.getEcmFile());
+            }
+            catch (Exception e)
+            {
+                log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            }
         }
-        catch (Exception e)
+        finally
         {
-            log.error("pipeline handler call failed: {}", e.getMessage(), e);
+            FileUtils.deleteQuietly(file);
         }
 
         log.debug("Returning from updateFileTransaction method");

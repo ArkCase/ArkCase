@@ -182,6 +182,7 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
         {
             if (getFileContents() == null)
             {
+                // NOTE This file is stored in the context for later use, do NOT delete it at the end of this method.
                 setFileContents(File.createTempFile("arkcase-file-transaction-set-file-byte-array-", null));
             }
             FileUtils.writeByteArrayToFile(getFileContents(), fileByteArray);
