@@ -1,5 +1,7 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationException;
 import com.armedia.acm.objectonverter.AcmUnmarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -12,6 +14,7 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.services.participants.model.AcmParticipant;
@@ -49,6 +52,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     private ObjectConverter objectConverter;
 
     private OutlookCalendarAdminServiceExtension calendarAdminService;
+
+    private AcmOutlookFolderCreatorDao folderCreatorDao;
 
     @Override
     public void onApplicationEvent(AcmObjectHistoryEvent event)
@@ -95,7 +100,7 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                     if (isStatusChanged(existing, updatedComplaint))
                     {
                         String calId = updatedComplaint.getContainer().getCalendarFolderId();
-                        if (complaintStatusClosed.contains(updatedComplaint.getStatus()) && shouldDeleteCalendarFolder && calId != null)
+                        if (shouldDeleteOnClose() && calId != null && complaintStatusClosed.contains(updatedComplaint.getStatus()))
                         {
 
                             // delete shared calendar if complaint closed
@@ -106,6 +111,8 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                             {
                                 getCalendarService().deleteFolder(user.get(), updatedComplaint.getContainer(),
                                         DeleteMode.MoveToDeletedItems);
+
+                                folderCreatorDao.deleteObjectReference(updatedComplaint.getId(), updatedComplaint.getObjectType());
                             }
                         }
                         getComplaintEventPublisher().publishComplaintModified(updatedComplaint, ipAddress, "status.changed");
@@ -130,6 +137,21 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
                 }
             }
         }
+    }
+
+    private boolean shouldDeleteOnClose()
+    {
+        boolean purgeOption;
+        try
+        {
+            purgeOption = PurgeOptions.CLOSED.equals(
+                    calendarAdminService.readConfiguration(false).getConfiguration(ComplaintConstants.OBJECT_TYPE).getPurgeOptions());
+        }
+        catch (CalendarConfigurationException e)
+        {
+            purgeOption = true;
+        }
+        return purgeOption && shouldDeleteCalendarFolder;
     }
 
     public boolean isAssigneeChanged(AcmAssignment assignment)
@@ -191,12 +213,10 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
 
     private boolean isPostalAddressEdited(List<PostalAddress> existingAddresses, List<PostalAddress> updatedAddresses)
     {
-        List<PostalAddress> sortedExisting = existingAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedExisting = existingAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
-        List<PostalAddress> sortedUpdated = updatedAddresses.stream()
-                .sorted(Comparator.comparing(PostalAddress::getId))
+        List<PostalAddress> sortedUpdated = updatedAddresses.stream().sorted(Comparator.comparing(PostalAddress::getId))
                 .collect(Collectors.toList());
 
         return IntStream.range(0, sortedExisting.size())
@@ -354,5 +374,14 @@ public class ComplaintEventListener implements ApplicationListener<AcmObjectHist
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    /**
+     * @param folderCreatorDao
+     *            the folderCreatorDao to set
+     */
+    public void setFolderCreatorDao(AcmOutlookFolderCreatorDao folderCreatorDao)
+    {
+        this.folderCreatorDao = folderCreatorDao;
     }
 }

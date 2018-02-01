@@ -99,6 +99,10 @@ public class ExchangeCalendarService
             {
                 errorDetails.put("error_cause", "INVALID_BIND_TO_SERVICE_CREDENTIALS");
             }
+            else if (exception instanceof CalendarObjectClosedException)
+            {
+                errorDetails.put("error_cause", "OBJECT_CLOSED");
+            }
             else
             {
                 errorDetails.put("error_cause", "INTERNAL_SERVER_ERROR");
@@ -292,7 +296,10 @@ public class ExchangeCalendarService
         {
             appointment = new Appointment(exchangeService);
             ExchangeTypesConverter.setAppointmentProperties(appointment, calendarEvent, attachments, true);
-            folderId = new FolderId(handler.getCalendarId(calendarEvent.getObjectId()));
+            String calendarId = handler.getCalendarId(calendarEvent.getObjectId())
+                    .orElseThrow(() -> new Exception(String.format("No outlook folder associated with object of type [%s] with id [%s].",
+                            calendarEvent.getObjectType(), calendarEvent.getObjectId())));
+            folderId = new FolderId(calendarId);
         }
         catch (Exception e)
         {
@@ -638,7 +645,9 @@ public class ExchangeCalendarService
         try
         {
             ExchangeService service = outlookDao.connect(user);
-            String calendarId = handler.getCalendarId(objectId.toString());
+            String calendarId = handler.getCalendarId(objectId.toString()).orElseThrow(() -> new Exception(
+                    String.format("No outlook folder associated with object of type [%s] with id [%s].", objectType, objectId)));
+
             CalendarFolder.bind(service, new FolderId(calendarId));
 
             AcmOutlookFolderCreator folderCreator = folderCreatorDao.getFolderCreator(configuration.getSystemEmail(),
@@ -659,6 +668,11 @@ public class ExchangeCalendarService
     {
         try
         {
+            CalendarEntityHandler handler = entityHandlers.get(objectType);
+            if (handler.isObjectClosed(objectId))
+            {
+                throw new CalendarObjectClosedException(String.format("Object of [%s] type and [%s] id is closed.", objectType, objectId));
+            }
             folderRecreator.recreateFolder(objectType, objectId, outlookUser);
             return outlookUser;
         }

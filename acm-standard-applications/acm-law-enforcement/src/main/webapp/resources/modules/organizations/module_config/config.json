@@ -264,7 +264,8 @@
                         {
                             "name": "streetAddress",
                             "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-                            "headerCellFilter": "translate"
+                            "headerCellFilter": "translate",
+                            "cellTemplate": "<a googlemaps-href is-primary-address='true' location-data='row.entity'>{{row.entity.streetAddress}}</a>"
                         },
                         {
                             "name": "modified",
@@ -700,12 +701,14 @@
                 {
                     "name": "streetAddress",
                     "displayName": "organizations.comp.addresses.table.columns.streetAddress",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a googlemaps-href is-primary-address='true' location-data='row.entity'>{{row.entity.streetAddress}}</a>"
                 },
                 {
                     "name": "streetAddress2",
                     "displayName": "organizations.comp.addresses.table.columns.streetAddress2",
-                    "headerCellFilter": "translate"
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<a googlemaps-href is-primary-address='false' location-data='row.entity'>{{row.entity.streetAddress2}}</a>"
                 },
                 {
                     "name": "city",
