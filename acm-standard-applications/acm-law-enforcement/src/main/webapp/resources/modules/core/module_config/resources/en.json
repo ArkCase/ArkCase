@@ -514,7 +514,7 @@
                 "nonConcur": "Non-Concur"
             },
             "businessProcessTypes": {
-                "acmDocumentWorkflow": "Acm Document Workflow",
+                "acmDocumentWorkflow": "ACM Document Workflow",
                 "correctiveActionPlan": "Corrective Action Plan"
             },
             "reportStates": {

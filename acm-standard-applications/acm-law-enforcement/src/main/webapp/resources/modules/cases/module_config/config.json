@@ -1259,7 +1259,7 @@
                     "cellTemplate": ""
                 },
                 {
-                    "name": "approverId",
+                    "name": "approverFullName",
                     "displayName": "cases.comp.approvalRouting.table.columns.assignee",
                     "cellEditableCondition": false,
                     "headerCellFilter": "translate"
@@ -1290,7 +1290,7 @@
                     "headerCellFilter": "translate"
                 },
                 {
-                    "name": "addedBy",
+                    "name": "addedByFullName",
                     "displayName": "cases.comp.approvalRouting.table.columns.addedBy",
                     "cellEditableCondition": false,
                     "headerCellFilter": "translate"

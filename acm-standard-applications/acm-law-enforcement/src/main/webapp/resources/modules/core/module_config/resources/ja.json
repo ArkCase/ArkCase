@@ -500,15 +500,26 @@
                 "concur": "同意する",
                 "nonConcur": "同意しない"
             },
+            "businessProcessTypes": {
+                "acmDocumentWorkflow": "ACM文書作業過程",
+                "correctiveActionPlan": "矯正措置の計画"
+            },
+            "reportStates": {
+                "draft": "下書き",
+                "inApproval": "承認中",
+                "active": "使用中",
+                "inActive": "待つ",
+                "closed": "閉じる"
+            },
             "auditReportNames": {
-                "all": "All",
-                "case_file": "Case",
-                "complaint": "Complaint",
-                "task": "Task",
-                "file": "File",
-                "document": "Document",
-                "person": "Person",
-                "organization": "Organization"
+                "all": "全て",
+                "case_file": "案件",
+                "complaint": "訴状",
+                "task": "任務",
+                "file": "ファイル",
+                "document": "文書",
+                "person": "人物",
+                "organization": "組織"
             }
         },
         "userInfo": {

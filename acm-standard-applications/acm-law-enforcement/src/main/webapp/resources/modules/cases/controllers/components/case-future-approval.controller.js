@@ -68,7 +68,7 @@ angular.module('cases').controller(
                     });
 
                     Authentication.queryUserInfo().then(function(data) {
-                        currentUser = data.userId;
+                        currentUser = data.fullName;
                     });
 
                     var onConfigRetrieved = function(config) {
@@ -115,6 +115,14 @@ angular.module('cases').controller(
                                     fetchBuckslipProcess(response.data[0]);
                                 }
                             });
+
+                            CaseFutureApprovalService.getBusinessProcessVariableForObject("CASE_FILE", objectInfo.id,
+                                    "nonConcurEndsApprovals", true).then(function(response) {
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.nonConcurEndsApprovals = response.data;
+                                }
+                            });
+
                         } else if (!Util.isEmpty(objectInfo.buckslipFutureTasks)) {
                             $scope.taskInfo = objectInfo;
                             CaseFutureApprovalService.getBuckslipProcessesForChildren(objectInfo.parentObjectType,
@@ -140,10 +148,11 @@ angular.module('cases').controller(
                         ModalDialogService.showModal(modalMetadata).then(function(result) {
                             var futureTask = {
                                 approverId : result.pickedUserId,
+                                approverFullName : result.pickedUserName,
                                 groupName : result.pickedGroupId,
                                 taskName : result.futureTaskTitle,
                                 details : result.futureTaskDetails,
-                                addedBy : currentUser
+                                addedByFullName : currentUser
                             }
                             if (!Util.isEmpty(futureTask.approverId) && !Util.isEmpty(futureTask.taskName)) {
                                 $scope.buckslipProcess.futureTasks.push(futureTask);

@@ -213,6 +213,7 @@
         <property name="complaintStatusClosed" value="${complaint.status.closed}"/>
         <property name="calendarAdminService" ref="outlookCalendarAdminServiceExtension"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="folderCreatorDao" ref="outlookFolderCreatorDao"/>
     </bean>
 
     <bean id="complaintDataAccessUpdateLocator" class="com.armedia.acm.plugins.complaint.service.ComplaintDataAccessUpdateLocator">

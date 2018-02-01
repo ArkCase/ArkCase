@@ -735,7 +735,7 @@
         "title": "Grade de campos de mesclagem de gerenciamento de correspondência"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Grade de versão de Merge Fields Correspondence Management"
+        "title": "Grade de campos de versão  de mesclagem de gerenciamento de correspondência"
     },
     "admin.comp.correspondenceManagementTemplates": {
         "title": "Gráfico de modelos de gerenciamento de correspondência"
@@ -750,7 +750,7 @@
         "title": "Formulários - Grelha de configuração de formulários"
     },
     "admin.comp.workflowsConfig": {
-        "title": "Gráficos de Workflows - Workflows Config"
+        "title": "Fluxos de trabalho - Configuração dos fluxos de trabalho"
     },
     "admin.comp.workflowsHistoryDialogConfig": {
         "title": "Fluxos de trabalho - Gráfico de diálogo do histórico de configurações de fluxos de trabalho"

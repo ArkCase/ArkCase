@@ -14,6 +14,10 @@
         <property name="caseFileEventUtility" ref="caseFileEventUtility"/>
     </bean>
 
+    <bean id="findCasesByTitleAPIController" class="com.armedia.acm.plugins.casefile.web.api.FindCasesByTitleAPIController">
+        <property name="caseFileDao" ref="caseFileDao"/>
+    </bean>
+
     <bean id="getCasesByStatusAPIController" class="com.armedia.acm.plugins.casefile.web.api.GetCasesByStatusAPIController">
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
     </bean>

@@ -6,11 +6,6 @@
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
-    <bean id="findUsersWithPrivilegeAPIController" class="com.armedia.acm.services.users.web.api.FindUsersWithPrivilegeAPIController">
-        <property name="pluginManager" ref="acmPluginManager"/>
-        <property name="userDao" ref="userJpaDao"/>
-    </bean>
-
     <bean id="findParticipantTypesForObjectTypeNameAPIController"
         class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
         <property name="acmApplication" ref="acmApplication"/>
