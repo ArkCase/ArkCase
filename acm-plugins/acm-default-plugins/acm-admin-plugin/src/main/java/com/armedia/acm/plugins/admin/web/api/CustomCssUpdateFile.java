@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.admin.web.api;
 
 import com.armedia.acm.plugins.admin.exception.AcmCustomCssException;
 import com.armedia.acm.plugins.admin.service.CustomCssService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * Created by sergey.kolomiets on 6/19/15.
  */
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class CustomCssUpdateFile
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -36,13 +37,13 @@ public class CustomCssUpdateFile
         {
             customCssService.updateFile(resource);
             return "{}";
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't update custom CSS file", e);
             throw new AcmCustomCssException("Can't update custom CSS file", e);
         }
     }
-
 
     public void setCustomCssService(CustomCssService customCssService)
     {

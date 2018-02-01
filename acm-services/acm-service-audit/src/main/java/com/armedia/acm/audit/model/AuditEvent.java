@@ -274,7 +274,6 @@ public class AuditEvent
         this.eventProperties = eventProperties;
     }
 
-
     public String getDiffDetailsAsJson()
     {
         return diffDetailsAsJson;

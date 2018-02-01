@@ -249,7 +249,8 @@ public class SolrAdvancedSearchDocument extends SolrAbstractDocument implements 
     }
 
     /**
-     * @param mime_type_s the mime_type_s to set
+     * @param mime_type_s
+     *            the mime_type_s to set
      */
     public void setMime_type_s(String mime_type_s)
     {

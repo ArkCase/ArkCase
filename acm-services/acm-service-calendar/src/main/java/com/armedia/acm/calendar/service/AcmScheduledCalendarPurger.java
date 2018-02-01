@@ -44,7 +44,6 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
 
     /*
      * (non-Javadoc)
-     *
      * @see com.armedia.acm.scheduler.AcmSchedulableBean#executeTask()
      */
     @Override
@@ -59,13 +58,15 @@ public class AcmScheduledCalendarPurger implements AcmSchedulableBean
                 try
                 {
                     calendarService.purgeEvents(k, v);
-                } catch (CalendarServiceException e)
+                }
+                catch (CalendarServiceException e)
                 {
                     log.error("Could not purge calendars for [{}].", k, e);
                 }
             });
 
-        } catch (CalendarConfigurationException e)
+        }
+        catch (CalendarConfigurationException e)
         {
             log.error("Could not load configuration for [{}].", getClass().getName(), e);
         }

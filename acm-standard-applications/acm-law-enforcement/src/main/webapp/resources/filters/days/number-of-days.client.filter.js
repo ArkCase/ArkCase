@@ -12,12 +12,12 @@
  * NumberOfDays filter used to calculate days from date string until current day
  * hours are not calculated.
  */
-angular.module('filters').filter('numberOfDays', function () {
+angular.module('filters').filter('numberOfDays', function() {
 
     var millisecondsNumber = (1000 * 60 * 60 * 24);
     var toDate = new Date();
     toDate.setHours(0, 0, 0, 0);
-    return function (fromDateString) {
+    return function(fromDateString) {
 
         var fromDate = new Date(fromDateString);
         fromDate.setHours(0, 0, 0, 0);

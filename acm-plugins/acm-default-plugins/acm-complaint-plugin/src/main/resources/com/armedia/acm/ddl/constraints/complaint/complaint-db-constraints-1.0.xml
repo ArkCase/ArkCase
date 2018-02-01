@@ -1,57 +1,35 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="04-drop-fk-cmpl-person-id-and-add-new-fk" author="tsedalu">
-        <addForeignKeyConstraint baseTableName="acm_complaint" 
-                                 baseColumnNames="cm_originator_id" 
-                                 constraintName="fk_cmpl_personAssoc_id" 
-                                 referencedTableName="acm_person_assoc" 
-                                 referencedColumnNames="cm_person_assoc_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_originator_id" constraintName="fk_cmpl_personAssoc_id"
+            referencedTableName="acm_person_assoc" referencedColumnNames="cm_person_assoc_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-05-disposition-id" author="dmiller">
-        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_disposition_id"
-                                 constraintName="fk_complaint_disp_id"
-                                 referencedTableName="acm_disposition"
-                                 referencedColumnNames="cm_disposition_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_disposition_id" constraintName="fk_complaint_disp_id"
+            referencedTableName="acm_disposition" referencedColumnNames="cm_disposition_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-06-close-complaint-disposition-id" author="dmiller">
-        <addForeignKeyConstraint baseTableName="acm_close_complaint_request"
-                                 baseColumnNames="cm_disposition_id"
-                                 constraintName="fk_close_complaint_disp_id"
-                                 referencedTableName="acm_disposition"
-                                 referencedColumnNames="cm_disposition_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_close_complaint_request" baseColumnNames="cm_disposition_id"
+            constraintName="fk_close_complaint_disp_id" referencedTableName="acm_disposition" referencedColumnNames="cm_disposition_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
-    
+
     <changeSet id="complaint-constraint-07-address-id" author="riste.tutureski">
-    	<addForeignKeyConstraint baseTableName="acm_complaint"
-    	                         baseColumnNames="cm_address_id"
-    	                         constraintName="fk_complaint_address_id" 
-    							 referencedTableName="acm_postal_address"
-    							 referencedColumnNames="cm_address_id"
-    							 deferrable="${deferrable}"
-    							 initiallyDeferred="${initially.deferred}" />
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_address_id" constraintName="fk_complaint_address_id"
+            referencedTableName="acm_postal_address" referencedColumnNames="cm_address_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-08-restricted-flag" author="dmiller">
-        <addForeignKeyConstraint
-                baseTableName="acm_complaint"
-                baseColumnNames="cm_complaint_restricted_flag"
-                constraintName="fk_complaint_restricted_flag"
-                referencedTableName="acm_boolean_lu"
-                referencedColumnNames="cm_value"
-                deferrable="${deferrable}"
-                initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_complaint_restricted_flag"
+            constraintName="fk_complaint_restricted_flag" referencedTableName="acm_boolean_lu" referencedColumnNames="cm_value"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-09-container-id" author="dmiller">
@@ -61,22 +39,15 @@
                 <columnExists tableName="acm_complaint" columnName="cm_container_id"/>
             </and>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_container_id"
-                                 constraintName="fk_cmpl_container_id"
-                                 referencedTableName="acm_container"
-                                 referencedColumnNames="cm_container_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_container_id" constraintName="fk_cmpl_container_id"
+            referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="complaint-constraint-10-postal-address-id" author="sharmilee.sivakumaran">
-        <addForeignKeyConstraint baseTableName="acm_complaint"
-                                 baseColumnNames="cm_default_address"
-                                 constraintName="fk_complaint_default_address_id"
-                                 referencedTableName="acm_postal_address"
-                                 referencedColumnNames="cm_address_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}" />
+        <addForeignKeyConstraint baseTableName="acm_complaint" baseColumnNames="cm_default_address"
+            constraintName="fk_complaint_default_address_id" referencedTableName="acm_postal_address" referencedColumnNames="cm_address_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 </databaseChangeLog>
 

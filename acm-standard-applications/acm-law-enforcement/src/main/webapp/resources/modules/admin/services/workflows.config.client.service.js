@@ -13,128 +13,134 @@
  *
  * The Admin.WorkflowsConfigService provides Workflows Config REST calls functionality
  */
-angular.module('admin').service('Admin.WorkflowsConfigService', ['$http', 'Upload',
-    function ($http, Upload) {
-        return ({
-            retrieveWorkflows: retrieveWorkflows,
-            retrieveHistory: retrieveHistory,
-            activate: activate,
-            uploadDefinition: uploadDefinition,
-            diagram: diagram
+angular.module('admin').service('Admin.WorkflowsConfigService', [ '$http', 'Upload', function($http, Upload) {
+    return ({
+        retrieveWorkflows : retrieveWorkflows,
+        retrieveHistory : retrieveHistory,
+        activate : activate,
+        uploadDefinition : uploadDefinition,
+        diagram : diagram
+    });
+    /**
+     * @ngdoc method
+     * @name retrieveWorkflows
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Performs retrieving all workflows
+     *
+     * @returns {HttpPromise} Future info about workflows
+     */
+    function retrieveWorkflows() {
+        return $http({
+            method : "GET",
+            url : "api/latest/plugin/admin/workflowconfiguration/workflows"
         });
-        /**
-         * @ngdoc method
-         * @name retrieveWorkflows
-         * @methodOf admin.service:Admin.WorkflowsConfigService
-         *
-         * @description
-         * Performs retrieving all workflows
-         *
-         * @returns {HttpPromise} Future info about workflows
-         */
-        function retrieveWorkflows() {
-            return $http({
-                method: "GET",
-                url: "api/latest/plugin/admin/workflowconfiguration/workflows"
-            });
-        };
+    }
+    ;
 
-        /**
-         * @ngdoc method
-         * @name retrieveHistory
-         * @methodOf admin.service:Admin.WorkflowsConfigService
-         *
-         * @description
-         * Retrieve workflow history
-         *
-         *
-         * @param {string} key workflow key
-         *
-         * @param {string} version workflow version
-         *
-         * @returns {HttpPromise} Future info about workflow history
-         */
-        function retrieveHistory(key, version) {
-            return $http({
-                method: 'GET',
-                url: 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/history'
-            });
-        };
+    /**
+     * @ngdoc method
+     * @name retrieveHistory
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Retrieve workflow history
+     *
+     *
+     * @param {string} key workflow key
+     *
+     * @param {string} version workflow version
+     *
+     * @returns {HttpPromise} Future info about workflow history
+     */
+    function retrieveHistory(key, version) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/history'
+        });
+    }
+    ;
 
-        /**
-         * @ngdoc method
-         * @name activate
-         * @methodOf admin.service:Admin.WorkflowsConfigService
-         *
-         * @description
-         * Activate workflow
-         *
-         *
-         * @param {string} key workflow key
-         *
-         * @param {string} version workflow version
-         *
-         * @returns {HttpPromise} Future info about workflow activation
-         */
-        function activate(key, version) {
-            return $http({
-                method: 'PUT',
-                url: 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/active',
-                data: {},
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
+    /**
+     * @ngdoc method
+     * @name activate
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Activate workflow
+     *
+     *
+     * @param {string} key workflow key
+     *
+     * @param {string} version workflow version
+     *
+     * @returns {HttpPromise} Future info about workflow activation
+     */
+    function activate(key, version) {
+        return $http({
+            method : 'PUT',
+            url : 'api/latest/plugin/admin/workflowconfiguration/workflows/' + key + '/versions/' + version + '/active',
+            data : {},
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        });
+    }
+    ;
 
-        /**
-         * @ngdoc method
-         * @name diagram
-         * @methodOf admin.service:Admin.WorkflowsConfigService
-         *
-         * @description
-         * Retrieve diagram
-         *
-         *
-         * @param {string} deployment id of workflow
-         *
-         * @param {string} key workflow key
-         *
-         * @param {string} version workflow version
-         *
-         * @returns {HttpPromise} Workflow diagram
-         */
-        function diagram(deploymentId, key, version) {
-            return $http({
-                method: 'GET',
-                url: 'api/latest/plugin/admin/workflowconfiguration/diagram/' + deploymentId + '/' + key + '/' + version,
-                data: {},
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-        };
+    /**
+     * @ngdoc method
+     * @name diagram
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Retrieve diagram
+     *
+     *
+     * @param {string} deployment id of workflow
+     *
+     * @param {string} key workflow key
+     *
+     * @param {string} version workflow version
+     *
+     * @returns {HttpPromise} Workflow diagram
+     */
+    function diagram(deploymentId, key, version) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/plugin/admin/workflowconfiguration/diagram/' + deploymentId + '/' + key + '/' + version,
+            data : {},
+            headers : {
+                'Content-Type' : 'application/json'
+            }
+        });
+    }
+    ;
 
-        /**
-         * @ngdoc method
-         * @name uploadDefinition
-         * @methodOf admin.service:Admin.WorkflowsConfigService
-         *
-         * @description
-         * Performs upload the BPMN file
-         *
-         * @param {object} file file to be uploaded
-         * @param {string} description description of the file
-         *
-         *
-         * @returns {HttpPromise} Future info about file upload progress
-         */
-        function uploadDefinition(file, description) {
-            return Upload.upload({
-                url: 'api/latest/plugin/admin/workflowconfiguration/files',
-                method: 'POST',
-                params: {description: description},
-                file: file,
-            });
-        };
-    }]);
+    /**
+     * @ngdoc method
+     * @name uploadDefinition
+     * @methodOf admin.service:Admin.WorkflowsConfigService
+     *
+     * @description
+     * Performs upload the BPMN file
+     *
+     * @param {object} file file to be uploaded
+     * @param {string} description description of the file
+     *
+     *
+     * @returns {HttpPromise} Future info about file upload progress
+     */
+    function uploadDefinition(file, description) {
+        return Upload.upload({
+            url : 'api/latest/plugin/admin/workflowconfiguration/files',
+            method : 'POST',
+            params : {
+                description : description
+            },
+            file : file,
+        });
+    }
+    ;
+} ]);

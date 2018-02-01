@@ -1,8 +1,13 @@
 package com.armedia.acm.services.functionalaccess.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.services.functionalaccess.service.FunctionalAccessService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,10 +25,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 /**
  * @author riste.tutureski
@@ -81,7 +82,8 @@ public class GetApplicationRolesAPIControllerTest extends EasyMockSupport
             resultTestData = mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<ArrayList<String>>()
             {
             });
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot create list from source: " + result.getResponse().getContentAsString());
         }
@@ -132,6 +134,5 @@ public class GetApplicationRolesAPIControllerTest extends EasyMockSupport
     {
         this.exceptionResolver = exceptionResolver;
     }
-
 
 }

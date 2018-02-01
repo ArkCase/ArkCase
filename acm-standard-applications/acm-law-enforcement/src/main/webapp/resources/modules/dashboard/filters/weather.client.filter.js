@@ -1,7 +1,7 @@
 'use strict'
 
-angular.module("dashboard.weather").filter('temp', function ($filter) {
-    return function (input, precision, units) {
+angular.module("dashboard.weather").filter('temp', function($filter) {
+    return function(input, precision, units) {
         if (!precision) {
             precision = 1;
         }
@@ -15,4 +15,3 @@ angular.module("dashboard.weather").filter('temp', function ($filter) {
         return numberFilter(input, precision) + tempChars;
     };
 })
- 

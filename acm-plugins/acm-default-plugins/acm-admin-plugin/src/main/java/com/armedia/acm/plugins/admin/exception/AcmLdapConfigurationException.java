@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.exception;
 /**
  * Created by admin on 4/28/15.
  */
-public class AcmLdapConfigurationException extends Exception{
+public class AcmLdapConfigurationException extends Exception
+{
 
     public AcmLdapConfigurationException()
     {
@@ -29,5 +30,3 @@ public class AcmLdapConfigurationException extends Exception{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-

@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.objectassociation.model.ObjectAssociationConstant
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,19 +41,11 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         solrDoc.setCreator_lcs(in.getCreator());
         solrDoc.setModified_date_tdt(in.getModified());
         solrDoc.setModifier_lcs(in.getModifier());
-        solrDoc.setStatus_lcs(in.getStatus()); //Reference status used by Bactes
+        solrDoc.setStatus_lcs(in.getStatus()); // Reference status used by Bactes
 
         setAdditionalProperties(solrDoc.getAdditionalProperties(), in);
 
         return solrDoc;
-    }
-
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(ObjectAssociation in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override
@@ -79,8 +72,10 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         if (objectAssociation.getInverseAssociation() != null)
         {
             additionalProperties.put("inverse_association_type_s", objectAssociation.getInverseAssociation().getAssociationType());
-            additionalProperties.put("inverse_association_id_s", objectAssociation.getInverseAssociation().getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
-        } else
+            additionalProperties.put("inverse_association_id_s",
+                    objectAssociation.getInverseAssociation().getAssociationId() + "-" + ObjectAssociationConstants.REFFERENCE_TYPE);
+        }
+        else
         {
             additionalProperties.put("inverse_association_type_s", null);
             additionalProperties.put("inverse_association_id_s", null);
@@ -89,7 +84,6 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
         additionalProperties.put("parent_type_s", objectAssociation.getParentType());
         additionalProperties.put("parent_title_s", objectAssociation.getParentName());
         additionalProperties.put("parent_ref_s", objectAssociation.getParentId() + "-" + objectAssociation.getParentType());
-
 
         additionalProperties.put("target_id_s", objectAssociation.getTargetId());
         additionalProperties.put("target_type_s", objectAssociation.getTargetType());
@@ -105,7 +99,6 @@ public class ObjectAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     {
         return ObjectAssociation.class.equals(acmObjectType);
     }
-
 
     @Override
     public Class<?> getAcmObjectTypeSupported()

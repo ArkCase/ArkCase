@@ -5,6 +5,7 @@ import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+
 import java.util.List;
 import java.util.Set;
 
@@ -36,9 +38,7 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
         query.where(
                 builder.and(
-                        builder.equal(group.<String>get("name"), name.toUpperCase())
-                )
-        );
+                        builder.equal(group.<String> get("name"), name)));
 
         TypedQuery<AcmGroup> dbQuery = getEm().createQuery(query);
 
@@ -91,11 +91,11 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
 
     public List<AcmGroup> findLdapGroupsByDirectory(String directoryName)
     {
-        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().
-                createQuery("SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
-                                + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
-                                + "AND acmGroup.directoryName = :directoryName",
-                        AcmGroup.class);
+        TypedQuery<AcmGroup> allLdapGroupsInDirectory = getEm().createQuery(
+                "SELECT DISTINCT acmGroup FROM AcmGroup acmGroup LEFT JOIN FETCH acmGroup.userMembers "
+                        + "WHERE acmGroup.type = com.armedia.acm.services.users.model.group.AcmGroupType.LDAP_GROUP "
+                        + "AND acmGroup.directoryName = :directoryName",
+                AcmGroup.class);
         allLdapGroupsInDirectory.setParameter("directoryName", directoryName);
         return allLdapGroupsInDirectory.getResultList();
     }

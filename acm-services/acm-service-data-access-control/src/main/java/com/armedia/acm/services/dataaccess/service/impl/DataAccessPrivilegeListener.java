@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmBeforeUpdateListener;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,7 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
 
     public void applyAssignmentAndAccessRules(Object obj)
     {
-        if ( obj instanceof AcmAssignedObject )
+        if (obj instanceof AcmAssignedObject)
         {
             AcmAssignedObject assignedObject = (AcmAssignedObject) obj;
             applyAssignRules(assignedObject);
@@ -44,13 +45,13 @@ public class DataAccessPrivilegeListener implements AcmBeforeUpdateListener, Acm
 
     private void updateParentPointers(AcmAssignedObject assignedObject)
     {
-        for ( AcmParticipant participant : assignedObject.getParticipants() )
+        for (AcmParticipant participant : assignedObject.getParticipants())
         {
             participant.setObjectType(assignedObject.getObjectType());
             participant.setObjectId(assignedObject.getId());
 
             log.trace("participant '" + participant.getParticipantLdapId() + "'");
-            for (AcmParticipantPrivilege priv : participant.getPrivileges() )
+            for (AcmParticipantPrivilege priv : participant.getPrivileges())
             {
                 log.trace("\t privilege: " + priv.getAccessType() + " " + priv.getObjectAction());
                 priv.setParticipant(participant);

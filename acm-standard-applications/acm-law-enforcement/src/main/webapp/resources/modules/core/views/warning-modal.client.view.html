@@ -1,10 +1,9 @@
-<div class="modal-header">
-</div>
+<div class="modal-header"></div>
 <div class="modal-body">
     <form name="warningForm">
         <div ng-bind-html="message"></div>
         <div class="checkbox" ng-if="isLoginGlobalWarning">
-            <label for="checkbox_warning"><input type="checkbox" id="checkbox_warning" required ng-model="temp"/>{{'core.loginWarning.checkbox_warning.label'
+            <label for="checkbox_warning"><input type="checkbox" id="checkbox_warning" required ng-model="temp" />{{'core.loginWarning.checkbox_warning.label'
                 | translate }}</label>
         </div>
     </form>

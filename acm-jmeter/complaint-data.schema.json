@@ -1,104 +1,104 @@
 {
-  "id": 29885,
-  "num_rows": 1000,
-  "file_format": "csv",
-  "name": "ACM Complaints",
-  "include_header": false,
-  "columns": [
-    {
-      "name": "acm.data.initiatorFirstName",
-      "type": "First Name",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorLastName",
-      "type": "Last Name",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.rta_html_holder_initiator_desc",
-      "type": "Paragraphs",
-      "min": 1,
-      "max": 3,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorDeviceValue",
-      "type": "Phone",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorOrganizationName",
-      "type": "Company Name",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorLocationAddress",
-      "type": "Street Address",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorLocationCity",
-      "type": "City",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorLocationState",
-      "type": "State",
-      "onlyUSPlaces": true,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorLocationZip",
-      "type": "Postal Code",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.initiatorAliasValue",
-      "type": "First Name (European)",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.rta_html_holder_initiator_notes",
-      "type": "Paragraphs",
-      "min": 1,
-      "max": 3,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.complaintTitle",
-      "type": "Sentences",
-      "min": 1,
-      "max": 1,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.rta_html_holder_complaint_desc",
-      "type": "Paragraphs",
-      "min": 2,
-      "max": 5,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.locationAddress",
-      "type": "Street Address",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.locationCity",
-      "type": "City",
-      "formula": ""
-    },
-    {
-      "name": "acm.data.locationState",
-      "type": "State",
-      "onlyUSPlaces": true,
-      "formula": ""
-    },
-    {
-      "name": "acm.data.locationZip",
-      "type": "Postal Code",
-      "formula": ""
-    }
-  ]
+    "id": 29885,
+    "num_rows": 1000,
+    "file_format": "csv",
+    "name": "ACM Complaints",
+    "include_header": false,
+    "columns": [
+        {
+            "name": "acm.data.initiatorFirstName",
+            "type": "First Name",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorLastName",
+            "type": "Last Name",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.rta_html_holder_initiator_desc",
+            "type": "Paragraphs",
+            "min": 1,
+            "max": 3,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorDeviceValue",
+            "type": "Phone",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorOrganizationName",
+            "type": "Company Name",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorLocationAddress",
+            "type": "Street Address",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorLocationCity",
+            "type": "City",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorLocationState",
+            "type": "State",
+            "onlyUSPlaces": true,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorLocationZip",
+            "type": "Postal Code",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.initiatorAliasValue",
+            "type": "First Name (European)",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.rta_html_holder_initiator_notes",
+            "type": "Paragraphs",
+            "min": 1,
+            "max": 3,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.complaintTitle",
+            "type": "Sentences",
+            "min": 1,
+            "max": 1,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.rta_html_holder_complaint_desc",
+            "type": "Paragraphs",
+            "min": 2,
+            "max": 5,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.locationAddress",
+            "type": "Street Address",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.locationCity",
+            "type": "City",
+            "formula": ""
+        },
+        {
+            "name": "acm.data.locationState",
+            "type": "State",
+            "onlyUSPlaces": true,
+            "formula": ""
+        },
+        {
+            "name": "acm.data.locationZip",
+            "type": "Postal Code",
+            "formula": ""
+        }
+    ]
 }

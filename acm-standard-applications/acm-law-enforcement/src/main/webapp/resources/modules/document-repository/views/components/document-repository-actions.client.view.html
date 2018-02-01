@@ -3,10 +3,8 @@
         <div class="col-xs-4">
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)"
-                           permission="restrictDocumentRepository" permission-object-type="DOC_REPO"
-                           permission-properties="objectInfo"
-                           permission-action="disabled">
+                    <input type="checkbox" ng-model="restricted" ng-click="onClickRestrict($event)" permission="restrictDocumentRepository"
+                            permission-object-type="DOC_REPO" permission-properties="objectInfo" permission-action="disabled">
                     <span translate>document-repository.comp.actions.restrict</span>
                 </label>
             </div>
@@ -14,8 +12,7 @@
 
         <div class="pull-right">
             <div class="btn-group">
-                <button class="btn btn-sm btn-default" ng-bootbox-confirm-action="delete(objectInfo.id)"
-                        ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
+                <button class="btn btn-sm btn-default" ng-bootbox-confirm-action="deleteDR(objectInfo.id)" ng-bootbox-confirm="<i class='fa fa-fw fa-exclamation-triangle text-danger'></i>
                         {{ 'document-repository.comp.actions.confirm.delete.documentRepository.msg' | translate}}">
                     <i class="fa fa-trash-o"></i>
                     <span translate>document-repository.comp.actions.delete.button</span>

@@ -5,21 +5,12 @@
     <div>
 
         <p class="input-group">
-            <input type="text"
-                   class="form-control"
-                   ng-required="true"
-                   id="dateFromAudit"
-                   datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                   ng-model="dateFrom"
-                   is-open="opened.openedStart"
-                   close-on-date-selection="true"
-                   show-button-bar="true"
-                   on-open-focus="false"
-                   ng-blur="dateFromChanged()"
-                   close-text="{{'audit.datepicker.close' | translate}}"
-                   current-text="{{'audit.datepicker.current' | translate}}"
-                   clear-text="{{'audit.datepicker.clear' | translate}}"/>
-                <span class="input-group-btn">
+            <input type="text" class="form-control" ng-required="true" id="dateFromAudit"
+                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}" ng-model="dateFrom" is-open="opened.openedStart"
+                    close-on-date-selection="true" show-button-bar="true" on-open-focus="false" ng-blur="dateFromChanged()"
+                    close-text="{{'audit.datepicker.close' | translate}}" current-text="{{'audit.datepicker.current' | translate}}"
+                    clear-text="{{'audit.datepicker.clear' | translate}}" />
+            <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="opened.openedStart = !opened.openedStart">
                         <i class="fa fa-calendar"></i>
                     </button>
@@ -27,27 +18,16 @@
         </p>
     </div>
 
-
-
     <label for="dateToAudit" translate>audit.navigation.label.dateTo</label>
     <span class="required-asterisk">*</span>
     <div>
         <p class="input-group">
-            <input type="text"
-                   class="form-control"
-                   ng-required="true"
-                   id="dateToAudit"
-                   datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}"
-                   ng-model="dateTo"
-                   is-open="opened.openedEnd"
-                   close-on-date-selection="true"
-                   show-button-bar="true"
-                   on-open-focus="false"
-                   ng-blur="dateToChanged()"
-                   close-text="{{'audit.datepicker.close' | translate}}"
-                   current-text="{{'audit.datepicker.current' | translate}}"
-                   clear-text="{{'audit.datepicker.clear' | translate}}"/>
-                <span class="input-group-btn">
+            <input type="text" class="form-control" ng-required="true" id="dateToAudit"
+                    datepicker-popup="{{locale.DATETIME_FORMATS.shortDate}}" ng-model="dateTo" is-open="opened.openedEnd"
+                    close-on-date-selection="true" show-button-bar="true" on-open-focus="false" ng-blur="dateToChanged()"
+                    close-text="{{'audit.datepicker.close' | translate}}" current-text="{{'audit.datepicker.current' | translate}}"
+                    clear-text="{{'audit.datepicker.clear' | translate}}" />
+            <span class="input-group-btn">
                     <button type="button" class="btn btn-default" ng-click="opened.openedEnd = !opened.openedEnd">
                         <i class="fa fa-calendar"></i>
                     </button>

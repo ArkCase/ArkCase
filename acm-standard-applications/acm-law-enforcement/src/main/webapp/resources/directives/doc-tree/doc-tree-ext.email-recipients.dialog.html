@@ -3,10 +3,8 @@
 </div>
 
 <div>
-    <search-modal config="config"
-                  filter='"Object Type": USER'
-                  on-items-selected="onSelectRecipient"
-                  search-placeholder="{{'common.directive.docTree.recipientsDialog.search.placeholder' | translate}}">
+    <search-modal config="config" filter='"Object Type": USER' on-items-selected="onSelectRecipient"
+            search-placeholder="{{'common.directive.docTree.recipientsDialog.search.placeholder' | translate}}">
 
     </search-modal>
 </div>
@@ -17,11 +15,13 @@
         </label>
     </div>
     <div class="col-sm-12">
-        <tags-input ng-model="recipients" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$" placeholder="{{'common.directive.docTree.recipientsDialog.externalRecipients.placeholder' | translate}}" on-tag-added="addAdditionalRecipients($tag)"></tags-input>
+        <tags-input ng-model="recipients" display-property="email" allowed-tags-pattern="^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+                placeholder="{{'common.directive.docTree.recipientsDialog.externalRecipients.placeholder' | translate}}"
+                on-tag-added="addAdditionalRecipients($tag)"></tags-input>
     </div>
 </div>
 <div class="modal-footer">
-    <br/>
+    <br />
     <button type="button" class="btn btn-secondary" ng-click="cancel()" translate>
         common.directive.docTree.recipientsDialog.cancel.button
     </button>

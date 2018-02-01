@@ -1,5 +1,11 @@
 package com.armedia.acm.plugins.task.service;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.data.BuckslipFutureTask;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -7,6 +13,7 @@ import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.model.BuckslipProcess;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.web.api.MDCConstants;
+
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -32,8 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -196,9 +201,9 @@ public class BuckslipArkcaseIT
         assertEquals("[]", acmTask.getBuckslipPastApprovers());
         assertEquals("ann group", acmTask.getCandidateGroups().get(0));
         assertEquals("ann details", acmTask.getDetails());
-//        String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(acmTask.getParticipants());
-//        assertNotNull(owningGroup);
-//        assertEquals("ann group", owningGroup);
+        // String owningGroup = ParticipantUtils.getOwningGroupIdFromParticipants(acmTask.getParticipants());
+        // assertNotNull(owningGroup);
+        // assertEquals("ann group", owningGroup);
         Principal assignee = new UsernamePasswordAuthenticationToken("ann-acm", "ann-acm");
         taskDao.completeTask(assignee, acmTask.getTaskId(), "buckslipOutcome", "CONCUR");
 
@@ -359,7 +364,6 @@ public class BuckslipArkcaseIT
 
         // first we have to initiate the process by signaling the initiate task
         acmTaskService.signalTask(buckslipProcess.getBusinessProcessId(), TaskConstants.INITIATE_TASK_NAME);
-
 
         // should have a task for ann-acm... complete with 'CONCUR' outcome
         AcmTask acmTask = findAcmTaskForProcess();

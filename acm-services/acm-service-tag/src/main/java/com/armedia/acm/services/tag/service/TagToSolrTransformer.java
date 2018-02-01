@@ -61,7 +61,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
             solr.setAdditionalProperty("modifier_full_name_lcs", modifier.getFirstName() + " " + modifier.getLastName());
         }
 
-
         return solr;
     }
 
@@ -85,13 +84,6 @@ public class TagToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmTa
         solr.setAdditionalProperty("tags_s", in.getTagName());
 
         return solr;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmTag in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override

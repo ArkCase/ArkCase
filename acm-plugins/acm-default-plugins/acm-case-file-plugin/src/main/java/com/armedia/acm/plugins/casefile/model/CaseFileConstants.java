@@ -26,4 +26,8 @@ public interface CaseFileConstants
     String OWNING_GROUP = "owning group";
 
     String ASSIGNEE = "assignee";
+
+    String PARENT_OBJECT_TYPE = "PARENT_OBJECT_TYPE";
+
+    String PARENT_OBJECT_ID = "PARENT_OBJECT_ID";
 }

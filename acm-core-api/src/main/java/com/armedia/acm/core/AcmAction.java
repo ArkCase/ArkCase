@@ -12,7 +12,6 @@ public class AcmAction implements Serializable
     private String actionResourceName;
     private String requiredPrivilege;
 
-
     public String getActionName()
     {
         return actionName;
@@ -23,11 +22,13 @@ public class AcmAction implements Serializable
         this.actionName = actionName;
     }
 
-    public String getActionResourceName() {
+    public String getActionResourceName()
+    {
         return actionResourceName;
     }
 
-    public void setActionResourceName(String actionResourceName) {
+    public void setActionResourceName(String actionResourceName)
+    {
         this.actionResourceName = actionResourceName;
     }
 

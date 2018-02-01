@@ -101,7 +101,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                         }
                     }
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LOG.warn("Cannot check if the file {} is supported", event.getFileName());
             }
@@ -163,7 +164,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                 Complaint saved = getSaveComplaintTransaction().saveComplaint(complaint, null);
 
                 String cmisFolderId = saved != null && saved.getContainer() != null && saved.getContainer().getAttachmentFolder() != null
-                        ? saved.getContainer().getAttachmentFolder().getCmisFolderId() : null;
+                        ? saved.getContainer().getAttachmentFolder().getCmisFolderId()
+                        : null;
                 String objectFileType = saved != null && saved.getObjectType() != null ? saved.getObjectType().toLowerCase() : null;
 
                 if (cmisFolderId != null && objectFileType != null)
@@ -171,7 +173,8 @@ public class ComplaintCaptureFileEventListener extends AbstractBatchXMLFileListe
                     // Save documents and attachments for complaint
                     saveAttachments(cmisFolderId, saved.getId(), saved.getObjectType(), docObject, objectFileType, "attachment");
                 }
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 LOG.error("Cannot create complaint or uploading attachments: {}", e.getMessage(), e);
             }

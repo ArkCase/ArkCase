@@ -1,5 +1,13 @@
 package com.armedia.acm.compressfolder;
 
+import static org.easymock.EasyMock.expect;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -7,6 +15,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -29,10 +38,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import static org.easymock.EasyMock.expect;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Sep 14, 2016
@@ -63,7 +68,6 @@ public class FolderCompressorTest extends EasyMockSupport
     private EcmFile mockedLevel2File;
 
     private EcmFile mockedLevel3File;
-
 
     @Before
     public void setUp() throws IOException
@@ -121,9 +125,10 @@ public class FolderCompressorTest extends EasyMockSupport
             {
                 folder_level_1 = child;
                 expect(mockedLevel1Folder.getName()).andReturn(child.getName());
-            } else
+            }
+            else
             {
-                //child.getName returns fileName and extension, need to remove the extension
+                // child.getName returns fileName and extension, need to remove the extension
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel1File.getFileName()).andReturn(childFileName);
@@ -143,9 +148,10 @@ public class FolderCompressorTest extends EasyMockSupport
             {
                 folder_level_2 = child;
                 expect(mockedLevel2Folder.getName()).andReturn(child.getName());
-            } else
+            }
+            else
             {
-                //child.getName returns fileName and extension, need to remove the extension
+                // child.getName returns fileName and extension, need to remove the extension
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel2File.getFileName()).andReturn(childFileName);
@@ -161,7 +167,7 @@ public class FolderCompressorTest extends EasyMockSupport
         {
             if (!child.isDirectory())
             {
-                //child.getName returns fileName and extension, need to remove the extension
+                // child.getName returns fileName and extension, need to remove the extension
                 String childFileName = child.getName().replace("." + FilenameUtils.getExtension(child.getName()), "");
                 String childFileExtension = "." + FilenameUtils.getExtension(child.getName());
                 expect(mockedLevel3File.getFileName()).andReturn(childFileName);
@@ -187,7 +193,8 @@ public class FolderCompressorTest extends EasyMockSupport
                     {
                         file.mkdir();
                     }
-                } else
+                }
+                else
                 {
                     if (!file.exists())
                     {
@@ -250,7 +257,8 @@ public class FolderCompressorTest extends EasyMockSupport
         {
             compressor.compressFolder(folderId);
             fail("should have gotten an exception");
-        } catch (FolderCompressorException expectedException)
+        }
+        catch (FolderCompressorException expectedException)
         {
             assertEquals(String.format("No folder with id %d was found!", folderId), expectedException.getMessage());
         }
@@ -284,9 +292,11 @@ public class FolderCompressorTest extends EasyMockSupport
         {
             compressor.compressFolder(folderId);
             fail("should have gotten an exception");
-        } catch (FolderCompressorException expectedException)
+        }
+        catch (FolderCompressorException expectedException)
         {
-            assertEquals(String.format("java.io.IOException: Resulting compressed file is bigger than %1$s", 1024), expectedException.getMessage());
+            assertEquals(String.format("java.io.IOException: Resulting compressed file is bigger than %1$s", 1024),
+                    expectedException.getMessage());
         }
 
         verifyAll();

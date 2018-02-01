@@ -1,6 +1,7 @@
 package com.armedia.acm.audit.service.systemlogger;
 
 import com.armedia.acm.core.AcmApplication;
+
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -18,8 +19,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Syslog implementation of {@link ISystemLogger}.
  * Add the following lines to rsyslog.conf file to enable UDP protocol:
- * #	$ModLoad imudp
- * #	$UDPServerRun 514
+ * # $ModLoad imudp
+ * # $UDPServerRun 514
  * <p>
  * Created by Bojan Milenkoski on 25.12.2015.
  */
@@ -55,14 +56,17 @@ public class SyslogLogger implements ISystemLogger
         LoggerContext ctx = (LoggerContext) LogManager.getContext(false);
         AbstractConfiguration config = (AbstractConfiguration) ctx.getConfiguration();
 
-        SyslogAppender syslogAppender = SyslogAppender.createAppender(getHost(), getPort(), getProtocol(), null, 0, 0, true, SYSLOG_LOGGER_APPENDER_NAME, true, true,
-                Facility.LOG_AUDIT, "App", Rfc5424Layout.DEFAULT_ENTERPRISE_NUMBER, true, Rfc5424Layout.DEFAULT_MDCID, null, "acm", true, null,
-                getAcmApplication().getApplicationName(), "ACMAudit", null, null, null, "RFC5424", null, new DefaultConfiguration(), Charsets.UTF_8,
+        SyslogAppender syslogAppender = SyslogAppender.createAppender(getHost(), getPort(), getProtocol(), null, 0, 0, true,
+                SYSLOG_LOGGER_APPENDER_NAME, true, true,
+                Facility.LOG_AUDIT, "App", Rfc5424Layout.DEFAULT_ENTERPRISE_NUMBER, true, Rfc5424Layout.DEFAULT_MDCID, null, "acm", true,
+                null,
+                getAcmApplication().getApplicationName(), "ACMAudit", null, null, null, "RFC5424", null, new DefaultConfiguration(),
+                Charsets.UTF_8,
                 null, null, false);
 
         syslogAppender.start();
         config.addAppender(syslogAppender);
-        AppenderRef[] refs = new AppenderRef[]{AppenderRef.createAppenderRef(SYSLOG_LOGGER_APPENDER_NAME, null, null)};
+        AppenderRef[] refs = new AppenderRef[] { AppenderRef.createAppenderRef(SYSLOG_LOGGER_APPENDER_NAME, null, null) };
         LoggerConfig loggerConfig = LoggerConfig.createLogger("false", Level.ALL, SYSLOG_LOGGER_NAME, "true", refs, null, config, null);
         loggerConfig.addAppender(syslogAppender, Level.ALL, null);
         config.addLogger(SYSLOG_LOGGER_NAME, loggerConfig);

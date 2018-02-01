@@ -1,18 +1,23 @@
 package com.armedia.acm.plugins.task.listener;
 
+import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 import com.armedia.acm.plugins.task.model.TaskConstants;
+
 import org.activiti.engine.delegate.DelegateExecution;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 
 import java.util.Objects;
 
-public class BuckslipTaskHelper
+public class BuckslipTaskHelper implements ApplicationEventPublisherAware
 {
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    private ApplicationEventPublisher applicationEventPublisher;
 
     public void resetFutureApproversAfterWithdrawOrNonConcur(DelegateExecution delegateExecution)
     {
@@ -100,7 +105,9 @@ public class BuckslipTaskHelper
         log.debug("past: {}, current: {}, future: {}", pastTasks, currentApprover, futureTasks);
 
         // when the approval cycle is restarted, everyone has to approve again
-        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks", newFutureTasks.toString());
+        delegateExecution.getEngineServices().getRuntimeService().setVariable(pi.getProcessInstanceId(), "futureTasks",
+                newFutureTasks.toString());
+        notifyBuckslipProcessStateChanged(delegateExecution, BuckslipProcessStateEvent.BuckslipProcessState.WITHDRAWN);
     }
 
     public int getMaxTaskDurationInDays(String taskDueDateExpression)
@@ -111,5 +118,19 @@ public class BuckslipTaskHelper
         String lostSecondChar = lostFirstChar.substring(0, lostFirstChar.length() - 1);
         log.debug("max task duration in days: {}", lostSecondChar);
         return Integer.valueOf(lostSecondChar);
+    }
+
+    public void notifyBuckslipProcessStateChanged(DelegateExecution delegateExecution,
+            BuckslipProcessStateEvent.BuckslipProcessState buckslipProcessState)
+    {
+        BuckslipProcessStateEvent buckslipProcessStateEvent = new BuckslipProcessStateEvent(delegateExecution.getVariables());
+        buckslipProcessStateEvent.setBuckslipProcessState(buckslipProcessState);
+        applicationEventPublisher.publishEvent(buckslipProcessStateEvent);
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

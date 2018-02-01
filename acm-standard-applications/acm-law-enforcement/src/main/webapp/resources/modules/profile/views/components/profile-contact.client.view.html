@@ -1,4 +1,3 @@
-
 <section class="well">
     <h4 class="well-small">
         <span translate>profile.contact.title</span>
@@ -7,21 +6,26 @@
         <li>
             <div ng-controller="Profile.ContactController" class="row">
                 <div class="col-xs-6">
-                    <h4>  <a href="#"  editable-text="profileContactLocation" onaftersave="update()">{{ profileContactLocation || 'profile.unknown'  | translate}}</a></h4>
+                    <h4><a href="#" editable-text="profileContactLocation" onaftersave="update()">{{ profileContactLocation ||
+                        'profile.unknown' | translate}}</a></h4>
                     <small>
                         <span translate>profile.contact.location</span>
                     </small>
-                    <h4>  <a href="#" editable-text="profileContactIM" onaftersave="update()"  >{{ profileContactIM || 'profile.unknown'  | translate}}</a> ( <a href="#" editable-text="profileContactIMSystem" onaftersave="update()"  >{{ profileContactIMSystem || 'profile.unknown'  | translate}}</a> )</h4>
+                    <h4><a href="#" editable-text="profileContactIM" onaftersave="update()">{{ profileContactIM || 'profile.unknown' |
+                        translate}}</a> ( <a href="#" editable-text="profileContactIMSystem" onaftersave="update()">{{
+                        profileContactIMSystem || 'profile.unknown' | translate}}</a> )</h4>
                     <small>
                         <span translate>profile.contact.im</span>
                     </small>
                 </div>
                 <div class="col-xs-6">
-                    <h4>  <a href="#" editable-text="profileContactOfficephone" onaftersave="update()" >{{ profileContactOfficephone || 'profile.unknown'  | translate}}</a></h4>
+                    <h4><a href="#" editable-text="profileContactOfficephone" onaftersave="update()">{{ profileContactOfficephone ||
+                        'profile.unknown' | translate}}</a></h4>
                     <small>
                         <span translate>profile.contact.officePhone</span>
                     </small>
-                    <h4>  <a href="#" editable-text="profileContactMobilephone" onaftersave="update()" >{{ profileContactMobilephone || 'profile.unknown'  | translate}}</a></h4>
+                    <h4><a href="#" editable-text="profileContactMobilephone" onaftersave="update()">{{ profileContactMobilephone ||
+                        'profile.unknown' | translate}}</a></h4>
                     <small>
                         <span translate>profile.contact.mobilePhone</span>
                     </small>

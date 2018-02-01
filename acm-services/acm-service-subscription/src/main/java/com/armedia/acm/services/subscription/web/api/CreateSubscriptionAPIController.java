@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.subscription.model.AcmSubscription;
 import com.armedia.acm.services.subscription.service.SubscriptionEventPublisher;
 import com.armedia.acm.services.subscription.service.SubscriptionService;
+
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -33,7 +34,7 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/subscription", "/api/latest/service/subscription"})
+@RequestMapping({ "/api/v1/service/subscription", "/api/latest/service/subscription" })
 public class CreateSubscriptionAPIController
 {
 
@@ -57,7 +58,6 @@ public class CreateSubscriptionAPIController
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-
     @PreAuthorize("hasPermission(#objectId, #objectType, 'subscribe')")
     @RequestMapping(value = "/{userId}/{objType}/{objId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -65,8 +65,7 @@ public class CreateSubscriptionAPIController
             @PathVariable("userId") String userId,
             @PathVariable("objType") String objectType,
             @PathVariable("objId") Long objectId,
-            Authentication authentication
-    ) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
+            Authentication authentication) throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException
     {
 
         log.info("Creating subscription for user:" + userId + " on object['" + objectType + "]:[" + objectId + "]");
@@ -77,41 +76,51 @@ public class CreateSubscriptionAPIController
             AcmSubscription addedSubscription = getSubscriptionService().saveSubscription(subscription);
             getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(addedSubscription, authentication, true);
             subscription = addedSubscription;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             Throwable t = ExceptionUtils.getRootCause(e);
             if (t instanceof SQLIntegrityConstraintViolationException)
             {
                 log.debug("Subscription on object['" + objectType + "]:[" + objectId + "] by user: " + userId + " already exists", e);
 
-                List<AcmSubscription> subscriptionList = getSubscriptionService().getSubscriptionsByUserObjectIdAndType(userId, objectId, objectType);
+                List<AcmSubscription> subscriptionList = getSubscriptionService().getSubscriptionsByUserObjectIdAndType(userId, objectId,
+                        objectType);
                 if (subscriptionList.isEmpty())
                 {
-                    log.error("Constraint Violation Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
-                    throw new AcmCreateObjectFailedException(objectType, "Subscription for user: " + userId + " on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB", e);
-                } else
+                    log.error("Constraint Violation Exception occurred while trying to create subscription on object[" + objectType + "]:["
+                            + objectId + "] for user: " + userId, e);
+                    throw new AcmCreateObjectFailedException(objectType, "Subscription for user: " + userId + " on object [" + objectType
+                            + "]:[" + objectId + "] was not inserted into the DB", e);
+                }
+                else
                 {
                     subscription = subscriptionList.get(ZERO);
                 }
-            } else
+            }
+            else
             {
-                log.error("Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId + "] for user: " + userId, e);
+                log.error("Exception occurred while trying to create subscription on object[" + objectType + "]:[" + objectId
+                        + "] for user: " + userId, e);
 
                 getSubscriptionEventPublisher().publishSubscriptionCreatedEvent(subscription, authentication, false);
 
-                throw new AcmCreateObjectFailedException(objectType, "Subscription for user: " + userId + " on object [" + objectType + "]:[" + objectId + "] was not inserted into the DB", e);
+                throw new AcmCreateObjectFailedException(objectType, "Subscription for user: " + userId + " on object [" + objectType
+                        + "]:[" + objectId + "] was not inserted into the DB", e);
             }
         }
         return subscription;
     }
 
-    private AcmSubscription prepareSubscription(String userId, String objectType, Long objectId, Authentication auth) throws AcmObjectNotFoundException
+    private AcmSubscription prepareSubscription(String userId, String objectType, Long objectId, Authentication auth)
+            throws AcmObjectNotFoundException
     {
         JSONObject solrResponse = findSolrObjectForSubscription(objectType, objectId, auth);
         return prepareSubscriptionObject(userId, objectId, objectType, solrResponse);
     }
 
-    private JSONObject findSolrObjectForSubscription(String objectType, Long objectId, Authentication auth) throws AcmObjectNotFoundException
+    private JSONObject findSolrObjectForSubscription(String objectType, Long objectId, Authentication auth)
+            throws AcmObjectNotFoundException
     {
 
         Map<String, Object> properties = getSubscriptionPlugin().getPluginProperties();
@@ -125,18 +134,21 @@ public class CreateSubscriptionAPIController
         {
             solrResponseJsonString = getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.QUICK_SEARCH,
                     query, FIRST_ROW, MAX_ROWS, SORT);
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             if (log.isErrorEnabled())
             {
                 log.error("Mule exception occurred while performing quick search for object:" + id, e);
             }
-            throw new AcmObjectNotFoundException(objectType, objectId, "Exception occurred while performing quick search for object:" + id, e);
+            throw new AcmObjectNotFoundException(objectType, objectId, "Exception occurred while performing quick search for object:" + id,
+                    e);
         }
         return new JSONObject(solrResponseJsonString);
     }
 
-    private AcmSubscription prepareSubscriptionObject(String userId, Long objectId, String objectType, JSONObject solrResponse) throws AcmObjectNotFoundException
+    private AcmSubscription prepareSubscriptionObject(String userId, Long objectId, String objectType, JSONObject solrResponse)
+            throws AcmObjectNotFoundException
     {
 
         JSONObject responseBody = solrResponse.getJSONObject(SOLR_RESPONSE_BODY);

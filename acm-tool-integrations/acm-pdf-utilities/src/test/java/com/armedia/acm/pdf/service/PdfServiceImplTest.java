@@ -1,6 +1,11 @@
 package com.armedia.acm.pdf.service;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static junit.framework.TestCase.assertNotNull;
+
 import com.armedia.acm.pdf.PdfServiceException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.multipdf.PDFMergerUtility;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -19,10 +24,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * Created by nebojsha on 30.01.2016.
@@ -53,7 +54,6 @@ public class PdfServiceImplTest
     public void generateMultiPageTiffFromPdf() throws PdfServiceException
     {
         assertNotNull(pdfService);
-
 
         FileSystemResource multipagePdf = new FileSystemResource(this.getClass().getResource("/pdfs/multipage_document.pdf").getFile());
         assertTrue(multipagePdf.exists());

@@ -1,14 +1,14 @@
 package com.armedia.acm.pentaho.config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class PentahoReportUrlTest
 {
@@ -23,7 +23,7 @@ public class PentahoReportUrlTest
     @Before
     public void setUp() throws Exception
     {
-        reportsProperties = new HashMap<String, Object>();
+        reportsProperties = new HashMap<>();
         reportServerConfigurationProperties = new Properties();
 
         reportServerConfigurationProperties.put("PENTAHO_SERVER_URL", PENTAHO_SERVER_URL);
@@ -41,9 +41,11 @@ public class PentahoReportUrlTest
     {
         Map<String, String> urlMap = reportUrl.getNewReportUrlList();
         assertTrue(urlMap.containsKey(ReportName.COMPLAINT_REPORT.getDisplayName()));
-        assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + COMPLAINT_REPORT, urlMap.get(ReportName.COMPLAINT_REPORT.getDisplayName()));
+        assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + COMPLAINT_REPORT,
+                urlMap.get(ReportName.COMPLAINT_REPORT.getDisplayName()));
         assertTrue(urlMap.containsKey(ReportName.BILLING_REPORT.getDisplayName()));
-        assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + BILLING_REPORT, urlMap.get(ReportName.BILLING_REPORT.getDisplayName()));
+        assertEquals(PENTAHO_SERVER_URL + ":" + PENTAHO_SERVER_PORT + BILLING_REPORT,
+                urlMap.get(ReportName.BILLING_REPORT.getDisplayName()));
     }
 
     @Test

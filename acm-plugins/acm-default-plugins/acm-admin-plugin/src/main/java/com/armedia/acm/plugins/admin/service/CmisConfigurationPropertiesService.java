@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.admin.service;
 
 import com.armedia.acm.plugins.admin.exception.AcmCmisConfigurationException;
+
 import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,6 +21,8 @@ public class CmisConfigurationPropertiesService
     private Logger log = LoggerFactory.getLogger(getClass());
 
     private CmisConfigurationService cmisConfigurationService;
+
+    private List<String> propertyNamesForIntegerValues;
 
     public JSONArray retrieveProperties() throws AcmCmisConfigurationException
     {
@@ -42,7 +45,17 @@ public class CmisConfigurationPropertiesService
                     for (String proName : prop.stringPropertyNames())
                     {
                         log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
-                        cmisJsonObj.put(proName, prop.getProperty(proName));
+
+                        log.debug("Reading [{}] with value [{}] from [{}]", proName, prop.getProperty(proName), propertyFile.getName());
+                        if (isPropertyNameForIntegerValue(proName))
+                        {
+                            Integer value = Integer.valueOf(prop.getProperty(proName));
+                            cmisJsonObj.put(proName, value);
+                        }
+                        else
+                        {
+                            cmisJsonObj.put(proName, prop.getProperty(proName));
+                        }
                     }
 
                     log.debug("Finished reading property file: [{}]", propertyFile.getName());
@@ -52,7 +65,8 @@ public class CmisConfigurationPropertiesService
 
             return cmisJsonArr;
 
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't read CMIS properties file", e);
             throw new AcmCmisConfigurationException("Can't retrieve CMIS properties", e);
@@ -62,5 +76,16 @@ public class CmisConfigurationPropertiesService
     public void setCmisConfigurationService(CmisConfigurationService cmisConfigurationService)
     {
         this.cmisConfigurationService = cmisConfigurationService;
+    }
+
+    public void setPropertyNamesForIntegerValues(List<String> propertyNamesForIntegerValues)
+    {
+        this.propertyNamesForIntegerValues = propertyNamesForIntegerValues;
+    }
+
+    private boolean isPropertyNameForIntegerValue(String propertyName)
+    {
+        return propertyNamesForIntegerValues != null
+                && propertyNamesForIntegerValues.stream().filter(item -> item.equalsIgnoreCase(propertyName)).findFirst().isPresent();
     }
 }

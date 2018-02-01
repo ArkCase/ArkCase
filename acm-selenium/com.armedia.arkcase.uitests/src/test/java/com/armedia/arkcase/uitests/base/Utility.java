@@ -1,109 +1,123 @@
 package com.armedia.arkcase.uitests.base;
 
-import java.io.FileInputStream;
-
-import java.io.FileOutputStream;
-
 import org.apache.poi.xssf.usermodel.XSSFCell;
-
 import org.apache.poi.xssf.usermodel.XSSFRow;
-
 import org.apache.poi.xssf.usermodel.XSSFSheet;
-
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class Utility {
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
-	private static XSSFSheet ExcelWSheet;
+public class Utility
+{
 
-	private static XSSFWorkbook ExcelWBook;
+    private static XSSFSheet ExcelWSheet;
 
-	private static XSSFCell Cell;
+    private static XSSFWorkbook ExcelWBook;
 
-	private static XSSFRow Row;
+    private static XSSFCell Cell;
 
-//This method is to set the File path and to open the Excel file, Pass Excel Path and Sheetname as Arguments to this method
+    private static XSSFRow Row;
 
-public static void setExcelFile(String Path,String SheetName) throws Exception {
+    // This method is to set the File path and to open the Excel file, Pass Excel Path and Sheetname as Arguments to
+    // this method
 
-		try {
+    public static void setExcelFile(String Path, String SheetName) throws Exception
+    {
 
-			// Open the Excel file
+        try
+        {
 
-		FileInputStream ExcelFile = new FileInputStream(Path);
+            // Open the Excel file
 
-		// Access the required test data sheet
+            FileInputStream ExcelFile = new FileInputStream(Path);
 
-		ExcelWBook = new XSSFWorkbook(ExcelFile);
+            // Access the required test data sheet
 
-		ExcelWSheet = ExcelWBook.getSheet(SheetName);
+            ExcelWBook = new XSSFWorkbook(ExcelFile);
 
-		} catch (Exception e){
+            ExcelWSheet = ExcelWBook.getSheet(SheetName);
 
-			throw (e);
+        }
+        catch (Exception e)
+        {
 
-		}
+            throw (e);
 
-}
+        }
 
-//This method is to read the test data from the Excel cell, in this we are passing parameters as Row num and Col num
+    }
 
-public static String getCellData(int RowNum, int ColNum) throws Exception{
+    // This method is to read the test data from the Excel cell, in this we are passing parameters as Row num and Col
+    // num
 
-		try{
+    public static String getCellData(int RowNum, int ColNum) throws Exception
+    {
 
-			Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
+        try
+        {
 
-			String CellData = Cell.getStringCellValue();
+            Cell = ExcelWSheet.getRow(RowNum).getCell(ColNum);
 
-			return CellData;
+            String CellData = Cell.getStringCellValue();
 
-			}catch (Exception e){
+            return CellData;
 
-			return"";
+        }
+        catch (Exception e)
+        {
 
-			}
+            return "";
 
-}
+        }
 
-//This method is to write in the Excel cell, Row num and Col num are the parameters
+    }
 
-public static void setCellData(String Result,  int RowNum, int ColNum) throws Exception	{
+    // This method is to write in the Excel cell, Row num and Col num are the parameters
 
-		try{
+    public static void setCellData(String Result, int RowNum, int ColNum) throws Exception
+    {
 
-			Row  = ExcelWSheet.getRow(RowNum);
+        try
+        {
 
-		Cell = Row.getCell(ColNum, org.apache.poi.ss.usermodel.Row.RETURN_BLANK_AS_NULL);
+            Row = ExcelWSheet.getRow(RowNum);
 
-		if (Cell == null) {
+            Cell = Row.getCell(ColNum, org.apache.poi.ss.usermodel.Row.RETURN_BLANK_AS_NULL);
 
-			Cell = Row.createCell(ColNum);
+            if (Cell == null)
+            {
 
-			Cell.setCellValue(Result);
+                Cell = Row.createCell(ColNum);
 
-			} else {
+                Cell.setCellValue(Result);
 
-				Cell.setCellValue(Result);
+            }
+            else
+            {
 
-			}
+                Cell.setCellValue(Result);
 
-// Constant variables Test Data path and Test Data file name
+            }
 
-				FileOutputStream fileOut = new FileOutputStream(Constant.Path_TestData + Constant.File_TestData);
+            // Constant variables Test Data path and Test Data file name
 
-				ExcelWBook.write(fileOut);
+            FileOutputStream fileOut = new FileOutputStream(Constant.Path_TestData + Constant.File_TestData);
 
-				fileOut.flush();
+            ExcelWBook.write(fileOut);
 
-				fileOut.close();
+            fileOut.flush();
 
-			}catch(Exception e){
+            fileOut.close();
 
-				throw (e);
+        }
+        catch (Exception e)
+        {
 
-		}
+            throw (e);
 
-	}
+        }
+
+    }
 
 }
