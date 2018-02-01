@@ -236,7 +236,7 @@ angular.module('directives').directive(
 
                             scope.editRow = function(rowEntity) {
                                 scope.participant = rowEntity;
-                                if (rowEntity.participantLdapId === '*') {
+                                if (rowEntity.participantLdapId === '*' || Util.isEmpty(rowEntity.participantLdapId)) {
                                     var item = {
                                         id : rowEntity.id,
                                         participantType : rowEntity.participantType,

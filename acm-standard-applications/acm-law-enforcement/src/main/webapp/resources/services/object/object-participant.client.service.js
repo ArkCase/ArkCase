@@ -23,7 +23,7 @@ angular
                         'SearchService',
                         'Search.QueryBuilderService',
                         'ObjectService',
-                        function($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder, ObjectService)) {
+                        function($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder, ObjectService) {
                             var Service = $resource('api/v1/service', {}, {
 
                                 /**
@@ -109,8 +109,8 @@ angular
                                 var df = $q.defer();
                                 var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery('* AND (id:"' + participantId
                                         + '-USER" OR (name:"' + participantId + '" AND object_type_s:GROUP))', "", 10, 0);
-                                SearchService.queryFilteredSearch({
-                                    query : query
+                                SearchService.unescapedQueryFilteredSearch({
+                                    unescapedQuery : query
                                 }, function(data) {
                                     if (Util.validateSolrData(data)) {
                                         var participantData = data.response.docs;
@@ -240,7 +240,7 @@ angular
                                 }
                     
                                 // multiple owners
-                                if (_.filter(data, function(pa) {
+                                if (_.filter(participants, function(pa) {
                                     return Util.compare("owner", pa.participantType);
                                 }).length > 1) {
                                     MessageService.error($translate.instant("common.directive.coreParticipants.message.error.ownerUnique"));
