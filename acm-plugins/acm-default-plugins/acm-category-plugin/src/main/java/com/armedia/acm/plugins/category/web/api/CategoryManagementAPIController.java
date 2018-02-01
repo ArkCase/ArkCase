@@ -14,7 +14,6 @@ import com.armedia.acm.services.search.model.solr.ResponseHeader;
 import com.armedia.acm.services.search.model.solr.ResponseHeaderProducer;
 import com.armedia.acm.services.search.model.solr.SolrSearchResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.users.service.group.GroupService;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import org.mule.api.MuleException;
@@ -53,8 +52,6 @@ public class CategoryManagementAPIController
     private CategoryService categoryService;
 
     private ExecuteSolrQuery executeSolrQuery;
-
-    private GroupService groupService;
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
