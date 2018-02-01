@@ -70,9 +70,17 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
      */
     public EcmTikaFile detectFileUsingTika(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
-        File file = File.createTempFile("arkcase-detect-file-using-tika", null);
-        FileUtils.writeByteArrayToFile(file, fileBytes);
-        return detectFileUsingTika(file, fileName);
+        File file = null;
+        try
+        {
+            File.createTempFile("arkcase-detect-file-using-tika-", null);
+            FileUtils.writeByteArrayToFile(file, fileBytes);
+            return detectFileUsingTika(file, fileName);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     @Override
@@ -110,9 +118,17 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
      */
     protected String extractIso6709Gps(byte[] fileBytes) throws IOException
     {
-        File file = File.createTempFile("arkcase-extract-iso-6709gps", null);
-        FileUtils.writeByteArrayToFile(file, fileBytes);
-        return extractIso6709Gps(file);
+        File file = null;
+        try
+        {
+            File.createTempFile("arkcase-extract-iso-6709gps-", null);
+            FileUtils.writeByteArrayToFile(file, fileBytes);
+            return extractIso6709Gps(file);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     protected String extractIso6709Gps(File file) throws IOException
@@ -143,9 +159,17 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
      */
     protected Map<String, Object> extract(byte[] fileBytes, String fileName) throws IOException, SAXException, TikaException
     {
-        File file = File.createTempFile("arkcase-extract-metadata", null);
-        FileUtils.writeByteArrayToFile(file, fileBytes);
-        return extract(file, fileName);
+        File file = null;
+        try
+        {
+            File.createTempFile("arkcase-extract-metadata-", null);
+            FileUtils.writeByteArrayToFile(file, fileBytes);
+            return extract(file, fileName);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     protected Map<String, Object> extract(File file, String fileName) throws IOException, SAXException, TikaException
@@ -290,9 +314,18 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
     @Deprecated
     protected PointLocation pointLocationFromVideo(byte[] fileBytes, Map<String, Object> extractedFromStream) throws IOException
     {
-        File file = File.createTempFile("arkcase-point-location-from-video", null);
-        FileUtils.writeByteArrayToFile(file, fileBytes);
-        return pointLocationFromVideo(file, extractedFromStream);
+        File file = null;
+
+        try
+        {
+            File.createTempFile("arkcase-point-location-from-video", null);
+            FileUtils.writeByteArrayToFile(file, fileBytes);
+            return pointLocationFromVideo(file, extractedFromStream);
+        }
+        finally
+        {
+            FileUtils.deleteQuietly(file);
+        }
     }
 
     protected PointLocation pointLocationFromVideo(File file, Map<String, Object> extractedFromStream) throws IOException
