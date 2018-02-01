@@ -88,7 +88,7 @@ public class AcmGroupAPIController
         {
             query += " AND member_id_ss:" + memberId;
         }
-        // Vo zavisnost od fq required da se smeni ova! && dali treba proverki ko ovie?
+
         if (searchFilter != null && !searchFilter.equals(""))
         {
             query += " AND name_partial:" + searchFilter;
@@ -251,21 +251,6 @@ public class AcmGroupAPIController
         return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows, sort);
 
     }
-
-    /*
-     * @RequestMapping(value = "/groups/search", method = RequestMethod.GET)
-     * @ResponseBody
-     * public String listFlatSearchResultsFromFolderContent(Authentication auth,
-     * @RequestParam(value = "fq") String searchFilter,
-     * @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
-     * @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-     * @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-     * @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-     * @RequestParam(value = "category", required = false) String category) throws MuleException
-     * {
-     * return getGroupService().test(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
-     * }
-     */
 
     @RequestMapping(value = "/{directory:.+}/groups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody

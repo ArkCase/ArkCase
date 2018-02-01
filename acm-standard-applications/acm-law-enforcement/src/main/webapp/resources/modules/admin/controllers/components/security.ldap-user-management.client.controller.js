@@ -21,15 +21,14 @@ angular.module('admin').controller(
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
-                    /*      TUKA PRAKAJ MU JA TESTDATA NAMESTO appUSers && update na notAuth i Auth     */
-                    $scope.testData = {
+                    $scope.userData = {
                         "appUsers" : $scope.appUsers,
                         "selectedNotAuthorized" : [],
                         "selectedAuthorized" : []
                     };
 
                     $scope.$watch('appUsers', function() {
-                        $scope.testData.appUsers = $scope.appUsers;
+                        $scope.userData.appUsers = $scope.appUsers;
                     }, true);
 
                     LdapUserManagementService.getNUsers({}).then(function(response) {
@@ -288,25 +287,25 @@ angular.module('admin').controller(
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getAllUnauthorizedGroups(data).then(function(response) {
-                                $scope.testData.selectedNotAuthorized = [];
+                                $scope.userData.selectedNotAuthorized = [];
                                 _.forEach(response.data.response.docs, function(user) {
                                     var element = {};
                                     element.name = user.name;
                                     element.key = user.object_id_s;
                                     element.directory = user.directory_name_s;
-                                    $scope.testData.selectedNotAuthorized.push(element);
+                                    $scope.userData.selectedNotAuthorized.push(element);
                                 });
                             });
                         } else {
                             LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
-                                $scope.testData.selectedNotAuthorized = [];
+                                $scope.userData.selectedNotAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
                                     _.forEach(response.data.response.docs, function(user) {
                                         var element = {};
                                         element.name = user.name;
                                         element.key = user.object_id_s;
                                         element.directory = user.directory_name_s;
-                                        $scope.testData.selectedNotAuthorized.push(element);
+                                        $scope.userData.selectedNotAuthorized.push(element);
                                     });
                                 }
                             }, function() {
@@ -320,25 +319,25 @@ angular.module('admin').controller(
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getAllAuthorizedGroups(data).then(function(response) {
-                                $scope.testData.selectedAuthorized = [];
+                                $scope.userData.selectedAuthorized = [];
                                 _.forEach(response.data.response.docs, function(user) {
                                     var element = {};
                                     element.name = user.name;
                                     element.key = user.object_id_s;
                                     element.directory = user.directory_name_s;
-                                    $scope.testData.selectedAuthorized.push(element);
+                                    $scope.userData.selectedAuthorized.push(element);
                                 });
                             });
                         } else {
                             LdapUserManagementService.getFilteredAuthorizedGroups(data).then(function(response) {
-                                $scope.testData.selectedAuthorized = [];
+                                $scope.userData.selectedAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
                                     _.forEach(response.data.response.docs, function(user) {
                                         var element = {};
                                         element.name = user.name;
                                         element.key = user.object_id_s;
                                         element.directory = user.directory_name_s;
-                                        $scope.testData.selectedAuthorized.push(element);
+                                        $scope.userData.selectedAuthorized.push(element);
                                     });
                                 }
                             }, function() {

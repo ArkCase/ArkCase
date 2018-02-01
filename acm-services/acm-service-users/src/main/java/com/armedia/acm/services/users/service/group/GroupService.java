@@ -36,18 +36,6 @@ public interface GroupService
     String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException;
 
     /**
-     * Retrieve all LDAP groups that a user belongs to
-     *
-     * @param auth
-     * @return LDAP groups
-     */
-    /*
-     * String test(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int
-     * maxRows)
-     * throws MuleException;
-     */
-
-    /**
      * @param groupName
      *            list users for this specific group
      * @param userStatus

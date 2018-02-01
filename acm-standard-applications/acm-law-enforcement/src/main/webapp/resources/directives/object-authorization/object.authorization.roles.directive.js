@@ -69,34 +69,16 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     onAuthRoleChange : "=",
                     objectDisplayName : "@",
                     roleDisplayName : "@",
-                    controllerName : "@?",
                     objectTitle : "@"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
-                    /*scope.$watch('data', function(newValue) {
+                    scope.$watch('data', function(newValue) {
                         if (newValue && newValue.length > 0) {
                             scope.selectedObject = scope.data[0];
                             scope.selectObject();
                         }
-                    }, true);*/
-
-                    /*scope.filterWord = "";
-                    scope.noFilterData = true;
-                    scope.onChangeFilterWord = function() {
-                        if (scope.filterWord == "") {
-                            scope.noFilterData = true;
-                            scope.$bus.publish('onFilter-' + scope.controllerName, "");
-                        } else {
-                            scope.noFilterData = false;
-                        }
-                    };
-
-                    scope.filterObjects = function() {
-                        scope.$bus.publish('onFilter-' + scope.controllerName, {
-                            "filterWord" : scope.filterWord
-                        });
-                    };*/
+                    }, true);
 
                     //initial setup
                     scope.selectedNotAuthorized = "";
@@ -110,20 +92,6 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.$watch('data.selectedAuthorized', function() {
                         scope.authorized = Util.isArrayEmpty(scope.data.selectedAuthorized) ? [] : scope.data.selectedAuthorized;
                     }, true);
-
-                    //scroll, adding scroll event on the element
-                    // document.getElementById("scrollTest").addEventListener("scroll", myFunction);
-                    /*var maxScrolled = 0;
-
-                    angular.element("scrollTest").bind("scroll", function() {
-                        var temp = document.getElementById("scrollTest");
-                        if ((temp.offsetHeight + temp.scrollTop) >= temp.scrollHeight) {
-                            scope.$bus.publish(scope.controllerName + "Filter", {
-                                "filterWord" : scope.filterWord,
-                                "n" : scope.data.appUsers.length * 2
-                            });
-                        }
-                    });*/
 
                     //authorize button is clicked
                     scope.authorize = function() {
