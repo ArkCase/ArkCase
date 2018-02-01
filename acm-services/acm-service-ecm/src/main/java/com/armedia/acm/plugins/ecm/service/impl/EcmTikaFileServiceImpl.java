@@ -73,7 +73,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         File file = null;
         try
         {
-            File.createTempFile("arkcase-detect-file-using-tika-", null);
+            file = File.createTempFile("arkcase-detect-file-using-tika-", null);
             FileUtils.writeByteArrayToFile(file, fileBytes);
             return detectFileUsingTika(file, fileName);
         }
@@ -121,7 +121,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         File file = null;
         try
         {
-            File.createTempFile("arkcase-extract-iso-6709gps-", null);
+            file = File.createTempFile("arkcase-extract-iso-6709gps-", null);
             FileUtils.writeByteArrayToFile(file, fileBytes);
             return extractIso6709Gps(file);
         }
@@ -162,7 +162,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
         File file = null;
         try
         {
-            File.createTempFile("arkcase-extract-metadata-", null);
+            file = File.createTempFile("arkcase-extract-metadata-", null);
             FileUtils.writeByteArrayToFile(file, fileBytes);
             return extract(file, fileName);
         }
@@ -318,7 +318,7 @@ public class EcmTikaFileServiceImpl implements EcmTikaFileService
 
         try
         {
-            File.createTempFile("arkcase-point-location-from-video", null);
+            file = File.createTempFile("arkcase-point-location-from-video", null);
             FileUtils.writeByteArrayToFile(file, fileBytes);
             return pointLocationFromVideo(file, extractedFromStream);
         }

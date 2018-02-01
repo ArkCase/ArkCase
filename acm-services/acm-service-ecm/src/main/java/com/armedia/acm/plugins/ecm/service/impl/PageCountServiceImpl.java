@@ -29,7 +29,7 @@ public class PageCountServiceImpl implements PageCountService
         File file = null;
         try
         {
-            File.createTempFile("arkcase-get-number-of-pages-", null);
+            file = File.createTempFile("arkcase-get-number-of-pages-", null);
             FileUtils.writeByteArrayToFile(file, data);
             return getNumberOfPages(mimeType, file);
         }

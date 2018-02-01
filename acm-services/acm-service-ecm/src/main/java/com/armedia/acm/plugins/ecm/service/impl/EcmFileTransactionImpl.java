@@ -60,7 +60,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         File tempFileContents = null;
         try
         {
-            File.createTempFile("arkcase-upload-temp-file-", null);
+            tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
             FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
 
             EcmTikaFile detectedMetadata = null;
@@ -169,7 +169,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         File file = null;
         try
         {
-            File.createTempFile("arkcase-extract-file-metadata-", null);
+            file = File.createTempFile("arkcase-extract-file-metadata-", null);
             FileUtils.writeByteArrayToFile(file, fileByteArray);
             return extractFileMetadata(file, fileName);
         }
