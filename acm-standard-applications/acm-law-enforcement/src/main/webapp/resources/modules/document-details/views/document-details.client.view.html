@@ -1,9 +1,20 @@
 <section ng-controller="DocumentDetailsController">
-    <div class="module-content">
-        <div class="module-header">
+    <div class="module-content" tabindex="1" ng-keydown="checkEscape($event)">
+        <div class="module-header" ng-if="!viewerOnly">
             <div class="well-sm clearfix">
                 <div class="row">
                     <div class="col-sm-6 col-md-12">
+                        <div class="pull-right">
+                            <div class="col-xs-12">
+                                <a class="btn btn-default" href="" ng-click="expand()">
+                                    <i class="fa fa-external-link"></i>
+                                </a>
+                                <a class="btn btn-default" href="javascript:window.close();">
+                                    <i class="fa fa-times"></i>
+                                </a>
+                            </div>
+                        </div>
+
                         <div class="h4 font-bold">{{ecmFile.fileName || 'common.value.unknown' | translate}}</div>
                         <!--<small class="text-muted" translate>documentDetails.name</small>-->
                     </div>
@@ -14,9 +25,7 @@
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate) ||
-                            'common.value.unknown' | translate}}
-                        </div>
+                        <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
                     <!--<div class="col-sm-3">
@@ -37,10 +46,11 @@
             </div>
         </div>
 
-        <div class="content-body well-sm">
+        <div ng-class="viewerOnly? 'content-body well-sm full-docview' : 'content-body well-sm'">
             <div ng-include="'modules/document-details/views/document-viewer.client.view.html'"></div>
         </div>
-        <div class="right-sidebar well-sm documentDetails">
+
+        <div class="right-sidebar well-sm documentDetails" ng-if="!viewerOnly">
             <ng-form name="docDetails" novalidate>
                 <tabset>
                     <tab heading="{{'documentDetails.comp.details.title' | translate}}">

@@ -600,4 +600,48 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 
         fail("Should have thrown AcmResourceNotFoundException");
     }
+
+    @Test
+    public void testOrderOfLookupEntries()
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        String lookupName = "someLookupName";
+        String key1 = "someKey1";
+        String value1 = "someValue1";
+        String key2 = "someKey2";
+        String value2 = "someValue2";
+        Boolean readonly = true;
+        String lookups = "{\"standardLookup\":[{\"name\":\"" + lookupName + "\",\"entries\":[{\"key\":\"" + key1 + "\",\"value\":\""
+                + value1 + "\"}, {\"key\":\"" + key2
+                + "\",\"value\":\"" + value2 + "\"}],\"readonly\":\"" + readonly + "\"}]}";
+
+        lookupDefinition.setName(lookupName);
+        lookupDefinition.setReadonly(readonly);
+
+        String lookupNameExt = "someLookupName";
+        String key1Ext = "someKey2";
+        String value1Ext = "someValue2";
+        String key2Ext = "someKey1";
+        String value2Ext = "someValue1";
+        Boolean readonlyExt = false;
+        String updatedEntries = "[{\"key\":\"" + key1Ext + "\",\"value\":\"" + value1Ext
+                + "\"}, {\"key\":\"" + key2Ext + "\",\"value\":\"" + value2Ext + "\"}]";
+        String lookupsExt = "{\"standardLookup\":[{\"name\":\"" + lookupNameExt + "\",\"entries\":" + updatedEntries + ",\"readonly\":\""
+                + readonlyExt + "\"}]}";
+
+        configLookupDao.setLookups(lookups);
+        configLookupDao.setLookupsExt(lookupsExt);
+
+        // when
+        String mergedLookups = configLookupDao.getMergedLookups();
+
+        // then
+        ArrayNode updatedValue = JsonPath.using(configuration).parse(mergedLookups)
+                .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
+                        + "')].entries");
+
+        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+    }
 }

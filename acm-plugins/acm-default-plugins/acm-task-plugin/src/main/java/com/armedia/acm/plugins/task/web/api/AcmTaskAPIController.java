@@ -36,8 +36,7 @@ public class AcmTaskAPIController
         try
         {
             log.info("Trying to fetch the Future Tasks from Business Process {}", businessProcessId);
-            return new ResponseEntity<>(getAcmTaskService().getBuckslipFutureTasks(businessProcessId),
-                    HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipFutureTasks(businessProcessId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
@@ -63,13 +62,13 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/objectType/{type}/objectId/{id}/buckslipProcessesForChildren", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("type") String objectType, @PathVariable("id") Long objectId)
+    public ResponseEntity<?> getBuckslipProcessesForObject(@PathVariable("type") String objectType,
+            @PathVariable("id") Long objectId)
     {
         try
         {
             log.info("Trying to fetch buckslip processes for {}, with ID {}", objectType, objectId);
-            return new ResponseEntity<>(getAcmTaskService().getBuckslipProcessesForChildren(objectType, objectId),
-                    HttpStatus.OK);
+            return new ResponseEntity<>(getAcmTaskService().getBuckslipProcessesForChildren(objectType, objectId), HttpStatus.OK);
         }
         catch (AcmTaskException e)
         {
@@ -79,7 +78,7 @@ public class AcmTaskAPIController
 
     @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/pastTasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
-    public ResponseEntity<?> getCompletedBuckslipProcessIdForObject(@PathVariable("objectType") String objectType,
+    public ResponseEntity<?> getBuckslipPastTasksForObject(@PathVariable("objectType") String objectType,
             @PathVariable("objectId") Long objectId,
             @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory,
             Authentication authentication)
@@ -98,7 +97,28 @@ public class AcmTaskAPIController
             log.debug("No history for Business Proess {}", businessProcessId);
             return new ResponseEntity<>(new ArrayList<>().toString(), HttpStatus.OK);
         }
+    }
 
+    @RequestMapping(value = "/businessProcess/{objectType}/{objectId}/{processVariable}/businessProcessVariable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseBody
+    public ResponseEntity<?> getBusinessProcessVariableForObject(@PathVariable("objectType") String objectType,
+            @PathVariable("objectId") Long objectId,
+            @PathVariable("processVariable") String processVariable,
+            @RequestParam(value = "readFromHistory", required = false, defaultValue = "false") boolean readFromHistory,
+            Authentication authentication) throws AcmTaskException
+    {
+
+        log.info("Trying to fetch the completed Business Processes Id for object {}, with id {}", objectType, objectId);
+
+        try
+        {
+            return new ResponseEntity<>(getAcmTaskService().getBusinessProcessVariableByObjectType(objectType, objectId, processVariable,
+                    readFromHistory, authentication), HttpStatus.OK);
+        }
+        catch (AcmTaskException e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping(value = "/businessProcess/{id}/initiatable", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)

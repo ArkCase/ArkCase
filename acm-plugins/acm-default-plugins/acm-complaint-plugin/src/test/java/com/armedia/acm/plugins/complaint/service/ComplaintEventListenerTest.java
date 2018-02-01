@@ -7,6 +7,9 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.addressable.model.PostalAddress;
@@ -21,6 +24,7 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService;
@@ -59,6 +63,9 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     private OutlookCalendarAdminServiceExtension mockedCalendarAdminService;
     private AcmOutlookUser mockedOutlookUser;
     private ComplaintEventListener complaintEventListener;
+    private CalendarConfigurationsByObjectType mockedCalendarConfigurationType;
+    private CalendarConfiguration mockedCalendarConfiguration;
+    private AcmOutlookFolderCreatorDao mockedFolderCreatorDao;
 
     @Before
     public void setUp()
@@ -70,6 +77,9 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         mockCalendarService = createMock(OutlookContainerCalendarService.class);
         mockedCalendarAdminService = createMock(OutlookCalendarAdminService.class);
         mockedOutlookUser = createMock(AcmOutlookUser.class);
+        mockedCalendarConfigurationType = createMock(CalendarConfigurationsByObjectType.class);
+        mockedCalendarConfiguration = createMock(CalendarConfiguration.class);
+        mockedFolderCreatorDao = createMock(AcmOutlookFolderCreatorDao.class);
 
         complaintEventListener = new ComplaintEventListener();
         complaintEventListener.setAcmObjectHistoryService(mockAcmObjectHistoryService);
@@ -80,6 +90,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         complaintEventListener.setCalendarAdminService(mockedCalendarAdminService);
         complaintEventListener.setComplaintStatusClosed("CLOSED");
         complaintEventListener.setObjectConverter(ObjectConverter.createObjectConverterForTests());
+        complaintEventListener.setFolderCreatorDao(mockedFolderCreatorDao);
     }
 
     public Complaint getComplaint()
@@ -276,7 +287,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void testPriorityIsChanged()
+    public void testPriorityIsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -292,11 +303,11 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "priority.changed", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "priority.changed", jsonComplaint, false);
     }
 
     @Test
-    public void testLocationIsUpdated()
+    public void testLocationIsUpdated() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -313,11 +324,11 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint, false);
     }
 
     @Test
-    public void testLocationIsUpdatedWhenPreviouslyIsEmpty()
+    public void testLocationIsUpdatedWhenPreviouslyIsEmpty() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -335,11 +346,11 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentHistory.setObjectType(ComplaintConstants.OBJECT_TYPE);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "location.updated", jsonComplaint, false);
     }
 
     @Test
-    public void testStatusIsChanged()
+    public void testStatusIsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -356,7 +367,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "status.changed", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "status.changed", jsonComplaint, true);
     }
 
     @Test
@@ -384,7 +395,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void testDetailsChanged()
+    public void testDetailsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -401,11 +412,11 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint, false);
     }
 
     @Test
-    public void testDetailsChangedWhenPreviouslyNull()
+    public void testDetailsChangedWhenPreviouslyNull() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         Complaint jsonComplaint = getComplaint();
@@ -423,7 +434,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonComplaint);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint);
+        runAndTestComplaintModifiedEvent(currentHistory, previousHistory, "details.changed", jsonComplaint, false);
     }
 
     public void verifyEvent(String ipAddress, Complaint complaintCapture, Complaint jsonComplaint)
@@ -441,7 +452,7 @@ public class ComplaintEventListenerTest extends EasyMockSupport
     }
 
     public void runAndTestComplaintModifiedEvent(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck,
-            Complaint complaint)
+            Complaint complaint, boolean mockCalendarConfiguration) throws Exception
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -456,6 +467,13 @@ public class ComplaintEventListenerTest extends EasyMockSupport
         mockComplaintEventPublisher.publishComplaintModified(capture(complaintCapture), capture(ipAddressCapture),
                 capture(eventStatusCapture));
         expectLastCall().once();
+
+        if (mockCalendarConfiguration)
+        {
+            expect(mockedCalendarAdminService.readConfiguration(false)).andReturn(mockedCalendarConfigurationType);
+            expect(mockedCalendarConfigurationType.getConfiguration(ComplaintConstants.OBJECT_TYPE)).andReturn(mockedCalendarConfiguration);
+            expect(mockedCalendarConfiguration.getPurgeOptions()).andReturn(PurgeOptions.CLOSED);
+        }
 
         replayAll();
         complaintEventListener.onApplicationEvent(event);
@@ -489,6 +507,13 @@ public class ComplaintEventListenerTest extends EasyMockSupport
 
         expect(mockedCalendarAdminService.getEventListenerOutlookUser(ComplaintConstants.OBJECT_TYPE))
                 .andReturn(Optional.of(mockedOutlookUser));
+
+        mockedFolderCreatorDao.deleteObjectReference(OBJECT_ID, ComplaintConstants.OBJECT_TYPE);
+        expectLastCall().once();
+
+        expect(mockedCalendarAdminService.readConfiguration(false)).andReturn(mockedCalendarConfigurationType);
+        expect(mockedCalendarConfigurationType.getConfiguration(ComplaintConstants.OBJECT_TYPE)).andReturn(mockedCalendarConfiguration);
+        expect(mockedCalendarConfiguration.getPurgeOptions()).andReturn(PurgeOptions.CLOSED);
 
         replayAll();
         complaintEventListener.onApplicationEvent(event);

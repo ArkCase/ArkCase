@@ -234,7 +234,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             }
 
             if (calendarItem.getAllDayEvent() != null && calendarItem.getAllDayEvent())
+            {
                 appointment.setIsAllDayEvent(calendarItem.getAllDayEvent());
+            }
 
             if (calendarItem.getRecurring() != null && calendarItem.getRecurring())
             {
@@ -292,14 +294,20 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
             contact.setDisplayName(contactItem.getDisplayName());
 
             if (contactItem.getPrimaryTelephone() != null)
+            {
                 contact.getPhoneNumbers().setPhoneNumber(PhoneNumberKey.PrimaryPhone, contactItem.getPrimaryTelephone());
+            }
 
             if (contactItem.getEmailAddress1() != null)
+            {
                 contact.getEmailAddresses().setEmailAddress(EmailAddressKey.EmailAddress1,
                         new EmailAddress(contactItem.getEmailAddress1()));
+            }
             if (contactItem.getEmailAddress2() != null)
+            {
                 contact.getEmailAddresses().setEmailAddress(EmailAddressKey.EmailAddress2,
                         new EmailAddress(contactItem.getEmailAddress2()));
+            }
 
             contact.save(folder.getId());
 
@@ -403,7 +411,9 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
                 addFolderPermissions(folder, addThese);
             }
             if (!StringUtils.isEmpty(parentFolder.getFolderClass()))
+            {
                 folder.setFolderClass(parentFolder.getFolderClass());
+            }
             folder.save(parentFolder.getId());
             newFolder.setId(folder.getId().getUniqueId());
         }
@@ -421,6 +431,15 @@ public class ExchangeWebServicesOutlookDao implements OutlookDao, ApplicationLis
     {
         try
         {
+            Folder folder = Folder.bind(service, new FolderId(folderId));
+            ItemView view = new ItemView(10_000);
+            FindItemsResults<Item> folderItems = folder.findItems(view);
+            for (Item item : folderItems.getItems())
+            {
+                String itemId = item.getId().getUniqueId();
+                service.deleteItem(new ItemId(itemId), deleteMode, SendCancellationsMode.SendOnlyToAll,
+                        AffectedTaskOccurrence.AllOccurrences);
+            }
             service.deleteFolder(new FolderId(folderId), deleteMode);
         }
         catch (Exception e)

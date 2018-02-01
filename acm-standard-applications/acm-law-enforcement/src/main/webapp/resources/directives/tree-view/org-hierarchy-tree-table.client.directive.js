@@ -290,7 +290,7 @@ angular
                                         scope.onAddSubGroup(node.data).then(function(subGroup) {
                                             //success
                                             node.setExpanded().then(function() {
-                                                node.addNode(subGroup);
+                                                node.addChildren(subGroup);
                                             });
                                             messageService.succsessAction();
                                         }, function() {
@@ -304,7 +304,7 @@ angular
                                         scope.onAddExistingSubGroup(node.data).then(function(subGroup) {
                                             //success
                                             node.setExpanded().then(function() {
-                                                node.addNode(subGroup);
+                                                node.addChildren(subGroup);
                                             });
                                             messageService.succsessAction();
                                         }, function() {

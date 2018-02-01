@@ -161,6 +161,21 @@ public class CaseFileDao extends AcmAbstractDao<CaseFile> implements AcmNotifica
         return results;
     }
 
+    public List<CaseFile> findByTitle(String title) throws AcmObjectNotFoundException
+    {
+        String queryText = "SELECT cf FROM CaseFile cf WHERE cf.title = :title";
+
+        Query casesByTitle = getEm().createQuery(queryText);
+        casesByTitle.setParameter("title", title);
+
+        List<CaseFile> retval = casesByTitle.getResultList();
+        if (retval.isEmpty())
+        {
+            throw new AcmObjectNotFoundException("Case File", null, "Cases not found for the title: " + title + "", null);
+        }
+        return retval;
+    }
+
     @Transactional
     public int updateComplaintStatus(Long caseId, String newStatus, String modifier, Date date)
     {
