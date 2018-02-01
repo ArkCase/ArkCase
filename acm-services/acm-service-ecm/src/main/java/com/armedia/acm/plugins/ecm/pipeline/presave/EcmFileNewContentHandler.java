@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Created by joseph.mcgrady on 9/28/2015.
@@ -34,14 +35,14 @@ public class EcmFileNewContentHandler implements PipelineHandler<EcmFile, EcmFil
         if (!pipelineContext.getIsAppend() && !pipelineContext.isFileAlreadyInEcmSystem())
         {
 
-            try
+            try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
                 // Adds the file to the ECM content repository as a new document... using the context filename
                 // as the filename for the repository.
                 String arkcaseFilename = entity.getFileName();
                 entity.setFileName(pipelineContext.getOriginalFileName());
                 Document newDocument = ecmFileMuleUtils.addFile(entity, pipelineContext.getCmisFolderId(),
-                        new FileInputStream(pipelineContext.getFileContents()));
+                        fileInputStream);
                 // now, restore the ArkCase file name
                 entity.setFileName(arkcaseFilename);
                 pipelineContext.setCmisDocument(newDocument);
