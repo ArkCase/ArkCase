@@ -16,6 +16,7 @@ import com.armedia.acm.services.search.model.solr.SolrSearchResponse;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.fasterxml.jackson.databind.JsonNode;
+
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Feb 9, 2017
  */
 @Controller
-@RequestMapping({"/api/service/category/v1", "/api/service/category/latest"})
+@RequestMapping({ "/api/service/category/v1", "/api/service/category/latest" })
 public class CategoryManagementAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -58,15 +59,15 @@ public class CategoryManagementAPIController
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public SolrSearchResponse<ResponseHeader, List<Category>> getCategories(Authentication auth,
-                                                                            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                                                            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                                                                            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:CATEGORY AND -parent_id_s:*&sort=title_parseable %s", s);
         try
         {
             SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
-                    Optional.<ResponseHeaderProducer<ResponseHeader>>empty(), this::extractCategories);
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         }
         catch (MuleException | IOException e)
@@ -80,13 +81,13 @@ public class CategoryManagementAPIController
     @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public SolrSearchResponse<ResponseHeader, Category> getCategory(Authentication auth,
-                                                                    @PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
+            @PathVariable(value = "categoryId") Long categoryId) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:CATEGORY AND object_id_s:%d&sort=title_parseable ASC", categoryId);
         try
         {
             SolrSearchResponse<ResponseHeader, Category> response = generateGetResponse(auth, query, 0, 1,
-                    Optional.<ResponseHeaderProducer<ResponseHeader>>empty(), node -> {
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), node -> {
 
                         List<Category> result = extractCategories(node);
                         if (result.isEmpty())
@@ -109,16 +110,16 @@ public class CategoryManagementAPIController
     @RequestMapping(value = "/{categoryId}/children", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public SolrSearchResponse<ResponseHeader, List<Category>> getCategoryChildren(Authentication auth,
-                                                                                  @PathVariable(value = "categoryId") Long categoryId,
-                                                                                  @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                                                                                  @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                                                                                  @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
+            @PathVariable(value = "categoryId") Long categoryId,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false, defaultValue = "ASC") String s) throws AcmObjectNotFoundException
     {
         String query = String.format("object_type_s:CATEGORY AND parent_id_s:%d&sort=title_parseable %s", categoryId, s);
         try
         {
             SolrSearchResponse<ResponseHeader, List<Category>> response = generateGetResponse(auth, query, start, n,
-                    Optional.<ResponseHeaderProducer<ResponseHeader>>empty(), this::extractCategories);
+                    Optional.<ResponseHeaderProducer<ResponseHeader>> empty(), this::extractCategories);
             return response;
         }
         catch (MuleException | IOException e)
@@ -162,7 +163,7 @@ public class CategoryManagementAPIController
     @RequestMapping(value = "/activate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<Category> activateCategories(@RequestBody List<Long> categoryIds,
-                                             @RequestParam(value = "activateChildren", required = false, defaultValue = "false") boolean activateChildren)
+            @RequestParam(value = "activateChildren", required = false, defaultValue = "false") boolean activateChildren)
             throws AcmObjectNotFoundException, AcmUpdateObjectFailedException
     {
         return categoryIds.stream().map(categoryId -> {
@@ -208,7 +209,7 @@ public class CategoryManagementAPIController
     }
 
     private <K extends ResponseHeader, T> SolrSearchResponse<K, T> generateGetResponse(Authentication auth, String query, int start, int n,
-                                                                                       Optional<ResponseHeaderProducer<K>> headerProducer, PayloadProducer<T> payloadProducer)
+            Optional<ResponseHeaderProducer<K>> headerProducer, PayloadProducer<T> payloadProducer)
             throws MuleException, IOException, AcmObjectNotFoundException
     {
         String solrResponse = executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query, start, n, "");
@@ -257,7 +258,8 @@ public class CategoryManagementAPIController
     }
 
     /**
-     * @param categoryService the categoryService to set
+     * @param categoryService
+     *            the categoryService to set
      */
     public void setCategoryService(CategoryService categoryService)
     {
@@ -265,7 +267,8 @@ public class CategoryManagementAPIController
     }
 
     /**
-     * @param executeSolrQuery the executeSolrQuery to set
+     * @param executeSolrQuery
+     *            the executeSolrQuery to set
      */
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {
