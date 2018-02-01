@@ -13,7 +13,7 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -65,28 +65,31 @@ public class EcmFileMergeHandler implements PipelineHandler<EcmFile, EcmFileTran
 
                     // We need to pull the original file contents from Alfresco in order to merge with the new file
                     log.debug("Pulling original document contents from repository");
-                    InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(),
-                            matchFile.getVersionSeriesId());
-                    if (originalFileStream == null)
+                    try (InputStream updatedFileStream = new FileInputStream(pipelineContext.getFileContents());
+                            InputStream originalFileStream = ecmFileMuleUtils.downloadFile(matchFile.getCmisRepositoryId(),
+                                    matchFile.getVersionSeriesId()))
                     {
-                        throw new Exception("Failed to pull document " + matchFile.getFileId() + " from the repository");
-                    }
 
-                    // Appends the new PDF to the end of the old one
-                    log.debug("merging the new document and the original");
-                    byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream,
-                            new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                        if (originalFileStream == null)
+                        {
+                            throw new Exception("Failed to pull document " + matchFile.getFileId() + " from the repository");
+                        }
 
-                    // The merged PDF content will be available to the next pipeline stage
-                    if (mergedFileByteArray != null)
-                    {
-                        pipelineContext.setMergedFileByteArray(mergedFileByteArray);
-                        pipelineContext.setIsAppend(true);
-                        pipelineContext.setEcmFile(matchFile);
-                    }
-                    else
-                    {
-                        throw new Exception("The document merge failed");
+                        // Appends the new PDF to the end of the old one
+                        log.debug("merging the new document and the original");
+                        byte[] mergedFileByteArray = PDFUtils.mergeFiles(originalFileStream, updatedFileStream);
+
+                        // The merged PDF content will be available to the next pipeline stage
+                        if (mergedFileByteArray != null)
+                        {
+                            pipelineContext.setMergedFileByteArray(mergedFileByteArray);
+                            pipelineContext.setIsAppend(true);
+                            pipelineContext.setEcmFile(matchFile);
+                        }
+                        else
+                        {
+                            throw new Exception("The document merge failed");
+                        }
                     }
                 }
             }

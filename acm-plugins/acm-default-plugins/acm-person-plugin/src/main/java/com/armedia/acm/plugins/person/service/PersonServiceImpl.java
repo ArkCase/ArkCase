@@ -28,6 +28,7 @@ import com.armedia.acm.plugins.person.pipeline.PersonPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.exception.TikaException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +42,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -230,21 +232,24 @@ public class PersonServiceImpl implements PersonService
         AcmFolder picturesFolderObj = acmFolderService.findByNameAndParent(picturesFolder, person.getContainer().getFolder());
         Objects.requireNonNull(picturesFolderObj, "Pictures folder not found.");
 
+        File pictureFile = null;
         try
         {
-            EcmTikaFile ecmTikaFile = ecmTikaFileService.detectFileUsingTika(image.getBytes(), image.getName());
+            pictureFile = File.createTempFile("arkcase-insert-image-for-person-", null);
+            FileUtils.copyInputStreamToFile(image.getInputStream(), pictureFile);
+            EcmTikaFile ecmTikaFile = ecmTikaFileService.detectFileUsingTika(pictureFile, image.getName());
             if (!ecmTikaFile.getContentType().startsWith("image"))
             {
                 throw new AcmFileTypesException("File is not a type of an image, got " + ecmTikaFile.getContentType());
             }
         }
-        catch (SAXException e)
+        catch (SAXException | TikaException e)
         {
             throw new AcmFileTypesException("Error parsing contentType", e);
         }
-        catch (TikaException e)
+        finally
         {
-            throw new AcmFileTypesException("Error parsing contentType", e);
+            FileUtils.deleteQuietly(pictureFile);
         }
 
         EcmFile uploaded = ecmFileService.upload(image.getOriginalFilename(), PersonOrganizationConstants.PERSON_PICTURE_FILE_TYPE,
