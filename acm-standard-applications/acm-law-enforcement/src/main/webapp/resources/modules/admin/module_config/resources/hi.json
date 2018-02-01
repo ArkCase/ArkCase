@@ -377,7 +377,7 @@
                     "Exchange2013": "Exchange2013",
                     "Exchange2013_SP1": "Exchange2013_SP1"
                 },
-                "enableAutodiscovery.checkbox": "Autodiscovery सक्षम करें",
+                "enableAutodiscovery.checkbox": "खोज को सक्षम करें",
                 "clientAccessServer.label": "क्लाइंट एक्सेस सर्वर",
                 "clientAccessServer.description": "डिफ़ॉल्ट पहुंच स्तर बदलने से पहले, पर जाएँ: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ अधिक जानकारी के लिए",
                 "clientAccessServer.placeholder": "क्लाइंट एक्सेस सर्वर दर्ज करें",
