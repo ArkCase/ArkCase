@@ -2,9 +2,9 @@ package com.armedia.acm.plugins.ecm.service.impl;
 
 import com.armedia.acm.plugins.ecm.service.PageCountService;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.pdfbox.io.MemoryUsageSetting;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -6,7 +6,7 @@ import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.chemistry.opencmis.client.api.Document;
-import org.mule.util.FileUtils;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

@@ -33,11 +33,11 @@ import com.armedia.acm.services.search.service.SearchResults;
 
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -1180,7 +1180,7 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
                         File tempFileDestination = new File(tempUploadFolderPath + File.separator + uniqueTempFileName);
                         log.debug("Saving file [{}] as [{}] to [{}]", file.getOriginalFilename(), uniqueTempFileName,
                                 tempFileDestination.getCanonicalPath());
-                        FileUtils.copyStreamToFile(file.getInputStream(), tempFileDestination);
+                        FileUtils.copyInputStreamToFile(file.getInputStream(), tempFileDestination);
 
                         // The available file metadata will be returned as JSON to the caller
                         EcmFile uploadedFile = new EcmFile();
