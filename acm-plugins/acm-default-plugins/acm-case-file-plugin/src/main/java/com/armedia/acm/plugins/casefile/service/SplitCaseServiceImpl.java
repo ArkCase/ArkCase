@@ -89,6 +89,7 @@ public class SplitCaseServiceImpl implements SplitCaseService
         if (typesToCopy.contains("people"))
             copyPeople(original, copyCaseFile);
 
+        copyCaseFile.getParticipants().forEach(copyCaseFileParticipant -> copyCaseFileParticipant.setReplaceChildrenParticipant(true));
         copyCaseFile = saveCaseService.saveCase(copyCaseFile, auth, ipAddress);
 
         ObjectAssociation childObjectOriginal = new ObjectAssociation();
@@ -181,13 +182,8 @@ public class SplitCaseServiceImpl implements SplitCaseService
     private void copyTasks(CaseFile original, CaseFile copyCaseFile, Authentication auth, String ipAddress) throws AcmTaskException,
             AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
-        acmTaskService.copyTasks(original.getId(),
-                original.getObjectType(),
-                copyCaseFile.getId(),
-                copyCaseFile.getObjectType(),
-                copyCaseFile.getTitle(),
-                auth,
-                ipAddress);
+        acmTaskService.copyTasks(original.getId(), original.getObjectType(), copyCaseFile.getId(), copyCaseFile.getObjectType(),
+                copyCaseFile.getTitle(), auth, ipAddress);
     }
 
     public void setSaveCaseService(SaveCaseService saveCaseService)

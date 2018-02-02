@@ -3,11 +3,11 @@
 /**
  * @ngdoc service
  * @name services:Object.ParticipantService
- *
+ * 
  * @description
- *
+ * 
  * {@link https://***REMOVED***/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/services/object/object-participant.client.service.js services/object/object-participant.client.service.js}
-
+ * 
  * Object.ParticipantService includes group of REST calls related to participants.
  */
 angular
@@ -22,23 +22,28 @@ angular
                         'MessageService',
                         'SearchService',
                         'Search.QueryBuilderService',
-                        function($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder) {
+                        'ObjectService',
+                        function($resource, $translate, $q, Util, MessageService, SearchService, SearchQueryBuilder, ObjectService) {
                             var Service = $resource('api/v1/service', {}, {
 
                                 /**
                                  * @ngdoc method
                                  * @name get
                                  * @methodOf services:Object.ParticipantService
-                                 *
-                                 * @description
-                                 * Query list of participants for an object.
-                                 *
-                                 * @param {Object} params Map of input parameter
-                                 * @param {String} params.objectType  Object type
-                                 * @param {String} params.objectId  Object ID
-                                 * @param {Function} onSuccess (Optional)Callback function of success query
-                                 * @param {Function} onError (Optional) Callback function when fail
-                                 *
+                                 * 
+                                 * @description Query list of participants for an object.
+                                 * 
+                                 * @param {Object}
+                                 *                params Map of input parameter
+                                 * @param {String}
+                                 *                params.objectType Object type
+                                 * @param {String}
+                                 *                params.objectId Object ID
+                                 * @param {Function}
+                                 *                onSuccess (Optional)Callback function of success query
+                                 * @param {Function}
+                                 *                onError (Optional) Callback function when fail
+                                 * 
                                  * @returns {Object} Object returned by $resource
                                  */
                                 get : {
@@ -47,92 +52,35 @@ angular
                                     isArray : true
                                 },
 
-                                /**
-                                 * @ngdoc method
-                                 * @name save
-                                 * @methodOf services:Object.ParticipantService
-                                 *
-                                 * @description
-                                 * Create a new participant.
-                                 *
-                                 * @param {Object} params Map of input parameter
-                                 * @param {String} params.userId  User ID
-                                 * @param {String} params.participantType  Participant Type
-                                 * @param {String} params.objectType  Object type
-                                 * @param {String} params.objectId  Object ID
-                                 * @param {Function} onSuccess (Optional)Callback function of success query
-                                 * @param {Function} onError (Optional) Callback function when fail
-                                 *
-                                 * @returns {Object} Object returned by $resource
-                                 */
-                                save : {
-                                    method : 'PUT',
-                                    url : 'api/v1/service/participant/:userId/:participantType/:objectType/:objectId',
-                                    cache : false
-                                },
-
-                                /**
-                                 * @ngdoc method
-                                 * @name delete
-                                 * @methodOf services:Object.ParticipantService
-                                 *
-                                 * @description
-                                 * Delete participant.
-                                 *
-                                 * @param {Object} params Map of input parameter
-                                 * @param {String} params.userId  User ID
-                                 * @param {String} params.participantType  Participant Type
-                                 * @param {String} params.objectType  Object type
-                                 * @param {String} params.objectId  Object ID
-                                 * @param {Function} onSuccess (Optional)Callback function of success query
-                                 * @param {Function} onError (Optional) Callback function when fail
-                                 *
-                                 * @returns {Object} Object returned by $resource
-                                 */
-                                _delete : {
-                                    method : 'DELETE',
-                                    url : 'api/v1/service/participant/:userId/:participantType/:objectType/:objectId',
-                                    cache : false
-                                },
-
-                                /**
-                                 * @ngdoc method
-                                 * @name changeRole
-                                 * @methodOf services:Object.ParticipantService
-                                 *
-                                 * @description
-                                 * Change role for participant.
-                                 *
-                                 * @param {Object} params Map of input parameter
-                                 * @param {String} params.participantId  Participant ID
-                                 * @param {String} params.participantType  Participant Type
-                                 * @param {Function} onSuccess (Optional)Callback function of success query
-                                 * @param {Function} onError (Optional) Callback function when fail
-                                 *
-                                 * @returns {Object} Object returned by $resource
-                                 */
-                                changeRole : {
-                                    method : 'DELETE',
-                                    url : 'api/v1/service/participant/:participantId/:participantType',
-                                    cache : false
+                                postEcmObjectParticipants: {
+                                    method: 'POST',
+                                    url: 'api/latest/service/ecm/participants/:objectType/:objectId',
+                                    cache: false,
+                                    isArray: true
                                 },
 
                                 /**
                                  * @ngdoc method
                                  * @name checkPersonGroup
                                  * @methodOf services:Object.ParticipantService
-                                 *
-                                 * @description
-                                 * Check if a participant is a member of a group.
-                                 *
-                                 * @param {Object} params Map of input parameter
-                                 * @param {String} params.objectType  Object type
-                                 * @param {String} params.objectId  Object ID
-                                 * @param {String} params.participantId  Participant ID
-                                 * @param {String} params.groupId  Group ID
-                                 * @param {Function} onSuccess (Optional)Callback function of success query
-                                 * @param {Function} onError (Optional) Callback function when fail
-                                 *
+                                 * 
+                                 * @description Check if a participant is a member of a group.
+                                 * 
+                                 * @param {Object}
+                                 *                params Map of input parameter
+                                 * @param {String}
+                                 *                params.objectType Object type
+                                 * @param {String}
+                                 *                params.objectId Object ID
+                                 * @param {String}
+                                 *                params.participantId Participant ID
+                                 * @param {String}
+                                 *                params.groupId Group ID
+                                 * @param {Function}
+                                 *                onSuccess (Optional)Callback function of success query
+                                 * @param {Function}
+                                 *                onError (Optional) Callback function when fail
+                                 * 
                                  * @returns {Object} Object returned by $resource
                                  */
                                 checkGroupForParticipant : {
@@ -148,12 +96,12 @@ angular
                              * @ngdoc method
                              * @name findParticipantById
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Query participant of an object by Id
-                             *
-                             * @param {String} participantId  Participant id
-                             *
+                             * 
+                             * @description Query participant of an object by Id
+                             * 
+                             * @param {String}
+                             *                participantId Participant id
+                             * 
                              * @returns {Object} participant data
                              */
                             Service.findParticipantById = function(participantId) {
@@ -161,8 +109,8 @@ angular
                                 var df = $q.defer();
                                 var query = SearchQueryBuilder.buildSafeFqFacetedSearchQuery('* AND (id:"' + participantId
                                         + '-USER" OR (name:"' + participantId + '" AND object_type_s:GROUP))', "", 10, 0);
-                                SearchService.queryFilteredSearch({
-                                    query : query
+                                SearchService.unescapedQueryFilteredSearch({
+                                    unescapedQuery : query
                                 }, function(data) {
                                     if (Util.validateSolrData(data)) {
                                         var participantData = data.response.docs;
@@ -179,13 +127,14 @@ angular
                              * @ngdoc method
                              * @name retrieveParticipants
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Query list of participants of an object
-                             *
-                             * @param {String} objectType  Object type
-                             * @param {Number} objectId  Object ID
-                             *
+                             * 
+                             * @description Query list of participants of an object
+                             * 
+                             * @param {String}
+                             *                objectType Object type
+                             * @param {Number}
+                             *                objectId Object ID
+                             * 
                              * @returns {Object} Promise
                              */
                             Service.retrieveParticipants = function(objectType, objectId) {
@@ -205,114 +154,22 @@ angular
 
                             /**
                              * @ngdoc method
-                             * @name addNewParticipant
-                             * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Query list of participants of an object
-                             *
-                             * @param {String} userId  User ID
-                             * @param {String} participantType  Participant Type
-                             * @param {String} objectType  Object type
-                             * @param {Number} objectId  Object ID
-                             *
-                             * @returns {Object} Promise
-                             */
-                            Service.addNewParticipant = function(userId, participantType, objectType, objectId) {
-                                return Util.serviceCall({
-                                    service : Service.save,
-                                    param : {
-                                        userId : userId,
-                                        participantType : participantType,
-                                        objectType : objectType,
-                                        objectId : objectId
-                                    },
-                                    data : {},
-                                    onSuccess : function(data) {
-                                        if (Service.validateParticipant(data)) {
-                                            return data;
-                                        }
-                                    }
-                                })
-                            };
-
-                            /**
-                             * @ngdoc method
-                             * @name removeParticipant
-                             * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Remove participant of an object.
-                             *
-                             * @param {String} userId  User ID
-                             * @param {String} participantType  Participant Type
-                             * @param {String} objectType  Object type
-                             * @param {Number} objectId  Object ID
-                             *
-                             * @returns {Object} Promise
-                             */
-                            Service.removeParticipant = function(userId, participantType, objectType, objectId) {
-                                return Util.serviceCall({
-                                    service : Service._delete,
-                                    param : {
-                                        userId : userId,
-                                        participantType : participantType,
-                                        objectType : objectType,
-                                        objectId : objectId
-                                    },
-                                    onSuccess : function(data) {
-                                        if (Service.validateRemovedParticipant(data)) {
-                                            return data;
-                                        }
-                                    }
-                                })
-                            };
-
-                            /**
-                             * @ngdoc method
-                             * @name changeParticipantRole
-                             * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Change role for participant of an object.
-                             *
-                             * @param {String} participantId  Participant ID
-                             * @param {String} participantType  Participant Type
-                             *
-                             * @returns {Object} Promise
-                             */
-                            Service.changeParticipantRole = function(participantId, participantType) {
-                                return Util.serviceCall({
-                                    service : Service.changeRole,
-                                    param : {
-                                        participantId : participantId,
-                                        participantType : participantType
-                                    },
-                                    onSuccess : function(data) {
-                                        if (Service.validateParticipant(data)) {
-                                            return data;
-                                        }
-                                    }
-                                })
-                            };
-
-                            /**
-                             * @ngdoc method
                              * @name isParticipantValid
                              * @methodOf services:Object.ParticipantService
                              * @description Check if the participant is valid
-                             * @param {Object} data Participant object to be validated
+                             * @param {Object}
+                             *                data Participant object to be validated
                              * @returns {boolean} Promise
                              */
                             Service.isParticipantValid = function(data) {
                                 if (Util.isArrayEmpty(data)) {
-                                    //group/user is invalid (e.g. sync error/stale data)
+                                    // group/user is invalid (e.g. sync error/stale data)
                                     MessageService.error($translate
                                             .instant("common.directive.coreParticipants.message.error.userOrGroupNotFound"));
                                     return false;
                                 }
                                 if (Util.isArrayEmpty(data) && data.length > 1) {
-                                    //can't have two participants with same id
+                                    // can't have two participants with same id
                                     MessageService.error($translate
                                             .instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
                                     return false;
@@ -325,8 +182,10 @@ angular
                              * @name validateType
                              * @methodOf services:Object.ParticipantService
                              * @description Check if the type of participant is consistent with the given USER or GROUP type
-                             * @param {Object} data Participant object to be validated
-                             * @param {Object} type Given type
+                             * @param {Object}
+                             *                data Participant object to be validated
+                             * @param {Object}
+                             *                type Given type
                              * @returns {boolean} Promise
                              */
                             Service.validateType = function(data, type) {
@@ -341,125 +200,193 @@ angular
                              * @ngdoc method
                              * @name validateParticipants
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Validate participants.
-                             *
-                             * @param {Object} data  Data to be validated
-                             *
-                             * @returns {Object} Promise
+                             * 
+                             * @description Validate participants.
+                             * 
+                             * @param {Object}
+                             *                participants Participants array to be validated
+                             * @param {Boolean}
+                             *                allowDuplicateLdapIds When true duplicate LdapIds aren't checked (for entities usually true,
+                             *                for files it is false)
+                             * 
+                             * @returns {Boolean} true if participants are valid, otherwise false
                              */
-                            Service.validateParticipants = function(data) {
-                                if (Util.isEmpty(data)) {
+                            Service.validateParticipants = function (participants, allowDuplicateLdapIds) {
+                                if (Util.isEmpty(participants)) {
                                     return false;
                                 }
-                                if (!Util.isArray(data)) {
+                                if (!Util.isArray(participants)) {
                                     return false;
                                 }
-                                if (_.filter(data, function(pa) {
-                                    return Util.compare("assignee", pa.participantType);
-                                }).length > 1) {
-                                    MessageService.error($translate
-                                            .instant("common.directive.coreParticipants.message.error.assigneeUnique"));
+                    
+                                // missing participant Ldap id
+                                if (_.find(participants, function(participant) { return !participant.participantLdapId && participant.participantType != "assignee"; })) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.emptyParticipantLdapId"));
                                     return false;
                                 }
-                                if (_.filter(data, function(pa) {
+                                
+                                // missing participantType
+                                if (_.find(participants, function(participant) { return !participant.participantType; })) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.emptyParticipantType"));
+                                    return false;
+                                }
+                    
+                                // multiple assignees
+                                if (_.filter(participants, function (pa) {
+                                        return Util.compare("assignee", pa.participantType);
+                                    }).length > 1) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.assigneeUnique"));
+                                    return false;
+                                }
+                    
+                                // multiple owners
+                                if (_.filter(participants, function(pa) {
                                     return Util.compare("owner", pa.participantType);
                                 }).length > 1) {
                                     MessageService.error($translate.instant("common.directive.coreParticipants.message.error.ownerUnique"));
                                     return false;
                                 }
-                                if (_.filter(data, function(pa) {
-                                    return Util.compare("owning group", pa.participantType);
-                                }).length > 1) {
-                                    MessageService.error($translate
-                                            .instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
+                                
+                                // multiple owning groups
+                                if (_.filter(participants, function (pa) {
+                                        return Util.compare("owning group", pa.participantType);
+                                    }).length > 1) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.owninggroupUnique"));
                                     return false;
                                 }
+                    
+                                // don't understand this check. Is " " a valid participant type?
+                                if (_.filter(participants, function (pa) {
+                                        return Util.compare(" ", pa.participantType);
+                                    }).length > 1) {
+                                    return false;
+                                }
+                    
+                                // check for duplicate roles for LdapId
+                                if (_.chain(participants).groupBy(e => e.participantLdapId + '|' + e.participantType).filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+                                    MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                                    return false;
+                                }
+                                
+                                if (!allowDuplicateLdapIds) {
+                                    // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
+                                    if (_.chain(participants).groupBy('participantLdapId').filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+                                        MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
+                                        return false;
+                                    }
+                                }
+                    
                                 return true;
                             };
 
+                            Service.getFileParticipantsAsObjectInfo = function(fileId) {
+                                return Service.getObjectParticipantsAsObjectInfo(ObjectService.ObjectTypes.FILE, fileId);
+                            };
+                            
+                            Service.getFolderParticipantsAsObjectInfo = function(folderId) {
+                                return Service.getObjectParticipantsAsObjectInfo(ObjectService.ObjectTypes.FOLDER, folderId);
+                            };
+                    
+                            Service.getObjectParticipantsAsObjectInfo = function(objectType, objectId) {
+                                return Service.retrieveParticipants(objectType, objectId).then(function(data) {
+                                    return { "participants" : data };
+                                });
+                            };
+                            
                             /**
                              * @ngdoc method
-                             * @name validateParticipant
+                             * @name validateObjectParticipants
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Validate participant.
-                             *
-                             * @param {Object} data  Data to be validated
-                             *
-                             * @returns {Object} Promise
+                             * 
+                             * @description Validate object participants
+                             * 
+                             * @param {Object}
+                             *                data Object with 'participants' property to be validated
+                             * @param {Boolean}
+                             *                allowDuplicateLdapIds When true duplicate LdapIds aren't checked (for entities usually true, for files it is
+                             *                false)
+                             * 
+                             * @returns {Boolean} Return true if data is valid
                              */
-                            Service.validateParticipant = function(data) {
-                                if (Util.isEmpty(data)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.id)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.objectType)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.objectId)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.participantType)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.participantLdapId)) {
-                                    return false;
-                                }
-                                return true;
+                            Service.validateObjectParticipants = function (data, allowDuplicateLdapIds) {
+                                return Service.validateParticipants(data.participants, allowDuplicateLdapIds);
                             };
-
+                    
                             /**
                              * @ngdoc method
-                             * @name validateRemovedParticipant
+                             * @name saveFileParticipants
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Validate participant that will be removed.
-                             *
-                             * @param {Object} data  Data to be validated
-                             *
-                             * @returns {Object} Promise
+                             * 
+                             * @description Save file participants
+                             * 
+                             * @param {Object}
+                             *                data Object with 'participants' array property to be saved and 'objectId' property as the fileId
                              */
-                            Service.validateRemovedParticipant = function(data) {
-                                if (Util.isEmpty(data)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.deletedParticipant)) {
-                                    return false;
-                                }
-                                if (Util.isEmpty(data.deletedParticipantId)) {
-                                    return false;
-                                }
-                                return true;
+                            Service.saveFileParticipants = function (data) {
+                                return Service.saveEcmObjectParticipants(ObjectService.ObjectTypes.FILE, data);
                             };
-
+                            
+                            /**
+                             * @ngdoc method
+                             * @name saveFolderParticipants
+                             * @methodOf services:Object.ParticipantService
+                             * 
+                             * @description Save folder participants
+                             * 
+                             * @param {Object}
+                             *                data Object with 'participants' array property to be saved and 'objectId' property as the folderId
+                             */
+                            Service.saveFolderParticipants = function (data) {
+                                return Service.saveEcmObjectParticipants(ObjectService.ObjectTypes.FOLDER, data);
+                            };
+                            
+                            /**
+                             * @ngdoc method
+                             * @name saveEcmObjectParticipants
+                             * @methodOf services:Object.ParticipantService
+                             * 
+                             * @description Save ecm file or folder participants
+                             * 
+                             * @param {Object}
+                             *                data Object with 'participants' array property to be saved and 'objectId' property as Id for the object
+                             * @param {String}
+                             *                objectType The object type to set the participants on
+                             */
+                            Service.saveEcmObjectParticipants = function (objectType, data) {
+                                if (Service.validateObjectParticipants(data, false)) {
+                                    return Util.serviceCall({
+                                        service: Service.postEcmObjectParticipants
+                                        , param: { objectType: objectType, objectId: data.objectId}
+                                        , data: data.participants
+                                        , onSuccess: function(data){
+                                            return { "participants" : data };
+                                        }
+                                    });                
+                                } 
+                            }
+                    
                             /**
                              * @ngdoc method
                              * @name isParticipantMemberOfGroup
                              * @methodOf services:Object.ParticipantService
-                             *
-                             * @description
-                             * Query if participant(owner/assignee) belongs to selected group
-                             *
-                             * @param {String} participantId  Participant id
-                             *
+                             * 
+                             * @description Query if participant(owner/assignee) belongs to selected group
+                             * 
+                             * @param {String}
+                             *                participantId Participant id
+                             * 
                              * @returns {Object} participant data
                              */
-                            Service.isParticipantMemberOfGroup = function(participantId, owningGroup) {
+                            Service.isParticipantMemberOfGroup = function (participantId, owningGroup) {
                                 return Util.serviceCall({
-                                    service : Service.checkGroupForParticipant,
-                                    param : {
-                                        participantId : participantId,
-                                        owningGroup : owningGroup
-                                    },
-                                    onSuccess : function(data) {
+                                    service: Service.checkGroupForParticipant
+                                    , param: {
+                                        participantId: participantId,
+                                        owningGroup: owningGroup
+                                    }
+                                    , onSuccess: function (data) {
                                         if (data.response) {
-                                            return data.response.docs.length > 0 ? true : false;
+                                            return data.response.docs.length>0?true:false;
                                         }
                                     }
                                 })

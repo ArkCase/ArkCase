@@ -323,7 +323,7 @@ angular.module('services').factory(
                                     return objectInfo;
                                 }, function(error) {
                                     that.scope.objectInfo = null;
-                                    //todo: display error
+                                    MessageService.error($translate.instant("common.objects.progressError") + " " + objectId);
                                     return error;
                                 })
 
@@ -501,7 +501,11 @@ angular.module('services').factory(
                             that.moduleId = arg.moduleId;
                             that.componentId = arg.componentId;
                             that.retrieveObjectInfo = arg.retrieveObjectInfo;
-                            that.currentObjectId = that.scope.currentObjectId = Service.getCurrentObjectId();
+                            that.currentObjectId = (arg.objectId ? that.scope.currentObjectId = arg.objectId : that.scope.currentObjectId = Service.getCurrentObjectId());
+                            
+                            if (arg.resetComponentData) {
+                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [that.currentObjectId]);
+                            }
 
                             that.validateObjectInfo = (arg.validateObjectInfo) ? arg.validateObjectInfo : function(data) {
                                 return (!Util.isEmpty(data));
@@ -551,7 +555,9 @@ angular.module('services').factory(
                                 } else {
                                     return;
                                 }
-                                that.currentObjectId = Service.getCurrentObjectId();
+                                if (Service.getCurrentObjectId()) {
+                                    that.currentObjectId = Service.getCurrentObjectId();
+                                }
                                 if (that.currentObjectId == objectId) {
                                     onObjectInfoUpdated(objectInfo, objectId, e);
                                 }
@@ -564,12 +570,28 @@ angular.module('services').factory(
                                     return;
                                 }
                                 that.previousId = null;
-                                that.currentObjectId = Service.getCurrentObjectId();
+                                if (Service.getCurrentObjectId()) {
+                                    that.currentObjectId = Service.getCurrentObjectId();
+                                }
                                 onObjectInfoUpdated(objectInfo, that.currentObjectId, e);
                             });
 
+                            that.scope.$on('report-object-refreshed', function (e, objectId) {
+                                SyncDataLoader.reset(arg.objectId ? that.moduleId + that.componentId : that.moduleId, [objectId]);
+                                SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [objectId], function (objectInfo) {
+                                    that.scope.objectInfo = objectInfo;
+                                    that.scope.$broadcast('object-refreshed', objectInfo, true);
+                                    return objectInfo;
+                                }, function (error) {
+                                    that.scope.objectInfo = null;
+                                    MessageService.error($translate.instant("common.objects.progressError") + " " + objectId);
+                                    return error;
+                                })
+
+                            });
+
                             if (that.currentObjectId) {
-                                SyncDataLoader.load(that.moduleId, that.retrieveObjectInfo, [ that.currentObjectId ], function(objectInfo) {
+                                SyncDataLoader.load(arg.objectId ? that.moduleId + that.componentId : that.moduleId, that.retrieveObjectInfo, [ that.currentObjectId ], function(objectInfo) {
                                     onObjectInfoUpdated(objectInfo, that.currentObjectId);
                                     return objectInfo;
                                 });
@@ -828,7 +850,7 @@ angular.module('services').factory(
                      */
                     Service.getCurrentObjectId = function() {
                         var objectSetting = this.getCurrentObjectSetting();
-                        return objectSetting.objectId;
+                        return (objectSetting) ? objectSetting.objectId : null;
                     };
 
                     /**

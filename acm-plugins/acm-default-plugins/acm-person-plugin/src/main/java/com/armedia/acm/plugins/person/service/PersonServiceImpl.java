@@ -16,6 +16,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.plugins.person.dao.PersonDao;
@@ -62,6 +63,7 @@ public class PersonServiceImpl implements PersonService
     private PipelineManager<Person, PersonPipelineContext> personPipelineManager;
 
     private PersonDao personDao;
+    private EcmFileParticipantService fileParticipantService;
     /**
      * Root folder for all People
      */
@@ -319,6 +321,7 @@ public class PersonServiceImpl implements PersonService
         container.setContainerObjectTitle(person.getGivenName() + "-" + person.getFamilyName() + "-" + person.getId());
         AcmFolder folder = new AcmFolder();
         folder.setName("ROOT");
+        folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(person.getParticipants()));
 
         String cmisFolderId = ecmFileService.createFolder(peopleRootFolder + personRootFolderName);
         folder.setCmisFolderId(cmisFolderId);
@@ -539,6 +542,16 @@ public class PersonServiceImpl implements PersonService
     public void setPersonPipelineManager(PipelineManager<Person, PersonPipelineContext> personPipelineManager)
     {
         this.personPipelineManager = personPipelineManager;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 
     public ObjectConverter getObjectConverter()

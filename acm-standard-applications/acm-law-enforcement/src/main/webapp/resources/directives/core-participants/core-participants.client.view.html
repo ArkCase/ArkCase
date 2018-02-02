@@ -1,9 +1,14 @@
-<div class="panel panel-success panel-grid">
+<div class="panel panel-success panel-grid" ng-show="participantsInit">
     <div class="panel-heading">
         <div class="panel-title">
             <span>{{participantsInit.participantsTitle}}</span>
 
             <div class="pull-right">
+                <button type="button" class="btn btn-default"
+                        ng-click="onClickReplaceChildrenParticipants()"
+                        ng-show="participantsInit.showReplaceChildrenParticipants">
+                    <span translate>common.directive.coreParticipants.replaceFolderChildrenParticipants</span>
+                </button>
                 <button class="btn btn-default btn-xs" ng-hide="isReadOnly(objectInfo)" ng-click="addNew()"><i class="fa fa-lg fa-plus"></i>
                 </button>
             </div>
