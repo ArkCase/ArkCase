@@ -52,6 +52,7 @@ angular.module('admin').controller(
                         data.member_id = selectedObject;
                         selectedUser = selectedObject;
                         $scope.lastSelectedUser = selectedUser;
+                        currentAuthGroups = [];
 
                         var allUnauthorizedGroups = LdapUserManagementService.getAllUnauthorizedGroups(data);
                         var allAuthorizedGroups = LdapUserManagementService.getAllAuthorizedGroups(data);
@@ -69,6 +70,7 @@ angular.module('admin').controller(
                                 authObject.key = group.name;
                                 authObject.name = group.name;
                                 authorized.push(authObject);
+                                currentAuthGroups.push(authObject.key);
                             });
                         });
                     }
