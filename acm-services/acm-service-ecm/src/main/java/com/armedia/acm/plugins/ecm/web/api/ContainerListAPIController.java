@@ -25,7 +25,7 @@ public class ContainerListAPIController
 
     private EcmFileService ecmFileService;
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/container/{objectType}/{objectId}", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFolderContents(
