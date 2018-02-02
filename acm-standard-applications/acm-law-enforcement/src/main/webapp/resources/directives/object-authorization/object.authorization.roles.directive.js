@@ -69,7 +69,8 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     onAuthRoleChange : "=",
                     objectDisplayName : "@",
                     roleDisplayName : "@",
-                    objectTitle : "@"
+                    objectTitle : "@",
+                    showFilter : "=?"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
@@ -143,24 +144,3 @@ angular.module('directives').directive('objectAuthorizationRoles',
                 }
             };
         } ]);
-
-/*              OVAJ SMENI GO SO SORT OD SOLR!!!!!!*/
-
-angular.module('directives').filter('orderObjectBy', function() {
-    return function(input) {
-        if (!angular.isObject(input))
-            return input;
-
-        var array = [];
-        for ( var objectKey in input) {
-            array.push(input[objectKey]);
-        }
-
-        array.sort(function(a, b) {
-            a = a["name"];
-            b = b["name"];
-            return a > b ? 1 : a < b ? -1 : 0;
-        });
-        return array;
-    }
-});

@@ -119,7 +119,8 @@ public class AcmGroupAPIController
     @ResponseBody
     public String getAllAuthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "q", required = false) String memberId,
             Authentication auth) throws MuleException
     {
@@ -138,7 +139,7 @@ public class AcmGroupAPIController
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
+        headers.put("sort", sortBy + " " + sortDirection);
         headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
@@ -171,7 +172,6 @@ public class AcmGroupAPIController
             query += " AND -member_id_ss:" + memberId;
         }
 
-        // Vo zavisnost od fq required da se smeni ova! && dali treba proverki ko ovie?
         if (searchFilter != null && !searchFilter.equals(""))
         {
             query += " AND name_partial:" + searchFilter;
@@ -201,7 +201,8 @@ public class AcmGroupAPIController
     @ResponseBody
     public String getAllUnauthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "q", required = false) String memberId,
             Authentication auth) throws MuleException
     {
@@ -220,7 +221,7 @@ public class AcmGroupAPIController
         headers.put("query", query);
         headers.put("firstRow", startRow);
         headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
+        headers.put("sort", sortBy + " " + sortDirection);
         headers.put("acmUser", auth);
 
         MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);

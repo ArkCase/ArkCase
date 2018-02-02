@@ -4,17 +4,16 @@
             {{objectTitle}}</label>
         <!--Sort od SOLR-->
         <select ng-model="selectedObject" ng-change="selectObject()"
-                ng-options="d[objectDisplayName] | translate for d in data.appUsers | orderObjectBy:'objectDisplayName'"
-                name="" size="15" class="form-control">
+                ng-options="d[objectDisplayName] | translate for d in data.appUsers" name="" size="15"
+                class="form-control">
         </select>
-        <object-authorization-roles-filter controller-name="ChooseUserManagement" />
+        <object-authorization-roles-filter ng-show="showFilter" controller-name="ChooseUserManagement" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
-        <select ng-model="selectedNotAuthorized"
-                ng-options="na[roleDisplayName] for na in notAuthorized| orderObjectBy:'roleDisplayName'" name=""
+        <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized" name=""
                 size="15" multiple class="form-control">
         </select>
-        <object-authorization-roles-filter controller-name="UnauthorizedUserManagement" />
+        <object-authorization-roles-filter ng-show="showFilter" controller-name="UnauthorizedUserManagement" />
     </div>
     <div class="col-xs-1 b-r" style="text-align:center;"><br /><br /><br /><br />
         <button class="btn btn-rounded btn-sm" data-toggle="tooltip"
@@ -29,10 +28,9 @@
         <br /><br /><br /><br /><br />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
-        <select ng-model="selectedAuthorized"
-                ng-options="a[roleDisplayName] for a in authorized| orderObjectBy:'roleDisplayName'" size="15" multiple
+        <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized" size="15" multiple
                 class="form-control">
         </select>
-        <object-authorization-roles-filter controller-name="AuthorizedUserManagement" />
+        <object-authorization-roles-filter ng-show="showFilter" controller-name="AuthorizedUserManagement" />
     </div>
 </div>

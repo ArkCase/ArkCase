@@ -18,6 +18,7 @@ angular.module('admin').controller(
                     $scope.onObjSelect = onObjSelect;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
 
+                    $scope.showFilter = true;
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
@@ -47,34 +48,27 @@ angular.module('admin').controller(
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
+                        var data = {};
+                        data.member_id = selectedObject;
                         selectedUser = selectedObject;
                         $scope.lastSelectedUser = selectedUser;
-                        currentAuthGroups = [];
 
-                        var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);
-                        var adHocGroupsPromise = LdapUserManagementService.queryAdhocGroups();
+                        var allUnauthorizedGroups = LdapUserManagementService.getAllUnauthorizedGroups(data);
+                        var allAuthorizedGroups = LdapUserManagementService.getAllAuthorizedGroups(data);
 
-                        $q.all([ ldapGroupsPromise, adHocGroupsPromise ]).then(function(result) {
-                            // merge LDAP and Ad-hoc groups into a single structure
-                            var groups = _.union(result[0].data.response.docs, result[1].data.response.docs);
+                        $q.all([ allUnauthorizedGroups, allAuthorizedGroups ]).then(function(result) {
+                            _.forEach(result[0].data.response.docs, function(group) {
+                                var authObject = {};
+                                authObject.key = group.name;
+                                authObject.name = group.name;
+                                notAuthorized.push(authObject);
+                            });
 
-                            _.forEach(groups, function(group) {
-                                _.forEach(group.member_id_ss, function(groupMember) {
-                                    if (groupMember === selectedObject.key) {
-                                        var authObject = {};
-                                        authObject.key = group.name;
-                                        authObject.name = group.name;
-                                        authorized.push(authObject);
-                                        currentAuthGroups.push(authObject.key);
-                                    }
-                                });
-                                if (currentAuthGroups.indexOf(group.name) === -1) {
-                                    //we need to create wrapper to provide a name property
-                                    var notAuthorizedRole = {};
-                                    notAuthorizedRole.key = group.name;
-                                    notAuthorizedRole.name = group.name;
-                                    notAuthorized.push(notAuthorizedRole);
-                                }
+                            _.forEach(result[1].data.response.docs, function(group) {
+                                var authObject = {};
+                                authObject.key = group.name;
+                                authObject.name = group.name;
+                                authorized.push(authObject);
                             });
                         });
                     }
@@ -255,27 +249,16 @@ angular.module('admin').controller(
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
                                 $scope.appUsers = [];
-                                _.forEach(response.data, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    $scope.appUsers.push(element);
-                                });
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.fillList($scope.appUsers, response.data);
+                                }
                             });
                         } else {
                             LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
                                 $scope.appUsers = [];
                                 if (!Util.isEmpty(response.data)) {
-                                    _.forEach(response.data, function(user) {
-                                        var element = {};
-                                        element.name = user.name;
-                                        element.key = user.object_id_s;
-                                        element.directory = user.directory_name_s;
-                                        $scope.appUsers.push(element);
-                                    });
+                                    $scope.fillList($scope.appUsers, response.data);
                                 }
-
                             }, function() {
                                 console.log("error");
                             });
@@ -288,25 +271,15 @@ angular.module('admin').controller(
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getAllUnauthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedNotAuthorized = [];
-                                _.forEach(response.data.response.docs, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    $scope.userData.selectedNotAuthorized.push(element);
-                                });
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
+                                }
                             });
                         } else {
                             LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedNotAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
-                                    _.forEach(response.data.response.docs, function(user) {
-                                        var element = {};
-                                        element.name = user.name;
-                                        element.key = user.object_id_s;
-                                        element.directory = user.directory_name_s;
-                                        $scope.userData.selectedNotAuthorized.push(element);
-                                    });
+                                    $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
                                 }
                             }, function() {
                                 console.log("error");
@@ -320,25 +293,15 @@ angular.module('admin').controller(
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getAllAuthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedAuthorized = [];
-                                _.forEach(response.data.response.docs, function(user) {
-                                    var element = {};
-                                    element.name = user.name;
-                                    element.key = user.object_id_s;
-                                    element.directory = user.directory_name_s;
-                                    $scope.userData.selectedAuthorized.push(element);
-                                });
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
+                                }
                             });
                         } else {
                             LdapUserManagementService.getFilteredAuthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
-                                    _.forEach(response.data.response.docs, function(user) {
-                                        var element = {};
-                                        element.name = user.name;
-                                        element.key = user.object_id_s;
-                                        element.directory = user.directory_name_s;
-                                        $scope.userData.selectedAuthorized.push(element);
-                                    });
+                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
                                 }
                             }, function() {
                                 console.log("error");
@@ -346,4 +309,13 @@ angular.module('admin').controller(
                         }
                     });
 
+                    $scope.fillList = function(listToFill, data) {
+                        _.forEach(data, function(obj) {
+                            var element = {};
+                            element.name = obj.name;
+                            element.key = obj.object_id_s;
+                            element.directory = obj.directory_name_s;
+                            listToFill.push(element);
+                        });
+                    };
                 } ]);

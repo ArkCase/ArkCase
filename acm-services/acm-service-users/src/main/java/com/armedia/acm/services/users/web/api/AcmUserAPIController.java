@@ -70,7 +70,7 @@ public class AcmUserAPIController extends SecureLdapController
     @ResponseBody
     public String getNUsers(Authentication auth,
             @RequestParam(value = "fq", required = false) String searchFilter,
-            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
+            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,

@@ -53,6 +53,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
         solr.setAdditionalProperty("company_s", in.getCompany());
         solr.setAdditionalProperty("title_s", in.getTitle());
         solr.setAdditionalProperty("name_partial", in.getFullName());
+        solr.setAdditionalProperty("name_lcs", in.getFullName());
 
         // TODO find a way to add Organization
         // TODO find a way to add Application Title
@@ -76,6 +77,7 @@ public class UserToSolrTransformer implements AcmObjectToSolrDocTransformer<AcmU
 
         solr.setStatus_s(in.getUserState().name());
         solr.setAdditionalProperty("name_partial", in.getFullName());
+        solr.setAdditionalProperty("name_lcs", in.getFullName());
 
         return solr;
     }

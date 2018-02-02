@@ -1,9 +1,9 @@
 <form class="form-inline" ng-submit="filterObjects('Choose User')">
-    <div class="form-group">
-        <input type="text" class="form-control" ng-model="filterWord" ng-change="onChangeFilterWord()" pattern=".{2,}"
-                title="Error, 2 characters required.">
-    </div>
-    <button type="submit" class="btn btn-default" ng-disabled="noFilterData">
+    <button type="submit" class="btn btn-default col-xs-4" ng-disabled="noFilterData">
         <span class="glyphicon glyphicon-search"></span> Search
     </button>
+    <div class="form-group pull-right col-xs-8">
+        <input type="text" class="form-control filterWordInput" ng-model="filterWord" ng-change="onChangeFilterWord()"
+                pattern=".{2,}" title="Error, 2 characters required.">
+    </div>
 </form>
