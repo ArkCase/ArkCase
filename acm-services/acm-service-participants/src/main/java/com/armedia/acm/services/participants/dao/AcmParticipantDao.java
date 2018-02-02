@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
@@ -161,12 +162,11 @@ public class AcmParticipantDao extends AcmAbstractDao<AcmParticipant>
 
     private String getIdFieldName(Class<?> clazz)
     {
-        for (Field field : clazz.getDeclaredFields())
+        List<Field> idFields = FieldUtils.getFieldsListWithAnnotation(clazz, Id.class);
+        // hopefully in this case there will only be one.
+        if (idFields != null && idFields.size() == 1)
         {
-            if (field.getAnnotation(Id.class) != null)
-            {
-                return field.getName();
-            }
+            return idFields.get(0).getName();
         }
 
         throw new RuntimeException("Didn't find primary key database column name for class: " + clazz.getSimpleName());
