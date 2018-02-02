@@ -28,17 +28,13 @@ angular.module('admin').controller(
                         "selectedAuthorized" : []
                     };
 
-                    $scope.$watch('appUsers', function() {
-                        $scope.userData.appUsers = $scope.appUsers;
-                    }, true);
-
                     LdapUserManagementService.getNUsers({}).then(function(response) {
                         _.forEach(response.data, function(user) {
                             var element = {};
                             element.name = user.name;
                             element.key = user.object_id_s;
                             element.directory = user.directory_name_s;
-                            $scope.appUsers.push(element);
+                            $scope.userData.appUsers.push(element);
                         });
                     });
 
@@ -54,7 +50,7 @@ angular.module('admin').controller(
                         $scope.lastSelectedUser = selectedUser;
                         currentAuthGroups = [];
 
-                        var allUnauthorizedGroups = LdapUserManagementService.getAllUnauthorizedGroups(data);
+                        var allUnauthorizedGro5ups = LdapUserManagementService.getAllUnauthorizedGroups(data);
                         var allAuthorizedGroups = LdapUserManagementService.getAllAuthorizedGroups(data);
 
                         $q.all([ allUnauthorizedGroups, allAuthorizedGroups ]).then(function(result) {
@@ -169,7 +165,7 @@ angular.module('admin').controller(
                                     element.name = response.data.fullName;
                                     element.key = response.data.userId;
                                     element.directory = response.data.userDirectoryName;
-                                    $scope.appUsers.push(element);
+                                    $scope.userData.appUsers.push(element);
 
                                     //add the new user to cache store
                                     var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
@@ -236,7 +232,7 @@ angular.module('admin').controller(
                             });
                             cacheUsers.remove(cacheKeyUser);
 
-                            $scope.appUsers = _.reject($scope.appUsers, function(element) {
+                            $scope.userData.appUsers = _.reject($scope.userData.appUsers, function(element) {
                                 return element.key === selectedUser.key;
                             });
 
@@ -250,16 +246,16 @@ angular.module('admin').controller(
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 20 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
-                                $scope.appUsers = [];
+                                $scope.userData.appUsers = [];
                                 if (!Util.isEmpty(response.data)) {
-                                    $scope.fillList($scope.appUsers, response.data);
+                                    $scope.fillList($scope.userData.appUsers, response.data);
                                 }
                             });
                         } else {
                             LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
-                                $scope.appUsers = [];
+                                $scope.userData.appUsers = [];
                                 if (!Util.isEmpty(response.data)) {
-                                    $scope.fillList($scope.appUsers, response.data);
+                                    $scope.fillList($scope.userData.appUsers, response.data);
                                 }
                             }, function() {
                                 console.log("error");
