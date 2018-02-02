@@ -203,7 +203,7 @@ angular.module('services').factory(
                             cacheListStoreName = 'ComplaintList';
                         }
                         if (objectType == 'DOC_REPO') {
-                            cacheListStoreName = 'DocumentRepositoryInfo';
+                            cacheListStoreName = 'DocumentRepositoryList';
                         }
                         if (objectType == 'TASK') {
                             cacheListStoreName = 'TaskList';
