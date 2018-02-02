@@ -31,7 +31,7 @@ public interface AcmUserService
     List<String> extractIdsFromUserList(List<AcmUser> users);
 
     /**
-     * Retrieve all valid USERS
+     * Retrieve filtered valid USERS by searchFilter
      *
      * @param auth,
      *            searchFilter, sortBy, sortDirection, startRow, maxRows

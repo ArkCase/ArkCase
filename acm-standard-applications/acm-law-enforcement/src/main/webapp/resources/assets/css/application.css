@@ -1582,3 +1582,7 @@ a.primary {
     height: 30px;
     opacity: 1 !important;
 }
+
+.filterWordInput {
+    width: 100% !important;
+}

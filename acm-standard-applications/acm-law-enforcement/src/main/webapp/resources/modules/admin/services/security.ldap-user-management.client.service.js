@@ -16,14 +16,6 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         getNUsers : getNUsers
     });
 
-    /*
-     *
-     * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     * Description for all new endpoints
-     * @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-     *
-     * */
-
     function queryGroupsByDirectory(directory, n) {
         return $http({
             method : 'GET',
@@ -44,6 +36,20 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         });
     }
 
+    /**
+     * @ngdoc method
+     * @name getFilteredUnauthorizedGroups
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Filtered by: filterWord
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *
+     * @returns List of filtered authorized objects(groups)
+     */
     function getFilteredAuthorizedGroups(data) {
         return $http({
             method : 'GET',
@@ -56,6 +62,19 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         });
     }
 
+    /**
+     * @ngdoc method
+     * @name getAllAuthorizedGroups
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *
+     * @returns List of all authorized objects(groups)
+     */
     function getAllAuthorizedGroups(data) {
         return $http({
             method : 'GET',
@@ -67,6 +86,20 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         });
     }
 
+    /**
+     * @ngdoc method
+     * @name getFilteredUnauthorizedGroups
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Filtered by: filterWord
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *
+     * @returns List of filtered unauthorized objects(groups)
+     */
     function getFilteredUnauthorizedGroups(data) {
         return $http({
             method : 'GET',
@@ -79,6 +112,19 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         });
     }
 
+    /**
+     * @ngdoc method
+     * @name getAllUnauthorizedGroups
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *
+     * @returns List of all unauthorized objects(groups)
+     */
     function getAllUnauthorizedGroups(data) {
         return $http({
             method : 'GET',
@@ -130,12 +176,15 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     /**
      * @ngdoc method
      * @name getFilteredUsersByWord
-     * @methodOf services.service:LookupService
+     * @methodOf services.service:Admin.LdapUserManagementService
      *
      * @description
-     * Filtered list 20 users from start position start POUBAV DESCRIPTION + IME NA METHOD!!!!!
+     * Filtered list of users:
+     *      Filtered by: filterWord
+     *      Start position: 0
+     *      End position: n
      *
-     * @returns {Object} An object returned by $resource
+     * @returns List of objects(users)
      */
     function getFilteredUsersByWord(data) {
         var url = 'api/latest/ldap/getFilteredUsers/search';
@@ -153,13 +202,14 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     /**
      * @ngdoc method
      * @name getNUsers
-     * @methodOf services.service:LookupService
+     * @methodOf services.service:Admin.LdapUserManagementService
      *
      * @description
-     * List of N users from start position 0 to end possition n POUBAV DESCRIPTION + IME NA METHOD!!!!!
-     * Default n is 20
+     * List of N users:
+     *      Start position: 0
+     *      End position: n
      *
-     * @returns {Object} An object returned by $resource
+     * @returns List of objects(users)
      */
     function getNUsers(data) {
         var url = 'api/latest/ldap/getNUsers/search';

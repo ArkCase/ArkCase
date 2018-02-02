@@ -8,7 +8,6 @@ angular
                         '$q',
                         '$compile',
                         'MessageService',
-                        '$http',
                         function($q, $compile, messageService) {
                             return {
                                 restrict : 'E',
@@ -219,7 +218,6 @@ angular
 
                                     scope.addLdapUser = function(event) {
                                         var node = $.ui.fancytree.getNode(event);
-
                                         scope.onAddLdapMember(node.data).then(function(member) {
                                             node.setExpanded().then(function() {
                                                 node.addChildren(member);
