@@ -107,6 +107,19 @@ angular.module('directives').directive('objectAuthorizationRoles',
                         }
                     };
 
+                    //unauthorize button is clicked
+                    scope.unAuthorize = function() {
+                        //don't do anything if array null or empty
+                        if (scope.selectedAuthorized && scope.selectedAuthorized.length > 0) {
+                            angular.forEach(scope.selectedAuthorized, function(sel) {
+                                var indexOf = scope.authorized.indexOf(sel);
+                                scope.authorized.splice(indexOf, 1);
+                                scope.notAuthorized.push(sel);
+                            });
+                            scope.authRoleChange();
+                        }
+                    };
+
                     //object is selected event, call callback function
                     scope.selectObject = function() {
                         scope.authorized = [];
