@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,6 +50,7 @@ public class FileDownloadAPIController implements ApplicationEventPublisherAware
 
     private ObjectConverter objectConverter;
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/download", method = RequestMethod.GET)
     @ResponseBody
     public void downloadFileById(@RequestParam(value = "inline", required = false, defaultValue = "false") boolean inline,

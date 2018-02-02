@@ -164,6 +164,7 @@ public class MergeCaseServiceImpl implements MergeCaseService
             participants.add(addedAssignee);
             target.setParticipants(participants);
         }
+        target.getParticipants().forEach(participant -> participant.setReplaceChildrenParticipant(true));
     }
 
     private boolean hasBeenMerged(CaseFile source)

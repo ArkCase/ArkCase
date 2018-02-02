@@ -22,14 +22,14 @@ public abstract class AcmAbstractDao<T>
         return saved;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public T find(Long id)
     {
         T found = em.find(getPersistenceClass(), id);
         return found;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public List<T> findAll()
     {
         TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e", getPersistenceClass());
@@ -44,7 +44,7 @@ public abstract class AcmAbstractDao<T>
      *            column name (entity field name) to sort by
      * @return list of entities, sorted
      */
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public List<T> findAllOrderBy(String column)
     {
         TypedQuery<T> allRecords = em.createQuery("SELECT e FROM " + getPersistenceClass().getSimpleName() + " e order by e." + column,
@@ -53,7 +53,7 @@ public abstract class AcmAbstractDao<T>
         return retval;
     }
 
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.SUPPORTS)
     public List<T> findModifiedSince(Date lastModified, int startRow, int pageSize)
     {
         TypedQuery<T> sinceWhen = getEm().createQuery("SELECT e " + "FROM " + getPersistenceClass().getSimpleName() + " e "

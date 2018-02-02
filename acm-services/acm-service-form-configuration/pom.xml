@@ -98,6 +98,11 @@
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.xmlunit</groupId>
+            <artifactId>xmlunit-core</artifactId>
+        </dependency>
+
         <!-- testing -->
         <dependency>
             <groupId>junit</groupId>

@@ -1,9 +1,12 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.exception.AcmFolderException;
+import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.AcmFolderConstants;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
@@ -12,6 +15,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Created by marjan.stefanoski on 02.04.2015.
  */
@@ -33,9 +41,11 @@ import javax.servlet.http.HttpSession;
 public class CreateFolderByPathAPIController
 {
 
+    private AcmContainerDao containerDao;
     private AcmFolderService folderService;
     private EcmFileService ecmFileService;
     private FolderAndFilesUtils folderAndFilesUtils;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     private FolderEventPublisher folderEventPublisher;
     private FileEventPublisher fileEventPublisher;
@@ -44,15 +54,12 @@ public class CreateFolderByPathAPIController
 
     @RequestMapping(value = "/createFolderByPath", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmFolder addNewFolder(
-            @RequestParam("targetObjectType") String targetObjectType,
-            @RequestParam("targetObjectId") Long targetObjectId,
-            @RequestParam("newPath") String newPath,
+    public AcmFolder addNewFolder(@RequestParam("targetObjectType") String targetObjectType,
+            @RequestParam("targetObjectId") Long targetObjectId, @RequestParam("newPath") String newPath,
             @RequestParam(value = "docIds", required = false) String docIds,
-            @RequestParam(value = "isCopy", required = false, defaultValue = "false") boolean isCopy,
-            Authentication authentication,
-            HttpSession session)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
+            @RequestParam(value = "isCopy", required = false, defaultValue = "false") boolean isCopy, Authentication authentication,
+            HttpSession session) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException,
+            AcmFolderException, AcmAccessControlException
     {
         /**
          * This API is documented in ark-document-management.raml. If you update the API, also update the RAML.
@@ -67,6 +74,27 @@ public class CreateFolderByPathAPIController
 
         try
         {
+            List<Long> docLongIds = Arrays.asList(docIds.split(";")).stream().map(Long::parseLong).collect(Collectors.toList());
+            for (Long docId : docLongIds)
+            {
+                if (!getArkPermissionEvaluator().hasPermission(authentication, docId, "FILE", "read|group-read|write|group-write"))
+                {
+                    throw new AcmAccessControlException(Arrays.asList(""),
+                            "The user {" + authentication.getName() + "} is not allowed to read from file with id=" + docId);
+                }
+            }
+
+            AcmContainer container = getContainerDao().findFolderByObjectTypeAndId(targetObjectType, targetObjectId);
+            if (container == null)
+            {
+                throw new AcmObjectNotFoundException(targetObjectType, targetObjectId, "Container object not found", null);
+            }
+            if (!getArkPermissionEvaluator().hasPermission(authentication, container.getFolder().getId(), "FOLDER", "write|group-write"))
+            {
+                throw new AcmAccessControlException(Arrays.asList(""), "The user {" + authentication.getName()
+                        + "} is not allowed to write to target folder with id=" + container.getFolder().getId());
+            }
+
             AcmFolder newFolder = getFolderService().addNewFolderByPath(targetObjectType, targetObjectId, newPath);
             if (log.isInfoEnabled())
             {
@@ -105,13 +133,8 @@ public class CreateFolderByPathAPIController
         }
     }
 
-    private void copyDocumentsToNewFolder(
-            String targetObjectType,
-            Long targetObjectId,
-            String docIds,
-            AcmFolder newFolder,
-            Authentication auth,
-            String ipAddress)
+    private void copyDocumentsToNewFolder(String targetObjectType, Long targetObjectId, String docIds, AcmFolder newFolder,
+            Authentication auth, String ipAddress)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
         if (docIds != null)
@@ -137,13 +160,8 @@ public class CreateFolderByPathAPIController
         }
     }
 
-    private void moveDocumentsToNewFolder(
-            String targetObjectType,
-            Long targetObjectId,
-            String docIds,
-            AcmFolder newFolder,
-            Authentication auth,
-            String ipAddress)
+    private void moveDocumentsToNewFolder(String targetObjectType, Long targetObjectId, String docIds, AcmFolder newFolder,
+            Authentication auth, String ipAddress)
             throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmCreateObjectFailedException
     {
         if (docIds != null)
@@ -217,5 +235,25 @@ public class CreateFolderByPathAPIController
     public void setFileEventPublisher(FileEventPublisher fileEventPublisher)
     {
         this.fileEventPublisher = fileEventPublisher;
+    }
+
+    public ArkPermissionEvaluator getArkPermissionEvaluator()
+    {
+        return arkPermissionEvaluator;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
+    }
+
+    public AcmContainerDao getContainerDao()
+    {
+        return containerDao;
+    }
+
+    public void setContainerDao(AcmContainerDao containerDao)
+    {
+        this.containerDao = containerDao;
     }
 }

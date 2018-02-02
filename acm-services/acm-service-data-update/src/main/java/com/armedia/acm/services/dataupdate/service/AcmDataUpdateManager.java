@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -35,7 +34,6 @@ public class AcmDataUpdateManager implements ApplicationListener<ContextRefreshe
     private static final Logger log = LoggerFactory.getLogger(AcmDataUpdateManager.class);
 
     @Override
-    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event)
     {
         boolean isRootContext = ((ApplicationContext) event.getSource()).getParent() == null;

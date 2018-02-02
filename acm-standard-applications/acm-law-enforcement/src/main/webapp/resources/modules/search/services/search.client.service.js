@@ -62,7 +62,7 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
          * @methodOf services:Search.SearchService
          *
          * @description
-         * Performs "Faceted Search" REST call by supplying default filters
+         * Performs "Faceted Search" REST call by supplying default filters. The query will be Solr escaped on the server.
          *
          * @param {String} query Query to send to the server
          * @returns {HttpPromise} Future info about faceted search
@@ -75,6 +75,25 @@ angular.module('search').factory('SearchService', [ '$resource', 'UtilService', 
             transformResponse : Util.transformSearchResponse
         },
 
+        /**
+         * @ngdoc method
+         * @name unescapedQueryFilteredSearch
+         * @methodOf services:Search.SearchService
+         *
+         * @description
+         * Performs "Faceted Search" REST call by supplying default filters. The query will NOT be Solr escaped on the server.
+         *
+         * @param {String} unescapedQuery Query to send to the server
+         * @returns {HttpPromise} Future info about faceted search
+         */
+        unescapedQueryFilteredSearch : {
+            method : 'GET',
+            url : "api/v1/plugin/search/facetedSearch?unescapedQuery=:unescapedQuery",
+            cache : false,
+            isArray : false,
+            transformResponse : Util.transformSearchResponse
+        },
+        
         /**
          * @ngdoc method
          * @name queryAutoSuggestSearch
