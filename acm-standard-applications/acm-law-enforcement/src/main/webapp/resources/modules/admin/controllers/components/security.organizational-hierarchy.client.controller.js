@@ -166,7 +166,7 @@ angular.module('admin').controller(
                     $scope.onAddExistingSubGroup = function(parent) {
                         var deferred = $q.defer();
                         var excludeAncestorGroups = '';
-                        if(parent.ascendants_id_ss && parent.ascendants_id_ss.length > 0){
+                        if (parent.ascendants_id_ss && parent.ascendants_id_ss.length > 0) {
                             excludeAncestorGroups = " OR " + parent.ascendants_id_ss.join(' OR ');
                         }
                         var params = {
@@ -491,7 +491,7 @@ angular.module('admin').controller(
                         memberGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(groupId);
 
                         //find child users
-                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId.replace(/\./g, '_002E_'), 'VALID');
+                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId, 'VALID');
 
                         $q.all([ memberGroupsPromise, memberUsersPromise ]).then(function(data) {
                             var memberGroups = _.get(data[0], 'data.response.docs');

@@ -1,4 +1,4 @@
-import com.armedia.acm.services.search.util.SolrUtil
+import com.armedia.acm.services.search.util.AcmSolrUtil
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 
@@ -11,7 +11,7 @@ String dataAccessFilter = "{!frange l=1}sum(if(exists(protected_object_b), 0, 1)
 
 Authentication authentication = message.getInboundProperty("acmUser");
 
-String safeUserId = escapeCharacters(authentication.getName());
+String safeUserId = encodeCharacters(authentication.getName());
 
 // include records where current user is directly on allow_acl_ss
 dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
@@ -21,7 +21,7 @@ String denyAccessFilter = "-deny_acl_ss:" + safeUserId;
 
 for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = escapeCharacters(authName);
+    String safeAuthName = encodeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
     // exclude records where current user is in a locked-out group
@@ -43,7 +43,7 @@ childObjectDacFilter += " OR allow_acl_ss:" + safeUserId;
 
 for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = escapeCharacters(authName);
+    String safeAuthName = encodeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " OR allow_acl_ss:" + safeAuthName;
 }
@@ -52,7 +52,7 @@ for (GrantedAuthority granted : authentication.getAuthorities()) {
 childObjectDacFilter += " ) AND -deny_acl_ss:" + safeUserId;
 for (GrantedAuthority granted : authentication.getAuthorities()) {
     String authName = granted.getAuthority();
-    String safeAuthName = escapeCharacters(authName);
+    String safeAuthName = encodeCharacters(authName);
     // include records where current user is in a group on allow_acl_ss
     childObjectDacFilter += " AND -deny_acl_ss:" + safeAuthName;
 }
@@ -80,11 +80,8 @@ if (filterSubscriptionEvents) {
     message.setInboundProperty("isSubscribed", "");
 }
 
-def escapeCharacters(toBeEscaped) {
-    if (SolrUtil.hasSpecialCharacters(toBeEscaped)) {
-        toBeEscaped = "\"" + toBeEscaped + "\"";
-    }
-    toBeEscaped
+def encodeCharacters(toBeEscaped) {
+    return AcmSolrUtil.encodeSpecialCharactersForACL(toBeEscaped)
 }
 
 return payload;
