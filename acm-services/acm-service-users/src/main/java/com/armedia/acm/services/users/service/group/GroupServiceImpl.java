@@ -6,7 +6,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
-import com.armedia.acm.services.search.util.SolrUtil;
+import com.armedia.acm.services.search.util.AcmSolrUtil;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -118,7 +118,7 @@ public class GroupServiceImpl implements GroupService
         }).orElse("");
 
         String query = String.format("object_type_s:USER AND groups_id_ss:%s", buildSafeGroupNameForSolrSearch(groupName));
-        query = query.replace("_002E_", ".");
+        // query = query.replace("_002E_", ".");
         query += statusQuery;
 
         log.debug("Executing query for users in group: [{}]", query);
@@ -127,7 +127,7 @@ public class GroupServiceImpl implements GroupService
 
     private String buildSafeGroupNameForSolrSearch(String groupName)
     {
-        if (SolrUtil.hasSpecialCharacters(groupName))
+        if (AcmSolrUtil.hasSpecialCharacters(groupName))
         {
             groupName = "\"" + groupName + "\"";
         }
