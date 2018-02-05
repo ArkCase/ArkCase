@@ -11,57 +11,62 @@ angular.module('admin').controller(
                 'LookupService',
                 'MessageService',
                 'Acm.StoreService',
-                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store) {
+                'UtilService',
+                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util) {
 
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
 
+                    $scope.showFilter = true;
                     $scope.appUsers = [];
                     $scope.appGroups = [];
 
-                    LookupService.getUsers().then(function(data) {
-                        _.forEach(data, function(user) {
+                    $scope.userData = {
+                        "appUsers" : $scope.appUsers,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
+
+                    LdapUserManagementService.getNUsers({}).then(function(response) {
+                        _.forEach(response.data, function(user) {
                             var element = {};
                             element.name = user.name;
                             element.key = user.object_id_s;
                             element.directory = user.directory_name_s;
-                            $scope.appUsers.push(element);
+                            $scope.userData.appUsers.push(element);
                         });
                     });
 
+                    $scope.lastSelectedUser = "";
                     var selectedUser;
                     var currentAuthGroups;
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
+                        var data = {};
+                        data.member_id = selectedObject;
                         selectedUser = selectedObject;
+                        $scope.lastSelectedUser = selectedUser;
                         currentAuthGroups = [];
 
-                        var ldapGroupsPromise = LdapUserManagementService.queryGroupsByDirectory(selectedObject.directory);
-                        var adHocGroupsPromise = LdapUserManagementService.queryAdhocGroups();
+                        var allUnauthorizedGro5ups = LdapUserManagementService.getAllUnauthorizedGroups(data);
+                        var allAuthorizedGroups = LdapUserManagementService.getAllAuthorizedGroups(data);
 
-                        $q.all([ ldapGroupsPromise, adHocGroupsPromise ]).then(function(result) {
-                            // merge LDAP and Ad-hoc groups into a single structure
-                            var groups = _.union(result[0].data.response.docs, result[1].data.response.docs);
+                        $q.all([ allUnauthorizedGroups, allAuthorizedGroups ]).then(function(result) {
+                            _.forEach(result[0].data.response.docs, function(group) {
+                                var authObject = {};
+                                authObject.key = group.name;
+                                authObject.name = group.name;
+                                notAuthorized.push(authObject);
+                            });
 
-                            _.forEach(groups, function(group) {
-                                _.forEach(group.member_id_ss, function(groupMember) {
-                                    if (groupMember === selectedObject.key) {
-                                        var authObject = {};
-                                        authObject.key = group.name;
-                                        authObject.name = group.name;
-                                        authorized.push(authObject);
-                                        currentAuthGroups.push(authObject.key);
-                                    }
-                                });
-                                if (currentAuthGroups.indexOf(group.name) === -1) {
-                                    //we need to create wrapper to provide a name property
-                                    var notAuthorizedRole = {};
-                                    notAuthorizedRole.key = group.name;
-                                    notAuthorizedRole.name = group.name;
-                                    notAuthorized.push(notAuthorizedRole);
-                                }
+                            _.forEach(result[1].data.response.docs, function(group) {
+                                var authObject = {};
+                                authObject.key = group.name;
+                                authObject.name = group.name;
+                                authorized.push(authObject);
+                                currentAuthGroups.push(authObject.key);
                             });
                         });
                     }
@@ -160,7 +165,7 @@ angular.module('admin').controller(
                                     element.name = response.data.fullName;
                                     element.key = response.data.userId;
                                     element.directory = response.data.userDirectoryName;
-                                    $scope.appUsers.push(element);
+                                    $scope.userData.appUsers.push(element);
 
                                     //add the new user to cache store
                                     var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
@@ -227,7 +232,7 @@ angular.module('admin').controller(
                             });
                             cacheUsers.remove(cacheKeyUser);
 
-                            $scope.appUsers = _.reject($scope.appUsers, function(element) {
+                            $scope.userData.appUsers = _.reject($scope.userData.appUsers, function(element) {
                                 return element.key === selectedUser.key;
                             });
 
@@ -235,5 +240,80 @@ angular.module('admin').controller(
                         }, function() {
                             MessageService.errorAction();
                         });
-                    }
+                    };
+
+                    $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getNUsers(data).then(function(response) {
+                                $scope.userData.appUsers = [];
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.fillList($scope.userData.appUsers, response.data);
+                                }
+                            });
+                        } else {
+                            LdapUserManagementService.getFilteredUsersByWord(data).then(function(response) {
+                                $scope.userData.appUsers = [];
+                                if (!Util.isEmpty(response.data)) {
+                                    $scope.fillList($scope.userData.appUsers, response.data);
+                                }
+                            }, function() {
+                                console.log("error");
+                            });
+                        }
+                    });
+
+                    $scope.$bus.subscribe('UnauthorizedUserManagementFilter', function(data) {
+                        data.member_id = $scope.lastSelectedUser;
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getAllUnauthorizedGroups(data).then(function(response) {
+                                $scope.userData.selectedNotAuthorized = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
+                                }
+                            });
+                        } else {
+                            LdapUserManagementService.getFilteredUnauthorizedGroups(data).then(function(response) {
+                                $scope.userData.selectedNotAuthorized = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
+                                }
+                            }, function() {
+                                console.log("error");
+                            });
+                        }
+                    });
+
+                    $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
+                        data.member_id = $scope.lastSelectedUser;
+                        if (Util.isEmpty(data.filterWord)) {
+                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            LdapUserManagementService.getAllAuthorizedGroups(data).then(function(response) {
+                                $scope.userData.selectedAuthorized = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
+                                }
+                            });
+                        } else {
+                            LdapUserManagementService.getFilteredAuthorizedGroups(data).then(function(response) {
+                                $scope.userData.selectedAuthorized = [];
+                                if (!Util.isEmpty(response.data.response.docs)) {
+                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
+                                }
+                            }, function() {
+                                console.log("error");
+                            });
+                        }
+                    });
+
+                    $scope.fillList = function(listToFill, data) {
+                        _.forEach(data, function(obj) {
+                            var element = {};
+                            element.name = obj.name;
+                            element.key = obj.object_id_s;
+                            element.directory = obj.directory_name_s;
+                            listToFill.push(element);
+                        });
+                    };
                 } ]);

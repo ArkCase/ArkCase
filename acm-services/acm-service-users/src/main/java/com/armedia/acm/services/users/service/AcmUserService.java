@@ -2,6 +2,9 @@ package com.armedia.acm.services.users.service;
 
 import com.armedia.acm.services.users.model.AcmUser;
 
+import org.mule.api.MuleException;
+import org.springframework.security.core.Authentication;
+
 import java.util.List;
 
 /**
@@ -26,4 +29,24 @@ public interface AcmUserService
      * @return List of users id's
      */
     List<String> extractIdsFromUserList(List<AcmUser> users);
+
+    /**
+     * Retrieve filtered valid USERS by searchFilter
+     *
+     * @param auth,
+     *            searchFilter, sortBy, sortDirection, startRow, maxRows
+     * @return USER groups
+     */
+    String getFilteredByNameUsers(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException;
+
+    /**
+     * Retrieve n valid USERS
+     *
+     * @param auth,
+     *            sortBy, sortDirection, startRow, maxRows
+     * @return USER groups
+     */
+    String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
+            throws MuleException;
 }
