@@ -13,6 +13,9 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +32,22 @@ public class CSVReportGenerator extends ReportGenerator
     private static final String REPLACE_QUOTES_PATTERN = "\"";
     private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
     private static final String QUOTES_CONSTANT = "\"";
+
+    /**
+     * ISO 8601 Date/Time pattern used by Solr (yyyy-MM-ddTHH:mm:ssZ).
+     */
+    private static final String ISO8601_PATTERN = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$";
+
+    /**
+     * Formatter for parsing Solr *_tdt fields.
+     */
+    private static final DateTimeFormatter SOLR_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+    /**
+     * Formatter for formatting dates and times so Excel recognizes them.
+     */
+    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -65,7 +84,22 @@ public class CSVReportGenerator extends ReportGenerator
 
                     if (value instanceof String)
                     {
-                        sb.append(purifyForCSV(data.getString(field)));
+                        String stringValue = data.getString(field);
+                        // check if this is Solr Date/Time field in expected format
+                        if (field.endsWith("_tdt") && stringValue.matches(ISO8601_PATTERN))
+                        {
+                            // transform into Excel-recognizable format
+                            try
+                            {
+                                LocalDateTime localDateTime = LocalDateTime.parse(stringValue, SOLR_DATE_TIME_PATTERN);
+                                stringValue = localDateTime.format(EXCEL_DATE_TIME_PATTERN);
+                            }
+                            catch (DateTimeException e)
+                            {
+                                log.warn("[{}] cannot be parsed as Solr date/time value, exporting as it is", stringValue);
+                            }
+                        }
+                        sb.append(purifyForCSV(stringValue));
                     }
                     else if (value instanceof Integer || value instanceof Long)
                     {

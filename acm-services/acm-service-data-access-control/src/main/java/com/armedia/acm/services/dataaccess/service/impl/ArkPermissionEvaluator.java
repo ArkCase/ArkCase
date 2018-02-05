@@ -18,6 +18,7 @@ import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.core.Authentication;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -129,7 +130,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             return true;
         }
 
-        return evaluateAccess(authentication, id, targetType, (String) permission);
+        return evaluateAccess(authentication, id, targetType, Arrays.asList(((String) permission).split("\\|")));
     }
 
     @Override
@@ -139,30 +140,40 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         throw new UnsupportedOperationException("Checking permissions on an object reference is not supported");
     }
 
-    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, String permission)
+    private boolean evaluateAccess(Authentication authentication, Long objectId, String objectType, List<String> permissions)
     {
-        if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(permission))
+        if (permissions.contains(DataAccessControlConstants.ACCESS_LEVEL_READ))
         {
             // they want read, and we already know whether they can read, so we're done
             log.trace("Read access requested - returning read access level");
             return true;
         }
 
-        boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
-                authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
-
-        if (hasAccessDirectlyOrViaDefaultUser)
+        for (String permission : permissions)
         {
-            // we know they can read it, we're all set.
-            log.trace("Has access directly or via default user");
-            return hasAccessDirectlyOrViaDefaultUser;
+            boolean hasAccessDirectlyOrViaDefaultUser = getParticipantDao().hasObjectAccess(
+                    authentication.getName(), objectId, objectType, permission, DataAccessControlConstants.ACCESS_GRANT);
+
+            if (hasAccessDirectlyOrViaDefaultUser)
+            {
+                // we know they can read it, we're all set.
+                log.trace("Has access directly or via default user");
+                return hasAccessDirectlyOrViaDefaultUser;
+            }
+
+            boolean hasAccessViaGroup = hasObjectAccessViaGroup(authentication.getName(), objectId, objectType,
+                    permission, DataAccessControlConstants.ACCESS_GRANT);
+
+            if (hasAccessViaGroup)
+            {
+                log.trace("Has access via a group");
+                return hasAccessViaGroup;
+            }
+
         }
 
-        boolean hasAccessViaGroup = hasObjectAccessViaGroup(authentication.getName(), objectId, objectType,
-                permission, DataAccessControlConstants.ACCESS_GRANT);
-
-        log.trace("Returning whether they have access via a group - " + hasAccessViaGroup);
-        return hasAccessViaGroup;
+        log.trace("User has no access to object");
+        return false;
     }
 
     private boolean hasObjectAccessViaGroup(String principal, Long objectId, String objectType,

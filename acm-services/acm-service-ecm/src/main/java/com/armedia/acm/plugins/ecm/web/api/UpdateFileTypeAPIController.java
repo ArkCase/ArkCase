@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,13 +34,11 @@ public class UpdateFileTypeAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}/type/{fileType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile updateFileType(
-            @PathVariable("fileId") Long fileId,
-            @PathVariable("fileType") String fileType,
-            Authentication authentication,
-            HttpSession session) throws AcmObjectNotFoundException
+    public EcmFile updateFileType(@PathVariable("fileId") Long fileId, @PathVariable("fileType") String fileType,
+            Authentication authentication, HttpSession session) throws AcmObjectNotFoundException
     {
 
         log.debug("Updating file type to '{}'", fileType);
@@ -56,10 +55,8 @@ public class UpdateFileTypeAPIController
 
     @RequestMapping(value = "/file/bulk/type/{fileType}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public List<EcmFile> bulkUpdateFileType(@RequestBody List<Long> fileIds,
-            @PathVariable("fileType") String fileType,
-            Authentication authentication,
-            HttpSession session)
+    public List<EcmFile> bulkUpdateFileType(@RequestBody List<Long> fileIds, @PathVariable("fileType") String fileType,
+            Authentication authentication, HttpSession session)
     {
 
         log.debug("Updating file type to '{}' for multiple files.", fileType);

@@ -4084,7 +4084,9 @@ angular
                                                             $scope.width = (params.w + 200) + "px";
                                                             $scope.widthDialogBox = (params.w + 20) + "px";
                                                             $scope.frevvoFormUrl = params.frevvoFormUrl;
+
                                                             $scope.iframeLoaded = function() {
+                                                                document.getElementsByClassName("modal-" + (params.h + 200) + "px")[0].style.width = $scope.width;
                                                                 startCheckFrevvoSubmission();
                                                                 startInitFrevvoMessaging();
                                                             };
@@ -4240,7 +4242,7 @@ angular
                                                             }
                                                         } ],
                                                 animation : true,
-                                                size : 'lg',
+                                                size : (params.h + 200) + "px",
                                                 backdrop : 'static',
                                                 resolve : {
                                                     params : function() {

@@ -20,7 +20,7 @@ public interface AccessControlRuleChecker
      * @param targetType
      *            target type
      * @param permission
-     *            required permission
+     *            required permissions, separated with "|"
      * @param solrDocument
      *            Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise

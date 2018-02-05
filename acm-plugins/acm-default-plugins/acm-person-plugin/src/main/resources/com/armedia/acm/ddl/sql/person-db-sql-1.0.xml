@@ -1,0 +1,12 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm_person-update-empty-given-family-name" author="bojan.milenkoski">
+        <sql>UPDATE acm_person SET cm_given_name='update-empty-given-name' where cm_given_name=''</sql>
+        <sql>UPDATE acm_person SET cm_family_name='update-empty-family-name' where cm_family_name=''</sql>
+    </changeSet>
+
+</databaseChangeLog>
