@@ -49,7 +49,7 @@ public class FacetedSearchAPIController
     @RequestMapping(value = "/facetedSearch", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public String mainNotFilteredFacetedSearch(
-            @RequestParam(value = "q", required = true) String q,
+            @RequestParam(value = "q", required = false) String q,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "500") int maxRows,
             @RequestParam(value = "filters", required = false, defaultValue = "") String[] filters,
@@ -59,13 +59,8 @@ public class FacetedSearchAPIController
             @RequestParam(value = "export", required = false) String export,
             @RequestParam(value = "reportName", required = false, defaultValue = "report") String reportName,
             @RequestParam(value = "titles", required = false) String[] exportTitles,
-            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery, // Part
-                                                                                                                // of
-                                                                                                                // the
-                                                                                                                // query
-                                                                                                                // to
-                                                                                                                // NOT
-                                                                                                                // ESCAPE
+            // Part of the query to NOT ESCAPE
+            @RequestParam(value = "unescapedQuery", required = false, defaultValue = "") String unescapedQuery,
             HttpServletResponse response,
             Authentication authentication) throws MuleException, UnsupportedEncodingException
     {
@@ -97,14 +92,17 @@ public class FacetedSearchAPIController
         String rowQueryParameters = facetKeys + filterQueries;
         String sort = sortSpec == null ? "" : sortSpec.trim();
 
-        q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
-        q = getFacetedSearchService().escapeQueryChars(q);
+        if (StringUtils.isNotEmpty(q))
+        {
+            q = URLDecoder.decode(q, SearchConstants.FACETED_SEARCH_ENCODING);
+            q = getFacetedSearchService().escapeQueryChars(q);
+        }
 
         // Needed workaround for BACTES, since there needs to be exceptions the special characters that get escaped
         if (StringUtils.isNotEmpty(unescapedQuery))
         {
             unescapedQuery = URLDecoder.decode(unescapedQuery, SearchConstants.FACETED_SEARCH_ENCODING);
-            q += unescapedQuery;
+            q = (q == null ? unescapedQuery : q + unescapedQuery);
         }
 
         String query = SearchConstants.CATCH_ALL_QUERY + q;
@@ -142,7 +140,7 @@ public class FacetedSearchAPIController
             try
             {
                 // Get the appropriate generator for the requested file type
-                ReportGenerator generator = (ReportGenerator) springContextHolder.getBeanByName(String.format("%sReportGenerator",
+                ReportGenerator generator = springContextHolder.getBeanByName(String.format("%sReportGenerator",
                         export.toLowerCase()), ReportGenerator.class);
                 String content = generator.generateReport(exportFields, exportTitles, res);
                 export(generator, content, response, reportName);

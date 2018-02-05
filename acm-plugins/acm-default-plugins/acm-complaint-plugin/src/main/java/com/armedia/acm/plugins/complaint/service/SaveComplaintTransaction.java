@@ -37,7 +37,9 @@ public class SaveComplaintTransaction
         pipelineContext.setIpAddress(ipAddress);
 
         return pipelineManager.executeOperation(complaint, pipelineContext, () -> {
+
             Complaint saved = complaintDao.save(complaint);
+
             log.info("Complaint saved '{}'", saved);
             return saved;
 

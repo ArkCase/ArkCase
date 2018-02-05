@@ -7,8 +7,8 @@ import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.io.FilenameUtils;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;

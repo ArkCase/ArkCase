@@ -73,6 +73,8 @@ public class ParticipantDaoIT
 
         dao.save(p);
 
+        entityManager.flush();
+
         boolean hasAccess = dao.hasObjectAccess(p.getParticipantLdapId(), objectId, objectType, "save", "grant");
 
         assertTrue(hasAccess);
@@ -90,6 +92,8 @@ public class ParticipantDaoIT
 
         dao.save(p);
 
+        entityManager.flush();
+
         boolean hasAccess = dao.hasObjectAccess("any-user", objectId, objectType, "save", "grant");
 
         assertTrue(hasAccess);
@@ -101,6 +105,8 @@ public class ParticipantDaoIT
     {
         AcmParticipant p = makeAcmParticipant("ACM_ADMINISTRATOR_DEV", "assignee", "grant", "read");
         dao.save(p);
+
+        entityManager.flush();
 
         boolean hasAccess = dao.hasObjectAccessViaGroup(
                 new HashSet<>(Arrays.asList(p.getParticipantLdapId())), objectId, objectType, "read", "grant");

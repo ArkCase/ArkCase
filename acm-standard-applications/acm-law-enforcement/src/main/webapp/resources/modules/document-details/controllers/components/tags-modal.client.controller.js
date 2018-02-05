@@ -53,6 +53,7 @@ angular.module('document-details').controller(
                                             tagToAdd.title_parseable = selectedTag.tags_s;
                                             tagToAdd.id = tagToAdd.id + '-TAG';
                                             $scope.tags.push(tagToAdd);
+                                            $scope.createdTags.push(tagToAdd);
                                         })
                             } else {
                                 messageService.info($translate.instant('cases.comp.tags.message.tagExists'));

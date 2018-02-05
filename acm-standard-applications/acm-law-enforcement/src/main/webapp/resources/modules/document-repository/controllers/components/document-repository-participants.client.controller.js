@@ -8,6 +8,7 @@ angular.module('document-repository').controller(
                     $scope.participantsInit = {
                         moduleId : 'document-repository',
                         componentId : 'participants',
+                        showReplaceChildrenParticipants: true,
                         retrieveObjectInfo : DocumentRepositoryInfoService.getDocumentRepositoryInfo,
                         validateObjectInfo : DocumentRepositoryInfoService.validateDocumentRepositoryInfo,
                         saveObjectInfo : DocumentRepositoryInfoService.saveDocumentRepository,

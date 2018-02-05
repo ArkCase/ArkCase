@@ -17,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -72,7 +73,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     /**
      * Check if particular user is granted access to a given object. This is accomplished with iterating over all
-     * configured AC entries until the first positive match
+     * configured AC entries until the first positive match. It only requires one permission to match, from the list of
+     * required permissions
      *
      * @param authentication
      *            authentication token
@@ -89,13 +91,19 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     @Override
     public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument)
     {
+        return isAccessGranted(authentication, targetId, targetType, Arrays.asList(permission.split("\\|")), solrDocument);
+    }
+
+    private boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions,
+            String solrDocument)
+    {
         if (accessControlRules == null || accessControlRules.getAccessControlRuleList() == null)
         {
             log.warn("Missing access control rules configuration");
             return false;
         }
         log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(),
-                permission, targetType, targetId);
+                StringUtils.join(permissions, ","), targetType, targetId);
         boolean granted = false;
 
         JSONObject solrJsonDocument = new JSONObject(solrDocument);
@@ -107,59 +115,66 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         // loop trough configured access control rules, break on first positive match
         for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
         {
-            // check if action name matches
-            if (permission == null || !permission.equals(accessControlRule.getActionName()))
+            for (String permission : permissions)
             {
-                log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
-                continue;
-            }
-            // check if target type matches
-            if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
-            {
-                log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
-                continue;
-            }
-            // check if target sub type matches (NOTE: it is optional in JSON rules structure)
-            if (accessControlRule.getObjectSubType() != null)
-            {
-                // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
-                // accessControlRules.json
-                String targetSubType = (String) targetObjectProperties.get("objectSubType");
-                if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                // check if action name matches
+                if (permission == null || !permission.equals(accessControlRule.getActionName()))
                 {
-                    log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                    log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
                     continue;
                 }
-            }
-            // check if "ALL" roles match
-            if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
-            {
-                // log entry created in checkRolesAll() method
-                continue;
-            }
-            // check if "ANY" roles match
-            if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
-            {
-                // log entry created in checkRolesAny() method
-                continue;
-            }
-            // all initial checks passed, proceed with checking required object properties
-            granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
+                // check if target type matches
+                if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
+                {
+                    log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
+                    continue;
+                }
+                // check if target sub type matches (NOTE: it is optional in JSON rules structure)
+                if (accessControlRule.getObjectSubType() != null)
+                {
+                    // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
+                    // accessControlRules.json
+                    String targetSubType = (String) targetObjectProperties.get("objectSubType");
+                    if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                    {
+                        log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                        continue;
+                    }
+                }
+                // check if "ALL" roles match
+                if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
+                {
+                    // log entry created in checkRolesAll() method
+                    continue;
+                }
+                // check if "ANY" roles match
+                if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
+                {
+                    // log entry created in checkRolesAny() method
+                    continue;
+                }
+                // all initial checks passed, proceed with checking required object properties
+                granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
 
-            // proceed with checking if user is any of required participant types
-            granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
+                // proceed with checking if user is any of required participant types
+                granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
 
+                if (granted)
+                {
+                    log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
+                            authentication.getName(), permission, targetType, targetId, accessControlRule);
+                    break;
+                }
+            }
             if (granted)
             {
-                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
-                        authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
         if (!granted)
         {
             log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(),
-                    permission, targetType, targetId);
+                    StringUtils.join(permissions, ","), targetType, targetId);
         }
         return granted;
     }
