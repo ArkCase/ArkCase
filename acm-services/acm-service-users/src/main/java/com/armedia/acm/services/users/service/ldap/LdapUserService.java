@@ -2,7 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
@@ -57,8 +57,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
 
     private ApplicationEventPublisher eventPublisher;
-
-    private AlfrescoLdapSyncer alfrescoLdapSyncer;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
@@ -159,7 +157,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
 
-        alfrescoLdapSyncer.initiateSync();
+        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser));
 
         return acmUser;
     }
@@ -395,12 +393,4 @@ public class LdapUserService implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    /**
-     * @param alfrescoLdapSyncer
-     *            the alfrescoLdapSyncer to set
-     */
-    public void setAlfrescoLdapSyncer(AlfrescoLdapSyncer alfrescoLdapSyncer)
-    {
-        this.alfrescoLdapSyncer = alfrescoLdapSyncer;
-    }
 }
