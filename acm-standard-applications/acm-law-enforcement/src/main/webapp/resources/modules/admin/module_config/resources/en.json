@@ -557,7 +557,8 @@
             "module.config": {
                 "title": "Module Configuration",
                 "btnDisabled": "Disabled",
-                "btnEnabled": "Enabled"
+                "btnEnabled": "Enabled",
+                "message": "No modules found in the system"
             },
             "userName.config": {
                 "title": "Username Display Configuration",
