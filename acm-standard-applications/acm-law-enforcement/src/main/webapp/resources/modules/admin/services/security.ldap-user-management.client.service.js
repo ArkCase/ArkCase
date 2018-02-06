@@ -55,7 +55,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/getFilteredAuthorizedGroups',
             params : {
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 q : data.member_id.key,
                 fq : data.filterWord
             }
@@ -80,7 +80,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/getAllAuthorizedGroups',
             params : {
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 q : data.member_id.key
             }
         });
@@ -105,7 +105,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/getFilteredUnauthorizedGroups',
             params : {
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 q : data.member_id.key,
                 fq : data.filterWord
             }
@@ -130,7 +130,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/getAllUnauthorizedGroups',
             params : {
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 q : data.member_id.key
             }
         });
@@ -193,7 +193,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : url,
             params : {
                 fq : data.filterWord,
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 start : 0
             }
         });
@@ -217,7 +217,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : url,
             params : {
-                n : (data.n ? data.n : 20),
+                n : (data.n ? data.n : 50),
                 start : 0
             }
         });

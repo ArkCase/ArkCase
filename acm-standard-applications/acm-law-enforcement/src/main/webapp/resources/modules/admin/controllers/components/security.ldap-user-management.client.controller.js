@@ -17,30 +17,36 @@ angular.module('admin').controller(
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
                     $scope.onAuthRoleSelected = onAuthRoleSelected;
+                    $scope.initUser = initUser;
+                    $scope.fillList = fillList;
+                    $scope.deleteUser = deleteUser;
 
+                    var makePaginationRequest = true;
+                    var selectedUser;
+                    var currentAuthGroups;
                     $scope.showFilter = true;
                     $scope.appUsers = [];
                     $scope.appGroups = [];
-
+                    $scope.lastSelectedUser = "";
                     $scope.userData = {
                         "appUsers" : $scope.appUsers,
                         "selectedNotAuthorized" : [],
                         "selectedAuthorized" : []
                     };
 
-                    LdapUserManagementService.getNUsers({}).then(function(response) {
-                        _.forEach(response.data, function(user) {
-                            var element = {};
-                            element.name = user.name;
-                            element.key = user.object_id_s;
-                            element.directory = user.directory_name_s;
-                            $scope.userData.appUsers.push(element);
-                        });
-                    });
+                    function initUser(userNumber) {
+                        var userRequestInfo = {};
+                        userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
+                        if (makePaginationRequest) {
+                            LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
+                                $scope.userData.appUsers = [];
+                                $scope.fillList($scope.userData.appUsers, response.data.response.docs);
+                                makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
+                            });
+                        }
+                    }
 
-                    $scope.lastSelectedUser = "";
-                    var selectedUser;
-                    var currentAuthGroups;
+                    $scope.initUser();
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
@@ -222,7 +228,17 @@ angular.module('admin').controller(
 
                     }
 
-                    $scope.deleteUser = function() {
+                    function fillList(listToFill, data) {
+                        _.forEach(data, function(obj) {
+                            var element = {};
+                            element.name = obj.name;
+                            element.key = obj.object_id_s;
+                            element.directory = obj.directory_name_s;
+                            listToFill.push(element);
+                        });
+                    }
+
+                    function deleteUser() {
                         LdapUserManagementService.deleteUser(selectedUser).then(function() {
 
                             var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
@@ -240,11 +256,15 @@ angular.module('admin').controller(
                         }, function() {
                             MessageService.errorAction();
                         });
-                    };
+                    }
+
+                    $scope.$bus.subscribe('ChooseUserManagementScroll', function() {
+                        initUser($scope.userData.appUsers.length * 2);
+                    });
 
                     $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
                                 $scope.userData.appUsers = [];
                                 if (!Util.isEmpty(response.data)) {
@@ -266,7 +286,7 @@ angular.module('admin').controller(
                     $scope.$bus.subscribe('UnauthorizedUserManagementFilter', function(data) {
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getAllUnauthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedNotAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
@@ -288,7 +308,7 @@ angular.module('admin').controller(
                     $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
-                            data.n = Util.isEmpty(data.n) ? 20 : data.n;
+                            data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getAllAuthorizedGroups(data).then(function(response) {
                                 $scope.userData.selectedAuthorized = [];
                                 if (!Util.isEmpty(response.data.response.docs)) {
@@ -307,13 +327,4 @@ angular.module('admin').controller(
                         }
                     });
 
-                    $scope.fillList = function(listToFill, data) {
-                        _.forEach(data, function(obj) {
-                            var element = {};
-                            element.name = obj.name;
-                            element.key = obj.object_id_s;
-                            element.directory = obj.directory_name_s;
-                            listToFill.push(element);
-                        });
-                    };
                 } ]);
