@@ -164,7 +164,7 @@
                     "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning' translate>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
+                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
                     "width": 70
                 },
                 {
