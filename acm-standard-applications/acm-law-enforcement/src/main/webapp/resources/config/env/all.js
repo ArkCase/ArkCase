@@ -61,7 +61,8 @@ module.exports = {
                     'lib/angular-google-analytics/dist/angular-google-analytics.js', 'lib/rrule/lib/rrule.js', 'lib/jsog/lib/JSOG.js',
                     'lib/videogular/videogular.js', 'lib/videogular-controls/vg-controls.js',
                     'lib/videogular-overlay-play/vg-overlay-play.js', 'lib/videogular-poster/vg-poster.js',
-                    'lib/videogular-buffering/vg-buffering.js', 'lib/angular-utf8-base64/angular-utf8-base64.js' ]
+                    'lib/videogular-buffering/vg-buffering.js', 'lib/angular-utf8-base64/angular-utf8-base64.js',
+                    'lib/ui-grid-draggable-rows/js/draggable-rows.js' ]
         },
         css : [ 'assets/css/application.css', 'modules/**/css/*.css', 'custom_modules/**/css/*.css', 'assets/css/arkcase-extension.css',
                 'custom_assets/css/arkcase-extension.css' ],

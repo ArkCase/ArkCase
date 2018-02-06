@@ -11,5 +11,7 @@ public interface AcmAssignedObject extends AcmObject
 {
     List<AcmParticipant> getParticipants();
 
+    Boolean getRestricted();
+
     String getStatus();
 }

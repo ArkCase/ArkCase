@@ -52,7 +52,7 @@ public class GroupServiceImpl implements GroupService
     @Override
     public AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException
     {
-        String groupName = MapperUtils.buildGroupName(group.getName(), Optional.empty());
+        String groupName = group.getName();
         AcmGroup acmGroup = groupDao.findByName(groupName);
         if (acmGroup != null && acmGroup.getStatus() == AcmGroupStatus.ACTIVE)
         {
@@ -444,10 +444,6 @@ public class GroupServiceImpl implements GroupService
         {
             subGroup.setSupervisor(parent.getSupervisor());
         }
-
-        String name = MapperUtils.buildGroupName(subGroup.getName(), Optional.empty());
-        subGroup.setName(name);
-        subGroup.setDisplayName(name);
         subGroup.setAscendantsList(parent.getAscendantsList());
         subGroup.addAscendant(parentId);
         AcmGroup acmGroup = createGroup(subGroup);

@@ -8,6 +8,7 @@ angular.module('complaints').controller(
                     $scope.participantsInit = {
                         moduleId : 'complaints',
                         componentId : 'participants',
+                        showReplaceChildrenParticipants: true,
                         retrieveObjectInfo : ComplaintInfoService.getComplaintInfo,
                         validateObjectInfo : ComplaintInfoService.validateComplaintInfo,
                         saveObjectInfo : ComplaintInfoService.saveComplaintInfo,

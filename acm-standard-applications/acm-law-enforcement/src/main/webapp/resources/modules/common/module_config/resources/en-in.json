@@ -575,14 +575,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participants",
-        "modal.addParticipant.label": "Add Participant",
-        "modal.editParticipant.label": "Edit Record",
-        "modal.participantType.label": "Participant Type ",
-        "modal.participantName.label": "Participant Name",
-        "modal.btnOk.text": "Save",
-        "modal.btnCancel.text": "Cancel",
-        "modal.dialogUserPicker.header": "Search User",
-        "modal.dialogGroupPicker.header": "Search Group",
+        "replaceFolderChildrenParticipants": "Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "Add Participant",
+            "editParticipant.label": "Edit Record",
+            "participantType.label": "Participant Type ",
+            "participantName.label": "Participant Name",
+            "btnOk.text": "Save",
+            "btnCancel.text": "Cancel",
+            "dialogUserPicker.header": "Search User",
+            "dialogGroupPicker.header": "Search Group",
+            "replaceChildrenParticipant": "replace children participant"
+        },
         "message": {
             "error.groupType": "The owning group cannot be a person.",
             "error.userType": " User type cannot be a group.",
@@ -864,6 +868,18 @@
                 "action": "Action",
                 "newValue": "New Value",
                 "oldValue": "Old Value"
+            }
+        },
+        "client": {
+            "title": "History",
+            "label": {
+                "updated": "Updated"
+            },
+            "table.columns": {
+                "eventType": "Event Name",
+                "eventDate": "Date",
+                "userId": "User",
+                "details.btn.text": "View {{count}} Changes"
             }
         }
     }

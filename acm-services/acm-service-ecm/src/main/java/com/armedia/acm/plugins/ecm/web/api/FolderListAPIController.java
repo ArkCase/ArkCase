@@ -26,7 +26,7 @@ public class FolderListAPIController
 
     private EcmFileService ecmFileService;
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFolderContents(Authentication auth, @PathVariable("objectType") String objectType,
@@ -43,7 +43,7 @@ public class FolderListAPIController
         return getEcmFileService().listFolderContents(auth, container, category, sortBy, sortDirection, startRow, maxRows);
     }
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}/search", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFlatSearchResultsFromFolderContent(Authentication auth, @PathVariable("objectType") String objectType,

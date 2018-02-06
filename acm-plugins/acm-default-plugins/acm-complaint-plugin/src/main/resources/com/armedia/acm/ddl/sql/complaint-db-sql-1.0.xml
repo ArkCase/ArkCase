@@ -2,4 +2,8 @@
     xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
+    <changeSet id="01-acm_complaint-update-empty-title" author="bojan.milenkoski">
+        <sql>UPDATE acm_complaint SET cm_complaint_title='update-empty-title' where cm_complaint_title=''</sql>
+    </changeSet>
+
 </databaseChangeLog>

@@ -178,6 +178,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
 
     @ManyToMany(cascade = {
             CascadeType.DETACH,
+            CascadeType.MERGE,
             CascadeType.REFRESH,
             CascadeType.REMOVE })
     @JoinTable(name = "acm_person_organization", joinColumns = {
@@ -272,27 +273,16 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
             setStatus("ACTIVE");
         }
 
-        for (PersonAlias pa : getPersonAliases())
-        {
-            pa.setPerson(this);
-        }
-
-        for (PersonAssociation pa : getAssociationsFromObjects())
-        {
-            pa.setPerson(this);
-        }
-        for (PersonOrganizationAssociation poa : getOrganizationAssociations())
-        {
-            poa.setPerson(this);
-        }
-        if (getDefaultOrganization() != null)
-        {
-            getDefaultOrganization().setPerson(this);
-        }
+        setupChildPointers();
     }
 
     @PreUpdate
     protected void beforeUpdate()
+    {
+        setupChildPointers();
+    }
+
+    private void setupChildPointers()
     {
         for (PersonAlias pa : getPersonAliases())
         {
@@ -311,10 +301,18 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         {
             getDefaultOrganization().setPerson(this);
         }
+
         for (AcmParticipant ap : getParticipants())
         {
             ap.setObjectId(getId());
             ap.setObjectType(getObjectType());
+        }
+
+        if (getContainer() != null)
+        {
+            getContainer().setContainerObjectId(getId());
+            getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle("Person-" + getId());
         }
     }
 
@@ -794,6 +792,7 @@ public class Person implements Serializable, AcmEntity, AcmObject, AcmContainerE
         this.participants = participants;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

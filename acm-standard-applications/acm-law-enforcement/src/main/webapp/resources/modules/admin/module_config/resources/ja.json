@@ -646,6 +646,7 @@
                     "edit": "CMIS構成の編集"
                 },
                 "dialog": {
+                    "testConnection": "ja_Test Connection",
                     "cancel": "キャンセル",
                     "ok": "[OK]"
                 },
@@ -673,10 +674,6 @@
                 "useAlfrescoExtension": {
                     "label": "Alfresco Extensionを使用する",
                     "placeholder": "Alfresco Extensionを使用する"
-                },
-                "endpoint": {
-                    "label": "終点",
-                    "placeholder": "終点"
                 },
                 "maxIdle": {
                     "label": "最大アイドル",
@@ -710,7 +707,7 @@
                     "label": "リポジトリID",
                     "placeholder": "リポジトリID"
                 },
-                "versioningState": {
+                "cmisVersioningState": {
                     "label": "バージョン管理の状態",
                     "placeholder": "バージョン管理の状態"
                 }
@@ -732,28 +729,28 @@
         }
     },
     "admin.comp.securityLdapConfig": {
-        "title": "セキュリティ - Ldap設定グリッド"
+        "title": "セキュリティ - LDAP設定グリッド"
     },
     "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Correspondence Management Merge Fieldsグリッド"
+        "title": "対応管理マージフィールドグリッド"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
         "title": "対応管理マージフィールドバージョングリッド"
     },
     "admin.comp.correspondenceManagementTemplates": {
-        "title": "連絡文書管理テンプレートグリッド"
+        "title": "対応管理データファイル転送グリッド"
     },
     "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Correspondance Management Template Versionsグリッド"
+        "title": "対応管理テンプレートのバージョングリッド"
     },
     "admin.comp.labelsConfig": {
-        "title": "アプリケーション - ラベルConfig Grid"
+        "title": "アプリケーション - ラベル設定グリッド"
     },
     "admin.comp.plainFormsConfig": {
         "title": "フォーム - フォーム構成グリッド"
     },
     "admin.comp.workflowsConfig": {
-        "title": "ワークフロー - ワークフローConfigグリッド"
+        "title": "ワークフロー - ワークフロー設定グリッド"
     },
     "admin.comp.workflowsHistoryDialogConfig": {
         "title": "ワークフロー - ワークフロー設定履歴ダイアロググリッド"

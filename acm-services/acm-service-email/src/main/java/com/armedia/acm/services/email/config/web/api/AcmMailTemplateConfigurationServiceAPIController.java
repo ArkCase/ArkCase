@@ -1,5 +1,6 @@
 package com.armedia.acm.services.email.config.web.api;
 
+import com.armedia.acm.services.email.model.EmailTemplateValidationResponse;
 import com.armedia.acm.services.email.service.AcmEmailConfigurationException;
 import com.armedia.acm.services.email.service.AcmEmailServiceException;
 import com.armedia.acm.services.email.service.AcmEmailServiceExceptionMapper;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -44,6 +46,14 @@ public class AcmMailTemplateConfigurationServiceAPIController
     {
         mailService.updateEmailTemplate(templateConfiguration, template);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/validate", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public EmailTemplateValidationResponse validateEmailTemplate(@RequestBody EmailTemplateConfiguration templateConfiguration)
+            throws AcmEmailConfigurationException
+    {
+        return mailService.validateEmailTemplate(templateConfiguration);
     }
 
     @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)

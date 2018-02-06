@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "प्रतिभागियों",
-        "modal.addParticipant.label": "प्रतिभागी को जोड़ें",
-        "modal.editParticipant.label": "रिकॉर्ड संपादित करें",
-        "modal.participantType.label": "प्रतिभागी प्रकार",
-        "modal.participantName.label": "भाग लेने वाले का नाम",
-        "modal.btnOk.text": "बचाना",
-        "modal.btnCancel.text": "रद्द करना",
-        "modal.dialogUserPicker.header": "खोज उपयोगकर्ता",
-        "modal.dialogGroupPicker.header": "खोज समूह",
+        "replaceFolderChildrenParticipants": "hi_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "प्रतिभागी को जोड़ें",
+            "editParticipant.label": "रिकॉर्ड संपादित करें",
+            "participantType.label": "प्रतिभागी प्रकार",
+            "participantName.label": "भाग लेने वाले का नाम",
+            "btnOk.text": "बचाना",
+            "btnCancel.text": "रद्द करना",
+            "dialogUserPicker.header": "खोज उपयोगकर्ता",
+            "dialogGroupPicker.header": "खोज समूह",
+            "replaceChildrenParticipant": "hi_replace children participant"
+        },
         "message": {
             "error.groupType": "मालिक का समूह एक व्यक्ति नहीं हो सकता",
             "error.userType": " उपयोगकर्ता प्रकार समूह नहीं हो सकता",
@@ -852,6 +856,23 @@
                 "newValue": "नया मूल्य",
                 "oldValue": "पुरानी मूल्य"
             }
+        },
+        "client": {
+            "title": "इतिहास",
+            "label": {
+                "updated": "अपडेट किया गया"
+            },
+            "table.columns": {
+                "eventType": "कार्यक्रम नाम",
+                "eventDate": "तारीख",
+                "userId": "उपयोगकर्ता",
+                "details.btn.text": "{{count}} परिवर्तन देखें"
+            }
         }
     }
 }
+
+
+
+
+

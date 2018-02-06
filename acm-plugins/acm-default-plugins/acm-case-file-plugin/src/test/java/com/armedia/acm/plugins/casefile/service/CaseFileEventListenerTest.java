@@ -7,6 +7,9 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.armedia.acm.calendar.config.service.CalendarConfiguration;
+import com.armedia.acm.calendar.config.service.CalendarConfiguration.PurgeOptions;
+import com.armedia.acm.calendar.config.service.CalendarConfigurationsByObjectType;
 import com.armedia.acm.objectonverter.AcmMarshaller;
 import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
@@ -21,6 +24,7 @@ import com.armedia.acm.service.objecthistory.model.AcmObjectHistory;
 import com.armedia.acm.service.objecthistory.model.AcmObjectHistoryEvent;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryEventPublisher;
 import com.armedia.acm.service.objecthistory.service.AcmObjectHistoryService;
+import com.armedia.acm.service.outlook.dao.AcmOutlookFolderCreatorDao;
 import com.armedia.acm.service.outlook.model.AcmOutlookUser;
 import com.armedia.acm.service.outlook.service.OutlookCalendarAdminServiceExtension;
 import com.armedia.acm.service.outlook.service.impl.OutlookCalendarAdminService;
@@ -58,6 +62,9 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     private OutlookCalendarAdminServiceExtension mockedCalendarAdminService;
     private AcmOutlookUser mockedOutlookUser;
     private CaseFileEventListener caseFileEventListener;
+    private CalendarConfigurationsByObjectType mockedCalendarConfigurationType;
+    private CalendarConfiguration mockedCalendarConfiguration;
+    private AcmOutlookFolderCreatorDao mockedFolderCreatorDao;
 
     @Before
     public void setUp()
@@ -71,6 +78,9 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         mockCalendarService = createMock(OutlookContainerCalendarService.class);
         mockedCalendarAdminService = createMock(OutlookCalendarAdminService.class);
         mockedOutlookUser = createMock(AcmOutlookUser.class);
+        mockedCalendarConfigurationType = createMock(CalendarConfigurationsByObjectType.class);
+        mockedCalendarConfiguration = createMock(CalendarConfiguration.class);
+        mockedFolderCreatorDao = createMock(AcmOutlookFolderCreatorDao.class);
 
         caseFileEventListener.setAcmObjectHistoryService(mockAcmObjectHistoryService);
         caseFileEventListener.setAcmObjectHistoryEventPublisher(mockAcmObjectHistoryEventPublisher);
@@ -79,6 +89,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         caseFileEventListener.setCalendarService(mockCalendarService);
         caseFileEventListener.setCalendarAdminService(mockedCalendarAdminService);
         caseFileEventListener.setCaseFileStatusClosed("CLOSED");
+        caseFileEventListener.setFolderCreatorDao(mockedFolderCreatorDao);
     }
 
     public CaseFile getCase()
@@ -317,7 +328,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void testPriorityIsChanged()
+    public void testPriorityIsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
@@ -333,11 +344,11 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndCheck(currentHistory, previousHistory, "priority.changed", jsonCaseFile);
+        runAndCheck(currentHistory, previousHistory, "priority.changed", jsonCaseFile, false);
     }
 
     @Test
-    public void testStatusIsChanged()
+    public void testStatusIsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
@@ -354,7 +365,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndCheck(currentHistory, previousHistory, "status.changed", jsonCaseFile);
+        runAndCheck(currentHistory, previousHistory, "status.changed", jsonCaseFile, true);
     }
 
     @Test
@@ -382,7 +393,7 @@ public class CaseFileEventListenerTest extends EasyMockSupport
     }
 
     @Test
-    public void testDetailsChanged()
+    public void testDetailsChanged() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
@@ -399,11 +410,11 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndCheck(currentHistory, previousHistory, "details.changed", jsonCaseFile);
+        runAndCheck(currentHistory, previousHistory, "details.changed", jsonCaseFile, false);
     }
 
     @Test
-    public void testDetailsChangedWhenPreviouslyNull()
+    public void testDetailsChangedWhenPreviouslyNull() throws Exception
     {
         AcmMarshaller acmMarshaller = ObjectConverter.createJSONMarshallerForTests();
         CaseFile jsonCaseFile = getCase();
@@ -421,10 +432,12 @@ public class CaseFileEventListenerTest extends EasyMockSupport
         currentJsonObject = acmMarshaller.marshal(jsonCaseFile);
         currentHistory.setObjectString(currentJsonObject);
 
-        runAndCheck(currentHistory, previousHistory, "details.changed", jsonCaseFile);
+        runAndCheck(currentHistory, previousHistory, "details.changed", jsonCaseFile, false);
     }
 
-    public void runAndCheck(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck, CaseFile caseFile)
+    public void runAndCheck(AcmObjectHistory currentHistory, AcmObjectHistory previousHistory, String statusToCheck, CaseFile caseFile,
+            boolean mockCalendarConfiguration)
+            throws Exception
     {
         AcmObjectHistoryEvent event = new AcmObjectHistoryEvent(currentHistory);
         event.setIpAddress(IP_ADDRESS);
@@ -438,6 +451,13 @@ public class CaseFileEventListenerTest extends EasyMockSupport
 
         mockCaseFileEventUtility.raiseCaseFileModifiedEvent(capture(caseCapture), capture(ipAddressCapture), capture(eventStatusCapture));
         expectLastCall().once();
+
+        if (mockCalendarConfiguration)
+        {
+            expect(mockedCalendarAdminService.readConfiguration(false)).andReturn(mockedCalendarConfigurationType);
+            expect(mockedCalendarConfigurationType.getConfiguration(CaseFileConstants.OBJECT_TYPE)).andReturn(mockedCalendarConfiguration);
+            expect(mockedCalendarConfiguration.getPurgeOptions()).andReturn(PurgeOptions.CLOSED);
+        }
 
         replayAll();
         caseFileEventListener.onApplicationEvent(event);
@@ -477,6 +497,13 @@ public class CaseFileEventListenerTest extends EasyMockSupport
 
         expect(mockedCalendarAdminService.getEventListenerOutlookUser(CaseFileConstants.OBJECT_TYPE))
                 .andReturn(Optional.of(mockedOutlookUser));
+
+        mockedFolderCreatorDao.deleteObjectReference(OBJECT_ID, CaseFileConstants.OBJECT_TYPE);
+        expectLastCall().once();
+
+        expect(mockedCalendarAdminService.readConfiguration(false)).andReturn(mockedCalendarConfigurationType);
+        expect(mockedCalendarConfigurationType.getConfiguration(CaseFileConstants.OBJECT_TYPE)).andReturn(mockedCalendarConfiguration);
+        expect(mockedCalendarConfiguration.getPurgeOptions()).andReturn(PurgeOptions.CLOSED);
 
         replayAll();
         caseFileEventListener.onApplicationEvent(event);

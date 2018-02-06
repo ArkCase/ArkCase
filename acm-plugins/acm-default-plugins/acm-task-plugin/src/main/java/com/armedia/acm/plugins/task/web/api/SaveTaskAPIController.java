@@ -29,16 +29,10 @@ public class SaveTaskAPIController
 
     @RequestMapping(value = "/save/{taskId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmTask createAdHocTask(
-            @PathVariable("taskId") Long taskId,
-            @RequestBody AcmTask in,
-            Authentication authentication,
+    public AcmTask createAdHocTask(@PathVariable("taskId") Long taskId, @RequestBody AcmTask in, Authentication authentication,
             HttpSession httpSession) throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Saving task id'" + taskId + "'");
-        }
+        log.info("Saving task id={}", taskId);
 
         try
         {
@@ -58,11 +52,7 @@ public class SaveTaskAPIController
         }
     }
 
-    protected void publishTaskSavedEvent(
-            Authentication authentication,
-            HttpSession httpSession,
-            AcmTask saved,
-            boolean succeeded)
+    protected void publishTaskSavedEvent(Authentication authentication, HttpSession httpSession, AcmTask saved, boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
         AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(saved, "save", authentication.getName(), succeeded, ipAddress);
@@ -88,5 +78,4 @@ public class SaveTaskAPIController
     {
         this.taskEventPublisher = taskEventPublisher;
     }
-
 }

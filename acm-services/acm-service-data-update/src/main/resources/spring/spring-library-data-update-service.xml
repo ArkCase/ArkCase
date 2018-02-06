@@ -22,9 +22,17 @@
             <list>
                 <ref bean="userIdGroupNameDomainUpdateExecutor"/>
                 <ref bean="groupRemoveUUIDExecutor"/>
+                <ref bean="fileFolderParticipantsUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
+    </bean>
+    
+    <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
     </bean>
 
     <bean id="userIdGroupNameDomainUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">

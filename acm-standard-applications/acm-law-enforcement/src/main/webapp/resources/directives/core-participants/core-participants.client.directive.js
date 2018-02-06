@@ -80,8 +80,13 @@ angular.module('directives').directive(
                                 stateParams : $stateParams,
                                 moduleId : scope.participantsInit.moduleId,
                                 componentId : scope.participantsInit.componentId,
+                                objectId: scope.participantsInit.objectId,
+                                showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
+                                objectId: scope.participantsInit.objectId,
+                                showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
                                 retrieveObjectInfo : scope.participantsInit.retrieveObjectInfo,
                                 validateObjectInfo : scope.participantsInit.validateObjectInfo,
+                                resetComponentData: scope.participantsInit.resetComponentData,
                                 onConfigRetrieved : function(componentConfig) {
                                     return onConfigRetrieved(componentConfig);
                                 },
@@ -114,10 +119,12 @@ angular.module('directives').directive(
                                 gridHelper.setUserNameFilter(promiseUsers);
                             };
 
-                            var showModal = function(participant, isEdit) {
+                            var showModal = function(participant, isEdit, showReplaceChildrenParticipants) {
                                 var modalScope = scope.$new();
+                                participant.replaceChildrenParticipant = true;
                                 modalScope.participant = participant || {};
                                 modalScope.isEdit = isEdit || false;
+                                modalScope.showReplaceChildrenParticipants = showReplaceChildrenParticipants || false;
                                 modalScope.selectedType = participant.selectedType ? participant.selectedType : "";
 
                                 var params = {};
@@ -170,6 +177,7 @@ angular.module('directives').directive(
                                                         .instant("common.directive.coreParticipants.message.error.noAccessCombo"));
                                             } else {
                                                 participant.participantType = data.participant.participantType;
+                                                participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
                                                 var participantPerson = owner ? owner : assignee;
                                                 if (!Util.isEmpty(participantPerson) && !Util.isEmpty(owningGroup)) {
                                                     if (!ObjectParticipantService
@@ -192,10 +200,11 @@ angular.module('directives').directive(
                                             } else {
                                                 participant.participantType = data.participant.participantType;
                                                 participant.className = scope.config.className;
+                                                participant.replaceChildrenParticipant = data.participant.replaceChildrenParticipant;
                                                 scope.objectInfo.participants.push(participant);
                                             }
                                         }
-                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants)) {
+                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
                                             saveObjectInfoAndRefresh();
                                         } else {
                                             refresh();
@@ -222,12 +231,12 @@ angular.module('directives').directive(
                                     participantTypes : scope.participantTypes,
                                     config : scope.config
                                 };
-                                showModal(item, false);
+                                showModal(item, false, scope.participantsInit.showReplaceChildrenParticipants);
                             };
 
                             scope.editRow = function(rowEntity) {
                                 scope.participant = rowEntity;
-                                if (rowEntity.participantLdapId === '*') {
+                                if (rowEntity.participantLdapId === '*' || Util.isEmpty(rowEntity.participantLdapId)) {
                                     var item = {
                                         id : rowEntity.id,
                                         participantType : rowEntity.participantType,
@@ -236,7 +245,7 @@ angular.module('directives').directive(
                                         selectedType : rowEntity.participantType,
                                         config : scope.config
                                     };
-                                    showModal(item, true);
+                                    showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                 } else {
                                     var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
                                     participantDataPromise.then(function(participantData) {
@@ -249,7 +258,7 @@ angular.module('directives').directive(
                                                 selectedType : participantData[0].object_type_s ? participantData[0].object_type_s : "",
                                                 config : scope.config
                                             };
-                                            showModal(item, true);
+                                            showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                         }
                                     })
                                 }
@@ -272,22 +281,33 @@ angular.module('directives').directive(
                                 }
                             };
 
+                            scope.onClickReplaceChildrenParticipants = function () {
+                                var len = scope.objectInfo.participants.length;
+                                for (var i = 0; i < len; i++) {
+                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                }                       
+                                saveObjectInfoAndRefresh();
+                            }
+
                             scope.isDeleteDisabled = function(rowEntity) {
                                 return rowEntity.participantType === typeOwningGroup || rowEntity.participantType === typeAssignee;
                             };
 
                             var saveObjectInfoAndRefresh = function() {
                                 var saveObject = Util.omitNg(scope.objectInfo);
+                                saveObject.objectId = scope.participantsInit.objectId;
                                 scope.participantsInit.saveObjectInfo(saveObject).then(function(objectSaved) {
                                     refresh();
                                     return objectSaved;
                                 }, function(error) {
+                                    MessageService.error(error.data);
+                                    refresh();
                                     return error;
                                 });
                             };
 
                             var refresh = function() {
-                                scope.$emit('report-object-refreshed', $stateParams.id);
+                                scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId : $stateParams.id);
                             };
                         },
                         templateUrl : 'directives/core-participants/core-participants.client.view.html'
