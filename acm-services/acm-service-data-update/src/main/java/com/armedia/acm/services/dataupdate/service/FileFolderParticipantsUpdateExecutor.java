@@ -60,7 +60,24 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
             for (Class<?> assignedAndContainerClass : assignedAndContainerClasses)
             {
                 log.info("Updating file and folder participants for entities from class: {}", assignedAndContainerClass.getName());
-                AcmAbstractDao<?> daoInstance = getDaoInstanceForClass(assignedAndContainerClass, daoInstances);
+                AcmAbstractDao<?> daoInstance = null;
+                Class targetClass = assignedAndContainerClass;
+                while ( daoInstance == null && targetClass != null )
+                {
+                    daoInstance = getDaoInstanceForClass(targetClass, daoInstances);
+                    if ( daoInstance == null )
+                    {
+                        targetClass = targetClass.getSuperclass();
+                    }
+                }
+                if ( daoInstance != null )
+                {
+                    log.debug("Found DAO class {} for entity class {}", daoInstance.getClass().getName(), assignedAndContainerClass.getName());
+                }
+                else
+                {
+                    throw new RuntimeException("Cannot find DAO class for AcmObject of type: " + assignedAndContainerClass.getName());
+                }
                 List<?> assignedAndContainerObjects = daoInstance.findAll();
                 for (Object assignedAndContainerObject : assignedAndContainerObjects)
                 {
@@ -134,7 +151,8 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
             }
         }
 
-        throw new RuntimeException("Cannot find DAO class for AcmObject of type: " + assignedAndContainerClass.getName());
+        return null;
+        //throw new RuntimeException("Cannot find DAO class for AcmObject of type: " + assignedAndContainerClass.getName());
     }
 
     public Set<Class<?>> getAssignedAndContainerClasses()
