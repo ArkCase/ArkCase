@@ -76,11 +76,7 @@ public class AcmUserAPIController extends SecureLdapController
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
             @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
     {
-        String solrResponse = acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
-        SearchResults searchResults = new SearchResults();
-        JSONArray docs = searchResults.getDocuments(solrResponse);
-
-        return docs.toString();
+        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
     }
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
