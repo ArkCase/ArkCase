@@ -27,7 +27,8 @@ angular.module('common').controller(
                     var promiseUsers = gridHelper.getUsers();
 
                     function retrieveGridData() {
-                        gridHelper.retrieveAuditData($stateParams.type, $stateParams.id);
+                        var objectType = $stateParams.type == "ADHOC" ? "TASK" : $stateParams.type;
+                        gridHelper.retrieveAuditData(objectType, $stateParams.id);
                     }
 
                     $scope.onClickObjLink = function(event, rowEntity) {

@@ -4084,7 +4084,9 @@ angular
                                                             $scope.width = (params.w + 200) + "px";
                                                             $scope.widthDialogBox = (params.w + 20) + "px";
                                                             $scope.frevvoFormUrl = params.frevvoFormUrl;
+
                                                             $scope.iframeLoaded = function() {
+                                                                document.getElementsByClassName("modal-" + (params.h + 200) + "px")[0].style.width = $scope.width;
                                                                 startCheckFrevvoSubmission();
                                                                 startInitFrevvoMessaging();
                                                             };
@@ -4163,7 +4165,7 @@ angular
 
                                                                 params.header = $translate
                                                                         .instant("common.directive.coreParticipants.modal.dialogUserPicker.header");
-                                                                params.filter = '"Object Type": USER';
+                                                                params.filter = '"Object Type": USER' + '&fq="status_lcs": "VALID"';
                                                                 params.config = Util.goodMapValue(DocTree.treeConfig, "dialogUserPicker");
 
                                                                 var modalInstanceUserPicker = $modal
@@ -4240,7 +4242,7 @@ angular
                                                             }
                                                         } ],
                                                 animation : true,
-                                                size : 'lg',
+                                                size : (params.h + 200) + "px",
                                                 backdrop : 'static',
                                                 resolve : {
                                                     params : function() {

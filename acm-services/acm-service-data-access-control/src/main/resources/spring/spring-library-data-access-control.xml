@@ -34,9 +34,14 @@
         <property name="ruleSpreadsheetFilename" value="drools-access-control-rules.xlsx"/>
     </bean>
 
+    <bean id="entityParticipantsChangedEventPublisher" class="com.armedia.acm.services.dataaccess.service.EntityParticipantsChangedEventPublisher" />
+
     <bean id="dataAccessPrivilegeListener" class="com.armedia.acm.services.dataaccess.service.impl.DataAccessPrivilegeListener">
         <property name="assignmentBusinessRule" ref="acmAssignmentBusinessRule"/>
         <property name="accessControlBusinessRule" ref="acmDataAccessControlBusinessRule"/>
+        <property name="participantsBusinessRule" ref="participantsBusinessRule"/>
+        <property name="participantService" ref="acmParticipantService"/>
+        <property name="entityParticipantsChangedEventPublisher" ref="entityParticipantsChangedEventPublisher"/>
     </bean>
 
     <bean id="participantAccessChecker" class="com.armedia.acm.services.dataaccess.service.ParticipantAccessChecker"/>

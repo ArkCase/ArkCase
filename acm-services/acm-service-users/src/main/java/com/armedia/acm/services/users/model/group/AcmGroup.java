@@ -438,13 +438,17 @@ public class AcmGroup implements Serializable, AcmEntity
             return false;
         }
         AcmGroup acmGroup = (AcmGroup) o;
-        return Objects.equals(name, acmGroup.name);
+        if (name != null)
+        {
+            return name.equalsIgnoreCase(acmGroup.name);
+        }
+        return acmGroup.name == null;
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(name);
+        return Objects.hash(name == null ? null : name.toLowerCase());
     }
 
     @Override

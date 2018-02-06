@@ -11,6 +11,7 @@ import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,13 +34,11 @@ public class MoveFolderAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#folderToMoveId, 'FOLDER', 'read|group-read|write|group-write') and hasPermission(#dstFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/move/{folderToMoveId}/{dstFolderId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmFolder moveFolder(
-            @PathVariable("folderToMoveId") Long folderToMoveId,
-            @PathVariable("dstFolderId") Long dstFolderId,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public AcmFolder moveFolder(@PathVariable("folderToMoveId") Long folderToMoveId, @PathVariable("dstFolderId") Long dstFolderId,
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
     {
         if (log.isInfoEnabled())
         {

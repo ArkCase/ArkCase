@@ -330,11 +330,13 @@ angular.module('services').factory(
                         case "PERSON":
                         case "ORGANIZATION":
                             return Service.getLookupByLookupName("organizationalParticipantTypes");
-                            break;
                         case "COMPLAINT":
                         case "CASE_FILE":
                         case "DOC_REPO":
                             return Service.getLookupByLookupName("entitiesParticipantTypes");
+                        case "FILE"  :
+                        case "FOLDER":
+                            return Service.getLookupByLookupName("documentsParticipantTypes");
                         }
                     };
 
@@ -893,12 +895,6 @@ angular.module('services').factory(
                                 return {
                                     isValid : false,
                                     errorMessage : "Empty value found!"
-                                };
-                            }
-                            if (!lookup[i].inverseKey) {
-                                return {
-                                    isValid : false,
-                                    errorMessage : "Empty inverse key found!"
                                 };
                             }
                             if (!lookup[i].inverseValue) {

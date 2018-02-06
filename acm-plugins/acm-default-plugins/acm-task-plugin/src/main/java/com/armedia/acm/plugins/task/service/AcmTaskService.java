@@ -158,6 +158,34 @@ public interface AcmTaskService
     Long getCompletedBuckslipProcessIdForObjectFromSolr(String objectType, Long objectId, Authentication authentication);
 
     /**
+     * Retrieves the value of process variable of active business process or from the history
+     *
+     * @param businessProcessId
+     *            active or non active business process id, ...
+     * @param processVariableKey
+     *            variable that we want to get
+     * @param readFromHistory
+     *            does the variable need to be fetched from history if the business process is over
+     */
+    String getBusinessProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory) throws AcmTaskException;
+
+    /**
+     * Retrieves the value of process variable of active business process or from the history by object type and
+     * objectId
+     *
+     * @param objectType
+     *            object type for which the business process Id will be fetched
+     * @param objectId
+     *            object id for which the business process Id will be fetched
+     * @param processVariableKey
+     *            variable that we want to get
+     * @param readFromHistory
+     *            does the variable need to be fetched from history if the business process is over
+     */
+    String getBusinessProcessVariableByObjectType(String objectType, Long objectId, String processVariableKey, boolean readFromHistory,
+            Authentication authentication) throws AcmTaskException;
+
+    /**
      * Update an existing buckslip process; only the <code>nonConcurEndsApprovals</code> and <code>futureTasks</code>
      * properties can be updated. All other changes are ignored.
      *

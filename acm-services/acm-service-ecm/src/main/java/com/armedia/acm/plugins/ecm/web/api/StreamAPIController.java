@@ -8,6 +8,7 @@ import org.apache.catalina.connector.ClientAbortException;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,13 +33,13 @@ public class StreamAPIController
 
     private StreamService streamService;
 
+    @PreAuthorize("hasPermission(#id, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/stream/{id}", method = RequestMethod.GET)
     @ResponseBody
     public void stream(@PathVariable(value = "id") Long id,
-            @RequestParam(value = "version", required = false, defaultValue = "") String version,
-            Authentication authentication,
-            HttpServletRequest request,
-            HttpServletResponse response) throws IOException, MuleException, AcmObjectNotFoundException, AcmUserActionFailedException
+            @RequestParam(value = "version", required = false, defaultValue = "") String version, Authentication authentication,
+            HttpServletRequest request, HttpServletResponse response)
+            throws IOException, MuleException, AcmObjectNotFoundException, AcmUserActionFailedException
     {
         LOG.info("Streaming file with ID '{}' for user '{}'", id, authentication.getName());
 

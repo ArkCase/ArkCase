@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -28,8 +29,7 @@ public class AcmDataAccessBatchPolicyUpdateService
 
     /**
      * The default run date to use if this generator has never run before (or if the properties file that stores the
-     * last run date is
-     * missing)
+     * last run date is missing)
      */
     private static final String DEFAULT_LAST_RUN_DATE = "1970-01-01T00:00:00Z";
 
@@ -120,6 +120,7 @@ public class AcmDataAccessBatchPolicyUpdateService
     }
 
     private void updateDataAccessControlPolicy(Date lastUpdate, AcmObjectDataAccessBatchUpdateLocator locator)
+            throws AcmAccessControlException
     {
         boolean debug = log.isDebugEnabled();
 

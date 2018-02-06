@@ -500,6 +500,17 @@
                 "concur": "Concur",
                 "nonConcur": "Non-Concur"
             },
+            "businessProcessTypes": {
+                "acmDocumentWorkflow": "ACM Document Workflow",
+                "correctiveActionPlan": "Corrective Action Plan"
+            },
+            "reportStates": {
+                "draft": "Draft",
+                "inApproval": "In Approval",
+                "active": "Active",
+                "inActive": "Inactive",
+                "closed": "Closed"
+            },
             "auditReportNames": {
                 "all": "All",
                 "case_file": "Case",

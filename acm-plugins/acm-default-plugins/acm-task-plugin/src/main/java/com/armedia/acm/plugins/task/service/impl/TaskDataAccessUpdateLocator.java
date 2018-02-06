@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.task.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmTask;
 import com.armedia.acm.plugins.task.service.TaskDao;
@@ -27,7 +28,7 @@ public class TaskDataAccessUpdateLocator implements AcmObjectDataAccessBatchUpda
     }
 
     @Override
-    public void save(AcmTask task)
+    public void save(AcmTask task) throws AcmAccessControlException
     {
         try
         {

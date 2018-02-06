@@ -802,8 +802,12 @@
                     "id": "sendAsAttachments"
                 },
                 {
-                    "name": "Send as links",
+                    "name": "Send as Links",
                     "id": "sendAsLinks"
+                },
+                {
+                    "name": "Send as Attachments and Links",
+                    "id": "sendAsAttachmentsAndLinks"
                 }
             ],
             "sources": [
@@ -835,7 +839,8 @@
                     "headerCellFilter": "translate",
                     "cellFilter": "translate"
                 }
-            ]
+            ],
+            "rowTemplate": "modules/admin/views/components/application-draggable-rows.view.html"
         },
         {
             "id": "inverseValuesLookup",
@@ -866,7 +871,8 @@
                     "headerCellFilter": "translate",
                     "cellFilter": "translate"
                 }
-            ]
+            ],
+            "rowTemplate": "modules/admin/views/components/application-draggable-rows.view.html"
         }
     ],
     "tree": {
