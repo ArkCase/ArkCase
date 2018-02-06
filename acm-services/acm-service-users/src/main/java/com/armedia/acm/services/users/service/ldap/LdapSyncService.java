@@ -11,6 +11,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapConstants;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapGroup;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -117,42 +118,43 @@ public class LdapSyncService implements ApplicationEventPublisherAware
     }
 
     @Async
-    public void initiatePartialSync(String principal)
+    public void initiateSync(String principal, boolean fullSync)
     {
-        log.debug("Shod be async");
-        boolean successResult = true;
-        try
-        {
-            ldapPartialSync();
-        }
-        catch (Exception e)
-        {
-            successResult = false;
-            log.error("LDAP partial sync failed to complete.", e);
-        }
-        AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
-        ldapSyncResult.setMessage(successResult ? "LDAP partial sync completed" : "LDAP partial sync failed to complete");
-        ldapSyncResult.setResult(successResult);
-        ldapSyncResult.setService("LDAP");
-        ldapSyncResult.setUser(principal);
-        applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
-    }
+        String syncType = fullSync ? "Full" : "Partial";
 
-    @Async
-    public void initiateFullSync(String principal)
-    {
+        if (!isSyncEnabled())
+        {
+            log.debug("{} sync is disabled - stopping now.", syncType);
+            AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
+            ldapSyncResult.setMessage(String.format("Ldap %s sync is not enabled", syncType));
+            ldapSyncResult.setResult(false);
+            ldapSyncResult.setService("LDAP");
+            ldapSyncResult.setUser(principal);
+            applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
+            return;
+        }
+
         boolean successResult = true;
         try
         {
-            ldapSync();
+            if (fullSync)
+            {
+                ldapSync();
+            }
+            else
+            {
+                ldapPartialSync();
+            }
+
         }
         catch (Exception e)
         {
             successResult = false;
-            log.error("LDAP full sync failed to complete.", e);
+            log.error("LDAP {} sync failed to complete.", syncType, e);
         }
         AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
-        ldapSyncResult.setMessage(successResult ? "LDAP full sync completed" : "LDAP full sync failed to complete");
+        ldapSyncResult.setMessage(successResult ? String.format("LDAP %s sync completed", syncType)
+                : String.format("LDAP %s sync failed to complete", syncType));
         ldapSyncResult.setResult(successResult);
         ldapSyncResult.setService("LDAP");
         ldapSyncResult.setUser(principal);
