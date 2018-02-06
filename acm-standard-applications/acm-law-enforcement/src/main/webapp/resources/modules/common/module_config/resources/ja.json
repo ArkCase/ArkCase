@@ -52,6 +52,7 @@
             "newCorrespondence": "新しい対応",
             "open": "開いた",
             "email": "電子メイル",
+            "newTask": "ja_New Task",
             "download": "ダウンロード",
             "copy": "複写",
             "cut": "カット",
@@ -563,7 +564,7 @@
     "common.directive.coreParticipants": {
         "title": "参加者",
         "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "参加者を追加",
             "editParticipant.label": "レコードの編集",
             "participantType.label": "参加者タイプ",
