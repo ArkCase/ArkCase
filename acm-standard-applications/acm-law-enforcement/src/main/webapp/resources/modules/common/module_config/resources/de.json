@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Teilnehmer",
-        "modal.addParticipant.label": "Teilnehmer hinzufügen",
-        "modal.editParticipant.label": "Datensatz bearbeiten",
-        "modal.participantType.label": "Teilnehmertyp",
-        "modal.participantName.label": "Teilnehmer name",
-        "modal.btnOk.text": "Sparen",
-        "modal.btnCancel.text": "Stornieren",
-        "modal.dialogUserPicker.header": "Benutzer suchen",
-        "modal.dialogGroupPicker.header": "Suchgruppe",
+        "replaceFolderChildrenParticipants": "de_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "Teilnehmer hinzufügen",
+            "editParticipant.label": "Datensatz bearbeiten",
+            "participantType.label": "Teilnehmertyp",
+            "participantName.label": "Teilnehmer name",
+            "btnOk.text": "Sparen",
+            "btnCancel.text": "Stornieren",
+            "dialogUserPicker.header": "Benutzer suchen",
+            "dialogGroupPicker.header": "Suchgruppe",
+            "replaceChildrenParticipant": "de_replace children participant"
+        },
         "message": {
             "error.groupType": "Die besitzende Gruppe kann keine Person sein.",
             "error.userType": " Benutzertyp kann keine Gruppe sein.",
@@ -843,7 +847,7 @@
     },
     "common.objectHistory": {
         "modal": {
-            "title": "Historie Details",
+            "title": "Geschichte Details",
             "btn": {
                 "close": "Schließen"
             },
@@ -852,6 +856,23 @@
                 "newValue": "Neuer Wert",
                 "oldValue": "Alter Wert"
             }
+        },
+        "client": {
+            "title": "Geschichte",
+            "label": {
+                "updated": "Aktualisiert"
+            },
+            "table.columns": {
+                "eventType": "Veranstaltungsname",
+                "eventDate": "Datum",
+                "userId": "Benutzer",
+                "details.btn.text": "Zeigen Sie {{count}} Änderungen an"
+            }
         }
     }
 }
+
+
+
+
+

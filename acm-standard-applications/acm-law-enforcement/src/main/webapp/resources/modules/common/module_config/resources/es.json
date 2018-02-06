@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participantes",
-        "modal.addParticipant.label": "Añada participante",
-        "modal.editParticipant.label": "Editar registro",
-        "modal.participantType.label": "Tipo de participante",
-        "modal.participantName.label": "Nombre del participante",
-        "modal.btnOk.text": "Salvar",
-        "modal.btnCancel.text": "Cancelar",
-        "modal.dialogUserPicker.header": "Usuario de búsqueda",
-        "modal.dialogGroupPicker.header": "Grupo de búsqueda",
+        "replaceFolderChildrenParticipants": "es_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "Añada participante",
+            "editParticipant.label": "Editar registro",
+            "participantType.label": "Tipo de participante",
+            "participantName.label": "Nombre del participante",
+            "btnOk.text": "Salvar",
+            "btnCancel.text": "Cancelar",
+            "dialogUserPicker.header": "Usuario de búsqueda",
+            "dialogGroupPicker.header": "Grupo de búsqueda",
+            "replaceChildrenParticipant": "es_replace children participant"
+        },
         "message": {
             "error.groupType": "El grupo propietario no puede ser una persona.",
             "error.userType": " El tipo de usuario no puede ser un grupo.",
@@ -852,6 +856,23 @@
                 "newValue": "Nuevo valor",
                 "oldValue": "Valor antiguo"
             }
+        },
+        "client": {
+            "title": "Historia",
+            "label": {
+                "updated": "Actualizado"
+            },
+            "table.columns": {
+                "eventType": "Nombre del evento",
+                "eventDate": "Fecha",
+                "userId": "Usuario",
+                "details.btn.text": "Ver {{count}} Cambios"
+            }
         }
     }
 }
+
+
+
+
+

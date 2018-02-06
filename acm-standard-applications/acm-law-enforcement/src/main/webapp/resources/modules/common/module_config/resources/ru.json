@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Участники",
-        "modal.addParticipant.label": "Добавить участника",
-        "modal.editParticipant.label": "Изменить запись",
-        "modal.participantType.label": "Тип участника",
-        "modal.participantName.label": "Имя участника",
-        "modal.btnOk.text": "Сохранить",
-        "modal.btnCancel.text": "Отмена",
-        "modal.dialogUserPicker.header": "Поиск пользователя",
-        "modal.dialogGroupPicker.header": "Поиск группы",
+        "replaceFolderChildrenParticipants": "ru_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "Добавить участника",
+            "editParticipant.label": "Изменить запись",
+            "participantType.label": "Тип участника",
+            "participantName.label": "Имя участника",
+            "btnOk.text": "Сохранить",
+            "btnCancel.text": "Отмена",
+            "dialogUserPicker.header": "Поиск пользователя",
+            "dialogGroupPicker.header": "Поиск группы",
+            "replaceChildrenParticipant": "ru_replace children participant"
+        },
         "message": {
             "error.groupType": "Собственная группа не может быть человеком.",
             "error.userType": " Тип пользователя не может быть группой.",
@@ -852,6 +856,23 @@
                 "newValue": "Новая стоимость",
                 "oldValue": "Старая стоимость"
             }
+        },
+        "client": {
+            "title": "история",
+            "label": {
+                "updated": "обновленный"
+            },
+            "table.columns": {
+                "eventType": "Название события",
+                "eventDate": "Дата",
+                "userId": "пользователь",
+                "details.btn.text": "Просмотреть {{count}} изменения"
+            }
         }
     }
 }
+
+
+
+
+

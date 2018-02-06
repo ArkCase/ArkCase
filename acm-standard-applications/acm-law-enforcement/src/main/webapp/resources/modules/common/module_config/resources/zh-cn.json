@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "参与者",
-        "modal.addParticipant.label": "添加参与者",
-        "modal.editParticipant.label": "编辑记录",
-        "modal.participantType.label": "参与者类型",
-        "modal.participantName.label": "参与者名称",
-        "modal.btnOk.text": "保存",
-        "modal.btnCancel.text": "取消",
-        "modal.dialogUserPicker.header": "搜索用户",
-        "modal.dialogGroupPicker.header": "搜索组",
+        "replaceFolderChildrenParticipants": "zh-cn_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "添加参与者",
+            "editParticipant.label": "编辑记录",
+            "participantType.label": "参与者类型",
+            "participantName.label": "参与者名称",
+            "btnOk.text": "保存",
+            "btnCancel.text": "取消",
+            "dialogUserPicker.header": "搜索用户",
+            "dialogGroupPicker.header": "搜索组",
+            "replaceChildrenParticipant": "zh-cn_replace children participant"
+        },
         "message": {
             "error.groupType": "拥有的团体不能成为一个人。",
             "error.userType": " 用户类型不能是一个组。",
@@ -851,6 +855,18 @@
                 "action": "运作",
                 "newValue": "新价值",
                 "oldValue": "旧价值"
+            }
+        },
+        "client": {
+            "title": "历史",
+            "label": {
+                "updated": "更新"
+            },
+            "table.columns": {
+                "eventType": "事件名称",
+                "eventDate": "事件日期",
+                "userId": "用户",
+                "details.btn.text": "查看{{count}}个更改"
             }
         }
     }

@@ -16,6 +16,7 @@ angular.module('admin').controller(
                             id : 'standardLookup'
                         });
                         var columnDefs = componentConfig.columnDefs;
+                        var rowTemplate = componentConfig.rowTemplate;
 
                         // TODO: This should be checked in the HelperUiGridService (ignore addButton with same name)
                         if (!_.findWhere(columnDefs, {
@@ -33,7 +34,13 @@ angular.module('admin').controller(
                             noUnselect : false,
                             columnDefs : columnDefs,
                             totalItems : 0,
-                            data : []
+                            data : [],
+                            rowTemplate : rowTemplate,
+                            onRegisterApi : function(gridApi) {
+                                gridApi.draggableRows.on.rowDropped($scope, function(info, dropTarget) {
+                                    saveLookup();
+                                });
+                            }
                         };
 
                         $scope.gridOptions.data = $scope.lookup;
@@ -61,15 +68,19 @@ angular.module('admin').controller(
                     };
 
                     $scope.deleteRow = function(rowEntity) {
-                        var idx;
-                        _.find($scope.lookup, function(entry, entryIdx) {
-                            if (entry.key == rowEntity.key) {
-                                idx = entryIdx;
-                                return true;
+                        bootbox.confirm($translate.instant('admin.application.lookups.config.deleteEntryMsg'), function(result) {
+                            if (result) {
+                                var idx;
+                                _.find($scope.lookup, function(entry, entryIdx) {
+                                    if (entry.key == rowEntity.key) {
+                                        idx = entryIdx;
+                                        return true;
+                                    }
+                                });
+                                $scope.lookup.splice(idx, 1);
+                                saveLookup();
                             }
                         });
-                        $scope.lookup.splice(idx, 1);
-                        saveLookup();
                     };
 
                     function showModal(entry, isEdit) {

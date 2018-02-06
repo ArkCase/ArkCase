@@ -1,15 +1,8 @@
 'use strict';
 
-var nunjucks = require('nunjucks'),
-    glob = require('glob'),
-    fs = require('fs-extra'),
-    os = require('os'),
-    path = require('path'),
-    _ = require('lodash'),
-    homedir = require('homedir');
+var nunjucks = require('nunjucks'), glob = require('glob'), fs = require('fs-extra'), os = require('os'), path = require('path'), _ = require('lodash'), homedir = require('homedir');
 
-
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     // Path to .arkcase folder, used for sync-dev task
     var destPath = null;
     try {
@@ -22,123 +15,105 @@ module.exports = function (grunt) {
     try {
         var customConfig = require('./config/env/customConfig');
         _.merge(config, customConfig);
-    }
-    catch (ex) {
+    } catch (ex) {
         console.log('Custom config does not exist..continuing..');
     }
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg : grunt.file.readJSON('package.json'),
 
-        csslint: {
-            options: {
-                csslintrc: '.csslintrc'
+        csslint : {
+            options : {
+                csslintrc : '.csslintrc'
             },
-            all: {
-                src: 'modules/**/*.css'
+            all : {
+                src : 'modules/**/*.css'
             }
         },
-        uglify: {
-            production: {
-                options: {
-                    mangle: false,
-                    sourceMap: true
+        uglify : {
+            production : {
+                options : {
+                    mangle : false,
+                    sourceMap : true
                 },
-                files: {
-                    'assets/dist/application.min.js': 'assets/dist/application.js'
+                files : {
+                    'assets/dist/application.min.js' : 'assets/dist/application.js'
                 }
             }
         },
-        cssmin: {
-            combine: {
-                files: {
-                    'assets/dist/application.min.css': '<%= applicationCSSFiles %>'
+        cssmin : {
+            combine : {
+                files : {
+                    'assets/dist/application.min.css' : '<%= applicationCSSFiles %>'
                 }
             }
         },
-        ngAnnotate: {
-            production: {
-                files: {
-                    'assets/dist/application.js': '<%= applicationJavaScriptFiles %>'
+        ngAnnotate : {
+            production : {
+                files : {
+                    'assets/dist/application.js' : '<%= applicationJavaScriptFiles %>'
                 }
             }
         },
-        concat: {
-            dist: {
-                src: '<%= vendorsJavaScriptFiles %>',
-                dest: 'assets/dist/vendors.min.js'
+        concat : {
+            dist : {
+                src : '<%= vendorsJavaScriptFiles %>',
+                dest : 'assets/dist/vendors.min.js'
             }
         },
 
         /////////////////////////////////////
         // Developemnet tasks
         /////////////////////////////////////
-        concurrent: {
-            default: {
-                tasks: ['watch:resources'],
-                options: {
-                    logConcurrentOutput: true,
-                    limit: 10
+        concurrent : {
+            default1 : {
+                tasks : [ 'watch:resources' ],
+                options : {
+                    logConcurrentOutput : true,
+                    limit : 10
                 }
             }
         },
-        sync: {
-            resources: {
-                files: [
-                    {
-                        cwd: 'assets/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/assets/')
-                    },
-                    {
-                        cwd: 'directives/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/directives/')
-                    },
-                    {
-                        cwd: 'filters/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/filters/')
-                    },
-                    {
-                        cwd: 'modules/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/modules/')
-                    },
-                    {
-                        cwd: 'modules_config/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/modules_config/')
-                    },
-                    {
-                        cwd: 'services/',
-                        src: ['**'],
-                        dest: path.join(destPath, 'custom/services/')
-                    }
-                ],
-                verbose: true,
-                updateAndDelete: false,
-                compareUsing: 'mtime'
+        sync : {
+            resources : {
+                files : [ {
+                    cwd : 'assets/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/assets/')
+                }, {
+                    cwd : 'directives/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/directives/')
+                }, {
+                    cwd : 'filters/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/filters/')
+                }, {
+                    cwd : 'modules/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/modules/')
+                }, {
+                    cwd : 'modules_config/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/modules_config/')
+                }, {
+                    cwd : 'services/',
+                    src : [ '**' ],
+                    dest : path.join(destPath, 'custom/services/')
+                } ],
+                verbose : true,
+                updateAndDelete : false,
+                compareUsing : 'mtime'
             }
         },
 
-        watch: {
-            resources: {
-                files: [
-                    'assets/**',
-                    'directives/**',
-                    'filters/**',
-                    'modules/**',
-                    'modules_config/**',
-                    'service/**'
-                ],
-                tasks: [
-                    'sync:resources'
-                ]
+        watch : {
+            resources : {
+                files : [ 'assets/**', 'directives/**', 'filters/**', 'modules/**', 'modules_config/**', 'service/**' ],
+                tasks : [ 'sync:resources' ]
             }
         }
     });
-
 
     // Load NPM tasks
     require('load-grunt-tasks')(grunt);
@@ -147,7 +122,7 @@ module.exports = function (grunt) {
     grunt.option('force', true);
 
     // A Task for loading the configuration object
-    grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function () {
+    grunt.task.registerTask('loadConfig', 'Task that loads the config into a grunt option.', function() {
         //var init = require('./config/init')();
         var configUtil = require('./config/config');
         grunt.config.set('applicationJavaScriptFiles', configUtil.assets.js.concat(configUtil.getModulesJavaScriptAssets()));
@@ -155,9 +130,8 @@ module.exports = function (grunt) {
         grunt.config.set('applicationCSSFiles', configUtil.getCSSAssets());
     });
 
-
     // Render home page bases on hom.tpl.html template
-    grunt.registerTask('renderHome', 'Render HTML page', function () {
+    grunt.registerTask('renderHome', 'Render HTML page', function() {
         var configUtil = require('./config/config');
 
         var title = config.homePage.title;
@@ -172,12 +146,11 @@ module.exports = function (grunt) {
             cssFiles = configUtil.getCSSAssets();
         }
 
-
         var html = nunjucks.render(config.homePage.template, {
-            appPath: config.appPath,
-            title: title,
-            jsFiles: jsFiles,
-            cssFiles: cssFiles
+            appPath : config.appPath,
+            title : title,
+            jsFiles : jsFiles,
+            cssFiles : cssFiles
         });
 
         fs.writeFileSync(config.homePage.target, html);
@@ -186,27 +159,26 @@ module.exports = function (grunt) {
     /**
      * Synchronize modules configuration files
      */
-    grunt.registerTask('updateModulesConfig', 'Update Modules config files', function () {
+    grunt.registerTask('updateModulesConfig', 'Update Modules config files', function() {
         var cfg = config.config;
 
         // Be sure that config folder is created
         fs.mkdirpSync(cfg.modulesConfigFolder);
-
 
         var modules = [];
         if (fs.existsSync(cfg.modulesConfigFile)) {
             modules = JSON.parse(fs.readFileSync(cfg.modulesConfigFile));
         }
 
-
         // Get config from modules and _config_modules diectrories
-        var modulesConfigFolders = glob.sync(config.modules.defaultModulesFolder + '*/module_config/').concat(glob.sync(config.modules.customModulesDir + '*/module_config/'));
+        var modulesConfigFolders = glob.sync(config.modules.defaultModulesFolder + '*/module_config/').concat(
+                glob.sync(config.modules.customModulesDir + '*/module_config/'));
 
         var allModules = [];
         var newModules = [];
         var newModulesFolders = [];
         // Add missed modules
-        _.forEach(modulesConfigFolders, function (folderName) {
+        _.forEach(modulesConfigFolders, function(folderName) {
             var fileName = path.join(folderName, 'config.json');
 
             // This works only for modules that have config.json file
@@ -217,15 +189,17 @@ module.exports = function (grunt) {
                 var moduleId = moduleObj.id;
 
                 // Check if module is not present in modules.json. Add if required
-                if (!_.find(modules, {id: moduleId})) {
+                if (!_.find(modules, {
+                    id : moduleId
+                })) {
                     newModulesFolders.push({
-                        id: moduleId,
-                        folder: folderName
+                        id : moduleId,
+                        folder : folderName
                     });
                     modules.push({
-                        'id': moduleId,
-                        'title': moduleObj.title,
-                        'configurable': moduleObj.configurable
+                        'id' : moduleId,
+                        'title' : moduleObj.title,
+                        'configurable' : moduleObj.configurable
                     });
                     newModules.push(moduleObj);
                 }
@@ -235,24 +209,26 @@ module.exports = function (grunt) {
 
         var removedModules = [];
         // Remove missed modules info from config
-        _.forEach(modules, function (module) {
-            if (!_.find(allModules, {id: module.id})) {
+        _.forEach(modules, function(module) {
+            if (!_.find(allModules, {
+                id : module.id
+            })) {
                 // remove modules
                 removedModules.push(module);
             }
         });
 
-
-        modules = _.reject(modules, function (item) {
-            return _.find(removedModules, {id: item.id});
+        modules = _.reject(modules, function(item) {
+            return _.find(removedModules, {
+                id : item.id
+            });
         });
-
 
         // Save modules config file
         fs.writeFileSync(cfg.modulesConfigFile, JSON.stringify(modules, null, 2));
 
         // Copy new modules configuration to the modules folder
-        _.forEach(newModulesFolders, function (module) {
+        _.forEach(newModulesFolders, function(module) {
             // Create module folder if required
             var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
             fs.mkdirsSync(moduleFolder);
@@ -263,21 +239,20 @@ module.exports = function (grunt) {
         });
 
         // Remove excess modules files
-        _.forEach(removedModules, function (module) {
+        _.forEach(removedModules, function(module) {
             var moduleFolder = path.join(cfg.modulesConfigFolder, 'modules', module.id);
             fs.removeSync(moduleFolder);
             console.log('Removed module config folder: ' + moduleFolder);
         });
     });
 
-
     // Lint task.
-    grunt.registerTask('lint', ['jshint', 'csslint']);
+    grunt.registerTask('lint', [ 'jshint', 'csslint' ]);
 
     // Build task.
     //grunt.registerTask('build', ['renderHome', 'sass', 'lint', 'loadConfig', 'ngAnnotate', 'uglify', 'cssmin']);
-    grunt.registerTask('default', ['loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'updateModulesConfig']);
+    grunt.registerTask('default', [ 'loadConfig', 'ngAnnotate', 'uglify', 'concat', 'cssmin', 'renderHome', 'updateModulesConfig' ]);
 
     // Task syncs current folder with $user/.arkcase/custom/ folder
-    grunt.registerTask('sync-dev', ['concurrent:default'])
+    grunt.registerTask('sync-dev', [ 'concurrent:default' ])
 };

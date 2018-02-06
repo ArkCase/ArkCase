@@ -2,8 +2,11 @@
 
 angular.module('core').controller(
         'PageController',
-        [ '$scope', '$modal', '$sce', '$q', 'UtilService', 'Acm.LoginService', 'LoginWarningService', 'Authentication',
-                function($scope, $modal, $sce, $q, Util, AcmLoginService, LoginWarningService, Authentication) {
+        [ '$scope', '$modal', '$sce', '$q', '$location', 'UtilService', 'Acm.LoginService', 'LoginWarningService', 'Authentication',
+                function($scope, $modal, $sce, $q, $location, Util, AcmLoginService, LoginWarningService, Authentication) {
+
+                    $scope.fullScreenMode = _.startsWith($location.path(), "/viewer/");
+
                     $scope.isLeftMenuCollapsed = false;
 
                     $scope.$on('isLeftMenuCollapsed', function(e, isLeftMenuCollapsed) {

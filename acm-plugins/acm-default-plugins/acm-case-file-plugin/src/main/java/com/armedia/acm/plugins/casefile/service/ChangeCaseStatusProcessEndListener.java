@@ -4,9 +4,12 @@
 package com.armedia.acm.plugins.casefile.service;
 
 import com.armedia.acm.activiti.AcmBusinessProcessEvent;
+import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
 import java.util.Map;
@@ -15,11 +18,12 @@ import java.util.Map;
  * @author riste.tutureski
  *
  */
-public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent>
+public class ChangeCaseStatusProcessEndListener implements ApplicationListener<AcmBusinessProcessEvent>, ApplicationEventPublisherAware
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private ChangeCaseFileStateService changeCaseFileStateService;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     public void onApplicationEvent(AcmBusinessProcessEvent event)
@@ -46,6 +50,13 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
                 log.error("Exception handling completed change case status: " + e.getMessage(), e);
                 throw new RuntimeException(e);
             }
+        }
+
+        if (isBuckslipWorkflow(event))
+        {
+            BuckslipProcessStateEvent buckslipProcessStateEvent = new BuckslipProcessStateEvent(event.getProcessVariables());
+            buckslipProcessStateEvent.setBuckslipProcessState(BuckslipProcessStateEvent.BuckslipProcessState.COMPLETED);
+            applicationEventPublisher.publishEvent(buckslipProcessStateEvent);
         }
     }
 
@@ -88,6 +99,36 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
         return true;
     }
 
+    private boolean isBuckslipWorkflow(AcmBusinessProcessEvent event)
+    {
+        if (!"com.armedia.acm.activiti.businessProcess.end".equals(event.getEventType()))
+        {
+            log.debug("Event is not the end of a business process: [{}]", event.getEventType());
+            return false;
+        }
+
+        Map<String, Object> pvars = event.getProcessVariables();
+
+        if (!pvars.containsKey("buckslipOutcome"))
+        {
+            log.debug("Event does not contain a buckslip outcome property");
+            return false;
+        }
+
+        if (!pvars.containsKey("isBuckslipWorkflow"))
+        {
+            log.debug("Event does not contain a is buckslip workflow property");
+            return false;
+        }
+
+        if ((boolean) pvars.get("isBuckslipWorkflow") == false)
+        {
+            log.debug("Process is not buckslip");
+            return false;
+        }
+        return true;
+    }
+
     public ChangeCaseFileStateService getChangeCaseFileStateService()
     {
         return changeCaseFileStateService;
@@ -99,4 +140,9 @@ public class ChangeCaseStatusProcessEndListener implements ApplicationListener<A
         this.changeCaseFileStateService = changeCaseFileStateService;
     }
 
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
 }

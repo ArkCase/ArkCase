@@ -7,6 +7,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEvent;
 import com.armedia.acm.plugins.ecm.model.sync.EcmEventType;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private AcmFolderService folderService;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
+    private EcmFileParticipantService fileParticipantService;
 
     public void onEcmFolderCreated(EcmEvent folderCreated)
     {
@@ -49,6 +51,9 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
             // new folder should have creator and modifier of the user that took the action in the ECM system
             getAuditPropertyEntityAdapter().setUserId(folderCreated.getUserId());
             AcmFolder created = getFolderDao().save(newFolder);
+
+            getFileParticipantService().setFolderParticipantsFromParentFolder(created);
+            created = getFolderDao().save(created);
 
             log.debug("Finished creating new folder with node id {}, ArkCase id {}", folderCreated.getNodeId(), created.getId());
         }
@@ -88,8 +93,8 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
 
     protected boolean isNewFolderEvent(EcmEvent ecmEvent)
     {
-        return EcmEventType.CREATE.equals(ecmEvent.getEcmEventType()) &&
-                EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER.equals(ecmEvent.getNodeType());
+        return EcmEventType.CREATE.equals(ecmEvent.getEcmEventType())
+                && EcmFileConstants.ECM_SYNC_NODE_TYPE_FOLDER.equals(ecmEvent.getNodeType());
     }
 
     @Override
@@ -129,5 +134,15 @@ public class EcmFolderCreatedEventHandler implements ApplicationListener<EcmEven
     public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
     {
         return auditPropertyEntityAdapter;
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

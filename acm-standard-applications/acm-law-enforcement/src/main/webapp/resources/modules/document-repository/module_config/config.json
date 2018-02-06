@@ -677,7 +677,7 @@
             "enableFiltering": false,
             "multiSelect": false,
             "showFacets": false,
-            "searchFilter": "\"Object Type\": USER",
+            "searchFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
             "columnDefs": [
                 {
                     "name": "name",
