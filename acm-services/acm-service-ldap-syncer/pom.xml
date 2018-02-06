@@ -10,31 +10,26 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-services</groupId>
-    <artifactId>acm-service-alfresco-ldap-syncer</artifactId>
+    <artifactId>acm-service-ldap-syncer</artifactId>
     <name>ACM Service: Alfresco LDAP Syncer</name>
-    <description>Service for initiating syncing Alfresco with the LDAP service.</description>
+    <description>Service for initiating syncing external services with the LDAP service.</description>
     <packaging>jar</packaging>
 
     <dependencies>
     
-    <!-- spring -->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-        </dependency>
-
+        <!-- spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context-support</artifactId>
         </dependency>
 
-        <!-- spring security -->
+        <!-- acm -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
+            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
+            <artifactId>acm-spring-context-holder</artifactId>
+            <version>${acm.version}</version>
         </dependency>
 
-        <!-- acm -->
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-encryption</artifactId>
@@ -44,12 +39,6 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-data-source</artifactId>
-            <version>${acm.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-ldap-syncer</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

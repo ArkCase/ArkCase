@@ -8,9 +8,8 @@
     <task:scheduler id="taskScheduler" pool-size="1"/>
     <task:executor id="taskExecutor" pool-size="20"/>
 
-    <bean id="alfrescoLdapSyncer" class="com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer">
-        <property name="encryptablePropertyUtils" ref="acmEncryptablePropertyUtils"/>
-        <property name="alfrescoPropertiesResource" value="file:${user.home}/.arkcase/acm/alfrescoLdapSyncerService.properties"/>
+    <bean id="externalLdapSyncLauncher" class="com.armedia.acm.services.ldap.syncer.ExternalLdapSyncLauncher">
+        <property name="springContextHolder" ref="acmContextHolder"/>
     </bean>
 
 </beans>
