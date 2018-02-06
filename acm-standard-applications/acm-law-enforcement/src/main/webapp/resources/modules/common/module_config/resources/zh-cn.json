@@ -52,6 +52,7 @@
             "newCorrespondence": "创建新信件",
             "open": "打开",
             "email": "电子邮件",
+            "newTask": "zh-cn_New Task",
             "download": "下载",
             "copy": "复制",
             "cut": "切割",
@@ -563,7 +564,7 @@
     "common.directive.coreParticipants": {
         "title": "参与者",
         "replaceFolderChildrenParticipants": "zh-cn_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "添加参与者",
             "editParticipant.label": "编辑记录",
             "participantType.label": "参与者类型",

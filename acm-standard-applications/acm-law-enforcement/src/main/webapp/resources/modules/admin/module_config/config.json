@@ -164,7 +164,7 @@
                     "displayName": "admin.correspondenceManagement.mergefields.version.grid.mergingActiveVersion",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning'>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
+                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.mergingActiveVersion' class='label label-warning' translate>No</span><span ng-if='row.entity.mergingActiveVersion' class='label label-success'>Yes</span></div>'",
                     "width": 70
                 },
                 {
@@ -257,7 +257,8 @@
                     "displayName": "admin.correspondenceManagement.templates.grid.activated",
                     "visible": true,
                     "headerCellFilter": "translate",
-                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)'>Deactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)'>Activated</span></div>'",
+                    "cellTemplate": "<div align='center'><span ng-if='!row.entity.activated' class='label label-warning' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusDeactivated</span><span ng-if='row.entity.activated' class='label label-success' ng-click='grid.appScope.activate(row.entity)' translate>admin.correspondenceManagement.templates.grid.statusActivated</span></div>'",
+                    "cellFilter": "translate",
                     "width": 120
                 }
             ],
@@ -781,33 +782,40 @@
             "objectTypes": [
                 {
                     "name": "Case File",
-                    "id": "CASE_FILE"
+                    "id": "CASE_FILE",
+                    "displayName": "admin.security.emailTemplates.objectTypes.caseFile"
                 },
                 {
                     "name": "Complaint",
-                    "id": "COMPLAINT"
+                    "id": "COMPLAINT",
+                    "displayName": "admin.security.emailTemplates.objectTypes.complaint"
                 },
                 {
                     "name": "Task",
-                    "id": "TASK"
+                    "id": "TASK",
+                    "displayName": "admin.security.emailTemplates.objectTypes.task"
                 },
                 {
                     "name": "Document",
-                    "id": "DOC_REPO"
+                    "id": "DOC_REPO",
+                    "displayName": "admin.security.emailTemplates.objectTypes.document"
                 }
             ],
             "actions": [
                 {
                     "name": "Send as Attachments",
-                    "id": "sendAsAttachments"
+                    "id": "sendAsAttachments",
+                    "displayName": "admin.security.emailTemplates.actions.sendAsAttachments"
                 },
                 {
                     "name": "Send as Links",
-                    "id": "sendAsLinks"
+                    "id": "sendAsLinks",
+                    "displayName": "admin.security.emailTemplates.actions.sendAsLinks"
                 },
                 {
                     "name": "Send as Attachments and Links",
-                    "id": "sendAsAttachmentsAndLinks"
+                    "id": "sendAsAttachmentsAndLinks",
+                    "displayName": "admin.security.emailTemplates.actions.sendAsAttachmentsAndLinks"
                 }
             ],
             "sources": [

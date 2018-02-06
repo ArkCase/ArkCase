@@ -52,6 +52,7 @@
             "newCorrespondence": "Новая переписка",
             "open": "Открыто",
             "email": "Эл. адрес",
+            "newTask": "ru_New Task",
             "download": "Скачать",
             "copy": "Копирование",
             "cut": "Порез",
@@ -563,7 +564,7 @@
     "common.directive.coreParticipants": {
         "title": "Участники",
         "replaceFolderChildrenParticipants": "ru_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Добавить участника",
             "editParticipant.label": "Изменить запись",
             "participantType.label": "Тип участника",

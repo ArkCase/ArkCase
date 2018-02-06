@@ -52,6 +52,7 @@
             "newCorrespondence": "Neue Korrespondenz",
             "open": "Öffnen",
             "email": "Email",
+            "newTask": "de_New Task",
             "download": "Herunterladen",
             "copy": "Kopieren",
             "cut": "Schnitt",
@@ -563,7 +564,7 @@
     "common.directive.coreParticipants": {
         "title": "Teilnehmer",
         "replaceFolderChildrenParticipants": "de_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Teilnehmer hinzufügen",
             "editParticipant.label": "Datensatz bearbeiten",
             "participantType.label": "Teilnehmertyp",

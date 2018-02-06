@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "カレンダー"
+        "title": "カレンダー",
+        "message": "ja_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "マージ",
@@ -332,6 +333,7 @@
             "status": "状態",
             "addedBy": "によって追加"
         },
+        "assigne.none": "ja_None",
         "assignee.label": "譲受人",
         "owningGroup.label": "所有グループ",
         "priority.label": "優先",
