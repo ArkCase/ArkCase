@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,12 +31,11 @@ public class GetEcmFileByIdAPIController
 
     private EcmFileService fileService;
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'read|group-read|write|group-write')")
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile getEcmFile(
-            @PathVariable("fileId") Long fileId,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    public EcmFile getEcmFile(@PathVariable("fileId") Long fileId, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
         if (log.isInfoEnabled())
         {

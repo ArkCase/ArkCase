@@ -115,6 +115,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
 
         mapAdditionalProperties(in, doc.getAdditionalProperties());
 
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        doc.setAdditionalProperty("acm_participants_lcs", participantsListJson);
+
         return doc;
     }
 
@@ -219,6 +222,9 @@ public class EcmFileToSolrTransformer implements AcmObjectToSolrDocTransformer<E
         solr.setAdditionalProperty("security_field_lcs", in.getSecurityField());
 
         solr.setAdditionalProperty("cmis_repository_id_s", in.getCmisRepositoryId());
+
+        String participantsListJson = ParticipantUtils.createParticipantsListJson(in.getParticipants());
+        solr.setAdditionalProperty("acm_participants_lcs", participantsListJson);
 
         return solr;
     }

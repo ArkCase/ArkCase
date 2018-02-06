@@ -104,7 +104,7 @@ public class SpringLdapUserDao
             // set old/new password attributes
             ModificationItem[] mods = new ModificationItem[2];
             mods[0] = new ModificationItem(DirContext.REMOVE_ATTRIBUTE,
-                    Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(password));
+                    Directory.valueOf(config.getDirectoryType()).getCurrentPasswordAttribute(password));
             mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                     Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(newPassword));
             // Perform the update

@@ -13,11 +13,11 @@ import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
 
 import org.activiti.engine.RepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -254,7 +254,7 @@ public class AcmBpmnServiceIT
         String tmpFolder = System.getProperty("java.io.tmpdir");
         InputStream is = acmBpmnService.getBpmnFileStream(apd);
         File downloadedFile = new File(tmpFolder + "/" + apd.getFileName());
-        FileUtils.copyStreamToFile(is, downloadedFile);
+        FileUtils.copyInputStreamToFile(is, downloadedFile);
 
         try
         {

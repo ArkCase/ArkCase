@@ -52,8 +52,6 @@ angular.module('admin').controller(
                     function refreshPageData() {
                         // set delay for solr to finish indexing
                         $timeout(function() {
-                            $scope.data = [];
-                            groupsMap = {};
                             $scope.onLoadMore(gridCurrentPage, gridPageSize);
                         }, 2000);
                     }
@@ -65,7 +63,6 @@ angular.module('admin').controller(
                     }
 
                     function addToTree(group, top) {
-                        group.expanded = false;
                         group.lazy = true;
                         group.folder = true;
                         group.title = group.name;
@@ -167,11 +164,16 @@ angular.module('admin').controller(
                         var deferred = $q.defer();
                         var excludeAncestorGroups = '';
                         if (parent.ascendants_id_ss && parent.ascendants_id_ss.length > 0) {
-                            excludeAncestorGroups = " OR " + parent.ascendants_id_ss.join(' OR ');
+                            var ancestors = _.map(parent.ascendants_id_ss, function(ancestor) {
+                                return ancestor.replace(/ /g, "*")
+                            });
+                            excludeAncestorGroups = ' OR ' + ancestors.join(' OR ');
                         }
+                        var parentId = parent.object_id_s.replace(/ /g, "*");
                         var params = {
                             filter : '\"Object Type\":GROUP %26 object_sub_type_s:ADHOC_GROUP %26 status_lcs:ACTIVE %26 -object_id_s:('
-                                    + parent.object_id_s + excludeAncestorGroups + ")"
+                                    + parentId + excludeAncestorGroups + ")",
+                            header : $translate.instant('admin.security.organizationalHierarchy.addMembers.group.title')
                         };
                         var modalInstance = openMembersPicker(params);
                         modalInstance.result.then(function(group) {
@@ -179,13 +181,13 @@ angular.module('admin').controller(
                                     function(payload) {
                                         //added successfully
                                         var subgroup = unmapGroupMember(payload.data, parent.object_id_s);
-                                        groupsMap[subgroup.object_id_s] = subgroup;
-                                        addToTree(subgroup);
                                         deferred.resolve(subgroup);
                                     }, function() {
                                         //error adding group
                                         deferred.reject();
-                                    });
+                                    }).then(function() {
+                                refreshPageData();
+                            });
                         }, function() {
                             //button cancel, nothing to do.
                         });
@@ -363,11 +365,17 @@ angular.module('admin').controller(
                         return $modal.open({
                             animation : $scope.animationsEnabled,
                             templateUrl : 'modules/admin/views/components/security.org-hierarchy.users-groups-picker.client.view.html',
-                            controller : [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
-                                $scope.modalInstance = $modalInstance;
-                                $scope.filter = params.filter;
-                                $scope.config = params.config;
-                            } ],
+                            controller : [
+                                    '$scope',
+                                    '$modalInstance',
+                                    'params',
+                                    function($scope, $modalInstance, params) {
+                                        $scope.modalInstance = $modalInstance;
+                                        $scope.filter = params.filter;
+                                        $scope.config = params.config;
+                                        $scope.header = params.header ? params.header : $translate
+                                                .instant('admin.security.organizationalHierarchy.addMembers.title');
+                                    } ],
                             size : 'lg',
                             resolve : {
                                 params : params
@@ -479,7 +487,7 @@ angular.module('admin').controller(
                     $scope.onLazyLoad = function(event, groupNode) {
 
                         var groupId = groupNode.object_id_s;
-                        var group = groupsMap[groupId];
+
                         var children = [];
 
                         var dfd = $q.defer();
@@ -497,6 +505,9 @@ angular.module('admin').controller(
                             var memberGroups = _.get(data[0], 'data.response.docs');
                             addToGroupsMap(memberGroups);
                             createTreeData(memberGroups);
+
+                            var group = groupsMap[groupId];
+
                             children = children.concat(memberGroups);
 
                             var memberUsers = _.get(data[1], 'data.response.docs');

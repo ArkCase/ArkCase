@@ -2,7 +2,6 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.services.search.model.SearchConstants;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -250,6 +249,46 @@ public class FacetedSearchService
 
         }
         return solrResult;
+    }
+
+    /**
+     * Same as ClentUtils.escapeChars, except c == '*' and Character.isWhitespace(c) is removed
+     *
+     * @param s String to have Solr's special characters escaped
+     * @return escaped string
+     */
+    public String escapeQueryChars(String s)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < s.length(); i++)
+        {
+            char c = s.charAt(i);
+            // These characters are part of the query syntax and must be escaped
+            if (c == '\\'
+                    || c == '+'
+                    || c == '-'
+                    || c == '!'
+                    || c == '('
+                    || c == ')'
+                    || c == ':'
+                    || c == '^'
+                    || c == '['
+                    || c == ']'
+                    || c == '\"'
+                    || c == '{'
+                    || c == '}'
+                    || c == '~'
+                    || c == '?'
+                    || c == '|'
+                    || c == '&'
+                    || c == ';'
+                    || c == '/')
+            {
+                sb.append('\\');
+            }
+            sb.append(c);
+        }
+        return sb.toString();
     }
 
     private String createFacetedFiltersSubString(String filter) throws UnsupportedEncodingException

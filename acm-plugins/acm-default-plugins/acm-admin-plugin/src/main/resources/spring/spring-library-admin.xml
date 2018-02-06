@@ -163,6 +163,18 @@
 
     <bean id="cmisConfigurationPropertiesService" class="com.armedia.acm.plugins.admin.service.CmisConfigurationPropertiesService">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
+        <property name="propertyNamesForIntegerValues">
+            <list value-type="java.lang.String">
+                <value>cmis.maxIdle</value>
+                <value>cmis.maxActive</value>
+                <value>cmis.maxWait</value>
+                <value>cmis.Count</value>
+                <value>cmis.reconnectFrequency</value>
+                <value>cmis.minEvictionMillis</value>
+                <value>cmis.reconnectCount</value>
+                <value>cmis.evictionCheckIntervalMillis</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -75,7 +76,14 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
 
             getTaskDao().ensureCorrectAssigneeInParticipants(acmTask);
 
-            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(acmTask);
+            try
+            {
+                getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(acmTask);
+            }
+            catch (AcmAccessControlException e)
+            {
+                log.error("Error applying assignment and access rules on AcmTaskActivitiEvent", e);
+            }
 
             // gotta check the assignee again to be sure the assignment rules didn't mess with it
             getTaskDao().ensureCorrectAssigneeInParticipants(acmTask);

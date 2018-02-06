@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "参加者",
-        "modal.addParticipant.label": "参加者を追加",
-        "modal.editParticipant.label": "レコードの編集",
-        "modal.participantType.label": "参加者タイプ",
-        "modal.participantName.label": "参加者名",
-        "modal.btnOk.text": "セーブ",
-        "modal.btnCancel.text": "キャンセル",
-        "modal.dialogUserPicker.header": "ユーザーを検索",
-        "modal.dialogGroupPicker.header": "検索グループ",
+        "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "参加者を追加",
+            "editParticipant.label": "レコードの編集",
+            "participantType.label": "参加者タイプ",
+            "participantName.label": "参加者名",
+            "btnOk.text": "セーブ",
+            "btnCancel.text": "キャンセル",
+            "dialogUserPicker.header": "ユーザーを検索",
+            "dialogGroupPicker.header": "検索グループ",
+            "replaceChildrenParticipant": "ja_replace children participant"
+        },
         "message": {
             "error.groupType": "所有グループは人になることはできません。",
             "error.userType": " ユーザータイプはグループにすることはできません。",
@@ -851,6 +855,18 @@
                 "action": "アクション",
                 "newValue": "新しい価値",
                 "oldValue": "古い価値"
+            }
+        },
+        "client": {
+            "title": "歴史",
+            "label": {
+                "updated": "更新しました"
+            },
+            "table.columns": {
+                "eventType": "イベント名",
+                "eventDate": "日付",
+                "userId": "ユーザー",
+                "details.btn.text": "{{count}}つの変更を表示"
             }
         }
     }

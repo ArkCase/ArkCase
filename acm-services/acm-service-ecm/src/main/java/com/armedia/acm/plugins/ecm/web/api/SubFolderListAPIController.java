@@ -34,7 +34,7 @@ public class SubFolderListAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|group-read|write|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}/{folderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmCmisObjectList listFolderChildren(

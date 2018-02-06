@@ -52,7 +52,7 @@ public class FolderDocumentCountAPIController
      * @throws AcmListObjectsFailedException
      *             If something went wrong querying Solr for the document counts.
      */
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/counts/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Integer> folderDocumentCountList(

@@ -5,6 +5,7 @@ import com.armedia.acm.core.AcmParentObjectInfo;
 import com.armedia.acm.core.AcmStatefulEntity;
 import com.armedia.acm.data.AcmEntity;
 import com.armedia.acm.data.AcmLegacySystemEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
 import com.armedia.acm.service.objectlock.model.AcmObjectLock;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
@@ -22,10 +23,12 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -156,8 +159,9 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @Column(name = "cm_class_name")
     private String className = this.getClass().getName();
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumns({ @JoinColumn(name = "cm_object_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_file_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
 
     @ManyToOne
@@ -167,6 +171,10 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
     @ManyToOne
     @JoinColumn(name = "cm_file_person_association")
     private ObjectAssociation personAssociation;
+
+    @Column(name = "cm_file_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
 
     @PrePersist
     protected void beforeInsert()
@@ -577,6 +585,17 @@ public class EcmFile implements AcmEntity, Serializable, AcmObject, AcmStatefulE
             fileExtension = FilenameUtils.getExtension(getFileName());
         }
         return fileExtension;
+    }
+
+    @Override
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 
     @Override
