@@ -39,6 +39,22 @@ public class LdapSyncAPIController
                 HttpStatus.BAD_REQUEST);
     }
 
+    @RequestMapping(value = "/{directory:.+}/full-sync", method = RequestMethod.POST)
+    @ResponseBody
+    public ResponseEntity initiateFullSync(@PathVariable String directory, Authentication authentication)
+    {
+        LdapSyncService ldapSyncService = acmContextHolder.getAllBeansOfType(LdapSyncService.class).
+                get(String.format("%s_ldapSyncJob", directory));
+        if (ldapSyncService != null)
+        {
+            log.debug("User [{}] initiated full sync of directory [{}]", authentication.getName(), directory);
+            ldapSyncService.initiateFullSync(authentication.getName());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(Collections.singletonMap("message", "Service for directory [ " + directory + " ] not found"),
+                HttpStatus.BAD_REQUEST);
+    }
+
     public void setAcmContextHolder(SpringContextHolder acmContextHolder)
     {
         this.acmContextHolder = acmContextHolder;
