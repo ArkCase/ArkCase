@@ -71,7 +71,7 @@ public class LdapSyncService implements ApplicationEventPublisherAware
             return;
         }
 
-        log.info("Starting sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
+        log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
                 getLdapSyncConfig().getLdapUrl());
 
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
@@ -80,8 +80,8 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.empty());
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
@@ -100,22 +100,16 @@ public class LdapSyncService implements ApplicationEventPublisherAware
 
         Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
         boolean isFullSync = !ldapLastSyncDate.isPresent();
-        if (isFullSync)
-        {
-            log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
-                    getLdapSyncConfig().getLdapUrl());
-        }
-        else
-        {
-            log.info("Starting partial sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
-                    getLdapSyncConfig().getLdapUrl());
-        }
+
+        log.info("Starting {} sync of directory: [{}]; ldap URL: [{}]", isFullSync ? "full" : "partial",
+                getLdapSyncConfig().getDirectoryName(),
+                getLdapSyncConfig().getLdapUrl());
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
         // only changed users are retrieved
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
 
@@ -125,6 +119,7 @@ public class LdapSyncService implements ApplicationEventPublisherAware
     @Async
     public void initiatePartialSync(String principal)
     {
+        log.debug("Shod be async");
         boolean successResult = true;
         try
         {
@@ -133,10 +128,31 @@ public class LdapSyncService implements ApplicationEventPublisherAware
         catch (Exception e)
         {
             successResult = false;
-            log.error("LDAP Partial sync failed to complete.", e);
+            log.error("LDAP partial sync failed to complete.", e);
         }
         AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
-        ldapSyncResult.setMessage(successResult ? "LDAP Partial sync completed" : "LDAP Partial sync failed to complete");
+        ldapSyncResult.setMessage(successResult ? "LDAP partial sync completed" : "LDAP partial sync failed to complete");
+        ldapSyncResult.setResult(successResult);
+        ldapSyncResult.setService("LDAP");
+        ldapSyncResult.setUser(principal);
+        applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
+    }
+
+    @Async
+    public void initiateFullSync(String principal)
+    {
+        boolean successResult = true;
+        try
+        {
+            ldapSync();
+        }
+        catch (Exception e)
+        {
+            successResult = false;
+            log.error("LDAP full sync failed to complete.", e);
+        }
+        AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
+        ldapSyncResult.setMessage(successResult ? "LDAP full sync completed" : "LDAP full sync failed to complete");
         ldapSyncResult.setResult(successResult);
         ldapSyncResult.setService("LDAP");
         ldapSyncResult.setUser(principal);

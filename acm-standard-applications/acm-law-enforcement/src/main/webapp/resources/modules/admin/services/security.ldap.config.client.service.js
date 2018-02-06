@@ -18,7 +18,8 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http'
             createDirectory: createDirectory,
             deleteDirectory: deleteDirectory,
             updateDirectory: updateDirectory,
-            startPartialSync: startPartialSync
+            startPartialSync: startPartialSync,
+            startFullSync: startFullSync
         });
 
         /**
@@ -123,6 +124,29 @@ angular.module('admin').service('Admin.LdapConfigService', ['$http'
             return $http({
                 method: "POST",
                 url: "api/latest/ldap/" + dir + "/partial-sync",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+        }
+
+        /**
+         * @ngdoc method
+         * @name startFullSync
+         * @methodOf admin.service:Admin.LdapConfigService
+         *
+         * @description
+         * Initiate full sync from ldap directory
+         *
+         *
+         * @param {object} dir name of ldap directory
+         *
+         * @returns {HttpPromise} Future info status
+         */
+        function startFullSync(dir) {
+            return $http({
+                method: "POST",
+                url: "api/latest/ldap/" + dir + "/full-sync",
                 headers: {
                     "Content-Type": "application/json"
                 }
