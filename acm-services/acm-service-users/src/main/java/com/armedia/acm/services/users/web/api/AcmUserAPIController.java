@@ -49,15 +49,15 @@ public class AcmUserAPIController extends SecureLdapController
 
     private AcmUserService acmUserService;
 
-    @RequestMapping(value = "/getFilteredUsers/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/search/users/filtered", method = RequestMethod.GET)
     @ResponseBody
-    public String getFilteredUsers(Authentication auth,
+    public String getUsersFiltered(Authentication auth,
             @RequestParam(value = "fq") String searchFilter,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
+            @RequestParam(value = "category", required = false) String category) throws MuleException
     {
         String solrResponse = acmUserService.getFilteredByNameUsers(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
         SearchResults searchResults = new SearchResults();
@@ -66,21 +66,15 @@ public class AcmUserAPIController extends SecureLdapController
         return docs.toString();
     }
 
-    @RequestMapping(value = "/getNUsers/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/search/n/users", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getNUsers(Authentication auth,
-            @RequestParam(value = "fq", required = false) String searchFilter,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows) throws MuleException
     {
-        String solrResponse = acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
-        SearchResults searchResults = new SearchResults();
-        JSONArray docs = searchResults.getDocuments(solrResponse);
-
-        return docs.toString();
+        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
     }
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
