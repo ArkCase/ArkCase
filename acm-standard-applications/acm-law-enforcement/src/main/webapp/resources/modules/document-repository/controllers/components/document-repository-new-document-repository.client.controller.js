@@ -92,10 +92,6 @@ angular
                                             return;
                                         }
                                     }
-                                    // if (!Util.isEmpty(selected)) {
-                                    //     $scope.assignee = selected;
-                                    //     $scope.userGroups = selected.groups_id_ss;
-                                    // }
                                 }, function() {
                                     // Cancel button was clicked.
                                     return [];
