@@ -53,7 +53,10 @@ angular.module('directives').directive('panelView', [ '$q', function($q) {
 
             scope.onCollapseIconClick = function($event) {
                 $event.preventDefault();
-                scope.isCollapsed = !scope.isCollapsed
+                scope.isCollapsed = !scope.isCollapsed;
+
+                //Allows the controller of where the directive is used to control if it's collapsed as well as keeping the parent's scope updated
+                scope.$parent.collapsed = scope.isCollapsed + "";
             };
         },
 
