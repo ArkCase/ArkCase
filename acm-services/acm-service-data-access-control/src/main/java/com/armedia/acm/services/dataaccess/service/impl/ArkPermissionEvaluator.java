@@ -53,6 +53,7 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     private AcmGroupDao groupDao;
     private UserDao userDao;
     private AccessControlRuleChecker accessControlRuleChecker;
+    private boolean enableDocumentACL;
 
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType, Object permission)
@@ -73,6 +74,11 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
         {
             log.error("Permission must be a non-null string... returning false");
             return false;
+        }
+
+        if (!isEnableDocumentACL() && (targetType == null || targetType.equals("FILE") || targetType.equals("FOLDER")))
+        {
+            return true;
         }
 
         // checking access to a single object
@@ -207,9 +213,10 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
             // this evaluator to consider additional access levels, but for now we will grant any access so long as
             // the user can read the object.
             String result = getExecuteSolrQuery()
-                    .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc");
+                    .getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, 0, 1, "id asc", objectType);
             if (result.contains("numFound\":0"))
-                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc");
+                result = getExecuteSolrQuery().getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1, "id asc",
+                        objectType);
             return result;
         }
         catch (MuleException e)
@@ -283,5 +290,15 @@ public class ArkPermissionEvaluator implements PermissionEvaluator
     public void setAccessControlRuleChecker(AccessControlRuleChecker accessControlRuleChecker)
     {
         this.accessControlRuleChecker = accessControlRuleChecker;
+    }
+
+    public boolean isEnableDocumentACL()
+    {
+        return enableDocumentACL;
+    }
+
+    public void setEnableDocumentACL(boolean enableDocumentACL)
+    {
+        this.enableDocumentACL = enableDocumentACL;
     }
 }
