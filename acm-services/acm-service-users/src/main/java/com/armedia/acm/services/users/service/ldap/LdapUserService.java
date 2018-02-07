@@ -98,7 +98,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             user = userDto.updateAcmUser(user);
         }
 
-        String dn = buildDnForUser(user.getFullName(), userDto.getUserId(), ldapSyncConfig);
+        String dn = buildDnForUser(userDto.getUserId(), ldapSyncConfig);
         user.setDistinguishedName(dn);
         user.setUserDirectoryName(directoryName);
         user.setUserState(AcmUserState.VALID);
@@ -299,11 +299,11 @@ public class LdapUserService implements ApplicationEventPublisherAware
         return user;
     }
 
-    private String buildDnForUser(String userFullName, String userId, AcmLdapSyncConfig syncConfig)
+    private String buildDnForUser(String userId, AcmLdapSyncConfig syncConfig)
     {
         String uidAttr = String.format("%s=%s", "uid", userId.toLowerCase());
-        String cnAttr = String.format("%s=%s", "cn", userFullName);
-        String dnAttr = Directory.openldap.name().equals(syncConfig.getDirectoryType()) ? uidAttr : cnAttr;
+        String samaccountNameAttr = String.format("%s=%s", "sAMAccountName", userId.toLowerCase());
+        String dnAttr = Directory.openldap.name().equals(syncConfig.getDirectoryType()) ? uidAttr : samaccountNameAttr;
         return MapperUtils.appendToDn(dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 
