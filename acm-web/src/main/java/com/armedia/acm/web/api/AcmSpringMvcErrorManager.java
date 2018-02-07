@@ -115,7 +115,7 @@ public class AcmSpringMvcErrorManager
     public void resourceNotModifiable(HttpServletResponse response, Exception e)
     {
         log.error("Resource cannot be modified: " + e.getMessage(), e);
-        sendResponse(HttpStatus.NOT_MODIFIED, response, e.getMessage());
+        sendResponse(HttpStatus.CONFLICT, response, e.getMessage());
     }
 
     @ExceptionHandler(InvalidLookupException.class)
