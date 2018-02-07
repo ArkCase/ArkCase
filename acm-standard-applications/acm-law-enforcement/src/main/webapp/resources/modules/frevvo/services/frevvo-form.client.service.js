@@ -9,7 +9,7 @@
  *
  * This service contains functionality for Frevvo form management.
  */
-angular.module('services').factory('Frevvo.FormService', [ 'UtilService', function(Util) {
+angular.module('frevvo').factory('Frevvo.FormService', [ 'UtilService', 'Config.LocaleService', function(Util, LocaleService) {
     return {
         /**
          * @ngdoc method
@@ -41,12 +41,11 @@ angular.module('services').factory('Frevvo.FormService', [ 'UtilService', functi
             urlTemplate = urlTemplate.replace('{type}', acmFormsProperties[formType + '.type']);
             urlTemplate = urlTemplate.replace('{mode}', acmFormsProperties[formType + '.mode']);
             urlTemplate = urlTemplate.replace('{frevvo_timezone}', acmFormsProperties['frevvo.timezone']);
-            urlTemplate = urlTemplate.replace('{frevvo_locale}', acmFormsProperties['frevvo.locale']);
+            urlTemplate = urlTemplate.replace('{frevvo_locale}', LocaleService.getLocaleData().code);
             urlTemplate = urlTemplate.replace('{acm_ticket}', acmTicket);
             urlTemplate = urlTemplate.replace('{frevvo_service_baseUrl}', acmFormsProperties['frevvo.service.baseUrl']);
             urlTemplate = urlTemplate.replace('{frevvo_service_external_baseUrl}', acmFormsProperties['frevvo.service.external.baseUrl']);
             urlTemplate = urlTemplate.replace('{frevvo_browser_redirect_baseUrl}', acmFormsProperties['frevvo.browser.redirect.baseUrl']);
-
             if (!Util.isEmpty(arg)) {
                 var replacement = "";
                 _.each(arg, function(v, k) {
