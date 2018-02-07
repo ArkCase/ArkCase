@@ -9,7 +9,9 @@ import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.frevvo.config.FrevvoFormUtils;
 import com.armedia.acm.objectonverter.ObjectConverter;
+import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
 import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
 import com.armedia.acm.plugins.ecm.exception.AcmFileTypesException;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
@@ -353,7 +355,20 @@ public class PersonServiceImpl implements PersonService
             AcmUpdateObjectFailedException, AcmUserActionFailedException, PipelineProcessException
     {
         validateOrganizationAssociations(in);
-        validateContactMethodFields(in);
+        try
+        {
+            ContactMethodsUtil.validateContactMethodFields(in.getContactMethods());
+        }
+        catch (AcmContactMethodValidationException e)
+        {
+            if(in.getId() == null){
+                throw new AcmCreateObjectFailedException("Person", e.toString(), null);
+            } else {
+                throw new AcmUpdateObjectFailedException("Person", in.getId(), e.toString(), null);
+            }
+
+        }
+
         PersonPipelineContext pipelineContext = new PersonPipelineContext();
         // populate the context
         pipelineContext.setNewPerson(in.getId() == null);
@@ -418,31 +433,6 @@ public class PersonServiceImpl implements PersonService
             errorMessage.append("Duplicate organizations to person relations!");
             withDupes.forEach(duplicate -> {
                 errorMessage.append(" [OrganizationId: " + duplicate.getKey() + " Relation: " + duplicate.getValue() + "]");
-            });
-            throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
-        }
-    }
-
-    /**
-     * Validates the {@link com.armedia.acm.plugins.addressable.model.ContactMethod}.
-     *
-     * @param person
-     *            the {@link Person} to validate
-     * @throws AcmCreateObjectFailedException
-     *             when at least one of the {@link ContactMethod} is not valid.
-     * @throws AcmUpdateObjectFailedException
-     *             when at least one of the {@link ContactMethod} is not valid.
-     */
-    private void validateContactMethodFields(Person person) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException{
-        List<ContactMethod> invalidEmails = person.getContactMethods().stream()
-                .filter(m -> "email".equals(m.getType().toLowerCase())).filter(m -> !ContactMethod.EMAIL_ADDRESS_REGEX.matcher(m.getValue()).matches())
-                .collect(Collectors.toList());
-
-        if(invalidEmails.size() > 0){
-            StringBuilder errorMessage = new StringBuilder();
-            errorMessage.append("Invalid email in Contact Method!");
-            invalidEmails.forEach(invalid -> {
-                errorMessage.append(" [PersonId: " + person.getId() + " emailValue: " + invalid.getValue() + "]");
             });
             throw new AcmCreateObjectFailedException("Person", errorMessage.toString(), null);
         }
