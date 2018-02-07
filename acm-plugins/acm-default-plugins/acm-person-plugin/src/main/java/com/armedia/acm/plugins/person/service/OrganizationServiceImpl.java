@@ -2,8 +2,10 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.plugins.person.pipeline.OrganizationPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -47,6 +49,7 @@ public class OrganizationServiceImpl implements OrganizationService
             throws PipelineProcessException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
         validatePersonAssociations(organization);
+        validateContactMethodFields(organization);
         OrganizationPipelineContext pipelineContext = new OrganizationPipelineContext();
         // populate the context
         pipelineContext.setNewOrganization(organization.getId() == null);
@@ -67,7 +70,7 @@ public class OrganizationServiceImpl implements OrganizationService
      *            the {@link Organization} to validate
      * @throws AcmCreateObjectFailedException
      *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
-     * @throws AcmDuplicatePersonAssociationException
+     * @throws AcmUpdateObjectFailedException
      *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
      */
     private void validatePersonAssociations(Organization organization) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException
@@ -105,6 +108,31 @@ public class OrganizationServiceImpl implements OrganizationService
             errorMessage.append("Duplicate persons to organization relations!");
             withDupes.forEach(duplicate -> {
                 errorMessage.append("[PersonId: " + duplicate.getKey() + " <-> Realation: " + duplicate.getValue() + "]");
+            });
+            throw new AcmCreateObjectFailedException("Organization", errorMessage.toString(), null);
+        }
+    }
+
+    /**
+     * Validates the {@link com.armedia.acm.plugins.addressable.model.ContactMethod}.
+     *
+     * @param organization
+     *            the {@link Organization} to validate
+     * @throws AcmCreateObjectFailedException
+     *             when at least one of the {@link ContactMethod} is not valid.
+     * @throws AcmUpdateObjectFailedException
+     *             when at least one of the {@link ContactMethod} is not valid.
+     */
+    private void validateContactMethodFields(Organization organization) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException{
+        List<ContactMethod> invalidEmails = organization.getContactMethods().stream()
+                .filter(m -> "email".equals(m.getType().toLowerCase())).filter(m -> !ContactMethod.EMAIL_ADDRESS_REGEX.matcher(m.getValue()).matches())
+                .collect(Collectors.toList());
+
+        if(invalidEmails.size() > 0){
+            StringBuilder errorMessage = new StringBuilder();
+            errorMessage.append("Invalid email in Contact Method!");
+            invalidEmails.forEach(invalid -> {
+                errorMessage.append(" [OrganizationId: " + organization.getId() + " emailValue: " + invalid.getValue() + "]");
             });
             throw new AcmCreateObjectFailedException("Organization", errorMessage.toString(), null);
         }
