@@ -59,6 +59,7 @@
         <property name="searchResults">
             <bean class="com.armedia.acm.services.search.service.SearchResults"/>
         </property>
+        <property name="groupDao" ref="groupDao"/>
     </bean>
 
 </beans>
