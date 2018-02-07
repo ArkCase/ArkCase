@@ -51,7 +51,7 @@ public class AcmUserAPIController extends SecureLdapController
 
     @RequestMapping(value = "/search/users/filtered", method = RequestMethod.GET)
     @ResponseBody
-    public String getFilteredUsers(Authentication auth,
+    public String getUsersFiltered(Authentication auth,
             @RequestParam(value = "fq") String searchFilter,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
