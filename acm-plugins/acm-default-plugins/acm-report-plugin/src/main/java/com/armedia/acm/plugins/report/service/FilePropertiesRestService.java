@@ -21,7 +21,7 @@ public class FilePropertiesRestService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilePropertiesRestService.class);
     private ReportFiles reportFiles;
-    ResponseEntity<ReportFiles> response;
+    private ResponseEntity<ReportFiles> response;
     private String pentahoUrl;
     private String pentahoPort;
     private String filePropertiesApi;
