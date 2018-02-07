@@ -386,6 +386,69 @@
             ]
         },
         {
+            "id": "scheduleReportConfig",
+            "title": "Schedule Report Config",
+            "enabled": true,
+            "type": "grid",
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 10,
+            "rowHeight": "auto",
+            "columnDefs": [
+                {
+                    "name": "jobName",
+                    "displayName": "admin.reports.schedule.table.columns.jobName",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "recurrence",
+                    "field": "jobTrigger.uiPassParam",
+                    "displayName": "admin.reports.schedule.table.columns.recurrence",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "startTime",
+                    "displayName": "admin.reports.schedule.table.columns.startTime",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('admin.reports.schedule.table.startTimeFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "startDate",
+                    "displayName": "admin.reports.schedule.table.columns.startDate",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.startTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "endDate",
+                    "displayName": "admin.reports.schedule.table.columns.endDate",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ row.entity.jobTrigger.endTime | date : ('common.defaultDateUIFormat' | translate) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "emailAddresses",
+                    "displayName": "admin.reports.schedule.table.columns.emailAddresses",
+                    "visible": true,
+                    "cellTemplate": "<div>{{ grid.appScope.extractEmailAddresses(row.entity) }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "state",
+                    "displayName": "admin.reports.schedule.table.columns.state",
+                    "visible": true,
+                    "headerCellFilter": "translate"
+                }
+            ]
+        },
+        {
             "id": "labelsChooser",
             "title": "Application - Labels Config grid",
             "enabled": true,
@@ -997,6 +1060,13 @@
                 "label": "admin.reports.config",
                 "components": [
                     "reports.config"
+                ]
+            },
+            {
+                "type": "p/reports/schedule",
+                "label": "admin.reports.schedule.title",
+                "components": [
+                    "reports.schedule"
                 ]
             },
             {
