@@ -92,9 +92,6 @@ angular
                                             return;
                                         }
                                     }
-                                }, function() {
-                                    // Cancel button was clicked.
-                                    return [];
                                 });
                             };
 
