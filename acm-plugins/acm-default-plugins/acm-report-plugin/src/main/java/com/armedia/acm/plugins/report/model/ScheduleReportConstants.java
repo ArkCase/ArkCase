@@ -32,10 +32,48 @@ public final class ScheduleReportConstants
     public static final String MONTHLY = "MONTHLY";
     public static final String OUTPUT_TARGET_STRING_VALUE = "table/excel;page-mode=flow";
     public static final String ACCEPTED_PAGE_STRING_VALUE = "-1";
-    public static final String SHOW_PARAMETERS = "true";
-    public static final String RENDER_MODE = "XML";
-    public static final String HTML_PROPORTIONAL_WIDTH = "false";
+    public static final String TRUE = "true";
+    public static final String XML = "XML";
+    public static final String FALSE = "false";
     public static final String EXCEL_MIMETYPE = "application/vnd.ms-excel";
+
+    public static final String JOB_NAME = "jobName";
+    public static final String INPUT_FILE = "inputFile";
+    public static final String OUTPUT_FILE = "outputFile";
+    public static final String UI_PASS_PARAM = "uiPassParam";
+    public static final String START_TIME = "startTime";
+    public static final String END_TIME = "endTime";
+    public static final String REPEAT_INTERVAL = "repeatInterval";
+    public static final String REPEAT_COUNT = "repeatCount";
+    public static final String DAYS_OF_WEEK = "daysOfWeek";
+    public static final String DAYS_OF_MONTH = "daysOfMonth";
+    public static final String NAME = "name";
+    public static final String STRING_VALUE = "stringValue";
+    public static final String TYPE = "type";
+    public static final String STRING = "string";
+    public static final String NUMBER = "number";
+    public static final String OUTPUT_TARGET = "output-target";
+    public static final String ACCEPTED_PAGE = "accepted-page";
+    public static final String START_DATE = "startDate";
+    public static final String END_DATE = "endDate";
+    public static final String REPORT_DATE_FORMAT = "MM/DD/YYYY";
+    public static final String DATE_FORMAT = "dateFormat";
+    public static final String UTC = "UTC5:0";
+    public static final String TIME_ZONE = "timeZone";
+    public static final String WILDCARD = "%";
+    public static final String STATUS = "status";
+    public static final String SHOW_PARAMETERS = "showParameters";
+    public static final String RENDER_MODE = "renderMode";
+    public static final String HTML_PROPORTIONAL_WIDTH = "htmlProportionalWidth";
+    public static final String EMAIL_TO = "_SCH_EMAIL_TO";
+    public static final String EMAIL_CC = "_SCH_EMAIL_CC";
+    public static final String EMAIL_BCC = "_SCH_EMAIL_BCC";
+    public static final String EMAIL_SUBJECT = "_SCH_EMAIL_SUBJECT";
+    public static final String EMAIL_MESSAGE = "_SCH_EMAIL_MESSAGE";
+    public static final String EMAIL_ATTACHMENT = "_SCH_EMAIL_ATTACHMENT_NAME";
+    public static final String EMAIL_SUBJECT_TEMPLATE = "%s scheduled report has successfully run";
+    public static final String EMAIL_BODY_TEMPLATE = "Attached is the scheduled report \"%s\"";
+    public static final String JOB_PARAMETERS = "jobParameters";
 
     private ScheduleReportConstants()
     {

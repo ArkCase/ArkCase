@@ -19,7 +19,7 @@ import java.util.Arrays;
 public class DownloadGeneratedReportRestService
 {
     private static final Logger LOGGER = LoggerFactory.getLogger(DownloadGeneratedReportRestService.class);
-    ResponseEntity<byte[]> response;
+    private ResponseEntity<byte[]> response;
     private String pentahoUrl;
     private String pentahoPort;
     private String downloadApi;

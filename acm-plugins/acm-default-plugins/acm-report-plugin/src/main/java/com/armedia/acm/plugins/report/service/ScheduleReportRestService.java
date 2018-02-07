@@ -21,7 +21,7 @@ public class ScheduleReportRestService implements ScheduleReportService
     private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleReportRestService.class);
     private HttpHeaders headers;
     private RestTemplate restTemplate;
-    ResponseEntity<String> response;
+    private ResponseEntity<String> response;
     private String pentahoUser;
     private String pentahoPassword;
     private String pentahoUrl;
