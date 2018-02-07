@@ -52,7 +52,7 @@ public class AngularResourceCopier implements ServletContextAware
     @Override
     public void setServletContext(ServletContext servletContext)
     {
-        copyAngularResources(servletContext);
+        // copyAngularResources(servletContext);
     }
 
     public void copyAngularResources(ServletContext servletContext)
