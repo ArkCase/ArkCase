@@ -42,7 +42,9 @@ public class LdapGroupAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapGroupService.createLdapGroup(group, directory);
+            AcmGroup acmGroup = ldapGroupService.createLdapGroup(group, directory);
+            acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
+            return acmGroup;
         }
         catch (NameAlreadyBoundException e)
         {
@@ -74,7 +76,9 @@ public class LdapGroupAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapGroupService.createLdapSubgroup(group, parentGroupName, directory);
+            AcmGroup acmGroup = ldapGroupService.createLdapSubgroup(group, parentGroupName, directory);
+            acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
+            return acmGroup;
         }
         catch (NameAlreadyBoundException e)
         {
