@@ -123,4 +123,10 @@
         <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization_assoc"/>
     </changeSet>
 
+    <changeSet id="11-add-not-null-constraints-family-given-name" author="bojan.milenkoski">
+        <addNotNullConstraint tableName="acm_person" columnName="cm_given_name" defaultNullValue="given-name"
+            columnDataType="VARCHAR(1024)"/>
+        <addNotNullConstraint tableName="acm_person" columnName="cm_family_name" defaultNullValue="family-name"
+            columnDataType="VARCHAR(1024)"/>
+    </changeSet>
 </databaseChangeLog>

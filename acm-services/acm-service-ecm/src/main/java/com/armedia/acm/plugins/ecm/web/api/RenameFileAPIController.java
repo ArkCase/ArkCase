@@ -35,15 +35,12 @@ public class RenameFileAPIController
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
-    @PreAuthorize("hasPermission(#objectId, 'FILE', 'renameFile')")
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{objectId}/{newName}/{extension}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile renameFile(
-            @PathVariable("objectId") Long objectId,
-            @PathVariable("newName") String name,
-            @PathVariable("extension") String extension,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public EcmFile renameFile(@PathVariable("objectId") Long objectId, @PathVariable("newName") String name,
+            @PathVariable("extension") String extension, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException
     {
 
         String newName = name + "." + extension;
@@ -51,14 +48,11 @@ public class RenameFileAPIController
         return getEcmFile(objectId, authentication, session, newName);
     }
 
-    @PreAuthorize("hasPermission(#objectId, 'FILE', 'renameFile')")
+    @PreAuthorize("hasPermission(#objectId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{objectId}/rename", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile renameFileWithoutExt(
-            @PathVariable("objectId") Long objectId,
-            @RequestParam("newName") String newName,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public EcmFile renameFileWithoutExt(@PathVariable("objectId") Long objectId, @RequestParam("newName") String newName,
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
     {
 
         return getEcmFile(objectId, authentication, session, newName);

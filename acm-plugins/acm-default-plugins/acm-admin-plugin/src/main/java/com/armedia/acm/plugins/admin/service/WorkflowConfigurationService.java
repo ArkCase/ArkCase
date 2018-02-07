@@ -115,10 +115,7 @@ public class WorkflowConfigurationService
         }
         finally
         {
-            if (tmpFile != null)
-            {
-                FileUtils.deleteQuietly(tmpFile);
-            }
+            FileUtils.deleteQuietly(tmpFile);
         }
 
     }

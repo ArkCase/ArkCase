@@ -100,4 +100,6 @@ public interface AcmFolderService
     String getCmisRepositoryId(AcmFolder folder);
 
     DeleteFolderInfo getFolderToDeleteInfo(Long folderId) throws AcmObjectNotFoundException;
+
+    AcmFolder saveFolder(AcmFolder folder);
 }

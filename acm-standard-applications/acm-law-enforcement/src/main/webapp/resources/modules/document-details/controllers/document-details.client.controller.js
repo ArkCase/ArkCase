@@ -14,8 +14,13 @@ angular.module('document-details').controller(
                 'SnowboundService',
                 'Authentication',
                 'EcmService',
+                'Helper.LocaleService',
                 function($scope, $stateParams, $sce, $q, $timeout, TicketService, ConfigService, LookupService, SnowboundService,
-                        Authentication, EcmService) {
+                        Authentication, EcmService, LocaleHelper) {
+
+                    new LocaleHelper.Locale({
+                        scope : $scope
+                    });
 
                     $scope.viewerOnly = false;
                     $scope.expand = function() {

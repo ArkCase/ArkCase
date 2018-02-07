@@ -112,10 +112,9 @@ public class FrevvoFormFactory
 
     public List<AcmParticipant> asAcmParticipants(List<ParticipantItem> items, OwningGroupItem groupItem, String formName)
     {
-        List<AcmParticipant> participants = null;
+        List<AcmParticipant> participants = new ArrayList<>();
         if (items != null)
         {
-            participants = new ArrayList<>();
             for (ParticipantItem item : items)
             {
                 AcmParticipant participant = new AcmParticipant();
@@ -132,11 +131,6 @@ public class FrevvoFormFactory
         // THIS PART OF CODE WILL BE REMOVED ONCE WE IMPLEMENT GROUP PICKER ON FREVVO SIDE
         if (groupItem != null)
         {
-            if (participants == null)
-            {
-                participants = new ArrayList<>();
-            }
-
             AcmParticipant participant = new AcmParticipant();
 
             participant.setId(groupItem.getId());
@@ -264,11 +258,6 @@ public class FrevvoFormFactory
 
         // Create participants
         List<AcmParticipant> retval = asAcmParticipants(items, groupItem, formName);
-
-        if (retval == null)
-        {
-            retval = new ArrayList<>();
-        }
 
         if (defaultParticipant != null)
         {

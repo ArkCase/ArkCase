@@ -16,8 +16,13 @@ angular.module('document-details').controller(
                 'UtilService',
                 'LookupService',
                 'ConfigService',
+                'Helper.LocaleService',
                 function($scope, $translate, $filter, $modal, $q, ObjectLookupService, OrganizationInfoService, PersonInfoService,
-                        EcmService, MessageService, UtilService, LookupService, ConfigService) {
+                        EcmService, MessageService, UtilService, LookupService, ConfigService, LocaleHelper) {
+
+                    new LocaleHelper.Locale({
+                        scope : $scope
+                    });
 
                     $scope.$on('document-data', function(event, ecmFile) {
 
@@ -57,14 +62,12 @@ angular.module('document-details').controller(
                                     $scope.details.modifier = $scope.get(_.find(response[0], {
                                         id : $scope.details.activeVersion.modifier
                                     }), 'name');
-                                    $scope.details.modified = $filter('date')(_activeVersion.created,
-                                            $translate.instant("common.defaultDateTimeUIFormat"));
+                                    $scope.details.verModified = _activeVersion.created;
                                     $scope.details.size = $scope.convert($scope.details.activeVersion.fileSizeBytes);
-                                    $scope.details.mediaCreated = $filter('date')(_activeVersion.mediaCreated,
-                                            $translate.instant("common.defaultDateTimeUIFormat"));
+                                    $scope.details.verMediaCreated = _activeVersion.mediaCreated;
 
                                     $scope.saveButton.disabled = false;
-                                    $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
+                                    $scope.saveInProgress = false;
                                 });
 
                         $scope.objectType = _ecmFile.container.containerObjectType;
@@ -80,7 +83,7 @@ angular.module('document-details').controller(
                     $scope.details = {};
                     $scope.saveButton = {};
                     $scope.saveButton.disabled = true;
-                    $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.save");
+                    $scope.saveInProgress = false;
 
                     $scope.options = {
                         focus : false,
@@ -128,7 +131,7 @@ angular.module('document-details').controller(
                         }
 
                         return {};
-                    }
+                    };
 
                     $scope.setActiveVersion = function(ecmFile, activeVersion) {
                         if (ecmFile && ecmFile.versions && activeVersion) {
@@ -142,7 +145,7 @@ angular.module('document-details').controller(
                         }
 
                         return ecmFile;
-                    }
+                    };
 
                     ConfigService.getModuleConfig('common').then(function(moduleConfig) {
                         $scope.commonConfig = moduleConfig;
@@ -255,7 +258,7 @@ angular.module('document-details').controller(
                     // Save Details
                     $scope.save = function() {
                         $scope.saveButton.disabled = true;
-                        $scope.saveButton.label = $translate.instant("documentDetails.comp.details.label.button.wait");
+                        $scope.saveInProgress = true;
                         $scope.details.ecmFile = $scope.setActiveVersion($scope.details.ecmFile, $scope.details.activeVersion);
 
                         UtilService.serviceCall({
