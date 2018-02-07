@@ -59,16 +59,13 @@ public class CorrespondenceService
     {
         CorrespondenceTemplate template = findTemplate(templateName);
 
-        File file = null;
-        FileInputStream fisForUploadToEcm = null;
-        FileOutputStream fosToWriteFile = null;
-        try {
-            file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+        File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
+
+        try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
+             FileOutputStream fosToWriteFile = new FileOutputStream(file))
+        {
 
             log.debug("writing correspondence to file: " + file.getCanonicalPath());
-
-            fisForUploadToEcm = new FileInputStream(file);
-            fosToWriteFile = new FileOutputStream(file);
 
             EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
                     targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
@@ -82,14 +79,6 @@ public class CorrespondenceService
         finally
         {
             FileUtils.deleteQuietly(file);
-            if (fisForUploadToEcm != null)
-            {
-                fisForUploadToEcm.close();
-            }
-            if (fosToWriteFile != null)
-            {
-                fosToWriteFile.close();
-            }
         }
 
     }
