@@ -25,9 +25,7 @@
                         <small class="text-muted" translate>documentDetails.creator</small>
                     </div>
                     <div class="col-sm-6 col-md-3">
-                        <div class="h4 font-bold">{{::ecmFile.created | date : ('common.defaultDateUIFormat' | translate) ||
-                            'common.value.unknown' | translate}}
-                        </div>
+                        <div class="h4 font-bold">{{::ecmFile.created | date : locale.DATETIME_FORMATS.shortDate}}</div>
                         <small class="text-muted" translate>documentDetails.created</small>
                     </div>
                     <!--<div class="col-sm-3">

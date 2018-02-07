@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
@@ -31,16 +32,14 @@ public class ListFileFolderByCategoryAPIController
 
     @RequestMapping(value = "/bycategory/{parentObjectType}/{parentObjectId}", method = RequestMethod.GET)
     @ResponseBody
-    public AcmCmisObjectList listFolderContents(
-            Authentication auth,
-            @PathVariable("parentObjectType") String parentObjectType,
+    public AcmCmisObjectList listFolderContents(Authentication auth, @PathVariable("parentObjectType") String parentObjectType,
             @PathVariable("parentObjectId") Long parentObjectId,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
             @RequestParam(value = "category", required = true) String category)
-            throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException
+            throws AcmListObjectsFailedException, AcmCreateObjectFailedException, AcmUserActionFailedException, AcmAccessControlException
     {
         AcmContainer container = getEcmFileService().getOrCreateContainer(parentObjectType, parentObjectId);
         log.info("Cotainer ID : " + container.getId());
@@ -54,14 +53,7 @@ public class ListFileFolderByCategoryAPIController
         if (category != null && !category.isEmpty())
         {
             log.info("Category provide is: " + category);
-            retval = getEcmFileService().listFileFolderByCategory(
-                    auth,
-                    container,
-                    sortBy,
-                    sortDirection,
-                    startRow,
-                    maxRows,
-                    category);
+            retval = getEcmFileService().listFileFolderByCategory(auth, container, sortBy, sortDirection, startRow, maxRows, category);
         }
         else
         {
@@ -80,5 +72,4 @@ public class ListFileFolderByCategoryAPIController
     {
         this.ecmFileService = ecmFileService;
     }
-
 }

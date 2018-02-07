@@ -92,7 +92,7 @@ public class ArkCaseBeanUtils extends org.apache.commons.beanutils.BeanUtilsBean
             catch (Exception e)
             {
                 // The filed is not found in the current class ... try to find it to superclass
-                LOG.warn("There is no field '{}' declared. Try to find in the superclass.", name);
+                LOG.trace("There is no field '{}' declared. Try to find in the superclass.", name);
                 return getField(c.getSuperclass(), name);
             }
         }

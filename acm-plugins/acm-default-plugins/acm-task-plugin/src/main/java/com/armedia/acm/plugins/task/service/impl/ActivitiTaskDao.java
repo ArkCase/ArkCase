@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.core.AcmNotifiableEntity;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
@@ -13,6 +14,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
 import com.armedia.acm.plugins.task.model.AcmTask;
@@ -28,7 +30,6 @@ import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.ParticipantTypes;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.service.AcmUserService;
 
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.bpmn.model.FlowElement;
@@ -90,7 +91,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     private AcmContainerDao containerFolderDao;
     private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
     private TaskEventPublisher taskEventPublisher;
-    private AcmUserService acmUserService;
+    private EcmFileParticipantService fileParticipantService;
 
     private ObjectConverter objectConverter;
 
@@ -310,7 +311,15 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             // have to apply the assignment and data access control rules right here, inline with the save operation.
             // Tasks generated or updated by the Activiti engine will have participants set by a specialized
             // Mule flow.
-            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
+
+            try
+            {
+                getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(in);
+            }
+            catch (AcmAccessControlException e)
+            {
+                log.error("Failed to apply assignment and access rules while updating task", e);
+            }
 
             // Now we have to check the assignee again, to be sure the Activiti task assignee is the "assignee"
             // participant. I know we're calling the same method twice!, to overwrite any changes the rules make to the
@@ -369,6 +378,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
                         if (ap.getParticipantLdapId() == null || !ap.getParticipantLdapId().equalsIgnoreCase(in.getAssignee()))
                         {
                             ap.setParticipantLdapId(in.getAssignee());
+                            ap.setReplaceChildrenParticipant(true);
                             break;
                         }
                     }
@@ -395,6 +405,7 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             assignee.setParticipantType(ParticipantTypes.ASSIGNEE);
             assignee.setObjectId(in.getTaskId());
             assignee.setObjectType(TaskConstants.OBJECT_TYPE);
+            assignee.setReplaceChildrenParticipant(true);
 
             in.getParticipants().add(assignee);
         }
@@ -431,7 +442,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         retval = completeTask(retval, user, outcomePropertyName, outcomeId);
 
         // Task participant privileges updated immediately, not to wait for DAC batch update
-        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        try
+        {
+            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        }
+        catch (AcmAccessControlException e)
+        {
+            log.error("Failed to apply assignment and access rules while completing task", e);
+        }
 
         return retval;
     }
@@ -459,7 +477,14 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         retval = deleteTask(retval, user, null);
 
         // Task participant privileges updated immediately, not to wait for DAC batch update
-        getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        try
+        {
+            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(retval);
+        }
+        catch (AcmAccessControlException e)
+        {
+            log.error("Failed to apply assignment and access rules while deleting task", e);
+        }
 
         return retval;
     }
@@ -1090,6 +1115,9 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
             AcmFolder folder = new AcmFolder();
             folder.setCmisFolderId(folderId);
             folder.setName(EcmFileConstants.CONTAINER_FOLDER_NAME);
+
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(task.getParticipants()));
+
             container.setFolder(folder);
             container.setContainerObjectType(task.getObjectType());
             container.setContainerObjectId(task.getId());
@@ -1348,8 +1376,8 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
     }
 
     @Override
-    public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables,
-            Map<String, Object> localVariables, String taskEventName)
+    public AcmTask acmTaskFromActivitiTask(Task activitiTask, Map<String, Object> processVariables, Map<String, Object> localVariables,
+            String taskEventName)
     {
         return createAcmTask(activitiTask, processVariables, localVariables, taskEventName);
     }
@@ -1724,8 +1752,13 @@ public class ActivitiTaskDao implements TaskDao, AcmNotificationDao
         return TaskConstants.OBJECT_TYPE;
     }
 
-    public void setAcmUserService(AcmUserService acmUserService)
+    public EcmFileParticipantService getFileParticipantService()
     {
-        this.acmUserService = acmUserService;
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

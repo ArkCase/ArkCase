@@ -93,6 +93,7 @@ public class CreateAdHocTaskAPIController
             }
 
             AcmTask adHocTask = getTaskDao().createAdHocTask(in);
+
             publishAdHocTaskCreatedEvent(authentication, httpSession, adHocTask, true);
 
             return adHocTask;

@@ -3,11 +3,9 @@ package com.armedia.acm.plugins.ecm.service.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import com.armedia.acm.plugins.ecm.service.EcmTikaFileService;
 
-import org.apache.tika.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -18,7 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -156,7 +153,7 @@ public class TikaMetadataIT
 
             Resource resource = new ClassPathResource(filePath);
             EcmTikaFile multimedia = ecmTikaFileService.detectFileUsingTika(
-                    IOUtils.toByteArray(resource.getInputStream()),
+                    resource.getFile(),
                     resource.getFile().getName());
             assertEquals(mimeType, multimedia.getContentType());
             assertEquals(extension, multimedia.getNameExtension());
@@ -192,9 +189,7 @@ public class TikaMetadataIT
     public void detectJsonFile() throws Exception
     {
         Resource resource = new ClassPathResource("json/simple.json");
-
-        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(
-                IOUtils.toByteArray(resource.getInputStream()), resource.getFile().getName());
+        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(resource.getFile(), resource.getFile().getName());
         assertEquals("application/json", file.getContentType());
     }
 
@@ -202,8 +197,7 @@ public class TikaMetadataIT
     public void detectPDFFile() throws Exception
     {
         Resource resource = new ClassPathResource("adobe/xfa.pdf");
-        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(
-                IOUtils.toByteArray(resource.getInputStream()), resource.getFile().getName());
+        EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(resource.getFile(), resource.getFile().getName());
         assertEquals("application/pdf", file.getContentType());
     }
 
@@ -262,20 +256,12 @@ public class TikaMetadataIT
         detectExpectedMimeTypes(resources, expectedMimeTypes);
     }
 
-    private void detectExpectedMimeTypes(List<Resource> resources, List<String> expectedMimeTypes)
+    private void detectExpectedMimeTypes(List<Resource> resources, List<String> expectedMimeTypes) throws Exception
     {
         for (Resource resource : resources)
         {
-            try (InputStream is = resource.getInputStream())
-            {
-                EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(IOUtils.toByteArray(is), resource.getFile().getName());
-                assertTrue(expectedMimeTypes.contains(file.getContentType()));
-            }
-            catch (Exception e)
-            {
-                logger.error("could not process " + resource.getFilename(), e);
-                fail("could not process " + resource.getFilename());
-            }
+            EcmTikaFile file = ecmTikaFileService.detectFileUsingTika(resource.getFile(), resource.getFile().getName());
+            assertTrue(expectedMimeTypes.contains(file.getContentType()));
         }
     }
 

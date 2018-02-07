@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -89,10 +91,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"),
             @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Column(name = "cm_folder_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
 
     @PrePersist
     protected void beforeInsert()
@@ -261,6 +267,17 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     public void setStatus(String status)
     {
         this.status = status;
+    }
+
+    @Override
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 
     @Override
