@@ -22,23 +22,38 @@ Authentication authentication = message.getInboundProperty("acmUser");
 
 String safeUserId = authentication.getName().replace(" ", SPACE_REPLACE);
 
-// include records where current user is directly on allow_acl_ss
-dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
+// do not apply data access filters for FILE or FOLDER, when 'enableDocumentACL' is false
+boolean enableDocumentACL = message.getInboundProperty("enableDocumentACL");
+String query = message.getInboundProperty('query');
+String rowQueryParametars = message.getInboundProperty('rowQueryParametars');
+String targetType = getObjectType(query, rowQueryParametars);
 
-// exclude records where the user is specifically locked out
-String denyAccessFilter = "-deny_acl_ss:" + safeUserId;
+String denyAccessFilter = "";
 
-for (GrantedAuthority granted : authentication.getAuthorities())
+if (!enableDocumentACL && targetType != null && (targetType.equals("FILE") || targetType.equals("FOLDER") || targetType.contentEquals("CONTAINER")))
 {
-    String authName = granted.getAuthority();
-    String safeAuthName = escapeCharacters(authName);
-    // include records where current user is in a group on allow_acl_ss
-    dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
-    // exclude records where current user is in a locked-out group
-    denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName;
+    dataAccessFilter += ")";
 }
-
-dataAccessFilter += ")";
+else
+{
+    // include records where current user is directly on allow_acl_ss
+    dataAccessFilter += ", termfreq(allow_acl_ss, " + safeUserId + ")";
+    
+    // exclude records where the user is specifically locked out
+    denyAccessFilter = "-deny_acl_ss:" + safeUserId;
+    
+    for (GrantedAuthority granted : authentication.getAuthorities())
+    {
+        String authName = granted.getAuthority();
+        String safeAuthName = escapeCharacters(authName);
+        // include records where current user is in a group on allow_acl_ss
+        dataAccessFilter += ", termfreq(allow_acl_ss, " + safeAuthName + ")";
+        // exclude records where current user is in a locked-out group
+        denyAccessFilter += " AND -deny_acl_ss:" + safeAuthName;
+    }
+    
+    dataAccessFilter += ")";
+}
 
 message.setInboundProperty("dataAccessFilter", URLEncoder.encode(dataAccessFilter, StandardCharsets.UTF_8.displayName()));
 message.setInboundProperty("denyAccessFilter", URLEncoder.encode(denyAccessFilter, StandardCharsets.UTF_8.displayName()));
@@ -103,6 +118,29 @@ def escapeCharacters(toBeEscaped)
             .replace(",", COMMA_REPLACE)
             .replace("(", OPENING_PARENTHESIS_REPLACE)
             .replace(")", CLOSING_PARENTHESIS_REPLACE);
+}
+
+def getObjectType(query, rowQueryParametars)
+{
+    // find object type from query or rowQueryParameters that looks like "...object_type_s:FILE..."
+    def regex = /(.*)(\s|^|\(|=|\)|})object_type_s:([a-zA-Z0-9_]*)(.*)/;
+    def m = (query =~ regex);
+
+    if (m.matches()) {
+        return m[0][3];
+    } else {
+        m = (rowQueryParametars =~ regex);
+        if (m.matches()) {
+            return m[0][3];
+        }
+    }
+
+    // find object type from query "id:103-FILE"
+    regex = /id:([0-9]+)\-([a-zA-Z0-9_]*)(.*)/;
+    m = (query =~ regex);
+    if (m.matches()) {
+        return m[0][2];
+    }
 }
 
 return payload;
