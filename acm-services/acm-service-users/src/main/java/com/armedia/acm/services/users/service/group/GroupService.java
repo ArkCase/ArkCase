@@ -35,7 +35,7 @@ public interface GroupService
      * 
      * @return LDAP groups
      */
-    String getLdapGroupsByType(String type, String memberId, String searchFilter) throws MuleException;
+    String getGroupsByType(String type, String memberId, String searchFilter) throws MuleException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to

@@ -85,9 +85,8 @@ public class GroupServiceImpl implements GroupService
         return managed;
     }
 
-    // Tuka brisi Ldap
     @Override
-    public String getLdapGroupsByType(String type, String memberId, String searchFilter) throws MuleException
+    public String getGroupsByType(String type, String memberId, String searchFilter) throws MuleException
     {
         String groupType = "";
         if (type.equals("authorized"))

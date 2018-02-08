@@ -34,56 +34,6 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
         });
     }
 
-    /**
-     * @ngdoc method
-     * @name getAuthorizedGroupsForUser
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of all authorized objects(groups)
-     */
-    /*function getAuthorizedGroupsForUser(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/get/authorized/groups/foruser',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key
-            }
-        });
-    }*/
-
-    /**
-     * @ngdoc method
-     * @name getUnauthorizedGroupsFiltered
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Filtered by: filterWord
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of filtered unauthorized objects(groups)
-     */
-    /*function getUnauthorizedGroupsFiltered(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/get/unauthorized/groups/filtered',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key,
-                fq : data.filterWord
-            }
-        });
-    }*/
-
     function addGroupsToUser(user, groups, directory) {
         var url = 'api/latest/ldap/' + directory + '/manage/' + user + '/groups';
         return $http({
