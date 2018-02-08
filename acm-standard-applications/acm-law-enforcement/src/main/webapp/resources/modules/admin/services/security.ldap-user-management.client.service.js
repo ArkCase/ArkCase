@@ -85,7 +85,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      * @returns List of objects(users)
      */
     function getUsersFiltered(data) {
-        var url = 'api/latest/users/search/filtered';
+        var url = 'api/latest/users/';
         return $http({
             method : 'GET',
             url : url,
@@ -110,12 +110,13 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      * @returns List of objects(users)
      */
     function getNUsers(data) {
-        var url = 'api/latest/users/search/' + data.n;
+        var url = 'api/latest/users/';
         return $http({
             method : 'GET',
             url : url,
             params : {
-                start : 0
+                start : 0,
+                n : data.n
             }
         });
     }
@@ -138,11 +139,12 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     function getGroupsFiltered(data) {
         return $http({
             method : 'GET',
-            url : 'api/latest/groups/' + data.type,
+            url : 'api/latest/users/' + data.member_id.key + '/groups/',
             params : {
                 n : (data.n ? data.n : 50),
                 q : data.member_id.key,
-                fq : data.filterWord
+                fq : data.filterWord,
+                authorized : data.isAuthorized
             }
         });
     }
@@ -164,9 +166,10 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     function getGroupsForUser(data) {
         return $http({
             method : 'GET',
-            url : 'api/latest/users/' + data.member_id.key + '/groups/' + data.type,
+            url : 'api/latest/users/' + data.member_id.key + '/groups/',
             params : {
-                n : (data.n ? data.n : 50)
+                n : (data.n ? data.n : 50),
+                authorized : data.isAuthorized
             }
         });
     }

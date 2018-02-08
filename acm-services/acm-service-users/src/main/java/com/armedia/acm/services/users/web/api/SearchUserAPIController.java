@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,20 +22,20 @@ public class SearchUserAPIController
     private Logger log = LoggerFactory.getLogger(getClass());
     private AcmUserService acmUserService;
 
-    @RequestMapping(value = "/search/{nrows}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getNUsers(Authentication auth,
-            @PathVariable("nrows") int nrows,
-            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "s", required = true, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow) throws MuleException
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "1000") int n) throws MuleException
     {
-        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, nrows);
+        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, n);
     }
 
-    @RequestMapping(value = "/search/filtered", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", params = { "fq" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getUsersFiltered(Authentication auth,
+    public String getUsersByName(Authentication auth,
             @RequestParam(value = "fq") String searchFilter,
             @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
