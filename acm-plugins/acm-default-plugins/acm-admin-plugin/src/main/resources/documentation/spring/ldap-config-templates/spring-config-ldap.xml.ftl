@@ -115,7 +115,6 @@
             </beans:constructor-arg>
             <beans:property name="userDao" ref="userJpaDao"/>
             <beans:property name="ldapSyncService" ref="${id}_ldapSyncJob"/>
-            <beans:property name="alfrescoLdapSyncer" ref="alfrescoLdapSyncer"/>
         </beans:bean>
 
         <beans:bean id="${id}_contextSource"
