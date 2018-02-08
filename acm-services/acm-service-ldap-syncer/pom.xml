@@ -11,7 +11,7 @@
 
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-ldap-syncer</artifactId>
-    <name>ACM Service: Alfresco LDAP Syncer</name>
+    <name>ACM Service: LDAP Syncer</name>
     <description>Service for initiating syncing external services with the LDAP service.</description>
     <packaging>jar</packaging>
 
