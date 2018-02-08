@@ -35,7 +35,7 @@ public interface GroupService
      * 
      * @return groups
      */
-    String getGroupsByType(String type, String memberId, String searchFilter) throws MuleException;
+    String buildGroupsForUserByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws MuleException;
 
     /**
      * Retrieve all groups that a user belongs to
@@ -44,7 +44,7 @@ public interface GroupService
      *         userId
      * @return groups
      */
-    String getGroupsForUser(String type, String userId) throws MuleException;
+    String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
 
     /**
      * Retrieve all LDAP groups that a user belongs to

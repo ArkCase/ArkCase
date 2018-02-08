@@ -55,9 +55,9 @@ angular.module('admin').controller(
                         $scope.lastSelectedUser = selectedObject;
                         currentAuthGroups = [];
 
-                        data.type = "unauthorized";
+                        data.isAuthorized = false;
                         var unAuthorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
-                        data.type = "authorized";
+                        data.isAuthorized = true;
                         var authorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
 
                         $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
@@ -284,7 +284,7 @@ angular.module('admin').controller(
                     });
 
                     $scope.$bus.subscribe('UnauthorizedUserManagementFilter', function(data) {
-                        data.type = "unauthorized";
+                        data.isAuthorized = false;
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
@@ -305,7 +305,7 @@ angular.module('admin').controller(
                     });
 
                     $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
-                        data.type = "authorized";
+                        data.isAuthorized = true;
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;

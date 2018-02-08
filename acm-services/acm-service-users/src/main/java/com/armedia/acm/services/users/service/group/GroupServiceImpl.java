@@ -86,37 +86,16 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String getGroupsByType(String type, String memberId, String searchFilter) throws MuleException
+    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter) throws MuleException
     {
-        String groupType = "";
-        if (type.equals("authorized"))
-        {
-            groupType = " AND member_id_ss:" + memberId;
-        }
-        else if (type.equals("unauthorized"))
-        {
-            groupType = " AND -member_id_ss:" + memberId;
-        }
-        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND name_partial:"
-                + searchFilter + groupType;
-
-        return solrQuery;
+        return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
     }
 
     @Override
-    public String getGroupsForUser(String type, String userId) throws MuleException
+    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException
     {
-        String groupType = "";
-        if (type.equals("authorized"))
-        {
-            groupType = " AND member_id_ss:" + userId;
-        }
-        else if (type.equals("unauthorized"))
-        {
-            groupType = " AND -member_id_ss:" + userId;
-        }
         String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
-                + userId + groupType;
+                + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
 
         return solrQuery;
     }
