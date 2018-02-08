@@ -2223,22 +2223,8 @@ angular
                                                     return Util.isEmpty(fileType.form);
                                                 }), function(result) {
                                                     var op = result.op;
-                                                    var fileType = result.fileType.type;
-                                                    if (DialogDnd.OpTypes.OP_REPLACE == op) {
-                                                        DocTree.uploadSetting = {
-                                                            replaceFileNode : node,
-                                                            uploadToFolderNode : node.parent,
-                                                            uploadFileType : Util.goodValue(node.data.type),
-                                                            uploadFileNew : false,
-                                                            deferUploadFile : $q.defer()
-                                                        };
-                                                        var args = {
-                                                            files : files
-                                                        };
-                                                        var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
-                                                        DocTree.Command.handleCommand(replaceFiles, [ node ], args);
-
-                                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
+                                                    var fileType = result.fileType;
+                                                    if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
                                                         DocTree.uploadSetting = {
                                                             uploadToFolderNode : node.parent,
                                                             uploadFileType : fileType,
@@ -4881,6 +4867,10 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
             $scope.fileTypes = params.fileTypes;
             if ("folder" == params.nodeType) {
                 $scope.result.op = OpTypes.OP_UPLOAD_TO_FOLDER;
+            }
+
+            if ("file" == params.nodeType) {
+                $scope.result.op = OpTypes.OP_UPLOAD_TO_PARENT;
             }
 
             $scope.disableOk = function() {
