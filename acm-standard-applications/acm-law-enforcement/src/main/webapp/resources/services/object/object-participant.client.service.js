@@ -263,11 +263,19 @@ angular
                                 }
                     
                                 // check for duplicate roles for LdapId
-                                if (_.chain(participants).groupBy(e => e.participantLdapId + '|' + e.participantType).filter(function(v){return v.length > 1}).flatten().value().length > 0) {
+                                if (_.chain(participants)
+                                        .groupBy('participantLdapId')
+                                        .filter(function(array){ return array.length > 1})
+                                        .flatten()
+                                        .groupBy('participantType')
+                                        .filter(function(array){ return array.length > 1})
+                                        .flatten()
+                                        .value().length > 0)
+                                {
                                     MessageService.error($translate.instant("common.directive.coreParticipants.message.error.duplicateUserOrGroup"));
                                     return false;
-                                }
-                                
+                                } 
+
                                 if (!allowDuplicateLdapIds) {
                                     // search for duplicate participants LDAPIds. One participant cannot have different roles for an object
                                     if (_.chain(participants).groupBy('participantLdapId').filter(function(v){return v.length > 1}).flatten().value().length > 0) {

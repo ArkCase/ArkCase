@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmContainerEntity;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.spring.SpringContextHolder;
@@ -34,6 +35,7 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
     private EcmFileParticipantService fileParticipantService;
     private AcmFolderDao folderDao;
     private EcmFileDao fileDao;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     @Override
     public String getUpdateId()
@@ -44,6 +46,12 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
     @Override
     public void execute()
     {
+        // do not update file and folder participants if the document ACL feature is disabled
+        if (!getArkPermissionEvaluator().isEnableDocumentACL())
+        {
+            return;
+        }
+
         try
         {
             // since this code is run via a executor, there is no authenticated user, so we need to specify the user to
@@ -60,7 +68,25 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
             for (Class<?> assignedAndContainerClass : assignedAndContainerClasses)
             {
                 log.info("Updating file and folder participants for entities from class: {}", assignedAndContainerClass.getName());
-                AcmAbstractDao<?> daoInstance = getDaoInstanceForClass(assignedAndContainerClass, daoInstances);
+                AcmAbstractDao<?> daoInstance = null;
+                Class targetClass = assignedAndContainerClass;
+                while (daoInstance == null && targetClass != null)
+                {
+                    daoInstance = getDaoInstanceForClass(targetClass, daoInstances);
+                    if (daoInstance == null)
+                    {
+                        targetClass = targetClass.getSuperclass();
+                    }
+                }
+                if (daoInstance != null)
+                {
+                    log.debug("Found DAO class {} for entity class {}", daoInstance.getClass().getName(),
+                            assignedAndContainerClass.getName());
+                }
+                else
+                {
+                    throw new RuntimeException("Cannot find DAO class for AcmObject of type: " + assignedAndContainerClass.getName());
+                }
                 List<?> assignedAndContainerObjects = daoInstance.findAll();
                 for (Object assignedAndContainerObject : assignedAndContainerObjects)
                 {
@@ -134,7 +160,9 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
             }
         }
 
-        throw new RuntimeException("Cannot find DAO class for AcmObject of type: " + assignedAndContainerClass.getName());
+        return null;
+        // throw new RuntimeException("Cannot find DAO class for AcmObject of type: " +
+        // assignedAndContainerClass.getName());
     }
 
     public Set<Class<?>> getAssignedAndContainerClasses()
@@ -179,5 +207,15 @@ public class FileFolderParticipantsUpdateExecutor implements AcmDataUpdateExecut
     public void setFileDao(EcmFileDao fileDao)
     {
         this.fileDao = fileDao;
+    }
+
+    public ArkPermissionEvaluator getArkPermissionEvaluator()
+    {
+        return arkPermissionEvaluator;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 }
