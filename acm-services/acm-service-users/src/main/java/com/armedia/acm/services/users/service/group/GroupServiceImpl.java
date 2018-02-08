@@ -13,7 +13,6 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
-import com.armedia.acm.services.users.model.ldap.MapperUtils;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -84,6 +83,43 @@ public class GroupServiceImpl implements GroupService
         AcmGroup managed = groupDao.save(group);
         groupDao.getEm().flush();
         return managed;
+    }
+
+    // Tuka brisi Ldap
+    @Override
+    public String getLdapGroupsByType(String type, String memberId, String searchFilter) throws MuleException
+    {
+        String groupType = "";
+        if (type.equals("authorized"))
+        {
+            groupType = " AND member_id_ss:" + memberId;
+        }
+        else if (type.equals("unauthorized"))
+        {
+            groupType = " AND -member_id_ss:" + memberId;
+        }
+        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED AND name_partial:"
+                + searchFilter + groupType;
+
+        return solrQuery;
+    }
+
+    @Override
+    public String getGroupsForUser(String type, String userId) throws MuleException
+    {
+        String groupType = "";
+        if (type.equals("authorized"))
+        {
+            groupType = " AND member_id_ss:" + userId;
+        }
+        else if (type.equals("unauthorized"))
+        {
+            groupType = " AND -member_id_ss:" + userId;
+        }
+        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
+                + userId + groupType;
+
+        return solrQuery;
     }
 
     @Override

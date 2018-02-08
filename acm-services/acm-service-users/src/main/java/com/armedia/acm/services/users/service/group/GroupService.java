@@ -28,6 +28,25 @@ public interface GroupService
     AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
+     * Retrieve all LDAP groups that belongs to specific group type
+     *
+     * @params type,
+     *         memberId, searchFilter
+     * 
+     * @return LDAP groups
+     */
+    String getLdapGroupsByType(String type, String memberId, String searchFilter) throws MuleException;
+
+    /**
+     * Retrieve all LDAP groups that a user belongs to
+     *
+     * @params type,
+     *         userId
+     * @return LDAP groups
+     */
+    String getGroupsForUser(String type, String userId) throws MuleException;
+
+    /**
      * Retrieve all LDAP groups that a user belongs to
      *
      * @param usernamePasswordAuthenticationToken
