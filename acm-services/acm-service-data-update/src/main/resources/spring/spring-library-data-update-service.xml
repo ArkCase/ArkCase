@@ -33,6 +33,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="fileDao" ref="ecmFileDao"/>
         <property name="folderDao" ref="acmFolderDao"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
 
     <bean id="userIdGroupNameDomainUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
