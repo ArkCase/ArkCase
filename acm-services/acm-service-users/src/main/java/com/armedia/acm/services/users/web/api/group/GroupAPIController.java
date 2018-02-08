@@ -38,7 +38,7 @@ public class GroupAPIController
     {
         LOG.info("Taking all groups and subgroups from Solr.");
 
-        String solrQuery = getGroupService().getLdapGroupsByType(type, memberId, searchFilter);
+        String solrQuery = getGroupService().getGroupsByType(type, memberId, searchFilter);
 
         LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
 
