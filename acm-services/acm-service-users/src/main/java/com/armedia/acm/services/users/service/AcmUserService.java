@@ -37,7 +37,7 @@ public interface AcmUserService
      *            searchFilter, sortBy, sortDirection, startRow, maxRows
      * @return USER groups
      */
-    String getFilteredByNameUsers(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
+    String getUsersByName(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
             throws MuleException;
 
     /**

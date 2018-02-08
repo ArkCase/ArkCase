@@ -21,6 +21,12 @@
         <property name="muleContextManager" ref="muleContextManager"/>
     </bean>
 
+    <bean id="GroupAPIController" class="com.armedia.acm.services.users.web.api.group.GroupAPIController">
+        <property name="groupService" ref="groupService"/>
+        <property name="muleContextManager" ref="muleContextManager"/>
+        <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
+
     <bean id="acmGroupAPIController" class="com.armedia.acm.services.users.web.api.group.AcmGroupAPIController">
         <property name="groupService" ref="groupService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
@@ -37,6 +43,10 @@
 
     <bean id="getUsersByGroupAPIController" class="com.armedia.acm.services.users.web.api.GetUsersByGroupAPIController">
         <property name="groupService" ref="groupService"/>
+    </bean>
+
+    <bean id="SearchUserAPIController" class="com.armedia.acm.services.users.web.api.SearchUserAPIController">
+        <property name="acmUserService" ref="acmUserService"/>
     </bean>
 
     <bean id="acmUserAPIController" class="com.armedia.acm.services.users.web.api.AcmUserAPIController" parent="secureLdapController">
