@@ -30,29 +30,14 @@ angular.module('directives').directive('panelView', [ '$q', function($q) {
         transclude : true,
         scope : {
             header : '@',
-            collapsible : '@',
+            collapsible : '=',
             collapsed : '='
         },
 
         link : function(scope, element, attrs) {
-            if (!attrs.collapsible) {
-                attrs.collapsible = 'true';
-            }
-
-            if (scope.collapsed) {
-                scope.isCollapsed = true;
-            }
-
-            scope.$watch('collapsed', function(collapsedVal) {
-                scope.isCollapsed = collapsedVal;
-            });
-
             scope.onCollapseIconClick = function($event) {
                 $event.preventDefault();
-                scope.isCollapsed = !scope.isCollapsed;
-
-                //Allows the controller of where the directive is used to control if it's collapsed as well as keeping the parent's scope updated
-                scope.$parent.collapsed = scope.isCollapsed;
+                scope.collapsed = !scope.collapsed;
             };
         },
 
