@@ -11,8 +11,8 @@
     <form name="emailForm">
         <div class="row">
             <div class="col-sm-6 form-group">
-                <label for="emails" translate>organizations.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
-                <input id="emails" class="input-md form-control" type="text" ng-model="email.value" class="input-md form-control"
+                <label for="emails" translate>organizations.comp.emails.modal.value.label}</label><span class="required-asterisk">*</span>
+                <input id="emails" class="input-md form-control" type="{{email.type}}" ng-model="email.value" class="input-md form-control"
                         required="required" placeholder="{{ 'organizations.comp.emails.modal.value.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">

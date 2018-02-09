@@ -14,7 +14,7 @@
 
                 <label for="emails" translate>people.comp.emails.modal.value.label</label><span class="required-asterisk">*</span>
 
-                <input id="emails" class="input-md form-control" type="email" ng-model="email.value" required="required"
+                <input id="emails" class="input-md form-control" type="{{email.type}}" ng-model="email.value" required="required"
                         placeholder="{{ 'people.comp.emails.modal.value.placeholder' | translate }}">
 
             </div>
