@@ -29,7 +29,6 @@ import java.util.Base64;
 public class LdapGroupAPIController extends SecureLdapController
 {
     private LdapGroupService ldapGroupService;
-    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -42,9 +41,7 @@ public class LdapGroupAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            AcmGroup acmGroup = ldapGroupService.createLdapGroup(group, directory);
-            acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
-            return acmGroup;
+            return ldapGroupService.createLdapGroup(group, directory);
         }
         catch (NameAlreadyBoundException e)
         {
@@ -76,9 +73,7 @@ public class LdapGroupAPIController extends SecureLdapController
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            AcmGroup acmGroup = ldapGroupService.createLdapSubgroup(group, parentGroupName, directory);
-            acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
-            return acmGroup;
+            return ldapGroupService.createLdapSubgroup(group, parentGroupName, directory);
         }
         catch (NameAlreadyBoundException e)
         {
@@ -107,8 +102,7 @@ public class LdapGroupAPIController extends SecureLdapController
         try
         {
             groupName = new String(Base64.getUrlDecoder().decode(groupName.getBytes()));
-            AcmGroup source = ldapGroupService.deleteLdapGroup(groupName, directory);
-            getAcmGroupEventPublisher().publishLdapGroupDeletedEvent(source);
+            ldapGroupService.deleteLdapGroup(groupName, directory);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (AcmLdapActionFailedException e)
@@ -165,15 +159,5 @@ public class LdapGroupAPIController extends SecureLdapController
     public void setLdapGroupService(LdapGroupService ldapGroupService)
     {
         this.ldapGroupService = ldapGroupService;
-    }
-
-    public AcmGroupEventPublisher getAcmGroupEventPublisher()
-    {
-        return acmGroupEventPublisher;
-    }
-
-    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
-    {
-        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }
