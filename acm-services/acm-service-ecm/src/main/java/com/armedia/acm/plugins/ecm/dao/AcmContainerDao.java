@@ -149,6 +149,15 @@ public class AcmContainerDao extends AcmAbstractDao<AcmContainer>
         return findByFolderId(folderId);
     }
 
+    public List<AcmContainer> findByObjectType(String objectType)
+    {
+        TypedQuery<AcmContainer> query = getEm().createQuery(EcmFileConstants.FIND_CONTAINERS_QUERY_BY_OBJECT_TYPE, getPersistenceClass());
+
+        query.setParameter("objectType", objectType);
+
+        return query.getResultList();
+    }
+
     @Override
     protected Class<AcmContainer> getPersistenceClass()
     {
