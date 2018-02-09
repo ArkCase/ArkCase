@@ -55,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>com.armedia.acm.acm-services</groupId>
-            <artifactId>acm-service-alfresco-ldap-syncer</artifactId>
+            <artifactId>acm-service-ldap-syncer</artifactId>
             <version>${acm.version}</version>
         </dependency>
         <!-- spring -->
