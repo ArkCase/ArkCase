@@ -35,17 +35,17 @@ public interface AcmUserService
      *
      * @param auth,
      *            searchFilter, sortBy, sortDirection, startRow, maxRows
-     * @return USER groups
+     * @return users
      */
     String getUsersByName(Authentication auth, String searchFilter, String sortBy, String sortDirection, int startRow, int maxRows)
             throws MuleException;
 
     /**
-     * Retrieve n valid USERS
+     * Retrieve n valid users
      *
      * @param auth,
      *            sortBy, sortDirection, startRow, maxRows
-     * @return USER groups
+     * @return users
      */
     String getNUsers(Authentication auth, String sortBy, String sortDirection, int startRow, int maxRows)
             throws MuleException;
