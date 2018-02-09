@@ -82,7 +82,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      End position: n
      *
-     * @returns List of objects(users)
+     * @returns List of users
      */
     function getUsersFiltered(data) {
         var url = 'api/latest/users/';
@@ -107,7 +107,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      End position: n
      *
-     * @returns List of objects(users)
+     * @returns List of users
      */
     function getNUsers(data) {
         var url = 'api/latest/users/';
@@ -134,7 +134,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      End position: n
      *      data.type: authorized/unauthorized
      *
-     * @returns List of filtered authorized/unauthorized objects
+     * @returns List of filtered authorized/unauthorized groups
      */
     function getGroupsFiltered(data) {
         return $http({
@@ -161,7 +161,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      End position: n
      *      data.type: authorized/unauthorized
      *
-     * @returns List of all unauthorized objects
+     * @returns List of all authorized/unauthorized groups
      */
     function getGroupsForUser(data) {
         return $http({
