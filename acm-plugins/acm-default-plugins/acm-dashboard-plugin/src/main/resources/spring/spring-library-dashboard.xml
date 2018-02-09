@@ -23,6 +23,8 @@
 
     <bean id="userPreferenceDao" class="com.armedia.acm.plugins.dashboard.dao.UserPreferenceDao"/>
 
+    <bean id="siteDao" class="com.armedia.acm.plugins.dashboard.site.dao.SiteDao"/>
+
     <bean id="dashboardPlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Dashboard Plugin"/>
         <property name="pluginProperties" ref="dashboardPluginProperties"/>
