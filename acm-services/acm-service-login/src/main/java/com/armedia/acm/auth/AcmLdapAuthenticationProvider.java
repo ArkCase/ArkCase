@@ -1,15 +1,11 @@
 package com.armedia.acm.auth;
 
-import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
-import com.armedia.acm.services.ldap.syncer.ExternalLdapSyncer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.ldap.authentication.LdapAuthenticationProvider;
@@ -21,11 +17,10 @@ import javax.naming.Name;
 /**
  * Created by riste.tutureski on 4/11/2016.
  */
-public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider implements ApplicationEventPublisherAware
+public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
 {
     private UserDao userDao;
     private LdapSyncService ldapSyncService;
-    private ApplicationEventPublisher eventPublisher;
 
     public AcmLdapAuthenticationProvider(LdapAuthenticator authenticator, LdapAuthoritiesPopulator authoritiesPopulator)
     {
@@ -51,7 +46,6 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider im
 
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
-            eventPublisher.publishEvent(new AcmLdapSyncEvent(user));
             getLdapSyncService().syncUserByDn(dn.toString());
         }
 
@@ -78,14 +72,4 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider im
         this.ldapSyncService = ldapSyncService;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.springframework.context.ApplicationEventPublisherAware#setApplicationEventPublisher(org.springframework.
-     * context.ApplicationEventPublisher)
-     */
-    @Override
-    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-    {
-        eventPublisher = applicationEventPublisher;
-    }
 }
