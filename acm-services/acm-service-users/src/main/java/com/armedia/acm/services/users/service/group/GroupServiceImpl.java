@@ -13,7 +13,6 @@ import com.armedia.acm.services.users.model.AcmUserState;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.model.group.AcmGroupType;
-import com.armedia.acm.services.users.model.ldap.MapperUtils;
 
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -84,6 +83,21 @@ public class GroupServiceImpl implements GroupService
         AcmGroup managed = groupDao.save(group);
         groupDao.getEm().flush();
         return managed;
+    }
+
+    @Override
+    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter) throws MuleException
+    {
+        return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
+    }
+
+    @Override
+    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException
+    {
+        String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
+                + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
+
+        return solrQuery;
     }
 
     @Override

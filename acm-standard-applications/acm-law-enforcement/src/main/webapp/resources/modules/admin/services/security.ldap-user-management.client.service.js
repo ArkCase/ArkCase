@@ -4,16 +4,14 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
     return ({
         queryGroupsByDirectory : queryGroupsByDirectory,
         queryAdhocGroups : queryAdhocGroups,
-        getFilteredAuthorizedGroups : getFilteredAuthorizedGroups,
-        getAllAuthorizedGroups : getAllAuthorizedGroups,
-        getFilteredUnauthorizedGroups : getFilteredUnauthorizedGroups,
-        getAllUnauthorizedGroups : getAllUnauthorizedGroups,
         addGroupsToUser : addGroupsToUser,
         removeGroupsFromUser : removeGroupsFromUser,
         cloneUser : cloneUser,
         deleteUser : deleteUser,
-        getFilteredUsersByWord : getFilteredUsersByWord,
-        getNUsers : getNUsers
+        getUsersFiltered : getUsersFiltered,
+        getNUsers : getNUsers,
+        getGroupsFiltered : getGroupsFiltered,
+        getGroupsForUser : getGroupsForUser
     });
 
     function queryGroupsByDirectory(directory, n) {
@@ -32,106 +30,6 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/groups/adhoc',
             params : {
                 n : 10000
-            }
-        });
-    }
-
-    /**
-     * @ngdoc method
-     * @name getFilteredUnauthorizedGroups
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Filtered by: filterWord
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of filtered authorized objects(groups)
-     */
-    function getFilteredAuthorizedGroups(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/getFilteredAuthorizedGroups',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key,
-                fq : data.filterWord
-            }
-        });
-    }
-
-    /**
-     * @ngdoc method
-     * @name getAllAuthorizedGroups
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of all authorized objects(groups)
-     */
-    function getAllAuthorizedGroups(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/getAllAuthorizedGroups',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key
-            }
-        });
-    }
-
-    /**
-     * @ngdoc method
-     * @name getFilteredUnauthorizedGroups
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Filtered by: filterWord
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of filtered unauthorized objects(groups)
-     */
-    function getFilteredUnauthorizedGroups(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/getFilteredUnauthorizedGroups',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key,
-                fq : data.filterWord
-            }
-        });
-    }
-
-    /**
-     * @ngdoc method
-     * @name getAllUnauthorizedGroups
-     * @methodOf services.service:Admin.LdapUserManagementService
-     *
-     * @description
-     * List of N groups:
-     *      Start position: 0
-     *      Member id key: member_id.key
-     *      End position: n
-     *
-     * @returns List of all unauthorized objects(groups)
-     */
-    function getAllUnauthorizedGroups(data) {
-        return $http({
-            method : 'GET',
-            url : 'api/latest/users/getAllUnauthorizedGroups',
-            params : {
-                n : (data.n ? data.n : 50),
-                q : data.member_id.key
             }
         });
     }
@@ -175,7 +73,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
 
     /**
      * @ngdoc method
-     * @name getFilteredUsersByWord
+     * @name getUsersFiltered
      * @methodOf services.service:Admin.LdapUserManagementService
      *
      * @description
@@ -184,10 +82,10 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      End position: n
      *
-     * @returns List of objects(users)
+     * @returns List of users
      */
-    function getFilteredUsersByWord(data) {
-        var url = 'api/latest/ldap/getFilteredUsers/search';
+    function getUsersFiltered(data) {
+        var url = 'api/latest/users/';
         return $http({
             method : 'GET',
             url : url,
@@ -209,16 +107,69 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      End position: n
      *
-     * @returns List of objects(users)
+     * @returns List of users
      */
     function getNUsers(data) {
-        var url = 'api/latest/ldap/getNUsers/search';
+        var url = 'api/latest/users/';
         return $http({
             method : 'GET',
             url : url,
             params : {
+                start : 0,
+                n : data.n
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getGroupsFiltered
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Filtered by: filterWord
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *      data.type: authorized/unauthorized
+     *
+     * @returns List of filtered authorized/unauthorized groups
+     */
+    function getGroupsFiltered(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/' + data.member_id.key + '/groups/',
+            params : {
                 n : (data.n ? data.n : 50),
-                start : 0
+                q : data.member_id.key,
+                fq : data.filterWord,
+                authorized : data.isAuthorized
+            }
+        });
+    }
+
+    /**
+     * @ngdoc method
+     * @name getGroupsForUser
+     * @methodOf services.service:Admin.LdapUserManagementService
+     *
+     * @description
+     * List of N groups:
+     *      Start position: 0
+     *      Member id key: member_id.key
+     *      End position: n
+     *      data.type: authorized/unauthorized
+     *
+     * @returns List of all authorized/unauthorized groups
+     */
+    function getGroupsForUser(data) {
+        return $http({
+            method : 'GET',
+            url : 'api/latest/users/' + data.member_id.key + '/groups/',
+            params : {
+                n : (data.n ? data.n : 50),
+                authorized : data.isAuthorized
             }
         });
     }

@@ -71,169 +71,46 @@ public class AcmGroupAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    @RequestMapping(value = "/getFilteredAuthorizedGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{userid:.+}/groups", params = {
+            "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getFilteredAuthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-            @RequestParam(value = "q", required = false) String memberId,
-            @RequestParam(value = "fq", required = false) String searchFilter,
-            Authentication auth) throws MuleException
-    {
-        LOG.info("Taking all groups and subgroups from Solr.");
-
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-
-        if (!memberId.equals(""))
-        {
-            query += " AND member_id_ss:" + memberId;
-        }
-
-        if (searchFilter != null && !searchFilter.equals(""))
-        {
-            query += " AND name_partial:" + searchFilter;
-        }
-
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", auth);
-
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        LOG.debug("Response type is [{}]", response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
-        {
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-    }
-
-    @RequestMapping(value = "/getAllAuthorizedGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String getAllAuthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+    public String findGroupsForUser(@PathVariable("userid") String userId, @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "q", required = false) String memberId,
             Authentication auth) throws MuleException
     {
         LOG.info("Taking all groups and subgroups from Solr.");
 
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String solrQuery = groupService.buildGroupsForUserSolrQuery(authorized, userId);
 
-        if (!memberId.equals(""))
-        {
-            query += " AND member_id_ss:" + memberId;
-        }
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
 
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sortBy + " " + sortDirection);
-        headers.put("acmUser", auth);
-
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        LOG.debug("Response type is [{}]", response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
-        {
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
-    @RequestMapping(value = "/getFilteredUnauthorizedGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{userId:.+}/groups", params = {
+            "fq", "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String getFilteredUnauthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+    public String findGroupsForUserByName(@RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-            @RequestParam(value = "q", required = false) String memberId,
-            @RequestParam(value = "fq", required = false) String searchFilter,
-            Authentication auth) throws MuleException
-    {
-        LOG.info("Taking all groups and subgroups from Solr.");
-
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
-
-        if (!memberId.equals(""))
-        {
-            query += " AND -member_id_ss:" + memberId;
-        }
-
-        if (searchFilter != null && !searchFilter.equals(""))
-        {
-            query += " AND name_partial:" + searchFilter;
-        }
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sort);
-        headers.put("acmUser", auth);
-
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        LOG.debug("Response type is [{}]", response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
-        {
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
-    }
-
-    @RequestMapping(value = "/getAllUnauthorizedGroups", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String getAllUnauthorizedGroups(@RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
-            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
+            @PathVariable(value = "userId") String userId,
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "q", required = false) String memberId,
+            @RequestParam(value = "fq") String searchFilter,
             Authentication auth) throws MuleException
     {
         LOG.info("Taking all groups and subgroups from Solr.");
 
-        String query = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String solrQuery = getGroupService().buildGroupsForUserByNameSolrQuery(authorized, userId, searchFilter);
 
-        if (!memberId.equals(""))
-        {
-            query += " AND -member_id_ss:" + memberId;
-        }
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
 
-        LOG.debug("User [{}] is searching for [{}]", auth.getName(), query);
-
-        Map<String, Object> headers = new HashMap<>();
-        headers.put("query", query);
-        headers.put("firstRow", startRow);
-        headers.put("maxRows", maxRows);
-        headers.put("sort", sortBy + " " + sortDirection);
-        headers.put("acmUser", auth);
-
-        MuleMessage response = getMuleContextManager().send("vm://advancedSearchQuery.in", "", headers);
-
-        LOG.debug("Response type is [{}]", response.getPayload().getClass());
-
-        if (response.getPayload() instanceof String)
-        {
-            return (String) response.getPayload();
-        }
-
-        throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     @RequestMapping(value = "/groups/adhoc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
