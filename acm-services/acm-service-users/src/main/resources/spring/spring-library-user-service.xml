@@ -144,6 +144,7 @@
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="ldapEntryTransformer" ref="ldapEntryTransformer"/>
         <property name="ldapGroupDao" ref="springLdapGroupDao"/>
+        <property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
     </bean>
 
     <bean id="ldapAddUserPropertiesFile" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
