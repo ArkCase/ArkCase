@@ -10,6 +10,7 @@ import com.armedia.acm.plugins.ecm.service.FileEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,28 +35,22 @@ public class SetActiveFileVersionAPIController
     private EcmFileService fileService;
     private FileEventPublisher fileEventPublisher;
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile setFileActiveVersion(
-            @PathVariable("fileId") Long fileId,
-            @RequestParam(value = "versionTag", required = true) String versionTag,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public EcmFile setFileActiveVersion(@PathVariable("fileId") Long fileId,
+            @RequestParam(value = "versionTag", required = true) String versionTag, Authentication authentication, HttpSession session)
+            throws AcmUserActionFailedException
     {
-        if (log.isInfoEnabled())
-        {
-            log.info("Version: " + versionTag + " will be set as active version for file with fileId: " + fileId);
-        }
+        log.info("Version: {}  will be set as active version for file with fileId: {}", versionTag, fileId);
 
         String ipAddress = (String) session.getAttribute(AcmFolderConstants.IP_ADDRESS_ATTRIBUTE);
 
         EcmFile source = getFileService().findById(fileId);
         if (source == null)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("File with fileId: " + fileId + " not found in the DB");
-            }
+            log.error("File with fileId: {} not found in the DB", fileId);
+
             getFileEventPublisher().publishFileActiveVersionSetEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_SET_FILE_ACTIVE_VERSION, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileId, "File with fileId: " + fileId + " not found in the DB", null);
@@ -68,10 +63,8 @@ public class SetActiveFileVersionAPIController
         }
         catch (PersistenceException e)
         {
-            if (log.isErrorEnabled())
-            {
-                log.error("Exception occurred while updating active version on file with fileId: " + fileId + " " + e.getMessage(), e);
-            }
+            log.error("Exception occurred while updating active version on file with fileId: {} with error: {}", fileId, e.getMessage(), e);
+
             getFileEventPublisher().publishFileActiveVersionSetEvent(source, authentication, ipAddress, false);
             throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_SET_FILE_ACTIVE_VERSION, EcmFileConstants.OBJECT_FILE_TYPE,
                     fileId, "Exception occurred while updating active version on file with fileId: " + fileId, e);

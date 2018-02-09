@@ -24,6 +24,15 @@
 
             </input>
         </div>
+        <div class="text-right" ng-show="showReplaceChildrenParticipants">
+            <input id="replaceChildrenParticipant" type="checkbox"
+               ng-model="participant.replaceChildrenParticipant"               
+               ng-true-value="true">
+            <label for="replaceChildrenParticipant">
+                <span translate>common.directive.coreParticipants.modal.replaceChildrenParticipant</span>                
+            </label>
+            <br/>
+        </div>
     </form>
 </div>
 <div class="modal-footer">

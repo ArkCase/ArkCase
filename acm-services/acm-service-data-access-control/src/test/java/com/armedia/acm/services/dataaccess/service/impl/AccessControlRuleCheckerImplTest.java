@@ -355,7 +355,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }
@@ -457,7 +458,8 @@ public class AccessControlRuleCheckerImplTest extends EasyMockSupport
         EasyMock.expect(authenticationMock.getAuthorities()).andReturn(grantedAuthorities).anyTimes();
         replayAll();
 
-        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE", "createTask", solrDocument);
+        boolean granted = accessControlRuleChecker.isAccessGranted(authenticationMock, 1L, "CASE_FILE",
+                "createTask", solrDocument);
         assertTrue(granted);
         verifyAll();
     }

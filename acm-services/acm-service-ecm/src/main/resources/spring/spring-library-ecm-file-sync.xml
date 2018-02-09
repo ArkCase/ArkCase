@@ -9,6 +9,7 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="folderDao" ref="acmFolderDao"/>
         <property name="folderService" ref="acmFolderService"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
     </bean>
 
     <bean id="ecmFileCreatedEventHandler" class="com.armedia.acm.plugins.ecm.service.sync.impl.EcmFileCreatedEventHandler">
