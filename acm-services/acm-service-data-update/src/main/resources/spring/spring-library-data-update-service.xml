@@ -33,6 +33,7 @@
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="containerDao" ref="acmContainerFolderDao"/>
         <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
     
     <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">

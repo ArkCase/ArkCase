@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataupdate.service;
 
+import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
@@ -24,6 +25,7 @@ public class UserRootFolderAccessUpdateExecutor implements AcmDataUpdateExecutor
     private EcmFileParticipantService fileParticipantService;
     private ArkPermissionEvaluator arkPermissionEvaluator;
     private AcmContainerDao containerDao;
+    private AuditPropertyEntityAdapter auditPropertyEntityAdapter;
 
     @Override
     public String getUpdateId()
@@ -35,6 +37,8 @@ public class UserRootFolderAccessUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
+        auditPropertyEntityAdapter.setUserId(AcmDataUpdateService.DATA_UPDATE_MODIFIER);
+
         // do not update file and folder participants if the document ACL feature is disabled
         if (!getArkPermissionEvaluator().isEnableDocumentACL())
         {
@@ -104,5 +108,15 @@ public class UserRootFolderAccessUpdateExecutor implements AcmDataUpdateExecutor
     public void setContainerDao(AcmContainerDao containerDao)
     {
         this.containerDao = containerDao;
+    }
+
+    public AuditPropertyEntityAdapter getAuditPropertyEntityAdapter()
+    {
+        return auditPropertyEntityAdapter;
+    }
+
+    public void setAuditPropertyEntityAdapter(AuditPropertyEntityAdapter auditPropertyEntityAdapter)
+    {
+        this.auditPropertyEntityAdapter = auditPropertyEntityAdapter;
     }
 }
