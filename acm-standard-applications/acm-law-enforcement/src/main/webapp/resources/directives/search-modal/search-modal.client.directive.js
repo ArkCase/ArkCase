@@ -166,7 +166,7 @@ angular.module('directives').directive(
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptionsMaster.data = data.response.docs;
                                 if (scope.gridOptionsMaster.data.length < 1) {
-                                    scope.showNoData = true;
+                                    scope.showNoData1 = true;
                                 }
                                 scope.gridOptionsMaster.totalItems = data.response.numFound;
                             }
@@ -202,7 +202,8 @@ angular.module('directives').directive(
                                     scope.showNoData = true;
                                 }
                                 scope.gridOptionsDetail.totalItems = data.response.numFound;
-                            };
+                            }
+                            ;
 
                             function updateFacets(facets) {
                                 if (facets) {
@@ -351,7 +352,7 @@ angular.module('directives').directive(
                                             scope.gridApi = gridApi;
 
                                             gridApi.selection.on.rowSelectionChanged(scope, function(row) {
-                                                if(row.isSelected){
+                                                if (row.isSelected) {
                                                     scope.selectedDetailItem = row.entity;
                                                 } else {
                                                     scope.selectedDetailItem = null;
