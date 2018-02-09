@@ -3993,7 +3993,6 @@ angular
                             var DialogDnd = {
                                 OpTypes : {
                                     OP_NOOP : "",
-                                    OP_REPLACE : "Replace",
                                     OP_UPLOAD_TO_PARENT : "UploadToParent",
                                     OP_UPLOAD_TO_FOLDER : "UploadToFolder"
                                 }
@@ -4876,19 +4875,9 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
             $scope.disableOk = function() {
                 if (OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op) {
                     return Util.isEmpty($scope.result.fileType);
-                } else if (OpTypes.OP_REPLACE == $scope.result.op) {
-                    return false;
                 } else {
                     return true;
                 }
-            };
-
-            $scope.showRadioButtons = function() {
-                return OpTypes.OP_UPLOAD_TO_FOLDER != $scope.result.op;
-            };
-
-            $scope.showSelFileTypes = function() {
-                return OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op;
             };
 
             $scope.onClickCancel = function() {
