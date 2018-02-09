@@ -33,7 +33,9 @@ public class SaveCaseServiceImpl implements SaveCaseService
         pipelineContext.setIpAddress(ipAddress);
 
         return pipelineManager.executeOperation(in, pipelineContext, () -> {
+
             CaseFile saved = caseFileDao.save(in);
+
             log.info("Case saved '{}'", saved);
             return saved;
 

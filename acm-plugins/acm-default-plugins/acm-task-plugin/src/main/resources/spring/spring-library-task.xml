@@ -68,8 +68,8 @@
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
         <property name="priorityLevelToNumberMap" ref="priorityLevelToNumberMap"/>
         <property name="taskEventPublisher" ref="taskEventPublisher"/>
-        <property name="acmUserService" ref="acmUserService"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="requiredFieldsPerOutcomeMap">
             <map>
                 <entry key="APPROVE">
@@ -138,7 +138,6 @@
         <property name="noteDao" ref="noteDao"/>
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="objectAssociationService" ref="objectAssociationService"/>
-        <property name="objectAssociationEventPublisher" ref="objectAssociationEventPublisher"/>
         <property name="acmParticipantDao" ref="acmParticipantDao"/>
         <property name="objectConverter" ref="objectConverter"/>
     </bean>

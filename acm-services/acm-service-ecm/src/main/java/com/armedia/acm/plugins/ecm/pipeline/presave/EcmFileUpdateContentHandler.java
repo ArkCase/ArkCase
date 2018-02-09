@@ -10,7 +10,8 @@ import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 /**
  * Created by sasko.tanaskoski
@@ -31,11 +32,10 @@ public class EcmFileUpdateContentHandler implements PipelineHandler<EcmFile, Ecm
 
         if (!pipelineContext.getIsAppend())
         {
-            try
+            try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
                 // Updates the file to the Alfresco content repository as a new document
-                Document newDocument = ecmFileMuleUtils.updateFile(entity, pipelineContext.getEcmFile(),
-                        new ByteArrayInputStream(pipelineContext.getFileByteArray()));
+                Document newDocument = ecmFileMuleUtils.updateFile(entity, pipelineContext.getEcmFile(), fileInputStream);
                 pipelineContext.setCmisDocument(newDocument);
             }
             catch (Exception e)

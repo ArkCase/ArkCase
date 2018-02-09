@@ -562,14 +562,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participants",
-        "modal.addParticipant.label": "Ajouter un participant",
-        "modal.editParticipant.label": "Modifier l'enregistrement",
-        "modal.participantType.label": "Type de participant",
-        "modal.participantName.label": "Nom du participant",
-        "modal.btnOk.text": "Sauvegarder",
-        "modal.btnCancel.text": "Annuler",
-        "modal.dialogUserPicker.header": "Rechercher un utilisateur",
-        "modal.dialogGroupPicker.header": "Groupe de recherche",
+        "replaceFolderChildrenParticipants": "fr_Replace child documents participants",
+        "modal" : {
+            "addParticipant.label": "Ajouter un participant",
+            "editParticipant.label": "Modifier l'enregistrement",
+            "participantType.label": "Type de participant",
+            "participantName.label": "Nom du participant",
+            "btnOk.text": "Sauvegarder",
+            "btnCancel.text": "Annuler",
+            "dialogUserPicker.header": "Rechercher un utilisateur",
+            "dialogGroupPicker.header": "Groupe de recherche",
+            "replaceChildrenParticipant": "fr_replace children participant"
+        },
         "message": {
             "error.groupType": "Le groupe propriétaire ne peut pas être une personne.",
             "error.userType": " Le type d'utilisateur ne peut pas être un groupe.",

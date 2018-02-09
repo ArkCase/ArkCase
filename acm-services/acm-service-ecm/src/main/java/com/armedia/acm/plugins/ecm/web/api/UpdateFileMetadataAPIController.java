@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,12 +37,11 @@ public class UpdateFileMetadataAPIController implements ApplicationEventPublishe
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
+    @PreAuthorize("hasPermission(#fileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/file/metadata/{fileId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public EcmFile updateFile(
-            @RequestBody EcmFile file,
-            @PathVariable("fileId") Long fileId,
-            Authentication authentication) throws AcmUserActionFailedException, AcmObjectNotFoundException
+    public EcmFile updateFile(@RequestBody EcmFile file, @PathVariable("fileId") Long fileId, Authentication authentication)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException
     {
 
         if (file == null || file.getFileId() == null || fileId == null || !fileId.equals(file.getFileId()))
