@@ -23,9 +23,16 @@
                 <ref bean="userIdGroupNameDomainUpdateExecutor"/>
                 <ref bean="groupRemoveUUIDExecutor"/>
                 <ref bean="fileFolderParticipantsUpdateExecutor"/>
+                <ref bean="userRootFolderAccessUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
+    </bean>
+    
+    <bean id="userRootFolderAccessUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserRootFolderAccessUpdateExecutor">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="containerDao" ref="acmContainerFolderDao"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
     </bean>
     
     <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
