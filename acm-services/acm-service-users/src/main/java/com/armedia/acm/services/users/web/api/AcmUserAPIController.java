@@ -5,7 +5,6 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
-import com.armedia.acm.services.users.service.AcmUserService;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
@@ -43,8 +42,6 @@ public class AcmUserAPIController extends SecureLdapController
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    private AcmUserService acmUserService;
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -261,15 +258,4 @@ public class AcmUserAPIController extends SecureLdapController
     {
         this.acmUserEventPublisher = acmUserEventPublisher;
     }
-
-    public AcmUserService getAcmUserService()
-    {
-        return acmUserService;
-    }
-
-    public void setAcmUserService(AcmUserService acmUserService)
-    {
-        this.acmUserService = acmUserService;
-    }
-
 }
