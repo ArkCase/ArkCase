@@ -24,12 +24,12 @@ angular.module('core').controller(
                                     userName : data.fullName
                                 };
                                 $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png'
-                                        : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&inline=true';
+                                        : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&parentObjectType=USER_ORG' + '&inline=true';
                             });
 
                     $scope.$on('uploadedPicture', function(event, arg) {
                         $scope.imgSrc = !arg ? 'modules/profile/img/nopic.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + arg
-                                + '&inline=true';
+                                + '&parentObjectType=USER_ORG' + '&inline=true';
                     });
 
                     $scope.onClickLogout = function() {
