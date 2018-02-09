@@ -28,6 +28,25 @@ public interface GroupService
     AcmGroup createGroup(AcmGroup group) throws AcmObjectAlreadyExistsException;
 
     /**
+     * Retrieve all groups that belongs to specific group type
+     *
+     * @params type,
+     *         memberId, searchFilter
+     * 
+     * @return groups
+     */
+    String buildGroupsForUserByNameSolrQuery(Boolean authorized, String memberId, String searchFilter) throws MuleException;
+
+    /**
+     * Retrieve all groups that a user belongs to
+     *
+     * @params type,
+     *         userId
+     * @return groups
+     */
+    String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
+
+    /**
      * Retrieve all LDAP groups that a user belongs to
      *
      * @param usernamePasswordAuthenticationToken

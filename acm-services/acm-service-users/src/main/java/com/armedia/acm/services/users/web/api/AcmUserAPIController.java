@@ -2,16 +2,12 @@ package com.armedia.acm.services.users.web.api;
 
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.AcmUserEventPublisher;
-import com.armedia.acm.services.users.service.AcmUserService;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateService;
 import com.armedia.acm.services.users.service.ldap.LdapUserService;
 
-import org.json.JSONArray;
-import org.mule.api.MuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -46,38 +42,6 @@ public class AcmUserAPIController extends SecureLdapController
     private AcmUserEventPublisher acmUserEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
-
-    private AcmUserService acmUserService;
-
-    @RequestMapping(value = "/getFilteredUsers/search", method = RequestMethod.GET)
-    @ResponseBody
-    public String getFilteredUsers(Authentication auth,
-            @RequestParam(value = "fq") String searchFilter,
-            @RequestParam(value = "s", required = false, defaultValue = "name") String sortBy,
-            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
-    {
-        String solrResponse = acmUserService.getFilteredByNameUsers(auth, searchFilter, sortBy, sortDirection, startRow, maxRows);
-        SearchResults searchResults = new SearchResults();
-        JSONArray docs = searchResults.getDocuments(solrResponse);
-
-        return docs.toString();
-    }
-
-    @RequestMapping(value = "/getNUsers/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    public String getNUsers(Authentication auth,
-            @RequestParam(value = "fq", required = false) String searchFilter,
-            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
-            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
-            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-            @RequestParam(value = "n", required = false, defaultValue = "1000") int maxRows,
-            @RequestParam(value = "category", required = false) String category) throws MuleException, MuleException
-    {
-        return acmUserService.getNUsers(auth, sortBy, sortDirection, startRow, maxRows);
-    }
 
     @RequestMapping(value = "/{directory:.+}/editingEnabled", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
@@ -294,15 +258,4 @@ public class AcmUserAPIController extends SecureLdapController
     {
         this.acmUserEventPublisher = acmUserEventPublisher;
     }
-
-    public AcmUserService getAcmUserService()
-    {
-        return acmUserService;
-    }
-
-    public void setAcmUserService(AcmUserService acmUserService)
-    {
-        this.acmUserService = acmUserService;
-    }
-
 }
