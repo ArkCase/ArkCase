@@ -41,7 +41,7 @@
             <div class="modal-right well-sm">
                 <div ui-grid="gridOptionsMaster" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
                         adjust-table-height="gridOptionsMaster.data.length" ui-grid-auto-resize class="grid">
-                    <div ng-if="showNoData" style="text-align: center;">
+                    <div ng-if="showNoData1" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
                     <div ng-if="!showNoData && gridOptionsMaster.data.length < 1">
@@ -55,6 +55,9 @@
                 <div ui-grid="gridOptionsDetail" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
                         adjust-table-height="gridOptionsDetail.data.length" ui-grid-auto-resize class="grid"
                         ng-if="selectedItems.length > 0 && secondGrid">
+                    <div ng-if="showNoData1" style="text-align: center;">
+                        {{onNoDataMessage}}
+                    </div>
                     <div ng-if="showNoData" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
@@ -71,7 +74,8 @@
     <button class="btn btn-secondary" ng-click="onClickCancel()">
         {{cancel}}
     </button>
-    <button class="btn btn-primary" ng-click="onClickOk()" ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
+    <button class="btn btn-primary" ng-click="onClickOk()"
+            ng-disabled="selectedItems.length < 1 || (secondGrid && selectedDetailItem == null)">
         {{ok}}
     </button>
 </div>
