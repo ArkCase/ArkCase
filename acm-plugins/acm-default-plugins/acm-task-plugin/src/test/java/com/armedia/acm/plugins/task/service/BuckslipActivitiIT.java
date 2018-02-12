@@ -1,11 +1,15 @@
 package com.armedia.acm.plugins.task.service;
 
+import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
+import com.armedia.acm.plugins.task.listener.BuckslipTaskHelper;
+import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -29,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -56,10 +61,15 @@ public class BuckslipActivitiIT extends EasyMockSupport
     private HistoryService hs;
 
     @Autowired
+    private BuckslipTaskHelper buckslipTaskHelper;
+
+    @Autowired
     private BuckslipTaskCompletedListener buckslipTaskCompletedListener;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDaoMock;
+
+    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Before
     public void setUp() throws Exception
@@ -69,7 +79,10 @@ public class BuckslipActivitiIT extends EasyMockSupport
                 .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
                 .deploy();
         userDaoMock = createMock(UserDao.class);
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         buckslipTaskCompletedListener.setUserDao(userDaoMock);
+        buckslipTaskCompletedListener.setBuckslipTaskHelper(buckslipTaskHelper);
+        buckslipTaskCompletedListener.getBuckslipTaskHelper().setApplicationEventPublisher(mockApplicationEventPublisher);
     }
 
     @After
@@ -81,18 +94,23 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void basicPath_noApproverChanges_nonConcurContinuesApprovals() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
         basicPath(false, "NON_CONCUR");
     }
 
     @Test
     public void basicPath_noApproverChanges_nonConcurEndsApprovals() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+        expectLastCall().times(2);
         basicPath(true, "NON_CONCUR");
     }
 
     @Test
     public void basicPath_noApproverChanges_withdraw() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+        expectLastCall().times(2);
         basicPath(true, "WITHDRAW");
     }
 
@@ -105,6 +123,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         {
             expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         }
+
+
 
         replayAll();
 
@@ -220,6 +240,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void removeAnApprover() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
@@ -318,6 +340,7 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void addAnApprover() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
 
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());

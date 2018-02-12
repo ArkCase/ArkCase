@@ -165,6 +165,9 @@
         "tooltip.move_left": "左に移動",
         "authorized": "認可された"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ja_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "検索",
         "btnSearch.text": "検索",
@@ -563,7 +566,7 @@
     "common.directive.coreParticipants": {
         "title": "参加者",
         "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "参加者を追加",
             "editParticipant.label": "レコードの編集",
             "participantType.label": "参加者タイプ",

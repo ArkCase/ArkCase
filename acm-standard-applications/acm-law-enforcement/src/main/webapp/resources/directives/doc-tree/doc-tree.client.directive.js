@@ -2223,22 +2223,8 @@ angular
                                                     return Util.isEmpty(fileType.form);
                                                 }), function(result) {
                                                     var op = result.op;
-                                                    var fileType = result.fileType.type;
-                                                    if (DialogDnd.OpTypes.OP_REPLACE == op) {
-                                                        DocTree.uploadSetting = {
-                                                            replaceFileNode : node,
-                                                            uploadToFolderNode : node.parent,
-                                                            uploadFileType : Util.goodValue(node.data.type),
-                                                            uploadFileNew : false,
-                                                            deferUploadFile : $q.defer()
-                                                        };
-                                                        var args = {
-                                                            files : files
-                                                        };
-                                                        var replaceFiles = DocTree.Command.findHandler("replaceFiles/");
-                                                        DocTree.Command.handleCommand(replaceFiles, [ node ], args);
-
-                                                    } else if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
+                                                    var fileType = result.fileType;
+                                                    if (DialogDnd.OpTypes.OP_UPLOAD_TO_PARENT == op && !Util.isEmpty(fileType)) {
                                                         DocTree.uploadSetting = {
                                                             uploadToFolderNode : node.parent,
                                                             uploadFileType : fileType,
@@ -4007,7 +3993,6 @@ angular
                             var DialogDnd = {
                                 OpTypes : {
                                     OP_NOOP : "",
-                                    OP_REPLACE : "Replace",
                                     OP_UPLOAD_TO_PARENT : "UploadToParent",
                                     OP_UPLOAD_TO_FOLDER : "UploadToFolder"
                                 }
@@ -4084,7 +4069,9 @@ angular
                                                             $scope.width = (params.w + 200) + "px";
                                                             $scope.widthDialogBox = (params.w + 20) + "px";
                                                             $scope.frevvoFormUrl = params.frevvoFormUrl;
+
                                                             $scope.iframeLoaded = function() {
+                                                                document.getElementsByClassName("modal-" + (params.h + 200) + "px")[0].style.width = $scope.width;
                                                                 startCheckFrevvoSubmission();
                                                                 startInitFrevvoMessaging();
                                                             };
@@ -4240,7 +4227,7 @@ angular
                                                             }
                                                         } ],
                                                 animation : true,
-                                                size : 'lg',
+                                                size : (params.h + 200) + "px",
                                                 backdrop : 'static',
                                                 resolve : {
                                                     params : function() {
@@ -4881,22 +4868,16 @@ angular.module('directives').controller('directives.DocTreeDndDialogController',
                 $scope.result.op = OpTypes.OP_UPLOAD_TO_FOLDER;
             }
 
+            if ("file" == params.nodeType) {
+                $scope.result.op = OpTypes.OP_UPLOAD_TO_PARENT;
+            }
+
             $scope.disableOk = function() {
                 if (OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op) {
                     return Util.isEmpty($scope.result.fileType);
-                } else if (OpTypes.OP_REPLACE == $scope.result.op) {
-                    return false;
                 } else {
                     return true;
                 }
-            };
-
-            $scope.showRadioButtons = function() {
-                return OpTypes.OP_UPLOAD_TO_FOLDER != $scope.result.op;
-            };
-
-            $scope.showSelFileTypes = function() {
-                return OpTypes.OP_UPLOAD_TO_FOLDER == $scope.result.op || OpTypes.OP_UPLOAD_TO_PARENT == $scope.result.op;
             };
 
             $scope.onClickCancel = function() {
