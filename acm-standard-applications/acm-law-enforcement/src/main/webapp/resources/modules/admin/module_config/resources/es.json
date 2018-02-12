@@ -748,16 +748,16 @@
         "title": "Seguridad - Cuadrícula de configuración Ldap"
     },
     "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Correspondence Management Merge Fields grid"
+        "title": "Correspondencia Administración Fusionar Campos Cuadrícula"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Correspondence Management Merge Fields versión grilla"
+        "title": "Correspondencia Administración Fusionar Campos versión grilla"
     },
     "admin.comp.correspondenceManagementTemplates": {
         "title": "Plantilla de gestión de correspondencia grid"
     },
     "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "Correspondance Management Template Versiones de la grilla"
+        "title": "Correspondencia Administración Modelo Versiones de la grilla"
     },
     "admin.comp.labelsConfig": {
         "title": "Aplicación - Cuadrícula de configuración de etiquetas"
@@ -766,7 +766,7 @@
         "title": "Formularios: red de configuración de formularios"
     },
     "admin.comp.workflowsConfig": {
-        "title": "Workflows - Cuadrícula de configuración de flujos de trabajo"
+        "title": "Flujos de trabajo - Cuadrícula de configuración de flujos de trabajo"
     },
     "admin.comp.workflowsHistoryDialogConfig": {
         "title": "Flujos de trabajo: cuadrícula de diálogo de historial de configuración de flujos de trabajo"
