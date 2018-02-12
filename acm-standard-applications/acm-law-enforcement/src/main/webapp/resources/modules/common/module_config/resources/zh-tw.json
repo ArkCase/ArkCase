@@ -165,6 +165,9 @@
         "tooltip.move_left": "向左移動",
         "authorized": "合法"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "zh-tw_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "搜索",
         "btnSearch.text": "搜索",
@@ -563,7 +566,7 @@
     "common.directive.coreParticipants": {
         "title": "參與者",
         "replaceFolderChildrenParticipants": "zh-tw_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "添加參與者",
             "editParticipant.label": "編輯記錄",
             "participantType.label": "參與者類型",

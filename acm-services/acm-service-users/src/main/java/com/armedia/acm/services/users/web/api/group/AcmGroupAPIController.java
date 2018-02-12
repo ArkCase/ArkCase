@@ -65,11 +65,52 @@ public class AcmGroupAPIController
 
         if (response.getPayload() instanceof String)
         {
-
             return (String) response.getPayload();
         }
 
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
+    }
+
+    @RequestMapping(value = "/{userid:.+}/groups", params = {
+            "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String findGroupsForUser(@PathVariable("userid") String userId, @RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            Authentication auth) throws MuleException
+    {
+        LOG.info("Taking groups and subgroups from Solr for specific user.");
+
+        String solrQuery = groupService.buildGroupsForUserSolrQuery(authorized, userId);
+
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
+
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
+                sortBy + " " + sortDirection);
+    }
+
+    @RequestMapping(value = "/{userId:.+}/groups", params = {
+            "fq", "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public String findGroupsForUserByName(@RequestParam(value = "authorized") Boolean authorized,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
+            @RequestParam(value = "s", defaultValue = "name_lcs") String sortBy,
+            @PathVariable(value = "userId") String userId,
+            @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
+            @RequestParam(value = "fq") String searchFilter,
+            Authentication auth) throws MuleException
+    {
+        LOG.info("Taking groups and subgroups from Solr for specific user by name.");
+
+        String solrQuery = getGroupService().buildGroupsForUserByNameSolrQuery(authorized, userId, searchFilter);
+
+        LOG.debug("User [{}] is searching for [{}]", auth.getName(), solrQuery);
+
+        return getExecuteSolrQuery().getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, solrQuery, startRow, maxRows,
+                sortBy + " " + sortDirection);
     }
 
     @RequestMapping(value = "/groups/adhoc", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -38,7 +38,7 @@ public class AcmJpaBatchUpdateService
     /**
      * The property key to use in the properties file that stores the last run date.
      */
-    private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
+    public static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
 
     private boolean batchUpdateBasedOnLastModifiedEnabled;
     private String lastBatchUpdatePropertyFileLocation;
