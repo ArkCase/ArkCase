@@ -182,7 +182,10 @@
         "name.placeholder": "键入名字",
         "descriptionLabel": "描述",
         "description.placeholder": "键入说明",
-        "searchUser": "搜索用户",
+        "searchUser": "zh-in_Search User and Group",
+        "cancelBtn": "zh-in_Cancel",
+        "okBtn": "zh-in_OK",
+        "search-placeholder": "zh-in_Search for user or group",
         "personalRepository": "我的文档"
     },
     "document-repository.dialogUserPicker": {
