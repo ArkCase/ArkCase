@@ -22,45 +22,57 @@ angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(das
                 'Helper.ObjectBrowserService',
                 'ConfigService',
                 'moment',
+                'Helper.UiGridService',
+                'Case.InfoService',
+                'Helper.ModulesServices',
                 function($scope, $translate, $stateParams, $filter, Util, TimeTrackingInfoService, HelperObjectBrowserService,
-                        ConfigService, moment) {
+                        ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServices) {
 
-                    var vm = this;
-                    ConfigService.getModuleConfig("preference").then(function(preferences) {
-                        var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
-                        if (Util.goodPositive(currentObjectId, false)) {
-                            TimeTrackingInfoService.getTimesheetInfo(currentObjectId).then(function(timesheetInfo) {
+                    var modules = ModulesServices.getModulesServiceStructure();
 
-                                var chartData = [];
-                                var labels = [];
+                    var module = _.find(modules, function(module) {
+                        return module.name == $stateParams.type;
+                    });
 
-                                var times = [];
-                                var i = 0;
-                                if (timesheetInfo.times.length > 7) {
-                                    i = timesheetInfo.times.length - 7;
-                                }
-                                for (i; i < timesheetInfo.times.length; i++) {
-                                    times.push(timesheetInfo.times[i]);
-                                }
+                    $scope.gridOptions = {
+                        enableColumnResizing : true,
+                        columnDefs : []
+                    };
 
-                                _.forEach(times, function(timeIter) {
+                    var gridHelper = new HelperUiGridService.Grid({
+                        scope : $scope
+                    });
 
-                                    // //reformat date to MM-DD-YYYY from (example) "2016-01-10T00:00:00.000-0500"
-                                    // var date = new moment(timeIter.date);
-                                    // var formattedDate = date.format(preferences.timeFormat);
-
-                                    // Above code is not i18n compliant. `timeFormat` is removed from preferences.
-                                    // Temporary quick fix for now:
-                                    var formattedDate = $filter('date')(timeIter.date, "shortDate");
-
-                                    labels.push(formattedDate);
-                                    chartData.push(timeIter.value);
-                                });
-
-                                vm.showChart = chartData.length > 0;
-                                vm.data = [ chartData ];
-                                vm.labels = labels;
+                    var onObjectInfoRetrieved = function(objectInfo) {
+                        $scope.data = objectInfo.times;
+                        _.forEach($scope.data, function(singleData) {
+                            CaseInfoService.getCaseInfo(singleData.objectId).then(function(data) {
+                                singleData.caseFile = data;
                             });
+                        });
+                        gridHelper.setWidgetsGridData($scope.data);
+                    };
+
+                    var onConfigRetrieved = function(componentConfig) {
+                        var widgetInfo = _.find(componentConfig.widgets, function(widget) {
+                            return widget.id === "hoursSummary";
+                        });
+                        gridHelper.setColumnDefs(widgetInfo);
+                    };
+
+                    var componentHelper = new HelperObjectBrowserService.Component({
+                        scope : $scope,
+                        stateParams : $stateParams,
+                        moduleId : module.configName,
+                        componentId : "main",
+                        retrieveObjectInfo : module.getInfo,
+                        validateObjectInfo : module.validateInfo,
+                        onObjectInfoRetrieved : function(objectInfo) {
+                            onObjectInfoRetrieved(objectInfo);
+                        },
+                        onConfigRetrieved : function(componentConfig) {
+                            onConfigRetrieved(componentConfig);
                         }
                     });
+
                 } ]);
