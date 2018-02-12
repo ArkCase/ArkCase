@@ -54,6 +54,8 @@ angular.module('admin').controller(
                         data.member_id = selectedObject;
                         $scope.lastSelectedUser = selectedObject;
                         currentAuthGroups = [];
+                        $scope.userData.selectedNotAuthorized = [];
+                        $scope.userData.selectedAuthorized = [];
 
                         data.isAuthorized = false;
                         var unAuthorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
@@ -68,7 +70,7 @@ angular.module('admin').controller(
                                         var authObject = {};
                                         authObject.key = group.name;
                                         authObject.name = group.name;
-                                        authorized.push(authObject);
+                                        $scope.userData.selectedAuthorized.push(authObject);
                                         currentAuthGroups.push(authObject.key);
                                     }
                                 });
@@ -77,7 +79,7 @@ angular.module('admin').controller(
                                     var notAuthorizedRole = {};
                                     notAuthorizedRole.key = group.name;
                                     notAuthorizedRole.name = group.name;
-                                    notAuthorized.push(notAuthorizedRole);
+                                    $scope.userData.selectedNotAuthorized.push(notAuthorizedRole);
                                 }
                             });
                         });
@@ -268,6 +270,35 @@ angular.module('admin').controller(
                         initUser($scope.userData.appUsers.length * 2);
                     });
 
+                    $scope.$bus.subscribe('UnauthorizedUserManagementScroll', function() {
+                        var data = {};
+                        data.isAuthorized = false;
+                        data.member_id = $scope.lastSelectedUser;
+                        data.n = Util.isArrayEmpty($scope.userData.selectedNotAuthorized) ? 50
+                                : $scope.userData.selectedNotAuthorized.length * 2;
+                        LdapUserManagementService.getGroupsForUser(data).then(function(response) {
+                            $scope.userData.selectedNotAuthorized = [];
+                            $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
+                        }, function() {
+                            $log.error('Error during returning unauthorized groups for user');
+                        });
+                    });
+
+                    $scope.$bus.subscribe('AuthorizedUserManagementScroll',
+                            function() {
+                                var data = {};
+                                data.isAuthorized = true;
+                                data.member_id = $scope.lastSelectedUser;
+                                data.n = Util.isArrayEmpty($scope.userData.selectedAuthorized) ? 50
+                                        : $scope.userData.selectedAuthorized.length * 2;
+                                LdapUserManagementService.getGroupsForUser(data).then(function(response) {
+                                    $scope.userData.selectedAuthorized = [];
+                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
+                                }, function() {
+                                    $log.error('Error during scrolling authorized groups for user');
+                                });
+                            });
+
                     $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
@@ -296,14 +327,14 @@ angular.module('admin').controller(
                                 $scope.userData.selectedNotAuthorized = [];
                                 $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
                             }, function() {
-                                $log.error('Error during returning unathorized groups for user');
+                                $log.error('Error during returning unauthorized groups for user');
                             });
                         } else {
                             LdapUserManagementService.getGroupsFiltered(data).then(function(response) {
                                 $scope.userData.selectedNotAuthorized = [];
                                 $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
                             }, function() {
-                                $log.error('Error during returning the filtered(unathorized) groups for user');
+                                $log.error('Error during returning the filtered(unauthorized) groups for user');
                             });
                         }
                     });
@@ -317,14 +348,14 @@ angular.module('admin').controller(
                                 $scope.userData.selectedAuthorized = [];
                                 $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
                             }, function() {
-                                error('Error during returning athorized groups for user');
+                                error('Error during returning authorized groups for user');
                             });
                         } else {
                             LdapUserManagementService.getGroupsFiltered(data).then(function(response) {
                                 $scope.userData.selectedAuthorized = [];
                                 $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
                             }, function() {
-                                error('Error during returning the filtered(athorized) groups for user');
+                                error('Error during returning the filtered(authorized) groups for user');
                             });
                         }
                     });
