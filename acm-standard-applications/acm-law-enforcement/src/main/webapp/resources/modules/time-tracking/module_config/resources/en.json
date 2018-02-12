@@ -71,11 +71,15 @@
             }
         }
     },
-    "timeTracking.comp.approvers": {
-        "title": "Approvers",
+    "timeTracking.comp.tasks": {
+        "title": "Tasks",
         "table.columns": {
-            "fullName": "Full Name",
-            "userId": "Username"
+            "title": "Title",
+            "assignee": "Assignee",
+            "created": "Created",
+            "priority": "Priority",
+            "due": "Due Date",
+            "status": "Status"
         }
     },
     "timeTracking.tree": {
@@ -84,7 +88,7 @@
             "person.label": "Person",
             "summary.label": "Hours",
             "tags.label": "Tags",
-            "approvers.label": "Approvers"
+            "tasks.label": "Tasks"
         },
         "sorters": {
             "dateAsc": "Sort Date Ascending",
@@ -93,6 +97,16 @@
             "idDesc": "Sort Timesheet ID Descending",
             "nameDesc": "Sort By Timesheet Name",
             "noSort": "(No Sort)"
+        }
+    },
+    "timeTracking.widgets.summary": {
+        "table": {
+            "columns": {
+                "date": "Date",
+                "caseTitle": "Case Title",
+                "caseNumber": "Case Number",
+                "number": "Hours"
+            }
         }
     }
 }
