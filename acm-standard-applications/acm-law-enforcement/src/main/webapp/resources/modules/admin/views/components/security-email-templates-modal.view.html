@@ -32,7 +32,8 @@
                 <label translate>admin.security.emailTemplates.modal.objectTypes.label</label><br />
                 <label ng-repeat="objectType in objectTypeList">
                     <input type="checkbox" name="objectTypes[]" value="{{objectType.id}}"
-                            ng-checked="template.objectTypes.indexOf(objectType.id) > -1" ng-click="toggleObjectTypes(objectType.id)">&nbsp;{{objectType.name}}&nbsp;
+                            ng-checked="template.objectTypes.indexOf(objectType.id) > -1" ng-click="toggleObjectTypes(objectType.id)">&nbsp;{{objectType.displayName
+                    | translate}}&nbsp;
                 </label>
             </div>
         </div>
@@ -41,7 +42,7 @@
                 <label translate>admin.security.emailTemplates.modal.actions.label</label><br />
                 <label ng-repeat="action in actionList">
                     <input type="checkbox" name="actions[]" value="{{action.id}}" ng-checked="template.actions.indexOf(action.id) > -1"
-                            ng-click="toggleActions(action.id)">&nbsp;{{action.name}}&nbsp;
+                            ng-click="toggleActions(action.id)">&nbsp;{{action.displayName | translate}}&nbsp;
                 </label>
             </div>
         </div>
