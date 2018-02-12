@@ -182,7 +182,10 @@
         "name.placeholder": "Entrez le nom",
         "descriptionLabel": "La description",
         "description.placeholder": "Entrez la description",
-        "searchUser": "Rechercher un utilisateur",
+        "searchUser": "fr_Search User and Group",
+        "cancelBtn": "fr_Cancel",
+        "okBtn": "fr_OK",
+        "search-placeholder": "fr_Search for user or group",
         "personalRepository": "Mes documents"
     },
     "document-repository.dialogUserPicker": {

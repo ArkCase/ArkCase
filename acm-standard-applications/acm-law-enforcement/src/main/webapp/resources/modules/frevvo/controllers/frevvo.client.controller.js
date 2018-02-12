@@ -30,7 +30,12 @@ angular
                             var promiseTicket = TicketService.getArkCaseTicket();
                             var acmFormsInfo = LookupService.getConfig("acm-forms", [ "frevvo.admin.user", "frevvo.admin.password" ]);
 
-                            $q.all([ promiseConfig, promiseTicket, acmFormsInfo ]).then(
+                            $scope.$bus.subscribe('$translateChangeSuccess', function(data) {
+                                init(); // recreate frevvo iframe url on language change
+                            });
+
+                            function init() {
+                                $q.all([ promiseConfig, promiseTicket, acmFormsInfo ]).then(
                                     function(data) {
                                         $scope.config = data[0];
                                         $scope.acmTicket = data[1].data;
@@ -41,13 +46,14 @@ angular
                                         if (found && (found.formKey || found.formDefault)) {
                                             var formType = Util.goodValue($scope.acmFormsProperties[found.formKey], found.formDefault);
                                             var formUrl = FrevvoFormService.buildFrevvoUrl($scope.acmFormsProperties, formType,
-                                                    $scope.acmTicket, $stateParams);
+                                                $scope.acmTicket, $stateParams);
                                             $scope.frevvoFormUrl = $sce.trustAsResourceUrl(formUrl);
 
                                             ServCommService.request($scope, "frevvo", $stateParams.name, found);
                                         }
                                     });
-
+                            }
+                            init();
                             ObjectLookupService.getPersonTypes("CASE_FILE", true).then(function response(personTypes) {
                                 $scope.caseFilePersonInitiatorTypes = personTypes;
                             });

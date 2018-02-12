@@ -166,6 +166,9 @@
         "tooltip.move_left": "左に移動",
         "authorized": "認可された"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ja_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "検索",
         "btnSearch.text": "検索",

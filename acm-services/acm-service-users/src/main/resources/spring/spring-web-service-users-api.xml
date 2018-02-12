@@ -39,6 +39,10 @@
         <property name="groupService" ref="groupService"/>
     </bean>
 
+    <bean id="searchUserAPIController" class="com.armedia.acm.services.users.web.api.SearchUserAPIController">
+        <property name="acmUserService" ref="acmUserService"/>
+    </bean>
+
     <bean id="acmUserAPIController" class="com.armedia.acm.services.users.web.api.AcmUserAPIController" parent="secureLdapController">
         <property name="ldapUserService" ref="ldapUserService"/>
         <property name="acmUserEventPublisher" ref="acmUserEventPublisher"/>
@@ -53,5 +57,9 @@
     <bean id="secureLdapController" class="com.armedia.acm.services.users.web.api.SecureLdapController">
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="passwordValidationService" ref="passwordValidationService"/>
+    </bean>
+
+    <bean id="ldapSyncAPIController" class="com.armedia.acm.services.users.web.api.LdapSyncAPIController">
+        <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>

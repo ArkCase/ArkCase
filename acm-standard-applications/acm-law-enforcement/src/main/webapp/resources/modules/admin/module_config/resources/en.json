@@ -19,7 +19,13 @@
         "security.ldapConfig.removeMember": "Remove Member",
         "security.ldapConfig.table.ldapUrl": "LDAP Url",
         "security.ldapConfig.table.directoryName": "Directory Name",
+        "security.ldapConfig.table.userAttributesConfig": "LDAP User Configuration",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAP Group Configuration",
+        "security.ldapConfig.table.action.partialSync": "Start LDAP Partial Sync",
         "security.ldapConfig.data": {
+            "sync.dialog.header": "Run synchronization",
+            "sync.dialog.type.partial": " Differential Sync",
+            "sync.dialog.type.full": "Full sync",
             "userAttributesTemplate": "Ldap User Attributes Template",
             "groupAttributesTemplate": "Ldap Group Attributes Template",
             "addNewDirectory": "Add New Directory",

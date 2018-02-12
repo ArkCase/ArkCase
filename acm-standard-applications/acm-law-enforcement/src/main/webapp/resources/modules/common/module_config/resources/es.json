@@ -166,6 +166,9 @@
         "tooltip.move_left": "Mover hacia la izquierda",
         "authorized": "Autorizado"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "es_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Buscar",
         "btnSearch.text": "Buscar",

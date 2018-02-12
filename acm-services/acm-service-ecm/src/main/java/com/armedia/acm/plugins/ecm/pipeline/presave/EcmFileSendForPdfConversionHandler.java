@@ -46,11 +46,6 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
                     throw new Exception("the conversion file is null");
                 }
 
-                if (fileInputStream == null)
-                {
-                    throw new Exception("the conversion file input stream is null");
-                }
-
                 // Drops the file into the shared drive folder for Ephesoft
                 sendForPdfConversion.copyToCaptureHotFolder(toBeConverted, fileInputStream);
             }
