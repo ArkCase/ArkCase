@@ -499,7 +499,7 @@ angular.module('admin').controller(
                         memberGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(groupId);
 
                         //find child users
-                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId.replace(/\./g, '_002E_'), 'VALID');
+                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId, 'VALID');
 
                         $q.all([ memberGroupsPromise, memberUsersPromise ]).then(function(data) {
                             var memberGroups = _.get(data[0], 'data.response.docs');

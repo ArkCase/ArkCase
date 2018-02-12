@@ -203,7 +203,8 @@
             "documents": {
                 "title": "文書",
                 "description": "フォルダごとの文書のチャートを表示する",
-                "noDataMessage": "現在表示する文書がありません"
+                "noDataMessage": "現在表示する文書がありません",
+                "series": "ja_Number of Documents"
             },
             "locations": {
                 "title": "場所",

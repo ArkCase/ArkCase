@@ -354,8 +354,9 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
 
     @Override
     public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
-            throws MuleException, IOException
+            throws IOException
     {
+
         ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream);
         String ipAddress = null;
         if (authentication != null)
