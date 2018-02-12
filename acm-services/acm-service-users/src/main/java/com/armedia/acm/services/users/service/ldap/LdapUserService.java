@@ -93,7 +93,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if (user == null)
         {
             user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
-        } else
+        }
+        else
         {
             user = userDto.updateAcmUser(user);
         }
@@ -105,7 +106,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setUid(userDto.getUserId());
-        } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
+        }
+        else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setsAMAccountName(userDto.getUserId());
         }
@@ -319,8 +321,10 @@ public class LdapUserService implements ApplicationEventPublisherAware
      * If the user exists and its status is either "INVALID" or "DELETED",
      * we need to remove that user's group membership
      *
-     * @param userId user identifier
-     * @throws NameAlreadyBoundException if a user exists and its status is "VALID"
+     * @param userId
+     *            user identifier
+     * @throws NameAlreadyBoundException
+     *             if a user exists and its status is "VALID"
      */
     private AcmUser checkExistingUser(String userId)
     {
@@ -333,7 +337,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if (AcmUserState.VALID == existing.getUserState())
         {
             throw new NameAlreadyBoundException(null);
-        } else
+        }
+        else
         {
             // INVALID or DELETED user, remove current group membership
             // we have to do this, otherwise new user will be associated with new groups,

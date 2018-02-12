@@ -1,6 +1,8 @@
 package com.armedia.acm.services.search.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -52,6 +54,6 @@ public class AcmSolrUtilTest
         String termWithSpecialCharacters = "!@!@#asasdasd{}[])(*&^%  asdasd asd asd asd asd";
         String encoded = AcmSolrUtil.encodeSpecialCharactersForACL(termWithSpecialCharacters);
         assertFalse(AcmSolrUtil.hasSpecialCharacters(encoded));
-        assertEquals("_21_@_21_@#asasdasd_7b__7d__5b__5d__29__28__2a__26__5e_%_20__20_asdasd_20_asd_20_asd_20_asd_20_asd", encoded);
+        assertEquals("_21_@_21_@#asasdasd_7B__7D__5B__5D__29__28__2A__26__5E_%_20__20_asdasd_20_asd_20_asd_20_asd_20_asd", encoded);
     }
 }
