@@ -166,6 +166,9 @@
         "tooltip.move_left": "Двигай влево",
         "authorized": "Уполномоченный"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ru_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Поиск",
         "btnSearch.text": "Поиск",

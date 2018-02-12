@@ -166,6 +166,9 @@
         "tooltip.move_left": "向左移动",
         "authorized": "合法"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "zh-cn_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "搜索",
         "btnSearch.text": "搜索",

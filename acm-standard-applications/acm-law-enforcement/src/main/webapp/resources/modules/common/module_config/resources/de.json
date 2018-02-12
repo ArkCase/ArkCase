@@ -166,6 +166,9 @@
         "tooltip.move_left": "Geh nach links",
         "authorized": "Autorisiert"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "de_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Suche",
         "btnSearch.text": "Suche",

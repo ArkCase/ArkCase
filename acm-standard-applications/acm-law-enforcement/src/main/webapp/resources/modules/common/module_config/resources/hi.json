@@ -166,6 +166,9 @@
         "tooltip.move_left": "बाएं खिसको",
         "authorized": "अधिकृत"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "hi_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "खोज",
         "btnSearch.text": "खोज",
