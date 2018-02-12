@@ -23,12 +23,14 @@
                 <ref bean="userIdGroupNameDomainUpdateExecutor"/>
                 <ref bean="groupRemoveUUIDExecutor"/>
                 <ref bean="fileFolderParticipantsUpdateExecutor"/>
+                <ref bean="triggerSolrUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
     </bean>
-    
-    <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+
+    <bean id="fileFolderParticipantsUpdateExecutor"
+        class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
         <property name="contextHolder" ref="acmContextHolder"/>
         <property name="fileParticipantService" ref="fileParticipantService"/>
         <property name="fileDao" ref="ecmFileDao"/>
@@ -47,6 +49,11 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="uuidUpdateDao" ref="groupUuidUpdateDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+
+    <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
+        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
+        <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
 </beans>
