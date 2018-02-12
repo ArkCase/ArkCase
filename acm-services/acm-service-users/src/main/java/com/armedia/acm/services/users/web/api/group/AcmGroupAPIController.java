@@ -81,7 +81,7 @@ public class AcmGroupAPIController
             @RequestParam(value = "dir", required = false, defaultValue = "ASC") String sortDirection,
             Authentication auth) throws MuleException
     {
-        LOG.info("Taking all groups and subgroups from Solr.");
+        LOG.info("Taking groups and subgroups from Solr for specific user.");
 
         String solrQuery = groupService.buildGroupsForUserSolrQuery(authorized, userId);
 
@@ -103,7 +103,7 @@ public class AcmGroupAPIController
             @RequestParam(value = "fq") String searchFilter,
             Authentication auth) throws MuleException
     {
-        LOG.info("Taking all groups and subgroups from Solr.");
+        LOG.info("Taking groups and subgroups from Solr for specific user by name.");
 
         String solrQuery = getGroupService().buildGroupsForUserByNameSolrQuery(authorized, userId, searchFilter);
 

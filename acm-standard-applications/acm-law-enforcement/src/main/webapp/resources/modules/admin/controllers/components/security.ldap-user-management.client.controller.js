@@ -13,7 +13,9 @@ angular.module('admin').controller(
                 'Acm.StoreService',
                 'UtilService',
                 '$log',
-                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log) {
+                '$translate',
+                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log,
+                        $translate) {
 
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
@@ -24,6 +26,7 @@ angular.module('admin').controller(
 
                     var makePaginationRequest = true;
                     var currentAuthGroups;
+                    var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
                     $scope.showFilter = true;
                     $scope.appUsers = [];
                     $scope.appGroups = [];
@@ -196,14 +199,14 @@ angular.module('admin').controller(
                                             return onCloneUser(data);
                                         };
                                         if (error.data.field == 'username') {
-                                            usernameError = error.data.message;
+                                            usernameError = $log.error.data.message;
                                             openCloneUserModal(error.data.extra.user, passwordError, usernameError).result.then(onAdd,
                                                     function() {
                                                         deferred.reject("cancel");
                                                         return {};
                                                     });
                                         } else if (error.data.field == 'password') {
-                                            passwordError = error.data.message;
+                                            passwordError = $log.error.data.message;
                                             openCloneUserModal(error.data.extra.userForm, passwordError, usernameError).result.then(onAdd,
                                                     function() {
                                                         deferred.reject("cancel");
@@ -264,14 +267,14 @@ angular.module('admin').controller(
                         });
                     }
 
-                    $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
+                    $scope.$bus.subscribe(objectTitle + 'Filter', function(data) {
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
                                 $scope.userData.appUsers = [];
                                 $scope.fillList($scope.userData.appUsers, response.data.response.docs);
                             }, function() {
-                                error('Error during returning n users');
+                                $log.error('Error during returning n users');
                             });
                         } else {
                             LdapUserManagementService.getUsersFiltered(data).then(function success(response) {
@@ -283,7 +286,7 @@ angular.module('admin').controller(
                         }
                     });
 
-                    $scope.$bus.subscribe('UnauthorizedUserManagementFilter', function(data) {
+                    $scope.$bus.subscribe(objectTitle + 'UnauthorizedFilter', function(data) {
                         data.isAuthorized = false;
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
@@ -304,7 +307,7 @@ angular.module('admin').controller(
                         }
                     });
 
-                    $scope.$bus.subscribe('AuthorizedUserManagementFilter', function(data) {
+                    $scope.$bus.subscribe(objectTitle + 'AuthorizedFilter', function(data) {
                         data.isAuthorized = true;
                         data.member_id = $scope.lastSelectedUser;
                         if (Util.isEmpty(data.filterWord)) {
@@ -313,14 +316,14 @@ angular.module('admin').controller(
                                 $scope.userData.selectedAuthorized = [];
                                 $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
                             }, function() {
-                                error('Error during returning athorized groups for user');
+                                $log.error('Error during returning athorized groups for user');
                             });
                         } else {
                             LdapUserManagementService.getGroupsFiltered(data).then(function(response) {
                                 $scope.userData.selectedAuthorized = [];
                                 $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
                             }, function() {
-                                error('Error during returning the filtered(athorized) groups for user');
+                                $log.error('Error during returning the filtered(athorized) groups for user');
                             });
                         }
                     });

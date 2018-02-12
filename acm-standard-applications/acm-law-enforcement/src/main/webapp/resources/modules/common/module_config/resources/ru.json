@@ -165,6 +165,9 @@
         "tooltip.move_left": "Двигай влево",
         "authorized": "Уполномоченный"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ru_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Поиск",
         "btnSearch.text": "Поиск",
@@ -563,7 +566,7 @@
     "common.directive.coreParticipants": {
         "title": "Участники",
         "replaceFolderChildrenParticipants": "ru_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Добавить участника",
             "editParticipant.label": "Изменить запись",
             "participantType.label": "Тип участника",

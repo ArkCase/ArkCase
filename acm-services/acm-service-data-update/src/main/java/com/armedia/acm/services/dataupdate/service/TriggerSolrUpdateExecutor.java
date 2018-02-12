@@ -18,7 +18,7 @@ public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "acm-jpa-batch-update";
+        return "solr-users-and-groups-update";
     }
 
     @Override

@@ -4,7 +4,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
     return {
         restrict : 'E',
         scope : {
-            controllerName : "@"
+            controllerAlias : "@?"
         },
         templateUrl : 'directives/object-authorization-filter/object.authorization.roles.filter.html',
         link : function(scope) {
@@ -13,7 +13,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
             scope.onChangeFilterWord = function() {
                 if (scope.filterWord == "") {
                     scope.noFilterData = true;
-                    scope.$bus.publish(scope.controllerName + "Filter", "");
+                    scope.$bus.publish(scope.controllerAlias + "Filter", "");
                 } else {
                     scope.noFilterData = false;
                 }
@@ -22,7 +22,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
             scope.filterObjects = function() {
                 var data = {};
                 data.filterWord = scope.filterWord;
-                scope.$bus.publish(scope.controllerName + "Filter", data);
+                scope.$bus.publish(scope.controllerAlias + "Filter", data);
             };
 
         }
