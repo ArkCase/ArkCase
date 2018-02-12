@@ -27,12 +27,8 @@ angular
                             Authentication.queryUserInfo().then(function(userInfo) {
                                 user = userInfo;
                                 $scope.assignee = {};
-                                $scope.assignee.name = userInfo.fullName;
-                                $scope.assignee.object_id_s = userInfo.userId;
+                                $scope.assignee.name = '';
                                 $scope.owningGroup = {};
-                                UserInfoService.getUserInfo().then(function(data) {
-                                    $scope.userGroups = data.groups;
-                                });
                                 return userInfo;
                             });
 
@@ -43,7 +39,7 @@ angular
                                 return moduleConfig;
                             });
 
-                            $scope.searchAssignee = function() {
+                            $scope.userOrGroupSearch = function() {
                                 var params = {};
                                 params.header = $translate.instant("document-repository.newRepository.searchUser");
                                 params.config = $scope.userSearchConfig;
@@ -54,7 +50,8 @@ angular
                                             controller : [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
                                                 $scope.modalInstance = $modalInstance;
                                                 $scope.header = params.header;
-                                                $scope.filter = params.config.searchFilter;
+                                                $scope.filter = params.config.userSearchFilter;
+                                                $scope.extraFilter = params.config.userSearchFacetExtraFilter;
                                                 $scope.config = params.config;
                                             } ],
                                             animation : true,
@@ -67,9 +64,33 @@ angular
                                             }
                                         });
                                 modalInstance.result.then(function(selected) {
-                                    if (!Util.isEmpty(selected)) {
-                                        $scope.assignee = selected;
-                                        $scope.userGroups = selected.groups_id_ss;
+                                    if (selected) {
+                                        var selectedObjectType = selected.masterSelectedItem.object_type_s;
+                                        if (selectedObjectType === 'USER') { // Selected user
+                                            var selectedUser = selected.masterSelectedItem;
+                                            var selectedGroup = selected.detailSelectedItems;
+
+                                            $scope.assignee.object_id_s = selectedUser.object_id_s;
+                                            $scope.assignee.name = selectedUser.name;
+                                            if (selectedGroup) {
+                                                $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                                                $scope.owningGroup.name = selectedGroup.name;
+                                            }
+
+                                            return;
+                                        } else if (selectedObjectType === 'GROUP') { // Selected group
+                                            var selectedUser = selected.detailSelectedItems;
+                                            var selectedGroup = selected.masterSelectedItem;
+                                            if (selectedUser) {
+                                                $scope.assignee.object_id_s = selectedUser.object_id_s;
+                                                $scope.assignee.name = selectedUser.name;
+                                            }
+
+                                            $scope.owningGroup.participantLdapId = selectedGroup.object_id_s;
+                                            $scope.owningGroup.name = selectedGroup.name;
+
+                                            return;
+                                        }
                                     }
                                 });
                             };
@@ -77,8 +98,14 @@ angular
                             $scope.changeType = function() {
                                 if ($scope.isPersonalDocRepo()) {
                                     $scope.owningGroup.participantLdapId = '';
+                                    $scope.owningGroup.name = '';
                                     $scope.assignee.name = user.fullName;
                                     $scope.assignee.object_id_s = user.userId;
+                                } else {
+                                    $scope.assignee.name = '';
+                                    $scope.assignee.object_id_s = '';
+                                    $scope.owningGroup.participantLdapId = '';
+                                    $scope.owningGroup.name = '';
                                 }
                             };
 

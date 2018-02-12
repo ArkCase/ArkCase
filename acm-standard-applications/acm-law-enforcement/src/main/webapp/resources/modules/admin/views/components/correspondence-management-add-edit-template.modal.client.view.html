@@ -17,7 +17,7 @@
                 <div>
                     <ul>
                         <li ng-if="selectedFiles.length == 0">
-                            <span>No File Selected</span>
+                            <span>{{ 'admin.correspondenceManagement.templates.modal.objectTypes.selectedFiles' | translate}}</span>
                         </li>
                         <li ng-repeat="file in selectedFiles">{{file.name}}</li>
                     </ul>
@@ -25,8 +25,7 @@
             </div>
             <div class="row">
                 <label class="control-label">{{ 'admin.correspondenceManagement.templates.modal.objectTypes.label' |
-                    translate
-                    }}
+                    translate}}
                     <select ng-model="template.objectType" ng-disabled="selectedRows.length > 0"
                             ng-options="objectType.id as objectType.name for objectType in objectTypes" class="form-control input-md"
                             required>
