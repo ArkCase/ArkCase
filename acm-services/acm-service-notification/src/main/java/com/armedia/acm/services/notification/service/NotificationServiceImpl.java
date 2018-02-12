@@ -8,6 +8,7 @@ import com.armedia.acm.services.notification.model.Notification;
 import com.armedia.acm.services.notification.model.NotificationConstants;
 import com.armedia.acm.services.notification.model.NotificationRule;
 import com.armedia.acm.spring.SpringContextHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 
 public class NotificationServiceImpl implements NotificationService
 {
@@ -58,9 +58,12 @@ public class NotificationServiceImpl implements NotificationService
 
             SimpleDateFormat dateFormat = new SimpleDateFormat(NotificationConstants.DATE_FORMAT);
 
-            // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last notification run date for one minute
-            // For now we will use date without correction, because we have problem if the run is set less than one minute, multiple emails are sent.
-            // Needed further investigation on DEV environments before removing commented line below. Locally works fine.
+            // Riste Tutureski on 28 November 2017: I will comment this method that make correction of the last
+            // notification run date for one minute
+            // For now we will use date without correction, because we have problem if the run is set less than one
+            // minute, multiple emails are sent.
+            // Needed further investigation on DEV environments before removing commented line below. Locally works
+            // fine.
 
             // Date lastRun = getLastRunDate(lastRunDate, dateFormat);
             Date lastRun = dateFormat.parse(lastRunDate);
@@ -111,8 +114,7 @@ public class NotificationServiceImpl implements NotificationService
                             getNotificationEventPublisher().publishNotificationEvent(event);
                         });
             }
-        }
-        while (!notifications.isEmpty());
+        } while (!notifications.isEmpty());
     }
 
     /**

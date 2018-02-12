@@ -16,10 +16,12 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
 import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
 import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
-import com.armedia.acm.plugins.task.model.*;
+import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+import com.armedia.acm.plugins.task.model.AcmTask;
+import com.armedia.acm.plugins.task.model.BuckslipProcess;
+import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.plugins.task.service.AcmTaskService;
 import com.armedia.acm.plugins.task.service.TaskDao;
 import com.armedia.acm.plugins.task.service.TaskEventPublisher;
@@ -32,9 +34,8 @@ import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
 import com.armedia.acm.web.api.MDCConstants;
 import com.google.common.collect.ImmutableMap;
+
 import org.activiti.engine.ActivitiException;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.apache.commons.beanutils.BeanUtils;
 import org.json.JSONArray;
@@ -51,7 +52,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Created by nebojsha on 22.06.2015.
@@ -71,7 +78,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private EcmFileService ecmFileService;
     private AcmParticipantDao acmParticipantDao;
     private ObjectAssociationService objectAssociationService;
-    private ObjectAssociationEventPublisher objectAssociationEventPublisher;
 
     private ObjectConverter objectConverter;
 
@@ -107,6 +113,28 @@ public class AcmTaskServiceImpl implements AcmTaskService
         return getBusinessProcessIdFromSolr(objectType, objectId, authentication);
     }
 
+    @Override
+    public String getBusinessProcessVariable(String businessProcessId, String processVariableKey, boolean readFromHistory)
+            throws AcmTaskException
+    {
+        return taskDao.readProcessVariable(businessProcessId, processVariableKey, readFromHistory).toString();
+    }
+
+    @Override
+    public String getBusinessProcessVariableByObjectType(String objectType, Long objectId, String processVariableKey,
+            boolean readFromHistory, Authentication authentication) throws AcmTaskException
+    {
+        List<BuckslipProcess> buckslipProcesses = getBuckslipProcessesForObject(objectType, objectId);
+
+        // Takes the business process id from the process if active or from solr if completed
+        Long businessProcessId = (buckslipProcesses != null && buckslipProcesses.size() > 0
+                && !buckslipProcesses.get(0).getBusinessProcessId().isEmpty())
+                        ? Long.valueOf(buckslipProcesses.get(0).getBusinessProcessId())
+                        : getCompletedBuckslipProcessIdForObjectFromSolr(objectType, objectId, authentication);
+
+        return getBusinessProcessVariable(String.valueOf(businessProcessId), processVariableKey, readFromHistory);
+    }
+
     protected List<BuckslipProcess> buckslipProcessesForProcessInstances(List<ProcessInstance> processInstances)
     {
         List<BuckslipProcess> buckslipProcesses = new ArrayList<>(processInstances.size());
@@ -122,9 +150,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
             String futureTasksJson = ((String) pi.getProcessVariables().get(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS));
 
-            List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ?
-                    new ArrayList<>() :
-                    getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
+            List<BuckslipFutureTask> futureTasks = futureTasksJson == null || futureTasksJson.trim().isEmpty() ? new ArrayList<>()
+                    : getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class,
+                            BuckslipFutureTask.class);
             bp.setFutureTasks(futureTasks);
             buckslipProcesses.add(bp);
         }
@@ -153,7 +181,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     @Override
     public boolean isWithdrawable(String businessProcessId) throws AcmTaskException
     {
-        return taskDao.isProcessActive(businessProcessId) && !taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
+        return taskDao.isProcessActive(businessProcessId)
+                && !taskDao.isWaitingOnReceiveTask(businessProcessId, TaskConstants.INITIATE_TASK_NAME);
     }
 
     @Override
@@ -162,10 +191,12 @@ public class AcmTaskServiceImpl implements AcmTaskService
         String futureTasksJson = taskDao.readProcessVariable(businessProcessId, TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, false);
         if (futureTasksJson != null && !futureTasksJson.trim().isEmpty())
         {
-            List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson, List.class, BuckslipFutureTask.class);
+            List<BuckslipFutureTask> buckslipFutureTasks = getObjectConverter().getJsonUnmarshaller().unmarshallCollection(futureTasksJson,
+                    List.class, BuckslipFutureTask.class);
             if (buckslipFutureTasks == null)
             {
-                throw new AcmTaskException(String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
+                throw new AcmTaskException(
+                        String.format("Process with id %s has invalid or corrupt future tasks data structure", businessProcessId));
             }
             return buckslipFutureTasks;
         }
@@ -205,15 +236,14 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
     @Override
     public void createTasks(String taskAssignees, String taskName, String owningGroup, String parentType,
-                            Long parentId)
+            Long parentId)
     {
         if (taskAssignees == null || taskAssignees.trim().isEmpty() || taskName == null || taskName.trim().isEmpty()
                 || owningGroup == null || owningGroup.trim().isEmpty() || parentType == null || parentType.trim().isEmpty()
                 || parentId == null)
         {
-            log.error("Cannot create tasks - invalid input: assignees [{}], task name [{}], owning group [{}], " +
-                            "parent type: [{}], parentId [{}]",
-                    taskAssignees, taskName, owningGroup, parentType, parentId);
+            log.error("Cannot create tasks - invalid input: assignees [{}], task name [{}], owning group [{}], "
+                    + "parent type: [{}], parentId [{}]", taskAssignees, taskName, owningGroup, parentType, parentId);
             return;
         }
 
@@ -237,7 +267,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
             task.setParticipants(new ArrayList<>());
             task.setDueDate(dueDate);
 
-
             try
             {
 
@@ -255,7 +284,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
                 AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", user, true, "");
                 taskEventPublisher.publishTaskEvent(event);
-            } catch (AcmTaskException ate)
+            }
+            catch (AcmTaskException ate)
             {
                 log.error("Could not save task: {}", ate.getMessage(), ate);
             }
@@ -271,13 +301,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void copyTasks(Long fromObjectId,
-                          String fromObjectType,
-                          Long toObjectId,
-                          String toObjectType,
-                          String toObjectName,
-                          Authentication auth,
-                          String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException
+    public void copyTasks(Long fromObjectId, String fromObjectType, Long toObjectId, String toObjectType, String toObjectName,
+            Authentication auth, String ipAddress) throws AcmTaskException, AcmCreateObjectFailedException
     {
         List<Long> tasksIdsFromOriginal = getTaskIdsFromSolr(fromObjectType, fromObjectId, auth);
         if (tasksIdsFromOriginal == null)
@@ -289,7 +314,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             try
             {
                 BeanUtils.copyProperties(task, taskFromOriginal);
-            } catch (InvocationTargetException | IllegalAccessException e)
+            }
+            catch (InvocationTargetException | IllegalAccessException e)
             {
                 log.error("couldn't copy bean.", e);
                 continue;
@@ -304,30 +330,33 @@ public class AcmTaskServiceImpl implements AcmTaskService
             task.setOwner(auth.getName());
             task.setContainer(null);
 
-
-            //create the task
+            // create the task
             task = taskDao.createAdHocTask(task);
 
-            //create container and folder for the task
+            // create container and folder for the task
             taskDao.createFolderForTaskEvent(task);
 
-            //save again to get container and folder ids, must be after creating folderForTaskEvent in order to create cmisFolderId
-            taskDao.save(task);
+            // save again to get container and folder ids, must be after creating folderForTaskEvent in order to create
+            // cmisFolderId
+            AcmTask savedTask = taskDao.save(task);
 
-            //copy folder structure of the original task to the copy task
+            // copy folder structure of the original task to the copy task
             try
             {
-                AcmContainer originalTaskContainer = acmContainerDao.findFolderByObjectTypeAndId(taskFromOriginal.getObjectType(), taskFromOriginal.getId());
+                AcmContainer originalTaskContainer = acmContainerDao.findFolderByObjectTypeAndId(taskFromOriginal.getObjectType(),
+                        taskFromOriginal.getId());
                 if (originalTaskContainer != null && originalTaskContainer.getFolder() != null)
-                    acmFolderService.copyFolderStructure(originalTaskContainer.getFolder().getId(), task.getContainer(), task.getContainer().getFolder());
-            } catch (Exception e)
+                    acmFolderService.copyFolderStructure(originalTaskContainer.getFolder().getId(), savedTask.getContainer(),
+                            savedTask.getContainer().getFolder());
+            }
+            catch (Exception e)
             {
-                log.error("Error copying attachments for task id = {} into task id = {}", taskFromOriginal.getId(), task.getId());
+                log.error("Error copying attachments for task id = {} into task id = {}", taskFromOriginal.getId(), savedTask.getId());
             }
 
-            copyNotes(taskFromOriginal, task);
+            copyNotes(taskFromOriginal, savedTask);
 
-            AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(task, "create", auth.getName(), true, ipAddress);
+            AcmApplicationTaskEvent event = new AcmApplicationTaskEvent(savedTask, "create", auth.getName(), true, ipAddress);
 
             taskEventPublisher.publishTaskEvent(event);
         }
@@ -337,7 +366,7 @@ public class AcmTaskServiceImpl implements AcmTaskService
     {
         try
         {
-            //copy notes
+            // copy notes
             List<Note> notesFromOriginal = noteDao.listNotes("GENERAL", taskFrom.getId(), taskFrom.getObjectType());
             for (Note note : notesFromOriginal)
             {
@@ -349,7 +378,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 newNote.setAuthor(note.getCreator());
                 noteDao.save(newNote);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Error copying notes!", e);
         }
@@ -359,16 +389,13 @@ public class AcmTaskServiceImpl implements AcmTaskService
     {
         List<Long> tasksIds = new LinkedList<>();
 
-
         log.debug("Taking task objects from Solr for parentObjectType = {} and parentObjectId={}", parentObjectType, parentObjectId);
 
         String query = "object_type_s:TASK AND parent_object_type_s :" + parentObjectType + " AND parent_object_id_i:" + parentObjectId;
 
         try
         {
-            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication,
-                    SolrCore.QUICK_SEARCH,
-                    query, 0, 1000, "");
+            String retval = executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.QUICK_SEARCH, query, 0, 1000, "");
 
             if (retval != null && searchResults.getNumFound(retval) > 0)
             {
@@ -384,7 +411,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             }
 
             log.debug("Acm Task ids was retrieved. count({}).", tasksIds.size());
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             log.error("Cannot retrieve objects from Solr.", e);
         }
@@ -401,11 +429,10 @@ public class AcmTaskServiceImpl implements AcmTaskService
             {
                 log.debug("Task event raised. Start coping folder to the parent folder ...");
 
+                AcmContainer container = task.getContainer() != null ? task.getContainer()
+                        : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
 
-                AcmContainer container = task.getContainer() != null ? task.getContainer() : getAcmContainerDao().findFolderByObjectTypeAndId(task.getObjectType(), task.getId());
-
-                Authentication auth =
-                        new UsernamePasswordAuthenticationToken(container.getCreator(), container.getCreator());
+                Authentication auth = new UsernamePasswordAuthenticationToken(container.getCreator(), container.getCreator());
 
                 AcmCmisObjectList files = getEcmFileService().allFilesForContainer(auth, container);
 
@@ -413,17 +440,19 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 {
                     AcmFolder folderToBeCoppied = container.getFolder();
 
-                    AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(), task.getParentObjectId());
+                    AcmContainer targetContainer = getAcmContainerDao().findFolderByObjectTypeAndId(task.getParentObjectType(),
+                            task.getParentObjectId());
 
-                    AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(),
-                            task.getParentObjectId(),
+                    AcmFolder targetFolder = getAcmFolderService().addNewFolderByPath(task.getParentObjectType(), task.getParentObjectId(),
                             "/" + String.format("Task %d%n %s", task.getId(), task.getTitle()));
 
                     getAcmFolderService().copyFolderStructure(folderToBeCoppied.getId(), targetContainer, targetFolder);
                 }
             }
 
-        } catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException | AcmObjectNotFoundException e)
+        }
+        catch (AcmFolderException | AcmListObjectsFailedException | AcmCreateObjectFailedException | AcmUserActionFailedException
+                | AcmObjectNotFoundException e)
         {
             log.error("Could not copy folder for task id = {}", task.getId(), e);
         }
@@ -435,12 +464,11 @@ public class AcmTaskServiceImpl implements AcmTaskService
         try
         {
             AcmTask parentObject = taskDao.findById(taskId);
-            String parentType = parentObject.getBusinessProcessId() == null ? TaskConstants.OBJECT_TYPE :
-                    TaskConstants.SYSTEM_OBJECT_TYPE;
-            Long parentId = parentObject.getBusinessProcessId() == null ? parentObject.getTaskId() :
-                    parentObject.getBusinessProcessId();
+            String parentType = parentObject.getBusinessProcessId() == null ? TaskConstants.OBJECT_TYPE : TaskConstants.SYSTEM_OBJECT_TYPE;
+            Long parentId = parentObject.getBusinessProcessId() == null ? parentObject.getTaskId() : parentObject.getBusinessProcessId();
             return objectAssociationService.findByParentTypeAndId(parentType, parentId);
-        } catch (AcmTaskException e)
+        }
+        catch (AcmTaskException e)
         {
             log.error("Task with id=[{}] not found!", taskId, e);
         }
@@ -462,7 +490,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
             List<ObjectAssociation> childObjects = findChildObjects(id);
             retval.setChildObjects(childObjects);
             return retval;
-        } catch (AcmTaskException | ActivitiException e)
+        }
+        catch (AcmTaskException | ActivitiException e)
         {
             log.error("Task with id=[{}] not found!", id, e);
         }
@@ -470,7 +499,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     }
 
     @Override
-    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication) throws AcmTaskException
+    public List<AcmTask> startReviewDocumentsWorkflow(AcmTask task, String businessProcessName, Authentication authentication)
+            throws AcmTaskException
     {
         List<String> reviewers = new ArrayList<>();
         reviewers.add(task.getAssignee());
@@ -481,7 +511,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
         if (task.getDocumentsToReview() == null || task.getDocumentsToReview().isEmpty())
         {
             throw new AcmTaskException("You must select at least one document to be reviewed.");
-        } else
+        }
+        else
         {
             // Iterate through the list of documentsToReview and start business process for each of them
             for (EcmFile documentToReview : task.getDocumentsToReview())
@@ -489,7 +520,9 @@ public class AcmTaskServiceImpl implements AcmTaskService
                 Map<String, Object> pVars = new HashMap<>();
 
                 pVars.put("reviewers", reviewers);
+                pVars.put("assignee", task.getAssignee());
                 pVars.put("taskName", task.getTitle());
+                pVars.put("dueDate", task.getDueDate());
                 pVars.put("documentAuthor", authentication.getName());
                 pVars.put("pdfRenditionId", documentToReview.getFileId());
                 pVars.put("formXmlId", null);
@@ -514,7 +547,8 @@ public class AcmTaskServiceImpl implements AcmTaskService
     private Long getBusinessProcessIdFromSolr(String objectType, Long objectId, Authentication authentication)
     {
         Long businessProcessId = null;
-        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
+        String query = "object_type_s:TASK AND parent_object_type_s:" + objectType + " AND parent_object_id_i:" + objectId
+                + " AND outcome_name_s:buckslipOutcome AND status_s:CLOSED";
         String retval = null;
 
         try
@@ -581,7 +615,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
         this.noteDao = noteDao;
     }
 
-
     public EcmFileService getEcmFileService()
     {
         return ecmFileService;
@@ -600,11 +633,6 @@ public class AcmTaskServiceImpl implements AcmTaskService
     public void setFileDao(EcmFileDao fileDao)
     {
         this.fileDao = fileDao;
-    }
-
-    public void setObjectAssociationEventPublisher(ObjectAssociationEventPublisher objectAssociationEventPublisher)
-    {
-        this.objectAssociationEventPublisher = objectAssociationEventPublisher;
     }
 
     public AcmParticipantDao getAcmParticipantDao()

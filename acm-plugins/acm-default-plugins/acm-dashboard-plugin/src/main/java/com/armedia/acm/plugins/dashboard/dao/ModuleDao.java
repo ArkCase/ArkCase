@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.dashboard.model.module.Module;
 
 import javax.persistence.TypedQuery;
+
 import java.util.List;
 
 /**
@@ -29,7 +30,6 @@ public class ModuleDao extends AcmAbstractDao<Module>
 
         return results.get(0);
     }
-
 
     @Override
     protected Class<Module> getPersistenceClass()

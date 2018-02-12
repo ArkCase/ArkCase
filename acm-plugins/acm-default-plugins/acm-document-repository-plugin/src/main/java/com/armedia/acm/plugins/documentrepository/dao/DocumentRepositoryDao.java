@@ -5,13 +5,13 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.data.AcmNotificationDao;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepositoryConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-
 
 @Transactional
 public class DocumentRepositoryDao extends AcmAbstractDao<DocumentRepository> implements AcmNotificationDao
@@ -51,7 +51,8 @@ public class DocumentRepositoryDao extends AcmAbstractDao<DocumentRepository> im
         try
         {
             return query.getSingleResult();
-        } catch (NoResultException e)
+        }
+        catch (NoResultException e)
         {
             log.debug("Document Repository with name: [{}] not found.", name);
             return null;

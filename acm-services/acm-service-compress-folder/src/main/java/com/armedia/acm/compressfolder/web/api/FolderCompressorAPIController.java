@@ -6,15 +6,21 @@ package com.armedia.acm.compressfolder.web.api;
 import com.armedia.acm.compressfolder.FolderCompressor;
 import com.armedia.acm.compressfolder.FolderCompressorException;
 import com.armedia.acm.compressfolder.model.CompressNode;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.tika.io.FilenameUtils;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,14 +32,14 @@ import java.io.InputStream;
  *
  */
 @Controller
-@RequestMapping(value = {"/api/v1/service/compressor", "/api/latest/service/compressor"})
+@RequestMapping(value = { "/api/v1/service/compressor", "/api/latest/service/compressor" })
 public class FolderCompressorAPIController
 {
     private FolderCompressor folderCompressor;
     private Logger log = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping(value = "/{folderId}", method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE,
-            MediaType.TEXT_PLAIN_VALUE})
+    @RequestMapping(value = "/{folderId}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_PLAIN_VALUE })
     @ResponseBody
     public FolderCompressorResponse compressFolder(@PathVariable(value = "folderId") long folderId) throws FolderCompressorException
     {
@@ -44,8 +50,7 @@ public class FolderCompressorAPIController
 
     @RequestMapping(value = "/download/{folderId}", method = RequestMethod.GET)
     @ResponseBody
-    public void getCompressedFolder(@PathVariable(value = "folderId") long folderId
-            , HttpServletResponse response)
+    public void getCompressedFolder(@PathVariable(value = "folderId") long folderId, HttpServletResponse response)
             throws FolderCompressorException, IOException
     {
         log.info("Downloading compressed folder by ID '{}'", folderId);
@@ -60,8 +65,7 @@ public class FolderCompressorAPIController
 
     @RequestMapping(value = "/download", method = RequestMethod.POST)
     @ResponseBody
-    public void getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode
-            ,HttpServletResponse response)
+    public void getCompressedSelectedFolderAndFiles(@RequestBody CompressNode compressNode, HttpServletResponse response)
             throws FolderCompressorException, IOException
     {
         String filePath = folderCompressor.compressFolder(compressNode);
@@ -86,8 +90,7 @@ public class FolderCompressorAPIController
                     {
                         response.getOutputStream().write(buffer, 0, read);
                     }
-                }
-                while (read > 0);
+                } while (read > 0);
                 response.getOutputStream().flush();
             }
             catch (IOException e)

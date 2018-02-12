@@ -4,7 +4,6 @@ import com.armedia.acm.core.model.AcmEvent;
 
 import java.util.Date;
 
-
 public class UpdateReferenceEvent extends AcmEvent
 {
 

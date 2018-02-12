@@ -5,6 +5,7 @@ package com.armedia.acm.services.timesheet.web;
 
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({"/api/v1/service/timesheet", "/api/latest/service/timesheet"})
+@RequestMapping({ "/api/v1/service/timesheet", "/api/latest/service/timesheet" })
 public class GetTimesheetsForObjectIdAndTypeAPIController
 {
 
@@ -32,11 +33,11 @@ public class GetTimesheetsForObjectIdAndTypeAPIController
     @RequestMapping(value = "/objectId/{objectId}/objectType/{objectType}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<AcmTimesheet> getAllTimesheetsForObject(@PathVariable("objectId") Long objectId,
-                                                        @PathVariable("objectType") String objectType,
-                                                        @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                                        @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                                                        @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                                        Authentication auth)
+            @PathVariable("objectType") String objectType,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            Authentication auth)
     {
         LOG.info("Taking all timesheets for objectId=[{}] and objectType=[{}]", objectId, objectType);
         return timesheetService.getByObjectIdAndType(objectId, objectType, startRow, maxRows, sort);

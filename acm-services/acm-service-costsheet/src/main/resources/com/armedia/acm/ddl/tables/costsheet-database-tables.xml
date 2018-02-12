@@ -1,183 +1,175 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-	<changeSet id="01-create-costsheet-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
-	     <createTable tableName="acm_costsheet">
-	         <column name="cm_costsheet_id" type="${idType}">
-	             <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
-	         </column>
-	         <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_object_id" type="NUMBER(32,0)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_object_type" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_object_number" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_status" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_created" type="${timestampType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_creator" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_modified" type="${timestampType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_costsheet_modifier" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	     </createTable>
-	 </changeSet>
+    <changeSet id="01-create-costsheet-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_costsheet">
+            <column name="cm_costsheet_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
+            </column>
+            <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
-	<changeSet id="01-create-costsheet-table" author="riste.tutureski" dbms="mysql">
-		<createTable tableName="acm_costsheet">
-			<column name="cm_costsheet_id" type="${idType}">
-				<constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
-			</column>
-			<column name="cm_costsheet_user_id" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_object_id" type="NUMBER(32,0)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_object_type" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_object_number" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_status" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_creator" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_costsheet_modifier" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>
-	</changeSet>
+    <changeSet id="01-create-costsheet-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_costsheet">
+            <column name="cm_costsheet_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_costsheet_id"/>
+            </column>
+            <column name="cm_costsheet_user_id" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_id" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_type" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_object_number" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_status" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_costsheet_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
 
-	<changeSet id="02-create-cost-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
-	     <createTable tableName="acm_cost">
-	         <column name="cm_cost_id" type="${idType}">
-	             <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
-	         </column>
-	         <column name="cm_cost_costsheet_id" type="${fkIdType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_date" type="${timestampType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_value" type="NUMBER(32,0)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_title" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_description" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_created" type="${timestampType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_creator" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_modified" type="${timestampType}">
-	             <constraints nullable="false"/>
-	         </column>
-	         <column name="cm_cost_modifier" type="VARCHAR(1024)">
-	             <constraints nullable="false"/>
-	         </column>
-	     </createTable>
-	     <addForeignKeyConstraint baseTableName="acm_cost" baseColumnNames="cm_cost_costsheet_id"
-                                 constraintName="fk_cost_costsheet_id"
-                                 referencedTableName="acm_costsheet"
-                                 referencedColumnNames="cm_costsheet_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-	 </changeSet>
+    <changeSet id="02-create-cost-table" author="riste.tutureski" dbms="oracle,postgresql,mssql">
+        <createTable tableName="acm_cost">
+            <column name="cm_cost_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
+            </column>
+            <column name="cm_cost_costsheet_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_date" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_value" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_title" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_description" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_created" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_modified" type="${timestampType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_cost" baseColumnNames="cm_cost_costsheet_id" constraintName="fk_cost_costsheet_id"
+            referencedTableName="acm_costsheet" referencedColumnNames="cm_costsheet_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
 
-	<changeSet id="02-create-cost-table" author="riste.tutureski" dbms="mysql">
-		<createTable tableName="acm_cost">
-			<column name="cm_cost_id" type="${idType}">
-				<constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
-			</column>
-			<column name="cm_cost_costsheet_id" type="${fkIdType}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_date" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_value" type="NUMBER(32,0)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_title" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_description" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_creator" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
-				<constraints nullable="false"/>
-			</column>
-			<column name="cm_cost_modifier" type="VARCHAR(1024)">
-				<constraints nullable="false"/>
-			</column>
-		</createTable>
-		<addForeignKeyConstraint baseTableName="acm_cost" baseColumnNames="cm_cost_costsheet_id"
-								 constraintName="fk_cost_costsheet_id"
-								 referencedTableName="acm_costsheet"
-								 referencedColumnNames="cm_costsheet_id"
-								 deferrable="${deferrable}"
-								 initiallyDeferred="${initially.deferred}"/>
-	</changeSet>
-	 
-	 <changeSet id="03-change-cost-value-type-precision" author="riste.tutureski">
-	 	<dropColumn tableName="acm_cost" columnName="cm_cost_value"/>
-	 	<addColumn tableName="acm_cost">
-	 		<column name="cm_cost_value" type="NUMBER(32,2)">
-	             <constraints nullable="false"/>
-	        </column>
-	 	</addColumn>
-	 </changeSet>
-	 
-	 <changeSet id="04-remove-nullable-constraint-for-description-in-cost-table" author="riste.tutureski">
-	 	<dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description" columnDataType="VARCHAR(1024)"/>
-	 </changeSet>
-	 
-	 <changeSet id="05-add-details-column-in-acm-costsheet-table" author="riste.tutureski">
-	 	<addColumn tableName="acm_costsheet">
-	 		<column name="cm_costsheet_details" type="CLOB">
-	 			<constraints nullable="true"/>
-	 		</column>
-	 	</addColumn>
-	 </changeSet>
-     
-     <changeSet id="06-add-container-id-in-acm-costsheet-table" author="riste.tutureski">
+    <changeSet id="02-create-cost-table" author="riste.tutureski" dbms="mysql">
+        <createTable tableName="acm_cost">
+            <column name="cm_cost_id" type="${idType}">
+                <constraints primaryKey="true" primaryKeyName="pk_cm_cost_id"/>
+            </column>
+            <column name="cm_cost_costsheet_id" type="${fkIdType}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_date" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_value" type="NUMBER(32,0)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_title" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_description" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_creator" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cm_cost_modifier" type="VARCHAR(1024)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="acm_cost" baseColumnNames="cm_cost_costsheet_id" constraintName="fk_cost_costsheet_id"
+            referencedTableName="acm_costsheet" referencedColumnNames="cm_costsheet_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+    </changeSet>
+
+    <changeSet id="03-change-cost-value-type-precision" author="riste.tutureski">
+        <dropColumn tableName="acm_cost" columnName="cm_cost_value"/>
+        <addColumn tableName="acm_cost">
+            <column name="cm_cost_value" type="NUMBER(32,2)">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="04-remove-nullable-constraint-for-description-in-cost-table" author="riste.tutureski">
+        <dropNotNullConstraint tableName="acm_cost" columnName="cm_cost_description" columnDataType="VARCHAR(1024)"/>
+    </changeSet>
+
+    <changeSet id="05-add-details-column-in-acm-costsheet-table" author="riste.tutureski">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_costsheet_details" type="CLOB">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="06-add-container-id-in-acm-costsheet-table" author="riste.tutureski">
         <addColumn tableName="acm_costsheet">
             <column name="cm_container_id" type="${fkIdType}"/>
         </addColumn>
@@ -212,16 +204,16 @@
         </insert>
     </changeSet>
 
-	<!-- adding discriminator column, needed for extensibility -->
-	<changeSet id="10-acm_costsheet-add-discriminator-column-extensibility" author="riste.tutureski">
-		<addColumn tableName="acm_costsheet">
-			<column name="cm_class_name" type="VARCHAR(400)"/>
-		</addColumn>
-	</changeSet>
+    <!-- adding discriminator column, needed for extensibility -->
+    <changeSet id="10-acm_costsheet-add-discriminator-column-extensibility" author="riste.tutureski">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
 
-	<changeSet id="11-add-title-in-acm-costsheet-table" author="nadica.cuculova">
-		<addColumn tableName="acm_costsheet">
-			<column name="cm_costsheet_title" type="VARCHAR(1024)"/>
-		</addColumn>
-	</changeSet>
+    <changeSet id="11-add-title-in-acm-costsheet-table" author="nadica.cuculova">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_costsheet_title" type="VARCHAR(1024)"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

@@ -6,8 +6,8 @@ import org.springframework.security.web.RedirectStrategy;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
+import java.io.IOException;
 
 public class AcmRedirectStrategy implements RedirectStrategy
 {
@@ -25,7 +25,8 @@ public class AcmRedirectStrategy implements RedirectStrategy
         {
             response.setHeader("acm_concurrent_session_redirect", redirectUrl);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        } else
+        }
+        else
         {
             response.sendRedirect(redirectUrl);
         }

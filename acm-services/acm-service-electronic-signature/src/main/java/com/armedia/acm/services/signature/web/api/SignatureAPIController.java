@@ -3,12 +3,11 @@ package com.armedia.acm.services.signature.web.api;
 import com.armedia.acm.core.exceptions.AcmAppErrorJsonMsg;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.signature.dao.SignatureDao;
-import com.armedia.acm.services.signature.exception.AcmSignatureException;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
-import org.codehaus.plexus.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,9 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
+
 import java.util.Map;
 
-@RequestMapping({"/api/v1/plugin/signature", "/api/latest/plugin/signature"})
+@RequestMapping({ "/api/v1/plugin/signature", "/api/latest/plugin/signature" })
 public class SignatureAPIController
 {
     private SignatureDao signatureDao;
@@ -38,12 +38,10 @@ public class SignatureAPIController
             @PathVariable("objectId") Long objectId,
             @RequestBody Map<String, String> body,
             Authentication authentication,
-            HttpSession httpSession
-    ) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
+            HttpSession httpSession) throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
         String password = body.get("confirmPassword");
         log.info("Electronically signing object [{}] [{}] ", objectType, objectId);
-
 
         String userName = authentication.getName();
         // authenticate user/password against ldap service(s)
@@ -52,7 +50,7 @@ public class SignatureAPIController
         {
             throw new AcmAppErrorJsonMsg("Invalid password", objectType, "password", null);
         }
-        
+
         try
         {
             // persist to db
@@ -66,7 +64,8 @@ public class SignatureAPIController
             publishSignatureEvent(authentication, httpSession, savedSignature, true);
 
             return savedSignature;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             // gen up a fake task so we can audit the failure
             Signature fakeSignature = new Signature();
@@ -86,7 +85,8 @@ public class SignatureAPIController
             boolean succeeded)
     {
         String ipAddress = (String) httpSession.getAttribute("acm_ip_address");
-        ApplicationSignatureEvent event = new ApplicationSignatureEvent(signed, String.format("%s.%s", "com.armedia.acm.app.signature.signed", signed.getObjectType().toLowerCase()), succeeded, ipAddress);
+        ApplicationSignatureEvent event = new ApplicationSignatureEvent(signed,
+                String.format("%s.%s", "com.armedia.acm.app.signature.signed", signed.getObjectType().toLowerCase()), succeeded, ipAddress);
         log.debug("Sign event type: [{}]", event.getEventType());
         getSignatureEventPublisher().publishSignatureEvent(event);
     }
@@ -124,4 +124,3 @@ public class SignatureAPIController
     }
 
 }
-

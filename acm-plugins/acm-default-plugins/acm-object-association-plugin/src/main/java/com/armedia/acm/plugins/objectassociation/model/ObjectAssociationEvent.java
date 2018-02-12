@@ -1,16 +1,16 @@
 package com.armedia.acm.plugins.objectassociation.model;
 
 import com.armedia.acm.core.model.AcmEvent;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 
 public class ObjectAssociationEvent extends AcmEvent
 {
-    public enum ObjectAssociationState {
-        NEW,
-        UPDATE,
-        DELETE
+    public enum ObjectAssociationState
+    {
+        NEW, UPDATE, DELETE
     }
 
     public ObjectAssociationEvent(ObjectAssociation source)

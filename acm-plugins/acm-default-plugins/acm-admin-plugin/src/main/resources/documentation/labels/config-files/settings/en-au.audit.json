@@ -1,77 +1,84 @@
-{"title": {
-    "value": "Audit",
-    "defaultValue": "Audit",
-    "description": ""
-}, "label": {
-    "date-from": {
-        "value": "From",
-        "defaultValue": "From",
+{
+    "title": {
+        "value": "Audit",
+        "defaultValue": "Audit",
         "description": ""
     },
-    "date-to": {
-        "value": "To",
-        "defaultValue": "To",
-        "description": ""
-    }
-}, "button": {
-    "generate-report": {
-        "value": "Generate Audit Report",
-        "defaultValue": "Generate Audit Report",
-        "description": ""
-    }
-}, "object-type": {
     "label": {
-        "value": "Object to audit",
-        "defaultValue": "Object to audit",
-        "description": ""
+        "date-from": {
+            "value": "From",
+            "defaultValue": "From",
+            "description": ""
+        },
+        "date-to": {
+            "value": "To",
+            "defaultValue": "To",
+            "description": ""
+        }
     },
-    "desc": {
-        "value": "Object to audit",
-        "defaultValue": "Object to audit",
-        "description": ""
+    "button": {
+        "generate-report": {
+            "value": "Generate Audit Report",
+            "defaultValue": "Generate Audit Report",
+            "description": ""
+        }
     },
-    "values": {
-        "all": {
-            "value": "ALL",
-            "defaultValue": "ALL",
+    "object-type": {
+        "label": {
+            "value": "Object to audit",
+            "defaultValue": "Object to audit",
             "description": ""
         },
-        "case-files": {
-            "value": "Briefs",
-            "defaultValue": "Briefs",
+        "desc": {
+            "value": "Object to audit",
+            "defaultValue": "Object to audit",
             "description": ""
         },
-        "complaints": {
-            "value": "Complaints",
-            "defaultValue": "Complaints",
+        "values": {
+            "all": {
+                "value": "ALL",
+                "defaultValue": "ALL",
+                "description": ""
+            },
+            "case-files": {
+                "value": "Briefs",
+                "defaultValue": "Briefs",
+                "description": ""
+            },
+            "complaints": {
+                "value": "Complaints",
+                "defaultValue": "Complaints",
+                "description": ""
+            },
+            "tasks": {
+                "value": "Tasks",
+                "defaultValue": "Tasks",
+                "description": ""
+            },
+            "files": {
+                "value": "Files",
+                "defaultValue": "Files",
+                "description": ""
+            }
+        }
+    },
+    "object-id": {
+        "label": {
+            "value": "Brief # ...",
+            "defaultValue": "Brief # ...",
             "description": ""
         },
-        "tasks": {
-            "value": "Tasks",
-            "defaultValue": "Tasks",
+        "desc": {
+            "value": "Object Number",
+            "defaultValue": "Object Number",
             "description": ""
-        },
-        "files": {
-            "value": "Files",
-            "defaultValue": "Files",
+        }
+    },
+    "date-range": {
+        "desc": {
+            "value": "Date Range",
+            "defaultValue": "Date Range",
             "description": ""
         }
     }
-}, "object-id": {
-    "label": {
-        "value": "Brief # ...",
-        "defaultValue": "Brief # ...",
-        "description": ""
-    },
-    "desc": {
-        "value": "Object Number",
-        "defaultValue": "Object Number",
-        "description": ""
-    }
-}, "date-range": {
-    "desc": {
-        "value": "Date Range",
-        "defaultValue": "Date Range",
-        "description": ""
-    }
-}}
+}

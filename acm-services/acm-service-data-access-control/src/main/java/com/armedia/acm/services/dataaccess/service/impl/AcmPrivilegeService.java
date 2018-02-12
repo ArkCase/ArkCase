@@ -4,6 +4,7 @@ import com.armedia.acm.services.dataaccess.model.DataAccessControlConstants;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.armedia.acm.services.participants.model.AcmParticipantPrivilege;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,10 +20,13 @@ public class AcmPrivilegeService
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * Grant privileges to object participants based on an access specification.  The access specification is
-     * configured in the drools-access-control-rules.xlsx spreadsheet.  It must conform to the following pattern:
+     * Grant privileges to object participants based on an access specification. The access specification is
+     * configured in the drools-access-control-rules.xlsx spreadsheet. It must conform to the following pattern:
      * <p/>
-     *   <pre>[grant|deny|mandatory deny] [access level] to [participant type][, participant type...]</pre>
+     * 
+     * <pre>
+     * [grant|deny|mandatory deny] [access level] to [participant type][, participant type...]
+     * </pre>
      * <p/>
      * Example: grant read to assignee
      * <br/>
@@ -34,11 +38,13 @@ public class AcmPrivilegeService
      * participant on this object.
      *
      * @param obj
-     * @param accessSpec Must follow the pattern '[grant|deny|mandatory deny] [access level] to [participant type][, participant type...]'
+     * @param accessSpec
+     *            Must follow the pattern '[grant|deny|mandatory deny] [access level] to [participant type][,
+     *            participant type...]'
      */
     public void setPrivileges(AcmAssignedObject obj, String accessSpec)
     {
-        log.debug("Set privilege '" + accessSpec + "'");
+        log.debug("Set privilege '{}' to object: {}[{}]", accessSpec, obj.getObjectType(), obj.getId());
 
         String[] parts = accessSpec.split(" ");
         // grant, deny, mandatory deny
@@ -71,28 +77,28 @@ public class AcmPrivilegeService
             idx++;
         }
 
-
-
         List<String> participantTypes = participantTypesToList(participantType);
 
         // now we have the desired access, so we can grant it to every participant of the given participant type
         for (AcmParticipant ap : obj.getParticipants())
         {
-            log.debug("checking type '" + ap.getParticipantType() + "', user '" + ap.getParticipantLdapId() + "'");
-            if ( participantTypes.contains((ap.getParticipantType().toLowerCase())) )
+            log.debug("checking type '{}', user '{}'", ap.getParticipantType(), ap.getParticipantLdapId());
+
+            if (participantTypes.contains((ap.getParticipantType().toLowerCase())))
             {
                 ap.setModified(new Date());
                 log.debug("participant matches, checking privileges");
                 boolean found = false;
                 for (AcmParticipantPrivilege priv : ap.getPrivileges())
                 {
-                    log.debug("object action: '" + priv.getObjectAction() + "', rule action: '" + action + "'");
+                    log.debug("object action: '{}', rule action: '{}'", priv.getObjectAction(), action);
                     if (action.equals(priv.getObjectAction()))
                     {
                         found = true;
                         priv.setAccessType(mode);
                         priv.setAccessReason(DataAccessControlConstants.ACCESS_REASON_POLICY);
-                        log.info("updated existing privilege [{} '{}' to '{}'='{}']", mode, action, ap.getParticipantType(), ap.getParticipantLdapId());
+                        log.debug("updated existing privilege [{} '{}' to '{}'='{}']", mode, action, ap.getParticipantType(),
+                                ap.getParticipantLdapId());
                         break;
                     }
                 }
@@ -105,7 +111,7 @@ public class AcmPrivilegeService
                     priv.setObjectAction(action);
                     ap.getPrivileges().add(priv);
 
-                    log.debug("added privilege '" + action + "' to '" + ap.getParticipantLdapId() + "'");
+                    log.debug("added privilege '{}' to '{}'", action, ap.getParticipantLdapId());
                 }
             }
         }
@@ -116,7 +122,7 @@ public class AcmPrivilegeService
     {
         List<String> participantTypes = new ArrayList<>();
         String[] types = participantType.split(",");
-        for ( String type : types )
+        for (String type : types)
         {
             participantTypes.add(type.trim().toLowerCase());
         }

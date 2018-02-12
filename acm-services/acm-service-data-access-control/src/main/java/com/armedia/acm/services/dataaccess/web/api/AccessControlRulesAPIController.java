@@ -2,6 +2,7 @@ package com.armedia.acm.services.dataaccess.web.api;
 
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by Petar Ilin <petar.ilin@armedia.com> on 05.11.2015.
  */
 @Controller
-@RequestMapping({"/api/v1/service/dataaccess/rules", "/api/latest/service/dataaccess/rules"})
+@RequestMapping({ "/api/v1/service/dataaccess/rules", "/api/latest/service/dataaccess/rules" })
 public class AccessControlRulesAPIController
 {
     /**
@@ -32,7 +33,8 @@ public class AccessControlRulesAPIController
     /**
      * Retrieve AC rules configuration
      *
-     * @param authentication authentication token
+     * @param authentication
+     *            authentication token
      * @return AC rules configuration
      */
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

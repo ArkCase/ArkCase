@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
-    
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
     <bean id="projectFactory" class="com.armedia.acm.form.project.service.ProjectFactory">
-    	<property name="userDao" ref="userJpaDao" />
-    	<property name="acmParticipantDao" ref="acmParticipantDao" />
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="acmParticipantDao" ref="acmParticipantDao"/>
     </bean>
-    
+
     <bean id="projectService" class="com.armedia.acm.form.project.service.ProjectService" parent="frevvoFormService" scope="prototype">
-    	<property name="projectFactory" ref="projectFactory" />
+        <property name="projectFactory" ref="projectFactory"/>
     </bean>
-    
+
     <bean id="projectUpdatedListener" class="com.armedia.acm.form.project.service.ProjectUpdatedListener">
-    	<property name="properties" ref="acm-forms-properties" />
-    	<lookup-method name="getProjectService" bean="projectService"/>
+        <property name="properties" ref="acm-forms-properties"/>
+        <lookup-method name="getProjectService" bean="projectService"/>
     </bean>
 
 </beans>

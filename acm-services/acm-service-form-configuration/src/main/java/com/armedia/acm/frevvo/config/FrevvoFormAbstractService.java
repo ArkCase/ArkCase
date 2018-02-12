@@ -44,6 +44,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.builder.Input;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -323,13 +328,42 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
 
             if (ecmFile != null)
             {
-                Object form = getExistingForm(ecmFile.getId(), c);
+
+                Object form = null;
+                String existingXml = "";
+
+                if (ecmFile.getId() != null)
+                {
+                    try
+                    {
+                        // Taking existing XML for the form
+                        existingXml = getEcmFileService().download(ecmFile.getId());
+
+                        // Creating Frevvo form from the existing XML
+                        form = convertFromXMLToObject(cleanXML(existingXml), c);
+                    }
+                    catch (MuleException e)
+                    {
+                        LOG.error("Cannot download file with id={}", ecmFile.getId());
+                    }
+                }
+
                 form = convertToFrevvoForm(entity, form);
 
                 if (form != null)
                 {
                     String xml = convertFromObjectToXML(form);
-                    updateXML(xml, ecmFile, auth);
+
+                    // compare the XMLs and upload the new file only if changed
+                    Diff diff = DiffBuilder.compare(Input.fromString(xml))
+                            .withTest(Input.fromString(existingXml))
+                            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText))
+                            .build();
+
+                    if (diff.hasDifferences())
+                    {
+                        updateXML(xml, ecmFile, auth);
+                    }
                 }
             }
         }
@@ -351,30 +385,6 @@ public abstract class FrevvoFormAbstractService implements FrevvoFormService
                 LOG.error("Failed to update XML file.", e);
             }
         }
-    }
-
-    public Object getExistingForm(Long id, Class<?> c)
-    {
-        Object retval = null;
-
-        if (id != null)
-        {
-            String existingXml = "";
-            try
-            {
-                // Taking existing XML for the form
-                existingXml = getEcmFileService().download(id);
-
-                // Creating Frevvo form from the existing XML
-                retval = convertFromXMLToObject(cleanXML(existingXml), c);
-            }
-            catch (MuleException e)
-            {
-                LOG.error("Cannot download file with id={}", id);
-            }
-        }
-
-        return retval;
     }
 
     public void updateXMLAttachment(MultiValueMap<String, MultipartFile> attachments, String formName, Object form) throws Exception

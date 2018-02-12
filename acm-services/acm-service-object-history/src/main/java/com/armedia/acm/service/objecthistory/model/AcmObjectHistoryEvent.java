@@ -14,21 +14,22 @@ import java.util.Date;
 public class AcmObjectHistoryEvent extends AcmEvent
 {
 
-	private static final String OBJECT_TYPE = "OBJECT_HISTORY";
-	
-	private static final long serialVersionUID = 5070129016123205179L;
+    private static final String OBJECT_TYPE = "OBJECT_HISTORY";
 
-	public AcmObjectHistoryEvent(AcmObjectHistory source) 
-	{
-		super(source);
-		
-		setObjectId(source.getId());
-		setEventDate(new Date());
-		setUserId(source.getModifier());
-	}
+    private static final long serialVersionUID = 5070129016123205179L;
 
-	public String getObjectType()
-	{
-		return OBJECT_TYPE;
-	}
+    public AcmObjectHistoryEvent(AcmObjectHistory source)
+    {
+        super(source);
+
+        setObjectId(source.getId());
+        setEventDate(new Date());
+        setUserId(source.getModifier());
+    }
+
+    @Override
+    public String getObjectType()
+    {
+        return OBJECT_TYPE;
+    }
 }

@@ -1,26 +1,8 @@
 package com.armedia.acm.services.users.service.ldap;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-import javax.servlet.http.HttpSession;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.ldap.NameAlreadyBoundException;
-import org.springframework.ldap.core.LdapTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
-import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
@@ -40,6 +22,24 @@ import com.armedia.acm.services.users.model.ldap.UserDTO;
 import com.armedia.acm.services.users.service.group.GroupService;
 import com.armedia.acm.spring.SpringContextHolder;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.ldap.NameAlreadyBoundException;
+import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpSession;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class LdapUserService implements ApplicationEventPublisherAware
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -57,8 +57,6 @@ public class LdapUserService implements ApplicationEventPublisherAware
     private SpringContextHolder acmContextHolder;
 
     private ApplicationEventPublisher eventPublisher;
-
-    private AlfrescoLdapSyncer alfrescoLdapSyncer;
 
     public void publishSetPasswordEmailEvent(AcmUser user)
     {
@@ -83,7 +81,8 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public AcmUser createLdapUser(UserDTO userDto, String directoryName) throws AcmUserActionFailedException, AcmLdapActionFailedException
+    public AcmUser createLdapUser(UserDTO userDto, String directoryName)
+            throws AcmUserActionFailedException, AcmLdapActionFailedException
     {
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
 
@@ -141,7 +140,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
             userDao.save(acmUser);
             userDao.getEntityManager().flush();
 
-            Set<String> groupDns = groups.stream().filter(AcmGroup::isLdapGroup).map(AcmGroup::getDistinguishedName)
+            Set<String> groupDns = groups.stream()
+                    .filter(AcmGroup::isLdapGroup)
+                    .map(AcmGroup::getDistinguishedName)
                     .collect(Collectors.toSet());
 
             ldapGroupDao.addMemberToGroups(acmUser.getDistinguishedName(), groupDns, ldapSyncConfig);
@@ -154,7 +155,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
 
-        alfrescoLdapSyncer.initiateSync();
+        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser));
 
         return acmUser;
     }
@@ -215,14 +216,20 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public List<AcmUser> addExistingLdapUsersToGroup(List<AcmUser> acmUsers, String directoryName, String groupName)
+    public List<AcmUser> addExistingLdapUsersToGroup(List<String> userIds, String directoryName, String groupName)
             throws AcmLdapActionFailedException, AcmObjectNotFoundException
     {
         List<AcmUser> ldapUsers = new ArrayList<>();
-        for (AcmUser user : acmUsers)
+        for (String userId : userIds)
         {
-            AcmUser existingUser = userDao.findByUserId(user.getUserId());
-            log.debug("Adding Group [{}] to User [{}]", groupName, user.getUserId());
+            AcmUser existingUser = userDao.findByUserId(userId);
+
+            if (existingUser == null)
+            {
+                throw new AcmObjectNotFoundException("USER", null, "User " + userId + " not found");
+            }
+
+            log.debug("Adding Group [{}] to User [{}]", groupName, userId);
             AcmGroup ldapGroup = groupService.addUserMemberToGroup(existingUser, groupName, true);
 
             AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
@@ -308,8 +315,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
     }
 
     /**
-     * Check if user already exists with the same user identifier. If the user exists and its status is either "INVALID"
-     * or "DELETED", we need to remove that user's group membership
+     * Check if user already exists with the same user identifier.
+     * If the user exists and its status is either "INVALID" or "DELETED",
+     * we need to remove that user's group membership
      *
      * @param userId user identifier
      * @throws NameAlreadyBoundException if a user exists and its status is "VALID"
@@ -380,12 +388,4 @@ public class LdapUserService implements ApplicationEventPublisherAware
         eventPublisher = applicationEventPublisher;
     }
 
-    /**
-     * @param alfrescoLdapSyncer
-     *            the alfrescoLdapSyncer to set
-     */
-    public void setAlfrescoLdapSyncer(AlfrescoLdapSyncer alfrescoLdapSyncer)
-    {
-        this.alfrescoLdapSyncer = alfrescoLdapSyncer;
-    }
 }

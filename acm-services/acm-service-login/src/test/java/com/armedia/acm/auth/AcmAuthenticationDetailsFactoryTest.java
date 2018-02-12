@@ -1,14 +1,15 @@
 package com.armedia.acm.auth;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Vector;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import java.util.Vector;
 
 public class AcmAuthenticationDetailsFactoryTest extends EasyMockSupport
 {
@@ -58,13 +59,12 @@ public class AcmAuthenticationDetailsFactoryTest extends EasyMockSupport
     {
         String ip = "192.168.1.1";
 
-        Vector<String> headerNames = new Vector<String>();
-        if ( forwardFor != null )
+        Vector<String> headerNames = new Vector<>();
+        if (forwardFor != null)
         {
             headerNames.add(forwardHeaderName);
             expect(mockRequest.getHeader(forwardHeaderName)).andReturn(forwardFor);
         }
-
 
         expect(mockRequest.getRemoteAddr()).andReturn(ip);
         expect(mockRequest.getSession(false)).andReturn(null);
@@ -77,7 +77,7 @@ public class AcmAuthenticationDetailsFactoryTest extends EasyMockSupport
         verifyAll();
 
         String expectedIp = forwardFor == null ? ip : forwardFor;
-        if ( expectedIp.indexOf(",") > 0 )
+        if (expectedIp.indexOf(",") > 0)
         {
             expectedIp = expectedIp.substring(0, expectedIp.indexOf(","));
         }

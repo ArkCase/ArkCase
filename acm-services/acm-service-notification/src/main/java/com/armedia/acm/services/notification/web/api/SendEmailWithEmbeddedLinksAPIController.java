@@ -45,7 +45,8 @@ public class SendEmailWithEmbeddedLinksAPIController
         try
         {
             return getNotificationSenderFactory().getNotificationSender().sendEmailWithEmbeddedLinks(in, authentication, user);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmUserActionFailedException(
                     "Could not send emails with embedded links, among other things check your request body. Exception message is : ", null,

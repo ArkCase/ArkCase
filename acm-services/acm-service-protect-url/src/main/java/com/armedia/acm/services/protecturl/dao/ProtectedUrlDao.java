@@ -4,6 +4,7 @@ import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.services.protecturl.model.ProtectedUrl;
 
 import javax.persistence.Query;
+
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -22,7 +23,8 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
     /**
      * returns ProtectedUrl if found for given parameter of obfuscatedUrl, if not found throws NoResultException
      *
-     * @param obfuscatedUrl String  obfuscatedUrl
+     * @param obfuscatedUrl
+     *            String obfuscatedUrl
      * @return instance of ProtectedUrl
      */
     public ProtectedUrl findByObfuscatedUrl(String obfuscatedUrl)
@@ -35,7 +37,8 @@ public class ProtectedUrlDao extends AcmAbstractDao<ProtectedUrl>
     /**
      * returns list of ProtectedUrl if found for given parameter of originalUrl, if not found throws NoResultException
      *
-     * @param originalUrl String  originalUrl
+     * @param originalUrl
+     *            String originalUrl
      * @return instance of List<ProtectedUrl>
      */
     public List<ProtectedUrl> findByOriginalUrl(String originalUrl)

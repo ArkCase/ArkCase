@@ -1,5 +1,7 @@
 package com.armedia.acm.services.config.lookups.service;
 
+import com.armedia.acm.core.exceptions.AcmResourceNotFoundException;
+import com.armedia.acm.core.exceptions.AcmResourceNotModifiableException;
 import com.armedia.acm.core.exceptions.InvalidLookupException;
 import com.armedia.acm.services.config.lookups.model.AcmLookup;
 import com.armedia.acm.services.config.lookups.model.LookupDefinition;
@@ -12,6 +14,20 @@ import java.io.IOException;
 public interface LookupDao
 {
     /**
+     * Returns all the lookups as json.
+     */
+    String getMergedLookups();
+
+    /**
+     * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
+     *
+     * @param name
+     *            the name of the lookup to find
+     * @return the {@link AcmLookup} found
+     */
+    AcmLookup<?> getLookupByName(String name);
+
+    /**
      * Returns all the lookups as json, with the updated lookup.
      *
      * @param lookupDefinition
@@ -22,14 +38,20 @@ public interface LookupDao
      * @throws IOException
      *             when the underlying store cannot be accessed
      */
-    public String updateLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
+    String saveLookup(LookupDefinition lookupDefinition) throws InvalidLookupException, IOException;
 
     /**
-     * Returns {@link AcmLookup} with the given name. Returns null if no such lookup is defined.
+     * Delete lookup with given name.
      *
      * @param name
-     *            the name of the lookup to find
-     * @return the {@link AcmLookup} found
+     *            the {@link name} for the lookup to be deleted
+     * @return all the updated lookups as json
+     * @throws AcmResourceNotFoundException
+     *             when the lookup cannot be found
+     * @throws AcmResourceNotModifiableException
+     *             when the lookup cannot be modified
+     * @throws IOException
+     *             when the underlying store cannot be accessed
      */
-    public AcmLookup<?> getLookupByName(String name);
+    String deleteLookup(String name) throws AcmResourceNotFoundException, AcmResourceNotModifiableException, IOException;
 }

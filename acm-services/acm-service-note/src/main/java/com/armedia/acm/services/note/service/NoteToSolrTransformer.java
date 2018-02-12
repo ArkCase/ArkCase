@@ -93,12 +93,6 @@ public class NoteToSolrTransformer implements AcmObjectToSolrDocTransformer<Note
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Note in)
-    {
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return Note.class.equals(acmObjectType);

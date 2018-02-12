@@ -14,5 +14,4 @@ public interface AcmDiffConstants
     String OBJECT_MODIFIED = "object_modified";
     String OBJECT_REPLACED = "object_replaced";
 
-
 }

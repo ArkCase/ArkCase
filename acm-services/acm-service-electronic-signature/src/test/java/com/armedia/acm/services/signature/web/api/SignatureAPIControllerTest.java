@@ -1,11 +1,20 @@
 package com.armedia.acm.services.signature.web.api;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import com.armedia.acm.services.signature.dao.SignatureDao;
 import com.armedia.acm.services.signature.model.ApplicationSignatureEvent;
 import com.armedia.acm.services.signature.model.Signature;
 import com.armedia.acm.services.signature.service.SignatureEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapAuthenticateManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.easymock.Capture;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -25,16 +34,10 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
 
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
         "classpath:/spring/spring-web-acm-web.xml",
-        "classpath:/spring/spring-library-electronic-signature-test.xml"})
+        "classpath:/spring/spring-library-electronic-signature-test.xml" })
 public class SignatureAPIControllerTest extends EasyMockSupport
 {
 
@@ -47,7 +50,6 @@ public class SignatureAPIControllerTest extends EasyMockSupport
     private SignatureDao mockSignatureDao;
     private SignatureEventPublisher mockSignatureEventPublisher;
     private LdapAuthenticateManager mockLdapAuthenticateManager;
-
 
     @Autowired
     private ExceptionHandlerExceptionResolver exceptionResolver;
@@ -106,7 +108,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport
                                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                                 .content("{\"confirmPassword\":\"password\"}")
                                 .session(mockHttpSession)
-                                .principal(mockAuthentication)).andReturn();
+                                .principal(mockAuthentication))
+                .andReturn();
 
         verifyAll();
 
@@ -153,7 +156,7 @@ public class SignatureAPIControllerTest extends EasyMockSupport
         replayAll();
 
         // To see details on the HTTP calls, change .andReturn() to .andDo(print())
-         mockMvc
+        mockMvc
                 .perform(
                         post("/api/v1/plugin/signature/confirm/{objectType}/{objectId}", objectType, objectId)
                                 .content("{\"confirmPassword\":\"password\"}")
@@ -197,7 +200,8 @@ public class SignatureAPIControllerTest extends EasyMockSupport
                                 .contentType(
                                         MediaType.APPLICATION_JSON_VALUE)
                                 .session(mockHttpSession)
-                                .principal(mockAuthentication)).andReturn();
+                                .principal(mockAuthentication))
+                .andReturn();
 
         verifyAll();
 

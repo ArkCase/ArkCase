@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.documentrepository.pipeline;
 
 import com.armedia.acm.plugins.documentrepository.model.DocumentRepository;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
+
 import org.springframework.security.core.Authentication;
 
 import java.util.List;

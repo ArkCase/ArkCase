@@ -27,6 +27,7 @@ angular.module('admin').controller(
                         var columnLdapUserTemplate = userTemplate();
                         var columnLdapGroupTemplate = groupTemplate();
                         var columnPartialSyncBtn = partialSyncBtn();
+
                         columnDefs.push(columnPartialSyncBtn);
                         columnDefs.push(columnLdapGroupTemplate);
                         columnDefs.push(columnLdapUserTemplate);

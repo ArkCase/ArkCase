@@ -64,13 +64,6 @@ public class AcmContainerToSolrTransformer implements AcmObjectToSolrDocTransfor
     }
 
     @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(AcmContainer in)
-    {
-        // no implementation needed yet
-        return null;
-    }
-
-    @Override
     public boolean isAcmObjectTypeSupported(Class acmObjectType)
     {
         return AcmContainer.class.equals(acmObjectType);

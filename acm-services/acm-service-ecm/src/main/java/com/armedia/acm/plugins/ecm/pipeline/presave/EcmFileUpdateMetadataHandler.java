@@ -9,6 +9,7 @@ import com.armedia.acm.plugins.ecm.service.PageCountService;
 import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
+
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,10 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             version.setVersionTag(cmisDocument.getVersionLabel());
             version.setVersionMimeType(entity.getFileActiveVersionMimeType());
             version.setVersionFileNameExtension(entity.getFileActiveVersionNameExtension());
-            int fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
-                    pipelineContext.getMergedFileByteArray().length > 0 ?
-                    pipelineContext.getMergedFileByteArray().length :
-                    pipelineContext.getFileByteArray() != null ? pipelineContext.getFileByteArray().length : 0;
-            version.setFileSizeBytes(Long.valueOf(fileSizeBytes));
+            long fileSizeBytes = pipelineContext.getMergedFileByteArray() != null &&
+                    pipelineContext.getMergedFileByteArray().length > 0 ? pipelineContext.getMergedFileByteArray().length
+                            : pipelineContext.getFileContents() != null ? pipelineContext.getFileContents().length() : 0;
+            version.setFileSizeBytes(fileSizeBytes);
 
             // file metadata
             if (pipelineContext.getDetectedFileMetadata() != null)
@@ -72,12 +72,13 @@ public class EcmFileUpdateMetadataHandler implements PipelineHandler<EcmFile, Ec
             try
             {
                 int pageCount = getPageCountService().getNumberOfPages(entity.getFileActiveVersionMimeType(),
-                        pipelineContext.getFileByteArray());
+                        pipelineContext.getFileContents());
                 if (pageCount > -1)
                 {
                     entity.setPageCount(pageCount);
                 }
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 throw new PipelineProcessException(e);
             }

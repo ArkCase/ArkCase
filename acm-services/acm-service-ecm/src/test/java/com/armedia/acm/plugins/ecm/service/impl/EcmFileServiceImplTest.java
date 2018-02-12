@@ -1,5 +1,9 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import static org.easymock.EasyMock.capture;
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.plugins.ecm.dao.AcmContainerDao;
@@ -9,6 +13,7 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
+
 import org.apache.chemistry.opencmis.client.api.CmisObject;
 import org.apache.chemistry.opencmis.client.api.Document;
 import org.easymock.Capture;
@@ -21,10 +26,6 @@ import org.mule.module.cmis.connectivity.CMISCloudConnectorConnectionManager;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Created by armdev on 3/11/15.
@@ -41,6 +42,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     private Properties ecmFileServiceProperties;
     private EcmFileDao mockEcmFileDao;
     private AcmContainerDao mockContainerDao;
+    private EcmFileParticipantService mockFileParticipantService;
 
     @Before
     public void setUp() throws Exception
@@ -53,6 +55,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
         mockEcmFileDao = createMock(EcmFileDao.class);
         mockContainerDao = createMock(AcmContainerDao.class);
+        mockFileParticipantService = createMock(EcmFileParticipantService.class);
 
         ecmFileServiceProperties = new Properties();
         ecmFileServiceProperties.setProperty("ecm.defaultCmisId", defaultCmisId);
@@ -62,6 +65,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setEcmFileServiceProperties(ecmFileServiceProperties);
         unit.setEcmFileDao(mockEcmFileDao);
         unit.setContainerFolderDao(mockContainerDao);
+        unit.setFileParticipantService(mockFileParticipantService);
     }
 
     @Test
@@ -103,6 +107,8 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         Capture<EcmFile> saved = Capture.newInstance();
         expect(mockEcmFileDao.save(capture(saved))).andReturn(null);
 
+        expect(mockFileParticipantService.setFileParticipantsFromParentFolder(null)).andReturn(null);
+
         replayAll();
 
         unit.moveFile(fileId, targetObjectId, targetObjectType, targetFolder);
@@ -128,7 +134,6 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         expect(mockMuleMessage.getPayload(CmisObject.class)).andReturn(mockCmisObject);
         expect(mockCmisObject.getId()).andReturn(id);
         expect(mockCmisConfigUtils.getCmisConfiguration(defaultCmisId)).andReturn(cmisConfig);
-
 
         replayAll();
 

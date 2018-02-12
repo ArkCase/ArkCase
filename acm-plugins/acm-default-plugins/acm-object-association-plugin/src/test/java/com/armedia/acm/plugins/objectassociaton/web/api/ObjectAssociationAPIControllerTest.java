@@ -1,42 +1,38 @@
 package com.armedia.acm.plugins.objectassociaton.web.api;
 
-import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
-import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
-import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.armedia.acm.plugins.objectassociation.dao.ObjectAssociationDao;
+import com.armedia.acm.plugins.objectassociation.model.ObjectAssociation;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationEventPublisher;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationService;
+import com.armedia.acm.plugins.objectassociation.service.ObjectAssociationServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Created by nebojsha.davidovikj on 6/16/2017.
@@ -76,8 +72,7 @@ public class ObjectAssociationAPIControllerTest implements HandlerExceptionResol
 
         String content = "{\"@id\":\"1\",\"parentId\":105,\"parentType\":\"PERSON\",\"parentClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"targetId\":101,\"targetType\":\"PERSON\",\"targetClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"associationType\":\"Sibling\",\"inverseAssociation\":{\"@id\":\"2\",\"parentId\":101,\"parentType\":\"PERSON\",\"parentClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"targetId\":105,\"targetType\":\"PERSON\",\"targetClassName\":\"com.armedia.acm.plugins.person.model.Person\",\"associationType\":\"Sibling\",\"inverseAssociation\":{\"@ref\":\"1\"}}}";
 
-        when(objectAssociationDao.save(anyObject())).then(invocationOnMock ->
-                invocationOnMock.getArguments()[0]);
+        when(objectAssociationDao.save(anyObject())).then(invocationOnMock -> invocationOnMock.getArguments()[0]);
 
         MvcResult result = mockMvc.perform(
                 post("/api/latest/service/objectassociations")
@@ -86,7 +81,6 @@ public class ObjectAssociationAPIControllerTest implements HandlerExceptionResol
                         .content(content).principal(mockAuthentication))
                 .andExpect(status().isOk())
                 .andReturn();
-
 
         log.info("Results: " + result.getResponse().getContentAsString());
         ObjectMapper om = new ObjectMapper();

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/context
        http://www.springframework.org/schema/context/spring-context.xsd">
@@ -24,13 +22,29 @@
             <list>
                 <ref bean="userIdGroupNameDomainUpdateExecutor"/>
                 <ref bean="groupRemoveUUIDExecutor"/>
+                <ref bean="fileFolderParticipantsUpdateExecutor"/>
+                <ref bean="userRootFolderAccessUpdateExecutor"/>
             </list>
         </property>
         <property name="dataUpdateService" ref="dataUpdateService"/>
     </bean>
+    
+    <bean id="userRootFolderAccessUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserRootFolderAccessUpdateExecutor">
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="containerDao" ref="acmContainerFolderDao"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+        <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
+    </bean>
+    
+    <bean id="fileFolderParticipantsUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.FileFolderParticipantsUpdateExecutor">
+        <property name="contextHolder" ref="acmContextHolder"/>
+        <property name="fileParticipantService" ref="fileParticipantService"/>
+        <property name="fileDao" ref="ecmFileDao"/>
+        <property name="folderDao" ref="acmFolderDao"/>
+        <property name="arkPermissionEvaluator" ref="arkPermissionEvaluator"/>
+    </bean>
 
-    <bean id="userIdGroupNameDomainUpdateExecutor"
-          class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
+    <bean id="userIdGroupNameDomainUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.UserIdGroupNameDomainUpdateExecutor">
         <property name="userDao" ref="userJpaDao"/>
         <property name="groupDao" ref="groupDao"/>
         <property name="userIdGroupNameDomainUpdateDao" ref="userIdGroupNameDomainUpdateDao"/>

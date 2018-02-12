@@ -4,6 +4,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
 import com.armedia.acm.services.users.service.RetryExecutor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.NameAlreadyBoundException;
@@ -77,7 +78,7 @@ class LdapCrudDao
     }
 
     private DirContextOperations executeWithResult(AcmLdapSyncConfig ldapSyncConfig,
-                                                   LdapTemplateFunction<DirContextOperations> function)
+            LdapTemplateFunction<DirContextOperations> function)
             throws AcmLdapActionFailedException
     {
 

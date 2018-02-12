@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.ecm.service.sync.impl;
 
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
+
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -16,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
-
 
 public class AlfrescoAuditApplicationRestClient
 {
@@ -35,8 +35,7 @@ public class AlfrescoAuditApplicationRestClient
 
     private enum AlfrescoAuthenticationType
     {
-        BASIC,
-        KERBEROS
+        BASIC, KERBEROS
     }
 
     private transient final Logger LOG = LoggerFactory.getLogger(getClass());
@@ -109,7 +108,6 @@ public class AlfrescoAuditApplicationRestClient
         return basicAuthenticationHeaderValue;
     }
 
-
     public String getProtocol()
     {
         return protocol;
@@ -165,19 +163,19 @@ public class AlfrescoAuditApplicationRestClient
 
         switch (findAlfrescoAuthenticationType())
         {
-            case KERBEROS:
-                AppConfigurationEntry appConfigurationEntry = Configuration.getConfiguration()
-                        .getAppConfigurationEntry(APP_CONFIGURATION_ENTRY_NAME)[0];
-                restTemplate = new KerberosRestTemplate((String) appConfigurationEntry.getOptions().get("keytab"),
-                        (String) appConfigurationEntry.getOptions().get("principal"));
-                break;
-            case BASIC:
-                // basic authentication header will be added in the headers before each call
-                restTemplate = new RestTemplate();
-                break;
-            default:
-                // should not happen
-                throw new RuntimeException("Alfresco authentication type unknown!");
+        case KERBEROS:
+            AppConfigurationEntry appConfigurationEntry = Configuration.getConfiguration()
+                    .getAppConfigurationEntry(APP_CONFIGURATION_ENTRY_NAME)[0];
+            restTemplate = new KerberosRestTemplate((String) appConfigurationEntry.getOptions().get("keytab"),
+                    (String) appConfigurationEntry.getOptions().get("principal"));
+            break;
+        case BASIC:
+            // basic authentication header will be added in the headers before each call
+            restTemplate = new RestTemplate();
+            break;
+        default:
+            // should not happen
+            throw new RuntimeException("Alfresco authentication type unknown!");
         }
     }
 
@@ -190,7 +188,8 @@ public class AlfrescoAuditApplicationRestClient
     }
 
     /**
-     * @param username the username to set
+     * @param username
+     *            the username to set
      */
     public void setUsername(String username)
     {
@@ -206,7 +205,8 @@ public class AlfrescoAuditApplicationRestClient
     }
 
     /**
-     * @param password the password to set
+     * @param password
+     *            the password to set
      */
     public void setPassword(String password)
     {
