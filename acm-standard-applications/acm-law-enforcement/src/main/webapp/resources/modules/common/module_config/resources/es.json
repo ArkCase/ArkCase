@@ -165,6 +165,9 @@
         "tooltip.move_left": "Mover hacia la izquierda",
         "authorized": "Autorizado"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "es_Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Buscar",
         "btnSearch.text": "Buscar",
@@ -563,7 +566,7 @@
     "common.directive.coreParticipants": {
         "title": "Participantes",
         "replaceFolderChildrenParticipants": "es_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Añada participante",
             "editParticipant.label": "Editar registro",
             "participantType.label": "Tipo de participante",

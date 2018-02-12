@@ -2,6 +2,7 @@ package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.ldap.syncer.AcmLdapSyncEvent;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapGroupDao;
@@ -92,8 +93,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if (user == null)
         {
             user = userDto.toAcmUser(userId, userDao.getDefaultUserLang());
-        }
-        else
+        } else
         {
             user = userDto.updateAcmUser(user);
         }
@@ -105,8 +105,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
         if ("uid".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setUid(userDto.getUserId());
-        }
-        else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
+        } else if ("sAMAccountName".equalsIgnoreCase(ldapSyncConfig.getUserIdAttributeName()))
         {
             user.setsAMAccountName(userDto.getUserId());
         }
@@ -155,6 +154,9 @@ public class LdapUserService implements ApplicationEventPublisherAware
             ldapUserDao.deleteUserEntry(acmUser.getDistinguishedName(), ldapSyncConfig);
             throw new AcmUserActionFailedException("create LDAP user", null, null, "Creating LDAP user failed!", e);
         }
+
+        eventPublisher.publishEvent(new AcmLdapSyncEvent(acmUser));
+
         return acmUser;
     }
 
@@ -317,22 +319,21 @@ public class LdapUserService implements ApplicationEventPublisherAware
      * If the user exists and its status is either "INVALID" or "DELETED",
      * we need to remove that user's group membership
      *
-     * @param userId
-     *            user identifier
-     * @throws NameAlreadyBoundException
-     *             if a user exists and its status is "VALID"
+     * @param userId user identifier
+     * @throws NameAlreadyBoundException if a user exists and its status is "VALID"
      */
     private AcmUser checkExistingUser(String userId)
     {
         AcmUser existing = userDao.findByUserId(userId);
         if (existing == null)
+        {
             return null;
+        }
 
         if (AcmUserState.VALID == existing.getUserState())
         {
             throw new NameAlreadyBoundException(null);
-        }
-        else
+        } else
         {
             // INVALID or DELETED user, remove current group membership
             // we have to do this, otherwise new user will be associated with new groups,
@@ -386,4 +387,5 @@ public class LdapUserService implements ApplicationEventPublisherAware
     {
         eventPublisher = applicationEventPublisher;
     }
+
 }

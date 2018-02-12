@@ -182,7 +182,10 @@
         "name.placeholder": "鍵入名字",
         "descriptionLabel": "描述",
         "description.placeholder": "鍵入說​​明",
-        "searchUser": "搜索用戶",
+        "searchUser": "zh-tw_Search User and Group",
+        "cancelBtn": "zh-tw_Cancel",
+        "okBtn": "zh-tw_OK",
+        "search-placeholder": "zh-tw_Search for user or group",
         "personalRepository": "我的文檔"
     },
     "document-repository.dialogUserPicker": {

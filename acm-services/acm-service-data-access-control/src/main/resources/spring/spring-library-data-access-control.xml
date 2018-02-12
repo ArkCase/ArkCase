@@ -16,6 +16,7 @@
                 <prop key="dac.batchUpdateBasedOnLastModifiedEnabled">true</prop>
                 <prop key="dac.batchUpdateFrequencyInMilliseconds">3600000</prop>
                 <prop key="dac.batchUpdateBatchSize">50</prop>
+                <prop key="dac.enableDocumentACL">true</prop>
             </props>
         </property>
     </bean>
@@ -57,6 +58,7 @@
         <property name="groupDao" ref="groupDao"/>
         <property name="userDao" ref="userJpaDao"/>
         <property name="accessControlRuleChecker" ref="accessControlRuleChecker"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
     </bean>
 
     <bean id="acmDataAccessBatchUpdater" class="com.armedia.acm.services.dataaccess.service.impl.AcmDataAccessBatchUpdater">
