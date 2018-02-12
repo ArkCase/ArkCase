@@ -86,13 +86,13 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter) throws MuleException
+    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
         return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
     }
 
     @Override
-    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException
+    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId)
     {
         String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
                 + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
