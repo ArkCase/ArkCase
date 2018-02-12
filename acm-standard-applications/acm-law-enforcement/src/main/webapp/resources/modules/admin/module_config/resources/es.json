@@ -9,6 +9,7 @@
         "security.ldapConfig.addNewMember": "Agregar nuevo miembro",
         "security.ldapConfig.addMembers": "Añadir miembros",
         "security.ldapConfig.addSubgroup": "Agregar Subgrupo",
+		"security.ldapConfig.addExistingSubgroup": "Agregar grupo existente",
         "security.ldapConfig.addExistingMembers": "Agregar miembros existentes",
         "security.ldapConfig.addLdapSubgroup": "Agregar subgrupo LDAP",
         "security.ldapConfig.deleteLdapGroup": "Eliminar grupo LDAP",
@@ -138,6 +139,7 @@
             },
             "addMembers": {
                 "title": "Añadir miembros",
+				"group.title": "Agregar un grupo existente como miembro",
                 "btn": {
                     "search": "¡Ir!",
                     "cancel": "Cancelar",
@@ -158,6 +160,9 @@
                     "email": "Ingrese correo electrónico",
                     "password": "Introducir la contraseña",
                     "confirmation": "Ingresa tu contraseña nuevamente"
+					"_1_": "Los valores numéricos no son válidos en el archivo de recursos. _TO_BE_REMOVED_",
+					"_2_": "If 'minLengthForPassword' si es necesario, por favor muévelo a config.json",
+					"_minLengthForPassword": "7"
                 },
                 "editLdapMember": {
                     "title": "Editar miembro de Ldap",
@@ -350,6 +355,7 @@
                 "templateName.label": "Nombre de la plantilla",
                 "templateName.placeholder": "Introduzca el nombre de la plantilla",
                 "emailPattern.label": "Patrón de correo electrónico",
+				"emailPattern.description": "Use '.*' para todos los destinatarios, use '.+@armedia.com' para armedia.com destinatarios o alguna otra expresión regular. Tenga en cuenta que dot(.) debe ser escapado con barra invertida!",
                 "emailPattern.placeholder": "Ingresar patrón de correo electrónico",
                 "source.label": "Fuente",
                 "objectTypes.label": "Tipos de objetos",
@@ -359,6 +365,7 @@
                 "browse": "Vistazo",
                 "save": "Salvar",
                 "cancel": "Cancelar"
+				"validationResponse": "La plantilla de correo electrónico ya existe con los parámetros seleccionados"
             }
         },
         "security.exchangeConfiguration": {
@@ -386,7 +393,7 @@
                 "exchangeDefaultAccessOptions": {
                     "None": "Ninguna",
                     "Owner": "Propietario",
-                    "PublishingEditor": "EditorialEditor",
+                    "PublishingEditor": "PublishingEditor",
                     "Editor": "Editor",
                     "PublishingAuthor": "PublicadorAutor",
                     "Author": "Autor",
@@ -432,7 +439,7 @@
             "cancel": "Cancelar",
             "activate": "Activar"
         },
-        "workflows.config.noHistory": "es_There is no history for this workflow.",
+        "workflows.config.noHistory": "No hay historial para este flujo de trabajo.",
         "workflows.config.grid": {
             "businessProcess": "Procesos de negocio",
             "description": "Descripción",
@@ -461,7 +468,7 @@
                 "btnClose.text": "Cerca"
             }
         },
-        "formWorkflows.title": "Enlace Form / Workflow",
+        "formWorkflows.title": "Formulario/Enlace de flujo de trabajo",
         "formWorkflows.link": "Formularios de enlace / flujos de trabajo",
         "formWorkflows.link.undo": "Deshacer",
         "formWorkflows.link.saveChanges": "Guardar cambios",
@@ -518,7 +525,15 @@
                     "btnCancel.text": "Cancelar",
                     "btnOk.text": "Guardar entrada"
                 }
-            },
+				"addLookup": "Agregar Búsqueda",
+                "lookupName": "Nombre de Búsqueda",
+                "btnSave.text": "Salvar",
+                "deleteLookupMsg": "¿Seguro que quieres eliminar esta búsqueda?",
+                "deleteEntryMsg": "¿Seguro que quieres eliminar esta entrada?",
+                "delete.success": "La búsqueda fue eliminada exitosamente",
+                "delete.error": "La búsqueda no puede ser eliminada",
+                "lookupExists.error": "La búsqueda con este nombre ya existe"
+			},	
             "module.config": {
                 "title": "Configuración del módulo"
             },
@@ -646,7 +661,7 @@
                     "edit": "Editar configuración CMIS"
                 },
                 "dialog": {
-                    "testConnection": "es_Test Connection",
+                    "testConnection": "Conexión de prueba",
                     "cancel": "Cancelar",
                     "ok": "DE ACUERDO"
                 },
@@ -725,6 +740,7 @@
                 "insert.error": "Error al crear una nueva fila de configuración",
                 "update.success": "Fila de configuración actualizada con éxito.",
                 "update.error": "Error al actualizar la fila de configuración"
+				"test.conection.success": "Conectado con éxito."
             }
         }
     },
