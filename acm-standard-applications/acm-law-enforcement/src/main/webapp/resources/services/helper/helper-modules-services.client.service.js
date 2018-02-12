@@ -11,7 +11,7 @@
  * Helper.ModulesServices provides modules service functions structure
  */
 angular.module('services').factory(
-        'Helper.ModulesServices',
+        'Helper.ModulesServicesStructure',
         [ '$timeout', '$translate', 'UtilService', 'ConfigService', 'TimeTracking.InfoService',
                 function($timeout, $translate, Util, ConfigService, TimeTrackingInfoService) {
 

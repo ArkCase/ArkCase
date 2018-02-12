@@ -24,11 +24,11 @@ angular.module('dashboard.hoursSummary', [ 'adf.provider' ]).config(function(das
                 'moment',
                 'Helper.UiGridService',
                 'Case.InfoService',
-                'Helper.ModulesServices',
+                'Helper.ModulesServicesStructure',
                 function($scope, $translate, $stateParams, $filter, Util, TimeTrackingInfoService, HelperObjectBrowserService,
-                        ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServices) {
+                        ConfigService, moment, HelperUiGridService, CaseInfoService, ModulesServicesStructure) {
 
-                    var modules = ModulesServices.getModulesServiceStructure();
+                    var modules = ModulesServicesStructure.getModulesServiceStructure();
 
                     var module = _.find(modules, function(module) {
                         return module.name == $stateParams.type;
