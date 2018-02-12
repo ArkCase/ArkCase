@@ -1,13 +1,8 @@
 <panel-view header="{{'documentDetails.comp.versionHistory.title' | translate}}" collapsible="true" collapsed="false">
     <div ng-controller="Document.VersionHistoryController">
         <form name="versionHistory">
-            <div ui-grid="gridOptions"
-                 ng-if="gridOptions.data.length"
-                 ui-grid-selection
-                 ui-grid-auto-resize
-                 ui-grid-pagination
-                 class="grid">
-            </div>
+            <div ui-grid="gridOptions" ng-if="gridOptions.data.length" ui-grid-selection ui-grid-auto-resize ui-grid-pagination
+                    class="grid"></div>
         </form>
     </div>
 </panel-view>

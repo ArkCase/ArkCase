@@ -1,5 +1,7 @@
 package com.armedia.acm.objectdiff.service;
 
+import static org.junit.Assert.*;
+
 import com.armedia.acm.objectdiff.model.AcmChange;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementAdded;
 import com.armedia.acm.objectdiff.model.AcmCollectionElementRemoved;
@@ -9,6 +11,7 @@ import com.armedia.acm.objectdiff.model.AcmValueChanged;
 import com.armedia.acm.objectdiff.model.TestAttribute;
 import com.armedia.acm.objectdiff.model.TestPerson;
 import com.armedia.acm.objectdiff.model.interfaces.AcmChangeDisplayable;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +22,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -33,47 +34,48 @@ public class AcmDiffServiceTest
     private AcmDiffService diffService;
 
     @Before
-    public void setUp() throws Exception
+    public void setUp()
     {
         assertNotNull(diffService);
 
         oldPerson = new TestPerson();
 
-        oldPerson.setId(1l);
+        oldPerson.setId(1L);
         oldPerson.setLastName("Doe");
         oldPerson.setName("John");
         oldPerson.setToBeIgnored("This field is ignored");
 
         List<TestAttribute> attributeList = new ArrayList<>();
-        //first attribute
+        // first attribute
         TestAttribute attribute = new TestAttribute();
-        attribute.setId(1l);
+        attribute.setId(1L);
         attribute.setValue("Value 1");
         attributeList.add(attribute);
 
-        //second attribute
+        // second attribute
         attribute = new TestAttribute();
-        attribute.setId(2l);
+        attribute.setId(2L);
         attribute.setValue("Value 2");
         attributeList.add(attribute);
 
-        //third attribute
+        // third attribute
         attribute = new TestAttribute();
-        attribute.setId(3l);
+        attribute.setId(3L);
         attribute.setValue("Value 3");
         attributeList.add(attribute);
 
         oldPerson.setAttributeList(attributeList);
 
-        //default attribute
+        // default attribute
         attribute = new TestAttribute();
-        attribute.setId(4l);
+        attribute.setId(4L);
         attribute.setValue("Value 4");
+        attributeList.add(attribute);
         oldPerson.setDefaultAttribute(attribute);
     }
 
     @Test
-    public void compareObjectsNoChanges() throws Exception
+    public void compareObjectsNoChanges()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
 
@@ -82,7 +84,7 @@ public class AcmDiffServiceTest
     }
 
     @Test
-    public void compareObjectsCollectionElementRemoved() throws Exception
+    public void compareObjectsCollectionElementRemoved()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
         newPerson.getAttributeList().remove(0);
@@ -98,11 +100,11 @@ public class AcmDiffServiceTest
     }
 
     @Test
-    public void compareObjectsCollectionElementAdded() throws Exception
+    public void compareObjectsCollectionElementAdded()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
         TestAttribute testAttribute = new TestAttribute();
-        testAttribute.setId(6l);
+        testAttribute.setId(6L);
         testAttribute.setValue("value 6");
         newPerson.getAttributeList().add(testAttribute);
 
@@ -113,18 +115,16 @@ public class AcmDiffServiceTest
         assertTrue(change instanceof AcmCollectionElementAdded);
     }
 
-
     @Test
-    public void compareObjectsValueChanged() throws Exception
+    public void compareObjectsValueChanged()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
-        //change 1
+        // change 1
         newPerson.setName("Jane");
-        //change 2
+        // change 2
         newPerson.setLastName("Doe1");
-        //change 3 but should be ignored
+        // change 3 but should be ignored
         newPerson.setToBeIgnored(null);
-
 
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
         assertEquals(2, diff.getChangesAsList().size());
@@ -137,7 +137,8 @@ public class AcmDiffServiceTest
                 AcmValueChanged valueChanged = (AcmValueChanged) change;
                 assertEquals("John", valueChanged.getOldValue());
                 assertEquals("Jane", valueChanged.getNewValue());
-            } else if ("person.lastName".equals(change.getPath()))
+            }
+            else if ("person.lastName".equals(change.getPath()))
             {
                 assertTrue(change instanceof AcmValueChanged);
                 AcmValueChanged valueChanged = (AcmValueChanged) change;
@@ -147,16 +148,14 @@ public class AcmDiffServiceTest
         }
     }
 
-
     @Test
-    public void compareObjectsReplaced() throws Exception
+    public void compareObjectsReplaced()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
         TestAttribute defaultAttribute = new TestAttribute();
-        defaultAttribute.setId(2l);
+        defaultAttribute.setId(2L);
         defaultAttribute.setValue("changed value");
         newPerson.setDefaultAttribute(defaultAttribute);
-
 
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
         assertEquals(1, diff.getChangesAsList().size());
@@ -166,18 +165,16 @@ public class AcmDiffServiceTest
         AcmObjectReplaced acmObjectReplaced = (AcmObjectReplaced) change;
         assertEquals(acmObjectReplaced.getOldObject(), oldPerson.getDefaultAttribute());
         assertEquals(acmObjectReplaced.getNewObject(), defaultAttribute);
-        AcmChangeDisplayable displayable = acmObjectReplaced;
-        assertEquals("Value 4", displayable.getOldValue());
-        assertEquals("changed value", displayable.getNewValue());
+
+        assertEquals("Value 4", acmObjectReplaced.getOldValue());
+        assertEquals("changed value", acmObjectReplaced.getNewValue());
     }
 
-
     @Test
-    public void compareObjectModified() throws Exception
+    public void compareObjectModified()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
         newPerson.getDefaultAttribute().setValue("Changed Value");
-
 
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
         assertEquals(1, diff.getChangesAsList().size());
@@ -187,11 +184,10 @@ public class AcmDiffServiceTest
     }
 
     @Test
-    public void compareCollectionElementModified() throws Exception
+    public void compareCollectionElementModified()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
         newPerson.getAttributeList().get(1).setValue("Changed value");
-
 
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
         assertEquals(1, diff.getChangesAsList().size());
@@ -201,10 +197,10 @@ public class AcmDiffServiceTest
     }
 
     @Test
-    public void compareRootObjectsReplaced() throws Exception
+    public void compareRootObjectsReplaced()
     {
         TestPerson newPerson = SerializationUtils.clone(oldPerson);
-        newPerson.setId(2l);
+        newPerson.setId(2L);
         newPerson.setName("Jane");
         AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
         assertEquals(1, diff.getChangesAsList().size());
@@ -213,5 +209,15 @@ public class AcmDiffServiceTest
         assertEquals("Jane Doe", displayable.getNewValue());
         assertEquals("John Doe", displayable.getOldValue());
         assertEquals("person", change.getPath());
+    }
+
+    @Test
+    public void compareSameObjectReference()
+    {
+        TestPerson newPerson = SerializationUtils.clone(oldPerson);
+        newPerson.getDefaultAttribute().setValue("1231231");
+        AcmDiff diff = diffService.compareObjects(oldPerson, newPerson);
+        assertEquals(1, diff.getChangesAsList().size());
+
     }
 }

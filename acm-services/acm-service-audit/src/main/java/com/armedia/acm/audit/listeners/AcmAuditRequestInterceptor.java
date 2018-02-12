@@ -59,7 +59,8 @@ public class AcmAuditRequestInterceptor extends HandlerInterceptorAdapter
             auditEvent.setObjectType(AuditConstants.EVENT_OBJECT_TYPE_WEB_REQUEST);
             auditEvent.setStatus(AuditConstants.EVENT_STATUS_COMPLETE);
             auditEvent.setUserId(MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) != null
-                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY) : AuditConstants.USER_ID_ANONYMOUS);
+                    ? MDC.get(MDCConstants.EVENT_MDC_REQUEST_USER_ID_KEY)
+                    : AuditConstants.USER_ID_ANONYMOUS);
             auditEvent.setEventProperties(getEventProperties(request));
 
             if (log.isTraceEnabled())

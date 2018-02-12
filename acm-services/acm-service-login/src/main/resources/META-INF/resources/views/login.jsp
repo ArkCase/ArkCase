@@ -121,6 +121,7 @@ Time: 12:44
             <c:otherwise>
                 <div class="alert alert-danger">${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}</div>
             </c:otherwise>
+
         </c:choose>
 
         <c:remove var="SPRING_SECURITY_LAST_EXCEPTION" scope="session"/>
@@ -165,6 +166,8 @@ Time: 12:44
             <div class="list-group-item">
                 <input id="j_username"
                        type="text"
+                       pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                       title="You must provide a domain, for example user@example.com"
                        name="j_username"
                        value="${sessionScope.SPRING_SECURITY_LAST_USERNAME}"
                        placeholder="Username"

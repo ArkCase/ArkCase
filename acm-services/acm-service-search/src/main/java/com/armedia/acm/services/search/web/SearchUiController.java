@@ -2,16 +2,15 @@ package com.armedia.acm.services.search.web;
 
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
 import com.armedia.acm.pluginmanager.service.AcmPluginManager;
+
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.json.JSONObject;
-import org.json.JSONException;
 
-import java.util.Collection;
 import java.util.Map;
 
 @RequestMapping("/plugin/search")
@@ -29,55 +28,64 @@ public class SearchUiController
 
         JSONArray objectTypes = null;
         Map<String, Object> props = props = plugin.getPluginProperties();
-        if (null != props) {
+        if (null != props)
+        {
             Object prop = props.get("object.types");
-            if (null != prop) {
-                try {
+            if (null != prop)
+            {
+                try
+                {
                     objectTypes = new JSONArray(prop.toString());
-                } catch (JSONException e) {
+                }
+                catch (JSONException e)
+                {
                     log.error(e.getMessage());
                 }
             }
         }
-        if (null != objectTypes) {
+        if (null != objectTypes)
+        {
             retval.addObject("objectTypes", objectTypes);
         }
 
-
-//        JSONArray arr = new JSONArray();
-//        Collection<AcmPlugin> plugins = getPluginManager().getAcmPlugins();
-//        for (AcmPlugin p : plugins) {
-//            props = p.getPluginProperties();
-//            if (null != props) {
-//                Object prop = props.get("search.ex");
-//                if (null != prop) {
-//                    try {
-//                        JSONObject searchEx = new JSONObject(prop.toString());
-//                        arr.put(searchEx);
-//                    } catch (JSONException e) {
-//                        log.error(e.getMessage());
-//                    }
-//                }
-//            }
-//        }
-//        retval.addObject("searchEx", arr);
+        // JSONArray arr = new JSONArray();
+        // Collection<AcmPlugin> plugins = getPluginManager().getAcmPlugins();
+        // for (AcmPlugin p : plugins) {
+        // props = p.getPluginProperties();
+        // if (null != props) {
+        // Object prop = props.get("search.ex");
+        // if (null != prop) {
+        // try {
+        // JSONObject searchEx = new JSONObject(prop.toString());
+        // arr.put(searchEx);
+        // } catch (JSONException e) {
+        // log.error(e.getMessage());
+        // }
+        // }
+        // }
+        // }
+        // retval.addObject("searchEx", arr);
 
         return retval;
     }
 
-    public AcmPluginManager getPluginManager() {
+    public AcmPluginManager getPluginManager()
+    {
         return pluginManager;
     }
 
-    public void setPluginManager(AcmPluginManager pluginManager) {
+    public void setPluginManager(AcmPluginManager pluginManager)
+    {
         this.pluginManager = pluginManager;
     }
 
-    public AcmPlugin getPlugin() {
+    public AcmPlugin getPlugin()
+    {
         return plugin;
     }
 
-    public void setPlugin(AcmPlugin plugin) {
+    public void setPlugin(AcmPlugin plugin)
+    {
         this.plugin = plugin;
     }
 }

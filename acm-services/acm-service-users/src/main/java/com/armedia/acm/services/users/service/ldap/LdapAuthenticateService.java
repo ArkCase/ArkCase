@@ -1,21 +1,22 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
+import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapUserDao;
-import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.ldap.LdapUser;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
+import com.armedia.acm.services.users.model.ldap.LdapUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
 
-
 /**
- * Authenticates a user id and password against LDAP directory.  To support multiple LDAP configurations, create multiple Spring
+ * Authenticates a user id and password against LDAP directory. To support multiple LDAP configurations, create multiple
+ * Spring
  * beans, each with its own LdapAuthenticateService.
  */
 public class LdapAuthenticateService
@@ -56,7 +57,8 @@ public class LdapAuthenticateService
                     ldapAuthenticateConfig);
             log.debug("Password changed successfully for User: {}", userName);
             savePasswordExpirationDate(acmUser, ldapTemplate);
-        } catch (AcmLdapActionFailedException e)
+        }
+        catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("change password", "USER", null, "Change password action failed!", null);
         }
@@ -77,7 +79,8 @@ public class LdapAuthenticateService
             ldapUserDao.changeUserPasswordWithAdministrator(user.getDistinguishedName(), password, ldapTemplate, ldapAuthenticateConfig);
             savePasswordExpirationDate(user, ldapTemplate);
             invalidateToken(user);
-        } catch (AcmLdapActionFailedException e)
+        }
+        catch (AcmLdapActionFailedException e)
         {
             throw new AcmUserActionFailedException("reset password", "USER", null, "Change password action failed!", e);
         }

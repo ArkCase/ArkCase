@@ -26,11 +26,11 @@ public class ParticipantAccessChecker
     private List<String> getReadersWithLevel(String level, AcmAssignedObject in)
     {
         List<String> readers = new ArrayList<>();
-        for ( AcmParticipant ap : in.getParticipants() )
+        for (AcmParticipant ap : in.getParticipants())
         {
-            for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
+            for (AcmParticipantPrivilege priv : ap.getPrivileges())
             {
-                if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) && level.equals(priv.getAccessType()) )
+                if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) && level.equals(priv.getAccessType()))
                 {
                     readers.add(ap.getParticipantLdapId());
                     break;
@@ -45,15 +45,15 @@ public class ParticipantAccessChecker
     {
         boolean defaultAccessorFound = false;
 
-        for ( AcmParticipant ap : in.getParticipants() )
+        for (AcmParticipant ap : in.getParticipants())
         {
-            if ( DataAccessControlConstants.DEFAULT_ACCESSOR.equals(ap.getParticipantLdapId()) )
+            if (DataAccessControlConstants.DEFAULT_ACCESSOR.equals(ap.getParticipantLdapId()))
             {
                 defaultAccessorFound = true;
-                for ( AcmParticipantPrivilege priv : ap.getPrivileges() )
+                for (AcmParticipantPrivilege priv : ap.getPrivileges())
                 {
-                    if ( DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) &&
-                            DataAccessControlConstants.ACCESS_GRANT.equals(priv.getAccessType()) )
+                    if (DataAccessControlConstants.ACCESS_LEVEL_READ.equals(priv.getObjectAction()) &&
+                            DataAccessControlConstants.ACCESS_GRANT.equals(priv.getAccessType()))
                     {
                         return true;
                     }
@@ -63,7 +63,7 @@ public class ParticipantAccessChecker
 
         // if there was no default accessor entry at all, then we return true (global read by default).
         // if there was a default accessor entry, but we got here, then we return false.
-        return ! defaultAccessorFound;
+        return !defaultAccessorFound;
     }
 
 }

@@ -2,7 +2,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -10,7 +10,6 @@
     <artifactId>acm-service-protect-url</artifactId>
     <name>acm-protect-url</name>
     <description>Service used for obfuscating sensitive urls</description>
-
 
     <dependencies>
 

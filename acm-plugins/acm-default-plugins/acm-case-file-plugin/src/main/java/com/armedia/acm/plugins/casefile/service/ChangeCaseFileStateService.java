@@ -6,6 +6,7 @@ import com.armedia.acm.plugins.casefile.dao.ChangeCaseStatusDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.model.ChangeCaseStatus;
 import com.armedia.acm.plugins.casefile.utility.CaseFileEventUtility;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -52,7 +53,8 @@ public class ChangeCaseFileStateService
             getCaseFileEventUtility().raiseEvent(retval, newState, now, ipAddress, auth.getName(), auth);
 
             return retval;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             throw new AcmUserActionFailedException("Set case to " + newState, "Case File", caseId, e.getMessage(), e);
         }

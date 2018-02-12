@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,8 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         if (personContact.getCompanyName() != null && !personContact.getCompanyName().isEmpty())
         {
             solrDoc.setName(personContact.getCompanyName());
-        } else if (personContact.getPersonName() != null && !personContact.getPersonName().isEmpty())
+        }
+        else if (personContact.getPersonName() != null && !personContact.getPersonName().isEmpty())
         {
             solrDoc.setName(personContact.getPersonName());
         }
@@ -75,13 +77,6 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         }
 
         return solrDoc;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonContact in)
-    {
-        // No implementation needed
-        return null;
     }
 
     private void addAddresses(PersonContact personContact, SolrAdvancedSearchDocument solrDoc)
@@ -121,7 +116,8 @@ public class PersonContactToSolrTransformer implements AcmObjectToSolrDocTransfo
         if (in.getCompanyName() != null && !in.getCompanyName().isEmpty())
         {
             solrDoc.setName(in.getCompanyName());
-        } else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
+        }
+        else if (in.getPersonName() != null && !in.getPersonName().isEmpty())
         {
             solrDoc.setName(in.getPersonName());
         }

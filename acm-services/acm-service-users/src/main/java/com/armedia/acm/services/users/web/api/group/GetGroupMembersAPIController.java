@@ -5,6 +5,7 @@ package com.armedia.acm.services.users.web.api.group;
 
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -28,7 +29,7 @@ import java.util.Map;
  * @author riste.tutureski
  */
 @Controller
-@RequestMapping({"/api/v1/users", "/api/latest/users"})
+@RequestMapping({ "/api/v1/users", "/api/latest/users" })
 public class GetGroupMembersAPIController
 {
 
@@ -40,16 +41,23 @@ public class GetGroupMembersAPIController
     @RequestMapping(value = "/group/{groupId}/get/members", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public String getGroupMembers(@PathVariable("groupId") String groupId,
-                                  @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
-                                  @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
-                                  @RequestParam(value = "s", required = false, defaultValue = "") String sort,
-                                  Authentication auth) throws Exception
+            @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int maxRows,
+            @RequestParam(value = "s", required = false, defaultValue = "") String sort,
+            Authentication auth) throws Exception
     {
 
-        groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+        try
+        {
+            groupId = new String(Base64.getUrlDecoder().decode(groupId.getBytes()));
+        }
+        catch (IllegalArgumentException e)
+        {
+            LOG.debug("Group ID [{}] is not URL encoded string or it contains not allowed characters. Proceed with original string",
+                    groupId);
+        }
 
         LOG.info("Taking group members from Solr for group ID = {}", groupId);
-
 
         String groupString = getGroup(groupId, 0, 1, "", auth);
 
@@ -66,7 +74,8 @@ public class GetGroupMembersAPIController
                 try
                 {
                     memberIds = doc.getJSONArray("member_id_ss");
-                } catch (Exception e)
+                }
+                catch (Exception e)
                 {
                     throw new IllegalStateException("There are no any members for group with ID = " + groupId);
                 }
@@ -80,7 +89,8 @@ public class GetGroupMembersAPIController
 
     private String getGroup(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
     {
-        String query = "object_id_s:" + groupId + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+        String query = "object_id_s:" + groupId
+                + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
 
         if (LOG.isDebugEnabled())
         {
@@ -108,7 +118,8 @@ public class GetGroupMembersAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    private String getMembers(String groupId, JSONArray members, int startRow, int maxRows, String sort, Authentication auth) throws MuleException
+    private String getMembers(String groupId, JSONArray members, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
     {
         if (members != null && members.length() > 0)
         {
@@ -119,7 +130,8 @@ public class GetGroupMembersAPIController
                 if (i < members.length() - 1)
                 {
                     query += members.getString(i) + " OR ";
-                } else
+                }
+                else
                 {
                     query += members.getString(i) + ")";
                 }

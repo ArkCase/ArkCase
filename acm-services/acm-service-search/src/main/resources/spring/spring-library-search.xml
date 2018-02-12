@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:task="http://www.springframework.org/schema/task" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
 
             http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
-    <bean id="searchPluginProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="searchPluginProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -34,8 +31,7 @@
     </bean>
 
     <!-- keeping this bean for now even though we are not using any properties yet.  -->
-    <bean id="searchProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="searchProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -43,13 +39,11 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
-            <props>
-            </props>
+            <props></props>
         </property>
     </bean>
 
-    <bean id="eventTypeProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="eventTypeProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -57,9 +51,14 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
-            <props>
-            </props>
+            <props></props>
         </property>
+    </bean>
+
+    <bean id="dacProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/dataAccessControl.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
     </bean>
 
     <bean id="csvReportGenerator" class="com.armedia.acm.services.search.service.CSVReportGenerator">
@@ -78,17 +77,12 @@
 
     <task:scheduler id="searchTaskScheduler" pool-size="1"/>
     <task:scheduled-tasks scheduler="searchTaskScheduler">
-        <task:scheduled
-                ref="acmJpaBatchUpdateService"
-                method="jpaBatchUpdate"
-                fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
+        <task:scheduled ref="acmJpaBatchUpdateService" method="jpaBatchUpdate" fixed-delay="${solr.batchUpdateFrequencyInMilliseconds}"/>
     </task:scheduled-tasks>
-
 
     <bean id="acmJpaBatchUpdateService" class="com.armedia.acm.services.search.service.AcmJpaBatchUpdateService">
         <property name="batchUpdateBasedOnLastModifiedEnabled" value="${solr.enableBatchUpdateBasedOnLastModified}"/>
-        <property name="lastBatchUpdatePropertyFileLocation"
-                  value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
+        <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
         <property name="springContextHolder" ref="acmContextHolder"/>
         <property name="batchSize" value="${solr.batchUpdateBatchSize}"/>
@@ -99,6 +93,7 @@
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
     </bean>
 
     <!-- event publishers -->

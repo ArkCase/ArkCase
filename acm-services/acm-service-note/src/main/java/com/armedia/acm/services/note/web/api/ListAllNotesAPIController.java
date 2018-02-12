@@ -7,6 +7,7 @@ import com.armedia.acm.core.query.QueryResultPageWithTotalCount;
 import com.armedia.acm.services.note.dao.NoteDao;
 import com.armedia.acm.services.note.model.Note;
 import com.armedia.acm.services.note.model.NoteConstants;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -18,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.persistence.PersistenceException;
+
 import java.util.List;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/note", "/api/latest/plugin/note"})
+@RequestMapping({ "/api/v1/plugin/note", "/api/latest/plugin/note" })
 public class ListAllNotesAPIController
 {
 
@@ -34,8 +36,8 @@ public class ListAllNotesAPIController
     public List<Note> findAllNotesInParentObject(
             @PathVariable("parentType") String parentType,
             @PathVariable("parentId") Long parentId,
-            @RequestParam(value = "type", required = false, defaultValue = "GENERAL") String type
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
+            @RequestParam(value = "type", required = false, defaultValue = "GENERAL") String type)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
     {
         log.info("Finding all notes");
         if (parentId != null && parentType != null)
@@ -45,7 +47,8 @@ public class ListAllNotesAPIController
                 List<Note> noteList = getNoteDao().listNotes(type, parentId, parentType);
                 log.debug("noteList size:{}", noteList.size());
                 return noteList;
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 throw new AcmListObjectsFailedException(NoteConstants.OBJECT_TYPE, e.getMessage(), e);
             }
@@ -55,22 +58,23 @@ public class ListAllNotesAPIController
 
     @RequestMapping(value = "/{parentType}/{parentId}/page", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-        public QueryResultPageWithTotalCount<Note> findPageNotesInParentObject(
+    public QueryResultPageWithTotalCount<Note> findPageNotesInParentObject(
             @PathVariable("parentType") String parentType,
             @PathVariable("parentId") Long parentId,
             @RequestParam(value = "type", required = false, defaultValue = "GENERAL") String type,
-        @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-        @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-        @RequestParam(value = "s", required = false) String s
-    ) throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
-        {
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "s", required = false) String s)
+            throws AcmObjectNotFoundException, AcmUserActionFailedException, AcmListObjectsFailedException
+    {
         log.info("Finding all notes paged");
         if (parentId != null && parentType != null)
         {
             try
             {
-                if(type.toUpperCase().equals("ALL")){
-                    //we will not filter by type
+                if (type.toUpperCase().equals("ALL"))
+                {
+                    // we will not filter by type
                     type = null;
                 }
                 List<Note> noteList = getNoteDao().listNotesPage(type, parentId, parentType, start, n, s);
@@ -84,7 +88,8 @@ public class ListAllNotesAPIController
                 retval.setTotalCount(totalCount);
                 retval.setResultPage(noteList);
                 return retval;
-            } catch (PersistenceException e)
+            }
+            catch (PersistenceException e)
             {
                 throw new AcmListObjectsFailedException(NoteConstants.OBJECT_TYPE, e.getMessage(), e);
             }

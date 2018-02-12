@@ -15,6 +15,8 @@ public interface AcmOutlookFolderCreatorDao
 
     AcmOutlookObjectReference getOutlookObjectReference(Long objectId, String objectType) throws AcmOutlookFolderCreatorDaoException;
 
+    void deleteObjectReference(Long objectId, String objectType);
+
     AcmOutlookFolderCreator getFolderCreator(String systemEmailAddress, String systemPassword) throws AcmOutlookFolderCreatorDaoException;
 
     AcmOutlookFolderCreator getFolderCreator(Long creatorId) throws AcmOutlookFolderCreatorDaoException;

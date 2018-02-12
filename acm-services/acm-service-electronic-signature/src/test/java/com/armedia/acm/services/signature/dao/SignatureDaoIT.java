@@ -1,6 +1,9 @@
 package com.armedia.acm.services.signature.dao;
 
-import java.util.List;
+import static org.junit.Assert.assertNotNull;
+
+import com.armedia.acm.services.signature.BaseTestCase;
+import com.armedia.acm.services.signature.model.Signature;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,19 +15,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.armedia.acm.services.signature.BaseTestCase;
-import com.armedia.acm.services.signature.model.Signature;
-
-import static org.junit.Assert.assertNotNull;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
-		"/spring/spring-library-data-source.xml",
+        "/spring/spring-library-data-source.xml",
         "/spring/spring-library-electronic-signature-dao.xml",
         "/spring/spring-library-context-holder.xml",
         "/spring/spring-library-property-file-manager.xml",
         "/spring/spring-library-acm-encryption.xml"
-		})
+})
 @TransactionConfiguration(defaultRollback = true, transactionManager = "transactionManager")
 public class SignatureDaoIT extends BaseTestCase
 {
@@ -33,15 +33,14 @@ public class SignatureDaoIT extends BaseTestCase
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
-
     @Test
     @Transactional
     public void saveSignature_findSignature() throws Exception
     {
-    	Long objectId = 100L;
-    	String objectType = "TASK";
-    	String user = "user";
-    	
+        Long objectId = 100L;
+        String objectType = "TASK";
+        String user = "user";
+
         Signature signature = new Signature();
         signature.setObjectId(objectId);
         signature.setObjectType(objectType);
@@ -52,17 +51,16 @@ public class SignatureDaoIT extends BaseTestCase
         log.info("Saved Electronic Signature ID: " + saved.getSignatureId());
 
     }
-    
+
     @Test
     @Transactional
     public void retrieveSignature_ObjectId_ObjectType() throws Exception
     {
-    	Long objectId = 100L;
-    	String objectType = "TASK";
-    	
-    	// just make sure generated sql is valid, won't find anything
+        Long objectId = 100L;
+        String objectType = "TASK";
+
+        // just make sure generated sql is valid, won't find anything
         List<Signature> signatureList = dao.findByObjectIdObjectType(objectId, objectType);
         assertNotNull(signatureList);
     }
 }
-

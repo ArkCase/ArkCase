@@ -14,11 +14,10 @@ public class CategoryEvent extends AcmEvent
     public enum CategoryEventType
     {
 
-        CREATE("com.armedia.acm.plugins.category.model.action.create"),
-        EDIT("com.armedia.acm.plugins.category.model.action.edit"),
-        DELETE("com.armedia.acm.plugins.category.model.action.delete"),
-        ACTIVATE("com.armedia.acm.plugins.category.model.action.activate"),
-        DEACTIVATE("com.armedia.acm.plugins.category.model.action.deactivate");
+        CREATE("com.armedia.acm.plugins.category.model.action.create"), EDIT("com.armedia.acm.plugins.category.model.action.edit"), DELETE(
+                "com.armedia.acm.plugins.category.model.action.delete"), ACTIVATE(
+                        "com.armedia.acm.plugins.category.model.action.activate"), DEACTIVATE(
+                                "com.armedia.acm.plugins.category.model.action.deactivate");
 
         private String actionType;
 

@@ -5,14 +5,14 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.2.2-SNAPSHOT</version>
+        <version>3.2.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.armedia.acm.acm-services</groupId>
     <artifactId>acm-service-alfresco-ldap-syncer</artifactId>
     <name>ACM Service: Alfresco LDAP Syncer</name>
-    <description>Service for periodically scheduling of tasks.</description>
+    <description>Service for initiating syncing Alfresco with the LDAP service.</description>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -44,6 +44,12 @@
         <dependency>
             <groupId>com.armedia.acm.acm-tool-integrations</groupId>
             <artifactId>acm-spring-data-source</artifactId>
+            <version>${acm.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.armedia.acm.acm-services</groupId>
+            <artifactId>acm-service-ldap-syncer</artifactId>
             <version>${acm.version}</version>
         </dependency>
 

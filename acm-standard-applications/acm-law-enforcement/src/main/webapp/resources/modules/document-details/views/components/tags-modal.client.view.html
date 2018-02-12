@@ -7,16 +7,11 @@
 
 <div class="modal-body">
     <form name="addTagsForm">
-    <label translate>documentDetails.comp.tags.modal.search</label>
-    <tags-input
-            ng-model="tags"
-            display-property="title_parseable"
-            key-property="id"
-            replace-spaces-with-dashes="false"
-            on-tag-adding="checkTag($tag)"
-            add-on-blur="false">
-        <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
-    </tags-input>
+        <label translate>documentDetails.comp.tags.modal.search</label>
+        <tags-input ng-model="tags" display-property="title_parseable" key-property="id" replace-spaces-with-dashes="false"
+                on-tag-adding="checkTag($tag)" add-on-blur="false">
+            <auto-complete min-length="2" max-results-to-show="10" source="loadTags($query)"></auto-complete>
+        </tags-input>
     </form>
 </div>
 <div class="modal-footer">

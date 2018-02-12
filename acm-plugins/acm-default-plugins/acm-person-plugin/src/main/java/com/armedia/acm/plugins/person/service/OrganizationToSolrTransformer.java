@@ -9,6 +9,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.mule.util.StringUtils;
 
 import java.util.Date;
@@ -196,13 +197,6 @@ public class OrganizationToSolrTransformer implements AcmObjectToSolrDocTransfor
         }
 
         return orgDoc;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(Organization in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override

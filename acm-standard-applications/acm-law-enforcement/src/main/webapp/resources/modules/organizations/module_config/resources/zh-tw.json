@@ -1,478 +1,584 @@
 {
-  "organizations": {
-    "title": "組織",
-    "progressNoComplaint": "[ 無組織數據 ]",
-    "progressLoading": "加載組織數據",
-    "progressError": "加載組織數據失敗",
-    "noDataMessage": "無數據"
-  },
-  "organizations.menus": {
-    "leftnav.item": "組織",
-    "topbar.item": "組織"
-  },
-  "organizations.comp.main": {
-    "title": "概述"
-  },
-  "organizations.comp.info": {
-    "title": "信息",
-    "phone.label": "電話",
-    "email.label": "電子郵箱",
-    "status.label": "狀態",
-    "organization.label": "組織",
-    "identification.label": "身份號碼",
-    "primary.label": "主要聯繫人",
-    "parent.label": "上層組織",
-    "parent.placeholder": "輸入上層組織"
-  },
-  "organizations.comp.actions": {
-    "title": "行動",
-    "export.button": "輸出",
-    "import.button": "輸入",
-    "delete.button": "刪除",
-    "activate.button": "激活",
-    "deactivate.button": "停用",
-    "merge.button": "合併"
-  },
-  "organizations.comp.details": {
-    "title": "詳情",
-    "informSaved": "zh-tw_Organization details saved",
-    "table.columns": {
-      "title": "zh-tw_Details",
-      "modified": "zh-tw_Date Last Modified",
-      "modifier": "zh-tw_User Last Modified"
+    "organizations": {
+        "title": "組織",
+        "progressNoComplaint": "[無組織數據]",
+        "progressLoading": "加載組織數據",
+        "progressError": "加載組織數據失敗",
+        "noDataMessage": "無數據"
+    },
+    "organizations.menus": {
+        "leftnav.item": "組織",
+        "topbar.item": "組織"
+    },
+    "organizations.comp.main": {
+        "title": "概述"
+    },
+    "organizations.comp.info": {
+        "title": "信息",
+        "phone.label": "電話",
+        "email.label": "電子郵箱",
+        "status.label": "狀態",
+        "identification.label": "身份號碼",
+        "primary.label": "主要聯繫人",
+        "parent.label": "上層組織",
+        "parent.placeholder": "鍵入上層組織"
+    },
+    "organizations.comp.actions": {
+        "title": "行動",
+        "export.button": "導出",
+        "import.button": "導入",
+        "delete.button": "刪除",
+        "activate.button": "啟用",
+        "deactivate.button": "停用",
+        "merge.button": "合併",
+        "restrict": "限制？"
+    },
+    "organizations.comp.details": {
+        "title": "詳情",
+        "informSaved": "組織詳情已保存",
+        "table.columns": {
+            "title": "詳情",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        }
+    },
+    "organizations.comp.addresses": {
+        "title": "地點",
+        "table.columns": {
+            "type": "類型",
+            "streetAddress": "地址1",
+            "streetAddress2": "地址2",
+            "city": "城市",
+            "state": "州",
+            "zip": "郵編",
+            "country": "國家",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否"
+        },
+        "actions": {
+            "addNew": "添加新項",
+            "map": "地圖"
+        },
+        "modal": {
+            "addAddress": "添加位置",
+            "editAddress": "編輯記錄",
+            "type.label": "地址類型",
+            "type.placeholder": "鍵入地址類型",
+            "streetAddress.label": "地址1",
+            "streetAddress.placeholder": "鍵入地址1",
+            "streetAddress2.label": "地址2",
+            "streetAddress2.placeholder": "鍵入地址2",
+            "city.label": "城市",
+            "city.placeholder": "鍵入城市",
+            "zip.label": "郵編",
+            "zip.placeholder": "鍵入郵編",
+            "state.label": "州",
+            "state.placeholder": "鍵入州名",
+            "country.label": "國家",
+            "country.placeholder": "鍵入國家",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存位置",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否"
+        }
+    },
+    "organizations.comp.phones": {
+        "title": "電話號碼",
+        "table.columns": {
+            "type": "電話類型",
+            "value": "電話號碼",
+            "description": "描述",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置",
+            "addNew": "添加新項"
+        },
+        "modal": {
+            "addPhone": "添加新電話號碼",
+            "editPhone": "編輯電話號碼",
+            "title": "添加新電話號碼",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "description": "描述",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存電話號碼",
+            "type.label": "電話類型",
+            "type.placeholder": "鍵入電話類型",
+            "value.label": "電話號碼",
+            "value.placeholder": "鍵入電話號碼"
+        }
+    },
+    "organizations.comp.faxes": {
+        "title": "傳真號碼",
+        "table.columns": {
+            "type": "傳真類型",
+            "value": "傳真號碼",
+            "description": "描述",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設置為主要",
+            "addNew": "添加新項"
+        },
+        "modal": {
+            "addFax": "添加新的傳真號碼",
+            "editFax": "編輯傳真號碼",
+            "title": "添加新的傳真號碼",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "description": "描述",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存傳真號碼",
+            "type.label": "傳真類型",
+            "type.placeholder": "鍵入傳真類型",
+            "value.label": "傳真號碼",
+            "value.placeholder": "鍵入傳真號碼"
+        }
+    },
+    "organizations.comp.emails": {
+        "title": "電子郵箱",
+        "table.columns": {
+            "type": "電子郵件地址類型",
+            "value": "電子郵件地址",
+            "description": "描述",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置",
+            "addNew": "添加新項"
+        },
+        "modal": {
+            "title": "添加新電子郵件地址",
+            "addEmail": "添加新電子郵件地址",
+            "editEmail": "編輯電子郵件地址",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "description": "描述",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存電郵地址",
+            "type.label": "電子郵件類型",
+            "type.placeholder": "鍵入電子郵件類型",
+            "value.label": "電子郵件地址",
+            "value.placeholder": "鍵入電子郵件地址"
+        }
+    },
+    "organizations.comp.urls": {
+        "title": "網址",
+        "table.columns": {
+            "type": "類型",
+            "value": "網址",
+            "description": "描述",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置？",
+            "addNew": "添加新項"
+        },
+        "modal": {
+            "title": "添加新網址",
+            "addUrl": "添加新網址",
+            "editUrl": "修改網址",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "description": "描述",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存網址",
+            "type.label": "網址類型",
+            "type.placeholder": "鍵入網址類型",
+            "value.label": "網址",
+            "value.placeholder": "鍵入網址"
+        }
+    },
+    "organizations.comp.participants": {
+        "title": "參與成員",
+        "table.columns": {
+            "type": "類型",
+            "name": "名字"
+        },
+        "dialogUserPicker": {
+            "header": "選擇用戶",
+            "table.columns": {
+                "name": "用戶名",
+                "type": "類型",
+                "title": "標題",
+                "id": "用戶名"
+            }
+        },
+        "dialogGroupPicker": {
+            "header": "選擇組",
+            "table.columns": {
+                "name": "群組名"
+            }
+        }
+    },
+    "organizations.comp.dbas": {
+        "title": "DBA",
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置？",
+            "upload": "新的DBA"
+        },
+        "table.columns": {
+            "value": "DBA",
+            "type": "類型",
+            "description": "描述",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "modal": {
+            "addDBA": "添加新的DBA",
+            "editDBA": "編輯DBA",
+            "title": "插入新的DBA",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存DBA",
+            "value.label": "DBA",
+            "value.placeholder": "鍵入DBA",
+            "description": "描述",
+            "aliasType.label": "DBA類型",
+            "aliasType.placeholder": "鍵入DBA類型"
+        }
+    },
+    "organizations.comp.ids": {
+        "title": "組織號碼",
+        "table.columns": {
+            "type": "類型",
+            "id": "識別號",
+            "number": "數值",
+            "issuer": "發行機構",
+            "yearIssued": "發行年份",
+            "created": "添加日期",
+            "creator": "添加用戶",
+            "modified": "上次更改日期",
+            "modifier": "上次更改用戶"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置",
+            "addNew": "添加新項"
+        },
+        "modal": {
+            "addID": "添加新身份證",
+            "editID": "編輯身份證",
+            "title": "添加新身份證",
+            "setPrimary": "設為主要設置？",
+            "yes": "確定",
+            "no": "否",
+            "type.label": "類型",
+            "type.placeholder": "鍵入類型",
+            "id.label": "識別號",
+            "id.placeholder": "鍵入識別號",
+            "number.label": "數值",
+            "number.placeholder": "鍵入數值",
+            "issuer.label": "發行機構",
+            "issuer.placeholder": "鍵入發行機構",
+            "yearIssued.label": "發行年份",
+            "yearIssued.placeholder": "鍵入發行年份",
+            "yearIssued.close.button": "關閉",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存識別號"
+        }
+    },
+    "organizations.comp.people": {
+        "title": "成員",
+        "table.columns": {
+            "type": "角色",
+            "firstName": "名字",
+            "lastName": "姓",
+            "organization": "組織",
+            "phone": "電話",
+            "location": "位置"
+        },
+        "actions": {
+            "delete": "刪除",
+            "setPrimary": "設為主要設置",
+            "addNew": "添加新項",
+            "addExisting": "否"
+        }
+    },
+    "organizations.comp.cases": {
+        "title": "案件",
+        "objectType.label": "案件文件",
+        "table.columns": {
+            "role": "角色",
+            "priority": "優先級別",
+            "id": "識別號",
+            "title": "標題",
+            "status": "狀態",
+            "assignee": "指定人員",
+            "modified": "更改日期"
+        }
+    },
+    "organizations.comp.complaints": {
+        "title": "投訴",
+        "objectType.label": "投訴",
+        "table.columns": {
+            "role": "角色",
+            "priority": "優先級別",
+            "id": "識別號",
+            "title": "標題",
+            "status": "狀態",
+            "assignee": "指定人員",
+            "modified": "更改日期"
+        }
+    },
+    "organizations.comp.related": {
+        "title": "相關組織",
+        "linkTitle": "相關組織",
+        "table.columns": {
+            "associationType": "關係",
+            "type": "類型",
+            "identification": "識別號",
+            "value": "組織",
+            "contact": "主要聯繫人",
+            "phone": "電話",
+            "location": "位置"
+        },
+        "modal": {
+            "title": "添加相關組織",
+            "type.label": "關係",
+            "type.placeholder": "鍵入關係",
+            "organization.label": "組織",
+            "organization.placeholder": "搜索組織",
+            "btnCancel.text": "取消",
+            "btnOk.text": "保存相關組織"
+        }
+    },
+    "organizations.comp.history": {
+        "title": "歷史",
+        "table.columns": {
+            "eventType": "事件名稱",
+            "eventDate": "日期",
+            "details.btn.text": "詳情",
+            "userId": "用戶"
+        }
+    },
+    "organizations.comp.newOrganization": {
+        "title": "組織",
+        "addAnother": "再添加",
+        "remove": "刪除",
+        "name": "機構名稱",
+        "name.placeholder": "鍵入組織名稱",
+        "type": "組織類型",
+        "type.placeholder": "選擇組織類型",
+        "saveButton": "保存組織",
+        "cancelButton": "取消",
+        "parentOrganization": "上層組織",
+        "searchParentOrganization.placeholder": "搜索上層組織",
+        "communicationAccounts": {
+            "title": "通信帳戶",
+            "phone": "電話",
+            "phone.placeholder": "鍵入電話",
+            "phoneType": "電話類型",
+            "email": "電子郵件",
+            "email.placeholder": "鍵入電子郵件",
+            "emailType": "電子郵件類型",
+            "fax": "傳真",
+            "fax.placeholder": "鍵入傳真",
+            "faxType": "傳真類型",
+            "url": "網址",
+            "url.placeholder": "鍵入網址",
+            "removeContactMethod": "刪除",
+            "urlType": "網址類型"
+        },
+        "people": {
+            "title": "人員",
+            "searchExisting.placeholder": "搜索現有人員",
+            "personType": "人員類型"
+        },
+        "locations": {
+            "title": "地點",
+            "country": "國家",
+            "country.placeholder": "選擇國家",
+            "state": "州",
+            "state.placeholder": "鍵入州名",
+            "zip": "郵編",
+            "zip.placeholder": "鍵入郵編",
+            "city": "市",
+            "city.placeholder": "鍵入城市",
+            "type": "地址類型",
+            "type.placeholder": "選擇地址類型",
+            "streetAddress": "街道地址",
+            "streetAddress.placeholder": "鍵入街道地址",
+            "streetAddress2": "街道地址2",
+            "streetAddress2.placeholder": "鍵入街道地址2"
+        },
+        "identification": {
+            "title": "身份證",
+            "identificationID": "身份證號",
+            "identificationID.placeholder": "鍵入身份證號",
+            "identificationType": "身份證類型",
+            "identificationType.placeholder": "選擇身份證類型",
+            "identificationNumber": "身份證號碼",
+            "identificationNumber.placeholder": "鍵入身份證號碼",
+            "identificationIssuer": "身份證發行機構",
+            "identificationIssuer.placeholder": "鍵入身份證發行機構",
+            "identificationYearIssued": "身份證發行日期",
+            "identificationYearIssued.placeholder": "選擇身份證已發布",
+            "identificationYearIssued.close.button": "關閉"
+        },
+        "informCreated": "{{objectType}} {{organizationValue}}已創建。"
+    },
+    "organizations.tree": {
+        "nodeTypes": {
+            "details.label": "詳情",
+            "addresses.label": "地點",
+            "phones.label": "電話號碼",
+            "faxes.label": "傳真號碼",
+            "emails.label": "電子郵箱",
+            "urls.label": "網址",
+            "participants.label": "參與成員",
+            "dbas.label": "DBA",
+            "people.label": "成員",
+            "ids.label": "組織號碼",
+            "complaints.label": "投訴",
+            "cases.label": "案件",
+            "related.label": "相關組織",
+            "history.label": "歷史"
+        },
+        "filters": {
+            "iHaveCreated": "我創建的所有",
+            "noFilter": "（無限制）"
+        },
+        "sorters": {
+            "createdDateAsc": "按創建日期排序",
+            "createdDateDesc": "按創建日期降序",
+            "idAsc": "按組織號排序",
+            "idDesc": "按組織號反排序",
+            "nameAsc": "按組織名排序",
+            "nameDesc": "按組織名降序",
+            "noSort": "（不排序）"
+        }
+    },
+    "changes": {
+        "object_replaced": {
+            "organization": {
+                "defaultPhone": "默認電話已更改",
+                "defaultEmail": "默認電子郵件已更改",
+                "defaultAddress": "默認地址已更改",
+                "defaultUrl": "默認網址已更改",
+                "defaultAlias": "默認別名已更改",
+                "defaultIdentification": "默認身份證已更改",
+                "defaultPicture": "默認圖片已更改"
+            }
+        },
+        "value_changed": {
+            "organization": {
+                "details": "組織 - 細節已更改",
+                "status": "組織 - 狀態已更改",
+                "organizationType": "組織 - 類型已更改",
+                "organizationValue": "組織 - 名稱已更改",
+                "contactMethods.contactMethod": {
+                    "subType": "聯繫方式 - 類型已更改",
+                    "value": "聯繫方式 - 值已更改"
+                },
+                "defaultPhone": {
+                    "subType": "默認電話 - 類型已更改",
+                    "value": "默認電話 - 值已更改"
+                },
+                "defaultEmail": {
+                    "subType": "默認電子郵件 - 類型已更改",
+                    "value": "默認電子郵件 - 值已更改"
+                },
+                "defaultUrl": {
+                    "subType": "默認網址 - 類型已更改",
+                    "value": "默認網址 - 值已更改"
+                },
+                "defaultFax": {
+                    "subType": "默認傳真 - 類型已更改",
+                    "value": "默認傳真 - 值已更改"
+                },
+                "addresses.address": {
+                    "city": "地址 - 城市已更改",
+                    "zip": "地址 - 郵編已更改",
+                    "streetAddress": "地址 - 街道已更改",
+                    "streetAddress2": "地址 - 街道2已更改",
+                    "type": "地址 - 類型已更改",
+                    "country": "地址 - 國家已更改",
+                    "state": "地址 - 州名已更改"
+                },
+                "defaultAddress": {
+                    "city": "地址 - 城市已更改",
+                    "zip": "地址 - 郵編已更改",
+                    "streetAddress": "地址 - 街道已更改",
+                    "streetAddress2": "地址 - 街道2已更改",
+                    "type": "地址 - 類型已更改",
+                    "country": "地址 - 國家已更改",
+                    "state": "地址 - 州名已更改"
+                },
+                "contactMethods.identifications": {
+                    "identificationType": "身份證 - 類型已更改",
+                    "identificationNumber": "身份證號碼已更改",
+                    "identificationIssuer": "身份證 - 發行機構已更改",
+                    "identificationYearIssued": "身份證 - 發布年份已更改"
+                },
+                "defaultIdentification": {
+                    "identificationType": "身份證 - 類型已更改",
+                    "identificationNumber": "身份證號碼已更改",
+                    "identificationIssuer": "身份證 - 發行人已更改",
+                    "identificationYearIssued": "身份證 - 發布年份已更改"
+                }
+            }
+        },
+        "collection_element_added": {
+            "organization": {
+                "identifications.identification": "身份證已添加",
+                "contactMethods.contactMethod": "聯繫方式已添加",
+                "personAliases.alias": "別名已添加",
+                "addresses.address": "地址已添加",
+                "organizations.organization": "組織已添加",
+                "associationsToObjects": "關聯已添加",
+                "associationsFromObjects": "關聯已添加",
+                "organizationAssociations": "組織已添加"
+            }
+        },
+        "collection_element_removed": {
+            "organization": {
+                "identifications.identification": "身份證已刪除",
+                "contactMethods.contactMethod": "聯繫方式已刪除",
+                "personAliases.alias": "別名已刪除",
+                "addresses.address": "地址已刪除",
+                "organizations.organization": "組織已刪除",
+                "associationsToObjects": "關聯已刪除",
+                "associationsFromObjects": "關聯已刪除",
+                "organizationAssociations": "組織已刪除"
+            },
+            "personAliases.alias": {
+                "aliasType": "別名 - 類型已更改",
+                "aliasValue": "別名 - 數值已更改",
+                "description": "別名 - 說明已更改"
+            }
+        }
     }
-  },
-  "organizations.comp.addresses": {
-    "title": "地點",
-    "table.columns": {
-      "type": "zh-tw_Type",
-      "streetAddress": "zh-tw_Address 1",
-      "streetAddress2": "zh-tw_Address 2",
-      "city": "zh-tw_City",
-      "state": "zh-tw_State",
-      "zip": "zh-tw_Zip",
-      "country": "zh-tw_Country",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No"
-    },
-    "actions": {
-      "addNew": "zh-tw_Add New",
-      "map": "zh-tw_Map"
-    },
-    "modal": {
-      "addAddress": "zh-tw_Add Location",
-      "editAddress": "zh-tw_Edit Record",
-      "type.label": "zh-tw_Address Type",
-      "type.placeholder": "zh-tw_Enter Address Type",
-      "streetAddress.label": "zh-tw_Address 1",
-      "streetAddress.placeholder": "zh-tw_Enter Address 1",
-      "streetAddress2.label": "zh-tw_Address 2",
-      "streetAddress2.placeholder": "zh-tw_Enter Address 2",
-      "city.label": "zh-tw_City",
-      "city.placeholder": "zh-tw_Enter City",
-      "zip.label": "zh-tw_Zip",
-      "zip.placeholder": "zh-tw_Enter Zip",
-      "state.label": "zh-tw_State",
-      "state.placeholder": "zh-tw_Enter State",
-      "country.label": "zh-tw_Country",
-      "country.placeholder": "zh-tw_Enter Country",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save Location",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No"
-    }
-  },
-  "organizations.comp.phones": {
-    "title": "電話號碼",
-    "table.columns": {
-      "type": "zh-tw_Phone Type",
-      "value": "zh-tw_Phone Number",
-      "description": "zh-tw_Description",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New"
-    },
-    "modal": {
-      "addPhone": "zh-tw_Add New Phone Number",
-      "editPhone": "zh-tw_Edit Phone Number",
-      "title": "zh-tw_Add New Phone Number",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "description": "zh-tw_Description",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save Phone Number",
-      "type.label": "zh-tw_Phone Type",
-      "type.placeholder": "zh-tw_Enter Phone Type",
-      "value.label": "zh-tw_Phone Number",
-      "value.placeholder": "zh-tw_Enter Phone Number"
-    }
-  },
-  "organizations.comp.faxes": {
-    "title": "傳真號碼",
-    "table.columns": {
-      "type": "zh-tw_Fax Type",
-      "value": "zh-tw_Fax Number",
-      "description": "zh-tw_Description",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New"
-    },
-    "modal": {
-      "addFax": "zh-tw_Add New Fax Number",
-      "editFax": "zh-tw_Edit Fax Number",
-      "title": "zh-tw_Add New Fax Number",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "description": "zh-tw_Description",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save Fax Number",
-      "type.label": "zh-tw_Fax Type",
-      "type.placeholder": "zh-tw_Enter Fax Type",
-      "value.label": "zh-tw_Fax Number",
-      "value.placeholder": "zh-tw_Enter Fax Number"
-    }
-  },
-  "organizations.comp.emails": {
-    "title": "電子郵箱",
-    "table.columns": {
-      "type": "zh-tw_Email Address Type",
-      "value": "zh-tw_Email Address",
-      "description": "zh-tw_Description",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New"
-    },
-    "modal": {
-      "title": "zh-tw_Add New Email Address",
-      "addEmail": "zh-tw_Add New Email Address",
-      "editEmail": "zh-tw_Edit Email Address",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "description": "zh-tw_Description",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save Email Address",
-      "type.label": "zh-tw_Email Type",
-      "type.placeholder": "zh-tw_Enter Email Type",
-      "value.label": "zh-tw_Email Address",
-      "value.placeholder": "zh-tw_Enter Email Address"
-    }
-  },
-  "organizations.comp.urls": {
-    "title": "網址",
-    "table.columns": {
-      "type": "zh-tw_Type",
-      "value": "zh-tw_Url",
-      "description": "zh-tw_Description",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New"
-    },
-    "modal": {
-      "title": "zh-tw_Add New URL",
-      "addUrl": "zh-tw_Add New URL",
-      "editUrl": "zh-tw_Edit URL",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "description": "zh-tw_Description",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save URL",
-      "type.label": "zh-tw_Type",
-      "type.placeholder": "zh-tw_Enter Type",
-      "value.label": "zh-tw_URL",
-      "value.placeholder": "zh-tw_Enter URL"
-    }
-  },
-  "organizations.comp.participants": {
-    "title": "參與成員",
-    "table.columns": {
-      "type": "zh-tw_Type",
-      "name": "zh-tw_Name"
-    },
-    "dialogUserPicker": {
-      "header": "zh-tw_Choose User",
-      "table.columns": {
-        "name": "zh-tw_Name",
-        "type": "zh-tw_Type",
-        "title": "zh-tw_Title",
-        "id": "zh-tw_Username"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "zh-tw_Choose Group",
-      "table.columns": {
-        "name": "zh-tw_Name"
-      }
-    }
-  },
-  "organizations.comp.dbas": {
-    "title": "DBA",
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "upload": "zh-tw_New DBA"
-    },
-    "table.columns": {
-      "value": "zh-tw_DBA",
-      "type": "zh-tw_Type",
-      "description": "zh-tw_Description",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "modal": {
-      "addDBA": "zh-tw_Add New DBA",
-      "editDBA": "zh-tw_Edit DBA",
-      "title": "zh-tw_Insert New DBA",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save DBA",
-      "value.label": "zh-tw_DBA",
-      "value.placeholder": "zh-tw_Enter DBA",
-      "description": "zh-tw_Description",
-      "aliasType.label": "zh-tw_DBA Type",
-      "aliasType.placeholder": "zh-tw_Enter DBA Type"
-    }
-  },
-  "organizations.comp.ids": {
-    "title": "組織號碼",
-    "table.columns": {
-      "type": "zh-tw_Type",
-      "id": "zh-tw_ID",
-      "number": "zh-tw_Number",
-      "issuer": "zh-tw_Issuer",
-      "yearIssued": "zh-tw_Year Issued",
-      "created": "zh-tw_Date Added",
-      "creator": "zh-tw_Added By",
-      "modified": "zh-tw_Last Modified",
-      "modifier": "zh-tw_Modified By"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New"
-    },
-    "modal": {
-      "addID": "zh-tw_Add New Identification",
-      "editID": "zh-tw_Edit Identification",
-      "title": "zh-tw_Add New Identification",
-      "setPrimary": "zh-tw_Set as Primary?",
-      "yes": "zh-tw_Yes",
-      "no": "zh-tw_No",
-      "type.label": "zh-tw_Type",
-      "type.placeholder": "zh-tw_Enter Type",
-      "id.label": "zh-tw_ID",
-      "id.placeholder": "zh-tw_Enter ID",
-      "number.label": "zh-tw_Number",
-      "number.placeholder": "zh-tw_Enter Number",
-      "issuer.label": "zh-tw_Issuer",
-      "issuer.placeholder": "zh-tw_Enter Issuer",
-      "yearIssued.label": "zh-tw_Year Issued",
-      "yearIssued.placeholder": "zh-tw_Enter Year Issued",
-      "yearIssued.close.button": "zh-tw_Close",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save ID"
-    }
-  },
-  "organizations.comp.people": {
-    "title": "成員",
-    "table.columns": {
-      "type": "zh-tw_Role",
-      "firstName": "zh-tw_FirstName",
-      "lastName": "zh-tw_LastName",
-      "organization": "zh-tw_Organization",
-      "phone": "zh-tw_Phone",
-      "location": "zh-tw_Location"
-    },
-    "actions": {
-      "delete": "zh-tw_Delete",
-      "setPrimary": "zh-tw_Set as Primary",
-      "addNew": "zh-tw_Add New",
-      "addExisting": "zh-tw_Add Existing"
-    }
-  },
-  "organizations.comp.cases": {
-    "title": "案件",
-    "table.columns": {
-      "priority": "zh-tw_Priority",
-      "id": "zh-tw_ID",
-      "title": "zh-tw_Title",
-      "status": "zh-tw_Status",
-      "assignee": "zh-tw_Assignee",
-      "modified": "zh-tw_Modified"
-    }
-  },
-  "organizations.comp.complaints": {
-    "title": "投訴",
-    "table.columns": {
-      "priority": "zh-tw_Priority",
-      "id": "zh-tw_ID",
-      "title": "zh-tw_Title",
-      "status": "zh-tw_Status",
-      "assignee": "zh-tw_Assignee",
-      "modified": "zh-tw_Modified"
-    }
-  },
-  "organizations.comp.related": {
-    "title": "相關組織",
-    "linkTitle": "zh-tw_Rel Org",
-    "table.columns": {
-      "associationType": "zh-tw_Relationship",
-      "type": "zh-tw_Type",
-      "identification": "zh-tw_ID",
-      "value": "zh-tw_Organization",
-      "contact": "zh-tw_Primary Contact",
-      "phone": "zh-tw_Phone",
-      "location": "zh-tw_Location"
-    },
-    "modal": {
-      "title": "zh-tw_Add Related Organization",
-      "type.label": "zh-tw_Relationship",
-      "type.placeholder": "zh-tw_Enter Relationship",
-      "organization.label": "zh-tw_Organization",
-      "organization.placeholder": "zh-tw_Search Organizations",
-      "btnCancel.text": "zh-tw_Cancel",
-      "btnOk.text": "zh-tw_Save Related Organization"
-    }
-  },
-  "organizations.comp.history": {
-    "title": "歷史",
-    "table.columns": {
-      "eventType": "zh-tw_Event Name",
-      "eventDate": "zh-tw_Date",
-      "userId": "zh-tw_User"
-    }
-  },
-  "organizations.comp.newOrganization": {
-    "title": "zh-tw_Organization",
-    "addAnother": "zh-tw_Add Another",
-    "remove": "zh-tw_Remove",
-    "name": "zh-tw_Organization Name",
-    "name.placeholder": "zh-tw_Enter Organization Name",
-    "type": "zh-tw_Organization Type",
-    "type.placeholder": "zh-tw_Select Organization Type",
-    "saveButton": "zh-tw_Save Organization",
-    "parentOrganization": "zh-tw_Parent organization",
-    "searchParentOrganization.placeholder": "zh-tw_Search Parent Organization",
-    "communicationAccounts": {
-      "title": "zh-tw_Communication Accounts",
-      "phone": "zh-tw_Phone",
-      "phone.placeholder": "zh-tw_Enter Phone",
-      "phoneType": "zh-tw_Phone Type",
-      "email": "zh-tw_Email",
-      "email.placeholder": "zh-tw_Enter Email",
-      "emailType": "zh-tw_Email Type",
-      "fax": "zh-tw_Fax",
-      "fax.placeholder": "zh-tw_Enter Fax",
-      "faxType": "zh-tw_Fax Type",
-      "url": "zh-tw_URL",
-      "url.placeholder": "zh-tw_Enter URL",
-      "removeContactMethod": "zh-tw_Remove",
-      "urlType": "zh-tw_URL Type"
-    },
-    "people": {
-      "title": "zh-tw_People",
-      "searchExisting.placeholder": "zh-tw_Search Existing Person",
-      "personType": "zh-tw_Person Type"
-    },
-    "locations": {
-      "title": "zh-tw_Locations",
-      "country": "zh-tw_Country",
-      "country.placeholder": "zh-tw_Select Country",
-      "state": "zh-tw_State",
-      "state.placeholder": "zh-tw_Enter State",
-      "zip": "zh-tw_Zip",
-      "zip.placeholder": "zh-tw_Enter Zip",
-      "city": "zh-tw_City",
-      "city.placeholder": "zh-tw_Enter City",
-      "type": "zh-tw_Address Type",
-      "type.placeholder": "zh-tw_Select Address Type",
-      "streetAddress": "zh-tw_Street Address",
-      "streetAddress.placeholder": "zh-tw_Enter Street Address",
-      "streetAddress2": "zh-tw_Street Address2",
-      "streetAddress2.placeholder": "zh-tw_Enter Street Address2"
-    },
-    "identification": {
-      "title": "zh-tw_Identifications",
-      "identificationID": "zh-tw_Identification ID",
-      "identificationID.placeholder": "zh-tw_Enter Identification ID",
-      "identificationType": "zh-tw_Identification Type",
-      "identificationType.placeholder": "zh-tw_Select Identification Type",
-      "identificationNumber": "zh-tw_Identification Number",
-      "identificationNumber.placeholder": "zh-tw_Enter Identification Number",
-      "identificationIssuer": "zh-tw_Identification Issuer",
-      "identificationIssuer.placeholder": "zh-tw_Enter Identification Issuer",
-      "identificationYearIssued": "zh-tw_Identification Issued Date",
-      "identificationYearIssued.placeholder": "zh-tw_Select Identification Issued",
-      "identificationYearIssued.close.button": "zh-tw_Close"
-    },
-    "informCreated": "zh-tw_{{objectType}} {{organizationValue}} was created."
-  },
-  "organizations.tree": {
-    "nodeTypes": {
-      "details.label": "詳情",
-      "addresses.label": "地點",
-      "phones.label": "電話號碼",
-      "faxes.label": "傳真號碼",
-      "emails.label": "電子郵箱",
-      "urls.label": "網址",
-      "participants.label": "參與成員",
-      "dbas.label": "DBA",
-      "people.label": "成員",
-      "ids.label": "組織號碼",
-      "complaints.label": "投訴",
-      "cases.label": "案件",
-      "related.label": "相關組織",
-      "history.label": "歷史"
-    },
-    "filters": {
-      "iHaveCreated": "我創建的所有",
-      "noFilter": "(無限制)"
-    },
-    "sorters": {
-      "createdDateAsc": "按創建日期排序",
-      "createdDateDesc": "按創建日期反排序",
-      "idAsc": "按組織號排序",
-      "idDesc": "按組織號反排序",
-      "nameAsc": "按組織名排序",
-      "nameDesc": "按組織名反排序",
-      "noSort": "(不排序)"
-    }
-  }
 }

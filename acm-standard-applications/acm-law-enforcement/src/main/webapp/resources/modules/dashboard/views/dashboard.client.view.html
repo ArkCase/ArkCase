@@ -4,19 +4,12 @@
             <div class="module-header">
                 <h3>
                     <span translate>{{dashboard.model.title}}</span>
-                    {{widgetFilter}}
-                </h3>
+                    {{widgetFilter}} </h3>
             </div>
             <div class="well-sm">
                 <div class="container-fluid">
-                    <adf-dashboard
-                            name="{{dashboard.name}}"
-                            collapsible="{{dashboard.collapsible}}"
-                            maximizable="{{dashboard.maximizable}}"
-                            structure="{{dashboard.structure}}"
-                            adf-model="dashboard.model"
-                            adf-widget-filter="widgetFilter"
-                    />
+                    <adf-dashboard name="{{dashboard.name}}" collapsible="{{dashboard.collapsible}}" maximizable="{{dashboard.maximizable}}"
+                            structure="{{dashboard.structure}}" adf-model="dashboard.model" adf-widget-filter="widgetFilter" />
                 </div>
             </div>
         </div>

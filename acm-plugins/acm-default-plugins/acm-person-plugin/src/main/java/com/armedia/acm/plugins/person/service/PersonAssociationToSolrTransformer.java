@@ -7,6 +7,7 @@ import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.AcmObjectToSolrDocTransformer;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,13 +81,6 @@ public class PersonAssociationToSolrTransformer implements AcmObjectToSolrDocTra
     public SolrDocument toSolrQuickSearch(PersonAssociation in)
     {
         // we don't want person associations in quick search, so just return null
-        return null;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(PersonAssociation in)
-    {
-        // No implementation needed
         return null;
     }
 

@@ -14,7 +14,6 @@ import com.armedia.acm.services.users.model.AcmUser;
 import java.util.Date;
 import java.util.List;
 
-
 public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTransformer<DocumentRepository>
 {
     private UserDao userDao;
@@ -117,13 +116,6 @@ public class DocumentRepositoryToSolrTransformer implements AcmObjectToSolrDocTr
 
         solr.setAdditionalProperty("repository_type_s", in.getRepositoryType());
         return solr;
-    }
-
-    @Override
-    public SolrAdvancedSearchDocument toContentFileIndex(DocumentRepository in)
-    {
-        // No implementation needed
-        return null;
     }
 
     @Override

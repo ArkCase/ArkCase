@@ -55,7 +55,7 @@ public class ChangeCaseStatusWorkflowListener implements ApplicationListener<Cha
         configuration = getFileWorkflowBusinessRule().applyRules(configuration);
         if (configuration.isBuckslipProcess())
         {
-            //ChangeCaseStatusWorkflowListener is not handling buckslip process
+            // ChangeCaseStatusWorkflowListener is not handling buckslip process
             return;
         }
         LOG.debug("Start process? [{}]", configuration.isStartProcess());

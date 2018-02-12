@@ -1,6 +1,7 @@
 package com.armedia.acm.activiti;
 
 import com.armedia.acm.activiti.model.SpringActivitiEvent;
+
 import org.activiti.engine.delegate.event.ActivitiEvent;
 import org.activiti.engine.delegate.event.ActivitiEventListener;
 import org.springframework.context.ApplicationEvent;

@@ -97,7 +97,8 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
         {
             outlookContainerCalendarService.createFolder(outlookUser, caseFile.getId(), CaseFileConstants.OBJECT_TYPE,
                     caseFile.getTitle() + "(" + caseFile.getCaseNumber() + ")", caseFile.getContainer(), caseFile.getParticipants());
-        } catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
+        }
+        catch (AcmOutlookItemNotFoundException | AcmOutlookCreateItemFailedException e)
         {
             log.error("Error creating calendar folder for '{}'", caseFile.getCaseNumber(), e);
         }
@@ -110,7 +111,8 @@ public class CaseFileOutlookHandler implements PipelineHandler<CaseFile, CaseFil
             AcmContainer container = caseFile.getContainer();
             outlookContainerCalendarService.updateFolderParticipants(outlookUser, container.getCalendarFolderId(),
                     caseFile.getParticipants());
-        } catch (AcmOutlookItemNotFoundException e)
+        }
+        catch (AcmOutlookItemNotFoundException e)
         {
             log.error("Error updating participants for '{}'", caseFile.getCaseNumber(), e);
         }

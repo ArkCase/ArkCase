@@ -1,11 +1,16 @@
 package com.armedia.acm.plugins.casefile.web.api;
 
+import static org.easymock.EasyMock.expect;
+import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
 import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.apache.commons.io.IOUtils;
 import org.easymock.EasyMockSupport;
 import org.junit.Before;
@@ -27,10 +32,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExc
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.Map;
-
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 /**
  * Created by riste.tutureski on 9/22/2015.
@@ -75,18 +76,24 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
         AcmQueue nonCompliance = new AcmQueue(6L, "Non-Compliance", 6);
 
         String queuesQuery = "object_type_s:QUEUE&sort=" + SearchConstants.PROPERTY_QUEUE_ORDER + " ASC";
-        String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
+        String facetQuery = "object_type_s:CASE_FILE AND " + SearchConstants.PROPERTY_QUEUE_NAME_S
+                + ":*&rows=1&fl=id&wt=json&indent=true&facet=true&facet.field=" + SearchConstants.PROPERTY_QUEUE_NAME_S;
 
-        InputStream queuesIputStream = getClass().getClassLoader().getResourceAsStream("SolrQueuesResponseGetNumberOfCaseFilesByQueueTest.json");
+        InputStream queuesIputStream = getClass().getClassLoader()
+                .getResourceAsStream("SolrQueuesResponseGetNumberOfCaseFilesByQueueTest.json");
         String queuesSolrResponse = IOUtils.toString(queuesIputStream, Charset.forName("UTF-8"));
 
-        InputStream facetInputStream = getClass().getClassLoader().getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByQueueTest.json");
+        InputStream facetInputStream = getClass().getClassLoader()
+                .getResourceAsStream("SolrFacetResponseGetNumberOfCaseFilesByQueueTest.json");
         String facetSolrResponse = IOUtils.toString(facetInputStream, Charset.forName("UTF-8"));
 
         expect(mockAuthentication.getName()).andReturn("user");
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 0, 50, "")).andReturn(queuesSolrResponse);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 50, 50, "")).andReturn(null);
-        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, "")).andReturn(facetSolrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 0, 50, ""))
+                .andReturn(queuesSolrResponse);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, queuesQuery, 50, 50, ""))
+                .andReturn(null);
+        expect(mockExecuteSolrQuery.getResultsByPredefinedQuery(mockAuthentication, SolrCore.QUICK_SEARCH, facetQuery, 0, 1, ""))
+                .andReturn(facetSolrResponse);
 
         replayAll();
 
@@ -94,8 +101,8 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
                 get("/api/latest/plugin/casefile/number/by/queue")
                         .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .principal(mockAuthentication)
-        ).andReturn();
+                        .principal(mockAuthentication))
+                .andReturn();
 
         verifyAll();
 
@@ -103,9 +110,10 @@ public class GetNumberOfActiveCaseFilesByQueueAPIControllerTest extends EasyMock
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        Map<String, Long> resultMap = objectMapper.readValue(result.getResponse().getContentAsString(), new TypeReference<Map<String, Long>>()
-        {
-        });
+        Map<String, Long> resultMap = objectMapper.readValue(result.getResponse().getContentAsString(),
+                new TypeReference<Map<String, Long>>()
+                {
+                });
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
         assertEquals(6, resultMap.size());

@@ -2,6 +2,7 @@ package com.armedia.acm.services.search.service;
 
 import com.armedia.acm.services.search.model.ReportGenerator;
 import com.armedia.acm.services.search.model.SearchConstants;
+
 import org.apache.commons.lang.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,6 +13,9 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +32,22 @@ public class CSVReportGenerator extends ReportGenerator
     private static final String REPLACE_QUOTES_PATTERN = "\"";
     private static final String REPLACEMENT_FOR_QUOTES_PATTERN = "\"\"";
     private static final String QUOTES_CONSTANT = "\"";
+
+    /**
+     * ISO 8601 Date/Time pattern used by Solr (yyyy-MM-ddTHH:mm:ssZ).
+     */
+    private static final String ISO8601_PATTERN = "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$";
+
+    /**
+     * Formatter for parsing Solr *_tdt fields.
+     */
+    private static final DateTimeFormatter SOLR_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+    /**
+     * Formatter for formatting dates and times so Excel recognizes them.
+     */
+    private static final DateTimeFormatter EXCEL_DATE_TIME_PATTERN = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -40,7 +60,8 @@ public class CSVReportGenerator extends ReportGenerator
         StringBuilder sb = new StringBuilder();
 
         List<String> headers = new ArrayList<>();
-        for (String title : titles) {
+        for (String title : titles)
+        {
             headers.add(purifyForCSV(title));
         }
 
@@ -63,19 +84,38 @@ public class CSVReportGenerator extends ReportGenerator
 
                     if (value instanceof String)
                     {
-                        sb.append(purifyForCSV(data.getString(field)));
-                    } else if (value instanceof Integer || value instanceof Long)
+                        String stringValue = data.getString(field);
+                        // check if this is Solr Date/Time field in expected format
+                        if (field.endsWith("_tdt") && stringValue.matches(ISO8601_PATTERN))
+                        {
+                            // transform into Excel-recognizable format
+                            try
+                            {
+                                LocalDateTime localDateTime = LocalDateTime.parse(stringValue, SOLR_DATE_TIME_PATTERN);
+                                stringValue = localDateTime.format(EXCEL_DATE_TIME_PATTERN);
+                            }
+                            catch (DateTimeException e)
+                            {
+                                log.warn("[{}] cannot be parsed as Solr date/time value, exporting as it is", stringValue);
+                            }
+                        }
+                        sb.append(purifyForCSV(stringValue));
+                    }
+                    else if (value instanceof Integer || value instanceof Long)
                     {
                         String formattedNumber = nf.format(data.getLong(field));
                         sb.append(String.format(purifyForCSV(formattedNumber)));
-                    } else if (value instanceof Double || value instanceof Float)
+                    }
+                    else if (value instanceof Double || value instanceof Float)
                     {
                         String formattedNumber = df.format(data.getDouble(field));
                         sb.append(purifyForCSV(formattedNumber));
-                    } else if (value instanceof Boolean)
+                    }
+                    else if (value instanceof Boolean)
                     {
                         sb.append(purifyForCSV(Boolean.toString(data.getBoolean(field))));
-                    } else if (value instanceof JSONArray)
+                    }
+                    else if (value instanceof JSONArray)
                     {
                         JSONArray jsonArray = data.getJSONArray(field);
                         sb.append(purifyForCSV(jsonArray.toString()));
@@ -89,11 +129,11 @@ public class CSVReportGenerator extends ReportGenerator
         return sb.toString();
     }
 
+    @Override
     public String getReportContentType()
     {
         return "text/csv;charset=UTF-8";
     }
-
 
     @Override
     public String generateReportName(String name)
@@ -106,7 +146,8 @@ public class CSVReportGenerator extends ReportGenerator
      * Encloses new lines or value if contains SEPARATOR or if value contains ".
      * for more information: https://tools.ietf.org/html/rfc4180
      *
-     * @param value actual value
+     * @param value
+     *            actual value
      * @return value with enclosed new lines, separator or ". If null or empty string returns as is
      */
     private String purifyForCSV(String value)
@@ -116,17 +157,17 @@ public class CSVReportGenerator extends ReportGenerator
             return value;
         }
         boolean shouldEnclose = false;
-        //if value contains " should be escaped with another "
+        // if value contains " should be escaped with another "
         if (value.contains(QUOTES_CONSTANT))
         {
             value = value.replaceAll(REPLACE_QUOTES_PATTERN, REPLACEMENT_FOR_QUOTES_PATTERN);
             shouldEnclose = true;
         }
 
-        //enclose field with "" if contains the separator, LF or CR
+        // enclose field with "" if contains the separator, LF or CR
         if (value.contains(SearchConstants.SEPARATOR_COMMA) || value.contains(LF) || value.contains(CR) || shouldEnclose)
         {
-            //enclose the value
+            // enclose the value
             return String.format(ENCLOSE_FORMATTER, value);
         }
         return value;

@@ -1,6 +1,9 @@
 package com.armedia.acm.auth;
 
-import javax.naming.Name;
+import com.armedia.acm.services.users.dao.UserDao;
+import com.armedia.acm.services.users.model.AcmUser;
+import com.armedia.acm.services.users.model.AcmUserState;
+import com.armedia.acm.services.users.service.ldap.LdapSyncService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ldap.core.DirContextOperations;
@@ -9,11 +12,7 @@ import org.springframework.security.ldap.authentication.LdapAuthenticationProvid
 import org.springframework.security.ldap.authentication.LdapAuthenticator;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 
-import com.armedia.acm.services.alfresco.ldap.syncer.AlfrescoLdapSyncer;
-import com.armedia.acm.services.users.dao.UserDao;
-import com.armedia.acm.services.users.model.AcmUser;
-import com.armedia.acm.services.users.model.AcmUserState;
-import com.armedia.acm.services.users.service.ldap.LdapSyncService;
+import javax.naming.Name;
 
 /**
  * Created by riste.tutureski on 4/11/2016.
@@ -22,8 +21,6 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
 {
     private UserDao userDao;
     private LdapSyncService ldapSyncService;
-
-    private AlfrescoLdapSyncer alfrescoLdapSyncer;
 
     public AcmLdapAuthenticationProvider(LdapAuthenticator authenticator, LdapAuthoritiesPopulator authoritiesPopulator)
     {
@@ -49,7 +46,6 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
 
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
-            alfrescoLdapSyncer.initiateSync();
             getLdapSyncService().syncUserByDn(dn.toString());
         }
 
@@ -76,12 +72,4 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
         this.ldapSyncService = ldapSyncService;
     }
 
-    /**
-     * @param alfrescoLdapSyncer
-     *            the alfrescoLdapSyncer to set
-     */
-    public void setAlfrescoLdapSyncer(AlfrescoLdapSyncer alfrescoLdapSyncer)
-    {
-        this.alfrescoLdapSyncer = alfrescoLdapSyncer;
-    }
 }

@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:int="http://www.springframework.org/schema/integration"
-       xmlns:task="http://www.springframework.org/schema/task"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:int="http://www.springframework.org/schema/integration"
+    xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
        http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
-    <bean id="datasourceProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="datasourceProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -48,7 +44,6 @@
                 <!-- EclipseLink specific: logging level - FINER shows SQL and transaction details -->
                 <prop key="eclipselink.logging.level">FINER</prop>
 
-
                 <!-- JPA package scanning:
                     - comma separated list of packages to scan for JPA entity classes.
                     - NOTE: Cannot start with a wild card.  The leading package name must be specified.
@@ -60,8 +55,7 @@
         </property>
     </bean>
 
-    <bean id="acmObjectsNotifications"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <bean id="acmObjectsNotifications" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <!-- note: must leave "file:" at the start of the file name for spring
         to be able to read the file; otherwise it will try to read from the
         classpath -->
@@ -69,8 +63,7 @@
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
-            <props>
-            </props>
+            <props></props>
         </property>
     </bean>
 
@@ -103,8 +96,7 @@
         <property name="packagesToScan" value="${jpa.model.packages}"/>
     </bean>
 
-    <bean id="acmPersistenceUnitManager"
-          class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
+    <bean id="acmPersistenceUnitManager" class="org.springframework.orm.jpa.persistenceunit.DefaultPersistenceUnitManager">
         <property name="defaultDataSource" ref="acmDataSource"/>
         <property name="packagesToScan" value="${jpa.model.packages}"/>
         <property name="persistenceUnitPostProcessors">
@@ -113,7 +105,6 @@
             </list>
         </property>
     </bean>
-
 
     <bean id="acmEntityManager" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
         <!--<property name="dataSource" ref="acmDataSource"/>-->
@@ -168,7 +159,6 @@
     </bean>
     <bean id="acmObjectChangedLogger" class="com.armedia.acm.data.AcmObjectChangedLogger"/>
 
-
     <int:service-activator ref="acmObjectChangedLogger" input-channel="objectEventChannel" method="logObject"/>
 
     <bean id="acmProgressNotifier" class="com.armedia.acm.data.AcmProgressNotifier">
@@ -198,8 +188,7 @@
     </bean>
 
     <bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
-        <property name="staticMethod"
-                  value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
+        <property name="staticMethod" value="com.armedia.acm.data.converter.StringEncryptionConverter.setAcmDecryptionProperties"/>
         <property name="arguments">
             <list>
                 <value type="java.lang.Boolean">${database.encryption_enabled}</value>
