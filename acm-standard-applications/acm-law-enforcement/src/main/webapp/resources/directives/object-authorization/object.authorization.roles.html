@@ -5,13 +5,13 @@
         <!--Sort od SOLR-->
         <select ng-model="selectedObject" ng-change="selectObject()"
                 ng-options="d[objectDisplayName] | translate for d in data.appUsers" name="" size="15"
-                class="form-control" scroll panel-pagination="ChooseUserManagement">
+                class="form-control" scroll panel-name-alias="{{objectTitle}}">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-name="ChooseUserManagement" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
         <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized" name=""
-                size="15" multiple class="form-control" scroll panel-pagination="UnauthorizedUserManagement">
+                size="15" multiple class="form-control" scroll panel-name-alias="{{objectTitle}}Unauthorized">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-name="UnauthorizedUserManagement" />
     </div>
@@ -29,7 +29,7 @@
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
         <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized" size="15" multiple
-                class="form-control" scroll panel-pagination="AuthorizedUserManagement">
+                class="form-control" scroll panel-name-alias="{{objectTitle}}Authorized">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-name="AuthorizedUserManagement" />
     </div>

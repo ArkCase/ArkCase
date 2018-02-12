@@ -13,7 +13,9 @@ angular.module('admin').controller(
                 'Acm.StoreService',
                 'UtilService',
                 '$log',
-                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log) {
+                '$translate',
+                function($scope, $q, $modal, $timeout, LdapUserManagementService, LookupService, MessageService, Store, Util, $log,
+                        $translate) {
 
                     $scope.cloneUser = cloneUser;
                     $scope.onObjSelect = onObjSelect;
@@ -24,6 +26,7 @@ angular.module('admin').controller(
 
                     var makePaginationRequest = true;
                     var currentAuthGroups;
+                    var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
                     $scope.showFilter = true;
                     $scope.appUsers = [];
                     $scope.appGroups = [];
@@ -266,11 +269,11 @@ angular.module('admin').controller(
                         });
                     }
 
-                    $scope.$bus.subscribe('ChooseUserManagementScroll', function() {
+                    $scope.$bus.subscribe(objectTitle + 'Scroll', function() {
                         initUser($scope.userData.appUsers.length * 2);
                     });
 
-                    $scope.$bus.subscribe('UnauthorizedUserManagementScroll', function() {
+                    $scope.$bus.subscribe(objectTitle + 'UnauthorizedScroll', function() {
                         var data = {};
                         data.isAuthorized = false;
                         data.member_id = $scope.lastSelectedUser;
@@ -284,7 +287,7 @@ angular.module('admin').controller(
                         });
                     });
 
-                    $scope.$bus.subscribe('AuthorizedUserManagementScroll',
+                    $scope.$bus.subscribe(objectTitle + 'AuthorizedScroll',
                             function() {
                                 var data = {};
                                 data.isAuthorized = true;
