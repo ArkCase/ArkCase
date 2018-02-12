@@ -58,10 +58,10 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
         log.debug("Creating ecm file pipeline context");
 
         File tempFileContents = null;
-        try(InputStream is = fileContents)
+        try
         {
             tempFileContents = File.createTempFile("arkcase-upload-temp-file-", null);
-            FileUtils.copyInputStreamToFile(is, tempFileContents);
+            FileUtils.copyInputStreamToFile(fileContents, tempFileContents);
 
             EcmTikaFile detectedMetadata = null;
 
@@ -294,7 +294,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             throws IOException
     {
         File file = null;
-        try(InputStream is = fileInputStream)
+        try
         {
 
             if (ecmFile.getFileActiveVersionNameExtension() != null
@@ -309,7 +309,7 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
             pipelineContext.setAuthentication(authentication);
             pipelineContext.setEcmFile(ecmFile);
             file = File.createTempFile("arkcase-update-file-transaction-", null);
-            FileUtils.copyInputStreamToFile(is, file);
+            FileUtils.copyInputStreamToFile(fileInputStream, file);
             pipelineContext.setFileContents(file);
 
             EcmTikaFile ecmTikaFile = new EcmTikaFile();
@@ -356,20 +356,18 @@ public class EcmFileTransactionImpl implements EcmFileTransaction
     public EcmFile updateFileTransactionEventAware(Authentication authentication, EcmFile ecmFile, InputStream fileInputStream)
             throws IOException
     {
-        try(InputStream is = fileInputStream)
-        {
-            ecmFile = updateFileTransaction(authentication, ecmFile, is);
-            String ipAddress = null;
-            if (authentication != null)
-            {
-                if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
-                {
-                    ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
-                }
-            }
 
-            getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
+        ecmFile = updateFileTransaction(authentication, ecmFile, fileInputStream);
+        String ipAddress = null;
+        if (authentication != null)
+        {
+            if (authentication.getDetails() != null && authentication.getDetails() instanceof AcmAuthenticationDetails)
+            {
+                ipAddress = ((AcmAuthenticationDetails) authentication.getDetails()).getRemoteAddress();
+            }
         }
+
+        getFileEventPublisher().publishFileActiveVersionSetEvent(ecmFile, authentication, ipAddress, true);
 
         return ecmFile;
     }
