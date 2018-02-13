@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataaccess.service.impl;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 
@@ -16,8 +17,8 @@ public class AcmDataAccessBatchUpdater
     private DataAccessPrivilegeListener dataAccessPrivilegeListener;
 
     @Transactional
-    public void updateDataAccessPolicy(List<AcmAssignedObject> assignedObjects,
-            AcmObjectDataAccessBatchUpdateLocator locator)
+    public void updateDataAccessPolicy(List<AcmAssignedObject> assignedObjects, AcmObjectDataAccessBatchUpdateLocator locator)
+            throws AcmAccessControlException
     {
         for (AcmAssignedObject assignedObject : assignedObjects)
         {

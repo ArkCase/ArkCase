@@ -13,6 +13,7 @@ import com.armedia.acm.plugins.ecm.service.FolderEventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,15 +36,12 @@ public class CopyFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
+    @PreAuthorize("hasPermission(#folderId, 'FOLDER', 'read|group-read|write|group-write') and hasPermission(#dstFolderId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/copy/{folderId}/{dstFolderId}/{targetObjectType}/{targetObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public FolderDTO copyFolder(
-            @PathVariable("folderId") Long folderId,
-            @PathVariable("dstFolderId") Long dstFolderId,
-            @PathVariable("targetObjectType") String targetObjectType,
-            @PathVariable("targetObjectId") Long targetObjectId,
-            Authentication authentication,
-            HttpSession session) throws AcmUserActionFailedException
+    public FolderDTO copyFolder(@PathVariable("folderId") Long folderId, @PathVariable("dstFolderId") Long dstFolderId,
+            @PathVariable("targetObjectType") String targetObjectType, @PathVariable("targetObjectId") Long targetObjectId,
+            Authentication authentication, HttpSession session) throws AcmUserActionFailedException
     {
 
         /**

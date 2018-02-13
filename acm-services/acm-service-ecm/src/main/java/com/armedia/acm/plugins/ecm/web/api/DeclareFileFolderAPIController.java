@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
@@ -38,12 +39,10 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
     @RequestMapping(value = "/declare/{parentObjectType}/{parentObjectId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
 
-    public List<FileFolderDeclareDTO> declareFileFolder(
-            @PathVariable("parentObjectType") String parentObjectType,
-            @PathVariable("parentObjectId") Long parentObjectId,
-            @RequestBody List<FileFolderDeclareDTO> in,
-            Authentication authentication)
-            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmListObjectsFailedException
+    public List<FileFolderDeclareDTO> declareFileFolder(@PathVariable("parentObjectType") String parentObjectType,
+            @PathVariable("parentObjectId") Long parentObjectId, @RequestBody List<FileFolderDeclareDTO> in, Authentication authentication)
+            throws AcmUserActionFailedException, AcmCreateObjectFailedException, AcmObjectNotFoundException, AcmListObjectsFailedException,
+            AcmAccessControlException
     {
 
         if (log.isInfoEnabled())
@@ -93,5 +92,4 @@ public class DeclareFileFolderAPIController implements ApplicationEventPublisher
     {
         this.ecmFileService = ecmFileService;
     }
-
 }

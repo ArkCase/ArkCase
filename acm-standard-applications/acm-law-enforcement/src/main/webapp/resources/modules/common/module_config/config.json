@@ -15,6 +15,7 @@
             "DocTreeExt.WebDAV",
             "DocTreeExt.Record",
             "DocTreeExt.Template",
+            "DocTreeExt.Participants",
             "DocTreeExt.ReviewDoc"
         ],
         "columnDefs": [
@@ -148,6 +149,13 @@
                         "title": "----"
                     },
                     {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
                         "___title": "Cut <kbd>Ctrl+X</kbd>",
                         "titleKey": "common.directive.docTree.menu.cut",
                         "cmd": "cut",
@@ -211,7 +219,7 @@
                         }
                     },
                     {
-                        "title": "New Task",
+                        "title": "common.directive.docTree.menu.newTask",
                         "cmd": "reviewDocument",
                         "uiIcon": "ui-icon-circle-check",
                         "data": {
@@ -239,6 +247,13 @@
                         "cmd": "cancelEditing",
                         "uiIcon": "ui-icon-close",
                         "disabled": true
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
                     },
                     {
                         "title": "----"
@@ -323,6 +338,13 @@
                         "title": "----"
                     },
                     {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
                         "___title": "Paste <kbd>Ctrl+V</kbd>",
                         "titleKey": "common.directive.docTree.menu.paste",
                         "cmd": "paste",
@@ -344,6 +366,13 @@
                     {
                         "titleKey": "common.directive.docTree.menu.newCorrespondence",
                         "cmd": "subMenuCorrespondenceForms"
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
                     },
                     {
                         "title": "----"
@@ -392,6 +421,13 @@
                         "data": {
                             "readOnly": true
                         }
+                    },
+                    {
+                        "title": "----"
+                    },
+                    {
+                        "title": "Participants",
+                        "cmd": "showParticipants"
                     },
                     {
                         "title": "----"

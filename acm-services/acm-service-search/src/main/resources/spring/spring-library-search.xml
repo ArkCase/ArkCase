@@ -55,6 +55,12 @@
         </property>
     </bean>
 
+    <bean id="dacProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="location" value="file:${user.home}/.arkcase/acm/dataAccessControl.properties"/>
+        <property name="ignoreResourceNotFound" value="true"/>
+        <property name="localOverride" value="false"/>
+    </bean>
+
     <bean id="csvReportGenerator" class="com.armedia.acm.services.search.service.CSVReportGenerator">
         <property name="propertyMap" ref="pluginSearch"/>
     </bean>
@@ -87,6 +93,7 @@
     <bean id="executeSolrQuery" class="com.armedia.acm.services.search.service.ExecuteSolrQuery">
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="objectConverter" ref="objectConverter"/>
+        <property name="enableDocumentACL" value="${dac.enableDocumentACL}"/>
     </bean>
 
     <!-- event publishers -->

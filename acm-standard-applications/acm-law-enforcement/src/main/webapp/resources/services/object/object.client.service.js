@@ -10,7 +10,6 @@
  *
  * Basic object service
  */
-
 angular
         .module('services')
         .factory(
@@ -35,8 +34,8 @@ angular
                                     DOC_REPO : "DOC_REPO",
                                     MY_DOC_REPO : "MY_DOC_REPO",
                                     PERSON : "PERSON",
-                                    ORGANIZATION : "ORGANIZATION"
-
+                                    ORGANIZATION : "ORGANIZATION",
+                                    FOLDER: "FOLDER"
                                 }
 
                                 ,

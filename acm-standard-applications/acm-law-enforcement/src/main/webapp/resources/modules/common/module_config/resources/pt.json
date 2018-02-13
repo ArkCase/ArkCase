@@ -52,6 +52,7 @@
             "newCorrespondence": "Nova Correspondência",
             "open": "Aberto",
             "email": "Email",
+            "newTask": "pt_New Task",
             "download": "Baixar",
             "copy": "Cópia de",
             "cut": "Cortar",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "Mover para a direita",
         "tooltip.move_left": "Mova para a esquerda",
         "authorized": "Autorizado"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "pt_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "Pesquisa",
@@ -562,14 +566,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Participantes",
-        "modal.addParticipant.label": "Adicionar participante",
-        "modal.editParticipant.label": "Editar registro",
-        "modal.participantType.label": "Tipo de participante",
-        "modal.participantName.label": "Nome do participante",
-        "modal.btnOk.text": "Salve ",
-        "modal.btnCancel.text": "Cancelar",
-        "modal.dialogUserPicker.header": "Pesquisar usuário",
-        "modal.dialogGroupPicker.header": "Grupo de pesquisa",
+        "replaceFolderChildrenParticipants": "pt_Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "Adicionar participante",
+            "editParticipant.label": "Editar registro",
+            "participantType.label": "Tipo de participante",
+            "participantName.label": "Nome do participante",
+            "btnOk.text": "Salve ",
+            "btnCancel.text": "Cancelar",
+            "dialogUserPicker.header": "Pesquisar usuário",
+            "dialogGroupPicker.header": "Grupo de pesquisa",
+            "replaceChildrenParticipant": "pt_replace children participant"
+        },
         "message": {
             "error.groupType": "O grupo proprietário não pode ser uma pessoa.",
             "error.userType": " O tipo de usuário não pode ser um grupo.",

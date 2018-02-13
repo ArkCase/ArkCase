@@ -1020,6 +1020,17 @@ a.editable.editable-click {
     cursor: pointer;
 }
 
+.full-docview {
+    background-color: #f4f5f4;
+}
+
+.full-docview .snowbound-iframe { 
+	position: absolute;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
+}
+
 @media only screen and (min-height: 900px) {
 
     .snowbound-iframe-div {
@@ -1061,6 +1072,14 @@ a.editable.editable-click {
     overflow-y: hidden;
     padding-bottom: 60px;
     padding-right: 200px;
+}
+
+.new-iframe-frevvo {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .reports-iframe, .audit-iframe {

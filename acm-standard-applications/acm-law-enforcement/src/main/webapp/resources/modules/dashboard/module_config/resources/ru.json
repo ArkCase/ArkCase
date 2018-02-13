@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Документы",
                 "description": "Отображает диаграмму документов по папке",
-                "noDataMessage": "В настоящее время нет документов для отображения"
+                "noDataMessage": "В настоящее время нет документов для отображения",
+                "series": "ru_Number of Documents"
             },
             "locations": {
                 "title": "Местоположения",

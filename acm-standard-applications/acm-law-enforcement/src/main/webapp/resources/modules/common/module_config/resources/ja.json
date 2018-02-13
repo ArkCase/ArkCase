@@ -52,6 +52,7 @@
             "newCorrespondence": "新しい対応",
             "open": "開いた",
             "email": "電子メイル",
+            "newTask": "ja_New Task",
             "download": "ダウンロード",
             "copy": "複写",
             "cut": "カット",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "右に動く",
         "tooltip.move_left": "左に移動",
         "authorized": "認可された"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ja_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "検索",
@@ -562,14 +566,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "参加者",
-        "modal.addParticipant.label": "参加者を追加",
-        "modal.editParticipant.label": "レコードの編集",
-        "modal.participantType.label": "参加者タイプ",
-        "modal.participantName.label": "参加者名",
-        "modal.btnOk.text": "セーブ",
-        "modal.btnCancel.text": "キャンセル",
-        "modal.dialogUserPicker.header": "ユーザーを検索",
-        "modal.dialogGroupPicker.header": "検索グループ",
+        "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "参加者を追加",
+            "editParticipant.label": "レコードの編集",
+            "participantType.label": "参加者タイプ",
+            "participantName.label": "参加者名",
+            "btnOk.text": "セーブ",
+            "btnCancel.text": "キャンセル",
+            "dialogUserPicker.header": "ユーザーを検索",
+            "dialogGroupPicker.header": "検索グループ",
+            "replaceChildrenParticipant": "ja_replace children participant"
+        },
         "message": {
             "error.groupType": "所有グループは人になることはできません。",
             "error.userType": " ユーザータイプはグループにすることはできません。",

@@ -63,8 +63,7 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
     @Override
     @Transactional
-    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication)
-            throws PipelineProcessException
+    public DocumentRepository save(DocumentRepository documentRepository, Authentication authentication) throws PipelineProcessException
     {
         boolean isNew = documentRepository.getId() == null;
         DocumentRepositoryPipelineContext pipelineContext = new DocumentRepositoryPipelineContext();
@@ -82,7 +81,9 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
         return pipelineManager.executeOperation(documentRepository, pipelineContext, () -> {
             log.debug("Saving document repository: {}", documentRepository.getName());
+
             DocumentRepository savedDocumentRepository = documentRepositoryDao.save(documentRepository);
+
             publishAuditEvents(pipelineContext.getAuditEventTypes(), savedDocumentRepository);
             return savedDocumentRepository;
         });
@@ -116,8 +117,8 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
 
         try
         {
-            docRepoTagList = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(id,
-                    DocumentRepositoryConstants.OBJECT_TYPE, authentication);
+            docRepoTagList = getAssociatedTagService().getAcmAssociatedTagsByObjectIdAndType(id, DocumentRepositoryConstants.OBJECT_TYPE,
+                    authentication);
 
         }
         catch (AcmObjectNotFoundException e)
@@ -134,8 +135,8 @@ public class DocumentRepositoryServiceImpl implements DocumentRepositoryService
             }
             catch (SQLException e)
             {
-                log.warn("Can't delete tag: {} associated to DocumentRepository: {} with id: {}",
-                        acmAssociatedTag.getTag().getTagName(), docRepoName, id);
+                log.warn("Can't delete tag: {} associated to DocumentRepository: {} with id: {}", acmAssociatedTag.getTag().getTagName(),
+                        docRepoName, id);
             }
         }
 

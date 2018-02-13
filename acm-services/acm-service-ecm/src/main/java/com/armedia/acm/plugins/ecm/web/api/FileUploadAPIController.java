@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.ecm.web.api;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.objectonverter.ObjectConverter;
@@ -10,6 +11,7 @@ import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.model.EcmFileConstants;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+import com.armedia.acm.services.dataaccess.service.impl.ArkPermissionEvaluator;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,6 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -45,11 +48,12 @@ public class FileUploadAPIController
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private ObjectConverter objectConverter;
+    private ArkPermissionEvaluator arkPermissionEvaluator;
 
     private final String uploadFileType = "attachment";
 
     // #parentObjectType == 'USER_ORG' applies to uploading profile picture
-    @PreAuthorize("hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') or #parentObjectType == 'USER_ORG'")
+    @PreAuthorize("(hasPermission(#parentObjectId, #parentObjectType, 'uploadOrReplaceFile') and hasPermission(#folderId, 'FOLDER', 'write|group-write')) or #parentObjectType == 'USER_ORG'")
     @RequestMapping(value = "/upload", method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public List<EcmFile> uploadFile(@RequestParam("parentObjectType") String parentObjectType,
@@ -57,9 +61,17 @@ public class FileUploadAPIController
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             @RequestParam(value = "fileLang", required = false) String fileLang, MultipartHttpServletRequest request,
             Authentication authentication, HttpSession session)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException
     {
-        String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
+        AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
+
+        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write"))
+        {
+            throw new AcmAccessControlException(Arrays.asList(""),
+                    "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
+        }
+
+        String folderCmisId = folder.getCmisFolderId();
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, fileLang, folderCmisId, request,
                 session);
         return uploaded;
@@ -73,11 +85,20 @@ public class FileUploadAPIController
             @RequestParam("parentObjectId") Long parentObjectId, @RequestParam(value = "folderId", required = false) Long folderId,
             @RequestParam(value = "fileType", required = false, defaultValue = uploadFileType) String fileType,
             MultipartHttpServletRequest request, HttpServletResponse response, Authentication authentication, HttpSession session)
-            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException
+            throws AcmCreateObjectFailedException, AcmUserActionFailedException, IOException, AcmAccessControlException
     {
+        AcmFolder folder = getParentFolder(parentObjectType, parentObjectId, folderId);
+
+        if (!getArkPermissionEvaluator().hasPermission(authentication, folder.getId(), "FOLDER", "write|group-write"))
+        {
+            throw new AcmAccessControlException(Arrays.asList(""),
+                    "The user {" + authentication.getName() + "} is not allowed to write to folder with id=" + folder.getId());
+        }
+
         String responseMimeType = MediaType.TEXT_PLAIN_VALUE;
         response.setContentType(responseMimeType);
-        String folderCmisId = getCmisId(parentObjectType, parentObjectId, folderId);
+
+        String folderCmisId = folder.getCmisFolderId();
         List<EcmFile> uploaded = uploadFiles(authentication, parentObjectType, parentObjectId, fileType, folderCmisId, request, session);
 
         String jsonUploadedFiles = getObjectConverter().getJsonMarshaller().marshal(uploaded);
@@ -132,6 +153,7 @@ public class FileUploadAPIController
         return uploadedFiles;
     }
 
+    @PreAuthorize("hasPermission(#ecmFileId, 'FILE', 'write|group-write')")
     @RequestMapping(value = "/{ecmFileId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFile(@PathVariable("ecmFileId") String ecmFileId, Authentication authentication)
     {
@@ -156,11 +178,10 @@ public class FileUploadAPIController
 
     }
 
-    private String getCmisId(String parentObjectType, Long parentObjectId, Long folderId)
+    private AcmFolder getParentFolder(String parentObjectType, Long parentObjectId, Long folderId)
             throws AcmUserActionFailedException, AcmCreateObjectFailedException
     {
-        AcmFolder folder;
-        String folderCmisId;
+        AcmFolder folder = null;
         if (folderId != null)
         {
             folder = getAcmFolderService().findById(folderId);
@@ -169,7 +190,6 @@ public class FileUploadAPIController
                 throw new AcmUserActionFailedException(EcmFileConstants.USER_ACTION_UPLOAD_FILE, EcmFileConstants.OBJECT_FILE_TYPE, null,
                         "Destination Folder not found", null);
             }
-            folderCmisId = folder.getCmisFolderId();
         }
         else
         {
@@ -179,9 +199,9 @@ public class FileUploadAPIController
                 // not really possible since the cm_folder_id is not nullable. But we'll account for it anyway
                 throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
             }
-            folderCmisId = container.getFolder().getCmisFolderId();
+            folder = container.getFolder();
         }
-        return folderCmisId;
+        return folder;
     }
 
     public AcmFolderService getAcmFolderService()
@@ -212,5 +232,15 @@ public class FileUploadAPIController
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public ArkPermissionEvaluator getArkPermissionEvaluator()
+    {
+        return arkPermissionEvaluator;
+    }
+
+    public void setArkPermissionEvaluator(ArkPermissionEvaluator arkPermissionEvaluator)
+    {
+        this.arkPermissionEvaluator = arkPermissionEvaluator;
     }
 }

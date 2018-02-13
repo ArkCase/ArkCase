@@ -232,6 +232,7 @@
         "modal": {
             "title": "Etikette",
             "search": "Auf der Suche nach einem Tag",
+            "placeholder": "de_Add tag",
             "buttons": {
                 "cancel": "Stornieren",
                 "ok": "Füge einen Tag hinzu"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Kalender"
+        "title": "Kalender",
+        "infoMessage": "de_Calendar Integration Configuration Not Enabled"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Referenzsuche"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Vollständiger Name"
         },
+        "assigne.none": "de_None",
         "assignee.label": "Empfänger",
         "owningGroup.label": "Besitzergruppe",
         "priority.label": "Priorität",

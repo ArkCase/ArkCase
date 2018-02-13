@@ -42,6 +42,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
     private Properties ecmFileServiceProperties;
     private EcmFileDao mockEcmFileDao;
     private AcmContainerDao mockContainerDao;
+    private EcmFileParticipantService mockFileParticipantService;
 
     @Before
     public void setUp() throws Exception
@@ -54,6 +55,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         mockCmisConfigUtils = createMock(CmisConfigUtils.class);
         mockEcmFileDao = createMock(EcmFileDao.class);
         mockContainerDao = createMock(AcmContainerDao.class);
+        mockFileParticipantService = createMock(EcmFileParticipantService.class);
 
         ecmFileServiceProperties = new Properties();
         ecmFileServiceProperties.setProperty("ecm.defaultCmisId", defaultCmisId);
@@ -63,6 +65,7 @@ public class EcmFileServiceImplTest extends EasyMockSupport
         unit.setEcmFileServiceProperties(ecmFileServiceProperties);
         unit.setEcmFileDao(mockEcmFileDao);
         unit.setContainerFolderDao(mockContainerDao);
+        unit.setFileParticipantService(mockFileParticipantService);
     }
 
     @Test
@@ -103,6 +106,8 @@ public class EcmFileServiceImplTest extends EasyMockSupport
 
         Capture<EcmFile> saved = Capture.newInstance();
         expect(mockEcmFileDao.save(capture(saved))).andReturn(null);
+
+        expect(mockFileParticipantService.setFileParticipantsFromParentFolder(null)).andReturn(null);
 
         replayAll();
 

@@ -10,7 +10,7 @@ import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
@@ -38,17 +38,12 @@ public class EcmFileSendForPdfConversionHandler implements PipelineHandler<EcmFi
 
         if (isFileFormatConvertibleToPdf && isFileTypeConvertibleToPdf)
         {
-            try
+            try (InputStream fileInputStream = new FileInputStream(pipelineContext.getFileContents()))
             {
                 EcmFile toBeConverted = pipelineContext.getEcmFile();
                 if (toBeConverted == null)
                 {
                     throw new Exception("the conversion file is null");
-                }
-                InputStream fileInputStream = new ByteArrayInputStream(pipelineContext.getFileByteArray());
-                if (fileInputStream == null)
-                {
-                    throw new Exception("the conversion file input stream is null");
                 }
 
                 // Drops the file into the shared drive folder for Ephesoft
