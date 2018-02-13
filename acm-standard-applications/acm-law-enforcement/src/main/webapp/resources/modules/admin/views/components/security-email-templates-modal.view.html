@@ -8,8 +8,13 @@
                 <label translate>admin.security.emailTemplates.modal.title</label><span class="required-asterisk"
                     ng-if="!isEdit">*</span><br />
                 <button ngf-select ng-model="templateFile" id="file" ng-required="!isEdit" class="btn btn-sm btn-default">
-                    <span translate>admin.security.emailTemplates.modal.browse</span></button>
-                {{templateFile.name}}
+                    <span translate>admin.security.emailTemplates.modal.choose.file</span></button>
+                <!--<span>{{!isEdit ? templateFile.name : template.templateName}}</span>-->
+                <span>{{templateFile.name || template.templateName}}</span>
+
+                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)" class="btn btn-sm btn-default pull-right" translate>
+                    admin.security.emailTemplates.modal.download
+                </button>
             </div>
         </div>
         <div class="row">

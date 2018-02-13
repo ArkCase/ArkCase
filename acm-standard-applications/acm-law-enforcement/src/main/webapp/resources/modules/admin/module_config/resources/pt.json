@@ -356,7 +356,8 @@
                 "actions.label": "Ações",
                 "manual.label": "Manual",
                 "automated.label": "Automatizado",
-                "browse": "Squeaky toy",
+                "choose.file": "pt_Choose File",
+                "download": "pt_Download",
                 "save": "Salve ",
                 "cancel": "Cancelar"
             }

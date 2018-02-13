@@ -1,5 +1,5 @@
 angular.module('admin').controller('Admin.EmailTemplatesModalController',
-        [ '$scope', '$modalInstance', 'params', function($scope, $modalInstance, params) {
+        [ '$scope', '$modalInstance', 'params', 'Admin.EmailTemplatesService', function($scope, $modalInstance, params, emailTemplatesService) {
 
             $scope.templateFile = null;
             $scope.isEdit = params.isEdit;
@@ -18,6 +18,21 @@ angular.module('admin').controller('Admin.EmailTemplatesModalController',
                     template : $scope.template,
                     isEdit : $scope.isEdit
                 });
+            };
+
+            $scope.downloadFile = function(templateName) {
+                emailTemplatesService.getEmailTemplate(templateName)
+                    .then(function(response) {
+                        var content = response.data.content;
+                        var url = URL.createObjectURL(new Blob([content]));
+                        var link = document.createElement('a');
+                        link.href = url;
+                        link.download = templateName;
+                        link.target = '_blank';
+                        link.click();
+                }, function(response) {
+                        $scope.content = "Something went wrong";
+                    });
             };
 
             $scope.toggleObjectTypes = function(objectType) {

@@ -356,7 +356,8 @@
                 "actions.label": "क्रिया",
                 "manual.label": "गाइड",
                 "automated.label": "स्वचालित",
-                "browse": "ब्राउज",
+                "choose.file": "hi_Choose File",
+                "download": "hi_Download",
                 "save": "बचाना",
                 "cancel": "रद्द करना"
             }
