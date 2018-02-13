@@ -1,8 +1,6 @@
 package com.armedia.acm.services.search.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -24,28 +22,27 @@ public class AcmSolrUtilTest
     @Test
     public void testEncodingSpecialCharactersForACL()
     {
-        assertEquals("_5C_", AcmSolrUtil.getCharEncodingForACL('\\'));
-        assertEquals("_2B_", AcmSolrUtil.getCharEncodingForACL('+'));
-        assertEquals("_2D_", AcmSolrUtil.getCharEncodingForACL('-'));
-        assertEquals("_21_", AcmSolrUtil.getCharEncodingForACL('!'));
-        assertEquals("_28_", AcmSolrUtil.getCharEncodingForACL('('));
-        assertEquals("_29_", AcmSolrUtil.getCharEncodingForACL(')'));
-        assertEquals("_3A_", AcmSolrUtil.getCharEncodingForACL(':'));
-        assertEquals("_2C_", AcmSolrUtil.getCharEncodingForACL(','));
-        assertEquals("_5E_", AcmSolrUtil.getCharEncodingForACL('^'));
-        assertEquals("_5B_", AcmSolrUtil.getCharEncodingForACL('['));
-        assertEquals("_5D_", AcmSolrUtil.getCharEncodingForACL(']'));
-        assertEquals("_22_", AcmSolrUtil.getCharEncodingForACL('\"'));
-        assertEquals("_7B_", AcmSolrUtil.getCharEncodingForACL('{'));
-        assertEquals("_7D_", AcmSolrUtil.getCharEncodingForACL('}'));
-        assertEquals("_7E_", AcmSolrUtil.getCharEncodingForACL('~'));
-        assertEquals("_2A_", AcmSolrUtil.getCharEncodingForACL('*'));
-        assertEquals("_2A_", AcmSolrUtil.getCharEncodingForACL('*'));
-        assertEquals("_3F_", AcmSolrUtil.getCharEncodingForACL('?'));
-        assertEquals("_7C_", AcmSolrUtil.getCharEncodingForACL('|'));
-        assertEquals("_26_", AcmSolrUtil.getCharEncodingForACL('&'));
-        assertEquals("_3B_", AcmSolrUtil.getCharEncodingForACL(';'));
-        assertEquals("_2F_", AcmSolrUtil.getCharEncodingForACL('/'));
+        assertEquals("_005C_", AcmSolrUtil.getCharEncodingForACL('\\'));
+        assertEquals("_002B_", AcmSolrUtil.getCharEncodingForACL('+'));
+        assertEquals("_0021_", AcmSolrUtil.getCharEncodingForACL('!'));
+        assertEquals("_0028_", AcmSolrUtil.getCharEncodingForACL('('));
+        assertEquals("_0029_", AcmSolrUtil.getCharEncodingForACL(')'));
+        assertEquals("_003A_", AcmSolrUtil.getCharEncodingForACL(':'));
+        assertEquals("_002C_", AcmSolrUtil.getCharEncodingForACL(','));
+        assertEquals("_005E_", AcmSolrUtil.getCharEncodingForACL('^'));
+        assertEquals("_005B_", AcmSolrUtil.getCharEncodingForACL('['));
+        assertEquals("_005D_", AcmSolrUtil.getCharEncodingForACL(']'));
+        assertEquals("_0022_", AcmSolrUtil.getCharEncodingForACL('\"'));
+        assertEquals("_007B_", AcmSolrUtil.getCharEncodingForACL('{'));
+        assertEquals("_007D_", AcmSolrUtil.getCharEncodingForACL('}'));
+        assertEquals("_007E_", AcmSolrUtil.getCharEncodingForACL('~'));
+        assertEquals("_002A_", AcmSolrUtil.getCharEncodingForACL('*'));
+        assertEquals("_002A_", AcmSolrUtil.getCharEncodingForACL('*'));
+        assertEquals("_003F_", AcmSolrUtil.getCharEncodingForACL('?'));
+        assertEquals("_007C_", AcmSolrUtil.getCharEncodingForACL('|'));
+        assertEquals("_0026_", AcmSolrUtil.getCharEncodingForACL('&'));
+        assertEquals("_003B_", AcmSolrUtil.getCharEncodingForACL(';'));
+        assertEquals("_002F_", AcmSolrUtil.getCharEncodingForACL('/'));
     }
 
     @Test
@@ -54,6 +51,8 @@ public class AcmSolrUtilTest
         String termWithSpecialCharacters = "!@!@#asasdasd{}[])(*&^%  asdasd asd asd asd asd";
         String encoded = AcmSolrUtil.encodeSpecialCharactersForACL(termWithSpecialCharacters);
         assertFalse(AcmSolrUtil.hasSpecialCharacters(encoded));
-        assertEquals("_21_@_21_@#asasdasd_7B__7D__5B__5D__29__28__2A__26__5E_%_20__20_asdasd_20_asd_20_asd_20_asd_20_asd", encoded);
+        assertEquals(
+                "_0021_@_0021_@#asasdasd_007B__007D__005B__005D__0029__0028__002A__0026__005E_%_0020__0020_asdasd_0020_asd_0020_asd_0020_asd_0020_asd",
+                encoded);
     }
 }
