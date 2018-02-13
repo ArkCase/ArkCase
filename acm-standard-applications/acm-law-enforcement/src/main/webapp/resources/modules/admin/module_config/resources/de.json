@@ -356,7 +356,8 @@
                 "actions.label": "Maßnahmen",
                 "manual.label": "Handbuch",
                 "automated.label": "Automatisiert",
-                "browse": "Durchsuchen",
+                "choose.file": "de_Choose File",
+                "download": "de_Download",
                 "save": "Sparen",
                 "cancel": "Stornieren"
             }

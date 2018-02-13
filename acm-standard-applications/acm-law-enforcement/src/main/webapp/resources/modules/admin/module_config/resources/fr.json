@@ -356,7 +356,8 @@
                 "actions.label": "Actes",
                 "manual.label": "Manuel",
                 "automated.label": "Automatique",
-                "browse": "Feuilleter",
+                "choose.file": "fr_Choose File",
+                "download": "fr_Download",
                 "save": "Sauvegarder",
                 "cancel": "Annuler"
             }

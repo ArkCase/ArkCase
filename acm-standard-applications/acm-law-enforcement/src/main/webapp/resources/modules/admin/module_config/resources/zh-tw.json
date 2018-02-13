@@ -356,7 +356,8 @@
                 "actions.label": "操作",
                 "manual.label": "手冊",
                 "automated.label": "自動化",
-                "browse": "瀏覽",
+                "choose.file": "zh-tw_Choose File",
+                "download": "zh-tw_Download",
                 "save": "保存",
                 "cancel": "取消"
             }
