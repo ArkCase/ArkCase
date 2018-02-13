@@ -2,7 +2,7 @@
 
 angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('approvers', {
-        title : 'dashboard.widgets.approvers.title',
+        title : 'preference.overviewWidgets.approvers.title',
         description : 'dashboard.widgets.approvers.description',
         controller : 'Dashboard.ApproversController',
         controllerAs : 'approvers',

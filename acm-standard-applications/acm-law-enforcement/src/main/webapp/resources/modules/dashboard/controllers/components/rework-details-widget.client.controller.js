@@ -2,7 +2,7 @@
 
 angular.module('dashboard.reworkDetails', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('reworkDetails', {
-        title : 'dashboard.widgets.reworkDetails.title',
+        title : 'preference.overviewWidgets.reworkDetails.title',
         description : 'dashboard.widgets.reworkDetails.description',
         controller : 'Dashboard.ReworkDetailsController',
         reload : true,
