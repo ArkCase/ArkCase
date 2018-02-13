@@ -71,4 +71,5 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider
     {
         this.ldapSyncService = ldapSyncService;
     }
+
 }

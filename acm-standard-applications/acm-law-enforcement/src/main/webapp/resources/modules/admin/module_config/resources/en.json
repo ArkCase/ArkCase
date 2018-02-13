@@ -19,7 +19,13 @@
         "security.ldapConfig.removeMember": "Remove Member",
         "security.ldapConfig.table.ldapUrl": "LDAP Url",
         "security.ldapConfig.table.directoryName": "Directory Name",
+        "security.ldapConfig.table.userAttributesConfig": "LDAP User Configuration",
+        "security.ldapConfig.table.groupAttributesConfig": "LDAP Group Configuration",
+        "security.ldapConfig.table.action.partialSync": "Start LDAP Partial Sync",
         "security.ldapConfig.data": {
+            "sync.dialog.header": "Run synchronization",
+            "sync.dialog.type.partial": " Differential Sync",
+            "sync.dialog.type.full": "Full sync",
             "userAttributesTemplate": "Ldap User Attributes Template",
             "groupAttributesTemplate": "Ldap Group Attributes Template",
             "addNewDirectory": "Add New Directory",
@@ -230,6 +236,12 @@
                         "error": "error"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "Name",
+                "type": "Type",
+                "supervisorName": "Supervisor Name",
+                "actions": "Actions"
             }
         },
         "security.selectPrivileges": "Create Role/Select Privileges",
@@ -261,6 +273,7 @@
                 "purge.label": "Purge",
                 "email.label": "System Email Address",
                 "password.label": "System Password",
+                "password.changeButton": "Change the calendar user password",
                 "purgeDays.label": "Days",
                 "emailValid": "System Email Address and Password are valid",
                 "emailNotValid": "System Email Address or Password are not valid",
@@ -367,6 +380,17 @@
                 "save": "Save",
                 "cancel": "Cancel",
                 "validationResponse": "Email Template already exists with selected parameters"
+            },
+            "objectTypes": {
+                "caseFile": "Case File",
+                "complaint": "Complaint",
+                "task": "Task",
+                "document": "Document"
+            },
+            "actions": {
+                "sendAsAttachments": "Send as Attachments",
+                "sendAsLinks": "Send as Links",
+                "sendAsAttachmentsAndLinks": "Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -527,7 +551,9 @@
                     "btnOk.text": "Save entry"
                 },
                 "addLookup": "Add Lookup",
+                "label": "Lookup Type",
                 "lookupName": "Lookup Name",
+                "placeholder": "Enter lookup name",
                 "btnSave.text": "Save",
                 "deleteLookupMsg": "Are you sure you want to delete this lookup?",
                 "deleteEntryMsg": "Are you sure you want to delete this entry?",
@@ -536,7 +562,10 @@
                 "lookupExists.error": "Lookup with this name already exists"
             },
             "module.config": {
-                "title": "Module Configuration"
+                "title": "Module Configuration",
+                "btnDisabled": "Disabled",
+                "btnEnabled": "Enabled",
+                "message": "No modules found in the system"
             },
             "userName.config": {
                 "title": "Username Display Configuration",
@@ -598,6 +627,8 @@
                 "creator": "Creator",
                 "modifier": "Modified By",
                 "activated": "Status",
+                "statusDeactivated": "Deactivated",
+                "statusActivated": "Activated",
                 "objectType": "Object Type",
                 "version": "Version",
                 "templateVersionActive": "Active"
@@ -614,6 +645,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "No File Selected",
                 "objectTypes.label": "Object Types",
                 "querySelect.label": "Query Select",
                 "label.label": "Display Name",

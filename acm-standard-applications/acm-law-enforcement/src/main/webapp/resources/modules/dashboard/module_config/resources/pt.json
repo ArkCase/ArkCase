@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documentos",
                 "description": "Exibe gráfico de documentos por pasta",
-                "noDataMessage": "Atualmente não há documentos para exibir"
+                "noDataMessage": "Atualmente não há documentos para exibir",
+                "series": "pt_Number of Documents"
             },
             "locations": {
                 "title": "Localizações",

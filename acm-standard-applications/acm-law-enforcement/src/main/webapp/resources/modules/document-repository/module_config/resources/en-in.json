@@ -182,7 +182,10 @@
         "name.placeholder": "Enter Name",
         "descriptionLabel": "Description",
         "description.placeholder": "Enter Description",
-        "searchUser": "Search User",
+        "searchUser": "en-in_Search User and Group",
+        "cancelBtn": "en-in_Cancel",
+        "okBtn": "en-in_OK",
+        "search-placeholder": "en-in_Search for user or group",
         "personalRepository": "My Documents"
     },
     "document-repository.dialogUserPicker": {

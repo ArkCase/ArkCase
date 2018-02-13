@@ -225,6 +225,12 @@
                         "error": "Erreur"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "fr_Name",
+                "type": "fr_Type",
+                "supervisorName": "fr_Supervisor Name",
+                "actions": "fr_Actions"
             }
         },
         "security.selectPrivileges": "Créer des privilèges de rôle / sélection",
@@ -256,6 +262,7 @@
                 "purge.label": " Purge",
                 "email.label": "Adresse e-mail du système",
                 "password.label": "Mot de passe système",
+                "password.changeButton": "fr_Change the calendar user password",
                 "purgeDays.label": "Journées",
                 "emailValid": "L'adresse électronique et le mot de passe du système sont valides",
                 "emailNotValid": "L'adresse électronique ou le mot de passe du système ne sont pas valides",
@@ -360,6 +367,17 @@
                 "download": "fr_Download",
                 "save": "Sauvegarder",
                 "cancel": "Annuler"
+            },
+            "objectTypes": {
+                "caseFile": "fr_Case File",
+                "complaint": "fr_Complaint",
+                "task": "fr_Task",
+                "document": "fr_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "fr_Send as Attachments",
+                "sendAsLinks": "fr_Send as Links",
+                "sendAsAttachmentsAndLinks": "fr_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -518,7 +536,17 @@
                     "inversevalue.placeholder": "Entrer la valeur inverse d'entrée comme clé d'étiquette",
                     "btnCancel.text": "Annuler",
                     "btnOk.text": "Enregistrer l'entrée"
-                }
+                },
+                "addLookup": "fr_Add Lookup",
+                "label": "fr_Lookup Type",
+                "lookupName": "fr_Lookup Name",
+                "placeholder": "fr_Enter lookup name",
+                "btnSave.text": "fr_Save",
+                "deleteLookupMsg": "fr_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "fr_Are you sure you want to delete this entry?",
+                "delete.success": "fr_Lookup is successfully deleted",
+                "delete.error": "fr_Lookup can't be deleted",
+                "lookupExists.error": "fr_Lookup with this name already exists"
             },
             "module.config": {
                 "title": "Configuration du module"
@@ -583,6 +611,8 @@
                 "creator": "Créateur",
                 "modifier": "Modifié par",
                 "activated": "Statut",
+                "statusDeactivated": "fr_Deactivated",
+                "statusActivated": "fr_Activated",
                 "objectType": "Type d'objet",
                 "version": "Version",
                 "templateVersionActive": "Actif"
@@ -599,6 +629,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "fr_No File Selected",
                 "objectTypes.label": "Types d'objets",
                 "querySelect.label": "Requête Sélectionnez",
                 "label.label": "Afficher un nom",
