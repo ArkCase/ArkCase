@@ -2,7 +2,7 @@
 
 angular.module('dashboard.emails', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('emails', {
-        title : 'dashboard.widgets.emails.title',
+        title : 'preference.overviewWidgets.emails.title',
         description : 'dashboard.widgets.emails.description',
         controller : 'Dashboard.EmailsController',
         reload : true,

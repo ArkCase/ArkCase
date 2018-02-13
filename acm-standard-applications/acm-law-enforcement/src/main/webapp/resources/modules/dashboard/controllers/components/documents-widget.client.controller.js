@@ -2,7 +2,7 @@
 
 angular.module('dashboard.documents', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('documents', {
-        title : 'dashboard.widgets.documents.title',
+        title : 'preference.overviewWidgets.documents.title',
         description : 'dashboard.widgets.documents.description',
         controller : 'Dashboard.DocumentsController',
         controllerAs : 'documents',
