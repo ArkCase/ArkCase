@@ -52,6 +52,7 @@
             "newCorrespondence": "न्यू पत्राचार",
             "open": "खुला",
             "email": "ईमेल",
+            "newTask": "hi_New Task",
             "download": "डाउनलोड",
             "copy": "कॉपी",
             "cut": "कट गया",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "दाएँ चले",
         "tooltip.move_left": "बाएं खिसको",
         "authorized": "अधिकृत"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "hi_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "खोज",
@@ -563,7 +567,7 @@
     "common.directive.coreParticipants": {
         "title": "प्रतिभागियों",
         "replaceFolderChildrenParticipants": "hi_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "प्रतिभागी को जोड़ें",
             "editParticipant.label": "रिकॉर्ड संपादित करें",
             "participantType.label": "प्रतिभागी प्रकार",

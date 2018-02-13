@@ -1020,6 +1020,17 @@ a.editable.editable-click {
     cursor: pointer;
 }
 
+.full-docview {
+    background-color: #f4f5f4;
+}
+
+.full-docview .snowbound-iframe { 
+	position: absolute;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
+}
+
 @media only screen and (min-height: 900px) {
 
     .snowbound-iframe-div {
@@ -1589,8 +1600,4 @@ a.primary {
 .ui-grid-draggable-row {
     height: 30px;
     opacity: 1 !important;
-}
-
-.filterWordInput {
-    width: 100% !important;
 }

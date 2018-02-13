@@ -225,6 +225,12 @@
                         "error": "त्रुटि"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "hi_Name",
+                "type": "hi_Type",
+                "supervisorName": "hi_Supervisor Name",
+                "actions": "hi_Actions"
             }
         },
         "security.selectPrivileges": "भूमिका बनाएं / विशेषाधिकारों का चयन करें",
@@ -256,6 +262,7 @@
                 "purge.label": "शुद्ध करना",
                 "email.label": "सिस्टम ईमेल पता",
                 "password.label": "सिस्टम पासवर्ड",
+                "password.changeButton": "hi_Change the calendar user password",
                 "purgeDays.label": "दिन",
                 "emailValid": "सिस्टम ईमेल पता और पासवर्ड मान्य हैं",
                 "emailNotValid": "सिस्टम ईमेल पता या पासवर्ड मान्य नहीं हैं",
@@ -359,6 +366,17 @@
                 "browse": "ब्राउज",
                 "save": "बचाना",
                 "cancel": "रद्द करना"
+            },
+            "objectTypes": {
+                "caseFile": "hi_Case File",
+                "complaint": "hi_Complaint",
+                "task": "hi_Task",
+                "document": "hi_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "hi_Send as Attachments",
+                "sendAsLinks": "hi_Send as Links",
+                "sendAsAttachmentsAndLinks": "hi_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -377,7 +395,7 @@
                     "Exchange2013": "Exchange2013",
                     "Exchange2013_SP1": "Exchange2013_SP1"
                 },
-                "enableAutodiscovery.checkbox": "Autodiscovery सक्षम करें",
+                "enableAutodiscovery.checkbox": "खोज को सक्षम करें",
                 "clientAccessServer.label": "क्लाइंट एक्सेस सर्वर",
                 "clientAccessServer.description": "डिफ़ॉल्ट पहुंच स्तर बदलने से पहले, पर जाएँ: http://help.unc.edu/help/exchange-what-are-permission-levels-in-outlook/ अधिक जानकारी के लिए",
                 "clientAccessServer.placeholder": "क्लाइंट एक्सेस सर्वर दर्ज करें",
@@ -517,7 +535,17 @@
                     "inversevalue.placeholder": "लेबल कुंजी के रूप में प्रवेश उलटा मूल्य दर्ज करें",
                     "btnCancel.text": "रद्द करना",
                     "btnOk.text": "प्रवेश सहेजें"
-                }
+                },
+                "addLookup": "hi_Add Lookup",
+                "label": "hi_Lookup Type",
+                "lookupName": "hi_Lookup Name",
+                "placeholder": "hi_Enter lookup name",
+                "btnSave.text": "hi_Save",
+                "deleteLookupMsg": "hi_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "hi_Are you sure you want to delete this entry?",
+                "delete.success": "hi_Lookup is successfully deleted",
+                "delete.error": "hi_Lookup can't be deleted",
+                "lookupExists.error": "hi_Lookup with this name already exists"
             },
             "module.config": {
                 "title": "मॉड्यूल कॉन्फ़िगरेशन"
@@ -582,6 +610,8 @@
                 "creator": "बनाने वाला",
                 "modifier": "द्वारा संशोधित",
                 "activated": "स्थिति",
+                "statusDeactivated": "hi_Deactivated",
+                "statusActivated": "hi_Activated",
                 "objectType": "वस्तु प्रकार",
                 "version": "संस्करण",
                 "templateVersionActive": "सक्रिय"
@@ -598,6 +628,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "hi_No File Selected",
                 "objectTypes.label": "ऑब्जेक्ट प्रकार",
                 "querySelect.label": "क्वेरी का चयन करें",
                 "label.label": "प्रदर्शित होने वाला नाम",

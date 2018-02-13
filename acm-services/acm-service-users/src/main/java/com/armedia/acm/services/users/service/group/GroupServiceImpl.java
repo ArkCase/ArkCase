@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
+import com.armedia.acm.services.search.util.AcmSolrUtil;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmUser;
@@ -86,13 +87,13 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
-    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter) throws MuleException
+    public String buildGroupsForUserByNameSolrQuery(Boolean authorized, String userId, String searchFilter)
     {
         return buildGroupsForUserSolrQuery(authorized, userId) + " AND name_partial:" + searchFilter;
     }
 
     @Override
-    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException
+    public String buildGroupsForUserSolrQuery(Boolean authorized, String userId)
     {
         String solrQuery = "object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE AND -status_lcs:INACTIVE AND -status_lcs:CLOSED"
                 + (authorized ? " AND member_id_ss:" : " AND -member_id_ss:") + userId;
@@ -131,7 +132,7 @@ public class GroupServiceImpl implements GroupService
         }).orElse("");
 
         String query = String.format("object_type_s:USER AND groups_id_ss:%s", buildSafeGroupNameForSolrSearch(groupName));
-        query = query.replace("_002E_", ".");
+        // query = query.replace("_002E_", ".");
         query += statusQuery;
 
         log.debug("Executing query for users in group: [{}]", query);
@@ -140,10 +141,11 @@ public class GroupServiceImpl implements GroupService
 
     private String buildSafeGroupNameForSolrSearch(String groupName)
     {
-        if (groupName.contains(" "))
+        if (AcmSolrUtil.hasSpecialCharacters(groupName))
         {
             groupName = "\"" + groupName + "\"";
         }
+        groupName = groupName.replace("%", "%25"); // instead of URL encoding
         groupName = groupName.replace("&", "%26"); // instead of URL encoding
         groupName = groupName.replace("?", "%3F"); // instead of URL encoding
         return groupName;
@@ -461,6 +463,34 @@ public class GroupServiceImpl implements GroupService
         AcmGroup acmGroup = createGroup(subGroup);
         parent.addGroupMember(acmGroup);
         return acmGroup;
+    }
+
+    @Override
+    public String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
+    {
+        groupId = buildSafeGroupNameForSolrSearch(groupId);
+        String query = "ascendants_id_ss:" + groupId
+                + " AND object_type_s:GROUP AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query,
+                startRow, maxRows, sort);
+    }
+
+    @Override
+    public String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException
+    {
+        String query = "object_type_s:GROUP AND -ascendants_id_ss:* AND -status_lcs:COMPLETE AND -status_lcs:DELETE "
+                + "AND -status_lcs:INACTIVE AND -status_lcs:CLOSED";
+
+        if (groupSubtype != null && !groupSubtype.isEmpty())
+        {
+            query += " AND object_sub_type_s:(" + String.join(" OR ", groupSubtype) + ")";
+        }
+        return executeSolrQuery.getResultsByPredefinedQuery(auth, SolrCore.ADVANCED_SEARCH, query,
+                startRow, maxRows, sort);
     }
 
     public void setUserDao(UserDao userDao)

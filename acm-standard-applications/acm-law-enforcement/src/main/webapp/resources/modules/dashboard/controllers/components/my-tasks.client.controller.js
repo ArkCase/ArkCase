@@ -86,8 +86,9 @@ angular.module('dashboard.my-tasks').controller(
                                 return _.startsWith(userGroup, 'ROLE') == false;
                             });
 
-                            userGroupList = userGroups.join(" OR ");
-                            userGroupList = "(" + userGroupList + ")";
+                            userGroupList = userGroups.join("\" OR \"");
+                            userGroupList = "(\"" + userGroupList + "\")";
+                            userGroupList = encodeURIComponent(userGroupList);
                             getPage();
                             return userInfo;
                         });
