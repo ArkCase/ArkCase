@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Dokumente",
                 "description": "Zeigt das Diagramm der Dokumente nach Ordner",
-                "noDataMessage": "Derzeit sind keine Dokumente vorhanden"
+                "noDataMessage": "Derzeit sind keine Dokumente vorhanden",
+                "series": "de_Number of Documents"
             },
             "locations": {
                 "title": "Standorte",
@@ -273,7 +274,8 @@
             "cost": {
                 "title": "Kosten",
                 "description": "Zeigt Diagramm für Kosten pro Benutzer",
-                "noDataMessage": "Derzeit gibt es keine Kosteninformationen zur Anzeige"
+                "noDataMessage": "Derzeit gibt es keine Kosteninformationen zur Anzeige",
+                "calendarIntegrationDisabledMessage": "de_Calendar integration is disabled by Administrator"
             },
             "calendar": {
                 "title": "Kalender",

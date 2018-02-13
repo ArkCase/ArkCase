@@ -232,6 +232,7 @@
         "modal": {
             "title": "Rótulo",
             "search": "À procura de um dia",
+            "placeholder": "pt_Add tag",
             "buttons": {
                 "cancel": "Cancelar",
                 "ok": "Adicione uma etiqueta"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Calendário"
+        "title": "Calendário",
+        "infoMessage": "pt_Calendar Integration Configuration Not Enabled"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Pesquisa de referência"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Nome completo"
         },
+        "assigne.none": "pt_None",
         "assignee.label": "Receptor",
         "owningGroup.label": "Grupo de proprietários",
         "priority.label": "Prioridade",

@@ -59,16 +59,13 @@ public class CorrespondenceService
     {
         CorrespondenceTemplate template = findTemplate(templateName);
 
-        File file = null;
-        FileOutputStream fosToWriteFile = null;
+        File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
-        try (FileInputStream fisForUploadToEcm = new FileInputStream(file))
+        try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
+                FileOutputStream fosToWriteFile = new FileOutputStream(file))
         {
-            file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
             log.debug("writing correspondence to file: " + file.getCanonicalPath());
-
-            fosToWriteFile = new FileOutputStream(file);
 
             EcmFile retval = getCorrespondenceGenerator().generateCorrespondence(authentication, parentObjectType, parentObjectId,
                     targetCmisFolderId, template, new Object[] { parentObjectId }, fosToWriteFile, fisForUploadToEcm);
@@ -82,10 +79,6 @@ public class CorrespondenceService
         finally
         {
             FileUtils.deleteQuietly(file);
-            if (fosToWriteFile != null)
-            {
-                fosToWriteFile.close();
-            }
         }
 
     }
@@ -335,7 +328,7 @@ public class CorrespondenceService
     }
 
     /**
-     * @param mapRequestToTemplate
+     * @param template
      * @throws IOException
      */
     public Optional<CorrespondenceTemplate> updateTemplate(CorrespondenceTemplate template) throws IOException

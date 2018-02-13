@@ -225,6 +225,12 @@
                         "error": "エラー"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "ja_Name",
+                "type": "ja_Type",
+                "supervisorName": "ja_Supervisor Name",
+                "actions": "ja_Actions"
             }
         },
         "security.selectPrivileges": "役割の作成/特権の選択",
@@ -256,6 +262,7 @@
                 "purge.label": "パージ",
                 "email.label": "システムの電子メールアドレス",
                 "password.label": "システムパスワード",
+                "password.changeButton": "ja_Change the calendar user password",
                 "purgeDays.label": "日々",
                 "emailValid": "システム電子メールアドレスとパスワードは有効です",
                 "emailNotValid": "システムの電子メールアドレスまたはパスワードが無効です",
@@ -360,6 +367,17 @@
                 "download": "ja_Download",
                 "save": "保存する",
                 "cancel": "キャンセル"
+            },
+            "objectTypes": {
+                "caseFile": "ja_Case File",
+                "complaint": "ja_Complaint",
+                "task": "ja_Task",
+                "document": "ja_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "ja_Send as Attachments",
+                "sendAsLinks": "ja_Send as Links",
+                "sendAsAttachmentsAndLinks": "ja_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -518,7 +536,17 @@
                     "inversevalue.placeholder": "ラベルキーとして入力逆値を入力",
                     "btnCancel.text": "キャンセル",
                     "btnOk.text": "エントリを保存"
-                }
+                },
+                "addLookup": "ja_Add Lookup",
+                "label": "ja_Lookup Type",
+                "lookupName": "ja_Lookup Name",
+                "placeholder": "ja_Enter lookup name",
+                "btnSave.text": "ja_Save",
+                "deleteLookupMsg": "ja_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "ja_Are you sure you want to delete this entry?",
+                "delete.success": "ja_Lookup is successfully deleted",
+                "delete.error": "ja_Lookup can't be deleted",
+                "lookupExists.error": "ja_Lookup with this name already exists"
             },
             "module.config": {
                 "title": "モジュール構成"
@@ -583,6 +611,8 @@
                 "creator": "クリエイター",
                 "modifier": "変更者",
                 "activated": "状態",
+                "statusDeactivated": "ja_Deactivated",
+                "statusActivated": "ja_Activated",
                 "objectType": "オブジェクトタイプ",
                 "version": "バージョン",
                 "templateVersionActive": "アクティブ"
@@ -599,6 +629,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "ja_No File Selected",
                 "objectTypes.label": "オブジェクト型",
                 "querySelect.label": "クエリ選択",
                 "label.label": "表示名",

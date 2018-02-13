@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documentos",
                 "description": "Muestra gráfico de documentos por carpeta",
-                "noDataMessage": "Actualmente no hay documentos para mostrar"
+                "noDataMessage": "Actualmente no hay documentos para mostrar",
+                "series": "es_Number of Documents"
             },
             "locations": {
                 "title": "Ubicaciones",
