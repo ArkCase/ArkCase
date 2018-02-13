@@ -18,11 +18,11 @@ public final class AcmSolrUtil
     private static final String solrSpecialCharacters;
     static
     {
-        solrSpecialCharacters = "\\+-!():,^[]\"{}~*?|&;/ ";
+        solrSpecialCharacters = "\\+!():,^[]\"{}~*?|&;/ ";
         encodedChars = new HashMap<>(solrSpecialCharacters.length());
         for (char c : solrSpecialCharacters.toCharArray())
         {
-            encodedChars.put(c, "_" + Integer.toHexString(c).toUpperCase() + "_");
+            encodedChars.put(c, String.format("_00%s_", Integer.toHexString(c).toUpperCase()));
         }
     }
 
