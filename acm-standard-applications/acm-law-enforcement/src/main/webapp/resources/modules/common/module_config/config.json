@@ -219,7 +219,7 @@
                         }
                     },
                     {
-                        "title": "New Task",
+                        "title": "common.directive.docTree.menu.newTask",
                         "cmd": "reviewDocument",
                         "uiIcon": "ui-icon-circle-check",
                         "data": {

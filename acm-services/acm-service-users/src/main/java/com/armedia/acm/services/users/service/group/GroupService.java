@@ -144,7 +144,7 @@ public interface GroupService
 
     /**
      * Saves new ADHOC group and adds it as member to parent group.
-     * 
+     *
      * @param subGroup
      *            group to be created
      * @param parentId
@@ -159,7 +159,7 @@ public interface GroupService
 
     /**
      * Adds group as member to parent group
-     * 
+     *
      * @param subGroupId
      *            member group name
      * @param parentId
@@ -169,4 +169,22 @@ public interface GroupService
      *             in case when subgroup or parent group are not found
      */
     AcmGroup addGroupMember(String subGroupId, String parentId) throws AcmCreateObjectFailedException;
+
+    /**
+     * retrive groups for given parent group id
+     *
+     * @param groupId
+     *            parent group id
+     * @param startRow
+     *            start row
+     * @param maxRows
+     * @param sort
+     * @param auth
+     * @return
+     * @throws MuleException
+     */
+    String getGroupsByParent(String groupId, int startRow, int maxRows, String sort, Authentication auth) throws MuleException;
+
+    String getTopLevelGroups(List<String> groupSubtype, int startRow, int maxRows, String sort, Authentication auth)
+            throws MuleException;
 }

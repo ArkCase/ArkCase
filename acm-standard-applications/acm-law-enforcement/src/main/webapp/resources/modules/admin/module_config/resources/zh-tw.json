@@ -225,6 +225,12 @@
                         "error": "錯誤"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "zh-tw_Name",
+                "type": "zh-tw_Type",
+                "supervisorName": "zh-tw_Supervisor Name",
+                "actions": "zh-tw_Actions"
             }
         },
         "security.selectPrivileges": "創建角色並選擇特權",
@@ -256,6 +262,7 @@
                 "purge.label": "清除",
                 "email.label": "系統電子郵件地址",
                 "password.label": "系統密碼",
+                "password.changeButton": "zh-tw_Change the calendar user password",
                 "purgeDays.label": "天",
                 "emailValid": "系統電子郵件地址和密碼有效",
                 "emailNotValid": "系統電子郵件地址或密碼無效",
@@ -359,6 +366,17 @@
                 "browse": "瀏覽",
                 "save": "保存",
                 "cancel": "取消"
+            },
+            "objectTypes": {
+                "caseFile": "zh-tw_Case File",
+                "complaint": "zh-tw_Complaint",
+                "task": "zh-tw_Task",
+                "document": "zh-tw_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "zh-tw_Send as Attachments",
+                "sendAsLinks": "zh-tw_Send as Links",
+                "sendAsAttachmentsAndLinks": "zh-tw_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -517,254 +535,236 @@
                     "inversevalue.placeholder": "輸入反向標籤值",
                     "btnCancel.text": "取消",
                     "btnOk.text": "保存條目"
-                }
-            },
-            "module.config": {
-                "title": "模塊配置"
-            },
-            "userName.config": {
-                "title": "用戶名顯示配置",
-                "userId.label": "使用用戶標識符",
-                "userName.label": "使用完整用戶名",
-                "apply": "應用",
-                "modal.title": "信息",
-                "modal.info": "設置將在刷新後生效",
-                "modal.ok": "確定"
-            },
-            "login.config": {
-                "title": "登錄配置",
-                "idleLimit.label": "登錄空閒限制（以毫秒為單位）",
-                "inform": "設置將對所有新用戶會話生效",
-                "apply.label": "應用"
-            },
-            "auditHistory.config": {
-                "title": "審計歷史",
-                "historyDays.label": "保持審計和通知事件（天）",
-                "inform": "設置成功保存",
-                "apply.label": "生效"
+                },
+                "addLookup": "zh-tw_Add Lookup",
+                "label": "zh-tw_Lookup Type",
+                "lookupName": "zh-tw_Lookup Name",
+                "placeholder": "zh-cn_Enter lookup name",
+                "btnSave.text": "zh-tw_Save",
+                "deleteLookupMsg": "zh-tw_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "zh-tw_Are you sure you want to delete this entry?",
+                "delete.success": "zh-tw_Lookup is successfully deleted",
+                "delete.error": "zh-tw_Lookup can't be deleted",
+                "lookupExists.error": "zh-tw_Lookup with this name already exists"
             }
         },
-        "branding.title": "品牌",
-        "branding.logo": "商標",
-        "branding.logo.messages": {
-            "upload.success": "自定義徽標文件已更新刷新瀏覽器頁面查看結果。",
-            "upload.error": "上傳自定義徽標文件時出錯。"
+        "module.config": {
+            "title": "模塊配置"
         },
-        "branding.logo.header.title": "標頭",
-        "branding.logo.login.title": "登錄頁面",
-        "branding.logo.warningMessage": "只允許使用PNG格式。推薦比例為1至4.最小高度為50像素。",
-        "branding.logo.btn": {
-            "chooseHeader": "選擇標題標誌",
-            "chooseLogin": "選擇登錄標誌",
-            "saveFiles": "保存"
+        "userName.config": {
+            "title": "用戶名顯示配置",
+            "userId.label": "使用用戶標識符",
+            "userName.label": "使用完整用戶名",
+            "apply": "應用",
+            "modal.title": "信息",
+            "modal.info": "設置將在刷新後生效",
+            "modal.ok": "確定"
         },
-        "branding": {
-            "customCss": "自定義CSS",
-            "customCss.save.success": "自定義CSS已更新。刷新瀏覽器頁面查看結果。",
-            "customCss.save.error": "保存自定義CSS時出錯。",
-            "customCss.save": "保存"
+        "login.config": {
+            "title": "登錄配置",
+            "idleLimit.label": "登錄空閒限制（以毫秒為單位）",
+            "inform": "設置將對所有新用戶會話生效",
+            "apply.label": "應用"
         },
-        "correspondenceManagement": {
-            "title": "通信管理",
-            "templates": "通信模板",
-            "templates.addNewTemplate": "上傳模板",
-            "templates.addTemplate": "上傳",
-            "templates.versionTemplate": "版本",
-            "templates.deleteTemplate": "刪除",
-            "templates.editTemplate": "編輯模板",
-            "templates.grid": {
-                "id": "ID",
-                "title": "標題",
-                "label": "顯示名稱",
-                "path": "路徑",
-                "created": "創建日期",
-                "modified": "更改日期",
-                "creator": "創造者",
-                "modifier": "更改者",
-                "activated": "狀態",
-                "objectType": "對像類型",
-                "version": "版本",
-                "templateVersionActive": "有效"
-            },
-            "templates.fieldNames.label": "將字段映射到模板中的值",
-            "templates.querySelect": {
-                "header.text": "選擇查詢",
-                "btnCancel.text": "取消",
-                "btnOk.text": "選擇查詢",
-                "table.columns": {
-                    "beanId": "Bean ID",
-                    "jpaQuery": "JPA查詢",
-                    "objectType": "查詢類型"
-                }
-            },
-            "templates.modal": {
-                "objectTypes.label": "對像類型",
-                "querySelect.label": "查詢選擇",
-                "label.label": "顯示名稱",
-                "btnCancel.text": "取消",
-                "btnOk.text": "上傳模板"
-            },
-            "templates.version.modal": {
-                "btnOk.text": "確定"
-            },
-            "mergefields": "合併字段配置",
-            "mergefields.saveMergeFields": "保存",
-            "mergefields.versionMergeFields": "版本",
-            "mergefields.grid": {
-                "fieldId": "ID",
-                "fieldValue": "數值",
-                "fieldDescription": "描述"
-            },
-            "mergefields.version.grid": {
-                "mergingVersion": "版本",
-                "modified": "更改日期",
-                "modifier": "更改者",
-                "mergingActiveVersion": "有效"
-            },
-            "mergefields.version.modal": {
-                "btnLoadVersion.text": "加載版本",
-                "btnCancel.text": "取消"
-            }
-        },
-        "forms.defaultValue": "選擇目標",
-        "forms.addForm": "添加平面",
-        "forms.data": {
-            "name": "表單名稱",
-            "applicationName": "應用名稱",
-            "description": "描述",
-            "target": "目標"
-        },
-        "forms.message.delete.success": "成功刪除行。",
-        "forms.message.delete.error": "錯誤刪除行。",
-        "documentManagement": {
-            "title": "文件管理",
-            "cmisConfiguration": "CMIS配置",
-            "cmisConfiguration.addNewConfig": "添加新的CMIS配置",
-            "cmisConfiguration.addNewConfig.modal": {
-                "header": {
-                    "new": "新的CMIS配置",
-                    "edit": "編輯CMIS配置"
-                },
-                "dialog": {
-                    "testConnection": "zh-tw_Test Connection",
-                    "cancel": "取消",
-                    "ok": "確定"
-                },
-                "guidelineMessage": {
-                    "repositoryId": "對於Alfresco：將cmis.repositoryId留空。對於Documentum：將cmis.repositoryId設置為docbase名稱。"
-                }
-            },
-            "cmisConfiguration.data": {
-                "id": {
-                    "label": "CMIS ID",
-                    "placeholder": "CMIS ID"
-                },
-                "baseUrl": {
-                    "label": "基本URL",
-                    "placeholder": "基本URL"
-                },
-                "username": {
-                    "label": "用戶名",
-                    "placeholder": "用戶名"
-                },
-                "password": {
-                    "label": "密碼",
-                    "placeholder": "密碼"
-                },
-                "useAlfrescoExtension": {
-                    "label": "使用Alfresco擴展",
-                    "placeholder": "使用Alfresco擴展"
-                },
-                "maxIdle": {
-                    "label": "最大空閒",
-                    "placeholder": "最大空閒"
-                },
-                "maxActive": {
-                    "label": "最大活動",
-                    "placeholder": "最大活動"
-                },
-                "maxWait": {
-                    "label": "最大等待",
-                    "placeholder": "最大等待"
-                },
-                "minEvictionMillis": {
-                    "label": "最小驅逐毫秒",
-                    "placeholder": "最小驅逐毫秒"
-                },
-                "evictionCheckIntervalMillis": {
-                    "label": "驅逐檢查間隔毫秒",
-                    "placeholder": "驅逐檢查間隔毫秒"
-                },
-                "reconnectCount": {
-                    "label": "重新連接計數",
-                    "placeholder": "重新連接計數"
-                },
-                "reconnectFrequency": {
-                    "label": "重新連接頻率",
-                    "placeholder": "重新連接頻率"
-                },
-                "repositoryId": {
-                    "label": "存儲庫ID",
-                    "placeholder": "存儲庫ID"
-                },
-                "cmisVersioningState": {
-                    "label": "版本控制狀態",
-                    "placeholder": "版本控制狀態"
-                }
-            },
-            "cmisConfiguration.deleteDialog": {
-                "cancelBtn": "取消",
-                "deleteBtn": "確認刪除",
-                "headerText": "您即將刪除CMIS配置：",
-                "bodyText": "你確定？"
-            },
-            "cmisConfiguration.messages": {
-                "delete.success": "成功刪除配置",
-                "delete.error": "刪除配置時出錯。",
-                "insert.success": "成功創建新的配置行。",
-                "insert.error": "創建新配置行時出錯。",
-                "update.success": "成功更新配置行。",
-                "update.error": "錯誤更新配置行。"
-            }
+        "auditHistory.config": {
+            "title": "審計歷史",
+            "historyDays.label": "保持審計和通知事件（天）",
+            "inform": "設置成功保存",
+            "apply.label": "生效"
         }
     },
-    "admin.comp.securityLdapConfig": {
-        "title": "安全 - Ldap配置網格"
+    "branding.title": "品牌",
+    "branding.logo": "商標",
+    "branding.logo.messages": {
+        "upload.success": "自定義徽標文件已更新刷新瀏覽器頁面查看結果。",
+        "upload.error": "上傳自定義徽標文件時出錯。"
     },
-    "admin.comp.correspondenceManagementMergeFields": {
-        "title": "通信管理合併字段網格"
+    "branding.logo.header.title": "標頭",
+    "branding.logo.login.title": "登錄頁面",
+    "branding.logo.warningMessage": "只允許使用PNG格式。推薦比例為1至4.最小高度為50像素。",
+    "branding.logo.btn": {
+        "chooseHeader": "選擇標題標誌",
+        "chooseLogin": "選擇登錄標誌",
+        "saveFiles": "保存"
     },
-    "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "通信管理合併字段版本網格"
+    "branding": {
+        "customCss": "自定義CSS",
+        "customCss.save.success": "自定義CSS已更新。刷新瀏覽器頁面查看結果。",
+        "customCss.save.error": "保存自定義CSS時出錯。",
+        "customCss.save": "保存"
     },
-    "admin.comp.correspondenceManagementTemplates": {
-        "title": "通信管理模板網格"
+    "correspondenceManagement": {
+        "title": "通信管理",
+        "templates": "通信模板",
+        "templates.addNewTemplate": "上傳模板",
+        "templates.addTemplate": "上傳",
+        "templates.versionTemplate": "版本",
+        "templates.deleteTemplate": "刪除",
+        "templates.editTemplate": "編輯模板",
+        "templates.grid": {
+            "id": "ID",
+            "title": "標題",
+            "label": "顯示名稱",
+            "path": "路徑",
+            "created": "創建日期",
+            "modified": "更改日期",
+            "creator": "創造者",
+            "modifier": "更改者",
+            "activated": "狀態",
+            "objectType": "對像類型",
+            "version": "版本",
+            "templateVersionActive": "有效"
+        },
+        "templates.fieldNames.label": "將字段映射到模板中的值",
+        "templates.querySelect": {
+            "header.text": "選擇查詢",
+            "btnCancel.text": "取消",
+            "btnOk.text": "選擇查詢",
+            "table.columns": {
+                "beanId": "Bean ID",
+                "jpaQuery": "JPA查詢",
+                "objectType": "查詢類型"
+            }
+        },
+        "templates.modal": {
+            "objectTypes.label": "對像類型",
+            "querySelect.label": "查詢選擇",
+            "label.label": "顯示名稱",
+            "btnCancel.text": "取消",
+            "btnOk.text": "上傳模板"
+        },
+        "templates.version.modal": {
+            "btnOk.text": "確定"
+        },
+        "mergefields": "合併字段配置",
+        "mergefields.saveMergeFields": "保存",
+        "mergefields.versionMergeFields": "版本",
+        "mergefields.grid": {
+            "fieldId": "ID",
+            "fieldValue": "數值",
+            "fieldDescription": "描述"
+        },
+        "mergefields.version.grid": {
+            "mergingVersion": "版本",
+            "modified": "更改日期",
+            "modifier": "更改者",
+            "mergingActiveVersion": "有效"
+        },
+        "mergefields.version.modal": {
+            "btnLoadVersion.text": "加載版本",
+            "btnCancel.text": "取消"
+        }
     },
-    "admin.comp.correspondenceManagementTemplateVersions": {
-        "title": "對應管理模板版本網格"
+    "forms.defaultValue": "選擇目標",
+    "forms.addForm": "添加平面",
+    "forms.data": {
+        "name": "表單名稱",
+        "applicationName": "應用名稱",
+        "description": "描述",
+        "target": "目標"
     },
-    "admin.comp.labelsConfig": {
-        "title": "應用 - 標籤配置網格"
-    },
-    "admin.comp.plainFormsConfig": {
-        "title": "表格 - 表格配置網格"
-    },
-    "admin.comp.workflowsConfig": {
-        "title": "工作流程 - 工作流配置網格"
-    },
-    "admin.comp.workflowsHistoryDialogConfig": {
-        "title": "工作流程 - 工作流程配置歷史記錄對話框"
-    },
-    "admin.comp.usersPicker": {
-        "title": "選擇用戶"
-    },
-    "admin.comp.orgHierarchy": {
-        "title": "組織層次結構"
-    },
-    "admin.comp.cmisConfiguration": {
-        "title": "CMIS配置網格"
-    },
-    "admin.comp.emailTemplates": {
-        "title": "電子郵件模板"
+    "forms.message.delete.success": "成功刪除行。",
+    "forms.message.delete.error": "錯誤刪除行。",
+    "documentManagement": {
+        "title": "文件管理",
+        "cmisConfiguration": "CMIS配置",
+        "cmisConfiguration.addNewConfig": "添加新的CMIS配置",
+        "cmisConfiguration.addNewConfig.modal": {
+            "header": {
+                "new": "新的CMIS配置",
+                "edit": "編輯CMIS配置"
+            },
+            "dialog": {
+                "testConnection": "zh-tw_Test Connection",
+                "cancel": "取消",
+                "ok": "確定"
+            },
+            "guidelineMessage": {
+                "repositoryId": "對於Alfresco：將cmis.repositoryId留空。對於Documentum：將cmis.repositoryId設置為docbase名稱。"
+            }
+        },
+        "cmisConfiguration.data": {
+            "id": {
+                "label": "CMIS ID",
+                "placeholder": "CMIS ID"
+            },
+            "baseUrl": {
+                "label": "基本URL",
+                "placeholder": "基本URL"
+            },
+            "username": {
+                "label": "用戶名",
+                "placeholder": "用戶名"
+            },
+            "password": {
+                "label": "密碼",
+                "placeholder": "密碼"
+            },
+            "useAlfrescoExtension": {
+                "label": "使用Alfresco擴展",
+                "placeholder": "使用Alfresco擴展"
+            },
+            "maxIdle": {
+                "label": "最大空閒",
+                "placeholder": "最大空閒"
+            },
+            "maxActive": {
+                "label": "最大活動",
+                "placeholder": "最大活動"
+            },
+            "maxWait": {
+                "label": "最大等待",
+                "placeholder": "最大等待"
+            },
+            "minEvictionMillis": {
+                "label": "最小驅逐毫秒",
+                "placeholder": "最小驅逐毫秒"
+            },
+            "evictionCheckIntervalMillis": {
+                "label": "驅逐檢查間隔毫秒",
+                "placeholder": "驅逐檢查間隔毫秒"
+            },
+            "reconnectCount": {
+                "label": "重新連接計數",
+                "placeholder": "重新連接計數"
+            },
+            "reconnectFrequency": {
+                "label": "重新連接頻率",
+                "placeholder": "重新連接頻率"
+            },
+            "repositoryId": {
+                "label": "存儲庫ID",
+                "placeholder": "存儲庫ID"
+            },
+            "cmisVersioningState": {
+                "label": "版本控制狀態",
+                "placeholder": "版本控制狀態"
+            }
+        },
+        "cmisConfiguration.deleteDialog": {
+            "cancelBtn": "取消",
+            "deleteBtn": "確認刪除",
+            "headerText": "您即將刪除CMIS配置：",
+            "bodyText": "你確定？"
+        },
+        "cmisConfiguration.messages": {
+            "delete.success": "成功刪除配置",
+            "delete.error": "刪除配置時出錯。",
+            "insert.success": "成功創建新的配置行。",
+            "insert.error": "創建新配置行時出錯。",
+            "update.success": "成功更新配置行。",
+            "update.error": "錯誤更新配置行。"
+        }
     }
+},
+"admin.comp.securityLdapConfig": {"title": "安全 - Ldap配置網格"}, "admin.comp.correspondenceManagementMergeFields": {"title": "通信管理合併字段網格"}, "admin.comp.correspondenceManagementMergeFieldsVersions": {"title": "通信管理合併字段版本網格"
+}, "admin.comp.correspondenceManagementTemplates": {
+"title": "通信管理模板網格"
+}, "admin.comp.correspondenceManagementTemplateVersions": {"title": "對應管理模板版本網格"},
+"admin.comp.labelsConfig": {"title": "應用 - 標籤配置網格"}, "admin.comp.plainFormsConfig": {"title": "表格 - 表格配置網格"}, "admin.comp.workflowsConfig": {"title": "工作流程 - 工作流配置網格"
+}, "admin.comp.workflowsHistoryDialogConfig": {
+"title": "工作流程 - 工作流程配置歷史記錄對話框"
+}, "admin.comp.usersPicker": {"title": "選擇用戶"},
+"admin.comp.orgHierarchy": {"title": "組織層次結構"}, "admin.comp.cmisConfiguration": {"title": "CMIS配置網格"}, "admin.comp.emailTemplates": {"title": "電子郵件模板"
+}
 }

@@ -47,6 +47,7 @@ angular
                                                                                                     $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png'
                                                                                                             : 'api/latest/plugin/ecm/download?ecmFileId='
                                                                                                                     + $scope.profileEcmFileID
+                                                                                                                    + '&parentObjectType=USER_ORG'
                                                                                                                     + '&inline=true';
                                                                                                     $rootScope.$broadcast(
                                                                                                             'uploadedPicture',
@@ -88,6 +89,7 @@ angular
                                                                                                     $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nosignature.png'
                                                                                                             : 'api/latest/plugin/ecm/download?ecmFileId='
                                                                                                                     + $scope.profileEcmSignatureFileID
+                                                                                                                    + '&parentObjectType=USER_ORG'
                                                                                                                     + '&inline=true';
                                                                                                 });
                                                                             }).error(
@@ -117,11 +119,11 @@ angular
                                         $scope.profilePicTitle = data.title;
                                         $scope.profileEcmFileID = data.ecmFileId;
                                         $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png'
-                                                : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&inline=true';
+                                                : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&parentObjectType=USER_ORG' + '&inline=true';
                                         // signature
                                         $scope.profileEcmSignatureFileID = data.ecmSignatureFileId;
                                         $scope.imgSignatureSrc = !$scope.profileEcmSignatureFileID ? 'modules/profile/img/nosignature.png'
                                                 : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmSignatureFileID
-                                                        + '&inline=true';
+                                                        + '&parentObjectType=USER_ORG' + '&inline=true';
                                     });
                         } ]);
