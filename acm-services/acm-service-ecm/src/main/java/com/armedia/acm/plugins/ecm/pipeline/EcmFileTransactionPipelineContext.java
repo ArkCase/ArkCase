@@ -6,7 +6,13 @@ import com.armedia.acm.plugins.ecm.service.impl.EcmTikaFile;
 import com.armedia.acm.services.pipeline.AbstractPipelineContext;
 
 import org.apache.chemistry.opencmis.client.api.Document;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by joseph.mcgrady on 9/9/2015.
@@ -14,9 +20,10 @@ import org.springframework.security.core.Authentication;
 public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
 {
 
+    private static final Logger LOG = LoggerFactory.getLogger(EcmFileTransactionPipelineContext.class);
     private String originalFileName;
     private Authentication authentication;
-    private byte[] fileByteArray;
+    private File fileContents;
     private String cmisRepositoryId;
     private String cmisFolderId;
     private AcmContainer container;
@@ -46,16 +53,6 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setAuthentication(Authentication authentication)
     {
         this.authentication = authentication;
-    }
-
-    public byte[] getFileByteArray()
-    {
-        return fileByteArray;
-    }
-
-    public void setFileByteArray(byte[] fileByteArray)
-    {
-        this.fileByteArray = fileByteArray;
     }
 
     public String getCmisRepositoryId()
@@ -146,5 +143,53 @@ public class EcmFileTransactionPipelineContext extends AbstractPipelineContext
     public void setDetectedFileMetadata(EcmTikaFile detectedFileMetadata)
     {
         this.detectedFileMetadata = detectedFileMetadata;
+    }
+
+    public File getFileContents()
+    {
+        return fileContents;
+    }
+
+    public void setFileContents(File fileContents)
+    {
+        this.fileContents = fileContents;
+    }
+
+    @Deprecated
+    /**
+     * @deprecated use getFileContents
+     */
+    public byte[] getFileByteArray()
+    {
+        try
+        {
+            return getFileContents() == null ? null : FileUtils.readFileToByteArray(getFileContents());
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not convert file to byte array: {}", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Deprecated
+    /**
+     * @deprecated use setFileContents
+     */
+    public synchronized void setFileByteArray(byte[] fileByteArray)
+    {
+        try
+        {
+            if (getFileContents() == null)
+            {
+                // NOTE This file is stored in the context for later use, do NOT delete it at the end of this method.
+                setFileContents(File.createTempFile("arkcase-file-transaction-set-file-byte-array-", null));
+            }
+            FileUtils.writeByteArrayToFile(getFileContents(), fileByteArray);
+        }
+        catch (IOException e)
+        {
+            LOG.error("Could not convert byte array to file: {}", e.getMessage(), e);
+        }
     }
 }

@@ -52,6 +52,7 @@
             "newCorrespondence": "Neue Korrespondenz",
             "open": "Öffnen",
             "email": "Email",
+            "newTask": "de_New Task",
             "download": "Herunterladen",
             "copy": "Kopieren",
             "cut": "Schnitt",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "Nach rechts bewegen",
         "tooltip.move_left": "Geh nach links",
         "authorized": "Autorisiert"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "de_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "Suche",
@@ -562,14 +566,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Teilnehmer",
-        "modal.addParticipant.label": "Teilnehmer hinzufügen",
-        "modal.editParticipant.label": "Datensatz bearbeiten",
-        "modal.participantType.label": "Teilnehmertyp",
-        "modal.participantName.label": "Teilnehmer name",
-        "modal.btnOk.text": "Sparen",
-        "modal.btnCancel.text": "Stornieren",
-        "modal.dialogUserPicker.header": "Benutzer suchen",
-        "modal.dialogGroupPicker.header": "Suchgruppe",
+        "replaceFolderChildrenParticipants": "de_Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "Teilnehmer hinzufügen",
+            "editParticipant.label": "Datensatz bearbeiten",
+            "participantType.label": "Teilnehmertyp",
+            "participantName.label": "Teilnehmer name",
+            "btnOk.text": "Sparen",
+            "btnCancel.text": "Stornieren",
+            "dialogUserPicker.header": "Benutzer suchen",
+            "dialogGroupPicker.header": "Suchgruppe",
+            "replaceChildrenParticipant": "de_replace children participant"
+        },
         "message": {
             "error.groupType": "Die besitzende Gruppe kann keine Person sein.",
             "error.userType": " Benutzertyp kann keine Gruppe sein.",

@@ -52,6 +52,7 @@
             "newCorrespondence": "创建新信件",
             "open": "打开",
             "email": "电子邮件",
+            "newTask": "zh-cn_New Task",
             "download": "下载",
             "copy": "复制",
             "cut": "切割",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "向右移",
         "tooltip.move_left": "向左移动",
         "authorized": "合法"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "zh-cn_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "搜索",
@@ -562,14 +566,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "参与者",
-        "modal.addParticipant.label": "添加参与者",
-        "modal.editParticipant.label": "编辑记录",
-        "modal.participantType.label": "参与者类型",
-        "modal.participantName.label": "参与者名称",
-        "modal.btnOk.text": "保存",
-        "modal.btnCancel.text": "取消",
-        "modal.dialogUserPicker.header": "搜索用户",
-        "modal.dialogGroupPicker.header": "搜索组",
+        "replaceFolderChildrenParticipants": "zh-cn_Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "添加参与者",
+            "editParticipant.label": "编辑记录",
+            "participantType.label": "参与者类型",
+            "participantName.label": "参与者名称",
+            "btnOk.text": "保存",
+            "btnCancel.text": "取消",
+            "dialogUserPicker.header": "搜索用户",
+            "dialogGroupPicker.header": "搜索组",
+            "replaceChildrenParticipant": "zh-cn_replace children participant"
+        },
         "message": {
             "error.groupType": "拥有的团体不能成为一个人。",
             "error.userType": " 用户类型不能是一个组。",

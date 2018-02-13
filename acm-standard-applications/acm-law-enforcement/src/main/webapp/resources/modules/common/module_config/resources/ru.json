@@ -52,6 +52,7 @@
             "newCorrespondence": "Новая переписка",
             "open": "Открыто",
             "email": "Эл. адрес",
+            "newTask": "ru_New Task",
             "download": "Скачать",
             "copy": "Копирование",
             "cut": "Порез",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "Двигаться вправо",
         "tooltip.move_left": "Двигай влево",
         "authorized": "Уполномоченный"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ru_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "Поиск",
@@ -562,14 +566,18 @@
     },
     "common.directive.coreParticipants": {
         "title": "Участники",
-        "modal.addParticipant.label": "Добавить участника",
-        "modal.editParticipant.label": "Изменить запись",
-        "modal.participantType.label": "Тип участника",
-        "modal.participantName.label": "Имя участника",
-        "modal.btnOk.text": "Сохранить",
-        "modal.btnCancel.text": "Отмена",
-        "modal.dialogUserPicker.header": "Поиск пользователя",
-        "modal.dialogGroupPicker.header": "Поиск группы",
+        "replaceFolderChildrenParticipants": "ru_Replace child documents participants",
+        "modal": {
+            "addParticipant.label": "Добавить участника",
+            "editParticipant.label": "Изменить запись",
+            "participantType.label": "Тип участника",
+            "participantName.label": "Имя участника",
+            "btnOk.text": "Сохранить",
+            "btnCancel.text": "Отмена",
+            "dialogUserPicker.header": "Поиск пользователя",
+            "dialogGroupPicker.header": "Поиск группы",
+            "replaceChildrenParticipant": "ru_replace children participant"
+        },
         "message": {
             "error.groupType": "Собственная группа не может быть человеком.",
             "error.userType": " Тип пользователя не может быть группой.",

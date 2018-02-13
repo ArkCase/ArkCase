@@ -27,13 +27,11 @@ public class RenameFolderAPIController
     private AcmFolderService folderService;
     private FolderEventPublisher folderEventPublisher;
 
-    @PreAuthorize("hasPermission(#objectId, 'FOLDER', 'renameFolder')")
+    @PreAuthorize("hasPermission(#objectId, 'FOLDER', 'write|group-write')")
     @RequestMapping(value = "/folder/{objectId}/{newName}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public AcmFolder renameFolder(
-            @PathVariable("objectId") Long objectId,
-            @PathVariable("newName") String newName) throws AcmUserActionFailedException,
-            AcmObjectNotFoundException, AcmFolderException
+    public AcmFolder renameFolder(@PathVariable("objectId") Long objectId, @PathVariable("newName") String newName)
+            throws AcmUserActionFailedException, AcmObjectNotFoundException, AcmFolderException
     {
         log.info("Renaming folder, folderId: {} with name: {}", objectId, newName);
         AcmFolder source = getFolderService().findById(objectId);
@@ -43,8 +41,8 @@ public class RenameFolderAPIController
             log.info("Folder with id: {} successfully renamed to: {}", objectId, newName);
             AcmContainer container = getFolderService().findContainerByFolderId(renamedFolder.getId());
 
-            getFolderEventPublisher().publishFolderRenamedEvent(renamedFolder, true,
-                    container.getContainerObjectType(), container.getContainerObjectId());
+            getFolderEventPublisher().publishFolderRenamedEvent(renamedFolder, true, container.getContainerObjectType(),
+                    container.getContainerObjectId());
             return renamedFolder;
         }
         catch (AcmUserActionFailedException | AcmFolderException | AcmObjectNotFoundException e)

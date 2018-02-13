@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.FlushModeType;
+
 import java.util.List;
 
 /**
@@ -40,7 +42,9 @@ public class ListAllParticipantsByObjectTypeAndObjectId
         {
             log.info("List all participants on object ['" + objectType + "]:[" + objectId + "]");
         }
-        List<AcmParticipant> participants = getAcmParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId);
+        List<AcmParticipant> participants = getAcmParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
+                FlushModeType.COMMIT);
+
         return participants;
     }
 

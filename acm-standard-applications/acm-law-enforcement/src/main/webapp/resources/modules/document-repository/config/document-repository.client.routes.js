@@ -1,6 +1,6 @@
 'use strict';
 
-//Setting up route
+// Setting up route
 angular
         .module('document-repository')
         .config(
@@ -24,9 +24,10 @@ angular
                                                                 $translatePartialLoader.addPart('common');
                                                                 $translatePartialLoader.addPart('dashboard');
                                                                 $translatePartialLoader.addPart('document-repository');
+                                                                $translatePartialLoader.addPart('document-details');
                                                                 $translate.resetDataDict().addDataDictFromLabels(
-                                                                        LocaleService.getLabelResources(
-                                                                                [ "document-repository", "common" ], "en"));
+                                                                        LocaleService.getLabelResources([ "document-repository",
+                                                                                "document-details", "common" ], "en"));
                                                                 return $translate.refresh();
                                                             } ]
                                                 }

@@ -60,6 +60,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                 <scripting:text><![CDATA[
                     import com.armedia.acm.plugins.ecm.model.AcmFolder;
                     import com.armedia.acm.plugins.ecm.model.AcmContainer;
+                    import com.armedia.acm.services.participants.model.AcmParticipant;
 
                     if ( payload.container == null )
                     {
@@ -73,6 +74,12 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
                         String user = payload.user.userId;
                         payload.ecmFolderPath = muleContext.registry.get("arkContext").getBean("acmUserOrgService").getProfileLocation() + "/" + user;
                         payload.container.folder.name = user;
+                        
+                        participant = new AcmParticipant();
+                        participant.setParticipantLdapId(user);
+                        participant.setParticipantType("write");
+                        
+                        payload.container.folder.getParticipants().add(participant);                        
                     }
 
                     return payload;

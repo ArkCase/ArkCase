@@ -51,7 +51,7 @@
                     <a href="javascript:;" class="editable-click no-outline" ng-click="openAssigneePickerModal()"
                             permission="editComplaintOwningGroup" permission-object-type="COMPLAINT" permission-properties="objectInfo"
                             permission-action="disable">
-                        <user-full-name userId="assignee" fallback="None" />
+                        <user-full-name userId="assignee" fallback="{{complaints.comp.approvalRouting.assigne.none | translate}}" />
                     </a>
                 </div>
                 <small class="text-muted"><span translate>complaints.comp.info.assignee.label</span></small>

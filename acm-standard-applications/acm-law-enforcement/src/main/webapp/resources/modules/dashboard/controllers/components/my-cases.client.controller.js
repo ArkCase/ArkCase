@@ -38,8 +38,9 @@ angular.module('dashboard.my-cases').controller(
                             var userGroups = _.filter(responseUserInfo.authorities, function(userGroup) {
                                 return _.startsWith(userGroup, 'ROLE') == false;
                             });
-                            userGroupList = userGroups.join(" OR ");
-                            userGroupList = "(" + userGroupList + ")";
+                            userGroupList = userGroups.join("\" OR \"");
+                            userGroupList = "(\"" + userGroupList + "\")";
+                            userGroupList = encodeURIComponent(userGroupList);
 
                             getPage();
                             return userInfo;
