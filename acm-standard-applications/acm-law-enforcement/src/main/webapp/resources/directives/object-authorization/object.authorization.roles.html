@@ -4,7 +4,7 @@
             {{objectTitle}}</label>
         <!--Sort od SOLR-->
         <select ng-model="selectedObject" ng-change="selectObject()"
-                ng-options="d[objectDisplayName] | translate for d in data.appUsers" name="" size="15"
+                ng-options="d[objectDisplayName] | translate for d in data.chooseObject" name="" size="15"
                 class="form-control">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-alias="{{objectTitle}}" />

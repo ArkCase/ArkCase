@@ -14,7 +14,7 @@
     </div>
     <panel-view header="{{'admin.security.ldap.user.management.title' | translate}}" collapsible="false">
         <div class="row">
-            <object-authorization-roles show-filter="true" data="userData" object-display-name="name"
+            <object-authorization-roles show-filter="showFilter" data="userData" object-display-name="name"
                     on-object-selected="onObjSelect" role-display-name="name" on-auth-role-change="onAuthRoleSelected"
                     object-title="{{'admin.security.ldap.user.management.user' | translate}}" />
         </div>
