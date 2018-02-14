@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.casefile.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.casefile.dao.CaseFileDao;
 import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
@@ -21,7 +22,7 @@ public class CaseFileDataAccessUpdateLocator implements AcmObjectDataAccessBatch
     }
 
     @Override
-    public void save(CaseFile assignedObject)
+    public void save(CaseFile assignedObject) throws AcmAccessControlException
     {
         getCaseFileDao().save(assignedObject);
     }

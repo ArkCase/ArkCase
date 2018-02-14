@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.task.service;
 
 import com.armedia.acm.core.model.AcmEvent;
 import com.armedia.acm.plugins.task.model.AcmApplicationTaskEvent;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 
@@ -17,7 +18,8 @@ public class TaskEventPublisher implements ApplicationEventPublisherAware
         getApplicationEventPublisher().publishEvent(event);
     }
 
-    public void publishAcmEvent( AcmEvent event ) {
+    public void publishAcmEvent(AcmEvent event)
+    {
         getApplicationEventPublisher().publishEvent(event);
     }
 

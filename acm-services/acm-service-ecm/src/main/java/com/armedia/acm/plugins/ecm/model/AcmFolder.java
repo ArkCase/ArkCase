@@ -2,18 +2,21 @@ package com.armedia.acm.plugins.ecm.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
+import com.armedia.acm.data.converter.BooleanToStringConverter;
 import com.armedia.acm.services.participants.model.AcmAssignedObject;
 import com.armedia.acm.services.participants.model.AcmParticipant;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.base.Objects;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -29,6 +32,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -87,9 +91,14 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = AcmFolderConstants.OBJECT_FOLDER_TYPE;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumns({@JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"), @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type")})
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @JoinColumns({ @JoinColumn(name = "cm_object_id", referencedColumnName = "cm_folder_id"),
+            @JoinColumn(name = "cm_object_type", referencedColumnName = "cm_object_type") })
     private List<AcmParticipant> participants = new ArrayList<>();
+
+    @Column(name = "cm_folder_restricted_flag", nullable = false)
+    @Convert(converter = BooleanToStringConverter.class)
+    private Boolean restricted = Boolean.FALSE;
 
     @PrePersist
     protected void beforeInsert()
@@ -261,6 +270,17 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     }
 
     @Override
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
+    }
+
+    @Override
     public String toString()
     {
         return ToStringBuilder.reflectionToString(this);
@@ -269,8 +289,10 @@ public class AcmFolder implements AcmEntity, Serializable, AcmObject, AcmAssigne
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         AcmFolder acmFolder = (AcmFolder) o;
         return Objects.equal(id, acmFolder.id);
     }

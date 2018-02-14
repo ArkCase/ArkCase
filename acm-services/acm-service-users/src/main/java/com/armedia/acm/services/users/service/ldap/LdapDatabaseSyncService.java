@@ -1,13 +1,5 @@
 package com.armedia.acm.services.users.service.ldap;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
 import com.armedia.acm.services.users.model.AcmRole;
@@ -15,11 +7,21 @@ import com.armedia.acm.services.users.model.AcmRoleType;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.AcmUserState;
 
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 public class LdapDatabaseSyncService
 {
     private final static Logger log = LoggerFactory.getLogger(LdapDatabaseSyncService.class);
     private UserDao userDao;
     private AcmGroupDao groupDao;
+    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     @Transactional
     public void saveUsers(AcmUsersSyncResult acmUsersSyncResult)
@@ -52,6 +54,7 @@ public class LdapDatabaseSyncService
         acmGroupsSyncResult.getNewGroups().forEach(acmGroup -> {
             log.info("Saving AcmGroup [{}]", acmGroup.getName());
             groupDao.save(acmGroup);
+            acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
         });
 
         log.info("Updating existing groups [{}]", acmGroupsSyncResult.getModifiedGroups().size());
@@ -64,6 +67,7 @@ public class LdapDatabaseSyncService
         acmGroupsSyncResult.getDeletedGroups().forEach(acmGroup -> {
             log.info("Updating AcmGroup [{}]", acmGroup.getName());
             groupDao.save(acmGroup);
+            acmGroupEventPublisher.publishLdapGroupDeletedEvent(acmGroup);
         });
     }
 
@@ -98,5 +102,10 @@ public class LdapDatabaseSyncService
     public void setGroupDao(AcmGroupDao groupDao)
     {
         this.groupDao = groupDao;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
+    {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

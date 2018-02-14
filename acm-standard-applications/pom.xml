@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.2.3-SNAPSHOT</version>
+        <version>3.2.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,6 +15,5 @@
     <modules>
         <module>acm-law-enforcement</module>
     </modules>
-
 
 </project>

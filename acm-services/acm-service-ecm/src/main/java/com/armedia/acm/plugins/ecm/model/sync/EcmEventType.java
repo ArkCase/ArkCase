@@ -5,6 +5,5 @@ package com.armedia.acm.plugins.ecm.model.sync;
  */
 public enum EcmEventType
 {
-    CREATE,
-    DELETE
+    CREATE, DELETE
 }

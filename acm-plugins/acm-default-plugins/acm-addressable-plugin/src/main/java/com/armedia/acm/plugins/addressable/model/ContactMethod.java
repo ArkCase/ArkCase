@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,9 +27,11 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlTransient;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "acm_contact_method")
@@ -41,15 +44,12 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
 {
     private static final long serialVersionUID = 1827685289454605556L;
     private transient final Logger log = LoggerFactory.getLogger(getClass());
+    public static final Pattern EMAIL_ADDRESS_REGEX =
+            Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
+
 
     @Id
-    @TableGenerator(name = "contact_method_gen",
-            table = "acm_contact_method_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_contact_method",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "contact_method_gen", table = "acm_contact_method_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_contact_method", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "contact_method_gen")
     @Column(name = "cm_contact_method_id")
     private Long id;
@@ -118,6 +118,7 @@ public class ContactMethod implements Serializable, AcmEntity, AcmObject
         return objectType;
     }
 
+    @Override
     @XmlTransient
     public Long getId()
     {

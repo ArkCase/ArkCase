@@ -20,6 +20,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -114,6 +115,9 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     private List<BuckslipFutureTask> buckslipFutureTasks;
 
     private String buckslipPastApprovers;
+
+    // TODO: we might need this field as a column in the database and use it in Drools rules
+    private Boolean restricted = false;
 
     public AcmContainer getContainer()
     {
@@ -310,13 +314,13 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
 
     public Integer getPercentComplete()
     {
-        return percentComplete != null && percentComplete > 0? percentComplete: 0;
+        return percentComplete != null && percentComplete > 0 ? percentComplete : 0;
     }
 
     public void setPercentComplete(Integer percentComplete)
     {
 
-        this.percentComplete = percentComplete != null && percentComplete > 0? percentComplete: 0;
+        this.percentComplete = percentComplete != null && percentComplete > 0 ? percentComplete : 0;
     }
 
     public String getDetails()
@@ -643,5 +647,16 @@ public class AcmTask implements AcmAssignedObject, Serializable, AcmLegacySystem
     public void setBuckslipFutureTasks(List<BuckslipFutureTask> buckslipFutureTasks)
     {
         this.buckslipFutureTasks = buckslipFutureTasks;
+    }
+
+    @Override
+    public Boolean getRestricted()
+    {
+        return restricted;
+    }
+
+    public void setRestricted(Boolean restricted)
+    {
+        this.restricted = restricted;
     }
 }

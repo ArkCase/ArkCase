@@ -10,6 +10,11 @@
                 "no-access": "No Access",
                 "case": "Case File"
             },
+            "cmisVersioningState": {
+                "none": "NONE",
+                "minor": "MINOR",
+                "major": "MAJOR"
+            },
             "addressTypes": {
                 "business": "Business"
             },
@@ -86,6 +91,14 @@
                 "manager": "Manager",
                 "general-counsel": "Counsel",
                 "executive": "Executive"
+            },
+            "documentsParticipantTypes": {
+                "group-write": "Group Write",
+                "group-read": "Group Read",
+                "group-no-access": "Group No Access", 
+                "write": "Write",
+                "read": "Read",
+                "no-access": "No Access"
             },
             "personRelationTypes": {
                 "sibling": "Sibling",
@@ -501,7 +514,7 @@
                 "nonConcur": "Non-Concur"
             },
             "businessProcessTypes": {
-                "acmDocumentWorkflow": "Acm Document Workflow",
+                "acmDocumentWorkflow": "ACM Document Workflow",
                 "correctiveActionPlan": "Corrective Action Plan"
             },
             "reportStates": {

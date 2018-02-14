@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
-       <bean id="milestoneDao" class="com.armedia.acm.service.milestone.dao.MilestoneDao"/>
+    <bean id="milestoneDao" class="com.armedia.acm.service.milestone.dao.MilestoneDao"/>
 
-       <bean id="milestoneService" class="com.armedia.acm.service.milestone.service.MilestoneService">
-              <property name="dao" ref="milestoneDao"/>
-       </bean>
+    <bean id="milestoneService" class="com.armedia.acm.service.milestone.service.MilestoneService">
+        <property name="dao" ref="milestoneDao"/>
+    </bean>
 
     <bean id="milestonePlugin" class="com.armedia.acm.pluginmanager.model.AcmPlugin">
         <property name="pluginName" value="Milestone Plugin"/>

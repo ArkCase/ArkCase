@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.List;
  */
 public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 {
-	private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     @Override
     protected Class<ObjectAssociation> getPersistenceClass()
@@ -30,10 +29,11 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
     {
         TypedQuery<ObjectAssociation> findByParentTypeAndId = getEm().createQuery(
                 "SELECT e " +
-                "FROM ObjectAssociation e " +
-                "WHERE e.parentType = :parentType " +
-                "AND e.parentId = :parentId " +
-                "ORDER BY e.targetName", ObjectAssociation.class);
+                        "FROM ObjectAssociation e " +
+                        "WHERE e.parentType = :parentType " +
+                        "AND e.parentId = :parentId " +
+                        "ORDER BY e.targetName",
+                ObjectAssociation.class);
 
         findByParentTypeAndId.setParameter("parentId", parentId);
         findByParentTypeAndId.setParameter("parentType", parentType);
@@ -42,20 +42,20 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
         return retval;
 
-
     }
 
     public ObjectAssociation findChildOfType(String parentType, Long parentId, String targetSubtype)
     {
         TypedQuery<ObjectAssociation> selectQuery = getEm().createQuery(
                 "SELECT e " +
-                "FROM ObjectAssociation e " +
-                "WHERE e.parentType = :parentType " +
-                "AND e.parentId = :parentId " +
-                "AND e.targetType = :targetType " +
-                "AND e.category = :targetCategory " +
-                "AND e.targetSubtype = :targetSubtype " +
-                "ORDER BY e.targetName", ObjectAssociation.class);
+                        "FROM ObjectAssociation e " +
+                        "WHERE e.parentType = :parentType " +
+                        "AND e.parentId = :parentId " +
+                        "AND e.targetType = :targetType " +
+                        "AND e.category = :targetCategory " +
+                        "AND e.targetSubtype = :targetSubtype " +
+                        "ORDER BY e.targetName",
+                ObjectAssociation.class);
 
         selectQuery.setParameter("parentId", parentId);
         selectQuery.setParameter("parentType", parentType);
@@ -67,16 +67,15 @@ public class ObjectAssociationDao extends AcmAbstractDao<ObjectAssociation>
 
         try
         {
-        	retval = selectQuery.getSingleResult();
+            retval = selectQuery.getSingleResult();
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             LOG.error("Cannot find Object Association for parentId=[{}], parentType=[{}] and targetSubtype=[{}].", parentId, parentType,
                     targetSubtype, e);
         }
 
         return retval;
-
 
     }
 

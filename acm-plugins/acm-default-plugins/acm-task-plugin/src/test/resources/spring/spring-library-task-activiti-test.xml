@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--suppress SpringFacetInspection -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+<?xml version="1.0" encoding="UTF-8"?><!--suppress SpringFacetInspection -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="org.h2.Driver"/>
@@ -14,7 +12,6 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-
 
     <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
         <property name="dataSource" ref="dataSource"/>
@@ -33,11 +30,14 @@
     <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService"/>
     <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService"/>
 
-    <bean id="buckslipTaskCompletedListener"
-          class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
+    <bean id="buckslipTaskCompletedListener" class="com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener">
 
     </bean>
 
-    <bean id="buckslipWithdrawnListener" class="com.armedia.acm.plugins.task.listener.BuckslipWithdrawnListener"/>
+    <bean id="buckslipTaskHelper" class="com.armedia.acm.plugins.task.listener.BuckslipTaskHelper"/>
+
+    <bean id="buckslipWithdrawnListener" class="com.armedia.acm.plugins.task.listener.BuckslipWithdrawnListener">
+        <property name="buckslipTaskHelper" ref="buckslipTaskHelper"/>
+    </bean>
 
 </beans>

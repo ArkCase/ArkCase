@@ -1,16 +1,23 @@
 package com.armedia.acm.activiti.services;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import com.armedia.acm.activiti.exceptions.AcmBpmnException;
 import com.armedia.acm.activiti.exceptions.NotValidBpmnFileException;
 import com.armedia.acm.activiti.model.AcmProcessDefinition;
 import com.armedia.acm.activiti.services.dao.AcmBpmnDao;
+
 import org.activiti.engine.RepositoryService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mule.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +36,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,8 +44,6 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -63,7 +69,6 @@ public class AcmBpmnServiceIT
     RepositoryService activitiRepositoryService;
     Set<String> filesToDelete = null;
     Set<String> deploymentsIdToDelete = null;
-
 
     @Before
     public void setUp() throws Exception
@@ -99,8 +104,7 @@ public class AcmBpmnServiceIT
     {
         try
         {
-            DocumentBuilderFactory domFactory =
-                    DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setNamespaceAware(false);
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             Document doc = builder.parse(processDefinitionFile);
@@ -112,16 +116,20 @@ public class AcmBpmnServiceIT
             if (attributeValue == null || attributeValue.length() < 1)
                 throw new NotValidBpmnFileException("attribute id not found in process tag");
             return attributeValue;
-        } catch (ParserConfigurationException e)
+        }
+        catch (ParserConfigurationException e)
         {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (SAXException e)
+        }
+        catch (SAXException e)
         {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new NotValidBpmnFileException("Not valid file!", e);
-        } catch (XPathExpressionException e)
+        }
+        catch (XPathExpressionException e)
         {
             throw new NotValidBpmnFileException("Not valid file!", e);
         }
@@ -135,10 +143,12 @@ public class AcmBpmnServiceIT
             stream = new FileInputStream(processDefinitionFile);
             String md5Hex = DigestUtils.md5Hex(stream);
             return md5Hex;
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             throw new AcmBpmnException("Error performing file digest!", e);
-        } finally
+        }
+        finally
         {
             if (stream != null)
             {
@@ -184,7 +194,6 @@ public class AcmBpmnServiceIT
         acmBpmnService.remove(apd, true);
     }
 
-
     @Test
     @Transactional
     public void deployNotExistingProcessDefinition() throws Exception
@@ -222,13 +231,11 @@ public class AcmBpmnServiceIT
 
         List<AcmProcessDefinition> acmProcessDefinitionList = acmBpmnService.getVersionHistory(apd);
 
-
         assertEquals(1, acmProcessDefinitionList.size());
 
         // somehow I get 5 now when I run this test.
         assertTrue(acmProcessDefinitionList.get(0).getVersion() > 1);
-        //assertEquals(2, acmProcessDefinitionList.get(0).getVersion());
-
+        // assertEquals(2, acmProcessDefinitionList.get(0).getVersion());
 
         acmBpmnService.remove(apd, true);
         acmBpmnService.remove(apd1, true);
@@ -247,16 +254,16 @@ public class AcmBpmnServiceIT
         String tmpFolder = System.getProperty("java.io.tmpdir");
         InputStream is = acmBpmnService.getBpmnFileStream(apd);
         File downloadedFile = new File(tmpFolder + "/" + apd.getFileName());
-        FileUtils.copyStreamToFile(is, downloadedFile);
+        FileUtils.copyInputStreamToFile(is, downloadedFile);
 
         try
         {
             is.close();
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             log.debug("file already closed");
         }
-
 
         assertTrue(FileUtils.contentEquals(f, downloadedFile));
 
@@ -266,17 +273,17 @@ public class AcmBpmnServiceIT
     @After
     public void cleanUp()
     {
-        //in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
+        // in case of failed test or exception, database will rollback, and files and deployments are cleaned manually
         String userHome = System.getProperty("user.home");
         String processDefinitionsFolder = userHome + "/.arkcase/acm/activiti/versions";
-        //delete created files
+        // delete created files
         for (String file : filesToDelete)
         {
             File toBeDeleted = new File(processDefinitionsFolder + "/" + file);
             if (toBeDeleted.exists())
                 toBeDeleted.delete();
         }
-        //delete created deployments
+        // delete created deployments
         for (String d : deploymentsIdToDelete)
         {
             if (activitiRepositoryService.createDeploymentQuery().deploymentId(d).singleResult() != null)

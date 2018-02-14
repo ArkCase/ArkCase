@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmListObjectsFailedException;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -26,47 +27,48 @@ import java.util.Map;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/ecm", "/api/latest/service/ecm"})
+@RequestMapping({ "/api/v1/service/ecm", "/api/latest/service/ecm" })
 public class FolderDocumentCountAPIController
 {
     private Logger log = LoggerFactory.getLogger(getClass());
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
 
-
     /**
      * Return a map data structure, where the keys are the names of each top-level folder in the target object,
-     * and the values are the count of all documents under each such folder (including subfolders).  The root folder
-     * has the special name "base".  The base folder document count includes all documents stored directly in the
-     * root folder of the container (it does not include documents from any subfolders).  The document count for each
+     * and the values are the count of all documents under each such folder (including subfolders). The root folder
+     * has the special name "base". The base folder document count includes all documents stored directly in the
+     * root folder of the container (it does not include documents from any subfolders). The document count for each
      * top-level folder includes all documents in that folder, plus all sub-folders of that folder.
      *
-     * @param auth       This user must be allowed to read the target object.
-     * @param objectType Object type of the target object, e.g. COMPLAINT, CASE_FILE, TASK.  Must be a container object.
-     * @param objectId   Object ID of the target object.
+     * @param auth
+     *            This user must be allowed to read the target object.
+     * @param objectType
+     *            Object type of the target object, e.g. COMPLAINT, CASE_FILE, TASK. Must be a container object.
+     * @param objectId
+     *            Object ID of the target object.
      * @return Map of strings (the folder names, with "base" as the special name for the root folder) to
-     * Longs (the count of documents in that folder).
-     * @throws AcmListObjectsFailedException If something went wrong querying Solr for the document counts.
+     *         Longs (the count of documents in that folder).
+     * @throws AcmListObjectsFailedException
+     *             If something went wrong querying Solr for the document counts.
      */
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/counts/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public Map<String, Integer> folderDocumentCountList(
             Authentication auth,
             @PathVariable("objectType") String objectType,
-            @PathVariable("objectId") Long objectId
-    ) throws AcmListObjectsFailedException
+            @PathVariable("objectId") Long objectId) throws AcmListObjectsFailedException
     {
-
 
         Map<String, Integer> documentCounts = new HashMap<>();
 
         try
         {
-            // This query returns the total count of files and folders in the root of the target object.  The total
-            // file count becomes the value of the "base" key in the returned map.  For each folder in the root folder,
+            // This query returns the total count of files and folders in the root of the target object. The total
+            // file count becomes the value of the "base" key in the returned map. For each folder in the root folder,
             // we go on to get the document count for that folder.
-            // Note, we only ask for one document, since for this query, we only care about the facets.  We don't
+            // Note, we only ask for one document, since for this query, we only care about the facets. We don't
             // need the actual documents.
             String topLevelFilesAndFolders = getExecuteSolrQuery().getResultsByPredefinedQuery(
                     auth,
@@ -92,8 +94,8 @@ public class FolderDocumentCountAPIController
 
             if (baseFolders > 0)
             {
-                // This query returns all the top-level folders in the root folder.  We can ask for exactly the
-                // number of records we need, since we know exactly how many such folders exist.  We don't need
+                // This query returns all the top-level folders in the root folder. We can ask for exactly the
+                // number of records we need, since we know exactly how many such folders exist. We don't need
                 // facets in this query.
                 String topLevelFolders = getExecuteSolrQuery().getResultsByPredefinedQuery(
                         auth,
@@ -121,24 +123,24 @@ public class FolderDocumentCountAPIController
                 }
             }
 
-
             return documentCounts;
 
-
-        } catch (MuleException e)
+        }
+        catch (MuleException e)
         {
             throw new AcmListObjectsFailedException("files", e.getMessage(), e);
         }
 
-
     }
 
     /**
-     * This method recursively calls itself, if the desired folderId includes subfolders.  The document counts
+     * This method recursively calls itself, if the desired folderId includes subfolders. The document counts
      * for each such subfolder are accumulated into a total document count for the desired folderId.
      *
-     * @param auth     User who is asking for document counts
-     * @param folderId The folder that we want the document counts for.
+     * @param auth
+     *            User who is asking for document counts
+     * @param folderId
+     *            The folder that we want the document counts for.
      * @return Number of documents in the folderId, plus all subfolders (if any)
      * @throws MuleException
      */
@@ -146,7 +148,7 @@ public class FolderDocumentCountAPIController
     {
         int docCount = 0;
 
-        // This query gets the facet counts for files and folders under the desired folderId.  We don't care about the
+        // This query gets the facet counts for files and folders under the desired folderId. We don't care about the
         // actual documents (we only care about the facets), so we only as for one document.
         String folderFacetResults = getExecuteSolrQuery().getResultsByPredefinedQuery(
                 auth,
@@ -197,7 +199,6 @@ public class FolderDocumentCountAPIController
 
         return docCount;
 
-
     }
 
     /**
@@ -219,10 +220,12 @@ public class FolderDocumentCountAPIController
      * "TIMESHEET",0,
      * "USER",0].
      * So, to find the count for some particular facet, we look at every other array element and see if that matches
-     * the desired facet name.  If so, we take the very next array item as the facet value.
+     * the desired facet name. If so, we take the very next array item as the facet value.
      *
-     * @param objectTypeFacets JSON array where strings alternate with ints; acquired from a facet-enabled Solr query.
-     * @param objectType       Name of the desired facet
+     * @param objectTypeFacets
+     *            JSON array where strings alternate with ints; acquired from a facet-enabled Solr query.
+     * @param objectType
+     *            Name of the desired facet
      * @return The facet value associated with objectType; or 0 if there is no such facet name.
      */
     private int getFacetCount(JSONArray objectTypeFacets, String objectType)
@@ -237,7 +240,6 @@ public class FolderDocumentCountAPIController
 
         return 0;
     }
-
 
     public void setExecuteSolrQuery(ExecuteSolrQuery executeSolrQuery)
     {

@@ -6,12 +6,8 @@
             </div>
         </div>
         <div class="panel-body">
-            <div ui-grid="gridOptions"
-                 ui-grid-resize-columns
-                 ui-grid-auto-resize
-                 ui-grid-pagination
-                 adjust-table-height="gridOptions.data.length"
-                 class="grid"></div>
+            <div ui-grid="gridOptions" ui-grid-resize-columns ui-grid-auto-resize ui-grid-pagination
+                    adjust-table-height="gridOptions.data.length" class="grid"></div>
         </div>
     </div>
 </div>
@@ -29,6 +25,5 @@
     <button ng-hide='!row.entity.diffDetailsAsJson || row.entity.diffDetailsAsJson.length < 1'
             ng-click='grid.appScope.showDetails(row.entity.diffDetailsAsJson)'
             translate="common.objectHistory.client.table.columns.details.btn.text"
-            translate-values="{count:row.entity.diffDetailsAsJson.length}">
-    </button>
+            translate-values="{count:row.entity.diffDetailsAsJson.length}"></button>
 </script>

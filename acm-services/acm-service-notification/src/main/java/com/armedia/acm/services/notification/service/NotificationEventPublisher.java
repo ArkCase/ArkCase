@@ -1,6 +1,7 @@
 package com.armedia.acm.services.notification.service;
 
 import com.armedia.acm.services.notification.model.ApplicationNotificationEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;

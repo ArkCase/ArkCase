@@ -1,11 +1,9 @@
 package com.armedia.acm.services.participants.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
-import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.services.participants.model.AcmParticipant;
-import com.armedia.acm.services.participants.service.AcmParticipantEventPublisher;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
-import org.eclipse.persistence.annotations.CascadeOnDelete;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -16,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.persistence.FlushModeType;
+
 import java.util.List;
 
 /**
@@ -23,8 +23,9 @@ import java.util.List;
  */
 
 @Controller
-@RequestMapping({"/api/v1/service/participant","/api/latest/service/participant"})
-public class ListAllParticipantsByObjectTypeAndObjectId {
+@RequestMapping({ "/api/v1/service/participant", "/api/latest/service/participant" })
+public class ListAllParticipantsByObjectTypeAndObjectId
+{
 
     private AcmParticipantService acmParticipantService;
 
@@ -35,21 +36,25 @@ public class ListAllParticipantsByObjectTypeAndObjectId {
     public List<AcmParticipant> listParticipants(
             @PathVariable(value = "objectType") String objectType,
             @PathVariable(value = "objectId") Long objectId,
-            Authentication authentication
-    ) throws AcmObjectNotFoundException {
-        if (log.isInfoEnabled()){
+            Authentication authentication) throws AcmObjectNotFoundException
+    {
+        if (log.isInfoEnabled())
+        {
             log.info("List all participants on object ['" + objectType + "]:[" + objectId + "]");
         }
-        List<AcmParticipant>  participants = getAcmParticipantService().listAllParticipantsPerObjectTypeAndId(objectType,objectId);
+        List<AcmParticipant> participants = getAcmParticipantService().listAllParticipantsPerObjectTypeAndId(objectType, objectId,
+                FlushModeType.COMMIT);
+
         return participants;
     }
 
-    public AcmParticipantService getAcmParticipantService() {
+    public AcmParticipantService getAcmParticipantService()
+    {
         return acmParticipantService;
     }
 
-    public void setAcmParticipantService(AcmParticipantService acmParticipantService) {
+    public void setAcmParticipantService(AcmParticipantService acmParticipantService)
+    {
         this.acmParticipantService = acmParticipantService;
     }
 }
-

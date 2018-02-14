@@ -1,7 +1,5 @@
 package com.armedia.acm.services.search.model.solr;
 
-import java.util.List;
-
 /**
  * Created by armdev on 10/27/14.
  */

@@ -6,8 +6,10 @@ import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.MuleException;
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author riste.tutureski
@@ -35,6 +38,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     private Properties applicationRolesProperties;
     private Properties applicationRolesToGroupsProperties;
+    private AcmRoleToGroupMapping roleToGroupMapping;
     private PropertyFileManager propertyFileManager;
     private String rolesToGroupsPropertyFileLocation;
     private FunctionalAccessEventPublisher eventPublisher;
@@ -53,9 +57,9 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
             try
             {
-                Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
-                applicationRolesProperties = reloaded;
-            } catch (IOException e)
+                applicationRolesProperties = getPropertyFileManager().readFromFile(eventFile);
+            }
+            catch (IOException e)
             {
                 LOG.info("Could not read new properties; keeping the old properties.");
             }
@@ -69,15 +73,14 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
             try
             {
-                Properties reloaded = getPropertyFileManager().readFromFile(eventFile);
-                applicationRolesToGroupsProperties = reloaded;
-            } catch (IOException e)
+                applicationRolesToGroupsProperties = getPropertyFileManager().readFromFile(eventFile);
+                roleToGroupMapping.reloadRoleToGroupMap(applicationRolesToGroupsProperties);
+            }
+            catch (IOException e)
             {
                 LOG.info("Could not read new properties; keeping the old properties.");
             }
-
         }
-
     }
 
     @Override
@@ -89,7 +92,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         {
             Properties roleProperties = getApplicationRolesProperties();
             applicationRoles = Arrays.asList(roleProperties.getProperty("application.roles").split(","));
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot read application roles from configuration.", e);
         }
@@ -100,7 +104,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     @Override
     public Map<String, List<String>> getApplicationRolesToGroups()
     {
-        return prepareRoleToGroupsForRetrieving(getApplicationRolesToGroupsProperties());
+        return roleToGroupMapping.getRoleToGroupsMap().entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, list -> new ArrayList<>(list.getValue())));
     }
 
     @Override
@@ -112,7 +117,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
             getPropertyFileManager().storeMultiple(prepareRoleToGroupsForSaving(rolesToGroups), getRolesToGroupsPropertyFileLocation(),
                     true);
             success = true;
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             LOG.error("Cannot save roles to groups mapping.", e);
             success = false;
@@ -128,7 +134,7 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
 
     @Override
     public Set<AcmUser> getUsersByRolesAndGroups(List<String> roles, Map<String, List<String>> rolesToGroups, String group,
-                                                 String currentAssignee)
+            String currentAssignee)
     {
         // Creating set to avoid duplicates. AcmUser has overrided "equals" and "hasCode" methods
         Set<AcmUser> users = new HashSet<>();
@@ -191,33 +197,13 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
         return retval;
     }
 
-    private Map<String, List<String>> prepareRoleToGroupsForRetrieving(Properties rolesToGroups)
-    {
-        Map<String, List<String>> retval = new HashMap<>();
-
-        if (rolesToGroups != null && rolesToGroups.size() > 0)
-        {
-            for (String key : rolesToGroups.stringPropertyNames())
-            {
-                String value = rolesToGroups.getProperty(key);
-                if (!("").equals(value) && value != null)
-                {
-                    retval.put(key, Arrays.asList(value.split(",")));
-                }
-            }
-        }
-
-        return retval;
-    }
-
     @Override
     public String getGroupsByPrivilege(List<String> roles, Map<String, List<String>> rolesToGroups, int startRow, int maxRows, String sort,
-                                       Authentication auth) throws MuleException
+            Authentication auth) throws MuleException
     {
         Set<String> groups = getAllGroupsForAllRoles(roles, rolesToGroups);
-        String retval = getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
 
-        return retval;
+        return getGroupsFromSolr(new ArrayList<>(groups), startRow, maxRows, sort, auth);
     }
 
     private Set<String> getAllGroupsForAllRoles(List<String> roles, Map<String, List<String>> rolesToGroups)
@@ -254,7 +240,8 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
                 if (i == groupNames.size() - 1)
                 {
                     queryGroupNames += "\"" + groupNames.get(i) + "\"";
-                } else
+                }
+                else
                 {
                     queryGroupNames += "\"" + groupNames.get(i) + "\"" + " OR ";
                 }
@@ -289,6 +276,11 @@ public class FunctionalAccessServiceImpl implements FunctionalAccessService, App
     public void setApplicationRolesToGroupsProperties(Properties applicationRolesToGroupsProperties)
     {
         this.applicationRolesToGroupsProperties = applicationRolesToGroupsProperties;
+    }
+
+    public void setRoleToGroupMapping(AcmRoleToGroupMapping roleToGroupMapping)
+    {
+        this.roleToGroupMapping = roleToGroupMapping;
     }
 
     public PropertyFileManager getPropertyFileManager()

@@ -1,183 +1,119 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="01-person-foreign-keys" author="dmiller">
 
         <addForeignKeyConstraint baseTableName="acm_person_security_tag" baseColumnNames="cm_person_id"
-                                 constraintName="fk_person_sec_tag_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_sec_tag_person_id" referencedTableName="acm_person" referencedColumnNames="cm_person_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_person_id"
-                                 constraintName="fk_person_addr_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_addr_person_id" referencedTableName="acm_person" referencedColumnNames="cm_person_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_postal_address" baseColumnNames="cm_address_id"
-                                 constraintName="fk_person_addr_addr_id"
-                                 referencedTableName="acm_postal_address"
-                                 referencedColumnNames="cm_address_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_addr_addr_id" referencedTableName="acm_postal_address" referencedColumnNames="cm_address_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_person_id"
-                                 constraintName="fk_person_cntct_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_cntct_person_id" referencedTableName="acm_person" referencedColumnNames="cm_person_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
         <addForeignKeyConstraint baseTableName="acm_person_contact_method" baseColumnNames="cm_contact_method_id"
-                                 constraintName="fk_person_cntct_cntct_id"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_cntct_cntct_id" referencedTableName="acm_contact_method" referencedColumnNames="cm_contact_method_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
 
     </changeSet>
 
     <changeSet id="03-person-alias-type-foreign-key" author="tsedalu">
 
-        <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_id"
-                                 constraintName="fk_person_alias_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_id" constraintName="fk_person_alias_person_id"
+            referencedTableName="acm_person" referencedColumnNames="cm_person_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="05-add-person-alias-type-foreign-key" author="tsedalu">
         <addForeignKeyConstraint baseTableName="acm_person_alias" baseColumnNames="cm_person_alias_type"
-                                 constraintName="fk_person_alias_type"
-                                 referencedTableName="acm_person_alias_type_lu"
-                                 referencedColumnNames="cm_value"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_alias_type" referencedTableName="acm_person_alias_type_lu" referencedColumnNames="cm_value"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="06-person-assoc-foreign-key" author="tsedalu">
         <addForeignKeyConstraint baseTableName="acm_person_assoc" baseColumnNames="cm_person_assoc_person_id"
-                                 constraintName="fk_person_assoc_person_id"
-                                 referencedTableName="acm_person"
-                                 referencedColumnNames="cm_person_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+            constraintName="fk_person_assoc_person_id" referencedTableName="acm_person" referencedColumnNames="cm_person_id"
+            deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="07-person-foreign-keys" author="nebojsha.davidovikj">
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_container_id"
-                                 constraintName="fk_container_id"
-                                 referencedTableName="acm_container"
-                                 referencedColumnNames="cm_container_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_picture_id"
-                                 constraintName="fk_default_picture_id"
-                                 referencedTableName="acm_file"
-                                 referencedColumnNames="cm_file_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_container_id" constraintName="fk_container_id"
+            referencedTableName="acm_container" referencedColumnNames="cm_container_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_picture_id" constraintName="fk_default_picture_id"
+            referencedTableName="acm_file" referencedColumnNames="cm_file_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="08-person-default_phone" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_phone"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_phone"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_phone"
-                                 constraintName="fk_person_default_phone"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_phone" constraintName="fk_person_default_phone"
+            referencedTableName="acm_contact_method" referencedColumnNames="cm_contact_method_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     <changeSet id="08-person-foreign-keys-default_email" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_email"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_email"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_email"
-                                 constraintName="fk_person_default_email"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_email" constraintName="fk_person_default_email"
+            referencedTableName="acm_contact_method" referencedColumnNames="cm_contact_method_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     <changeSet id="08-person-foreign-keys-default_url" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_url"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_url"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_url"
-                                 constraintName="fk_person_default_url"
-                                 referencedTableName="acm_contact_method"
-                                 referencedColumnNames="cm_contact_method_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_url" constraintName="fk_person_default_url"
+            referencedTableName="acm_contact_method" referencedColumnNames="cm_contact_method_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     <changeSet id="08-person-foreign-keys-default_address" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_address"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_address"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_address"
-                                 constraintName="fk_person_default_address"
-                                 referencedTableName="acm_postal_address"
-                                 referencedColumnNames="cm_address_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_address" constraintName="fk_person_default_address"
+            referencedTableName="acm_postal_address" referencedColumnNames="cm_address_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
     <changeSet id="08-person-foreign-keys-default_alias" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_alias"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_alias"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_alias"
-                                 constraintName="fk_person_default_alias"
-                                 referencedTableName="acm_person_alias"
-                                 referencedColumnNames="cm_person_alias_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_alias" constraintName="fk_person_default_alias"
+            referencedTableName="acm_person_alias" referencedColumnNames="cm_person_alias_id" deferrable="${deferrable}"
+            initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="08-person-foreign-keys-default_identification" author="nebojsha.davidovikj">
         <preConditions onFail="MARK_RAN">
             <not>
-                <foreignKeyConstraintExists foreignKeyTableName="acm_person"
-                                            foreignKeyName="fk_person_default_identification"/>
+                <foreignKeyConstraintExists foreignKeyTableName="acm_person" foreignKeyName="fk_person_default_identification"/>
             </not>
         </preConditions>
-        <addForeignKeyConstraint baseTableName="acm_person"
-                                 baseColumnNames="cm_default_identification"
-                                 constraintName="fk_person_default_identification"
-                                 referencedTableName="acm_identification"
-                                 referencedColumnNames="cm_identification_id"
-                                 deferrable="${deferrable}"
-                                 initiallyDeferred="${initially.deferred}"/>
+        <addForeignKeyConstraint baseTableName="acm_person" baseColumnNames="cm_default_identification"
+            constraintName="fk_person_default_identification" referencedTableName="acm_identification"
+            referencedColumnNames="cm_identification_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
     </changeSet>
 
     <changeSet id="10-person-organization-drop-foreign-keys" author="nebojsha.davidovikj">
@@ -187,4 +123,10 @@
         <dropForeignKeyConstraint baseTableName="acm_person" constraintName="fk_default_organization_assoc"/>
     </changeSet>
 
+    <changeSet id="11-add-not-null-constraints-family-given-name" author="bojan.milenkoski">
+        <addNotNullConstraint tableName="acm_person" columnName="cm_given_name" defaultNullValue="given-name"
+            columnDataType="VARCHAR(1024)"/>
+        <addNotNullConstraint tableName="acm_person" columnName="cm_family_name" defaultNullValue="family-name"
+            columnDataType="VARCHAR(1024)"/>
+    </changeSet>
 </databaseChangeLog>

@@ -1,369 +1,372 @@
 {
-  "complaints": {
-    "title": "Queixas",
-    "progressNoComplaint": "[ Não há dados sobre queixas ]",
-    "progressLoading": "Carregando queixas",
-    "progressError": "Falha ao carregar queixas"
-  },
-  "complaints.menus": {
-    "leftnav.item": "Queixas",
-    "topbar.item": "Queixa"
-  },
-  "complaints.comp.main": {
-    "title": "Visão geral"
-  },
-  "complaints.comp.info": {
-    "title": "Informações",
-    "complaintId": "Identificação da Queixa:",
-    "complaintNumber": "Número da Queixa:",
-    "courtRoomName": "Sala do Tribunal:",
-    "type.label": "Tipo",
-    "created.label": "Data criada",
-    "priority.label": "Prioridade",
-    "assignee.label": "Atribuído a",
-    "owningGroup.label": "O grupo pertence a",
-    "dueDate.label": "Data de vencimento"
-  },
-  "complaints.comp.actions": {
-    "title": "Ações",
-    "restrict": "Restringir?",
-    "new.button": "Nova Queixa",
-    "close.button": "Fechar Queixa",
-    "subscribe.button": "Assinar",
-    "unsubscribe.button": "Cancelar Inscrição",
-    "claim.button": "Reclamaçõe",
-    "unclaim.button": "Retirar Reclamaçõe"
-  },
-  "complaints.comp.details": {
-    "title": "Detalhes",
-    "informSaved": "Detalhes das reclamações guardados",
-    "table.columns": {
-      "title": "Detalhes",
-      "modified": "Data da última alteração",
-      "modifier": "Usuário modificado pela última vez"
+    "complaints": {
+        "title": "Queixas",
+        "progressNoComplaint": "[ Não há dados sobre queixas ]",
+        "progressLoading": "Carregando queixas",
+        "progressError": "Falha ao carregar queixas"
+    },
+    "complaints.menus": {
+        "leftnav.item": "Queixas",
+        "topbar.item": "Queixa"
+    },
+    "complaints.comp.main": {
+        "title": "Visão geral"
+    },
+    "complaints.comp.info": {
+        "title": "Informações",
+        "complaintId": "Identificação da Queixa:",
+        "complaintNumber": "Número da Queixa:",
+        "courtRoomName": "Sala do Tribunal:",
+        "type.label": "Tipo",
+        "created.label": "Data criada",
+        "priority.label": "Prioridade",
+        "assignee.label": "Atribuído a",
+        "owningGroup.label": "O grupo pertence a",
+        "dueDate.label": "Data de vencimento"
+    },
+    "complaints.comp.actions": {
+        "title": "Ações",
+        "restrict": "Restringir?",
+        "new.button": "Nova Queixa",
+        "close.button": "Fechar Queixa",
+        "subscribe.button": "Assinar",
+        "unsubscribe.button": "Cancelar Inscrição",
+        "claim.button": "Reclamaçõe",
+        "unclaim.button": "Retirar Reclamaçõe"
+    },
+    "complaints.comp.details": {
+        "title": "Detalhes",
+        "informSaved": "Detalhes das reclamações guardados",
+        "table.columns": {
+            "title": "Detalhes",
+            "modified": "Data da última alteração",
+            "modifier": "Usuário modificado pela última vez"
+        }
+    },
+    "complaints.comp.documents": {
+        "title": "Documentos",
+        "sendEmail": "Enviar email",
+        "filterInputPlaceholder": "Filtro",
+        "searchInputPlaceholder": "Pesquisa",
+        "menu": {
+            "forms": {
+                "rptInvestigation%": "Relatório de Investigação"
+            },
+            "correspondences": {
+                "correspondenceInvitation%": "Convite para correspondência",
+                "approvalLetter%": "Carta de aprovação de queixa",
+                "generalRelease%": "Liberação geral",
+                "medicalRelease%": "Alta médica",
+                "clearanceGranted%": "Liquidação concedida",
+                "clearanceDenied%": "Liquidação negada",
+                "witnessInterview%": "Pedido de entrevista de testemunha",
+                "witnessInterview2%": "Witness Interview Request-2.0"
+            }
+        },
+        "newTask": "Nova tarefa"
+    },
+    "complaints.comp.people": {
+        "title": "Pessoas",
+        "table.columns": {
+            "type": "Função",
+            "firstName": "Primeiro nome",
+            "lastName": "Sobrenome último nome",
+            "organization": "Organização",
+            "phone": "Telefone",
+            "location": "Lugar, colocar"
+        }
+    },
+    "complaints.comp.organizations": {
+        "title": "Organizações",
+        "table.columns": {
+            "name": "Nome da organização",
+            "associationType": "Função",
+            "type": "Tipo de organização",
+            "identification": "EU IRIA",
+            "value": "Organização",
+            "contact": "Contato primário",
+            "phone": "Telefone",
+            "location": "Lugar, colocar"
+        },
+        "actions": {
+            "delete": "Claro",
+            "setPrimary": "Definir como primário",
+            "addNew": "Adicionar novo",
+            "addExisting": "Adicionar novo"
+        }
+    },
+    "complaints.comp.participants": {
+        "title": "Participantes",
+        "table.columns": {
+            "type": "Tipo",
+            "name": "Sobrenome"
+        },
+        "dialogUserPicker": {
+            "header": "Escolha usuários",
+            "table.columns": {
+                "name": "Sobrenome",
+                "type": "Tipo",
+                "title": "Título",
+                "id": "Nome de usuário"
+            }
+        },
+        "dialogGroupPicker": {
+            "header": "Selecionar grupo",
+            "table.columns": {
+                "name": "Sobrenome"
+            }
+        }
+    },
+    "complaints.comp.addresses": {
+        "title": "Localizações",
+        "table.columns": {
+            "type": "Tipo",
+            "streetAddress": "Endereço 1",
+            "streetAddress2": "Endereço 2",
+            "city": "Cidade",
+            "state": "Estado",
+            "zip": "Código Postal",
+            "country": "País",
+            "created": "Data adicionada",
+            "creator": "Adicionado por",
+            "modified": "Última edição",
+            "modifier": "Adaptado de"
+        },
+        "actions": {
+            "addNew": "Adicionar novo",
+            "map": "Mapa"
+        },
+        "modal": {
+            "addAddress": "Adicionar local",
+            "editAddress": "Editar registro",
+            "type.label": "Tipo de endereço",
+            "type.placeholder": "Digite o tipo de endereço",
+            "streetAddress.label": "Endereço 1",
+            "streetAddress.placeholder": "Digite o endereço 1",
+            "streetAddress2.label": "Endereço 2",
+            "streetAddress2.placeholder": "Digite o endereço 2",
+            "city.label": "Cidade",
+            "city.placeholder": "Entre na cidade",
+            "zip.label": "Código Postal",
+            "zip.placeholder": "Digite o CEP.",
+            "state.label": "Estado",
+            "state.placeholder": "Insira o status",
+            "country.label": "País",
+            "country.placeholder": "Insira o país",
+            "btnCancel.text": "Cancelar",
+            "btnOk.text": "Lugar seguro",
+            "setPrimary": "Definir como primário?",
+            "yes": "Sim",
+            "no": "Não"
+        }
+    },
+    "complaints.comp.notes": {
+        "title": "Notas",
+        "table.columns": {
+            "note": "Nota",
+            "created": "Criada",
+            "creator": "Autor"
+        }
+    },
+    "complaints.comp.tasks": {
+        "title": "Tarefas",
+        "table.columns": {
+            "title": "Título",
+            "assignee": "Receptor",
+            "created": "Criada",
+            "priority": "Prioridade",
+            "due": "Vencimento",
+            "status": "Status"
+        },
+        "table.overdue.tooltip": "A tarefa está atrasada",
+        "table.deadline.tooltip": "O prazo está se aproximando"
+    },
+    "complaints.comp.references": {
+        "title": "Referências",
+        "table.columns": {
+            "targetName": "Número",
+            "targetTitle": "Título",
+            "targetType": "Tipo",
+            "assignee": "Receptor",
+            "modified": "Mudou",
+            "status": "Status"
+        }
+    },
+    "complaints.comp.history": {
+        "title": "História",
+        "table.columns": {
+            "eventType": "Nome do evento",
+            "eventDate": "Encontro",
+            "userId": "Do utilizador"
+        }
+    },
+    "complaints.comp.time": {
+        "title": "Tempo",
+        "table.columns": {
+            "name": "Nome do formulario",
+            "user": "Do utilizador",
+            "tally": "Total de horas",
+            "modified": "Data de mudança",
+            "status": "Status"
+        },
+        "formNamePrefix": "Planilha de horário"
+    },
+    "complaints.comp.cost": {
+        "title": "Custa",
+        "table.columns": {
+            "name": "Nome do formulario",
+            "user": "Do utilizador",
+            "tally": "Custo total",
+            "modified": "Data de mudança",
+            "status": "Status"
+        },
+        "formNamePrefix": "Custa"
+    },
+    "complaints.comp.tags": {
+        "title": "Etiquetas",
+        "table.columns": {
+            "tag": "Rótulo",
+            "created": "Criada",
+            "createdBy": "Criado por"
+        },
+        "modal": {
+            "title": "Rótulo",
+            "search": "À procura de um dia",
+            "placeholder": "pt_Add tag",
+            "buttons": {
+                "cancel": "Cancelar",
+                "ok": "Adicione uma etiqueta"
+            }
+        },
+        "message": {
+            "tagExists": "Tag com este nome ou descrição ou texto já existe",
+            "tagAssociated": "Já associado",
+            "delete": {
+                "success": "Tag excluído com sucesso",
+                "error": "Erro ao excluir a tag"
+            }
+        }
+    },
+    "complaints.comp.calendar": {
+        "title": "Calendário",
+        "infoMessage": "pt_Calendar Integration Configuration Not Enabled"
+    },
+    "complaints.comp.referenceSearchGrid": {
+        "title": "Pesquisa de referência"
+    },
+    "complaints.comp.addreference": {
+        "title": "Adicionar referência",
+        "cancelButton": "Cancelar",
+        "confirmButton": "Adicionar",
+        "search": {
+            "placeholder": "Procure por caso, reclamação, arquivo, tarefa",
+            "btn": "Pesquisa"
+        },
+        "grid": {
+            "columns": {
+                "id": "Eu iria",
+                "name": "Sobrenome",
+                "type": "Tipo",
+                "title": "Título",
+                "parent": "Pai",
+                "assignee": "Receptor",
+                "modified": "Mudou"
+            }
+        }
+    },
+    "complaints.comp.assigneePickerModal": {
+        "title": "Balconista",
+        "assigneeNamelabel": "Nome do destinatário",
+        "btnCancelText": "Cancelar",
+        "btnSaveText": "Guardar",
+        "searchAssigneeHeader": "Receptor de pesquisa"
+    },
+    "complaints.comp.groupPickerModal": {
+        "title": "Alterar grupo",
+        "groupNamelabel": "Nome do grupo",
+        "btnCancelText": "Cancelar",
+        "btnSaveText": "Guardar",
+        "searchGroupHeader": "Grupo de pesquisa"
+    },
+    "complaints.comp.approvalRouting": {
+        "title": "Futuros aprovadores",
+        "addNewTooltip": "Adicionar novo aprovador",
+        "noBuckslipMessage": "Sem dados",
+        "button": {
+            "save.tooltip": "Salvar alterações"
+        },
+        "table.columns": {
+            "fullName": "Nome completo"
+        },
+        "assigne.none": "pt_None",
+        "assignee.label": "Receptor",
+        "owningGroup.label": "Grupo de proprietários",
+        "priority.label": "Prioridade",
+        "startDate.label": "Data de início",
+        "dueDate.label": "Data de nascimento",
+        "state.label": "Estado"
+    },
+    "complaints.comp.pastApprovals": {
+        "title": "Roteamento de Aprovação",
+        "noBuckslipMessage": "Sem dados",
+        "table.columns": {
+            "approvalDate": "Data de aprovação",
+            "approverId": "Aprovador",
+            "approverFullName": "Aprovador",
+            "approverDecision": "Decisão de aprovação"
+        }
+    },
+    "complaints.userOrGroupSearch": {
+        "id": "Pesquisa do usuário",
+        "title": "Pesquisa de usuário / grupo",
+        "search": {
+            "btn": "Pesquisa",
+            "placeholder": "Procure o usuário ou grupo."
+        },
+        "cancelButton": "Cancelar",
+        "confirmButton": "Confirmar",
+        "assigneeGridColumns": {
+            "name": "Sobrenome",
+            "type": "Tipo",
+            "title": "Título",
+            "username": "Nome de usuário"
+        }
+    },
+    "complaints.tree": {
+        "nodeTypes": {
+            "details.label": "Detalhes",
+            "locations.label": "Locais",
+            "people.label": "Pessoas",
+            "organizations.label": "Organizações",
+            "documents.label": "Documentos",
+            "participants.label": "Participantes",
+            "notes.label": "Notas",
+            "tasks.label": "Tarefas",
+            "references.label": "Referências",
+            "history.label": "Histórico",
+            "time.label": "Tempo",
+            "cost.label": "Custo",
+            "tags.label": "Etiquetas",
+            "calendar.label": "Calendário",
+            "approvalRouting.label": "Roteamento de Aprovação"
+        },
+        "filters": {
+            "opened": "Todas as queixas abertas",
+            "iHaveCreated": "Tudo o que eu criei",
+            "iAmAssigned": "Tudo o que eu sou atribuído",
+            "iAmFollowing": "Tudo o que estou seguindo",
+            "closedNoFurtherAction": "Tudo fechado sem outra ação",
+            "closedReferExternal": "Referência externa totalmente fechada.",
+            "closedOpenInvestigation": "Todas as investigações fechadas abertas",
+            "noFilter": "(Sem filtro)"
+        },
+        "sorters": {
+            "incidentDateAsc": "Ordenar Data do evento Asc",
+            "incidentDateDesc": "Ordenar Data do evento Desc",
+            "createdDateAsc": "Ordenar Data de Criação Asc",
+            "createdDateDesc": "Ordenar Data de Criação Desc",
+            "nameAsc": "Classificar por nome Asc",
+            "noSort": "(Não classificar)"
+        }
     }
-  },
-  "complaints.comp.documents": {
-    "title": "Documentos",
-    "sendEmail": "Enviar email",
-    "filterInputPlaceholder": "Filtro",
-    "searchInputPlaceholder": "Pesquisa",
-    "menu": {
-      "forms": {
-        "rptInvestigation%": "Relatório de Investigação"
-      },
-      "correspondences": {
-        "correspondenceInvitation%": "Convite para correspondência",
-        "approvalLetter%": "Carta de aprovação de queixa",
-        "generalRelease%": "Liberação geral",
-        "medicalRelease%": "Alta médica",
-        "clearanceGranted%": "Liquidação concedida",
-        "clearanceDenied%": "Liquidação negada",
-        "witnessInterview%": "Pedido de entrevista de testemunha",
-        "witnessInterview2%": "Witness Interview Request-2.0"
-      }
-    },
-    "newTask": "Nova tarefa"
-  },
-  "complaints.comp.people": {
-    "title": "Pessoas",
-    "table.columns": {
-      "type": "Função",
-      "firstName": "Primeiro nome",
-      "lastName": "Sobrenome último nome",
-      "organization": "Organização",
-      "phone": "Telefone",
-      "location": "Lugar, colocar"
-    }
-  },
-  "complaints.comp.organizations": {
-    "title": "Organizações",
-    "table.columns": {
-      "name": "Nome da organização",
-      "associationType": "Função",
-      "type": "Tipo de organização",
-      "identification": "EU IRIA",
-      "value": "Organização",
-      "contact": "Contato primário",
-      "phone": "Telefone",
-      "location": "Lugar, colocar"
-    },
-    "actions": {
-      "delete": "Claro",
-      "setPrimary": "Definir como primário",
-      "addNew": "Adicionar novo",
-      "addExisting": "Adicionar novo"
-    }
-  },
-  "complaints.comp.participants": {
-    "title": "Participantes",
-    "table.columns": {
-      "type": "Tipo",
-      "name": "Sobrenome"
-    },
-    "dialogUserPicker": {
-      "header": "Escolha usuários",
-      "table.columns": {
-        "name": "Sobrenome",
-        "type": "Tipo",
-        "title": "Título",
-        "id": "Nome de usuário"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "Selecionar grupo",
-      "table.columns": {
-        "name": "Sobrenome"
-      }
-    }
-  },
-  "complaints.comp.addresses": {
-    "title": "Localizações",
-    "table.columns": {
-      "type": "Tipo",
-      "streetAddress": "Endereço 1",
-      "streetAddress2": "Endereço 2",
-      "city": "Cidade",
-      "state": "Estado",
-      "zip": "Código Postal",
-      "country": "País",
-      "created": "Data adicionada",
-      "creator": "Adicionado por",
-      "modified": "Última edição",
-      "modifier": "Adaptado de"
-    },
-    "actions": {
-      "addNew": "Adicionar novo",
-      "map": "Mapa"
-    },
-    "modal": {
-      "addAddress": "Adicionar local",
-      "editAddress": "Editar registro",
-      "type.label": "Tipo de endereço",
-      "type.placeholder": "Digite o tipo de endereço",
-      "streetAddress.label": "Endereço 1",
-      "streetAddress.placeholder": "Digite o endereço 1",
-      "streetAddress2.label": "Endereço 2",
-      "streetAddress2.placeholder": "Digite o endereço 2",
-      "city.label": "Cidade",
-      "city.placeholder": "Entre na cidade",
-      "zip.label": "Código Postal",
-      "zip.placeholder": "Digite o CEP.",
-      "state.label": "Estado",
-      "state.placeholder": "Insira o status",
-      "country.label": "País",
-      "country.placeholder": "Insira o país",
-      "btnCancel.text": "Cancelar",
-      "btnOk.text": "Lugar seguro",
-      "setPrimary": "Definir como primário?",
-      "yes": "Sim",
-      "no": "Não"
-    }
-  },
-  "complaints.comp.notes": {
-    "title": "Notas",
-    "table.columns": {
-      "note": "Nota",
-      "created": "Criada",
-      "creator": "Autor"
-    }
-  },
-  "complaints.comp.tasks": {
-    "title": "Tarefas",
-    "table.columns": {
-      "title": "Título",
-      "assignee": "Receptor",
-      "created": "Criada",
-      "priority": "Prioridade",
-      "due": "Vencimento",
-      "status": "Status"
-    },
-    "table.overdue.tooltip": "A tarefa está atrasada",
-    "table.deadline.tooltip": "O prazo está se aproximando"
-  },
-  "complaints.comp.references": {
-    "title": "Referências",
-    "table.columns": {
-      "targetName": "Número",
-      "targetTitle": "Título",
-      "targetType": "Tipo",
-      "assignee": "Receptor",
-      "modified": "Mudou",
-      "status": "Status"
-    }
-  },
-  "complaints.comp.history": {
-    "title": "História",
-    "table.columns": {
-      "eventType": "Nome do evento",
-      "eventDate": "Encontro",
-      "userId": "Do utilizador"
-    }
-  },
-  "complaints.comp.time": {
-    "title": "Tempo",
-    "table.columns": {
-      "name": "Nome do formulario",
-      "user": "Do utilizador",
-      "tally": "Total de horas",
-      "modified": "Data de mudança",
-      "status": "Status"
-    },
-    "formNamePrefix": "Planilha de horário"
-  },
-  "complaints.comp.cost": {
-    "title": "Custa",
-    "table.columns": {
-      "name": "Nome do formulario",
-      "user": "Do utilizador",
-      "tally": "Custo total",
-      "modified": "Data de mudança",
-      "status": "Status"
-    },
-    "formNamePrefix": "Custa"
-  },
-  "complaints.comp.tags": {
-    "title": "Etiquetas",
-    "table.columns": {
-      "tag": "Rótulo",
-      "created": "Criada",
-      "createdBy": "Criado por"
-    },
-    "modal": {
-      "title": "Rótulo",
-      "search": "À procura de um dia",
-      "buttons": {
-        "cancel": "Cancelar",
-        "ok": "Adicione uma etiqueta"
-      }
-    },
-    "message": {
-      "tagExists": "Tag com este nome ou descrição ou texto já existe",
-      "tagAssociated": "Já associado",
-      "delete": {
-        "success": "Tag excluído com sucesso",
-        "error": "Erro ao excluir a tag"
-      }
-    }
-  },
-  "complaints.comp.calendar": {
-    "title": "Calendário"
-  },
-  "complaints.comp.referenceSearchGrid": {
-    "title": "Pesquisa de referência"
-  },
-  "complaints.comp.addreference": {
-    "title": "Adicionar referência",
-    "cancelButton": "Cancelar",
-    "confirmButton": "Adicionar",
-    "search": {
-      "placeholder": "Procure por caso, reclamação, arquivo, tarefa",
-      "btn": "Pesquisa"
-    },
-    "grid": {
-      "columns": {
-        "id": "Eu iria",
-        "name": "Sobrenome",
-        "type": "Tipo",
-        "title": "Título",
-        "parent": "Pai",
-        "assignee": "Receptor",
-        "modified": "Mudou"
-      }
-    }
-  },
-  "complaints.comp.assigneePickerModal": {
-    "title": "Balconista",
-    "assigneeNamelabel": "Nome do destinatário",
-    "btnCancelText": "Cancelar",
-    "btnSaveText": "Guardar",
-    "searchAssigneeHeader": "Receptor de pesquisa"
-  },
-  "complaints.comp.groupPickerModal": {
-    "title": "Alterar grupo",
-    "groupNamelabel": "Nome do grupo",
-    "btnCancelText": "Cancelar",
-    "btnSaveText": "Guardar",
-    "searchGroupHeader": "Grupo de pesquisa"
-  },
-  "complaints.comp.approvalRouting": {
-    "title": "Futuros aprovadores",
-    "addNewTooltip": "Adicionar novo aprovador",
-    "noBuckslipMessage": "Sem dados",
-    "button": {
-      "save.tooltip": "Salvar alterações"
-    },
-    "table.columns": {
-      "fullName": "Nome completo"
-    },
-    "assignee.label": "Receptor",
-    "owningGroup.label": "Grupo de proprietários",
-    "priority.label": "Prioridade",
-    "startDate.label": "Data de início",
-    "dueDate.label": "Data de nascimento",
-    "state.label": "Estado"
-  },
-  "complaints.comp.pastApprovals": {
-    "title": "Roteamento de Aprovação",
-    "noBuckslipMessage": "Sem dados",
-    "table.columns": {
-      "approvalDate": "Data de aprovação",
-      "approverId": "Aprovador",
-      "approverFullName": "Aprovador",
-      "approverDecision": "Decisão de aprovação"
-    }
-  },
-  "complaints.userOrGroupSearch": {
-    "id": "Pesquisa do usuário",
-    "title": "Pesquisa de usuário / grupo",
-    "search": {
-      "btn": "Pesquisa",
-      "placeholder": "Procure o usuário ou grupo."
-    },
-    "cancelButton": "Cancelar",
-    "confirmButton": "Confirmar",
-    "assigneeGridColumns": {
-      "name": "Sobrenome",
-      "type": "Tipo",
-      "title": "Título",
-      "username": "Nome de usuário"
-    }
-  },
-  "complaints.tree": {
-    "nodeTypes": {
-      "details.label": "Detalhes",
-      "locations.label": "Locais",
-      "people.label": "Pessoas",
-      "organizations.label": "Organizações",
-      "documents.label": "Documentos",
-      "participants.label": "Participantes",
-      "notes.label": "Notas",
-      "tasks.label": "Tarefas",
-      "references.label": "Referências",
-      "history.label": "Histórico",
-      "time.label": "Tempo",
-      "cost.label": "Custo",
-      "tags.label": "Etiquetas",
-      "calendar.label": "Calendário",
-      "approvalRouting.label": "Roteamento de Aprovação"
-    },
-    "filters": {
-      "opened": "Todas as queixas abertas",
-      "iHaveCreated": "Tudo o que eu criei",
-      "iAmAssigned": "Tudo o que eu sou atribuído",
-      "iAmFollowing": "Tudo o que estou seguindo",
-      "closedNoFurtherAction": "Tudo fechado sem outra ação",
-      "closedReferExternal": "Referência externa totalmente fechada.",
-      "closedOpenInvestigation": "Todas as investigações fechadas abertas",
-      "noFilter": "(Sem filtro)"
-    },
-    "sorters": {
-      "incidentDateAsc": "Ordenar Data do evento Asc",
-      "incidentDateDesc": "Ordenar Data do evento Desc",
-      "createdDateAsc": "Ordenar Data de Criação Asc",
-      "createdDateDesc": "Ordenar Data de Criação Desc",
-      "nameAsc": "Classificar por nome Asc",
-      "noSort": "(Não classificar)"
-    }
-  }
 }

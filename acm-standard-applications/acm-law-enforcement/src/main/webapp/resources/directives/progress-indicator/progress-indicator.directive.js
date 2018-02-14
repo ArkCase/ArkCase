@@ -19,32 +19,29 @@
  </example>
  */
 
-angular.module('directives').directive('progressIndicator', ['$timeout'
-    , function ($timeout) {
-        return {
-            restrict: 'E',
-            templateUrl: 'directives/progress-indicator/progress-indicator.html',
-            link: function (scope) {
+angular.module('directives').directive('progressIndicator', [ '$timeout', function($timeout) {
+    return {
+        restrict : 'E',
+        templateUrl : 'directives/progress-indicator/progress-indicator.html',
+        link : function(scope) {
 
-                scope.showProgress = false;
-                var eventName = "live_progress";
-                scope.$bus.subscribe(eventName, function (data) {
+            scope.showProgress = false;
+            var eventName = "live_progress";
+            scope.$bus.subscribe(eventName, function(data) {
 
-                    scope.$apply(function () {
-                        scope.showProgress = true;
-                        scope.currentProgress = data.current;
-                        scope.percentageStyle = {
-                            width: scope.currentProgress + '%'
-                        };
-                        if (scope.currentProgress >= 100) {
-                            $timeout(function () {
-                                scope.showProgress = false;
-                            }, 3000);
-                        }
-                    });
+                scope.$apply(function() {
+                    scope.showProgress = true;
+                    scope.currentProgress = data.current;
+                    scope.percentageStyle = {
+                        width : scope.currentProgress + '%'
+                    };
+                    if (scope.currentProgress >= 100) {
+                        $timeout(function() {
+                            scope.showProgress = false;
+                        }, 3000);
+                    }
                 });
-            }
-        };
-    }
-]);
-
+            });
+        }
+    };
+} ]);

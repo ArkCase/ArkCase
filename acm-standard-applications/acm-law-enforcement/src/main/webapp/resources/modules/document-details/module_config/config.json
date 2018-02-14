@@ -1,254 +1,255 @@
 {
-  "id": "document-details",
-  "title": "Document details",
-  "configurable": false,
-  "menus": [
-  ],
-  "components": [
-    {
-      "id": "eventHistory",
-      "title": "Event History",
-      "icon": "fa fa-bell-o",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": true,
-      "enableRowSelection": true,
-      "enableRowHeaderSelection": true,
-      "enableFullRowSelection": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 20,
-      "columnDefs": [
+    "id": "document-details",
+    "title": "Document details",
+    "configurable": false,
+    "menus": [
+    ],
+    "components": [
         {
-          "name": "eventType",
-          "displayName": "documentDetails.comp.eventHistory.table.columns.eventType",
-          "headerCellFilter": "translate"
+            "id": "eventHistory",
+            "title": "Event History",
+            "icon": "fa fa-bell-o",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "enableRowSelection": true,
+            "enableRowHeaderSelection": true,
+            "enableFullRowSelection": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "eventType",
+                    "displayName": "documentDetails.comp.eventHistory.table.columns.eventType",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "eventDate",
+                    "displayName": "documentDetails.comp.eventHistory.table.columns.eventDate",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+                },
+                {
+                    "name": "userId",
+                    "displayName": "documentDetails.comp.eventHistory.table.columns.userId",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ]
         },
         {
-          "name": "eventDate",
-          "displayName": "documentDetails.comp.eventHistory.table.columns.eventDate",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.eventDate | date : 'short' }}</div>"
+            "id": "notes",
+            "title": "Notes",
+            "icon": "fa fa-comments",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "enableSorting": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "note",
+                    "displayName": "documentDetails.comp.notes.table.columns.note",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "tag",
+                    "displayName": "documentDetails.comp.notes.table.columns.tag",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "created",
+                    "displayName": "documentDetails.comp.notes.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "creator",
+                    "displayName": "documentDetails.comp.notes.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                }
+            ]
         },
         {
-          "name": "userId",
-          "displayName": "documentDetails.comp.eventHistory.table.columns.userId",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
+            "id": "versionHistory",
+            "title": "Version History",
+            "icon": "fa fa-comments",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": false,
+            "enableRowSelection": true,
+            "enableRowHeaderSelection": true,
+            "enableFullRowSelection": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "columnDefs": [
+                {
+                    "name": "versionTag",
+                    "displayName": "documentDetails.comp.versionHistory.table.columns.versionTag",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "documentDetails.comp.versionHistory.table.columns.created",
+                    "headerCellFilter": "translate",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "enableCellEdit": false
+                },
+                {
+                    "name": "creator",
+                    "displayName": "documentDetails.comp.versionHistory.table.columns.creator",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "userFullNames"
+                }
+            ]
+        },
+        {
+            "id": "participants",
+            "title": "Participants",
+            "icon": "fa fa-comments",
+            "className": "com.armedia.acm.services.participants.model.AcmParticipant",
+            "enabled": true,
+            "type": "grid",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 20,
+            "typeNoAccess": "No Access",
+            "columnDefs": [
+                {
+                    "name": "participantType",
+                    "displayName": "documentDetails.comp.participants.table.columns.type",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "cellTemplate": "<div class='ui-grid-cell-contents'>{{ grid.appScope.utils.getLookupValue(grid.appScope.participantTypes, row.entity.participantType) | translate }}</div>",
+                    "lookup": "participantTypes"
+                },
+                {
+                    "name": "participantLdapId",
+                    "displayName": "documentDetails.comp.participants.table.columns.name",
+                    "headerCellFilter": "translate",
+                    "enableCellEdit": false,
+                    "lookup": "participantNames"
+                }
+            ],
+            "dialogUserPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_type_s",
+                        "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.type",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "title",
+                        "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.title",
+                        "headerCellFilter": "translate"
+                    },
+                    {
+                        "name": "object_id_s",
+                        "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.id",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            },
+            "dialogGroupPicker": {
+                "enableFiltering": false,
+                "multiSelect": false,
+                "showFacets": false,
+                "columnDefs": [
+                    {
+                        "name": "name",
+                        "displayName": "documentDetails.comp.participants.dialogGroupPicker.table.columns.name",
+                        "headerCellFilter": "translate"
+                    }
+                ],
+                "paginationPageSizes": [
+                    5,
+                    10,
+                    20,
+                    50
+                ],
+                "paginationPageSize": 10,
+                "start": 0
+            }
+        },
+        {
+            "id": "tags",
+            "title": "Tags",
+            "icon": "fa fa-tags",
+            "enabled": true,
+            "type": "grid",
+            "autoSuggestObjectType": "TAG",
+            "enableFiltering": true,
+            "paginationPageSizes": [
+                5,
+                10,
+                20,
+                50
+            ],
+            "paginationPageSize": 5,
+            "columnDefs": [
+                {
+                    "name": "tagName",
+                    "displayName": "documentDetails.comp.tags.table.columns.tag",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "created",
+                    "displayName": "documentDetails.comp.tags.table.columns.created",
+                    "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
+                    "headerCellFilter": "translate"
+                },
+                {
+                    "name": "creator",
+                    "displayName": "documentDetails.comp.tags.table.columns.createdBy",
+                    "headerCellFilter": "translate",
+                    "lookup": "userFullNames"
+                }
+            ],
+            "filters": "\"Object Type\": TAG",
+            "filterName": "Object Type"
         }
-      ]
-    },
-    {
-      "id": "notes",
-      "title": "Notes",
-      "icon": "fa fa-comments",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": false,
-      "enableSorting": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 20,
-      "columnDefs": [
-        {
-          "name": "note",
-          "displayName": "documentDetails.comp.notes.table.columns.note",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false
-        },
-        {
-          "name": "tag",
-          "displayName": "documentDetails.comp.notes.table.columns.tag",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false
-        },
-        {
-          "name": "created",
-          "displayName": "documentDetails.comp.notes.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-          "enableCellEdit": false
-        },
-        {
-          "name": "creator",
-          "displayName": "documentDetails.comp.notes.table.columns.creator",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
-      "id": "versionHistory",
-      "title": "Version History",
-      "icon": "fa fa-comments",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": false,
-      "enableRowSelection": true,
-      "enableRowHeaderSelection": true,
-      "enableFullRowSelection": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 20,
-      "columnDefs": [
-        {
-          "name": "versionTag",
-          "displayName": "documentDetails.comp.versionHistory.table.columns.versionTag",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "documentDetails.comp.versionHistory.table.columns.created",
-          "headerCellFilter": "translate",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-          "enableCellEdit": false
-        },
-        {
-          "name": "creator",
-          "displayName": "documentDetails.comp.versionHistory.table.columns.creator",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "userFullNames"
-        }
-      ]
-    },
-    {
-      "id": "participants",
-      "title": "Participants",
-      "icon": "fa fa-comments",
-      "className": "com.armedia.acm.services.participants.model.AcmParticipant",
-      "enabled": true,
-      "type": "grid",
-      "enableFiltering": false,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 20,
-      "typeNoAccess": "No Access",
-      "columnDefs": [
-        {
-          "name": "participantType",
-          "displayName": "documentDetails.comp.participants.table.columns.type",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "participantTypes"
-        },
-        {
-          "name": "participantLdapId",
-          "displayName": "documentDetails.comp.participants.table.columns.name",
-          "headerCellFilter": "translate",
-          "enableCellEdit": false,
-          "lookup": "participantNames"
-        }
-      ],
-      "dialogUserPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "name",
-            "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.name",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "object_type_s",
-            "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.type",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "title",
-            "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.title",
-            "headerCellFilter": "translate"
-          },
-          {
-            "name": "object_id_s",
-            "displayName": "documentDetails.comp.participants.dialogUserPicker.table.columns.id",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      },
-      "dialogGroupPicker": {
-        "enableFiltering": false,
-        "multiSelect": false,
-        "showFacets": false,
-        "columnDefs": [
-          {
-            "name": "name",
-            "displayName": "documentDetails.comp.participants.dialogGroupPicker.table.columns.name",
-            "headerCellFilter": "translate"
-          }
-        ],
-        "paginationPageSizes": [
-          5,
-          10,
-          20,
-          50
-        ],
-        "paginationPageSize": 10,
-        "start": 0
-      }
-    },
-    {
-      "id": "tags",
-      "title": "Tags",
-      "icon": "fa fa-tags",
-      "enabled": true,
-      "type": "grid",
-      "autoSuggestObjectType": "TAG",
-      "enableFiltering": true,
-      "paginationPageSizes": [
-        5,
-        10,
-        20,
-        50
-      ],
-      "paginationPageSize": 5,
-      "columnDefs": [
-        {
-          "name": "tagName",
-          "displayName": "documentDetails.comp.tags.table.columns.tag",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "created",
-          "displayName": "documentDetails.comp.tags.table.columns.created",
-          "cellTemplate": "<div>{{ row.entity.created | date : 'shortDate' }}</div>",
-          "headerCellFilter": "translate"
-        },
-        {
-          "name": "creator",
-          "displayName": "documentDetails.comp.tags.table.columns.createdBy",
-          "headerCellFilter": "translate",
-          "lookup": "userFullNames"
-        }
-      ],
-      "filters": "\"Object Type\": TAG",
-      "filterName": "Object Type"
-    }
-  ]
+    ]
 }

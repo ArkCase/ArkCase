@@ -3,15 +3,15 @@ package com.armedia.acm.plugins.task.web;
 import com.armedia.acm.form.config.FormUrl;
 import com.armedia.acm.frevvo.config.FrevvoFormName;
 import com.armedia.acm.pluginmanager.model.AcmPlugin;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Map;
@@ -39,75 +39,90 @@ public class TaskUiController
     {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("task");
-        mv.addObject("objId",  taskId);
+        mv.addObject("objId", taskId);
 
         initModelAndView(mv);
         return mv;
     }
 
-    private void addJsonArrayProp(ModelAndView mv, Map<String, Object> props, String propName, String attrName) {
-        if (null != props) {
-            try {
+    private void addJsonArrayProp(ModelAndView mv, Map<String, Object> props, String propName, String attrName)
+    {
+        if (null != props)
+        {
+            try
+            {
                 Object prop = props.get(propName);
-                if (null != prop) {
+                if (null != prop)
+                {
                     JSONArray ar = new JSONArray(prop.toString());
                     mv.addObject(attrName, ar);
                 }
 
-            } catch (JSONException e) {
+            }
+            catch (JSONException e)
+            {
                 log.error(e.getMessage());
             }
         }
     }
-    private ModelAndView initModelAndView(ModelAndView mv) {
+
+    private ModelAndView initModelAndView(ModelAndView mv)
+    {
         Map<String, Object> props = getPlugin().getPluginProperties();
         addJsonArrayProp(mv, props, "search.tree.filter", "treeFilter");
         addJsonArrayProp(mv, props, "search.tree.sort", "treeSort");
         addJsonArrayProp(mv, props, "fileTypes", "fileTypes");
 
-        //frevvo form URLs
+        // frevvo form URLs
         mv.addObject("editCloseComplaintFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CLOSE_COMPLAINT, false));
         mv.addObject("changeCaseStatusFormUrl", formUrl.getNewFormUrl(FrevvoFormName.CHANGE_CASE_STATUS, false));
-        mv.addObject("allowMailFilesAsAttachments",getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
-        mv.addObject("allowMailFilesToExternalAddresses", getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
+        mv.addObject("allowMailFilesAsAttachments", getNotificationProperties().get("notification.allowMailFilesAsAttachments"));
+        mv.addObject("allowMailFilesToExternalAddresses",
+                getNotificationProperties().get("notification.allowMailFilesToExternalAddresses"));
 
         return mv;
     }
 
     @RequestMapping(value = "/wizard", method = RequestMethod.GET)
     public ModelAndView openTaskWizard(
-            @RequestParam(value = "parentType", required = false) String parentType
-            ,@RequestParam(value = "reference", required = false) String reference
-    ) {
+            @RequestParam(value = "parentType", required = false) String parentType,
+            @RequestParam(value = "reference", required = false) String reference)
+    {
         ModelAndView mv = new ModelAndView();
         mv.setViewName("taskWizard");
-        mv.addObject("parentType",  parentType);
-        mv.addObject("reference",  reference);
+        mv.addObject("parentType", parentType);
+        mv.addObject("reference", reference);
         return mv;
 
     }
 
-    public FormUrl getFormUrl() {
+    public FormUrl getFormUrl()
+    {
         return formUrl;
     }
 
-    public void setFormUrl(FormUrl formUrl) {
+    public void setFormUrl(FormUrl formUrl)
+    {
         this.formUrl = formUrl;
     }
 
-    public AcmPlugin getPlugin() {
+    public AcmPlugin getPlugin()
+    {
         return plugin;
     }
 
-    public void setPlugin(AcmPlugin plugin) {
+    public void setPlugin(AcmPlugin plugin)
+    {
         this.plugin = plugin;
     }
 
-    public Map<String, Object> getNotificationProperties() {
+    public Map<String, Object> getNotificationProperties()
+    {
         return notificationProperties;
     }
 
-    public void setNotificationProperties(Map<String, Object> notificationProperties) {
+    public void setNotificationProperties(Map<String, Object> notificationProperties)
+    {
         this.notificationProperties = notificationProperties;
     }
 }

@@ -1,8 +1,6 @@
 <div>
-    <search-modal header="{{header}}"
-                  filter="{{filter}}"
-                  extra-filter="{{extraFilter}}"
-                  config="config"
-                  modal-instance="modalInstance"
-    />
+    <search-modal header="{{header}}" cancel="{{'document-repository.newRepository.cancelBtn' | translate}}"
+            ok="{{'document-repository.newRepository.okBtn' | translate}}"
+            search-placeholder="{{'document-repository.newRepository.search-placeholder' | translate}}" filter="{{filter}}"
+            extra-filter="{{extraFilter}}" config="config" modal-instance="modalInstance" second-grid="true" />
 </div>

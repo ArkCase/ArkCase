@@ -8,6 +8,7 @@ import java.util.Set;
  */
 public interface AcmNotifiableEntity
 {
-	Set<AcmNotificationReceiver> getReceivers();
-	String getNotifiableEntityTitle();
+    Set<AcmNotificationReceiver> getReceivers();
+
+    String getNotifiableEntityTitle();
 }

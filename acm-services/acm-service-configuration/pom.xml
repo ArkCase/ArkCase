@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm-services</artifactId>
         <groupId>com.armedia.acm</groupId>
-        <version>3.2.3-SNAPSHOT</version>
+        <version>3.2.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -35,6 +35,5 @@
             <artifactId>easymock</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

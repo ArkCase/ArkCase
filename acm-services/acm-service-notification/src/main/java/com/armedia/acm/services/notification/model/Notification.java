@@ -5,6 +5,7 @@ import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +20,9 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
+
 import java.io.Serializable;
 import java.util.Date;
-
 
 @Entity
 @Table(name = "acm_notification")
@@ -32,17 +33,10 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @Id
-    @TableGenerator(name = "acm_notification_gen",
-            table = "acm_notification_id",
-            pkColumnName = "cm_seq_name",
-            valueColumnName = "cm_seq_num",
-            pkColumnValue = "acm_notification",
-            initialValue = 100,
-            allocationSize = 1)
+    @TableGenerator(name = "acm_notification_gen", table = "acm_notification_id", pkColumnName = "cm_seq_name", valueColumnName = "cm_seq_num", pkColumnValue = "acm_notification", initialValue = 100, allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "acm_notification_gen")
     @Column(name = "cm_notification_id")
     private Long id;
-
 
     @Column(name = "cm_notification_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -180,12 +174,10 @@ public class Notification implements Serializable, AcmObject, AcmEntity
         return type;
     }
 
-
     public void setType(String type)
     {
         this.type = type;
     }
-
 
     public String getStatus()
     {
@@ -349,5 +341,3 @@ public class Notification implements Serializable, AcmObject, AcmEntity
     }
 
 }
-
-

@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <changeSet id="milestone-01-tables" author="dmiller" dbms="oracle,postgresql,mssql">
@@ -47,8 +45,7 @@
             <column name="cm_milestone_object_type" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_milestone_achieved_date" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_milestone_achieved_date" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_milestone_name" type="VARCHAR(512)">

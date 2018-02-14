@@ -3,6 +3,7 @@ package com.armedia.acm.plugins.admin.web.api;
 import com.armedia.acm.plugins.admin.exception.AcmLdapConfigurationException;
 import com.armedia.acm.plugins.admin.model.LdapConfigurationProperties;
 import com.armedia.acm.plugins.admin.service.LdapConfigurationService;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,9 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 @Controller
-@RequestMapping({"/api/v1/plugin/admin", "/api/latest/plugin/admin"})
+@RequestMapping({ "/api/v1/plugin/admin", "/api/latest/plugin/admin" })
 public class LdapConfigurationCreateDirectory
 {
     private Logger log = LoggerFactory.getLogger(getClass());
@@ -45,7 +45,8 @@ public class LdapConfigurationCreateDirectory
             HashMap<String, Object> props = ldapConfigurationService.getProperties(newLdapObject);
             ldapConfigurationService.createLdapDirectoryConfigurations(id, directoryType, props);
             return newLdapObject.toString();
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             log.error("Can't create LDAP directory", e);
             throw new AcmLdapConfigurationException("Create LDAP directory error", e);

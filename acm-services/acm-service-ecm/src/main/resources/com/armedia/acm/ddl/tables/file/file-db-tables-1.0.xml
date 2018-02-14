@@ -1,7 +1,5 @@
-<databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
             http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="cmObjectTypeLength" value="1024" dbms="postgresql,oracle"/>
@@ -80,7 +78,6 @@
         </createTable>
     </changeSet>
 
-
     <changeSet id="files-03-add-file-type-column" author="dmiller">
         <addColumn tableName="acm_file">
             <column name="cm_file_type" type="VARCHAR(1024)"/>
@@ -123,15 +120,13 @@
             <column name="cm_container_folder_id" type="${idType}">
                 <constraints primaryKey="true" primaryKeyName="pk_container_folder"/>
             </column>
-            <column name="cm_container_folder_created" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_container_folder_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_folder_creator" type="VARCHAR(1024)">
                 <constraints nullable="false"/>
             </column>
-            <column name="cm_container_folder_modified" type="${timestampType}"
-                    defaultValueComputed="${timestampFunction}">
+            <column name="cm_container_folder_modified" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
             </column>
             <column name="cm_container_folder_modifier" type="VARCHAR(1024)">
@@ -179,8 +174,7 @@
             </column>
         </createTable>
         <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_object_id, cm_object_type"/>
-        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id"
-                             constraintName="uq_cons_cm_cmis_folder_id"/>
+        <addUniqueConstraint tableName="acm_container_folder" columnNames="cm_cmis_folder_id" constraintName="uq_cons_cm_cmis_folder_id"/>
     </changeSet>
 
     <changeSet id="files-09-rename-acm-container-folder" author="dmiller">
@@ -211,12 +205,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_parent_folder_id" type="${fkIdType}">
-                <constraints nullable="true"
-                             foreignKeyName="fk_folder_parent_id"
-                             referencedTableName="acm_folder"
-                             referencedColumnNames="cm_folder_id"
-                             initiallyDeferred="${initially.deferred}"
-                             deferrable="${deferrable}"/>
+                <constraints nullable="true" foreignKeyName="fk_folder_parent_id" referencedTableName="acm_folder"
+                    referencedColumnNames="cm_folder_id" initiallyDeferred="${initially.deferred}" deferrable="${deferrable}"/>
             </column>
         </createTable>
     </changeSet>
@@ -245,12 +235,8 @@
                 <constraints nullable="false"/>
             </column>
             <column name="cm_parent_folder_id" type="${fkIdType}">
-                <constraints nullable="true"
-                             foreignKeyName="fk_folder_parent_id"
-                             referencedTableName="acm_folder"
-                             referencedColumnNames="cm_folder_id"
-                             initiallyDeferred="${initially.deferred}"
-                             deferrable="${deferrable}"/>
+                <constraints nullable="true" foreignKeyName="fk_folder_parent_id" referencedTableName="acm_folder"
+                    referencedColumnNames="cm_folder_id" initiallyDeferred="${initially.deferred}" deferrable="${deferrable}"/>
             </column>
         </createTable>
     </changeSet>
@@ -258,24 +244,20 @@
     <changeSet id="files-12-update-acm-container-structure" author="dmiller" dbms="oracle,postgresql,mssql">
         <addColumn tableName="acm_container">
             <column name="cm_folder_id" type="${fkIdType}">
-                <constraints
-                        foreignKeyName="fk_container_folder_id"
-                        referencedTableName="acm_folder"
-                        referencedColumnNames="cm_folder_id"
-                        deferrable="${deferrable}"
-                        initiallyDeferred="${initially.deferred}"/>
+                <constraints foreignKeyName="fk_container_folder_id" referencedTableName="acm_folder" referencedColumnNames="cm_folder_id"
+                    deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
         <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
-                      columnDataType="${fkIdType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created"
-                      newColumnName="cm_container_created" columnDataType="${timestampType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator"
-                      newColumnName="cm_container_creator" columnDataType="VARCHAR(1024)"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified"
-                      newColumnName="cm_container_modified" columnDataType="${timestampType}"/>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier"
-                      newColumnName="cm_container_modifier" columnDataType="VARCHAR(1024)"/>
+            columnDataType="${fkIdType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_created" newColumnName="cm_container_created"
+            columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator" newColumnName="cm_container_creator"
+            columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modified" newColumnName="cm_container_modified"
+            columnDataType="${timestampType}"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier" newColumnName="cm_container_modifier"
+            columnDataType="VARCHAR(1024)"/>
         <dropPrimaryKey tableName="acm_container" constraintName="pk_container_folder"/>
         <addPrimaryKey tableName="acm_container" columnNames="cm_container_id" constraintName="pk_container"/>
     </changeSet>
@@ -283,28 +265,24 @@
     <changeSet id="files-12-update-acm-container-structure" author="dmiller" dbms="mysql">
         <addColumn tableName="acm_container">
             <column name="cm_folder_id" type="${fkIdType}">
-                <constraints
-                        foreignKeyName="fk_container_folder_id"
-                        referencedTableName="acm_folder"
-                        referencedColumnNames="cm_folder_id"
-                        deferrable="${deferrable}"
-                        initiallyDeferred="${initially.deferred}"/>
+                <constraints foreignKeyName="fk_container_folder_id" referencedTableName="acm_folder" referencedColumnNames="cm_folder_id"
+                    deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
         </addColumn>
         <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_id" newColumnName="cm_container_id"
-                      columnDataType="${fkIdType}"/>
+            columnDataType="${fkIdType}"/>
         <sql>
             ALTER TABLE acm_container
             CHANGE cm_container_folder_created cm_container_created TIMESTAMP default CURRENT_TIMESTAMP;
         </sql>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator"
-                      newColumnName="cm_container_creator" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_creator" newColumnName="cm_container_creator"
+            columnDataType="VARCHAR(1024)"/>
         <sql>
             ALTER TABLE acm_container
             CHANGE cm_container_folder_modified cm_container_modified TIMESTAMP default CURRENT_TIMESTAMP;
         </sql>
-        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier"
-                      newColumnName="cm_container_modifier" columnDataType="VARCHAR(1024)"/>
+        <renameColumn tableName="acm_container" oldColumnName="cm_container_folder_modifier" newColumnName="cm_container_modifier"
+            columnDataType="VARCHAR(1024)"/>
         <dropPrimaryKey tableName="acm_container" constraintName="pk_container_folder"/>
         <addPrimaryKey tableName="acm_container" columnNames="cm_container_id" constraintName="pk_container"/>
     </changeSet>
@@ -319,12 +297,8 @@
                 <constraints primaryKey="true" primaryKeyName="pk_file_version"/>
             </column>
             <column name="cm_file_id" type="${fkIdType}">
-                <constraints nullable="false"
-                             foreignKeyName="fk_file_version_file_id"
-                             referencedTableName="acm_file"
-                             referencedColumnNames="cm_file_id"
-                             deferrable="${deferrable}"
-                             initiallyDeferred="${initially.deferred}"/>
+                <constraints nullable="false" foreignKeyName="fk_file_version_file_id" referencedTableName="acm_file"
+                    referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
             <column name="cm_file_version_created" type="${timestampType}">
                 <constraints nullable="false"/>
@@ -353,12 +327,8 @@
                 <constraints primaryKey="true" primaryKeyName="pk_file_version"/>
             </column>
             <column name="cm_file_id" type="${fkIdType}">
-                <constraints nullable="false"
-                             foreignKeyName="fk_file_version_file_id"
-                             referencedTableName="acm_file"
-                             referencedColumnNames="cm_file_id"
-                             deferrable="${deferrable}"
-                             initiallyDeferred="${initially.deferred}"/>
+                <constraints nullable="false" foreignKeyName="fk_file_version_file_id" referencedTableName="acm_file"
+                    referencedColumnNames="cm_file_id" deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
             <column name="cm_file_version_created" type="${timestampType}" defaultValueComputed="${timestampFunction}">
                 <constraints nullable="false"/>
@@ -383,14 +353,11 @@
 
     <changeSet id="files-17-update-acm-file-structure" author="dmiller">
         <renameColumn tableName="acm_file" oldColumnName="cm_file_ecm_id" newColumnName="cm_version_series_id"
-                      columnDataType="VARCHAR(${cmVersionSeriesIdLength})"/>
+            columnDataType="VARCHAR(${cmVersionSeriesIdLength})"/>
         <addColumn tableName="acm_file">
             <column name="cm_folder_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_file_folder_id"
-                             referencedTableName="acm_folder"
-                             referencedColumnNames="cm_folder_id"
-                             deferrable="${deferrable}"
-                             initiallyDeferred="${initially.deferred}"/>
+                <constraints foreignKeyName="fk_file_folder_id" referencedTableName="acm_folder" referencedColumnNames="cm_folder_id"
+                    deferrable="${deferrable}" initiallyDeferred="${initially.deferred}"/>
             </column>
             <column name="cm_file_active_version_tag" type="VARCHAR(1024)" defaultValue="1.0">
                 <constraints nullable="false"/>
@@ -398,17 +365,14 @@
             <column name="cm_file_category" type="VARCHAR(128)"/>
         </addColumn>
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_file_ecm_id"/>
-        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id"
-                             constraintName="uk_version_series_id"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id" constraintName="uk_version_series_id"/>
     </changeSet>
 
     <!-- need to fix the unique key on acm_file before inserting the files from cases where those
          files are also in a complaint -->
     <changeSet id="files-23-unique-key-on-file-and-folder" author="dmiller" dbms="${excludeMSSQL}">
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
-        <addUniqueConstraint tableName="acm_file"
-                             columnNames="cm_version_series_id, cm_folder_id"
-                             constraintName="uk_file_folder"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id, cm_folder_id" constraintName="uk_file_folder"/>
     </changeSet>
 
     <!-- finally time to make cm_folder_id required -->
@@ -418,9 +382,7 @@
 
     <changeSet id="files-26-1-unique-key-on-file-and-folder-mssql" author="riste.tutureski" dbms="mssql">
         <dropUniqueConstraint tableName="acm_file" constraintName="uk_version_series_id"/>
-        <addUniqueConstraint tableName="acm_file"
-                             columnNames="cm_version_series_id, cm_folder_id"
-                             constraintName="uk_file_folder"/>
+        <addUniqueConstraint tableName="acm_file" columnNames="cm_version_series_id, cm_folder_id" constraintName="uk_file_folder"/>
     </changeSet>
 
     <changeSet id="files-27-make-folder-id-unique" author="dmiller">
@@ -430,11 +392,8 @@
     <changeSet id="files-28-add-container-id-to-file" author="dmiller">
         <addColumn tableName="acm_file">
             <column name="cm_container_id" type="${fkIdType}">
-                <constraints foreignKeyName="fk_file_container_id"
-                             referencedTableName="acm_container"
-                             referencedColumnNames="cm_container_id"
-                             initiallyDeferred="${initially.deferred}"
-                             deferrable="${deferrable}"/>
+                <constraints foreignKeyName="fk_file_container_id" referencedTableName="acm_container"
+                    referencedColumnNames="cm_container_id" initiallyDeferred="${initially.deferred}" deferrable="${deferrable}"/>
             </column>
         </addColumn>
     </changeSet>
@@ -570,9 +529,9 @@
 
     <changeSet id="51-acm_file-add-not-null-and-default-to-class-name" author="joseph.mcgrady">
         <addDefaultValue tableName="acm_file" columnName="cm_class_name" columnDataType="VARCHAR(400)"
-                         defaultValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
+            defaultValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
         <addNotNullConstraint tableName="acm_file" columnName="cm_class_name" columnDataType="VARCHAR(400)"
-                              defaultNullValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
+            defaultNullValue="com.armedia.acm.plugins.ecm.model.EcmFile"/>
     </changeSet>
 
     <changeSet id="52-acm_file-update-structure" author="sasko.tanaskoski">
@@ -623,12 +582,12 @@
         <addColumn tableName="acm_file_version">
             <column name="cm_file_size_bytes" type="${idType}"/>
         </addColumn>
-        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_make"
-                      newColumnName="cm_media_device_make" columnDataType="VARCHAR(255)"/>
-        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_model"
-                      newColumnName="cm_media_device_model" columnDataType="VARCHAR(255)"/>
-        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_vid_duration_seconds"
-                      newColumnName="cm_media_duration_seconds" columnDataType="${duration}"/>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_make" newColumnName="cm_media_device_make"
+            columnDataType="VARCHAR(255)"/>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_camera_model" newColumnName="cm_media_device_model"
+            columnDataType="VARCHAR(255)"/>
+        <renameColumn tableName="acm_file_version" oldColumnName="cm_media_vid_duration_seconds" newColumnName="cm_media_duration_seconds"
+            columnDataType="${duration}"/>
     </changeSet>
 
     <changeSet id="56-acm_file-add-organization-assoc-column" author="riste.tutureski">
@@ -660,6 +619,22 @@
     </changeSet>
     <changeSet id="59-acm_file_change_description_type" author="wazir.shpoon">
         <modifyDataType tableName="acm_file" columnName="cm_file_description" newDataType="CLOB"/>
+    </changeSet>
+
+    <changeSet id="59-add-folder-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_folder">
+            <column name="cm_folder_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="60-add-file-restricted-flag" author="bojan.milenkoski">
+        <addColumn tableName="acm_file">
+            <column name="cm_file_restricted_flag" type="VARCHAR(32)" defaultValue="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

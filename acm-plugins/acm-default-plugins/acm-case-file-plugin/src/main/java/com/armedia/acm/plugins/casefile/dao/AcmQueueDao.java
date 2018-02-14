@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.casefile.dao;
 
 import com.armedia.acm.data.AcmAbstractDao;
 import com.armedia.acm.plugins.casefile.model.AcmQueue;
+
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 

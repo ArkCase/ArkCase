@@ -1,9 +1,11 @@
 package com.armedia.acm.plugins.ecm.service.impl;
 
+import static org.easymock.EasyMock.expect;
 
 import com.armedia.acm.plugins.ecm.dao.EcmFileDao;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
+
 import org.easymock.EasyMockSupport;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,8 +16,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
 
 public class AcmFolderServiceImplTest extends EasyMockSupport
 {

@@ -58,7 +58,7 @@ h6 {
 }
 
 .pull-right.well {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 .well {
@@ -78,7 +78,7 @@ iframe {
 }
 
 .fancytree-node {
-  white-space: nowrap;
+    white-space: nowrap;
 }
 
 .ui-fancytree.fancytree-container {
@@ -101,23 +101,21 @@ iframe {
 }*/
 
 span.fancytree-title {
-	margin-left: 0px  !important;
-	padding-right: 0px  !important;
+    margin-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 .fancytree-container {
-	font-size:13px;
+    font-size: 13px;
 }
 
 .fancytree-node {
-	margin-left: 0px !important;
+    margin-left: 0px !important;
 }
 
 .fancytree-folder .fancytree-node {
-	white-space: inherit !important;
+    white-space: inherit !important;
 }
-
-
 
 .form-group.well-sm {
     margin: 0px;
@@ -280,38 +278,39 @@ span.fancytree-title {
     margin-top: 20px;
 }
 
-.dashboard .alert{
-	margin: 10px;
+.dashboard .alert {
+    margin: 10px;
 }
 
-.dashboard adf-widget-content h4{
-	margin-left: 10px;
+.dashboard adf-widget-content h4 {
+    margin-left: 10px;
 }
 
-.dashboard adf-widget-content ul{
-	margin-right: 10px;
+.dashboard adf-widget-content ul {
+    margin-right: 10px;
 }
-
 
 .dashboard .weather {
-	text-align: left;
+    text-align: left;
 }
+
 .dashboard .weather h4 {
-	margin: 0px;
-	padding-top: 20px;
+    margin: 0px;
+    padding-top: 20px;
 }
+
 .dashboard .weather h3 {
-	font-weight: bold;
+    font-weight: bold;
 }
+
 .dashboard .weather .pull-left img {
-	padding: 15px;
+    padding: 15px;
 }
 
-.container-fluid{
-	margin: 0px;
-	padding: 0px;
+.container-fluid {
+    margin: 0px;
+    padding: 0px;
 }
-
 
 /* Navigation List (Grouped)  */
 
@@ -388,16 +387,18 @@ span.fancytree-title {
     z-index: 3001;
 }
 
-
 .docTreeMenu {
     font-size: 100%;
 }
+
 .docTreeMenu ul {
     width: 240px;
 }
+
 .docTreeMenu ul li {
     /* white-space: nowrap; */
 }
+
 .docTreeMenu kbd {
     float: right;
 }
@@ -492,7 +493,6 @@ span.fancytree-title {
     padding-left: 15px;
     padding-right: 15px;
 }
-
 
 /* FIX: THis is bad style. It breaks vertical alignment for all btn-group elements. */
 .module-content .content-body .well-sm .btn-group {
@@ -698,19 +698,19 @@ span.fancytree-title {
 }
 
 .expandableRow .panel-body {
-	padding: 0px;
+    padding: 0px;
 }
-.expandableRow{
-	height: auto !important;
+
+.expandableRow {
+    height: auto !important;
 }
 
 .ui-grid-canvas {
-	height: auto !important;
+    height: auto !important;
 }
 
-
 .ui-grid-canvas .panel.panel-success {
-	margin: 0px !important;
+    margin: 0px !important;
 }
 
 thead {
@@ -727,16 +727,16 @@ thead {
 /* Hyperlinks Padding/Wrap Issues */
 
 .ui-grid a {
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	white-space: nowrap;
-	-ms-text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	position: relative;
-	display: inherit;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
+    display: inherit;
 }
 
 .ui-grid a.btn {
@@ -746,31 +746,32 @@ thead {
 /* Dates Padding Issues */
 
 .ui-grid .ui-grid-cell {
-	-ms-text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
 }
 
 .ui-grid .ui-grid-cell a.btn.btn-xs {
-	padding: 5px 5px 5px 5px;
-	border-radius: 0px;
-	border-left: 0px;
-	position: relative;
-	top: -1px;
+    padding: 5px 5px 5px 5px;
+    border-radius: 0px;
+    border-left: 0px;
+    position: relative;
+    top: -1px;
 }
 
 .ui-grid .ui-grid-cell div {
-	//padding: 5px;
-	-moz-box-sizing: border-box;
-	-webkit-box-sizing: border-box;
-	box-sizing: border-box;
-	white-space: nowrap;
-	-ms-text-overflow: ellipsis;
-	-o-text-overflow: ellipsis;
-	text-overflow: ellipsis;
-	overflow: hidden;
-	position: relative;
+/ / padding: 5 px;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    white-space: nowrap;
+    -ms-text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    position: relative;
 }
+
 .ui-grid-cell-anchor {
     display: inline;
 }
@@ -781,13 +782,13 @@ thead {
 }*/
 
 .widget .ui-grid-cell:hover {
-	white-space: normal;
-	overflow: normal;
+    white-space: normal;
+    overflow: normal;
 }
 
 .widget .ui-grid-cell a:hover {
-	white-space: normal;
-	overflow: normal;
+    white-space: normal;
+    overflow: normal;
 }
 
 /* Highlight error grid's cell */
@@ -797,11 +798,17 @@ thead {
     color: #fff;
 }
 
-.ui-grid-cell div { padding: 5px; }
+.ui-grid-cell div {
+    padding: 5px;
+}
 
-.ui-grid-cell a { padding: 5px; }
+.ui-grid-cell a {
+    padding: 5px;
+}
 
-.ui-grid-cell div a { padding: 0px; }
+.ui-grid-cell div a {
+    padding: 0px;
+}
 
 .ui-grid-cell div.ui-grid-icon-ok {
     padding: 0px;
@@ -835,9 +842,9 @@ thead {
 }
 
 .modal-search .modal-columns .modal-left {
-    float:left;
+    float: left;
     width: 200px;
-    height:300px;
+    height: 300px;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 10px 10px 0px 10px;
@@ -858,7 +865,7 @@ thead {
 }
 
 .modal-backdrop {
-	z-index: -1;
+    z-index: -1;
 }
 
 /* Overriding of .form-inline class for the needs of the x-editable popup form. */
@@ -1002,13 +1009,26 @@ a.editable.editable-click {
     width: 100%;
     height: 100%;
 }
+
 .snowbound-iframe {
     min-height: 650px;
     width: 100%;
     height: 100%;
 }
+
 .snowbound-open-document {
     cursor: pointer;
+}
+
+.full-docview {
+    background-color: #f4f5f4;
+}
+
+.full-docview .snowbound-iframe { 
+	position: absolute;
+	left: 0;
+	width: 100% !important;
+	height: 100% !important;
 }
 
 @media only screen and (min-height: 900px) {
@@ -1019,6 +1039,7 @@ a.editable.editable-click {
         width: 100%;
         height: 100%;
     }
+
     .snowbound-iframe {
         min-height: 800px;
         width: 100%;
@@ -1031,7 +1052,6 @@ a.editable.editable-click {
     width: 100%;
     height: 700px;
 }
-
 
 .case-frevvo-iframe {
     position: absolute;
@@ -1052,6 +1072,13 @@ a.editable.editable-click {
     overflow-y: hidden;
     padding-bottom: 60px;
     padding-right: 200px;
+}
+
+.new-iframe-frevvo {
+    width: 100%;
+    height: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
 }
 
 .reports-iframe, .audit-iframe {
@@ -1085,14 +1112,14 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
 /* Dropdowns in the left sidebar (ie. datepicker) */
 
 .left-sidebar label ul.dropdown-menu {
-	border-radius: 0px;
-	margin: -2px 0px 0px 0px;
-	padding: 5px;
+    border-radius: 0px;
+    margin: -2px 0px 0px 0px;
+    padding: 5px;
 }
 
- .left-sidebar label ul.dropdown-menu button{
-	border: 0px;
-	border-radius: 0px;
+.left-sidebar label ul.dropdown-menu button {
+    border: 0px;
+    border-radius: 0px;
 }
 
 .ace_editor {
@@ -1100,66 +1127,65 @@ input.ng-invalid, textarea.ng-invalid, select.ng-invalid {
     border: 1px solid #cbd5dd;
 }
 
-
 .tabbed-footer {
-	position: fixed;
-	bottom: 0px;
-	background-color: white;
-	height: 40px;
-	right: 0px;
-	border-radius: 5px 0px 0px 0px;
-	border-top: 1px solid #ddd;
-	border-left: 1px solid #ddd;
-	border-bottom: 0px;
-	border-right: 0px;
-	z-index: 2000;
+    position: fixed;
+    bottom: 0px;
+    background-color: white;
+    height: 40px;
+    right: 0px;
+    border-radius: 5px 0px 0px 0px;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-bottom: 0px;
+    border-right: 0px;
+    z-index: 2000;
 }
 
 div.tabbed-footer a.collapsed-button {
-	float: left;
-	height: 40px;
-	width: 30px;
+    float: left;
+    height: 40px;
+    width: 30px;
 }
 
-div.tabbed-footer a.collapsed-button:hover{
-	background-color: #2d343e;
-	color: white;
-	border-radius: 5px 0px 0px 0px;
+div.tabbed-footer a.collapsed-button:hover {
+    background-color: #2d343e;
+    color: white;
+    border-radius: 5px 0px 0px 0px;
 }
 
-div.tabbed-footer a.collapsed-button i{
-	margin-top: 10px;
-	margin-left: 12px;
-	font-size: 20px;
+div.tabbed-footer a.collapsed-button i {
+    margin-top: 10px;
+    margin-left: 12px;
+    font-size: 20px;
 
 }
 
 div.tabbed-footer .overview-tabs {
-  float: left;
+    float: left;
 }
 
 div.tabbed-footer .overview-tabs li {
-  width: auto;
-  height: auto;
-  text-align: center;
-  cursor: pointer;
-  cursor: hand;
-  border-radius: 0px;
-  border: 0px;
-  font-size: 18px;
+    width: auto;
+    height: auto;
+    text-align: center;
+    cursor: pointer;
+    cursor: hand;
+    border-radius: 0px;
+    border: 0px;
+    font-size: 18px;
 }
 
-div.tabbed-footer .overview-tabs li span{
-	display: none;
-	clear: none;
+div.tabbed-footer .overview-tabs li span {
+    display: none;
+    clear: none;
 }
 
 div.tabbed-footer .overview-tabs li i.fa {
-	position: relative;
-	top: -4px;
+    position: relative;
+    top: -4px;
 }
 
-div.tabbed-footer .overview-tabs li.active a{
+div.tabbed-footer .overview-tabs li.active a {
     background-color: #efefef;
     color: #2d343e;
     border-radius: 0px;
@@ -1177,14 +1203,14 @@ div.tabbed-footer .overview-tabs li:hover span {
     position: fixed;
     display: block;
     bottom: 50px;
-	font-weight: bold;
-	color: #2d343e;
-	margin-left: -20px;
-	font-size: 12px;
+    font-weight: bold;
+    color: #2d343e;
+    margin-left: -20px;
+    font-size: 12px;
 }
 
 div.tabbed-footer .overview-tabs li:hover:last-child span {
-	margin-left: -60px;
+    margin-left: -60px;
 }
 
 div.tabbed-footer .overview-tabs li:hover span:before {
@@ -1204,66 +1230,63 @@ div.tabbed-footer .overview-tabs li:hover:last-child span:before {
 }
 
 tags-input .host {
-  margin-top: 0px;
-  margin-bottom: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 
 tags-input .tags {
-  box-shadow: none;
-  padding-top: 1px;
-  padding-bottom: 2px;
+    box-shadow: none;
+    padding-top: 1px;
+    padding-bottom: 2px;
 }
 
-.module-header tags-input .tags{
-	border: none;
-	box-shadow: none;
-	padding-top: 1px;
-	padding-bottom: 3px;
+.module-header tags-input .tags {
+    border: none;
+    box-shadow: none;
+    padding-top: 1px;
+    padding-bottom: 3px;
 }
 
 .left-sidebar ul.tag-list li {
-	width: 240px;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
+    width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.left-sidebar ul.tag-list .remove-button{
-	position: absolute;
-	right: 15px;
-	margin-top: 3px;
+.left-sidebar ul.tag-list .remove-button {
+    position: absolute;
+    right: 15px;
+    margin-top: 3px;
 }
-
 
 .modal-header {
-	background-color: #232931;
-	border-radius: 4px 4px 0px 0px;
-	color: #fff;
+    background-color: #232931;
+    border-radius: 4px 4px 0px 0px;
+    color: #fff;
 }
-
 
 .modal-header h3, .modal-header h4 {
-	color: #fff;
+    color: #fff;
 }
 
-
 .modal-footer {
-	background-color: #2d343e;
-	color: #fff;
+    background-color: #2d343e;
+    color: #fff;
 }
 
 .modal-footer .btn-secondary {
-	background-color: transparent;
-	color: #fff;
+    background-color: transparent;
+    color: #fff;
 }
 
 .modal-title {
-	color: #fff;
+    color: #fff;
 }
 
 .modal-body {
-	color: #000000;
-	color: rgba(0, 0, 0, 0.7);
+    color: #000000;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .hidden-button {
@@ -1271,40 +1294,42 @@ tags-input .tags {
 }
 
 .pull-right.well select {
-	position: relative;
-	top: 4px !important;
-}
-.pull-right.well .btn-group .btn-link {
-	color: white;
-}
-.pull-right.well .btn-group .btn-link:hover {
-	color: #ccc;
+    position: relative;
+    top: 4px !important;
 }
 
+.pull-right.well .btn-group .btn-link {
+    color: white;
+}
+
+.pull-right.well .btn-group .btn-link:hover {
+    color: #ccc;
+}
 
 /* fixing padding for rows inside of panels */
 
 .panel-body .row {
-	margin-right: 0px;
-	margin-left: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
 .panel-body .row:first-child {
-	margin-top: 10px;
-	margin-right: 0px;
-	margin-left: 0px;
-}
-.panel-body .row:last-child {
-	margin-bottom: 10px;
-	margin-right: 0px;
-	margin-left: 0px;
+    margin-top: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
 }
 
+.panel-body .row:last-child {
+    margin-bottom: 10px;
+    margin-right: 0px;
+    margin-left: 0px;
+}
 
 .module-header .col-xs-12.col-md-3 .h4.font-bold {
     font-size: 15px;
     margin: 0px;
 }
+
 .module-header .col-xs-12.col-md-2 .h4.font-bold {
     font-size: 15px;
     margin: 0px;
@@ -1314,6 +1339,7 @@ tags-input .tags {
     font-size: 15px;
     margin: 0px;
 }
+
 .module-header .col-sm-6.col-md-3 .h4.font-bold {
     font-size: 15px;
     margin: 0px;
@@ -1330,35 +1356,32 @@ tags-input .tags {
 }
 
 .right-sidebar.well-sm.documentDetails {
-	top: 172px;
+    top: 172px;
 }
 
-
-
 /* Right Sidebar Summernote Editor */
-.right-sidebar.well-sm .note-toolbar .btn{
-	padding: 2px 5px 2px 5px;
+.right-sidebar.well-sm .note-toolbar .btn {
+    padding: 2px 5px 2px 5px;
 }
 
 .right-sidebar.well-sm .note-toolbar .btn-group {
-	margin: 0px !important;
-	padding: 0px !important;
+    margin: 0px !important;
+    padding: 0px !important;
 }
 
 .right-sidebar.well-sm .note-toolbar .note-help.btn-group {
-	display: none;
+    display: none;
 }
 
 .right-sidebar.well-sm .note-toolbar .note-view.btn-group {
-	display: none;
+    display: none;
 }
-
 
 /* Fixing Full Screen Summernote Editor */
 .note-editor.panel.panel-default.fullscreen {
-	z-index: 1000 !important;
-	position: absolute !important;
-	margin-top: 60px;
+    z-index: 1000 !important;
+    position: absolute !important;
+    margin-top: 60px;
 }
 
 /* Fixing Note Editor Padding for File Upload in Firefox */
@@ -1426,6 +1449,7 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     background-color: white !important;
     cursor: pointer;
 }
+
 .input-xs {
     height: 22px;
     padding: 2px 5px;
@@ -1449,20 +1473,30 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     animation: spin 2s linear infinite;
     margin-left: 45%
 }
+
 @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
-.modal-width-80 > .modal-dialog{
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal-width-80 > .modal-dialog {
     width: 80%;
 }
 
-.modal-width-80  .img-responsive {
+.modal-width-80 .img-responsive {
     margin: 0 auto;
 }
 
@@ -1482,14 +1516,14 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     cursor: default;
 }
 
-.help-tip:before{
-    content:'?';
+.help-tip:before {
+    content: '?';
     font-weight: bold;
-    color:#fff;
+    color: #fff;
 }
 
-.help-tip:hover p{
-    display:block;
+.help-tip:hover p {
+    display: block;
     transform-origin: 100% 0%;
     left: 50px;
 
@@ -1498,7 +1532,7 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 
 }
 
-.help-tip p{	/* The tooltip */
+.help-tip p { /* The tooltip */
     display: none;
     text-align: left;
     background-color: #1E2021;
@@ -1513,19 +1547,19 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
     line-height: 1.4;
 }
 
-.help-tip p:before{ /* The pointer of the tooltip */
+.help-tip p:before { /* The pointer of the tooltip */
     position: absolute;
     content: '';
-    width:0;
+    width: 0;
     height: 0;
-    border:6px solid transparent;
-    border-bottom-color:#1E2021;
+    border: 6px solid transparent;
+    border-bottom-color: #1E2021;
 }
 
-.help-tip p:after{ /* Prevents the tooltip from being hidden */
-    width:100%;
-    height:40px;
-    content:'';
+.help-tip p:after { /* Prevents the tooltip from being hidden */
+    width: 100%;
+    height: 40px;
+    content: '';
     position: absolute;
 }
 
@@ -1533,19 +1567,23 @@ a.no-link:hover, a.no-link:focus, a.no-link:visited {
 
 @-webkit-keyframes fadeIn {
     0% {
-        opacity:0;
+        opacity: 0;
         transform: scale(0.6);
     }
 
     100% {
-        opacity:100%;
+        opacity: 100%;
         transform: scale(1);
     }
 }
 
 @keyframes fadeIn {
-    0% { opacity:0; }
-    100% { opacity:100%; }
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100%;
+    }
 }
 
 /* For [Primary] on grid cell*/
@@ -1554,5 +1592,11 @@ a.primary {
 }
 
 .table > thead > tr > th {
-	vertical-align: top !important;
+    vertical-align: top !important;
+}
+
+/*For drag and drop on ui-grid */
+.ui-grid-draggable-row {
+    height: 30px;
+    opacity: 1 !important;
 }

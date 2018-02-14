@@ -47,7 +47,8 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
             if (context == null)
             {
                 MDC.clear();
-            } else
+            }
+            else
             {
                 MDC.setContextMap(context);
             }
@@ -55,12 +56,14 @@ public class MDCThreadPoolExecutor extends ThreadPoolExecutor
             try
             {
                 runnable.run();
-            } finally
+            }
+            finally
             {
                 if (previous == null)
                 {
                     MDC.clear();
-                } else
+                }
+                else
                 {
                     MDC.setContextMap(previous);
                 }

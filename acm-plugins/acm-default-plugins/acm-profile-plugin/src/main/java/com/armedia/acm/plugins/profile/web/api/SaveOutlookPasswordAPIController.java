@@ -54,7 +54,8 @@ public class SaveOutlookPasswordAPIController
             getEventPublisher().outlookPasswordSavedEvent(outlookPassword, authentication, ipAddress, true);
 
             return in;
-        } catch (AcmEncryptionException | NullPointerException | IllegalStateException | IllegalArgumentException e)
+        }
+        catch (AcmEncryptionException | NullPointerException | IllegalStateException | IllegalArgumentException e)
         {
             log.error("Could not update Outlook password for user: " + e.getMessage(), e);
 
