@@ -26,8 +26,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import java.io.IOException;
-
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
@@ -51,7 +49,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void testSaveLookupAddEntryToCoreLookupSuccess() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupAddEntryToCoreLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -72,11 +70,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, false);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupUpdateInverseLookupSuccess2() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupUpdateInverseLookupEntriesToExt() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -98,12 +96,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupAddInverseEntriesToExtLookupSuccess1()
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupAddInverseEntriesToExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -113,7 +110,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"inverseKey\":\"someKey\",\"inverseValue\":\"someValue\"}]";
         lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
         configLookupDao.setLookups(
-                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+                "{\"inverseValuesLookup\": [{\"name\":\"colors\", \"entries\":[], \"readonly\":true}], \"nestedLookup\": [],\"standardLookup\":[]}");
         configLookupDao.setLookupsExt("{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": []}");
 
         // when
@@ -124,12 +121,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupAddEntryToCoreAndExtLookupSuccess()
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupAddEntryToCoreAndExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -151,11 +147,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupToExtLookupSuccess() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupToExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -176,11 +172,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), true);
     }
 
     @Test
-    public void testSaveLookupNestedLookupSuccess() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupNestedLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -202,12 +198,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test(expected = InvalidLookupException.class)
-    public void testSaveLookupThrowsExceptionOnInvalidLookupJson()
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupThrowsExceptionOnInvalidLookupJson() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -229,7 +224,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = InvalidLookupException.class)
-    public void testSaveLookupThrowsExceptionOnDuplicateKeys() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testSaveLookupThrowsExceptionOnDuplicateKeys() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -406,7 +401,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
     }
 
     @Test
@@ -444,7 +439,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
     }
 
     @Test
@@ -492,7 +487,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
 
     }
 
@@ -532,12 +527,12 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
 
     }
 
     @Test
-    public void testDeleteLookupFromExtLookups() throws AcmResourceNotModifiableException, AcmResourceNotFoundException, IOException
+    public void testDeleteLookupFromExtLookups() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -563,8 +558,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testDeleteLookupThatCantBeDeletedReturnNotModifiableException()
-            throws AcmResourceNotModifiableException, AcmResourceNotFoundException, IOException
+    public void testDeleteLookupThatCantBeDeletedReturnNotModifiableException() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -584,8 +578,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotFoundException.class)
-    public void testDeleteLookupReturnsNotFoundExceptionForUnknownLookup()
-            throws AcmResourceNotModifiableException, IOException, AcmResourceNotFoundException
+    public void testDeleteLookupReturnsNotFoundExceptionForUnknownLookup() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -649,7 +642,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckDeleteProtectedEntry() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testCheckDeleteProtectedEntry() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -671,7 +664,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckReadOnlyEntriesOnUpdate() throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testCheckReadOnlyEntriesOnUpdate() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -693,8 +686,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckDeleteProtectedEntryOnAdding()
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testCheckDeleteProtectedEntryOnAdding() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -716,8 +708,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckDeleteProtectedEntryInInverseLookup()
-            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
+    public void testCheckDeleteProtectedEntryInInverseLookup() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -739,8 +730,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckReadonlyEntriesInNestedLookup() throws InvalidLookupException, IOException,
-            AcmResourceNotModifiableException
+    public void testCheckReadonlyEntriesInNestedLookup() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -763,8 +753,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testCheckReadonlyEntriesInSubLookupInNestedLookup() throws InvalidLookupException, IOException,
-            AcmResourceNotModifiableException
+    public void testCheckReadonlyEntriesInSubLookupInNestedLookup() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();

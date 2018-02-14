@@ -1,6 +1,6 @@
 package com.armedia.acm.services.config.lookups.model;
 
-public class AcmLookupEntry
+public abstract class AcmLookupEntry
 {
 
     private boolean readonly;
