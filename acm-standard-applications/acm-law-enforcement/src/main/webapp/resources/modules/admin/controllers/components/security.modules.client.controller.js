@@ -9,13 +9,18 @@ angular.module('admin').controller(
 
                     $scope.appModules = [];
                     $scope.appRoles = [];
+                    $scope.rolesData = {
+                        "chooseObject" : $scope.appModules,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
                     $scope.currentAuthRoles = [];
 
                     //wait all promises to resolve
                     $q.all([ tempAppModulesPromise, tempAppRolesPromise ]).then(function(payload) {
 
                         //get all appRoles
-                        $scope.appModules = payload[0].data;
+                        $scope.rolesData.chooseObject = payload[0].data;
 
                         //get all app roles
                         $scope.appRoles = payload[1].data;
