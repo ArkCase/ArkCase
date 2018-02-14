@@ -25,11 +25,11 @@ angular.module('document-details').controller(
                         gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                         gridHelper.setUserNameFilter(promiseUsers);
 
-                        $scope.retrieveGridData();
+                        $scope.retrieveGridDataForEventHistory();
                         return config;
                     });
 
-                    $scope.retrieveGridData = function() {
+                    $scope.retrieveGridDataForEventHistory = function() {
                         if (Util.goodPositive($stateParams.id)) {
                             var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.FILE, $stateParams.id, Util
                                     .goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"),
@@ -40,6 +40,7 @@ angular.module('document-details').controller(
                                 $scope.gridOptions = $scope.gridOptions || {};
                                 $scope.gridOptions.data = auditData.resultPage;
                                 $scope.gridOptions.totalItems = auditData.totalCount;
+
                             });
                         }
                     };
