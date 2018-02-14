@@ -375,7 +375,8 @@
                 "actions.label": "Actions",
                 "manual.label": "Manual",
                 "automated.label": "Automated",
-                "browse": "Browse",
+                "choose.file": "Choose File",
+                "download": "Download",
                 "save": "Save",
                 "cancel": "Cancel",
                 "validationResponse": "Email Template already exists with selected parameters"
