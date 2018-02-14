@@ -226,67 +226,100 @@ public class ConfigLookupDao implements LookupDao
         saveLookupsExt(updatedLookupsAsJson);
     }
 
-    private void checkReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    private void checkStandardLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
     {
-        if (LookupType.STANDARD_LOOKUP.equals(lookupDefinition.getLookupType()))
+
+        List<StandardLookupEntry> protectedEntries = ((StandardLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
+
+        for (StandardLookupEntry protectedEntry : protectedEntries)
         {
-            List<StandardLookupEntry> protectedEntries = ((StandardLookup) getLookupByName(lookupDefinition.getName()))
-                    .getEntries().stream()
-                    .filter(AcmLookupEntry::isReadonly)
-                    .collect(Collectors.toList());
-
-            List<StandardLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, StandardLookupEntry.class);
-
-            for (StandardLookupEntry protectedEntry : protectedEntries)
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
             {
-                if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
-                {
-                    throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() + " cannot be deleted");
-                }
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() + " cannot be deleted");
             }
         }
-        else if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
+
+    }
+
+    private void checkInverseLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+
+        List<InverseValuesLookupEntry> protectedEntries = ((InverseValuesLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
+        for (InverseValuesLookupEntry protectedEntry : protectedEntries)
         {
-            List<InverseValuesLookupEntry> protectedEntries = ((InverseValuesLookup) getLookupByName(lookupDefinition.getName()))
-                    .getEntries().stream()
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
+            {
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() +
+                        " cannot be deleted");
+            }
+        }
+
+    }
+
+    private void checkNestedLookupReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+
+        List<NestedLookupEntry> protectedMainEntries = ((NestedLookup) getLookupByName(lookupDefinition.getName()))
+                .getEntries().stream()
+                .filter(AcmLookupEntry::isReadonly)
+                .collect(Collectors.toList());
+
+        List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
+                .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
+
+        // we expect that a protected entry in sublookup must have a protected main entry
+        for (NestedLookupEntry protectedMainEntry : protectedMainEntries)
+        {
+            if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedMainEntry.getKey())))
+            {
+                throw new AcmResourceNotModifiableException("Entry with key: " + protectedMainEntry.getKey() +
+                        " cannot be deleted");
+            }
+
+            List<StandardLookupEntry> protectedSubEntries = protectedMainEntry.getSubLookup().stream()
                     .filter(AcmLookupEntry::isReadonly)
                     .collect(Collectors.toList());
 
-            List<InverseValuesLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, InverseValuesLookupEntry.class);
-            for (InverseValuesLookupEntry protectedEntry : protectedEntries)
+            List<StandardLookupEntry> subEntries = entries.stream().filter(entry -> entry.getKey().equals(protectedMainEntry.getKey()))
+                    .findFirst().get().getSubLookup();
+
+            for (StandardLookupEntry protectedSubEntry : protectedSubEntries)
             {
-                if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey())))
+                if (subEntries.stream().noneMatch(entry -> entry.getKey().equals(protectedSubEntry.getKey())))
                 {
-                    throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() +
+                    throw new AcmResourceNotModifiableException("Entry with key: " + protectedSubEntry.getKey() +
                             " cannot be deleted");
                 }
             }
         }
+
+    }
+
+    private void checkReadOnlyEntries(LookupDefinition lookupDefinition) throws AcmResourceNotModifiableException
+    {
+        if (LookupType.STANDARD_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            checkStandardLookupReadOnlyEntries(lookupDefinition);
+        }
+        else if (LookupType.INVERSE_VALUES_LOOKUP.equals(lookupDefinition.getLookupType()))
+        {
+            checkInverseLookupReadOnlyEntries(lookupDefinition);
+        }
         else if (LookupType.NESTED_LOOKUP.equals(lookupDefinition.getLookupType()))
         {
-            List<NestedLookupEntry> protectedEntries = ((NestedLookup) getLookupByName(lookupDefinition.getName()))
-                    .getEntries().stream()
-                    .filter(AcmLookupEntry::isReadonly)
-                    .collect(Collectors.toList());
-
-            List<NestedLookupEntry> entries = getObjectConverter().getJsonUnmarshaller()
-                    .unmarshallCollection(lookupDefinition.getLookupEntriesAsJson(), List.class, NestedLookupEntry.class);
-
-            for (NestedLookupEntry protectedEntry : protectedEntries)
-            {
-                for (StandardLookupEntry subProtectedEntry : protectedEntry.getSubLookup())
-                {
-                    if (entries.stream().noneMatch(entry -> entry.getKey().equals(protectedEntry.getKey()))
-                            || entries.stream().noneMatch(entry -> entry.getKey().equals(subProtectedEntry.getKey())))
-                    {
-                        throw new AcmResourceNotModifiableException("Entry with key: " + protectedEntry.getKey() +
-                                " cannot be deleted");
-                    }
-                }
-
-            }
+            checkNestedLookupReadOnlyEntries(lookupDefinition);
         }
 
     }
@@ -341,7 +374,7 @@ public class ConfigLookupDao implements LookupDao
                     ObjectNode subEntryNode = new ObjectNode(new JsonNodeFactory(false));
                     subEntryNode.put("key", sublookupEntry.getKey());
                     subEntryNode.put("value", sublookupEntry.getValue());
-                    entryNode.put("readonly", entry.isReadonly());
+                    subEntryNode.put("readonly", sublookupEntry.isReadonly());
 
                     sublookupNode.add(subEntryNode);
                 });
