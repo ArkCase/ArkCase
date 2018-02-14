@@ -1,8 +1,8 @@
 package com.armedia.acm.plugins.report.web.api;
 
-import com.armedia.acm.plugins.report.model.ReportScheduler;
+import com.armedia.acm.plugins.report.model.PentahoReportSchedule;
+import com.armedia.acm.plugins.report.model.PentahoScheduleRequest;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
-import com.armedia.acm.plugins.report.model.ScheduleRequest;
 import com.armedia.acm.plugins.report.service.ScheduleReportService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,22 +28,22 @@ public class ScheduleReportAPIController
 
     @RequestMapping(value = "/schedule", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public void processReportSchedule(@RequestBody ReportScheduler reportSchedule)
+    public void processReportSchedule(@RequestBody PentahoReportSchedule pentahoReportSchedule)
             throws ScheduleReportException
     {
 
-        if (reportSchedule == null || reportSchedule.getUiPassParam() == null)
+        if (pentahoReportSchedule == null || pentahoReportSchedule.getUiPassParam() == null)
         {
             throw new ScheduleReportException("Invalid input given or missing schedule type: DAILY, WEEKLY, etc.");
         }
 
-        ScheduleRequest scheduleRequest = new ScheduleRequest(reportSchedule.getUiPassParam(), reportSchedule.getStartTime(),
-                reportSchedule.getEndTime(), reportSchedule.getJobName(), reportSchedule.getEmails(),
-                reportSchedule.getFilterStartDate(), reportSchedule.getFilterEndDate(), reportSchedule.getReportFile(), scheduleInputFolder, scheduleOutputFolder);
-        getScheduleReportService().scheduleReport(scheduleRequest.toJSONSting());
+        PentahoScheduleRequest pentahoScheduleRequest = new PentahoScheduleRequest(pentahoReportSchedule.getUiPassParam(), pentahoReportSchedule.getStartTime(),
+                pentahoReportSchedule.getEndTime(), pentahoReportSchedule.getJobName(), pentahoReportSchedule.getEmails(),
+                pentahoReportSchedule.getFilterStartDate(), pentahoReportSchedule.getFilterEndDate(), pentahoReportSchedule.getReportFile(), scheduleInputFolder, scheduleOutputFolder);
+        getScheduleReportService().scheduleReport(pentahoScheduleRequest.toJSONSting());
 
-        LOGGER.debug(reportSchedule.toString());
-        LOGGER.debug(scheduleRequest.toJSONSting());
+        LOGGER.debug(pentahoReportSchedule.toString());
+        LOGGER.debug(pentahoScheduleRequest.toJSONSting());
     }
 
     @RequestMapping(value = "/schedule", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

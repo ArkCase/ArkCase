@@ -20,7 +20,7 @@ package com.armedia.acm.plugins.report.model;
  * }
  */
 
-public final class ScheduleReportConstants
+public final class PentahoReportScheduleConstants
 {
     //These are default values
     public static final String SIMPLE_JOB_TRIGGER = "simpleJobTrigger";
@@ -75,7 +75,7 @@ public final class ScheduleReportConstants
     public static final String EMAIL_BODY_TEMPLATE = "Attached is the scheduled report \"%s\"";
     public static final String JOB_PARAMETERS = "jobParameters";
 
-    private ScheduleReportConstants()
+    private PentahoReportScheduleConstants()
     {
         throw new AssertionError();
     }

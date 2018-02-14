@@ -16,9 +16,9 @@ import java.util.Arrays;
 /**
  * Created by dwu on 6/10/2017.
  */
-public class RemoveGeneratedReportRestService
+public class PentahoRemoveGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RemoveGeneratedReportRestService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoRemoveGeneratedReportService.class);
     private ResponseEntity<String> response;
     private String pentahoUrl;
     private String pentahoPort;

@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.report.model;
 /**
  * Created by dwu on 6/13/2017.
  */
-public class ReportScheduler
+public class PentahoReportSchedule
 {
     private String uiPassParam;
     private String startTime;
@@ -108,7 +108,7 @@ public class ReportScheduler
     @Override
     public String toString()
     {
-        return "ReportScheduler{" +
+        return "PentahoReportSchedule{" +
                 "uiPassParam='" + uiPassParam + '\'' +
                 ", startTime='" + startTime + '\'' +
                 ", endTime='" + endTime + '\'' +

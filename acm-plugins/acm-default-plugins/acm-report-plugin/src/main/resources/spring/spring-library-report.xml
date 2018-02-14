@@ -62,7 +62,7 @@
         </property>
     </bean>
 
-    <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.UploadGeneratedReportService">
+    <bean id="uploadReportService" class="com.armedia.acm.plugins.report.service.PentahoUploadGeneratedReportService">
         <property name="documentRepositoryDao" ref="documentRepositoryDao"/>
         <property name="acmFolderService" ref="acmFolderService"/>
         <property name="ecmFileService" ref="ecmFileService"/>
@@ -72,26 +72,26 @@
         <property name="reportDocumentRepository" value="${PENTAHO_REPORT_DOCUMENT_REPOSITORY_NAME}"/>
     </bean>
 
-    <bean id="downloadReportService" class="com.armedia.acm.plugins.report.service.DownloadGeneratedReportRestService">
+    <bean id="downloadReportService" class="com.armedia.acm.plugins.report.service.PentahoDownloadGeneratedReportService">
         <property name="pentahoUrl" value="${PENTAHO_SERVER_INTERNAL_URL}"/>
         <property name="pentahoPort" value="${PENTAHO_SERVER_INTERNAL_PORT}"/>
         <property name="downloadApi" value="${PENTAHO_DOWNLOAD_API}"/>
     </bean>
 
-    <bean id="filePropertiesRestService" class="com.armedia.acm.plugins.report.service.FilePropertiesRestService">
+    <bean id="pentahoFilePropertiesService" class="com.armedia.acm.plugins.report.service.PentahoFilePropertiesService">
         <property name="pentahoUrl" value="${PENTAHO_SERVER_INTERNAL_URL}"/>
         <property name="pentahoPort" value="${PENTAHO_SERVER_INTERNAL_PORT}"/>
         <property name="filePropertiesApi" value="${PENTAHO_FILE_PROPERTIES_API}"/>
     </bean>
 
-    <bean id="removeGeneratedReportRestService"
-          class="com.armedia.acm.plugins.report.service.RemoveGeneratedReportRestService">
+    <bean id="pentahoRemoveGeneratedReportService"
+          class="com.armedia.acm.plugins.report.service.PentahoRemoveGeneratedReportService">
         <property name="pentahoUrl" value="${PENTAHO_SERVER_INTERNAL_URL}"/>
         <property name="pentahoPort" value="${PENTAHO_SERVER_INTERNAL_PORT}"/>
         <property name="removeFileApi" value="${PENTAHO_REMOVE_FILE_API}"/>
     </bean>
 
-    <bean id="scheduleReportRestService" class="com.armedia.acm.plugins.report.service.ScheduleReportRestService">
+    <bean id="scheduleReportRestService" class="com.armedia.acm.plugins.report.service.PentahoScheduleReportService">
         <property name="pentahoUser" value="${PENTAHO_SERVER_USER}"/>
         <property name="pentahoPassword" value="${PENTAHO_SERVER_PASSWORD}"/>
         <property name="pentahoUrl" value="${PENTAHO_SERVER_INTERNAL_URL}"/>
@@ -102,11 +102,11 @@
     </bean>
 
     <bean id="scheduleGeneratedReportService"
-          class="com.armedia.acm.plugins.report.service.ScheduleGeneratedReportServiceImpl">
-        <property name="filePropertiesRestService" ref="filePropertiesRestService"/>
+          class="com.armedia.acm.plugins.report.service.PentahoScheduleGeneratedReportServiceImpl">
+        <property name="pentahoFilePropertiesService" ref="pentahoFilePropertiesService"/>
         <property name="downloadService" ref="downloadReportService"/>
         <property name="uploadService" ref="uploadReportService"/>
-        <property name="removeGeneratedReportRestService" ref="removeGeneratedReportRestService"/>
+        <property name="pentahoRemoveGeneratedReportService" ref="pentahoRemoveGeneratedReportService"/>
         <property name="pentahoUser" value="${PENTAHO_SERVER_USER}"/>
         <property name="pentahoPassword" value="${PENTAHO_SERVER_PASSWORD}"/>
     </bean>

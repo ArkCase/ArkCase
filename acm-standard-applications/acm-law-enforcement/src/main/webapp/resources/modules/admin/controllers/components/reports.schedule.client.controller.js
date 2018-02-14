@@ -5,8 +5,6 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
     function($scope, reportsConfigService, $q, $translate, LookupService, UtilDateService,
              ScheduleReportService, MessageService, Util) {
 
-        var deferred = $q.defer();
-
         // instantiate the promise to pull from acm-reports-server.config.properties
         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
 
@@ -14,18 +12,6 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
         $scope.reportTypes = [];
         $scope.reportRecurrence = [];
         $scope.outputTypes = [];
-        $scope.hoursList = [];
-        // add hours 1-12
-        for (var i = 1; i < 13; i++){
-            $scope.hoursList.push(i);
-        }
-        // add minutes 0-59
-        $scope.minutesList=[];
-        for (var y = 0; y < 60; y++) {
-            $scope.minutesList.push(("0" + y).slice(-2));
-        }
-        // set meridiem options
-        $scope.meridiemList=['AM','PM'];
 
         // wait for promises to resolve
         $q.all([promiseServerConfig]).then(function (payload) {
@@ -41,9 +27,8 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
                 $scope.reportFile = $scope.reportTypesList[0].value;
             }
             $scope.reportRecurrence = 'WEEKLY';
-            $scope.reportRecurrenceHours = 12;
-            $scope.reportRecurrenceMinutes = '00';
-            $scope.reportRecurrenceMeridiem = 'AM';
+            $scope.reportRecurrenceTime = new Date();
+            $scope.reportRecurrenceTime.setHours(0, 0, 0, 0);
             $scope.reportStartDate = new Date();
             $scope.reportEmailAddresses = '';
             $scope.outputFormat = 'Excel/CSV';
@@ -67,8 +52,8 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
         }
 
         $scope.validateStartDate = function () {
-            if ($scope.reportStartDate && $scope.reportRecurrenceHours && $scope.reportRecurrenceMinutes && $scope.reportRecurrenceMeridiem) {
-                var startDate = buildDate($scope.reportStartDate, $scope.reportRecurrenceHours, $scope.reportRecurrenceMinutes, $scope.reportRecurrenceMeridiem);
+            if ($scope.reportStartDate && $scope.reportRecurrenceTime && $scope.reportRecurrenceTime.getHours() && $scope.reportRecurrenceTime.getMinutes()) {
+                var startDate = buildDate($scope.reportStartDate, $scope.reportRecurrenceTime.getHours(), $scope.reportRecurrenceTime.getMinutes());
                 var currentDate = new Date();
                 return startDate > currentDate;
             }
@@ -88,8 +73,7 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
                 // process the entered dates
                 var startDate = dateToPentahoIso(
                     buildDate(
-                        $scope.reportStartDate, $scope.reportRecurrenceHours, $scope.reportRecurrenceMinutes,
-                        $scope.reportRecurrenceMeridiem));
+                        $scope.reportStartDate, $scope.reportRecurrenceTime.getHours(), $scope.reportRecurrenceTime.getMinutes()));
                 var endDate = dateToPentahoIso($scope.reportEndDate);
 
                 // convert scope variables into an object
@@ -137,18 +121,9 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
         };
 
         // process the entered time and date for the start date
-        var buildDate = function(date, hour, minute, meridiem) {
+        var buildDate = function(date, hour, minute) {
             var adjustedHour = hour;
             var adjustedDate = date;
-            // add 12 hours to PM times
-            if (adjustedHour < 12 && meridiem === 'PM') {
-                adjustedHour = adjustedHour + 12;
-            } else {
-                // adjust midnight to be hour 00
-                if (adjustedHour === 12 && meridiem === 'AM') {
-                    adjustedHour = 0;
-                }
-            }
             adjustedDate.setHours(adjustedHour, minute, 0, 0);
             return adjustedDate;
         };

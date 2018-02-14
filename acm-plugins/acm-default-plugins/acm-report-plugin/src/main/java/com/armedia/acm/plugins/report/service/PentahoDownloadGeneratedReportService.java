@@ -16,9 +16,9 @@ import java.util.Arrays;
 /**
  * Created by dwu on 6/9/2017.
  */
-public class DownloadGeneratedReportRestService
+public class PentahoDownloadGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(DownloadGeneratedReportRestService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoDownloadGeneratedReportService.class);
     private ResponseEntity<byte[]> response;
     private String pentahoUrl;
     private String pentahoPort;

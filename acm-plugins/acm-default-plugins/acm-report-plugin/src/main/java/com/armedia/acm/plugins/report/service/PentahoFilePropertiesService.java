@@ -1,6 +1,6 @@
 package com.armedia.acm.plugins.report.service;
 
-import com.armedia.acm.plugins.report.model.ReportFiles;
+import com.armedia.acm.plugins.report.model.PentahoReportFiles;
 import com.armedia.acm.plugins.report.model.ScheduleReportException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,16 +17,16 @@ import java.util.Arrays;
 /**
  * Created by dwu on 6/9/2017.
  */
-public class FilePropertiesRestService
+public class PentahoFilePropertiesService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(FilePropertiesRestService.class);
-    private ReportFiles reportFiles;
-    private ResponseEntity<ReportFiles> response;
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoFilePropertiesService.class);
+    private PentahoReportFiles pentahoReportFiles;
+    private ResponseEntity<PentahoReportFiles> response;
     private String pentahoUrl;
     private String pentahoPort;
     private String filePropertiesApi;
 
-    public ReportFiles consumeXML(HttpHeaders headers, RestTemplate restTemplate)
+    public PentahoReportFiles consumeXML(HttpHeaders headers, RestTemplate restTemplate)
     {
         try
         {
@@ -35,8 +35,8 @@ public class FilePropertiesRestService
             HttpEntity<String> request = new HttpEntity<>(headers);
 
             response = restTemplate.exchange(buildFilePropertiesUrl(),
-                    HttpMethod.GET, request, ReportFiles.class);
-            reportFiles = response.getBody();
+                    HttpMethod.GET, request, PentahoReportFiles.class);
+            pentahoReportFiles = response.getBody();
 
             if (response.getStatusCode() != HttpStatus.OK)
             {
@@ -48,7 +48,7 @@ public class FilePropertiesRestService
             LOGGER.error("File Properties encountered error. May be Rest call connection or file not found error: {}", e.getMessage(), e);
         }
 
-        return reportFiles;
+        return pentahoReportFiles;
     }
 
     public String buildFilePropertiesUrl()
@@ -56,22 +56,22 @@ public class FilePropertiesRestService
         return getPentahoUrl() + ((getPentahoPort() != null && !getPentahoPort().isEmpty()) ? ":" + getPentahoPort() : "") + getFilePropertiesApi();
     }
 
-    public ReportFiles getReportFiles()
+    public PentahoReportFiles getPentahoReportFiles()
     {
-        return reportFiles;
+        return pentahoReportFiles;
     }
 
-    public void setReportFiles(ReportFiles reportFiles)
+    public void setPentahoReportFiles(PentahoReportFiles pentahoReportFiles)
     {
-        this.reportFiles = reportFiles;
+        this.pentahoReportFiles = pentahoReportFiles;
     }
 
-    public ResponseEntity<ReportFiles> getResponse()
+    public ResponseEntity<PentahoReportFiles> getResponse()
     {
         return response;
     }
 
-    public void setResponse(ResponseEntity<ReportFiles> response)
+    public void setResponse(ResponseEntity<PentahoReportFiles> response)
     {
         this.response = response;
     }

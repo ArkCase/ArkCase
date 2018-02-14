@@ -31,24 +31,9 @@
                     <div class="row">
                         <label style="padding-left: 15px;" translate>admin.reports.schedule.time</label>
                         <div class="input-group" id="time">
-                            <div class="col-xs-4">
-                                <select ng-model="reportRecurrenceHours"
-                                        ng-options="item for item in hoursList"
-                                >
-                                </select>
-                            </div>
-                            <div class="col-xs-4">
-                                <select ng-model="reportRecurrenceMinutes"
-                                        ng-options="item for item in minutesList"
-                                >
-                                </select>
-                            </div>
-                            <div class="col-xs-4">
-                                <select ng-model="reportRecurrenceMeridiem"
-                                        ng-options="item for item in meridiemList"
-                                >
-                                </select>
-                            </div>
+                            <timepicker ng-model="reportRecurrenceTime" hour-step="1" minute-step="1"
+                                        show-meridian="true" show-spinners="false">
+                            </timepicker>
                         </div>
                     </div>
                     <div class="row">
