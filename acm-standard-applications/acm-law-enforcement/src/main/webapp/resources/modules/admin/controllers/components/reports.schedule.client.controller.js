@@ -27,8 +27,6 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
                 $scope.reportFile = $scope.reportTypesList[0].value;
             }
             $scope.reportRecurrence = 'WEEKLY';
-            $scope.reportRecurrenceTime = new Date();
-            $scope.reportRecurrenceTime.setHours(0, 0, 0, 0);
             $scope.reportStartDate = new Date();
             $scope.reportEmailAddresses = '';
             $scope.outputFormat = 'Excel/CSV';
@@ -41,48 +39,23 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
             $scope.opened.openedFilterEnd = false;
         });
 
-        function dateToPentahoIso (date, replacement) {
-            var replacedWith = (undefined === replacement) ? "" : replacement;
-
-            if (date && date instanceof Date) {
-                return moment(date).format("YYYY-MM-DDTHH:mm:ss.SSSZ");
-            } else {
-                return replacedWith;
-            }
-        }
-
-        $scope.validateStartDate = function () {
-            if ($scope.reportStartDate && $scope.reportRecurrenceTime && $scope.reportRecurrenceTime.getHours() && $scope.reportRecurrenceTime.getMinutes()) {
-                var startDate = buildDate($scope.reportStartDate, $scope.reportRecurrenceTime.getHours(), $scope.reportRecurrenceTime.getMinutes());
-                var currentDate = new Date();
-                return startDate > currentDate;
-            }
-            return false;
-        };
-
         $scope.isSubmitDisabled = function () {
             return Util.isEmpty($scope.reportFile) ||
                 Util.isEmpty($scope.filterStartDate) ||
                 Util.isEmpty($scope.filterEndDate) ||
-                !$scope.validateStartDate();
+                Util.isEmpty($scope.reportStartDate);
         };
 
         $scope.saveNewScheduledReport = function() {
             var selectedReport = _.find($scope.reportTypesList, {value: $scope.reportFile});
             if (!Util.isEmpty(selectedReport)) {
-                // process the entered dates
-                var startDate = dateToPentahoIso(
-                    buildDate(
-                        $scope.reportStartDate, $scope.reportRecurrenceTime.getHours(), $scope.reportRecurrenceTime.getMinutes()));
-                var endDate = dateToPentahoIso($scope.reportEndDate);
-
                 // convert scope variables into an object
                 var objectToSubmit = {
                     jobName: selectedReport.label,
                     reportFile: selectedReport.value,
                     uiPassParam: $scope.reportRecurrence,
-                    startTime: startDate,
-                    endTime: endDate,
+                    startTime: moment($scope.reportStartDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    endTime: $scope.reportEndDate ? moment($scope.reportEndDate).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : "", // schedule end date is optional
                     outputFileType: $scope.outputFormat,
                     emails: $scope.reportEmailAddresses,
                     filterStartDate: UtilDateService.goodIsoDate($scope.filterStartDate),
@@ -118,14 +91,6 @@ angular.module('admin').controller('Admin.ReportsScheduleController', ['$scope',
                 propertyArray.push(valueLabelPair);
             }
             return propertyArray;
-        };
-
-        // process the entered time and date for the start date
-        var buildDate = function(date, hour, minute) {
-            var adjustedHour = hour;
-            var adjustedDate = date;
-            adjustedDate.setHours(adjustedHour, minute, 0, 0);
-            return adjustedDate;
         };
 
     }

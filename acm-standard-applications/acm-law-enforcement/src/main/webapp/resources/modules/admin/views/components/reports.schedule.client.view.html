@@ -32,7 +32,7 @@
                         <label style="padding-left: 15px;" translate>admin.reports.schedule.time</label>
                         <div class="col-xs-12 b-r">
                             <div class="input-group" id="time">
-                                <timepicker ng-model="reportRecurrenceTime" hour-step="1" minute-step="1"
+                                <timepicker ng-model="reportStartDate" hour-step="1" minute-step="1"
                                             show-meridian="true" show-spinners="false">
                                 </timepicker>
                             </div>
@@ -41,6 +41,7 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <label for="startDate" translate>admin.reports.schedule.startDate</label>
+                            <span class="required-asterisk">*</span>
                             <div class="input-group" id="startDate">
                                 <input type="text" class="form-control"
                                        name="reportStartDate"
@@ -151,11 +152,6 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <div class="alert alert-warning col-sm-12" ng-if="!validateStartDate()">
-                <span translate>admin.reports.schedule.enterFutureDate</span>
-            </div>
-        </div>
         <div class="row">
             <div class="col-xs-12 b-r">
                 <button type="button" class="btn btn-primary pull-right"
