@@ -1,5 +1,6 @@
 package com.armedia.acm.services.dataupdate.web;
 
+import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -23,12 +24,9 @@ import java.util.Properties;
 
 public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
 {
-    // private String acmUserKey = "solr.last.run.date.com.armedia.acm.services.users.model.AcmUser";
-    private String acmUserValue = "";
-    // private String acmGroupKey = "solr.last.run.date.com.armedia.acm.services.users.model.group.AcmGroup";
-    private String acmGroupValue = "";
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
     private TriggerSolrUpdateExecutor triggerSolrUpdateExecutor;
+    private TriggerSolrUpdateExecutor triggerSolrUpdateExecutorMock;
     private PropertyFileManager propertyFileManager;
     private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
     private List<String> solrList;
@@ -38,6 +36,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         triggerSolrUpdateExecutor = new TriggerSolrUpdateExecutor();
+        triggerSolrUpdateExecutorMock = createMock(TriggerSolrUpdateExecutor.class);
         propertyFileManager = new PropertyFileManager();
         triggerSolrUpdateExecutor.setLastBatchUpdatePropertyFileLocation(filePath);
         triggerSolrUpdateExecutor.setPropertyFileManager(propertyFileManager);
@@ -62,7 +61,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
         properties.store(new FileOutputStream(filePath), null);
     }
 
-    public String takeValue(String key) throws IOException
+    public String takePropertiesValueByKey(String key) throws IOException
     {
         String retval = "";
         Properties properties = new Properties();
@@ -81,7 +80,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
     @Test
     public void validatePath() throws Exception
     {
-        assertEquals(triggerSolrUpdateExecutor.getLastBatchUpdatePropertyFileLocation(), filePath);
+        expect(triggerSolrUpdateExecutorMock.getLastBatchUpdatePropertyFileLocation()).andReturn(filePath);
     }
 
     @Test
@@ -91,8 +90,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
 
         for (String key : solrList)
         {
-            String ret = takeValue(key);
-            assertEquals(ret, null);
+            assertEquals(takePropertiesValueByKey(key), null);
         }
     }
 
