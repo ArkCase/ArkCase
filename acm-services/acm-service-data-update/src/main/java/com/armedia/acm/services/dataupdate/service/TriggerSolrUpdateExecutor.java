@@ -18,15 +18,15 @@ public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public String getUpdateId()
     {
-        return "solr-users-and-groups-update";
+        return "solr-users-and-groups-update-v2";
     }
 
     @Override
     public void execute()
     {
         List<String> propertiesToDelete = new ArrayList<>();
-        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + AcmUser.class.getName());
-        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + AcmGroup.class.getName());
+        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmUser.class.getName());
+        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmGroup.class.getName());
 
         propertyFileManager.removeMultiple(propertiesToDelete, lastBatchUpdatePropertyFileLocation);
     }
