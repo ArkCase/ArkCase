@@ -2,7 +2,7 @@
 
 angular.module('dashboard.pictures', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('pictures', {
-        title : 'dashboard.widgets.pictures.title',
+        title : 'preference.overviewWidgets.pictures.title',
         description : 'dashboard.widgets.pictures.description',
         controller : 'Dashboard.PicturesController',
         reload : true,

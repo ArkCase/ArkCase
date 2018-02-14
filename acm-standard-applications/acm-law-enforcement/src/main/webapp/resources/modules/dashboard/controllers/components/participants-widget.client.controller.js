@@ -2,7 +2,7 @@
 
 angular.module('dashboard.participants', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('participants', {
-        title : 'dashboard.widgets.participants.title',
+        title : 'preference.overviewWidgets.participants.title',
         description : 'dashboard.widgets.participants.description',
         controller : 'Dashboard.ParticipantsController',
         reload : true,

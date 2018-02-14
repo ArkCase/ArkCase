@@ -2,7 +2,7 @@
 
 angular.module('dashboard.references', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('references', {
-        title : 'dashboard.widgets.references.title',
+        title : 'preference.overviewWidgets.references.title',
         description : 'dashboard.widgets.references.description',
         controller : 'Dashboard.ReferencesController',
         reload : true,

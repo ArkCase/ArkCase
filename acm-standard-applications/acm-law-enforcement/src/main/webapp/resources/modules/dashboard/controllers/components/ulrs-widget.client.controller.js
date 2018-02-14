@@ -2,7 +2,7 @@
 
 angular.module('dashboard.urls', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('urls', {
-        title : 'dashboard.widgets.urls.title',
+        title : 'preference.overviewWidgets.urls.title',
         description : 'dashboard.widgets.urls.description',
         controller : 'Dashboard.UrlsController',
         reload : true,

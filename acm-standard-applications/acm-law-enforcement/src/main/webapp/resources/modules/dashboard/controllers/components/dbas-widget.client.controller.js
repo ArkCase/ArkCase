@@ -2,7 +2,7 @@
 
 angular.module('dashboard.dbas', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('dbas', {
-        title : 'dashboard.widgets.dbas.title',
+        title : 'preference.overviewWidgets.dbas.title',
         description : 'dashboard.widgets.dbas.description',
         controller : 'Dashboard.DbasController',
         reload : true,
