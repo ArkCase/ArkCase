@@ -269,40 +269,7 @@ angular.module('admin').controller(
                         });
                     }
 
-                    $scope.$bus.subscribe(objectTitle + 'Scroll', function() {
-                        initUser($scope.userData.chooseObject.length * 2);
-                    });
-
-                    $scope.$bus.subscribe(objectTitle + 'UnauthorizedScroll', function() {
-                        var data = {};
-                        data.isAuthorized = false;
-                        data.member_id = $scope.lastSelectedUser;
-                        data.n = Util.isArrayEmpty($scope.userData.selectedNotAuthorized) ? 50
-                                : $scope.userData.selectedNotAuthorized.length * 2;
-                        LdapUserManagementService.getGroupsForUser(data).then(function(response) {
-                            $scope.userData.selectedNotAuthorized = [];
-                            $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
-                        }, function() {
-                            $log.error('Error during returning unauthorized groups for user');
-                        });
-                    });
-
-                    $scope.$bus.subscribe(objectTitle + 'AuthorizedScroll',
-                            function() {
-                                var data = {};
-                                data.isAuthorized = true;
-                                data.member_id = $scope.lastSelectedUser;
-                                data.n = Util.isArrayEmpty($scope.userData.selectedAuthorized) ? 50
-                                        : $scope.userData.selectedAuthorized.length * 2;
-                                LdapUserManagementService.getGroupsForUser(data).then(function(response) {
-                                    $scope.userData.selectedAuthorized = [];
-                                    $scope.fillList($scope.userData.selectedAuthorized, response.data.response.docs);
-                                }, function() {
-                                    $log.error('Error during scrolling authorized groups for user');
-                                });
-                            });
-
-                    $scope.$bus.subscribe('ChooseUserManagementFilter', function(data) {
+                    $scope.$bus.subscribe(objectTitle + 'Filter', function(data) {
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
