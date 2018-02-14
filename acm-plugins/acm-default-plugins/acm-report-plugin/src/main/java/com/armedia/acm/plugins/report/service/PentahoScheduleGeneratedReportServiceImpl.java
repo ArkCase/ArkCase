@@ -51,16 +51,16 @@ public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulable
                     LOGGER.info("Downloading report [{}] from Pentaho", pentahoFileProperties.getName());
                     getDownloadService().downloadReport(headers, restTemplate, pentahoFileProperties.getName());
 
-                    //upload report to REPs
+                    //upload report to ArkCase
                     EcmFile reportFile = uploadReportToArkCase(pentahoFileProperties);
 
                     //remove generated report by file id
                     getPentahoRemoveGeneratedReportService().removeReport(headers, restTemplate, pentahoFileProperties.getId());
 
-                    LOGGER.info("Successfully uploaded scheduled report [{}] to REPS", reportFile.getFileName());
+                    LOGGER.info("Successfully uploaded scheduled report [{}] to ArkCase", reportFile.getFileName());
                 } catch (Exception e)
                 {
-                    LOGGER.error("Failed to upload generated report to REPS", e);
+                    LOGGER.error("Failed to upload generated report to ArkCase", e);
                 }
             });
         } else
