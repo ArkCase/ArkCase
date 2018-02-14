@@ -4,8 +4,8 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
-import com.armedia.acm.plugins.report.model.FileProperties;
-import com.armedia.acm.plugins.report.model.ReportFiles;
+import com.armedia.acm.plugins.report.model.PentahoFileProperties;
+import com.armedia.acm.plugins.report.model.PentahoReportFiles;
 import com.armedia.acm.scheduler.AcmSchedulableBean;
 import org.apache.commons.ssl.Base64;
 import org.slf4j.Logger;
@@ -19,16 +19,16 @@ import java.io.InputStream;
 /**
  * Created by dwu on 6/9/2017.
  */
-public class ScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
+public class PentahoScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleGeneratedReportServiceImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoScheduleGeneratedReportServiceImpl.class);
     private HttpHeaders headers;
     private RestTemplate restTemplate;
-    private DownloadGeneratedReportRestService downloadService;
-    private FilePropertiesRestService filePropertiesRestService;
-    private RemoveGeneratedReportRestService removeGeneratedReportRestService;
-    private UploadGeneratedReportService uploadService;
-    private ReportFiles reportFiles;
+    private PentahoDownloadGeneratedReportService downloadService;
+    private PentahoFilePropertiesService pentahoFilePropertiesService;
+    private PentahoRemoveGeneratedReportService pentahoRemoveGeneratedReportService;
+    private PentahoUploadGeneratedReportService uploadService;
+    private PentahoReportFiles pentahoReportFiles;
     private String pentahoUser;
     private String pentahoPassword;
 
@@ -40,22 +40,22 @@ public class ScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
         restTemplate = new RestTemplate();
 
         //get generate report metadata
-        reportFiles = getFilePropertiesRestService().consumeXML(headers, restTemplate);
-        if (reportFiles != null && reportFiles.getFilePropertiesList() != null)
+        pentahoReportFiles = getPentahoFilePropertiesService().consumeXML(headers, restTemplate);
+        if (pentahoReportFiles != null && pentahoReportFiles.getPentahoFilePropertiesList() != null)
         {
-            reportFiles.getFilePropertiesList().forEach(fileProperties ->
+            pentahoReportFiles.getPentahoFilePropertiesList().forEach(pentahoFileProperties ->
             {
                 try
                 {
                     //download generated report
-                    LOGGER.info("Downloading report [{}] from Pentaho", fileProperties.getName());
-                    getDownloadService().downloadReport(headers, restTemplate, fileProperties.getName());
+                    LOGGER.info("Downloading report [{}] from Pentaho", pentahoFileProperties.getName());
+                    getDownloadService().downloadReport(headers, restTemplate, pentahoFileProperties.getName());
 
                     //upload report to REPs
-                    EcmFile reportFile = uploadReportToArkCase(fileProperties);
+                    EcmFile reportFile = uploadReportToArkCase(pentahoFileProperties);
 
                     //remove generated report by file id
-                    getRemoveGeneratedReportRestService().removeReport(headers, restTemplate, fileProperties.getId());
+                    getPentahoRemoveGeneratedReportService().removeReport(headers, restTemplate, pentahoFileProperties.getId());
 
                     LOGGER.info("Successfully uploaded scheduled report [{}] to REPS", reportFile.getFileName());
                 } catch (Exception e)
@@ -69,11 +69,11 @@ public class ScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
         }
     }
 
-    private EcmFile uploadReportToArkCase(FileProperties fileProperties) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
+    private EcmFile uploadReportToArkCase(PentahoFileProperties pentahoFileProperties) throws AcmCreateObjectFailedException, AcmUserActionFailedException, AcmObjectNotFoundException
     {
         byte[] data = getDownloadService().getResponse().getBody();
         InputStream inputStream = new ByteArrayInputStream(data);
-        return getUploadService().uploadReport(inputStream, fileProperties);
+        return getUploadService().uploadReport(inputStream, pentahoFileProperties);
     }
 
     private void createCredentialHeaders()
@@ -86,42 +86,42 @@ public class ScheduleGeneratedReportServiceImpl implements AcmSchedulableBean
         headers.add("Authorization", "Basic " + base64Creds);
     }
 
-    public FilePropertiesRestService getFilePropertiesRestService()
+    public PentahoFilePropertiesService getPentahoFilePropertiesService()
     {
-        return filePropertiesRestService;
+        return pentahoFilePropertiesService;
     }
 
-    public void setFilePropertiesRestService(FilePropertiesRestService filePropertiesRestService)
+    public void setPentahoFilePropertiesService(PentahoFilePropertiesService pentahoFilePropertiesService)
     {
-        this.filePropertiesRestService = filePropertiesRestService;
+        this.pentahoFilePropertiesService = pentahoFilePropertiesService;
     }
 
-    public DownloadGeneratedReportRestService getDownloadService()
+    public PentahoDownloadGeneratedReportService getDownloadService()
     {
         return downloadService;
     }
 
-    public void setDownloadService(DownloadGeneratedReportRestService downloadService)
+    public void setDownloadService(PentahoDownloadGeneratedReportService downloadService)
     {
         this.downloadService = downloadService;
     }
 
-    public RemoveGeneratedReportRestService getRemoveGeneratedReportRestService()
+    public PentahoRemoveGeneratedReportService getPentahoRemoveGeneratedReportService()
     {
-        return removeGeneratedReportRestService;
+        return pentahoRemoveGeneratedReportService;
     }
 
-    public void setRemoveGeneratedReportRestService(RemoveGeneratedReportRestService removeGeneratedReportRestService)
+    public void setPentahoRemoveGeneratedReportService(PentahoRemoveGeneratedReportService pentahoRemoveGeneratedReportService)
     {
-        this.removeGeneratedReportRestService = removeGeneratedReportRestService;
+        this.pentahoRemoveGeneratedReportService = pentahoRemoveGeneratedReportService;
     }
 
-    public UploadGeneratedReportService getUploadService()
+    public PentahoUploadGeneratedReportService getUploadService()
     {
         return uploadService;
     }
 
-    public void setUploadService(UploadGeneratedReportService uploadService)
+    public void setUploadService(PentahoUploadGeneratedReportService uploadService)
     {
         this.uploadService = uploadService;
     }

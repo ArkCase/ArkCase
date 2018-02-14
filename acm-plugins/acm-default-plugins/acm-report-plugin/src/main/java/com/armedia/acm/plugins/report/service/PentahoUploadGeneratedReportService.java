@@ -12,8 +12,8 @@ import com.armedia.acm.plugins.ecm.model.AcmFolder;
 import com.armedia.acm.plugins.ecm.model.EcmFile;
 import com.armedia.acm.plugins.ecm.service.AcmFolderService;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
-import com.armedia.acm.plugins.report.model.FileProperties;
-import com.armedia.acm.plugins.report.model.ScheduleReportConstants;
+import com.armedia.acm.plugins.report.model.PentahoFileProperties;
+import com.armedia.acm.plugins.report.model.PentahoReportScheduleConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -31,9 +31,9 @@ import java.util.TimeZone;
 /**
  * Created by joseph.mcgrady on 6/13/2017.
  */
-public class UploadGeneratedReportService
+public class PentahoUploadGeneratedReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(UploadGeneratedReportService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoUploadGeneratedReportService.class);
     private EcmFileService ecmFileService;
     private AcmFolderService acmFolderService;
     private DocumentRepositoryDao documentRepositoryDao;
@@ -43,7 +43,7 @@ public class UploadGeneratedReportService
     private String reportDocumentRepository;
 
     @Transactional
-    public EcmFile uploadReport(InputStream reportDataStream, FileProperties fileProperties)
+    public EcmFile uploadReport(InputStream reportDataStream, PentahoFileProperties pentahoFileProperties)
             throws AcmObjectNotFoundException
     {
         DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(getReportDocumentRepository());
@@ -57,9 +57,9 @@ public class UploadGeneratedReportService
             try
             {
                 yearFolder = findOrCreateYearFolder(container);
-                String fileName = getUniqueFileName(yearFolder, fileProperties);
+                String fileName = getUniqueFileName(yearFolder, pentahoFileProperties);
                 ecmFile = getEcmFileService().upload(fileName, "Other", "Document",
-                        reportDataStream, ScheduleReportConstants.EXCEL_MIMETYPE, fileName,
+                        reportDataStream, PentahoReportScheduleConstants.EXCEL_MIMETYPE, fileName,
                         auth, yearFolder.getCmisFolderId(),
                         container.getContainerObjectType(), container.getContainerObjectId());
             } catch (AcmCreateObjectFailedException e)
@@ -106,9 +106,9 @@ public class UploadGeneratedReportService
         return yearFolder;
     }
 
-    private String getUniqueFileName(AcmFolder acmFolder, FileProperties fileProperties)
+    private String getUniqueFileName(AcmFolder acmFolder, PentahoFileProperties pentahoFileProperties)
     {
-        String fileName = generateFileName(fileProperties);
+        String fileName = generateFileName(pentahoFileProperties);
         String nameNoExtension = fileName.substring(0, fileName.lastIndexOf("."));
         String extension = fileName.substring(fileName.lastIndexOf("."));
         EcmFile[] filesFound = getEcmFileDao().findByFolderId(acmFolder.getId()).stream().filter(f -> f.getFileName().contains(nameNoExtension)).toArray(EcmFile[]::new);
@@ -119,12 +119,12 @@ public class UploadGeneratedReportService
         return fileName;
     }
 
-    private String generateFileName(FileProperties fileProperties)
+    private String generateFileName(PentahoFileProperties pentahoFileProperties)
     {
-        Date reportGeneratedDate = Date.from(Instant.ofEpochMilli(Long.parseLong(fileProperties.getCreatedDate())));
+        Date reportGeneratedDate = Date.from(Instant.ofEpochMilli(Long.parseLong(pentahoFileProperties.getCreatedDate())));
         SimpleDateFormat fileDateFormat = new SimpleDateFormat("yyyy-MM-dd");
         fileDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return fileDateFormat.format(reportGeneratedDate) + " " + fileProperties.getName();
+        return fileDateFormat.format(reportGeneratedDate) + " " + pentahoFileProperties.getName();
     }
 
     public EcmFileService getEcmFileService()

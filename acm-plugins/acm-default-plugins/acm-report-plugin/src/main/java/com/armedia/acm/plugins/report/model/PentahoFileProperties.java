@@ -25,7 +25,7 @@ import javax.xml.bind.annotation.XmlElement;
  * <versioned>true</versioned>
  * </repositoryFileDto>
  */
-public class FileProperties
+public class PentahoFileProperties
 {
 
     private String aclNode;
@@ -228,7 +228,7 @@ public class FileProperties
     @Override
     public String toString()
     {
-        return "FileProperties{" +
+        return "PentahoFileProperties{" +
                 "aclNode='" + aclNode + '\'' +
                 ", createdDate='" + createdDate + '\'' +
                 ", creatorId='" + creatorId + '\'' +

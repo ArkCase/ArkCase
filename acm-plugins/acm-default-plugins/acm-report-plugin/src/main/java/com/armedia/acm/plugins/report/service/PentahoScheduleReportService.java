@@ -16,9 +16,9 @@ import org.springframework.web.client.RestTemplate;
 /**
  * Created by dwu on 6/11/2017.
  */
-public class ScheduleReportRestService implements ScheduleReportService
+public class PentahoScheduleReportService implements ScheduleReportService
 {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleReportRestService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PentahoScheduleReportService.class);
     private HttpHeaders headers;
     private RestTemplate restTemplate;
     private ResponseEntity<String> response;
