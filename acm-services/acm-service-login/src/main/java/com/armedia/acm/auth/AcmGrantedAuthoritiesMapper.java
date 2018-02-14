@@ -4,9 +4,12 @@ import com.armedia.acm.files.ConfigurationFileChangedEvent;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 
+import com.armedia.acm.services.users.model.event.LdapGroupCreatedEvent;
+import com.armedia.acm.services.users.model.event.LdapGroupDeletedEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -22,7 +25,7 @@ import java.util.Properties;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class AcmGrantedAuthoritiesMapper implements ApplicationListener<ConfigurationFileChangedEvent>
+public class AcmGrantedAuthoritiesMapper implements ApplicationListener<ApplicationEvent>
 {
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
@@ -68,26 +71,32 @@ public class AcmGrantedAuthoritiesMapper implements ApplicationListener<Configur
     }
 
     @Override
-    public void onApplicationEvent(ConfigurationFileChangedEvent configurationFileChangedEvent)
+    public void onApplicationEvent(ApplicationEvent event)
     {
-        File eventFile = configurationFileChangedEvent.getConfigFile();
-        if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
+        if (event instanceof ConfigurationFileChangedEvent)
         {
-            String filename = eventFile.getName();
-            log.info("[{}] has changed!", filename);
-
-            try
+            ConfigurationFileChangedEvent configurationFileChangedEvent = (ConfigurationFileChangedEvent) event;
+            File eventFile = configurationFileChangedEvent.getConfigFile();
+            if ("applicationRoleToUserGroup.properties".equals(eventFile.getName()))
             {
-                applicationRoleToUserGroupProperties = propertyFileManager.readFromFile(eventFile);
-                initBean();
-            }
-            catch (IOException e)
-            {
-                log.info("Could not read new properties; keeping the old properties.");
-            }
+                String filename = eventFile.getName();
+                log.info("[{}] has changed!", filename);
 
+                try
+                {
+                    applicationRoleToUserGroupProperties = propertyFileManager.readFromFile(eventFile);
+                    initBean();
+                }
+                catch (IOException e)
+                {
+                    log.info("Could not read new properties; keeping the old properties.");
+                }
+            }
         }
-
+        else if (event instanceof LdapGroupCreatedEvent || event instanceof LdapGroupDeletedEvent)
+        {
+            initBean();
+        }
     }
 
     private void logProperties(Properties p)
