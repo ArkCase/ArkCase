@@ -1,6 +1,5 @@
 package com.armedia.acm.services.dataupdate.web;
 
-import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
@@ -26,7 +25,6 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
 {
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
     private TriggerSolrUpdateExecutor triggerSolrUpdateExecutor;
-    private TriggerSolrUpdateExecutor triggerSolrUpdateExecutorMock;
     private PropertyFileManager propertyFileManager;
     private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
     private List<String> solrList;
@@ -36,8 +34,8 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
     public void setUp() throws Exception
     {
         triggerSolrUpdateExecutor = new TriggerSolrUpdateExecutor();
-        triggerSolrUpdateExecutorMock = createMock(TriggerSolrUpdateExecutor.class);
         propertyFileManager = new PropertyFileManager();
+
         triggerSolrUpdateExecutor.setLastBatchUpdatePropertyFileLocation(filePath);
         triggerSolrUpdateExecutor.setPropertyFileManager(propertyFileManager);
 
@@ -78,19 +76,13 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
     }
 
     @Test
-    public void validatePath() throws Exception
-    {
-        expect(triggerSolrUpdateExecutorMock.getLastBatchUpdatePropertyFileLocation()).andReturn(filePath);
-    }
-
-    @Test
     public void validateRemovedLines() throws Exception
     {
         triggerSolrUpdateExecutor.execute();
 
         for (String key : solrList)
         {
-            assertEquals(takePropertiesValueByKey(key), null);
+            assertEquals(null, takePropertiesValueByKey(key));
         }
     }
 
