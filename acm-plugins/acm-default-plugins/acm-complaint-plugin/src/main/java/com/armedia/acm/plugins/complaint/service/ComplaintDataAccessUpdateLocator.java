@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.complaint.service;
 
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.plugins.complaint.dao.ComplaintDao;
 import com.armedia.acm.plugins.complaint.model.Complaint;
 import com.armedia.acm.services.dataaccess.service.AcmObjectDataAccessBatchUpdateLocator;
@@ -21,7 +22,7 @@ public class ComplaintDataAccessUpdateLocator implements AcmObjectDataAccessBatc
     }
 
     @Override
-    public void save(Complaint assignedObject)
+    public void save(Complaint assignedObject) throws AcmAccessControlException
     {
         getComplaintDao().save(assignedObject);
     }

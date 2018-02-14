@@ -64,7 +64,7 @@ public class ComplaintUiController
         return mv;
     }
 
-    @PreAuthorize("hasPermission(#complaintId, 'COMPLAINT', 'read')")
+    @PreAuthorize("hasPermission(#complaintId, 'COMPLAINT', 'read|write|group-read|group-write')")
     @RequestMapping(value = "/{complaintId}", method = RequestMethod.GET)
     public ModelAndView viewFile(Authentication auth, @PathVariable(value = "complaintId") Long complaintId)
     {
@@ -89,7 +89,8 @@ public class ComplaintUiController
                     mv.addObject(attrName, ar);
                 }
 
-            } catch (JSONException e)
+            }
+            catch (JSONException e)
             {
                 log.error(e.getMessage());
             }

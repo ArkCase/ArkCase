@@ -1,27 +1,29 @@
 package com.armedia.acm.objectonverter.adapter;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
+
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateMillisecondAdapter extends XmlAdapter<Long, Date> {
-	
-	@Override
-	public Long marshal(Date date) throws Exception
-	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(date);
+public class DateMillisecondAdapter extends XmlAdapter<Long, Date>
+{
 
-		return calendar.getTimeInMillis();
-	}
+    @Override
+    public Long marshal(Date date) throws Exception
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
 
-	@Override
-	public Date unmarshal(Long date) throws Exception
-	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTimeInMillis(date);
+        return calendar.getTimeInMillis();
+    }
 
-		return calendar.getTime();
-	}
+    @Override
+    public Date unmarshal(Long date) throws Exception
+    {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(date);
+
+        return calendar.getTime();
+    }
 
 }

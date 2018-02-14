@@ -4,6 +4,7 @@ import com.armedia.acm.plugins.casefile.model.CaseFile;
 import com.armedia.acm.plugins.casefile.pipeline.CaseFilePipelineContext;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.model.AcmFolder;
+import com.armedia.acm.plugins.ecm.service.impl.EcmFileParticipantService;
 import com.armedia.acm.services.pipeline.exception.PipelineProcessException;
 import com.armedia.acm.services.pipeline.handler.PipelineHandler;
 
@@ -19,6 +20,8 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
      * Logger instance.
      */
     private final Logger log = LoggerFactory.getLogger(getClass());
+
+    private EcmFileParticipantService fileParticipantService;
 
     @Override
     public void execute(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
@@ -43,6 +46,8 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
         {
             AcmFolder folder = new AcmFolder();
             folder.setName("ROOT");
+            folder.setParticipants(getFileParticipantService().getFolderParticipantsFromAssignedObject(entity.getParticipants()));
+
             entity.getContainer().setFolder(folder);
             entity.getContainer().setAttachmentFolder(folder);
         }
@@ -54,5 +59,15 @@ public class CaseFileContainerHandler implements PipelineHandler<CaseFile, CaseF
     public void rollback(CaseFile entity, CaseFilePipelineContext pipelineContext) throws PipelineProcessException
     {
         // nothing to do here, there is no rollback action to be executed
+    }
+
+    public EcmFileParticipantService getFileParticipantService()
+    {
+        return fileParticipantService;
+    }
+
+    public void setFileParticipantService(EcmFileParticipantService fileParticipantService)
+    {
+        this.fileParticipantService = fileParticipantService;
     }
 }

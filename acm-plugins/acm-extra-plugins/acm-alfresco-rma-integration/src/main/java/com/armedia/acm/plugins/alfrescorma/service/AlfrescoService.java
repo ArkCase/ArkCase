@@ -2,6 +2,7 @@ package com.armedia.acm.plugins.alfrescorma.service;
 
 import com.armedia.acm.plugins.alfrescorma.exception.AlfrescoServiceException;
 import com.armedia.mule.cmis.basic.auth.HttpInvokerUtil;
+
 import org.apache.commons.codec.binary.Base64;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.security.auth.login.AppConfigurationEntry;
 import javax.security.auth.login.Configuration;
+
 import java.util.Map;
 
 /**
@@ -50,13 +52,14 @@ public abstract class AlfrescoService<T>
         short attempt = 0;
         AlfrescoServiceException lastException = null;
 
-        while ( attempt < maxAttempts )
+        while (attempt < maxAttempts)
         {
             try
             {
                 T retval = doService(context);
                 return retval;
-            } catch (AlfrescoServiceException e)
+            }
+            catch (AlfrescoServiceException e)
             {
                 LOG.warn("Exception in service attempt # {}: {} {}", attempt, e.getMessage(), e);
                 attempt++;
@@ -64,7 +67,8 @@ public abstract class AlfrescoService<T>
                 try
                 {
                     Thread.sleep(backoffMillis);
-                } catch (InterruptedException e1)
+                }
+                catch (InterruptedException e1)
                 {
                     LOG.warn("Could not wait for the backoff period: {} {}", e1.getMessage(), e1);
                 }
@@ -85,7 +89,7 @@ public abstract class AlfrescoService<T>
         headers.set(HttpInvokerUtil.EXTERNAL_AUTH_KEY, HttpInvokerUtil.getExternalUserIdValue());
 
         // add basic authentication header for the call
-        if ( findAlfrescoAuthenticationType().equals(AlfrescoAuthenticationType.BASIC) )
+        if (findAlfrescoAuthenticationType().equals(AlfrescoAuthenticationType.BASIC))
         {
             headers.set(HttpHeaders.AUTHORIZATION, getBasicAuthenticationHeaderValue());
         }
@@ -95,7 +99,7 @@ public abstract class AlfrescoService<T>
 
     private AlfrescoAuthenticationType findAlfrescoAuthenticationType()
     {
-        if ( getUsername().startsWith(KERBEROS_USERNAME_PREFIX) )
+        if (getUsername().startsWith(KERBEROS_USERNAME_PREFIX))
         {
             return AlfrescoAuthenticationType.KERBEROS;
         }
@@ -106,7 +110,7 @@ public abstract class AlfrescoService<T>
     // not synchronizing this method because the value would always be set the same
     private String getBasicAuthenticationHeaderValue()
     {
-        if ( basicAuthenticationHeaderValue == null )
+        if (basicAuthenticationHeaderValue == null)
         {
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(auth.getBytes());
@@ -160,7 +164,7 @@ public abstract class AlfrescoService<T>
 
     synchronized protected RestTemplate getRestTemplate()
     {
-        if ( restTemplate == null )
+        if (restTemplate == null)
         {
             createAndSetRestTemplate();
         }
@@ -173,19 +177,19 @@ public abstract class AlfrescoService<T>
 
         switch (findAlfrescoAuthenticationType())
         {
-            case KERBEROS:
-                AppConfigurationEntry appConfigurationEntry = Configuration.getConfiguration()
-                        .getAppConfigurationEntry(APP_CONFIGURATION_ENTRY_NAME)[0];
-                restTemplate = new KerberosRestTemplate((String) appConfigurationEntry.getOptions().get("keytab"),
-                        (String) appConfigurationEntry.getOptions().get("principal"));
-                break;
-            case BASIC:
-                // basic authentication header will be added in the headers before each call
-                restTemplate = new RestTemplate();
-                break;
-            default:
-                // should not happen
-                throw new RuntimeException("Alfresco authentication type unknown!");
+        case KERBEROS:
+            AppConfigurationEntry appConfigurationEntry = Configuration.getConfiguration()
+                    .getAppConfigurationEntry(APP_CONFIGURATION_ENTRY_NAME)[0];
+            restTemplate = new KerberosRestTemplate((String) appConfigurationEntry.getOptions().get("keytab"),
+                    (String) appConfigurationEntry.getOptions().get("principal"));
+            break;
+        case BASIC:
+            // basic authentication header will be added in the headers before each call
+            restTemplate = new RestTemplate();
+            break;
+        default:
+            // should not happen
+            throw new RuntimeException("Alfresco authentication type unknown!");
         }
     }
 
@@ -198,7 +202,8 @@ public abstract class AlfrescoService<T>
     }
 
     /**
-     * @param username the username to set
+     * @param username
+     *            the username to set
      */
     public void setUsername(String username)
     {
@@ -214,7 +219,8 @@ public abstract class AlfrescoService<T>
     }
 
     /**
-     * @param password the password to set
+     * @param password
+     *            the password to set
      */
     public void setPassword(String password)
     {

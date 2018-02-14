@@ -3,12 +3,15 @@ package com.armedia.acm.plugins.casefile.exceptions;
 /**
  * Created by nebojsha on 28.05.2015.
  */
-public class MergeCaseFilesException extends Exception {
-    public MergeCaseFilesException(String messge, Throwable e) {
+public class MergeCaseFilesException extends Exception
+{
+    public MergeCaseFilesException(String messge, Throwable e)
+    {
         super(messge, e);
     }
 
-    public MergeCaseFilesException(String s) {
+    public MergeCaseFilesException(String s)
+    {
         super(s);
     }
 }

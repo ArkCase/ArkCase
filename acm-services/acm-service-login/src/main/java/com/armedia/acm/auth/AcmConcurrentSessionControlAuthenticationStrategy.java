@@ -1,6 +1,7 @@
 package com.armedia.acm.auth;
 
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.session.SessionInformation;
 import org.springframework.security.core.session.SessionRegistry;
@@ -9,8 +10,8 @@ import org.springframework.security.web.authentication.session.ConcurrentSession
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
+import java.util.List;
 
 public class AcmConcurrentSessionControlAuthenticationStrategy extends ConcurrentSessionControlAuthenticationStrategy
 {
@@ -19,11 +20,12 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
     private final AuthenticationTokenService authenticationTokenService;
 
     /**
-     * @param sessionRegistry            the session registry which should be updated when the authenticated session is changed.
+     * @param sessionRegistry
+     *            the session registry which should be updated when the authenticated session is changed.
      * @param authenticationTokenService
      */
     public AcmConcurrentSessionControlAuthenticationStrategy(SessionRegistry sessionRegistry,
-                                                             AuthenticationTokenService authenticationTokenService)
+            AuthenticationTokenService authenticationTokenService)
     {
         super(sessionRegistry);
         this.sessionRegistry = sessionRegistry;
@@ -53,7 +55,7 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
         String token = request.getParameter("acm_ticket");
         if (token != null)
         {
-            //if token is found, check if it is associated with the authenticated user
+            // if token is found, check if it is associated with the authenticated user
             Authentication tokenAuthentication = authenticationTokenService.getAuthenticationForToken(token);
 
             if (tokenAuthentication != null)
@@ -61,11 +63,11 @@ public class AcmConcurrentSessionControlAuthenticationStrategy extends Concurren
                 String tokenAuthenticationPrincipal = tokenAuthentication.getName();
                 String principal = authentication.getName();
 
-                    if (tokenAuthenticationPrincipal.equals(principal))
-                    {
-                        //This is the same user with external request and new session
-                        return;
-                    }
+                if (tokenAuthenticationPrincipal.equals(principal))
+                {
+                    // This is the same user with external request and new session
+                    return;
+                }
             }
         }
 

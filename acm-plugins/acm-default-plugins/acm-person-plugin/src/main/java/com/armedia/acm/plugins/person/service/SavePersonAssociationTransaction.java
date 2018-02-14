@@ -1,9 +1,8 @@
 package com.armedia.acm.plugins.person.service;
 
-import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.muletools.mulecontextmanager.MuleContextManager;
-import com.armedia.acm.plugins.person.dao.PersonAssociationDao;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
+
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.springframework.security.core.Authentication;
@@ -30,7 +29,7 @@ public class SavePersonAssociationTransaction
         PersonAssociation saved = received.getPayload(PersonAssociation.class);
         MuleException e = received.getInboundProperty("saveException");
 
-        if ( e != null )
+        if (e != null)
         {
             throw e;
         }
@@ -38,7 +37,6 @@ public class SavePersonAssociationTransaction
         return saved;
 
     }
-
 
     public MuleContextManager getMuleContextManager()
     {

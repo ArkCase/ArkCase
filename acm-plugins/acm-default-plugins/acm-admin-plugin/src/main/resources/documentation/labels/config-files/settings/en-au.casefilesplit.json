@@ -1,14 +1,22 @@
 {
-    "footer": {"buttons": {"split-case": {
-        "defaultValue": "Split Brief",
-        "description": "",
-        "value": "Split Brief"
-    }}},
-    "header": {"labels": {"split-case": {
-        "defaultValue": "Split Brief",
-        "description": "",
-        "value": "Split Brief"
-    }}},
+    "footer": {
+        "buttons": {
+            "split-case": {
+                "defaultValue": "Split Brief",
+                "description": "",
+                "value": "Split Brief"
+            }
+        }
+    },
+    "header": {
+        "labels": {
+            "split-case": {
+                "defaultValue": "Split Brief",
+                "description": "",
+                "value": "Split Brief"
+            }
+        }
+    },
     "window-title": {
         "defaultValue": "Brief | ACM | Ark Case Management",
         "description": "",

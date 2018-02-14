@@ -9,6 +9,7 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.DistinguishedName;
 
 import javax.naming.directory.BasicAttribute;
+
 import java.io.UnsupportedEncodingException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -99,8 +100,7 @@ public class MapperUtils
         return String.format("\"%s\"", str).getBytes("UTF-16LE");
     }
 
-    public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter ->
-    {
+    public static final Function<DirContextAdapter, LocalDate> convertFileTimeTimestampToDate = adapter -> {
         String expirationTimePasswordAttr = MapperUtils.getAttribute(adapter, "msDS-UserPasswordExpiryTimeComputed");
         if (expirationTimePasswordAttr != null)
         {
@@ -122,8 +122,7 @@ public class MapperUtils
         return null;
     };
 
-    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter ->
-    {
+    public static final Function<DirContextAdapter, LocalDate> calculatePasswordExpirationDateByShadowAccount = adapter -> {
         String shadowMaxAttr = MapperUtils.getAttribute(adapter, "shadowMax");
         String shadowLastChangeAttr = MapperUtils.getAttribute(adapter, "shadowLastChange");
         if (shadowLastChangeAttr != null && shadowMaxAttr != null)
@@ -155,8 +154,11 @@ public class MapperUtils
         }
     };
 
-    public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password ->
-            new BasicAttribute("userPassword", password.getBytes());
+    public static final Function<String, BasicAttribute> openLdapPasswordToAttribute = password -> new BasicAttribute("userPassword",
+            password.getBytes());
+
+    public static final Function<String, BasicAttribute> openLdapCurrentPasswordToAttribute = password ->
+            new BasicAttribute("userPassword");
 
     public static String generatePassword(int minLength)
     {

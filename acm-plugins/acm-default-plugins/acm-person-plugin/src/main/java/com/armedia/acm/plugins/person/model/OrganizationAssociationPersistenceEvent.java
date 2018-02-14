@@ -21,5 +21,4 @@ public abstract class OrganizationAssociationPersistenceEvent extends AcmEvent
         return PersonOrganizationConstants.ORGANIZATION_ASSOCIATION_OBJECT_TYPE;
     }
 
-
 }

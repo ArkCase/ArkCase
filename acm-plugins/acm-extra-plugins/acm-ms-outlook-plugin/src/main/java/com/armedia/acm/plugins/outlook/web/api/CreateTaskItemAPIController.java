@@ -7,7 +7,7 @@ import com.armedia.acm.service.outlook.model.OutlookDTO;
 import com.armedia.acm.service.outlook.model.OutlookTaskItem;
 import com.armedia.acm.service.outlook.service.OutlookService;
 import com.armedia.acm.services.users.model.AcmUser;
-import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpSession;
 
+import microsoft.exchange.webservices.data.core.enumeration.property.WellKnownFolderName;
+
 @Controller
-@RequestMapping({"/api/v1/plugin/outlook/tasks", "/api/latest/plugin/outlook/tasks"})
+@RequestMapping({ "/api/v1/plugin/outlook/tasks", "/api/latest/plugin/outlook/tasks" })
 public class CreateTaskItemAPIController
 {
 

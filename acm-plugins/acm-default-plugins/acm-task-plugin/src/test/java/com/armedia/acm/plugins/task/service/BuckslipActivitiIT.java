@@ -1,9 +1,19 @@
 package com.armedia.acm.plugins.task.service;
 
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import com.armedia.acm.plugins.task.listener.BuckslipTaskCompletedListener;
+import com.armedia.acm.plugins.task.listener.BuckslipTaskHelper;
+import com.armedia.acm.plugins.task.model.BuckslipProcessStateEvent;
 import com.armedia.acm.plugins.task.model.TaskConstants;
 import com.armedia.acm.services.users.dao.UserDao;
 import com.armedia.acm.services.users.model.AcmUser;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
@@ -23,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -30,11 +41,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/spring/spring-library-task-activiti-test.xml"})
+@ContextConfiguration(locations = { "/spring/spring-library-task-activiti-test.xml" })
 public class BuckslipActivitiIT extends EasyMockSupport
 {
     @Autowired
@@ -53,10 +61,15 @@ public class BuckslipActivitiIT extends EasyMockSupport
     private HistoryService hs;
 
     @Autowired
+    private BuckslipTaskHelper buckslipTaskHelper;
+
+    @Autowired
     private BuckslipTaskCompletedListener buckslipTaskCompletedListener;
 
     private transient final Logger log = LoggerFactory.getLogger(getClass());
     private UserDao userDaoMock;
+
+    private ApplicationEventPublisher mockApplicationEventPublisher;
 
     @Before
     public void setUp() throws Exception
@@ -66,7 +79,10 @@ public class BuckslipActivitiIT extends EasyMockSupport
                 .addClasspathResource("activiti/ArkCase Buckslip Process v4.bpmn20.xml")
                 .deploy();
         userDaoMock = createMock(UserDao.class);
+        mockApplicationEventPublisher = createMock(ApplicationEventPublisher.class);
         buckslipTaskCompletedListener.setUserDao(userDaoMock);
+        buckslipTaskCompletedListener.setBuckslipTaskHelper(buckslipTaskHelper);
+        buckslipTaskCompletedListener.getBuckslipTaskHelper().setApplicationEventPublisher(mockApplicationEventPublisher);
     }
 
     @After
@@ -78,18 +94,23 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void basicPath_noApproverChanges_nonConcurContinuesApprovals() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
         basicPath(false, "NON_CONCUR");
     }
 
     @Test
     public void basicPath_noApproverChanges_nonConcurEndsApprovals() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+        expectLastCall().times(2);
         basicPath(true, "NON_CONCUR");
     }
 
     @Test
     public void basicPath_noApproverChanges_withdraw() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+        expectLastCall().times(2);
         basicPath(true, "WITHDRAW");
     }
 
@@ -102,6 +123,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         {
             expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
         }
+
+
 
         replayAll();
 
@@ -179,8 +202,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
         }
         int expectedCurrentProcessInstances = nonConcurEndsApprovals ? 1 : 0;
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
 
         List<ProcessInstance> pis = rt.createProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
 
@@ -206,7 +229,6 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
         verifyAll();
 
-
     }
 
     private void completeTask(Task task, String outcome)
@@ -218,6 +240,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
     @Test
     public void removeAnApprover() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
+
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("phil")).andReturn(new AcmUser());
@@ -282,15 +306,16 @@ public class BuckslipActivitiIT extends EasyMockSupport
         approvalsSoFar = (String) task.getProcessVariables().get(pastTasksKey);
         log.debug("Approvers in phil's task: {}", approvalsSoFar);
 
-        // here we will set the future approver list to an empty list, so the process should stop now, intead of going on to bill.
+        // here we will set the future approver list to an empty list, so the process should stop now, intead of going
+        // on to bill.
         // we should have one more approver from the original list, but we will remove it, and the proces should end.
         strFutureTasks = "[]";
         ts.setVariable(task.getId(), "futureTasks", strFutureTasks);
 
         completeTask(task, "CONCUR");
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
         assertEquals(1, hpiList.size());
 
         // should not be a current process any more
@@ -312,10 +337,10 @@ public class BuckslipActivitiIT extends EasyMockSupport
         futureTasks.put(task);
     }
 
-
     @Test
     public void addAnApprover() throws Exception
     {
+        mockApplicationEventPublisher.publishEvent(anyObject(BuckslipProcessStateEvent.class));
 
         expect(userDaoMock.findByUserId("jerry")).andReturn(new AcmUser());
         expect(userDaoMock.findByUserId("bob")).andReturn(new AcmUser());
@@ -404,8 +429,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
         completeTask(task, "CONCUR");
 
-        List<HistoricProcessInstance> hpiList =
-                hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId()).includeProcessVariables().list();
+        List<HistoricProcessInstance> hpiList = hs.createHistoricProcessInstanceQuery().processInstanceId(pi.getId())
+                .includeProcessVariables().list();
         assertEquals(1, hpiList.size());
 
         // should not be a current process any more
@@ -424,10 +449,8 @@ public class BuckslipActivitiIT extends EasyMockSupport
 
     private Execution getReceiveTaskId(ProcessInstance pi, String receiveTaskId)
     {
-        return rt.createExecutionQuery().processInstanceId(pi.getProcessInstanceId()).
-                activityId(receiveTaskId).singleResult();
+        return rt.createExecutionQuery().processInstanceId(pi.getProcessInstanceId()).activityId(receiveTaskId).singleResult();
     }
-
 
     private List<Task> getTasks(ProcessInstance pi)
     {

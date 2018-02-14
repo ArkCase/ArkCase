@@ -1,7 +1,7 @@
 {
-  "id": "welcome",
-  "title": "Welcome",
-  "configurable": false,
-  "menus": [],
-  "components": []
+    "id": "welcome",
+    "title": "Welcome",
+    "configurable": false,
+    "menus": [],
+    "components": []
 }

@@ -7,16 +7,18 @@ import com.armedia.acm.plugins.ecm.service.EcmFileTransaction;
 import com.armedia.acm.plugins.ecm.utils.CmisConfigUtils;
 import com.armedia.acm.plugins.ecm.utils.FolderAndFilesUtils;
 import com.armedia.acm.services.authenticationtoken.service.AuthenticationTokenService;
-import io.milton.http.LockManager;
-import io.milton.http.ResourceFactory;
-import io.milton.http.exceptions.BadRequestException;
-import io.milton.http.exceptions.NotAuthorizedException;
-import io.milton.resource.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import io.milton.http.LockManager;
+import io.milton.http.ResourceFactory;
+import io.milton.http.exceptions.BadRequestException;
+import io.milton.http.exceptions.NotAuthorizedException;
+import io.milton.resource.Resource;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity
@@ -80,10 +82,12 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
 
             ResourceHandler handler = getResourceHandler(strippedPath);
             return handler.getResource(host, strippedPath);
-        } else
+        }
+        else
         {
             log.debug("The path {} seems to be an list folder structure request or OPTIONS request", path);
-            //FIXME return always root folder, we should fix this to return correct folder, but since url consists of "/" it will be hard to implement
+            // FIXME return always root folder, we should fix this to return correct folder, but since url consists of
+            // "/" it will be hard to implement
             if (acmRootResource == null)
             {
                 acmRootResource = new AcmRootResource(this);
@@ -134,7 +138,8 @@ public class AcmFileSystemResourceFactory implements ResourceFactory
         if (filterMapping.endsWith("/"))
         {
             this.filterMapping = filterMapping;
-        } else
+        }
+        else
         {
             this.filterMapping = filterMapping + "/";
         }

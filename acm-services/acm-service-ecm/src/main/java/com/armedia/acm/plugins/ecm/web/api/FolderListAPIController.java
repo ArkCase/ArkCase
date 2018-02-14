@@ -6,6 +6,7 @@ import com.armedia.acm.core.exceptions.AcmUserActionFailedException;
 import com.armedia.acm.plugins.ecm.model.AcmCmisObjectList;
 import com.armedia.acm.plugins.ecm.model.AcmContainer;
 import com.armedia.acm.plugins.ecm.service.EcmFileService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +26,7 @@ public class FolderListAPIController
 
     private EcmFileService ecmFileService;
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFolderContents(Authentication auth, @PathVariable("objectType") String objectType,
@@ -42,7 +43,7 @@ public class FolderListAPIController
         return getEcmFileService().listFolderContents(auth, container, category, sortBy, sortDirection, startRow, maxRows);
     }
 
-    @PreAuthorize("hasPermission(#objectId, #objectType, 'read')")
+    @PreAuthorize("hasPermission(#objectId, #objectType, 'read|write|group-read|group-write')")
     @RequestMapping(value = "/folder/{objectType}/{objectId}/search", method = RequestMethod.GET)
     @ResponseBody
     public AcmCmisObjectList listFlatSearchResultsFromFolderContent(Authentication auth, @PathVariable("objectType") String objectType,
@@ -76,7 +77,7 @@ public class FolderListAPIController
 
         if (container.getFolder() == null)
         {
-            // not really possible since the cm_folder_id is not nullable.  But we'll account for it anyway
+            // not really possible since the cm_folder_id is not nullable. But we'll account for it anyway
             throw new IllegalStateException("Container '" + container.getId() + "' does not have a folder!");
         }
         return container;

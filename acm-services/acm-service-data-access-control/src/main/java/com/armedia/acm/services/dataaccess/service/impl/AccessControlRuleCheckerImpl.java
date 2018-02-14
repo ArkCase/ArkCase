@@ -4,6 +4,8 @@ import com.armedia.acm.objectonverter.ObjectConverter;
 import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
+
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -16,6 +18,7 @@ import org.springframework.security.core.GrantedAuthority;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,17 +74,29 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     /**
      * Check if particular user is granted access to a given object. This is accomplished with iterating over all
-     * configured AC entries until the first positive match
+     * configured AC entries until the first positive match. It only requires one permission to match, from the list of
+     * required permissions
      *
-     * @param authentication authentication token
-     * @param targetId       the identifier for the object instance
-     * @param targetType     target type
-     * @param permission     required permission
-     * @param solrDocument   Solr data stored for this object
+     * @param authentication
+     *            authentication token
+     * @param targetId
+     *            the identifier for the object instance
+     * @param targetType
+     *            target type
+     * @param permission
+     *            required permission
+     * @param solrDocument
+     *            Solr data stored for this object
      * @return true if user is allowed to access this object, false otherwise
      */
     @Override
     public boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, String permission, String solrDocument)
+    {
+        return isAccessGranted(authentication, targetId, targetType, Arrays.asList(permission.split("\\|")), solrDocument);
+    }
+
+    private boolean isAccessGranted(Authentication authentication, Long targetId, String targetType, List<String> permissions,
+            String solrDocument)
     {
         if (accessControlRules == null || accessControlRules.getAccessControlRuleList() == null)
         {
@@ -89,7 +104,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             return false;
         }
         log.debug("Checking if [{}] is granted executing [{}] on object of type [{}] with id [{}]", authentication.getName(),
-                permission, targetType, targetId);
+                StringUtils.join(permissions, ","), targetType, targetId);
         boolean granted = false;
 
         JSONObject solrJsonDocument = new JSONObject(solrDocument);
@@ -101,59 +116,66 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
         // loop trough configured access control rules, break on first positive match
         for (AccessControlRule accessControlRule : accessControlRules.getAccessControlRuleList())
         {
-            // check if action name matches
-            if (permission == null || !permission.equals(accessControlRule.getActionName()))
+            for (String permission : permissions)
             {
-                log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
-                continue;
-            }
-            // check if target type matches
-            if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
-            {
-                log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
-                continue;
-            }
-            // check if target sub type matches (NOTE: it is optional in JSON rules structure)
-            if (accessControlRule.getObjectSubType() != null)
-            {
-                // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
-                // accessControlRules.json
-                String targetSubType = (String) targetObjectProperties.get("objectSubType");
-                if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                // check if action name matches
+                if (permission == null || !permission.equals(accessControlRule.getActionName()))
                 {
-                    log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                    log.trace("Non matching permission [{} != {}], ignoring", accessControlRule.getActionName(), permission);
                     continue;
                 }
-            }
-            // check if "ALL" roles match
-            if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
-            {
-                // log entry created in checkRolesAll() method
-                continue;
-            }
-            // check if "ANY" roles match
-            if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
-            {
-                // log entry created in checkRolesAny() method
-                continue;
-            }
-            // all initial checks passed, proceed with checking required object properties
-            granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
+                // check if target type matches
+                if (targetType == null || !targetType.equals(accessControlRule.getObjectType()))
+                {
+                    log.trace("Non matching target type [{} != {}], ignoring", accessControlRule.getObjectType(), targetType);
+                    continue;
+                }
+                // check if target sub type matches (NOTE: it is optional in JSON rules structure)
+                if (accessControlRule.getObjectSubType() != null)
+                {
+                    // FIXME: unsafe - "object_sub_type_s" to "objectSubType" mapping has to be defined in
+                    // accessControlRules.json
+                    String targetSubType = (String) targetObjectProperties.get("objectSubType");
+                    if (targetSubType == null || !targetSubType.equals(accessControlRule.getObjectSubType()))
+                    {
+                        log.trace("Non matching target sub type [{} != {}], ignoring", accessControlRule.getObjectSubType(), targetSubType);
+                        continue;
+                    }
+                }
+                // check if "ALL" roles match
+                if (!checkRolesAll(accessControlRule.getUserRolesAll(), authentication.getAuthorities(), targetObjectProperties))
+                {
+                    // log entry created in checkRolesAll() method
+                    continue;
+                }
+                // check if "ANY" roles match
+                if (!checkRolesAny(accessControlRule.getUserRolesAny(), authentication.getAuthorities(), targetObjectProperties))
+                {
+                    // log entry created in checkRolesAny() method
+                    continue;
+                }
+                // all initial checks passed, proceed with checking required object properties
+                granted = evaluate(accessControlRule.getObjectProperties(), authentication, targetObjectProperties);
 
-            // proceed with checking if user is any of required participant types
-            granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
+                // proceed with checking if user is any of required participant types
+                granted = granted && checkParticipantTypes(accessControlRule.getUserIsParticipantTypeAny(), authentication, solrJsonResult);
 
+                if (granted)
+                {
+                    log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
+                            authentication.getName(), permission, targetType, targetId, accessControlRule);
+                    break;
+                }
+            }
             if (granted)
             {
-                log.debug("[{}] is granted executing [{}] on object of type [{}] with id [{}], matching rule [{}]",
-                        authentication.getName(), permission, targetType, targetId, accessControlRule);
                 break;
             }
         }
         if (!granted)
         {
             log.warn("[{}] is denied executing [{}] on object of type [{}] with id [{}], no matching rule found", authentication.getName(),
-                    permission, targetType, targetId);
+                    StringUtils.join(permissions, ","), targetType, targetId);
         }
         return granted;
     }
@@ -161,9 +183,12 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * If userIsParticipantTypeAny in AC is defined, evaluate if principal is any of the defined participant's types
      *
-     * @param userIsParticipantTypeAny list of "ANY" participants
-     * @param authentication           Authentication token
-     * @param solrJsonResult           JSONObject of parsed Solr documents response
+     * @param userIsParticipantTypeAny
+     *            list of "ANY" participants
+     * @param authentication
+     *            Authentication token
+     * @param solrJsonResult
+     *            JSONObject of parsed Solr documents response
      * @return true if principal is any of the defined participant's types
      */
     private boolean checkParticipantTypes(List<String> userIsParticipantTypeAny, Authentication authentication, JSONObject solrJsonResult)
@@ -187,8 +212,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Get set of all participant's ids whose types are in defined participant's types
      *
-     * @param participants             Participants of CASE/COMPLAINT from SOLR result
-     * @param userIsParticipantTypeAny list of "ANY" participants
+     * @param participants
+     *            Participants of CASE/COMPLAINT from SOLR result
+     * @param userIsParticipantTypeAny
+     *            list of "ANY" participants
      * @return set of all participant's ids whose types are found in the list userIsParticipantTypeAny
      */
     private Set<String> getParticipantsOfType(JSONArray participants, List<String> userIsParticipantTypeAny)
@@ -201,8 +228,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Check if principal is the required participant or is member of the required group
      *
-     * @param participantId  Ldap id of the required participant type
-     * @param authentication Authentication token
+     * @param participantId
+     *            Ldap id of the required participant type
+     * @param authentication
+     *            Authentication token
      * @return true if principal is the required participant or is in the required group
      */
     private boolean isParticipantAnyOf(String participantId, Authentication authentication)
@@ -219,7 +248,8 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Retrieve target object properties by parsing Solr document stored for this object.
      *
-     * @param solrJsonResult JSONObject of parsed Solr documents response
+     * @param solrJsonResult
+     *            JSONObject of parsed Solr documents response
      * @return map of retrieved properties
      */
     private Map<String, Object> retrieveTargetObjectProperties(Map<String, String> propertiesMapping, JSONObject solrJsonResult)
@@ -245,13 +275,16 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Check if all of the "ALL" roles match.
      *
-     * @param userRolesAll           list of "ALL" roles
-     * @param grantedAuthorities     list of granted authorities for the user
-     * @param targetObjectProperties target object properties (retrieved from Solr)
+     * @param userRolesAll
+     *            list of "ALL" roles
+     * @param grantedAuthorities
+     *            list of granted authorities for the user
+     * @param targetObjectProperties
+     *            target object properties (retrieved from Solr)
      * @return true if all of the roles are assigned to the user, false if any of the roles is missing
      */
     private boolean checkRolesAll(List<String> userRolesAll, Collection<? extends GrantedAuthority> grantedAuthorities,
-                                  Map<String, Object> targetObjectProperties)
+            Map<String, Object> targetObjectProperties)
     {
         if (userRolesAll == null || userRolesAll.isEmpty())
         {
@@ -286,12 +319,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private boolean evaluateAuthorityWildcardRole(String role, String authority)
     {
-        if (StringUtils.endsWith(role, "@*"))
+        if (StringUtils.endsWith(role, AcmRoleToGroupMapping.GROUP_NAME_WILD_CARD))
         {
             String roleName = StringUtils.substringBeforeLast(role, "@");
             String authorityName = StringUtils.substringBeforeLast(authority, "@");
             return authorityName.equalsIgnoreCase(roleName);
-        } else
+        }
+        else
         {
             return role.equalsIgnoreCase(authority);
         }
@@ -300,13 +334,16 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Check if any of the "ANY" roles match.
      *
-     * @param userRolesAny           list of "ANY" roles
-     * @param grantedAuthorities     list of granted authorities for the user
-     * @param targetObjectProperties target object properties (retrieved from Solr)
+     * @param userRolesAny
+     *            list of "ANY" roles
+     * @param grantedAuthorities
+     *            list of granted authorities for the user
+     * @param targetObjectProperties
+     *            target object properties (retrieved from Solr)
      * @return true if any of the roles are assigned to the user, false if none of the roles are assigned
      */
     private boolean checkRolesAny(List<String> userRolesAny, Collection<? extends GrantedAuthority> grantedAuthorities,
-                                  Map<String, Object> targetObjectProperties)
+            Map<String, Object> targetObjectProperties)
     {
         if (userRolesAny == null || userRolesAny.isEmpty())
         {
@@ -336,8 +373,10 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Replace placeholders in user role (marked as {{placeholder}})
      *
-     * @param userRole               user role string, as defined in access control rules
-     * @param targetObjectProperties target object properties (retrieved from Solr)
+     * @param userRole
+     *            user role string, as defined in access control rules
+     * @param targetObjectProperties
+     *            target object properties (retrieved from Solr)
      * @return evaluated user role
      */
     private String evaluateRole(String userRole, Map<String, Object> targetObjectProperties)
@@ -361,13 +400,16 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
     /**
      * Evaluate single AC rule.
      *
-     * @param requiredProperties     required object properties used in permission checking (read from configuration file)
-     * @param authentication         authentication token
-     * @param targetObjectProperties target object properties (retrieved from Solr)
+     * @param requiredProperties
+     *            required object properties used in permission checking (read from configuration file)
+     * @param authentication
+     *            authentication token
+     * @param targetObjectProperties
+     *            target object properties (retrieved from Solr)
      * @return evaluated AC rule
      */
     private boolean evaluate(Map<String, Object> requiredProperties, Authentication authentication,
-                             Map<String, Object> targetObjectProperties)
+            Map<String, Object> targetObjectProperties)
     {
         if (requiredProperties == null || requiredProperties.isEmpty())
         {
@@ -381,11 +423,13 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
             if (value == null)
             {
                 return true;
-            } else if (expectedValue.getClass().isAssignableFrom(ArrayList.class))
+            }
+            else if (expectedValue.getClass().isAssignableFrom(ArrayList.class))
             {
                 ArrayList<String> list = (ArrayList<String>) expectedValue;
                 return !list.contains(value);
-            } else if (expectedValue.getClass().isAssignableFrom(String.class))
+            }
+            else if (expectedValue.getClass().isAssignableFrom(String.class))
             {
                 String str = (String) expectedValue;
                 return !str.equals(value);

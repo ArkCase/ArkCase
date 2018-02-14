@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.armedia.acm</groupId>
         <artifactId>acm-services</artifactId>
-        <version>3.2.3-SNAPSHOT</version>
+        <version>3.2.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,7 +11,6 @@
     <artifactId>acm-service-search</artifactId>
     <name>ACM Service: Search</name>
     <description>Quick Search and Advanced Search services.</description>
-
 
     <dependencies>
         <dependency>
@@ -107,7 +106,6 @@
             <scope>compile</scope>
         </dependency>
 
-
         <!-- json -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -193,6 +191,5 @@
             <artifactId>solr-solrj</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

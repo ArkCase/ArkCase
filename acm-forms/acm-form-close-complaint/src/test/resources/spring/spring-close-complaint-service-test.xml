@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
-	   
-	 <bean id="acm-form-properties-test"
-		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+
+    <bean id="acm-form-properties-test" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="file:${user.home}/.arkcase/acm/acm-forms.properties"/>
         <property name="ignoreResourceNotFound" value="true"/>
         <property name="localOverride" value="false"/>
         <property name="properties">
-            <props>
-            </props>
-        </property>    
+            <props></props>
+        </property>
     </bean>
-	   
+
     <bean id="closeComplaintServiceTest" class="com.armedia.acm.form.closecomplaint.service.CloseComplaintService">
-		<property name="properties" ref="acm-form-properties-test" />
-	</bean>
+        <property name="properties" ref="acm-form-properties-test"/>
+    </bean>
 
 </beans>

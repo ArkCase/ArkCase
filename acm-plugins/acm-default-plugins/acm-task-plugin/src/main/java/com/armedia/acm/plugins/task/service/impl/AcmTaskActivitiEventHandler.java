@@ -1,6 +1,7 @@
 package com.armedia.acm.plugins.task.service.impl;
 
 import com.armedia.acm.activiti.AcmTaskActivitiEvent;
+import com.armedia.acm.core.exceptions.AcmAccessControlException;
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.plugins.task.exception.AcmTaskException;
@@ -12,6 +13,7 @@ import com.armedia.acm.services.participants.dao.AcmParticipantDao;
 import com.armedia.acm.services.search.model.solr.SolrAdvancedSearchDocument;
 import com.armedia.acm.services.search.model.solr.SolrDocument;
 import com.armedia.acm.services.search.service.SendDocumentsToSolr;
+
 import org.activiti.engine.task.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +54,8 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
                 try
                 {
                     getTaskDao().createFolderForTaskEvent(acmTask);
-                } catch (AcmTaskException | AcmCreateObjectFailedException e)
+                }
+                catch (AcmTaskException | AcmCreateObjectFailedException e)
                 {
                     log.error("Failed to create task container folder!", e.getMessage(), e);
                 }
@@ -71,10 +74,16 @@ public class AcmTaskActivitiEventHandler implements ApplicationListener<AcmTaskA
                 acmTask.setStatus(TaskConstants.STATE_TERMINATED);
             }
 
-
             getTaskDao().ensureCorrectAssigneeInParticipants(acmTask);
 
-            getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(acmTask);
+            try
+            {
+                getDataAccessPrivilegeListener().applyAssignmentAndAccessRules(acmTask);
+            }
+            catch (AcmAccessControlException e)
+            {
+                log.error("Error applying assignment and access rules on AcmTaskActivitiEvent", e);
+            }
 
             // gotta check the assignee again to be sure the assignment rules didn't mess with it
             getTaskDao().ensureCorrectAssigneeInParticipants(acmTask);

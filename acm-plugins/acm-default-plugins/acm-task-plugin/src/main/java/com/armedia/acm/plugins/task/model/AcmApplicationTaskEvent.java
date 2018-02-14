@@ -19,10 +19,9 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     private String priority;
     private boolean adhocTask;
     private String owner;
-//    private String assigneeFullName;
+    // private String assigneeFullName;
     private String businessProcessName;
     private AcmTask acmTask;
-
 
     public AcmApplicationTaskEvent(AcmTask source, String taskEvent, String eventUser, boolean succeeded, String ipAddress)
     {
@@ -121,43 +120,55 @@ public class AcmApplicationTaskEvent extends AcmEvent implements AcmTaskEvent
     }
 
     @Override
-    public String getPriority() {
+    public String getPriority()
+    {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(String priority)
+    {
         this.priority = priority;
     }
 
     @Override
-    public boolean isAdhocTask() {return adhocTask;}
+    public boolean isAdhocTask()
+    {
+        return adhocTask;
+    }
 
-    public void setAdhocTask(boolean adhocTask) {this.adhocTask = adhocTask;}
+    public void setAdhocTask(boolean adhocTask)
+    {
+        this.adhocTask = adhocTask;
+    }
 
     @Override
-    public String getOwner() {
+    public String getOwner()
+    {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(String owner)
+    {
         this.owner = owner;
     }
 
-//    @Override
-//    public String getAssigneeFullName() {
-//        return assigneeFullName;
-//    }
-//
-//    public void setAssigneeFullName(String assigneeFullName) {
-//        this.assigneeFullName = assigneeFullName;
-//    }
+    // @Override
+    // public String getAssigneeFullName() {
+    // return assigneeFullName;
+    // }
+    //
+    // public void setAssigneeFullName(String assigneeFullName) {
+    // this.assigneeFullName = assigneeFullName;
+    // }
 
     @Override
-    public String getBusinessProcessName() {
+    public String getBusinessProcessName()
+    {
         return businessProcessName;
     }
 
-    public void setBusinessProcessName(String businessProcessName) {
+    public void setBusinessProcessName(String businessProcessName)
+    {
         this.businessProcessName = businessProcessName;
     }
 

@@ -18,8 +18,8 @@ public class CloseComplaintFormEvent extends AcmEvent
     private String mode;
 
     public CloseComplaintFormEvent(String complaintNumber, Long complaintId, CloseComplaintRequest source,
-                                   FrevvoUploadedFiles files, String mode, String user, String ipAddress,
-                                   boolean succeeded)
+            FrevvoUploadedFiles files, String mode, String user, String ipAddress,
+            boolean succeeded)
     {
         super(source);
         setMode(mode);

@@ -21,7 +21,7 @@
     "angular-touch": "~1.4.3",
     "angular-translate": "~2.7.2",
     "angular-translate-loader-partial": "~2.7.2",
-    "angular-ui-grid": "~3.0.7",
+    "angular-ui-grid": "~4.0.0",
     "angular-ui-router": "~0.2.15",
     "angular-ui-utils": "~3.0.0",
     "angular-ui-ace": "~0.2.3",
@@ -56,6 +56,7 @@
     "videogular-overlay-play": "~1.4.4",
     "videogular-poster": "~1.4.4",
     "angular-utf8-base64": "0.0.5",
+    "ui-grid-draggable-rows": "0.2.2",
     "angular-cache": "4.6.0"
   },
   "resolutions": {

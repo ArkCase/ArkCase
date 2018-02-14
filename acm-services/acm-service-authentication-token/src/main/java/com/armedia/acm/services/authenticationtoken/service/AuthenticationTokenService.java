@@ -16,11 +16,12 @@ public class AuthenticationTokenService
     private Cache authenticationTokenCache;
 
     /**
-     * Retrieve a token corresponding to the given Authentication.  The token can be placed in service URLs
+     * Retrieve a token corresponding to the given Authentication. The token can be placed in service URLs
      * like so: http://$acm_host/$acm_servlet_context/api/v1/$api_service?acm_ticket=$token.
      * <p/>
-     * The token remains valid as long as service calls using the token are made at least every half hour.  After
+     * The token remains valid as long as service calls using the token are made at least every half hour. After
      * 30 minutes of non-use (e.g. no service calls made with the token), the token is no longer valid.
+     * 
      * @param auth
      * @return
      */
@@ -40,7 +41,8 @@ public class AuthenticationTokenService
         if (valueWrapper != null)
         {
             tokens = (Set<String>) valueWrapper.get();
-        } else
+        }
+        else
         {
             tokens = new HashSet<>();
         }
@@ -55,12 +57,14 @@ public class AuthenticationTokenService
     }
 
     /**
-     * Retrieve the authentication object corresponding to a token.  The token should have been previously retrieved
+     * Retrieve the authentication object corresponding to a token. The token should have been previously retrieved
      * by a call to getTokenForAuthentication.
      *
-     * @param key A token (received by calling getTokenForAuthentication)
+     * @param key
+     *            A token (received by calling getTokenForAuthentication)
      * @return The authentication provided when the token was retrieved
-     * @throws IllegalArgumentException If the token is no longer valid.
+     * @throws IllegalArgumentException
+     *             If the token is no longer valid.
      */
     public Authentication getAuthenticationForToken(String key) throws IllegalArgumentException
     {
@@ -81,8 +85,7 @@ public class AuthenticationTokenService
         {
             Set<String> tokens = (Set<String>) valueWrapper.get();
             tokens.forEach(
-                    token -> getAuthenticationTokenCache().evict(token)
-            );
+                    token -> getAuthenticationTokenCache().evict(token));
             getAuthenticationTokenCache().evict(sessionId);
         }
     }

@@ -9,12 +9,14 @@ atlassian-ide-plugin.xml
 
 *.project
 *.classpath
+*.tern-project
 .settings/
 .springBeans
 .externalToolBuilders/
 .checkstyle
 .mule/
 .configuration
+.tern-project
 
 # Package Files #
 nbactions.xml

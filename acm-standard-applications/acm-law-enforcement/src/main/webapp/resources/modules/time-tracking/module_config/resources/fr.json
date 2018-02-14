@@ -1,98 +1,98 @@
 {
-  "timeTracking": {
-    "title": "Suivi du temps",
-    "progressNoTimesheet": "[Aucune feuille de temps n'est sélectionnée]",
-    "progressLoading": "Chargement de la feuille de temps",
-    "progressError": "Échec du chargement de la feuille de temps"
-  },
-  "timeTracking.menus": {
-    "leftnav.item": "Suivi du temps",
-    "topbar.item": "Emploi du temps"
-  },
-  "timeTracking.comp.main": {
-    "title": "Aperçu"
-  },
-  "timeTracking.comp.info": {
-    "title": "Information",
-    "lastModified.label": "Dernière modification"
-  },
-  "timeTracking.comp.actions": {
-    "title": "Actes",
-    "new.button": "Nouvelle feuille de temps",
-    "edit.button": "Modifier la feuille de temps"
-  },
-  "timeTracking.comp.details": {
-    "title": "Détails",
-    "informSaved": "Détails de la feuille de temps enregistrés",
-    "table.columns": {
-      "title": "Détails",
-      "modified": "Date de la dernière modification",
-      "modifier": "Utilisateur modifié en dernier"
-    }
-  },
-  "timeTracking.comp.person": {
-    "title": "Personnes",
-    "table.columns": {
-      "fullName": "Nom complet",
-      "userId": "Nom d'utilisateur"
-    }
-  },
-  "timeTracking.comp.summary": {
-    "title": "Heures",
-    "table.columns": {
-      "code": "ID du parent",
-      "type": "Type de parent",
-      "value": "Heures totales",
-      "date": "Date de facturation",
-      "modified": "Date modifiée"
-    }
-  },
-  "timeTracking.comp.tags": {
-    "title": "Étiquettes",
-    "table.columns": {
-      "tag": "Marque",
-      "created": "Créé",
-      "createdBy": "Créé par"
+    "timeTracking": {
+        "title": "Suivi du temps",
+        "progressNoTimesheet": "[Aucune feuille de temps n'est sélectionnée]",
+        "progressLoading": "Chargement de la feuille de temps",
+        "progressError": "Échec du chargement de la feuille de temps"
     },
-    "modal": {
-      "title": "Marque",
-      "search": "Recherche de tag",
-      "buttons": {
-        "cancel": "Annuler",
-        "ok": "Ajouter une étiquette"
-      }
+    "timeTracking.menus": {
+        "leftnav.item": "Suivi du temps",
+        "topbar.item": "Emploi du temps"
     },
-    "message": {
-      "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
-      "tagAssociated": "Déjà associé",
-      "delete": {
-        "success": "Tag supprimé avec succès",
-        "error": "Erreur lors de la suppression d'un tag"
-      }
-    }
-  },
-  "timeTracking.comp.approvers": {
-    "title": "Approbateurs",
-    "table.columns": {
-      "fullName": "Nom complet",
-      "userId": "Nom d'utilisateur"
-    }
-  },
-  "timeTracking.tree": {
-    "nodeTypes": {
-      "details.label": "Détails",
-      "person.label": "Personnes",
-      "summary.label": "Heures",
-      "tags.label": "Étiquettes",
-      "approvers.label": "Approbateurs"
+    "timeTracking.comp.main": {
+        "title": "Aperçu"
     },
-    "sorters": {
-      "dateAsc": "Trier Date Asc",
-      "dateDesc": "Trier Date Déc",
-      "idAsc": "Trier ID de Temps Asc",
-      "idDesc": "Trier ID de Temps Déc",
-      "nameDesc": "Trier par nom Déc",
-      "noSort": "(Non Trier)"
+    "timeTracking.comp.info": {
+        "title": "Information",
+        "lastModified.label": "Dernière modification"
+    },
+    "timeTracking.comp.actions": {
+        "title": "Actes",
+        "new.button": "Nouvelle feuille de temps",
+        "edit.button": "Modifier la feuille de temps"
+    },
+    "timeTracking.comp.details": {
+        "title": "Détails",
+        "informSaved": "Détails de la feuille de temps enregistrés",
+        "table.columns": {
+            "title": "Détails",
+            "modified": "Date de la dernière modification",
+            "modifier": "Utilisateur modifié en dernier"
+        }
+    },
+    "timeTracking.comp.person": {
+        "title": "Personnes",
+        "table.columns": {
+            "fullName": "Nom complet",
+            "userId": "Nom d'utilisateur"
+        }
+    },
+    "timeTracking.comp.summary": {
+        "title": "Heures",
+        "table.columns": {
+            "code": "ID du parent",
+            "type": "Type de parent",
+            "value": "Heures totales",
+            "date": "Date de facturation",
+            "modified": "Date modifiée"
+        }
+    },
+    "timeTracking.comp.tags": {
+        "title": "Étiquettes",
+        "table.columns": {
+            "tag": "Marque",
+            "created": "Créé",
+            "createdBy": "Créé par"
+        },
+        "modal": {
+            "title": "Marque",
+            "search": "Recherche de tag",
+            "buttons": {
+                "cancel": "Annuler",
+                "ok": "Ajouter une étiquette"
+            }
+        },
+        "message": {
+            "tagExists": "La balise avec ce nom ou cette description ou ce texte existe déjà",
+            "tagAssociated": "Déjà associé",
+            "delete": {
+                "success": "Tag supprimé avec succès",
+                "error": "Erreur lors de la suppression d'un tag"
+            }
+        }
+    },
+    "timeTracking.comp.approvers": {
+        "title": "Approbateurs",
+        "table.columns": {
+            "fullName": "Nom complet",
+            "userId": "Nom d'utilisateur"
+        }
+    },
+    "timeTracking.tree": {
+        "nodeTypes": {
+            "details.label": "Détails",
+            "person.label": "Personnes",
+            "summary.label": "Heures",
+            "tags.label": "Étiquettes",
+            "approvers.label": "Approbateurs"
+        },
+        "sorters": {
+            "dateAsc": "Trier Date Asc",
+            "dateDesc": "Trier Date Déc",
+            "idAsc": "Trier ID de Temps Asc",
+            "idDesc": "Trier ID de Temps Déc",
+            "nameDesc": "Trier par nom Déc",
+            "noSort": "(Non Trier)"
+        }
     }
-  }
 }

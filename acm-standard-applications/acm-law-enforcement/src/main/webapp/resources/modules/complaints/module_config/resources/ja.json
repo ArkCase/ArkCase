@@ -1,369 +1,372 @@
 {
-  "complaints": {
-    "title": "訴状",
-    "progressNoComplaint": "[ 訴状のデータはありません ]",
-    "progressLoading": "訴状の読み込み",
-    "progressError": "訴状の読み込みに失敗しました"
-  },
-  "complaints.menus": {
-    "leftnav.item": "訴状",
-    "topbar.item": "訴状"
-  },
-  "complaints.comp.main": {
-    "title": "概観"
-  },
-  "complaints.comp.info": {
-    "title": "情報",
-    "complaintId": "訴状識別番号:",
-    "complaintNumber": "訴状番号:",
-    "courtRoomName": "裁判所名:",
-    "type.label": "種類",
-    "created.label": "作成日",
-    "priority.label": "優先",
-    "assignee.label": "割り当て先",
-    "owningGroup.label": "群に所属",
-    "dueDate.label": "期限日"
-  },
-  "complaints.comp.actions": {
-    "title": "操作",
-    "restrict": "制限する?",
-    "new.button": "新しい訴状",
-    "close.button": "訴状を閉じる",
-    "subscribe.button": "購読",
-    "unsubscribe.button": "購読中止",
-    "claim.button": "申し立て",
-    "unclaim.button": "申し立て中止"
-  },
-  "complaints.comp.details": {
-    "title": "詳細",
-    "informSaved": "クレームの詳細が保存されました",
-    "table.columns": {
-      "title": "詳細",
-      "modified": "最終変更日",
-      "modifier": "ユーザーが最後に変更された"
+    "complaints": {
+        "title": "訴状",
+        "progressNoComplaint": "[ 訴状のデータはありません ]",
+        "progressLoading": "訴状の読み込み",
+        "progressError": "訴状の読み込みに失敗しました"
+    },
+    "complaints.menus": {
+        "leftnav.item": "訴状",
+        "topbar.item": "訴状"
+    },
+    "complaints.comp.main": {
+        "title": "概観"
+    },
+    "complaints.comp.info": {
+        "title": "情報",
+        "complaintId": "訴状識別番号:",
+        "complaintNumber": "訴状番号:",
+        "courtRoomName": "裁判所名:",
+        "type.label": "種類",
+        "created.label": "作成日",
+        "priority.label": "優先",
+        "assignee.label": "割り当て先",
+        "owningGroup.label": "群に所属",
+        "dueDate.label": "期限日"
+    },
+    "complaints.comp.actions": {
+        "title": "操作",
+        "restrict": "制限する?",
+        "new.button": "新しい訴状",
+        "close.button": "訴状を閉じる",
+        "subscribe.button": "購読",
+        "unsubscribe.button": "購読中止",
+        "claim.button": "申し立て",
+        "unclaim.button": "申し立て中止"
+    },
+    "complaints.comp.details": {
+        "title": "詳細",
+        "informSaved": "クレームの詳細が保存されました",
+        "table.columns": {
+            "title": "詳細",
+            "modified": "最終変更日",
+            "modifier": "ユーザーが最後に変更された"
+        }
+    },
+    "complaints.comp.documents": {
+        "title": "文書",
+        "sendEmail": "メールを送る",
+        "filterInputPlaceholder": "フィルタ",
+        "searchInputPlaceholder": "サーチ",
+        "menu": {
+            "forms": {
+                "rptInvestigation%": "調査報告"
+            },
+            "correspondences": {
+                "correspondenceInvitation%": "通信招待状",
+                "approvalLetter%": "訴状の承認書",
+                "generalRelease%": "標準リリース",
+                "medicalRelease%": "医療リリース",
+                "clearanceGranted%": "許可されたクリアランス",
+                "clearanceDenied%": "クリアランスを拒否した",
+                "witnessInterview%": "目撃者のインタビュー要求",
+                "witnessInterview2%": "目撃者のインタビュー要求2.0"
+            }
+        },
+        "newTask": "新しい仕事"
+    },
+    "complaints.comp.people": {
+        "title": "人物",
+        "table.columns": {
+            "type": "役割",
+            "firstName": "最初に与えられた名前",
+            "lastName": "姓",
+            "organization": "組織",
+            "phone": "電話",
+            "location": "場所"
+        }
+    },
+    "complaints.comp.organizations": {
+        "title": "組織",
+        "table.columns": {
+            "name": "組織の名前",
+            "associationType": "役割",
+            "type": "組織のタイプ",
+            "identification": "私は...するだろう",
+            "value": "組織",
+            "contact": "一次接触",
+            "phone": "電話",
+            "location": "場所"
+        },
+        "actions": {
+            "delete": "クリア",
+            "setPrimary": "初期設定",
+            "addNew": "新しく追加する",
+            "addExisting": "新しく追加する"
+        }
+    },
+    "complaints.comp.participants": {
+        "title": "参加者",
+        "table.columns": {
+            "type": "種類",
+            "name": "姓"
+        },
+        "dialogUserPicker": {
+            "header": "ユーザーを選択",
+            "table.columns": {
+                "name": "姓",
+                "type": "種類",
+                "title": "タイトル",
+                "id": "ユーザー名"
+            }
+        },
+        "dialogGroupPicker": {
+            "header": "グループを選択",
+            "table.columns": {
+                "name": "名前"
+            }
+        }
+    },
+    "complaints.comp.addresses": {
+        "title": "場所",
+        "table.columns": {
+            "type": "種類",
+            "streetAddress": "住所（1",
+            "streetAddress2": "アドレス2",
+            "city": "シティ",
+            "state": "州",
+            "zip": "郵便番号",
+            "country": "国",
+            "created": "追加された日付",
+            "creator": "によって追加",
+            "modified": "最後の変更",
+            "modifier": "適応"
+        },
+        "actions": {
+            "addNew": "新しく追加する",
+            "map": "地図"
+        },
+        "modal": {
+            "addAddress": "場所を追加",
+            "editAddress": "レコードを編集する",
+            "type.label": "住所タイプ",
+            "type.placeholder": "アドレスの種類を入力",
+            "streetAddress.label": "住所（1",
+            "streetAddress.placeholder": "アドレス1を入力",
+            "streetAddress2.label": "アドレス2",
+            "streetAddress2.placeholder": "アドレス2を入力",
+            "city.label": "都市",
+            "city.placeholder": "都市を入力",
+            "zip.label": "郵便番号",
+            "zip.placeholder": "郵便番号を入力",
+            "state.label": "州",
+            "state.placeholder": "ステータスを入力",
+            "country.label": "国",
+            "country.placeholder": "国を入力",
+            "btnCancel.text": "キャンセル",
+            "btnOk.text": "安全な場所",
+            "setPrimary": "初期設定？",
+            "yes": "確認",
+            "no": "いいえ"
+        }
+    },
+    "complaints.comp.notes": {
+        "title": "注解",
+        "table.columns": {
+            "note": "注解",
+            "created": "作成した",
+            "creator": "著者"
+        }
+    },
+    "complaints.comp.tasks": {
+        "title": "任務",
+        "table.columns": {
+            "title": "タイトル",
+            "assignee": "受信機",
+            "created": "作成した",
+            "priority": "優先",
+            "due": "支払期日",
+            "status": "状態"
+        },
+        "table.overdue.tooltip": "タスクが遅れています",
+        "table.deadline.tooltip": "締め切りに近づいています"
+    },
+    "complaints.comp.references": {
+        "title": "参照",
+        "table.columns": {
+            "targetName": "数",
+            "targetTitle": "タイトル",
+            "targetType": "種類",
+            "assignee": "受信機",
+            "modified": "かわった",
+            "status": "状態"
+        }
+    },
+    "complaints.comp.history": {
+        "title": "歷史",
+        "table.columns": {
+            "eventType": "イベント名",
+            "eventDate": "日付",
+            "userId": "ユーザー"
+        }
+    },
+    "complaints.comp.time": {
+        "title": "時間",
+        "table.columns": {
+            "name": "フォーム名",
+            "user": "ユーザー",
+            "tally": "合計時間",
+            "modified": "変更日",
+            "status": "状態"
+        },
+        "formNamePrefix": "タイムシート"
+    },
+    "complaints.comp.cost": {
+        "title": "支出",
+        "table.columns": {
+            "name": "フォーム名",
+            "user": "ユーザー",
+            "tally": "総費用",
+            "modified": "変更日",
+            "status": "状態"
+        },
+        "formNamePrefix": "コスト"
+    },
+    "complaints.comp.tags": {
+        "title": "タグ",
+        "table.columns": {
+            "tag": "タグ",
+            "created": "作成した",
+            "createdBy": "によって作成された"
+        },
+        "modal": {
+            "title": "タグ",
+            "search": "検索タグ",
+            "placeholder": "ja_Add tag",
+            "buttons": {
+                "cancel": "キャンセル",
+                "ok": "タグを追加する"
+            }
+        },
+        "message": {
+            "tagExists": "この名前または説明またはテキストのタグは既に存在します",
+            "tagAssociated": "すでに関連付けられている",
+            "delete": {
+                "success": "タグを削除しました",
+                "error": "タグの削除中にエラーが発生しました"
+            }
+        }
+    },
+    "complaints.comp.calendar": {
+        "title": "日報",
+        "infoMessage": "ja_Calendar Integration Configuration Not Enabled"
+    },
+    "complaints.comp.referenceSearchGrid": {
+        "title": "リファレンス検索"
+    },
+    "complaints.comp.addreference": {
+        "title": "参照を追加する",
+        "cancelButton": "キャンセル",
+        "confirmButton": "追加",
+        "search": {
+            "placeholder": "ケース、苦情、ファイル、タスクを検索する",
+            "btn": "サーチ"
+        },
+        "grid": {
+            "columns": {
+                "id": "ID番号",
+                "name": "名前",
+                "type": "種類",
+                "title": "タイトル",
+                "parent": "親",
+                "assignee": "受信機",
+                "modified": "かわった"
+            }
+        }
+    },
+    "complaints.comp.assigneePickerModal": {
+        "title": "係員を変更する",
+        "assigneeNamelabel": "受取人の名前",
+        "btnCancelText": "キャンセル",
+        "btnSaveText": "セーブアップ",
+        "searchAssigneeHeader": "検索受信機"
+    },
+    "complaints.comp.groupPickerModal": {
+        "title": "グループを変更する",
+        "groupNamelabel": "グループ名",
+        "btnCancelText": "キャンセル",
+        "btnSaveText": "セーブアップ",
+        "searchGroupHeader": "検索グループ"
+    },
+    "complaints.comp.approvalRouting": {
+        "title": "将来の承認者",
+        "addNewTooltip": "新しい承認者を追加",
+        "noBuckslipMessage": "データなし",
+        "button": {
+            "save.tooltip": "変更内容を保存"
+        },
+        "table.columns": {
+            "fullName": "フルネーム"
+        },
+        "assigne.none": "ja_None",
+        "assignee.label": "受信機",
+        "owningGroup.label": "所有者グループ",
+        "priority.label": "優先",
+        "startDate.label": "開始日",
+        "dueDate.label": "締め切り",
+        "state.label": "状態"
+    },
+    "complaints.comp.pastApprovals": {
+        "title": "過去の承認",
+        "noBuckslipMessage": "データなし",
+        "table.columns": {
+            "approvalDate": "承認日",
+            "approverId": "承認者",
+            "approverFullName": "承認者",
+            "approverDecision": "承認決定"
+        }
+    },
+    "complaints.userOrGroupSearch": {
+        "id": "ユーザー検索",
+        "title": "ユーザー/グループの検索",
+        "search": {
+            "btn": "サーチ",
+            "placeholder": "ユーザーまたはグループを検索します。"
+        },
+        "cancelButton": "キャンセル",
+        "confirmButton": "確認するために",
+        "assigneeGridColumns": {
+            "name": "名前",
+            "type": "種類",
+            "title": "タイトル",
+            "username": "ユーザー名"
+        }
+    },
+    "complaints.tree": {
+        "nodeTypes": {
+            "details.label": "詳細",
+            "locations.label": "場所",
+            "people.label": "人物",
+            "organizations.label": "組織",
+            "documents.label": "文書",
+            "participants.label": "参加者",
+            "notes.label": "注解",
+            "tasks.label": "任務",
+            "references.label": "参照",
+            "history.label": "歴史",
+            "time.label": "時間",
+            "cost.label": "支出",
+            "tags.label": "タグ",
+            "calendar.label": "日報",
+            "approvalRouting.label": "承認ル"
+        },
+        "filters": {
+            "opened": "開いているすべての",
+            "iHaveCreated": "私が作成しました",
+            "iAmAssigned": "自分に割り当てられました",
+            "iAmFollowing": "私は心配です",
+            "closedNoFurtherAction": "ノーさらに開閉動作",
+            "closedReferExternal": "外部参照が閉じています",
+            "closedOpenInvestigation": "調査は、閉じました",
+            "noFilter": "(無制限)"
+        },
+        "sorters": {
+            "incidentDateAsc": "イベントの日付で並べ替え",
+            "incidentDateDesc": "イベントの日付で並べ替え降順",
+            "createdDateAsc": "作成日で並べ替え",
+            "createdDateDesc": "作成日で並べ替え降順",
+            "nameAsc": "名で並べ替え",
+            "noSort": "(注文しません)"
+        }
     }
-  },
-  "complaints.comp.documents": {
-    "title": "文書",
-    "sendEmail": "メールを送る",
-    "filterInputPlaceholder": "フィルタ",
-    "searchInputPlaceholder": "サーチ",
-    "menu": {
-      "forms": {
-        "rptInvestigation%": "調査報告"
-      },
-      "correspondences": {
-        "correspondenceInvitation%": "通信招待状",
-        "approvalLetter%": "訴状の承認書",
-        "generalRelease%": "標準リリース",
-        "medicalRelease%": "医療リリース",
-        "clearanceGranted%": "許可されたクリアランス",
-        "clearanceDenied%": "クリアランスを拒否した",
-        "witnessInterview%": "目撃者のインタビュー要求",
-        "witnessInterview2%": "目撃者のインタビュー要求2.0"
-      }
-    },
-    "newTask": "新しい仕事"
-  },
-  "complaints.comp.people": {
-    "title": "人物",
-    "table.columns": {
-      "type": "役割",
-      "firstName": "最初に与えられた名前",
-      "lastName": "姓",
-      "organization": "組織",
-      "phone": "電話",
-      "location": "場所"
-    }
-  },
-  "complaints.comp.organizations": {
-    "title": "組織",
-    "table.columns": {
-      "name": "組織の名前",
-      "associationType": "役割",
-      "type": "組織のタイプ",
-      "identification": "私は...するだろう",
-      "value": "組織",
-      "contact": "一次接触",
-      "phone": "電話",
-      "location": "場所"
-    },
-    "actions": {
-      "delete": "クリア",
-      "setPrimary": "初期設定",
-      "addNew": "新しく追加する",
-      "addExisting": "新しく追加する"
-    }
-  },
-  "complaints.comp.participants": {
-    "title": "参加者",
-    "table.columns": {
-      "type": "種類",
-      "name": "姓"
-    },
-    "dialogUserPicker": {
-      "header": "ユーザーを選択",
-      "table.columns": {
-        "name": "姓",
-        "type": "種類",
-        "title": "タイトル",
-        "id": "ユーザー名"
-      }
-    },
-    "dialogGroupPicker": {
-      "header": "グループを選択",
-      "table.columns": {
-        "name": "名前"
-      }
-    }
-  },
-  "complaints.comp.addresses": {
-    "title": "場所",
-    "table.columns": {
-      "type": "種類",
-      "streetAddress": "住所（1",
-      "streetAddress2": "アドレス2",
-      "city": "シティ",
-      "state": "州",
-      "zip": "郵便番号",
-      "country": "国",
-      "created": "追加された日付",
-      "creator": "によって追加",
-      "modified": "最後の変更",
-      "modifier": "適応"
-    },
-    "actions": {
-      "addNew": "新しく追加する",
-      "map": "地図"
-    },
-    "modal": {
-      "addAddress": "場所を追加",
-      "editAddress": "レコードを編集する",
-      "type.label": "住所タイプ",
-      "type.placeholder": "アドレスの種類を入力",
-      "streetAddress.label": "住所（1",
-      "streetAddress.placeholder": "アドレス1を入力",
-      "streetAddress2.label": "アドレス2",
-      "streetAddress2.placeholder": "アドレス2を入力",
-      "city.label": "都市",
-      "city.placeholder": "都市を入力",
-      "zip.label": "郵便番号",
-      "zip.placeholder": "郵便番号を入力",
-      "state.label": "州",
-      "state.placeholder": "ステータスを入力",
-      "country.label": "国",
-      "country.placeholder": "国を入力",
-      "btnCancel.text": "キャンセル",
-      "btnOk.text": "安全な場所",
-      "setPrimary": "初期設定？",
-      "yes": "確認",
-      "no": "いいえ"
-    }
-  },
-  "complaints.comp.notes": {
-    "title": "注解",
-    "table.columns": {
-      "note": "注解",
-      "created": "作成した",
-      "creator": "著者"
-    }
-  },
-  "complaints.comp.tasks": {
-    "title": "任務",
-    "table.columns": {
-      "title": "タイトル",
-      "assignee": "受信機",
-      "created": "作成した",
-      "priority": "優先",
-      "due": "支払期日",
-      "status": "状態"
-    },
-    "table.overdue.tooltip": "タスクが遅れています",
-    "table.deadline.tooltip": "締め切りに近づいています"
-  },
-  "complaints.comp.references": {
-    "title": "参照",
-    "table.columns": {
-      "targetName": "数",
-      "targetTitle": "タイトル",
-      "targetType": "種類",
-      "assignee": "受信機",
-      "modified": "かわった",
-      "status": "状態"
-    }
-  },
-  "complaints.comp.history": {
-    "title": "歷史",
-    "table.columns": {
-      "eventType": "イベント名",
-      "eventDate": "日付",
-      "userId": "ユーザー"
-    }
-  },
-  "complaints.comp.time": {
-    "title": "時間",
-    "table.columns": {
-      "name": "フォーム名",
-      "user": "ユーザー",
-      "tally": "合計時間",
-      "modified": "変更日",
-      "status": "状態"
-    },
-    "formNamePrefix": "タイムシート"
-  },
-  "complaints.comp.cost": {
-    "title": "支出",
-    "table.columns": {
-      "name": "フォーム名",
-      "user": "ユーザー",
-      "tally": "総費用",
-      "modified": "変更日",
-      "status": "状態"
-    },
-    "formNamePrefix": "コスト"
-  },
-  "complaints.comp.tags": {
-    "title": "タグ",
-    "table.columns": {
-      "tag": "タグ",
-      "created": "作成した",
-      "createdBy": "によって作成された"
-    },
-    "modal": {
-      "title": "タグ",
-      "search": "検索タグ",
-      "buttons": {
-        "cancel": "キャンセル",
-        "ok": "タグを追加する"
-      }
-    },
-    "message": {
-      "tagExists": "この名前または説明またはテキストのタグは既に存在します",
-      "tagAssociated": "すでに関連付けられている",
-      "delete": {
-        "success": "タグを削除しました",
-        "error": "タグの削除中にエラーが発生しました"
-      }
-    }
-  },
-  "complaints.comp.calendar": {
-    "title": "日報"
-  },
-  "complaints.comp.referenceSearchGrid": {
-    "title": "リファレンス検索"
-  },
-  "complaints.comp.addreference": {
-    "title": "参照を追加する",
-    "cancelButton": "キャンセル",
-    "confirmButton": "追加",
-    "search": {
-      "placeholder": "ケース、苦情、ファイル、タスクを検索する",
-      "btn": "サーチ"
-    },
-    "grid": {
-      "columns": {
-        "id": "ID番号",
-        "name": "名前",
-        "type": "種類",
-        "title": "タイトル",
-        "parent": "親",
-        "assignee": "受信機",
-        "modified": "かわった"
-      }
-    }
-  },
-  "complaints.comp.assigneePickerModal": {
-    "title": "係員を変更する",
-    "assigneeNamelabel": "受取人の名前",
-    "btnCancelText": "キャンセル",
-    "btnSaveText": "セーブアップ",
-    "searchAssigneeHeader": "検索受信機"
-  },
-  "complaints.comp.groupPickerModal": {
-    "title": "グループを変更する",
-    "groupNamelabel": "グループ名",
-    "btnCancelText": "キャンセル",
-    "btnSaveText": "セーブアップ",
-    "searchGroupHeader": "検索グループ"
-  },
-  "complaints.comp.approvalRouting": {
-    "title": "将来の承認者",
-    "addNewTooltip": "新しい承認者を追加",
-    "noBuckslipMessage": "データなし",
-    "button": {
-      "save.tooltip": "変更内容を保存"
-    },
-    "table.columns": {
-      "fullName": "フルネーム"
-    },
-    "assignee.label": "受信機",
-    "owningGroup.label": "所有者グループ",
-    "priority.label": "優先",
-    "startDate.label": "開始日",
-    "dueDate.label": "締め切り",
-    "state.label": "状態"
-  },
-  "complaints.comp.pastApprovals": {
-    "title": "過去の承認",
-    "noBuckslipMessage": "データなし",
-    "table.columns": {
-      "approvalDate": "承認日",
-      "approverId": "承認者",
-      "approverFullName": "承認者",
-      "approverDecision": "承認決定"
-    }
-  },
-  "complaints.userOrGroupSearch": {
-    "id": "ユーザー検索",
-    "title": "ユーザー/グループの検索",
-    "search": {
-      "btn": "サーチ",
-      "placeholder": "ユーザーまたはグループを検索します。"
-    },
-    "cancelButton": "キャンセル",
-    "confirmButton": "確認するために",
-    "assigneeGridColumns": {
-      "name": "名前",
-      "type": "種類",
-      "title": "タイトル",
-      "username": "ユーザー名"
-    }
-  },
-  "complaints.tree": {
-    "nodeTypes": {
-      "details.label": "詳細",
-      "locations.label": "場所",
-      "people.label": "人物",
-      "organizations.label": "組織",
-      "documents.label": "文書",
-      "participants.label": "参加者",
-      "notes.label": "注解",
-      "tasks.label": "任務",
-      "references.label": "参照",
-      "history.label": "歴史",
-      "time.label": "時間",
-      "cost.label": "支出",
-      "tags.label": "タグ",
-      "calendar.label": "日報",
-      "approvalRouting.label": "承認ル"
-    },
-    "filters": {
-      "opened": "開いているすべての",
-      "iHaveCreated": "私が作成しました",
-      "iAmAssigned": "自分に割り当てられました",
-      "iAmFollowing": "私は心配です",
-      "closedNoFurtherAction": "ノーさらに開閉動作",
-      "closedReferExternal": "外部参照が閉じています",
-      "closedOpenInvestigation": "調査は、閉じました",
-      "noFilter": "(無制限)"
-    },
-    "sorters": {
-      "incidentDateAsc": "イベントの日付で並べ替え",
-      "incidentDateDesc": "イベントの日付で並べ替え降順",
-      "createdDateAsc": "作成日で並べ替え",
-      "createdDateDesc": "作成日で並べ替え降順",
-      "nameAsc": "名で並べ替え",
-      "noSort": "(注文しません)"
-    }
-  }
 }

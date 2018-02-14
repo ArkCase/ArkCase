@@ -3,7 +3,8 @@ package com.armedia.acm.plugins.admin.exception;
 /**
  * Created by sergey.kolomiets on 6/26/15.
  */
-public class AcmModuleConfigurationException extends Exception{
+public class AcmModuleConfigurationException extends Exception
+{
 
     public AcmModuleConfigurationException()
     {
@@ -29,6 +30,3 @@ public class AcmModuleConfigurationException extends Exception{
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }
-
-
-

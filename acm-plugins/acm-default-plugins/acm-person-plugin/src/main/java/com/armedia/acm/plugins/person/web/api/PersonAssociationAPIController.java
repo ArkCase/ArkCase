@@ -4,6 +4,7 @@ import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.plugins.person.model.PersonAssociation;
 import com.armedia.acm.plugins.person.service.PersonAssociationService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Controller
-@RequestMapping({"/api/v1/plugin/personAssociation",
+@RequestMapping({ "/api/v1/plugin/personAssociation",
         "/api/latest/plugin/personAssociation",
         "/api/v1/plugin/person-associations",
         "/api/latest/plugin/person-associations"
@@ -35,8 +36,7 @@ public class PersonAssociationAPIController
     @ResponseBody
     public PersonAssociation addPersonAssociation(
             @RequestBody PersonAssociation in,
-            Authentication auth
-    ) throws AcmCreateObjectFailedException
+            Authentication auth) throws AcmCreateObjectFailedException
     {
         log.trace("Got a personAssociation: {}; person association ID: '{}'", in, in.getId());
         log.trace("personAssociation parentType: {}", in.getParentType());
@@ -46,31 +46,28 @@ public class PersonAssociationAPIController
 
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String
-    getChildObjects(Authentication auth,
-                    @RequestParam(value = "person-id", required = true) Long personId,
-                    @RequestParam(value = "parent-type", required = true) String parentType,
-                    @RequestParam(value = "start", required = false, defaultValue = "0") int start,
-                    @RequestParam(value = "n", required = false, defaultValue = "10") int n,
-                    @RequestParam(value = "sort", required = false, defaultValue = "id asc") String sort) throws AcmObjectNotFoundException
+    public String getChildObjects(Authentication auth,
+            @RequestParam(value = "person-id", required = true) Long personId,
+            @RequestParam(value = "parent-type", required = true) String parentType,
+            @RequestParam(value = "start", required = false, defaultValue = "0") int start,
+            @RequestParam(value = "n", required = false, defaultValue = "10") int n,
+            @RequestParam(value = "sort", required = false, defaultValue = "id asc") String sort) throws AcmObjectNotFoundException
     {
         return personAssociationService.getPersonAssociations(personId, parentType, start, n, sort, auth);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public PersonAssociation
-    getPersonAssociation(Authentication auth,
-                         @PathVariable Long id) throws AcmObjectNotFoundException
+    public PersonAssociation getPersonAssociation(Authentication auth,
+            @PathVariable Long id) throws AcmObjectNotFoundException
     {
         return personAssociationService.getPersonAssociation(id, auth);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
-    public void
-    deletePersonAssociation(Authentication auth,
-                            @PathVariable Long id) throws AcmObjectNotFoundException
+    public void deletePersonAssociation(Authentication auth,
+            @PathVariable Long id) throws AcmObjectNotFoundException
     {
         personAssociationService.deletePersonAssociation(id, auth);
     }

@@ -10,5 +10,6 @@ package com.armedia.acm.data;
 public interface AcmLegacySystemEntity
 {
     String getLegacySystemId();
+
     void setLegacySystemId(String legacySystemId);
 }

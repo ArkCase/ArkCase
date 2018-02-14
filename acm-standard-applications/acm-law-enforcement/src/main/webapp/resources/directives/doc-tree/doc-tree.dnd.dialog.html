@@ -2,26 +2,9 @@
     <h3 translate>common.directive.docTree.dndDialog.title</h3>
 </div>
 <div class="modal-body">
-    <div class="btn-group" ng-show="showRadioButtons()">
-        <label>
-            <input type="radio" ng-model="result.op" value="Replace">
-            <span translate>common.directive.docTree.dndDialog.radReplace.text</span>
-        </label>
-        <label>
-            <input type="radio" ng-model="result.op" value="UploadToParent">
-            <span translate>common.directive.docTree.dndDialog.radUploadToParent.text</span>
-        </label>
-        <!--<label>-->
-        <!--<input type="radio" ng-model="op" value="UploadToFolder">-->
-        <!--<span>Create document(s) in folder</span>-->
-        <!--</label>-->
-    </div>
-    <br/>
-
-    <div ng-if="showSelFileTypes()">
+    <div>
         <label translate>common.directive.docTree.dndDialog.selFileTypes.label</label>
-        <select ng-model="result.fileType"
-                ng-options="item.key as item.value | translate for item in fileTypes">
+        <select ng-model="result.fileType" ng-options="item.key as item.value | translate for item in fileTypes">
             <option value="" translate>common.directive.docTree.dndDialog.optFileType.prompt</option>
         </select>
     </div>

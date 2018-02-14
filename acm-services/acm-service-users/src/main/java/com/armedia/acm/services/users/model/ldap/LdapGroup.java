@@ -196,8 +196,8 @@ public class LdapGroup
 
     public String getAscendantsAsString()
     {
-        return ascendants.isEmpty() ? null :
-                ascendants.stream()
+        return ascendants.isEmpty() ? null
+                : ascendants.stream()
                         .map(LdapGroup::getName)
                         .sorted()
                         .collect(Collectors.joining(","));
@@ -211,8 +211,10 @@ public class LdapGroup
     @Override
     public boolean equals(Object o)
     {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
         LdapGroup ldapGroup = (LdapGroup) o;
         return Objects.equals(name, ldapGroup.name);
     }

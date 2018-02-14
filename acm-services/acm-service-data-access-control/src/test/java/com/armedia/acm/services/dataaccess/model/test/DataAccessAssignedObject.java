@@ -54,4 +54,10 @@ public class DataAccessAssignedObject implements AcmAssignedObject
     {
         return id;
     }
+
+    @Override
+    public Boolean getRestricted()
+    {
+        return false;
+    }
 }

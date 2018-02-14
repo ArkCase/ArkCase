@@ -1,30 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm"
-      xmlns="http://www.mulesoft.org/schema/mule/core"
-      xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting"
-      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-      version="CE-3.7.0"
-      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="
+<mule xmlns:vm="http://www.mulesoft.org/schema/mule/vm" xmlns="http://www.mulesoft.org/schema/mule/core"
+    xmlns:scripting="http://www.mulesoft.org/schema/mule/scripting" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+    version="CE-3.7.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
 http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd
 http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mule/scripting/current/mule-scripting.xsd">
 
-
     <flow name="savePersonAssociation" doc:name="Save PersonAssociation">
-        <description> Saves a personAssociation (creates new personAssociation if it has not been saved
-            previously).  The payload must be a PersonAssociation entity object.  The return message&quot;s
+        <description>Saves a personAssociation (creates new personAssociation if it has not been saved
+            previously). The payload must be a PersonAssociation entity object. The return message&quot;s
             payload is the (possibly updated) personAssociation; i.e. for a new personAssociation, the return payload&quot;s
-            ID fields are populated.</description>
-        <vm:inbound-endpoint
-                address="vm://savePersonAssociation.in"
-                exchange-pattern="request-response"
-                doc:name="Save PersonAssociation">
-        </vm:inbound-endpoint>
+            ID fields are populated.
+        </description>
+        <vm:inbound-endpoint address="vm://savePersonAssociation.in" exchange-pattern="request-response"
+            doc:name="Save PersonAssociation"></vm:inbound-endpoint>
 
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
-
 
         <timer-interceptor/>
 
@@ -45,8 +37,7 @@ http://www.mulesoft.org/schema/mule/scripting http://www.mulesoft.org/schema/mul
 
         </scripting:transformer>
 
-        <set-property doc:name="Added or Updated?"
-                      propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
+        <set-property doc:name="Added or Updated?" propertyName="PersonAssociationAdded" value="#[payload.Id == null]"/>
         <logger level="DEBUG" category="com.armedia.acm.plugins.person"/>
 
         <!-- NOTE: Intellij IDEA incorrectly claims scripting:transformer is not allowed here. This XML is valid. -->
