@@ -81,6 +81,8 @@ angular.module('directives').directive('objectAuthorizationRoles',
                         }
                     }, true);
 
+                    console.log(scope.roleDisplayName);
+
                     //initial setup
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
