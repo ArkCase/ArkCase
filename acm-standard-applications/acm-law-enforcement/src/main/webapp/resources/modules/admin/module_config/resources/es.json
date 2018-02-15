@@ -363,7 +363,8 @@
                 "actions.label": "Comportamiento",
                 "manual.label": "Manual",
                 "automated.label": "Automatizado",
-                "browse": "Vistazo",
+                "choose.file": "es_Choose File",
+                "download": "es_Download",
                 "save": "Salvar",
                 "cancel": "Cancelar"
             },

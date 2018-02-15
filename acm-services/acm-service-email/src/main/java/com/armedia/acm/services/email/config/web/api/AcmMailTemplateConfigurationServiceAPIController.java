@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Lazo Lazarev a.k.a. Lazarius Borg @ zerogravity Mar 28, 2017
@@ -56,12 +58,20 @@ public class AcmMailTemplateConfigurationServiceAPIController
         return mailService.validateEmailTemplate(templateConfiguration);
     }
 
-    @RequestMapping(path = "/{templateName}", method = RequestMethod.DELETE)
+    @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteEmailTemplate(@PathVariable(value = "templateName") String templateName)
             throws AcmEmailConfigurationException
     {
         mailService.deleteTemplate(templateName);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @RequestMapping(path = "/{templateName:.+}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, String> getEmailTemplate(@PathVariable(value = "templateName") String templateName)
+            throws AcmEmailConfigurationException
+    {
+        return Collections.singletonMap("content", mailService.getTemplate(templateName));
     }
 
     @ExceptionHandler(AcmEmailConfigurationException.class)

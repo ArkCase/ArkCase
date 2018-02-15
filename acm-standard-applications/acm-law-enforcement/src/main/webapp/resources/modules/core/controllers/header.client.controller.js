@@ -125,7 +125,9 @@ angular.module('core').controller(
                     $scope.onCreateNew = function(event, item) {
                         event.preventDefault();
                         if (!item.modalDialog) {
-                            $state.go(item.link);
+                            $state.go(item.link, {}, {
+                                reload : true
+                            });
                         } else {
                             ModalDialogService.showModal(item.modalDialog);
                         }

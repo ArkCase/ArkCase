@@ -2,7 +2,7 @@
 
 angular.module('dashboard.faxes', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('faxes', {
-        title : 'dashboard.widgets.faxes.title',
+        title : 'preference.overviewWidgets.faxes.title',
         description : 'dashboard.widgets.faxes.description',
         controller : 'Dashboard.FaxesController',
         reload : true,
