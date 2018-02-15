@@ -349,7 +349,8 @@
                 "validate.label": "SMTP Validation",
                 "validate.button": "Validate",
                 "smtpValid": "SMTP settings are valid",
-                "smtpNotValid": "SMTP settings are not valid"
+                "smtpNotValid": "SMTP settings are not valid",
+                "errorMsg": "Please check the way how documents will be sent"
             }
         },
         "security.emailTemplates": {
