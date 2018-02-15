@@ -206,7 +206,7 @@ angular.module('admin').service(
                     function getGroupsByName(params) {
                         return $http({
                             method : 'GET',
-                            url : 'api/latest/users/groups',
+                            url : 'api/latest/groups',
                             params: params
                         });
                     }
