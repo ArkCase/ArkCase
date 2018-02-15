@@ -18,23 +18,23 @@
     "common.objects": {
         "progressNoData": "[ Sin datos ]",
         "progressLoading": "Cargando datos ",
-        "progressError": "Error al cargar datos "
+        "progressError": "Hubo un error cargando los datos"
     },
     "common.service.messageService": {
-        "authorizationError": "No estás autorizado para tomar esta acción",
+        "authorizationError": "No está autorizado para ejecutar esta acción",
         "actionMessages": {
             "success": "La acción fue exitosa",
             "error": "Error de acción"
         }
     },
     "common.directive.docTree": {
-        "btnRefresh": "Refrescar",
-        "waitUploading": "Subiendo ...",
-        "confirmVersion": "¿Seguro que volverás a la versión anterior?",
-        "declareSuccessful": "Declara exitoso. Refreshing Document Tree ...",
-        "prevItems": " artículos arriba ...",
-        "prevItemsTooltip": "Revisa los artículos anteriores",
-        "moreItems": " mas cosas...",
+        "btnRefresh": "Recargar",
+        "waitUploading": "Cargando...",
+        "confirmVersion": "¿Seguro que quiere retroceder a la versión anterior?",
+        "declareSuccessful": "Exito recargando el árbol del documento...",
+        "prevItems": "los artículos de arriba...",
+        "prevItemsTooltip": "Revise los artículos anteriores",
+        "moreItems": "más artículos...",
         "moreItemsTooltip": "Cargar más artículos",
         "moreItemsBegin": "Mas cosas...",
         "email": {
@@ -67,8 +67,8 @@
         "table.columns": {
             "title": "Título",
             "type": "Tipo",
-            "created": "Creado",
-            "modified": "Modificado",
+            "created": "Creado el",
+            "modified": "Modificado el",
             "modifier": "Modificado por",
             "version": "Versión",
             "status": "Estado"
@@ -83,7 +83,7 @@
             "btnOk.text": "DE ACUERDO"
         },
         "emailDialog": {
-            "title": "Email",
+            "title": "Correo electrónico",
             "recipients.label": "Destinatarios:",
             "recipients.placeholder": "Elija destinatarios",
             "subject.label": "Tema:",
@@ -105,7 +105,7 @@
             "addRecipients.button": "Agregar recipientes",
             "gridColumns": {
                 "name": "Nombre",
-                "email": "Email"
+                "email": "Correo electrónico"
             }
         },
         "mediaDialog": {
@@ -144,7 +144,7 @@
     },
     "common.directive.objectTree": {
         "btnPrev.title": "Eregistros anteriores...",
-        "btnPrev.toolTip": "Revisar registros previos",
+        "btnPrev.toolTip": "Revisar registros anteriores",
         "btnNext.titleUnknownSize": "Más registros ...",
         "btnNext.title": " más registros ...",
         "btnNext.toolTip": "Cargar más registros",
@@ -160,7 +160,7 @@
         "pagerCountLabel": "{{pageCount}} de {{pageTotal}} artículos"
     },
     "common.directive.objectAuthorizationRoles": {
-        "choose": "Escoger",
+        "choose": "Elija",
         "not_authorized": "No autorizado",
         "tooltip.move_right": "Mover a la derecha",
         "tooltip.move_left": "Mover hacia la izquierda",
@@ -172,7 +172,7 @@
     "common.directive.searchModal": {
         "header": "Buscar",
         "btnSearch.text": "Buscar",
-        "btnOk.text": "DE ACUERDO",
+        "btnOk.text": "Aceptar",
         "btnCancel.text": "Cancelar",
         "edtPlaceholder": "Escriba para buscar",
         "noData.text": "Sin resultados"
@@ -214,7 +214,7 @@
             "names.incidentType%": "Tipo de incidente",
             "fields.incidentType.agricultural%": "Agrícola",
             "fields.incidentType.arson%": "Incendio provocado",
-            "fields.incidentType.backgroundInvestigation%": "Investigacion de antecedentes",
+            "fields.incidentType.backgroundInvestigation%": "Investigación de Antecedentes",
             "fields.incidentType.benefitsAppeal%": "Llamamiento de beneficios",
             "fields.incidentType.businessDispute%": "Disputa sobre mejores negocios",
             "fields.incidentType.clinicalFraud%": "Fraude de Investigador Clínico",
@@ -232,14 +232,14 @@
             "fields.incidentType.laborRacketeering%": "La delincuencia organizada",
             "fields.incidentType.local%": "Local",
             "fields.incidentType.murder%": "Asesinato",
-            "fields.incidentType.newDrugFraud%": "Nuevo fraude a la aplicación de drogas",
-            "fields.incidentType.payoff%": "Saldar",
+            "fields.incidentType.newDrugFraud%": "Fraude de aplicación de nuevos medicamentos",
+            "fields.incidentType.payoff%": "Ganancia",
             "fields.incidentType.pensionWaiver%": "Solicitud de exención de pensión",
             "fields.incidentType.pollution%": "Contaminación",
             "fields.incidentType.productTampering%": "Manipulación del producto",
             "fields.incidentType.assetTheftMisuse%": "Robo o mal uso del activo",
             "names.objectType%": "Tipo de objeto",
-            "fields.objectType.participant%": "Partícipe",
+            "fields.objectType.participant%": "Participante",
             "fields.objectType.contactMethod%": "Metodo de contacto",
             "fields.objectType.task%": "Tarea",
             "fields.objectType.file%": "Archivo",
@@ -263,46 +263,46 @@
             "fields.objectType.objectLock%": "Objeto de bloqueo",
             "names.state%": "Estado",
             "names.parentType%": "Tipo de padre",
-            "fields.parentType.container%": "Envase",
-            "fields.parentType.caseFile%": "Expediente",
+            "fields.parentType.container%": "Contenedor",
+            "fields.parentType.caseFile%": "Archivo de caso",
             "fields.parentType.complaint%": "Queja",
             "fields.parentType.organization%": "Organización",
             "fields.parentType.person%": "Persona",
             "fields.parentType.task%": "Tarea",
             "fields.parentType.file%": "Archivo",
             "fields.parentType.group%": "Grupo",
-            "fields.parentType.docRepo%": "Doc Repo",
+            "fields.parentType.docRepo%": "Depósito de documentos",
             "fields.parentType.costsheet%": "Hoja de coste",
-            "fields.parentType.timesheet%": "Parte de horas",
+            "fields.parentType.timesheet%": "Hoja de tiempos",
             "names.owner%": "Propietario",
-            "names.parentObjectType%": "Tipo de objeto primario",
-            "fields.parentObjectType.container%": "Envase",
-            "fields.parentObjectType.caseFile%": "Expediente",
+            "names.parentObjectType%": "Tipo de objeto principal",
+            "fields.parentObjectType.container%": "Contenedor",
+            "fields.parentObjectType.caseFile%": "Archivo de caso",
             "fields.parentObjectType.complaint%": "Queja",
             "fields.parentObjectType.organization%": "Organización",
             "fields.parentObjectType.person%": "Persona",
             "fields.parentObjectType.task%": "Tarea",
             "fields.parentObjectType.file%": "Archivo",
             "fields.parentObjectType.group%": "Grupo",
-            "fields.parentObjectType.docRepo%": "Doc Repo",
+            "fields.parentObjectType.docRepo%": "Depósito de documentos",
             "fields.parentObjectType.costsheet%": "Hoja de coste",
-            "fields.parentObjectType.timesheet%": "Parte de horas",
+            "fields.parentObjectType.timesheet%": "Hoja de tiempos",
             "names.personOrganization%": "Persona, tipo de organización",
             "names.city%": "Ciudad",
-            "names.createDate%": "Fecha de Creación",
-            "fields.createDate.previousWeek%": "Semana pasada",
+            "names.createDate%": "Crear fecha",
+            "fields.createDate.previousWeek%": "Semana anterior",
             "fields.createDate.previousMonth%": "Mes anterior",
             "fields.createDate.previousYear%": "Año anterior",
             "names.dueDate%": "Fecha de vencimiento",
-            "fields.dueDate.previousWeek%": "Semana pasada",
+            "fields.dueDate.previousWeek%": "Semana anterior",
             "fields.dueDate.previousMonth%": "Mes anterior",
             "fields.dueDate.previousYear%": "Año anterior",
             "names.incidentDate%": "Fecha del incidente",
-            "fields.incidentDate.previousWeek%": "Semana pasada",
+            "fields.incidentDate.previousWeek%": "Semana anterior",
             "fields.incidentDate.previousMonth%": "Mes anterior",
             "fields.incidentDate.previousYear%": "Año anterior",
             "names.modifyDate%": "Modificar fecha",
-            "fields.modifyDate.previousWeek%": "Semana pasada",
+            "fields.modifyDate.previousWeek%": "Semana anterior",
             "fields.modifyDate.previousMonth%": "Mes anterior",
             "fields.modifyDate.previousYear%": "Año anterior"
         }
