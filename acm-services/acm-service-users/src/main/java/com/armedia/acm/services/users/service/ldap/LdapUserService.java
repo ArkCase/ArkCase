@@ -301,9 +301,7 @@ public class LdapUserService implements ApplicationEventPublisherAware
 
     private String buildDnForUser(String userId, AcmLdapSyncConfig syncConfig)
     {
-        String uidAttr = String.format("%s=%s", "uid", userId.toLowerCase());
-        String samaccountNameAttr = String.format("%s=%s", "sAMAccountName", userId.toLowerCase());
-        String dnAttr = Directory.openldap.name().equals(syncConfig.getDirectoryType()) ? uidAttr : samaccountNameAttr;
+        String dnAttr = String.format("%s=%s", syncConfig.getUserIdAttributeName(), userId.toLowerCase());
         return MapperUtils.appendToDn(dnAttr, syncConfig.getUserSearchBase(), syncConfig.getBaseDC());
     }
 
