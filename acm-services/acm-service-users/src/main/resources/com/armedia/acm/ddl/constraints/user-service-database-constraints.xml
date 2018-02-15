@@ -27,8 +27,4 @@
         <addUniqueConstraint tableName="acm_group_membership" columnNames="cm_group_name, cm_member_group_name"/>
     </changeSet>
 
-    <changeSet id="05-user-dn-constraint" author="ncuculova">
-        <addUniqueConstraint tableName="acm_user" columnNames="cm_distinguished_name" constraintName="uk_dn"/>
-    </changeSet>
-
 </databaseChangeLog>
