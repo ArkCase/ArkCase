@@ -1,8 +1,8 @@
 'use strict';
 angular.module('admin').controller(
         'Admin.SecurityEmailSenderConfigurationController',
-        [ '$scope', 'Admin.EmailSenderConfigurationService', 'MessageService',
-                function($scope, EmailSenderConfigurationService, MessageService) {
+        [ '$scope', 'Admin.EmailSenderConfigurationService', 'MessageService', '$translate',
+                function($scope, EmailSenderConfigurationService, MessageService, $translate) {
                     $scope.emailSenderConfigDataModel = {};
                     $scope.isSmtpValid = null;
 
@@ -54,7 +54,7 @@ angular.module('admin').controller(
                         });
                     };
 
-                    $scope.save = function() {
+                    function emailSenderConfiguration() {
                         EmailSenderConfigurationService.saveEmailSenderConfiguration($scope.emailSenderConfigDataModel).then(function(res) {
                             MessageService.succsessAction();
                             $scope.isSmtpValid = null;
@@ -65,5 +65,17 @@ angular.module('admin').controller(
                                 MessageService.errorAction();
                             }
                         });
+                    }
+
+                    $scope.save = function() {
+                        if ($scope.emailSenderConfigDataModel.allowDocuments) {
+                            if ($scope.emailSenderConfigDataModel.allowAttachments || $scope.emailSenderConfigDataModel.allowHyperlinks) {
+                                emailSenderConfiguration();
+                            } else {
+                                MessageService.error($translate.instant("admin.security.emailConfiguration.emailConfigForm.errorMsg"));
+                            }
+                        } else {
+                            emailSenderConfiguration();
+                        }
                     };
                 } ]);

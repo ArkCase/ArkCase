@@ -30,12 +30,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="emailSenderConfigDataModel.allowDocuments">
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments"
-                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentAttach.checkbox
                                     </span>
@@ -43,12 +42,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="emailSenderConfigDataModel.allowDocuments">
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks"
-                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentHyperlink.checkbox
                                     </span>
