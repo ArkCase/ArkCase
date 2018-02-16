@@ -363,7 +363,8 @@
                 "actions.label": "操作",
                 "manual.label": "手册",
                 "automated.label": "自动化",
-                "browse": "浏览",
+                "choose.file": "zh-cn_Choose File",
+                "download": "zh-cn_Download",
                 "save": "保存",
                 "cancel": "取消"
             },

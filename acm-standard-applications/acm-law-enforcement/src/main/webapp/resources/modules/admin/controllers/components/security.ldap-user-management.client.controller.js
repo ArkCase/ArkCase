@@ -32,7 +32,7 @@ angular.module('admin').controller(
                     $scope.appGroups = [];
                     $scope.lastSelectedUser = "";
                     $scope.userData = {
-                        "appUsers" : $scope.appUsers,
+                        "chooseObject" : $scope.appUsers,
                         "selectedNotAuthorized" : [],
                         "selectedAuthorized" : []
                     };
@@ -42,8 +42,8 @@ angular.module('admin').controller(
                         userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
-                                $scope.userData.appUsers = [];
-                                $scope.fillList($scope.userData.appUsers, response.data.response.docs);
+                                $scope.userData.chooseObject = [];
+                                $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                                 makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
                             });
                         }
@@ -57,6 +57,8 @@ angular.module('admin').controller(
                         data.member_id = selectedObject;
                         $scope.lastSelectedUser = selectedObject;
                         currentAuthGroups = [];
+                        $scope.userData.selectedNotAuthorized = [];
+                        $scope.userData.selectedAuthorized = [];
 
                         data.isAuthorized = false;
                         var unAuthorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
@@ -71,7 +73,7 @@ angular.module('admin').controller(
                                         var authObject = {};
                                         authObject.key = group.name;
                                         authObject.name = group.name;
-                                        authorized.push(authObject);
+                                        $scope.userData.selectedAuthorized.push(authObject);
                                         currentAuthGroups.push(authObject.key);
                                     }
                                 });
@@ -80,7 +82,7 @@ angular.module('admin').controller(
                                     var notAuthorizedRole = {};
                                     notAuthorizedRole.key = group.name;
                                     notAuthorizedRole.name = group.name;
-                                    notAuthorized.push(notAuthorizedRole);
+                                    $scope.userData.selectedNotAuthorized.push(notAuthorizedRole);
                                 }
                             });
                         });
@@ -180,7 +182,7 @@ angular.module('admin').controller(
                                     element.name = response.data.fullName;
                                     element.key = response.data.userId;
                                     element.directory = response.data.userDirectoryName;
-                                    $scope.userData.appUsers.push(element);
+                                    $scope.userData.chooseObject.push(element);
 
                                     //add the new user to cache store
                                     var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
@@ -199,14 +201,14 @@ angular.module('admin').controller(
                                             return onCloneUser(data);
                                         };
                                         if (error.data.field == 'username') {
-                                            usernameError = $log.error.data.message;
+                                            usernameError = error.data.message;
                                             openCloneUserModal(error.data.extra.user, passwordError, usernameError).result.then(onAdd,
                                                     function() {
                                                         deferred.reject("cancel");
                                                         return {};
                                                     });
                                         } else if (error.data.field == 'password') {
-                                            passwordError = $log.error.data.message;
+                                            passwordError = error.data.message;
                                             openCloneUserModal(error.data.extra.userForm, passwordError, usernameError).result.then(onAdd,
                                                     function() {
                                                         deferred.reject("cancel");
@@ -257,7 +259,7 @@ angular.module('admin').controller(
                             });
                             cacheUsers.remove(cacheKeyUser);
 
-                            $scope.userData.appUsers = _.reject($scope.userData.appUsers, function(element) {
+                            $scope.userData.chooseObject = _.reject($scope.userData.chooseObject, function(element) {
                                 return element.key === selectedUser.key;
                             });
 
@@ -271,15 +273,15 @@ angular.module('admin').controller(
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
                             LdapUserManagementService.getNUsers(data).then(function(response) {
-                                $scope.userData.appUsers = [];
-                                $scope.fillList($scope.userData.appUsers, response.data.response.docs);
+                                $scope.userData.chooseObject = [];
+                                $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
                             }, function() {
                                 $log.error('Error during returning n users');
                             });
                         } else {
                             LdapUserManagementService.getUsersFiltered(data).then(function success(response) {
-                                $scope.userData.appUsers = [];
-                                $scope.fillList($scope.userData.appUsers, response.data);
+                                $scope.userData.chooseObject = [];
+                                $scope.fillList($scope.userData.chooseObject, response.data);
                             }, function() {
                                 $log.error('Error during returning the filtered(by word) groups for user');
                             });
@@ -295,14 +297,14 @@ angular.module('admin').controller(
                                 $scope.userData.selectedNotAuthorized = [];
                                 $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
                             }, function() {
-                                $log.error('Error during returning unathorized groups for user');
+                                $log.error('Error during returning unauthorized groups for user');
                             });
                         } else {
                             LdapUserManagementService.getGroupsFiltered(data).then(function(response) {
                                 $scope.userData.selectedNotAuthorized = [];
                                 $scope.fillList($scope.userData.selectedNotAuthorized, response.data.response.docs);
                             }, function() {
-                                $log.error('Error during returning the filtered(unathorized) groups for user');
+                                $log.error('Error during returning the filtered(unauthorized) groups for user');
                             });
                         }
                     });

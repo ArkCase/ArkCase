@@ -2,7 +2,7 @@
 
 angular.module('dashboard.related', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('related', {
-        title : 'dashboard.widgets.related.title',
+        title : 'preference.overviewWidgets.related.title',
         description : 'dashboard.widgets.related.description',
         controller : 'Dashboard.RelatedController',
         reload : true,

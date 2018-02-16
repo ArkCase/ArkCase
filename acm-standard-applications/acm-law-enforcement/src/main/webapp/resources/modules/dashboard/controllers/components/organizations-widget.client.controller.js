@@ -2,7 +2,7 @@
 
 angular.module('dashboard.organizations', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('organizations', {
-        title : 'dashboard.widgets.organizations.title',
+        title : 'preference.overviewWidgets.organizations.title',
         description : 'dashboard.widgets.organizations.description',
         controller : 'Dashboard.OrganizationsController',
         reload : true,
