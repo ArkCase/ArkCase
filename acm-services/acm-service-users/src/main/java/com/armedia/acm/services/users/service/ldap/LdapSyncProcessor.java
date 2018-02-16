@@ -30,7 +30,7 @@ public class LdapSyncProcessor
     {
         List<AcmUser> acmUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
         AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult(fullSync);
-        Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers);
+        Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers, userDao.getDefaultUserLang());
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();

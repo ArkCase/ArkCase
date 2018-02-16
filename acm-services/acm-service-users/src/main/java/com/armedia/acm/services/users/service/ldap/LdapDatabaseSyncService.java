@@ -25,7 +25,8 @@ public class LdapDatabaseSyncService
     public void saveUsers(AcmUsersSyncResult acmUsersSyncResult)
     {
         // filter out users that are not members to any AcmGroup
-        Set<AcmUser> newUsers = acmUsersSyncResult.getNewUsers().stream().filter(user -> !user.getGroups().isEmpty())
+        Set<AcmUser> newUsers = acmUsersSyncResult.getNewUsers().stream()
+                .filter(user -> !user.getGroups().isEmpty())
                 .collect(Collectors.toSet());
         log.info("Saving new users [{}]", newUsers.size());
         newUsers.forEach(acmUser -> {
