@@ -5,6 +5,7 @@ angular.module('admin').controller(
                 function($scope, EmailSenderConfigurationService, MessageService, $translate) {
                     $scope.emailSenderConfigDataModel = {};
                     $scope.isSmtpValid = null;
+                    $scope.showMessage = true;
 
                     $scope.serverTypeSelectOptions = [ {
                         value : 'smtp',
@@ -72,7 +73,7 @@ angular.module('admin').controller(
                             if ($scope.emailSenderConfigDataModel.allowAttachments || $scope.emailSenderConfigDataModel.allowHyperlinks) {
                                 emailSenderConfiguration();
                             } else {
-                                MessageService.error($translate.instant("admin.security.emailConfiguration.emailConfigForm.errorMsg"));
+                                $scope.showMessage = true;
                             }
                         } else {
                             emailSenderConfiguration();
