@@ -2,6 +2,7 @@ package com.armedia.acm.services.participants.web.api;
 
 import com.armedia.acm.core.exceptions.AcmObjectNotFoundException;
 import com.armedia.acm.services.participants.model.AcmParticipant;
+import com.armedia.acm.services.participants.model.DecoratedAssignedObjectParticipants;
 import com.armedia.acm.services.participants.service.AcmParticipantService;
 
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class ListAllParticipantsByObjectTypeAndObjectId
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @DecoratedAssignedObjectParticipants
     @ResponseBody
     public List<AcmParticipant> listParticipants(
             @PathVariable(value = "objectType") String objectType,

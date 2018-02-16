@@ -28,6 +28,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -89,6 +90,45 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     @Column(name = "cm_replace_children_participant", insertable = false, updatable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private boolean replaceChildrenParticipant;
+
+    @Transient
+    private boolean isEditableUser = true;
+
+    @Transient
+    private boolean isEditableType = true;
+
+    @Transient
+    private boolean isDeletable = true;
+
+    public boolean isEditableUser()
+    {
+        return isEditableUser;
+    }
+
+    public void setEditableUser(boolean editableUser)
+    {
+        isEditableUser = editableUser;
+    }
+
+    public boolean isEditableType()
+    {
+        return isEditableType;
+    }
+
+    public void setEditableType(boolean editableType)
+    {
+        isEditableType = editableType;
+    }
+
+    public boolean isDeletable()
+    {
+        return isDeletable;
+    }
+
+    public void setDeletable(boolean deletable)
+    {
+        isDeletable = deletable;
+    }
 
     @PrePersist
     public void beforeInsert()
@@ -290,5 +330,16 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
     public void setReplaceChildrenParticipant(boolean replaceChildrenParticipant)
     {
         this.replaceChildrenParticipant = replaceChildrenParticipant;
+    }
+
+    public static AcmParticipant createRulesTestParticipant(AcmParticipant participant)
+    {
+        AcmParticipant copyParticipant = new AcmParticipant();
+        copyParticipant.setParticipantLdapId(participant.getParticipantLdapId());
+        copyParticipant.setObjectId(participant.getObjectId());
+        copyParticipant.setParticipantType(participant.getParticipantType());
+        copyParticipant.setObjectType(participant.getObjectType());
+
+        return copyParticipant;
     }
 }
