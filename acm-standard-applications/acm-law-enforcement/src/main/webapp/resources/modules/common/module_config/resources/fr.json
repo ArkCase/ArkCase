@@ -619,7 +619,11 @@
         "FILE": "Fichier",
         "DOC_REPO": "Référentiel de documents",
         "ORGANIZATION": "Organisation",
-        "PERSON": "La personne"
+        "PERSON": "fr_La personne",
+        "PARTICIPANT": "fr_Participant",
+        "NOTE": "fr_Note",
+        "PARTICIPANT-ASSOCIATION": "fr_Participant-Association",
+        "ASSIGNMENT": "fr_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choisissez l'utilisateur",

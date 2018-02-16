@@ -2,7 +2,7 @@
 
 angular.module('dashboard.ids', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('ids', {
-        title : 'dashboard.widgets.ids.title',
+        title : 'preference.overviewWidgets.ids.title',
         description : 'dashboard.widgets.ids.description',
         controller : 'Dashboard.IdsController',
         reload : true,

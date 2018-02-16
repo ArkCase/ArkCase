@@ -2,7 +2,7 @@
 
 angular.module('dashboard.cost', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('cost', {
-        title : 'dashboard.widgets.cost.title',
+        title : 'preference.overviewWidgets.cost.title',
         description : 'dashboard.widgets.cost.description',
         controller : 'Dashboard.CostController',
         controllerAs : 'cost',

@@ -363,7 +363,8 @@
                 "actions.label": "行動",
                 "manual.label": "マニュアル",
                 "automated.label": "自動化された",
-                "browse": "ブラウズ",
+                "choose.file": "ja_Choose File",
+                "download": "ja_Download",
                 "save": "保存する",
                 "cancel": "キャンセル"
             },
