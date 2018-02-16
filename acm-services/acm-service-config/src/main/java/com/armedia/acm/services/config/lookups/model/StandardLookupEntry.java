@@ -3,7 +3,7 @@ package com.armedia.acm.services.config.lookups.model;
 /**
  * Created by bojan.milenkoski on 24.8.2017
  */
-public class StandardLookupEntry
+public class StandardLookupEntry extends AcmLookupEntry
 {
     private String key;
     private String value;

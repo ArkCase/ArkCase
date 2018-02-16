@@ -5,7 +5,7 @@
 
 angular.module('dashboard.calendar', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('calendar', {
-        title : 'dashboard.widgets.calendar.title',
+        title : 'preference.overviewWidgets.calendar.title',
         description : 'dashboard.widgets.calendar.description',
         controller : 'Dashboard.CalendarController',
         controllerAs : 'calendar',

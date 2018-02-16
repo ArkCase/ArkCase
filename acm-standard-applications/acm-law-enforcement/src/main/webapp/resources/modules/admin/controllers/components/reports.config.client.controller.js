@@ -13,6 +13,11 @@ angular.module('admin').controller(
                     var deferred = $q.defer();
 
                     $scope.reports = [];
+                    $scope.reportsData = {
+                        "chooseObject" : $scope.reports,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
                     $scope.reportsMap = [];
                     $scope.userGroupsAll = [];
                     $scope.reportsConfig = null;
@@ -23,7 +28,7 @@ angular.module('admin').controller(
                         var tempUserGroupsPromise = reportsConfigService.getUserGroups();
                         var tempReportsUserGroupsPromise = reportsConfigService.getReportsUserGroups();
                         var promiseServerConfig = LookupService.getConfig("acm-reports-server-config");
-                        $scope.reports = [];
+                        $scope.reportsData.chooseObject = [];
                         $scope.reportsMap = [];
                         $scope.userGroupsAll = [];
                         //wait all promises to resolve
@@ -34,7 +39,7 @@ angular.module('admin').controller(
                                         var element = new Object;
                                         element.name = report["title"];
                                         element.key = report["propertyName"];
-                                        $scope.reports.push(element);
+                                        $scope.reportsData.chooseObject.push(element);
                                         $scope.reportsMap[report["propertyName"]] = report;
                                     });
 

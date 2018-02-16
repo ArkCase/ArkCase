@@ -2,7 +2,7 @@
 
 angular.module('dashboard.parentDocs', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('parentDocs', {
-        title : 'dashboard.widgets.parentDocs.title',
+        title : 'preference.overviewWidgets.parentDocs.title',
         description : 'dashboard.widgets.parentDocs.description',
         controller : 'Dashboard.ParentDocumentsController',
         reload : true,

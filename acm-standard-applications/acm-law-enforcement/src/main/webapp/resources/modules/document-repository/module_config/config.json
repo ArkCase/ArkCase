@@ -677,7 +677,8 @@
             "enableFiltering": false,
             "multiSelect": false,
             "showFacets": false,
-            "searchFilter": "\"Object Type\": USER&fq=\"status_lcs\":VALID",
+            "userSearchFilter": "fq=\"object_type_s\":(GROUP OR USER)&fq=\"status_lcs\":(ACTIVE OR VALID)",
+            "userSearchFacetExtraFilter": "&fq=\"name\": ",
             "columnDefs": [
                 {
                     "name": "name",

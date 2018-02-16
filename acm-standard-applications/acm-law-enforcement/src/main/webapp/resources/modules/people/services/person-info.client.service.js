@@ -12,8 +12,8 @@
  */
 angular.module('services').factory(
         'Person.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', '$q',
-                function($resource, $translate, Store, Util, $http, $q) {
+        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', '$http', '$q', 'MessageService',
+                function($resource, $translate, Store, Util, $http, $q, MessageService) {
                     var Service = $resource('api/latest/plugin', {}, {
                         /**
                          * @ngdoc method
@@ -168,6 +168,10 @@ angular.module('services').factory(
                                     cachePersonInfo.put(personInfo.id, personInfo);
                                     return personInfo;
                                 }
+                            },
+                            onError: function (error) {
+                                    MessageService.error(error.data);
+                                    return error;
                             }
                         });
                     };

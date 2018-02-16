@@ -291,9 +291,12 @@ public class AcmBasicAndTokenAuthenticationFilter extends BasicAuthenticationFil
                     List<String> ascendants = searchResults.extractStringList(docs.getJSONObject(i), SearchConstants.PROPERTY_ASCENDANTS);
                     GrantedAuthority authority = new SimpleGrantedAuthority(groupName);
                     grantedAuthorities.add(authority);
-                    ascendants.stream()
-                            .map(SimpleGrantedAuthority::new)
-                            .forEach(grantedAuthorities::add);
+                    if (ascendants != null)
+                    {
+                        ascendants.stream()
+                                .map(SimpleGrantedAuthority::new)
+                                .forEach(grantedAuthorities::add);
+                    }
                 }
             }
             Authentication authentication = new UsernamePasswordAuthenticationToken(userId, userId,
