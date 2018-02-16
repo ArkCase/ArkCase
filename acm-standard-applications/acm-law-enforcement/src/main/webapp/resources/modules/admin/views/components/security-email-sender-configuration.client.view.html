@@ -26,6 +26,11 @@
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentEmail.checkbox
                                     </span>
+                                    <span class="text-danger"
+                                            ng-if="(showMessage && (emailSenderConfigDataModel.allowDocuments && !(emailSenderConfigDataModel.allowAttachments || emailSenderConfigDataModel.allowHyperlinks)))">
+                                        <i class="fa fa-times"></i>
+                                        <span translate>admin.security.emailConfiguration.emailConfigForm.errorMsg</span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
