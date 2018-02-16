@@ -41,23 +41,20 @@
             <div class="modal-right well-sm">
                 <div ui-grid="gridOptionsMaster" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
                         adjust-table-height="gridOptionsMaster.data.length" ui-grid-auto-resize class="grid">
-                    <div ng-if="showNoData1" style="text-align: center;">
+                    <div ng-if="showNoDataResult" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>
-                    <div ng-if="!showNoData && gridOptionsMaster.data.length < 1">
+                    <div ng-if="!showNoDataResult && gridOptionsMaster.data.length < 1">
                         &nbsp;
                     </div>
                 </div>
-                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && selectedItems.length > 0"
+                <label ng-if="selectedItem.object_type_s === 'GROUP' && secondGrid && gridOptionsDetail.data.length  > 0"
                         translate>{{pickUserLabel}}</label>
-                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && selectedItems.length > 0"
+                <label ng-if="selectedItem.object_type_s === 'USER' && secondGrid && gridOptionsDetail.data.length > 0"
                         translate>{{pickGroupLabel}}</label>
                 <div ui-grid="gridOptionsDetail" ui-grid-resize-columns ui-grid-pagination ui-grid-selection
                         adjust-table-height="gridOptionsDetail.data.length" ui-grid-auto-resize class="grid"
-                        ng-if="selectedItems.length > 0 && secondGrid">
-                    <div ng-if="showNoData1" style="text-align: center;">
-                        {{onNoDataMessage}}
-                    </div>
+                        ng-if="gridOptionsDetail.data.length > 0 && secondGrid">
                     <div ng-if="showNoData" style="text-align: center;">
                         {{onNoDataMessage}}
                     </div>

@@ -165,8 +165,12 @@ angular.module('directives').directive(
                             function successSearchResult(data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptionsMaster.data = data.response.docs;
+                                scope.gridOptionsDetail.data = [];
+                                scope.gridOptionsDetail.totalItems = 0;
                                 if (scope.gridOptionsMaster.data.length < 1) {
-                                    scope.showNoData1 = true;
+                                    scope.showNoDataResult = true;
+                                } else {
+                                    scope.showNoDataResult = false;
                                 }
                                 scope.gridOptionsMaster.totalItems = data.response.numFound;
                             }
@@ -200,6 +204,8 @@ angular.module('directives').directive(
                                 scope.gridOptionsDetail.data = data.response.docs;
                                 if (scope.gridOptionsDetail.data.length < 1) {
                                     scope.showNoData = true;
+                                } else {
+                                    scope.showNoData = false;
                                 }
                                 scope.gridOptionsDetail.totalItems = data.response.numFound;
                             }
