@@ -86,7 +86,7 @@ public class AcmParticipant implements Serializable, AcmEntity, AcmNotificationR
 
     // this field should be @Transient, but EclipseLink removes the field value on merge()
     // this way the field is effectively transient, although the column must exist in the database
-    @Column(name = "replaceChildrenParticipant", insertable = false, updatable = false)
+    @Column(name = "cm_replace_children_participant", insertable = false, updatable = false)
     @Convert(converter = BooleanToStringConverter.class)
     private boolean replaceChildrenParticipant;
 

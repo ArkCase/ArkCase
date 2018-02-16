@@ -225,6 +225,12 @@
                         "error": "Erro"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "pt_Name",
+                "type": "pt_Type",
+                "supervisorName": "pt_Supervisor Name",
+                "actions": "pt_Actions"
             }
         },
         "security.selectPrivileges": "Criar privilégios de função / seleção",
@@ -256,6 +262,7 @@
                 "purge.label": "Purga",
                 "email.label": "Endereço de Email do Sistema",
                 "password.label": "Senha do sistema",
+                "password.changeButton": "pt_Change the calendar user password",
                 "purgeDays.label": "Dias",
                 "emailValid": "O endereço de e-mail e a senha do sistema são válidos",
                 "emailNotValid": "O endereço de e-mail ou a senha do sistema não são válidos",
@@ -356,9 +363,21 @@
                 "actions.label": "Ações",
                 "manual.label": "Manual",
                 "automated.label": "Automatizado",
-                "browse": "Squeaky toy",
+                "choose.file": "pt_Choose File",
+                "download": "pt_Download",
                 "save": "Salve ",
                 "cancel": "Cancelar"
+            },
+            "objectTypes": {
+                "caseFile": "pt_Case File",
+                "complaint": "pt_Complaint",
+                "task": "pt_Task",
+                "document": "pt_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "pt_Send as Attachments",
+                "sendAsLinks": "pt_Send as Links",
+                "sendAsAttachmentsAndLinks": "pt_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -517,7 +536,17 @@
                     "inversevalue.placeholder": "Digite o valor inverso de entrada como chave de etiqueta",
                     "btnCancel.text": "Cancelar",
                     "btnOk.text": "Salvar entrada"
-                }
+                },
+                "addLookup": "pt_Add Lookup",
+                "label": "pt_Lookup Type",
+                "lookupName": "pt_Lookup Name",
+                "placeholder": "pt_Enter lookup name",
+                "btnSave.text": "pt_Save",
+                "deleteLookupMsg": "pt_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "pt_Are you sure you want to delete this entry?",
+                "delete.success": "pt_Lookup is successfully deleted",
+                "delete.error": "pt_Lookup can't be deleted",
+                "lookupExists.error": "pt_Lookup with this name already exists"
             },
             "module.config": {
                 "title": "Configuração do módulo"
@@ -582,6 +611,8 @@
                 "creator": "O Criador",
                 "modifier": "Modificado por",
                 "activated": "Status",
+                "statusDeactivated": "pt_Deactivated",
+                "statusActivated": "pt_Activated",
                 "objectType": "Tipo de objeto",
                 "version": "Versão",
                 "templateVersionActive": "Ativo"
@@ -598,6 +629,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "pt_No File Selected",
                 "objectTypes.label": "Tipos de Objetos",
                 "querySelect.label": "Seleção de consulta",
                 "label.label": "Mostrar nome",

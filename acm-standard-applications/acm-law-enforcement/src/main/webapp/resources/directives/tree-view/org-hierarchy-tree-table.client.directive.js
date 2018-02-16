@@ -112,7 +112,7 @@ angular
 
                                                 if (node.data.object_sub_type_s == "LDAP_GROUP") {
                                                     // check if editing is allowed for the directory server this group belongs
-                                                    if (scope.enableEditingLdapUsers[node.data.directory_name_s]) {
+                                                    if (scope.enableEditingLdapUsers && scope.enableEditingLdapUsers[node.data.directory_name_s]) {
                                                         $tdList
                                                                 .eq(3)
                                                                 .html(

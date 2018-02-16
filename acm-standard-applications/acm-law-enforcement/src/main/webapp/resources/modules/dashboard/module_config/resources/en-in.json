@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documents",
                 "description": "Displays chart of documents by folder",
-                "noDataMessage": "Currently there are no documents to display"
+                "noDataMessage": "Currently there are no documents to display",
+                "series": "en-in_Number of Documents"
             },
             "locations": {
                 "title": "Locations",

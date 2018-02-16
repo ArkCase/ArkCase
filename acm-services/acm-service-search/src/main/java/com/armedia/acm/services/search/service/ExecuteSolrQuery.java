@@ -28,6 +28,7 @@ public class ExecuteSolrQuery
 
     private MuleContextManager muleContextManager;
     private ObjectConverter objectConverter;
+    private boolean enableDocumentACL;
 
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort)
             throws MuleException
@@ -93,6 +94,7 @@ public class ExecuteSolrQuery
         headers.put("filterParentRef", filterParentRef);
         headers.put("filterSubscriptionEvents", filterSubscriptionEvents);
         headers.put("rowQueryParametars", rowQueryParameters);
+        headers.put("enableDocumentACL", isEnableDocumentACL());
         headers.put("indent", indent ? indent : "");
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
@@ -148,5 +150,15 @@ public class ExecuteSolrQuery
     public void setObjectConverter(ObjectConverter objectConverter)
     {
         this.objectConverter = objectConverter;
+    }
+
+    public boolean isEnableDocumentACL()
+    {
+        return enableDocumentACL;
+    }
+
+    public void setEnableDocumentACL(boolean enableDocumentACL)
+    {
+        this.enableDocumentACL = enableDocumentACL;
     }
 }

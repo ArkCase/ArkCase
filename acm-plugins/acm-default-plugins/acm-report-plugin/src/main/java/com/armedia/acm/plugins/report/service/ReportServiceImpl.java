@@ -10,9 +10,11 @@ import com.armedia.acm.services.search.model.SearchConstants;
 import com.armedia.acm.services.search.model.SolrCore;
 import com.armedia.acm.services.search.service.ExecuteSolrQuery;
 import com.armedia.acm.services.search.service.SearchResults;
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
+import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.mule.api.MuleException;
@@ -61,9 +63,10 @@ public class ReportServiceImpl implements ReportService
     private PentahoReportUrl reportUrl;
     private ExecuteSolrQuery executeSolrQuery;
     private SearchResults searchResults;
+    private AcmGroupDao groupDao;
 
     @Override
-    public List<Report> getPentahoReports() throws Exception, MuleException
+    public List<Report> getPentahoReports() throws Exception
     {
         Reports reports = null;
 
@@ -80,7 +83,7 @@ public class ReportServiceImpl implements ReportService
 
         String muleEndPoint = fullReportUrl.startsWith("http://") ? "vm://getPentahoReports.in" : "vm://getPentahoReportsSecure.in";
 
-        Map<String, Object> properties = new HashedMap();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("username", username);
         MuleMessage received = getMuleContextManager().send(muleEndPoint, reportListUrl, properties);
 
@@ -135,11 +138,8 @@ public class ReportServiceImpl implements ReportService
         if (key != null && !key.isEmpty())
         {
             String[] keyArray = key.split("_");
-            if (keyArray != null)
-            {
-                List<String> keyList = Arrays.asList(keyArray);
-                retval = keyList.stream().map(element -> StringUtils.capitalize(element.toLowerCase())).collect(Collectors.joining(" "));
-            }
+            List<String> keyList = Arrays.asList(keyArray);
+            retval = keyList.stream().map(element -> StringUtils.capitalize(element.toLowerCase())).collect(Collectors.joining(" "));
         }
 
         return retval;
@@ -169,9 +169,7 @@ public class ReportServiceImpl implements ReportService
 
         if (reports != null)
         {
-            reports.stream().forEach(report -> {
-                retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName()));
-            });
+            reports.forEach(report -> retval.put(report.getTitle(), getReportUrl().getReportUrlPath(report.getPropertyName())));
         }
 
         return retval;
@@ -390,8 +388,15 @@ public class ReportServiceImpl implements ReportService
     {
         if (reportsToGroupsMap != null && reportsToGroupsMap.size() > 0)
         {
-            return reportsToGroupsMap.entrySet().stream().filter(entry -> !"".equals(entry.getValue()) && entry.getValue() != null)
-                    .collect(Collectors.toMap(Entry::getKey, entry -> Arrays.<String> asList(entry.getValue().split(","))));
+            Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
+
+            return reportsToGroupsMap.entrySet().stream()
+                    .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
+                    .collect(Collectors.toMap(Entry::getKey,
+                            entry -> Arrays.stream(entry.getValue().split(","))
+                                    .flatMap(AcmRoleToGroupMapping.mapGroupsString(
+                                            name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
+                                    .collect(Collectors.toList())));
         }
 
         return new HashMap<>();
@@ -495,5 +500,10 @@ public class ReportServiceImpl implements ReportService
     public void setSearchResults(SearchResults searchResults)
     {
         this.searchResults = searchResults;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
     }
 }
