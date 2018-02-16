@@ -80,13 +80,11 @@ angular.module('directives').directive(
                                 stateParams : $stateParams,
                                 moduleId : scope.participantsInit.moduleId,
                                 componentId : scope.participantsInit.componentId,
-                                objectId: scope.participantsInit.objectId,
-                                showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
-                                objectId: scope.participantsInit.objectId,
-                                showReplaceChildrenParticipants: scope.participantsInit.showReplaceChildrenParticipants,
+                                objectId : scope.participantsInit.objectId,
+                                showReplaceChildrenParticipants : scope.participantsInit.showReplaceChildrenParticipants,
                                 retrieveObjectInfo : scope.participantsInit.retrieveObjectInfo,
                                 validateObjectInfo : scope.participantsInit.validateObjectInfo,
-                                resetComponentData: scope.participantsInit.resetComponentData,
+                                resetComponentData : scope.participantsInit.resetComponentData,
                                 onConfigRetrieved : function(componentConfig) {
                                     return onConfigRetrieved(componentConfig);
                                 },
@@ -111,7 +109,7 @@ angular.module('directives').directive(
                                     scope.participantsInit.participantsTitle = $translate
                                             .instant("common.directive.coreParticipants.title");
                                 scope.config = config;
-                                gridHelper.addButton(config, "edit");
+                                gridHelper.addButton(config, "edit", null, null, "isEditDisabled");
                                 gridHelper.addButton(config, "delete", null, null, "isDeleteDisabled");
                                 gridHelper.setColumnDefs(config);
                                 gridHelper.setBasicOptions(config);
@@ -204,7 +202,9 @@ angular.module('directives').directive(
                                                 scope.objectInfo.participants.push(participant);
                                             }
                                         }
-                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants, scope.participantsInit.objectType != "FOLDER" && scope.participantsInit.objectType != "FILE")) {
+                                        if (ObjectParticipantService.validateParticipants(scope.objectInfo.participants,
+                                                scope.participantsInit.objectType != "FOLDER"
+                                                        && scope.participantsInit.objectType != "FILE")) {
                                             saveObjectInfoAndRefresh();
                                         } else {
                                             refresh();
@@ -236,28 +236,20 @@ angular.module('directives').directive(
 
                             scope.editRow = function(rowEntity) {
                                 scope.participant = rowEntity;
+                                var item = rowEntity;
+                                item.participantTypes = scope.participantTypes;
+                                item.config = scope.config;
+
                                 if (rowEntity.participantLdapId === '*' || Util.isEmpty(rowEntity.participantLdapId)) {
-                                    var item = {
-                                        id : rowEntity.id,
-                                        participantType : rowEntity.participantType,
-                                        participantLdapId : rowEntity.participantLdapId,
-                                        participantTypes : scope.participantTypes,
-                                        selectedType : rowEntity.participantType,
-                                        config : scope.config
-                                    };
+                                    item.selectedType = rowEntity.participantType;
+
                                     showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                 } else {
                                     var participantDataPromise = ObjectParticipantService.findParticipantById(rowEntity.participantLdapId);
                                     participantDataPromise.then(function(participantData) {
                                         if (!Util.isArrayEmpty(participantData)) {
-                                            var item = {
-                                                id : rowEntity.id,
-                                                participantType : rowEntity.participantType,
-                                                participantLdapId : rowEntity.participantLdapId,
-                                                participantTypes : scope.participantTypes,
-                                                selectedType : participantData[0].object_type_s ? participantData[0].object_type_s : "",
-                                                config : scope.config
-                                            };
+                                            item.selectedType = participantData[0].object_type_s ? participantData[0].object_type_s : "";
+
                                             showModal(item, true, scope.participantsInit.showReplaceChildrenParticipants);
                                         }
                                     })
@@ -281,16 +273,19 @@ angular.module('directives').directive(
                                 }
                             };
 
-                            scope.onClickReplaceChildrenParticipants = function () {
+                            scope.onClickReplaceChildrenParticipants = function() {
                                 var len = scope.objectInfo.participants.length;
                                 for (var i = 0; i < len; i++) {
-                                        scope.objectInfo.participants[i].replaceChildrenParticipant = true;
-                                }                       
+                                    scope.objectInfo.participants[i].replaceChildrenParticipant = true;
+                                }
                                 saveObjectInfoAndRefresh();
                             }
 
                             scope.isDeleteDisabled = function(rowEntity) {
-                                return rowEntity.participantType === typeOwningGroup || rowEntity.participantType === typeAssignee;
+                                return !rowEntity.deletable;
+                            };
+                            scope.isEditDisabled = function(rowEntity) {
+                                return !(rowEntity.editableUser || rowEntity.editableType);
                             };
 
                             var saveObjectInfoAndRefresh = function() {
@@ -307,7 +302,8 @@ angular.module('directives').directive(
                             };
 
                             var refresh = function() {
-                                scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId : $stateParams.id);
+                                scope.$emit('report-object-refreshed', scope.participantsInit.objectId ? scope.participantsInit.objectId
+                                        : $stateParams.id);
                             };
                         },
                         templateUrl : 'directives/core-participants/core-participants.client.view.html'
