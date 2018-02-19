@@ -16,9 +16,10 @@ angular.module('cases').controller(
                 'Search.QueryBuilderService',
                 'ObjectAssociation.Service',
                 'MessageService',
+                '$timeout',
                 function($scope, $stateParams, $modal, Util, ConfigService, CaseInfoService, HelperUiGridService,
                         HelperObjectBrowserService, ObjectService, SearchService, SearchQueryBuilder, ObjectAssociationService,
-                        MessageService) {
+                        MessageService, $timeout) {
 
                     new HelperObjectBrowserService.Component({
                         scope : $scope,
@@ -83,10 +84,6 @@ angular.module('cases').controller(
                         return moduleConfig;
                     });
 
-                    $scope.refresh = function() {
-                        $scope.$emit('report-object-refreshed', $stateParams.id);
-                    };
-
                     // open add reference modal
                     $scope.addReference = function() {
                         var modalInstance = $modal.open({
@@ -125,6 +122,11 @@ angular.module('cases').controller(
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
                                     //append new entity as last item in the grid
+
+                                    $timeout(function() {
+                                        refresh();
+                                    }, 2000);
+
                                     var rowEntity = {
                                         object_id_s : payload.associationId,
                                         target_object : {
@@ -164,10 +166,19 @@ angular.module('cases').controller(
                         var id = Util.goodMapValue(rowEntity, "object_id_s", 0);
                         ObjectAssociationService.deleteAssociationInfo(id).then(function(data) {
                             //success
+                            $timeout(function() {
+                                refresh();
+                            }, 2000);
+
                             //remove it from the grid
                             _.remove($scope.gridOptions.data, function(row) {
                                 return row === rowEntity;
                             });
                         });
                     };
+
+                    var refresh = function() {
+                        $scope.$emit('report-object-refreshed', $scope.objectInfo.id ? $scope.objectInfo.id : $stateParams.id);
+                    };
+
                 } ]);
