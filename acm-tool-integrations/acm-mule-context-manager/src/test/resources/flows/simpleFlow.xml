@@ -8,7 +8,7 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/current/mule-vm.xsd">
 
     <flow name="simpleFlow" doc:name="Simple Flow for Testing">
-        <vm:inbound-endpoint address="vm://simpleFlow.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://simpleFlow.in" exchange-pattern="request-response" doc:name="VM"/>
 
         <timer-interceptor/>
 
