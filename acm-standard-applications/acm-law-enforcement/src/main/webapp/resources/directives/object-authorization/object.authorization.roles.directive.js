@@ -70,7 +70,9 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     objectDisplayName : "@",
                     roleDisplayName : "@",
                     objectTitle : "@",
-                    showFilter : "=?"
+                    showFilter : "=?",
+                    scrollLoadData : "=?",
+                    filterData : "=?"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
@@ -84,7 +86,6 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     //initial setup
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
-                    scope.authorized = [];
 
                     scope.$watch('data.selectedNotAuthorized', function() {
                         scope.notAuthorized = Util.isArrayEmpty(scope.data.selectedNotAuthorized) ? [] : scope.data.selectedNotAuthorized;

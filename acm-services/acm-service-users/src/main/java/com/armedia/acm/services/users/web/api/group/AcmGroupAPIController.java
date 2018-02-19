@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -104,6 +106,16 @@ public class AcmGroupAPIController
             Authentication auth) throws MuleException
     {
         LOG.info("Taking groups and subgroups from Solr for specific user by name.");
+
+        try
+        {
+            searchFilter = URLDecoder.decode(searchFilter, "UTF8");
+            searchFilter = "\"" + searchFilter + "\"";
+        }
+        catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
         String solrQuery = getGroupService().buildGroupsForUserByNameSolrQuery(authorized, userId, searchFilter);
 
