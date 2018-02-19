@@ -12,7 +12,7 @@ http://www.mulesoft.org/schema/mule/vm http://www.mulesoft.org/schema/mule/vm/cu
         exchange-pattern="request-response" doc:name="Issue a quick search document delete in SOLR"></https:endpoint>
 
     <flow name="quickSearchDelete" doc:name="Quick Search Delete Flow">
-        <vm:inbound-endpoint address="vm://quickSearchDelete.in" exchange-pattern="request-response" doc:name="VM"/>
+        <vm:inbound-endpoint connector-ref="arkcase-vm-connector"  address="vm://quickSearchDelete.in" exchange-pattern="request-response" doc:name="VM"/>
 
         <timer-interceptor/>
 
