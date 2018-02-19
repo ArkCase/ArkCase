@@ -17,6 +17,9 @@
  * @param {string} objectDisplayName name of the field which we want to display in the list.
  * @param {string} roleDisplayName name of the field which we want to display in the list.
  * @param {string} objectTitle value for the title Choose {{objectTitle}} in selecting objects.
+ * @param {boolean} showFilter true/false, on this variable depends the visibility of the directive "objectAuthorizationRolesFilter"
+ * @param {object} paginationDataControl - An object that contains functions for pagination
+ * @param {object} filterDataControl - An object that contains functions for search/filter
  *
  * @scope
  *
@@ -71,8 +74,8 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     roleDisplayName : "@",
                     objectTitle : "@",
                     showFilter : "=?",
-                    scrollLoadData : "=?",
-                    filterData : "=?"
+                    paginationDataControl : "=?",
+                    filterDataControl : "=?"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
