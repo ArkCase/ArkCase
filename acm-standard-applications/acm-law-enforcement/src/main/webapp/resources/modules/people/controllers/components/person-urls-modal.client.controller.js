@@ -19,10 +19,12 @@ angular.module('people').controller(
                         $modalInstance.dismiss('Cancel');
                     };
                     $scope.onClickOk = function() {
+
                         $modalInstance.close({
                             url : $scope.url,
                             isDefault : $scope.isDefault,
                             isEdit : $scope.isEdit
                         });
-                    };
+                    }
+
                 } ]);
