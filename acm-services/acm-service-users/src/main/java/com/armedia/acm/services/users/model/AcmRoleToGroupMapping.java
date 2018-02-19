@@ -1,19 +1,26 @@
 package com.armedia.acm.services.users.model;
 
+import com.armedia.acm.services.users.dao.group.AcmGroupDao;
+import com.armedia.acm.services.users.model.group.AcmGroup;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.AbstractMap;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class AcmRoleToGroupMapping
 {
     private Map<String, String> roleToGroupMap;
+    private AcmGroupDao groupDao;
+    public static final String GROUP_NAME_WILD_CARD = "@*";
 
     public void reloadRoleToGroupMap(Properties properties)
     {
@@ -32,12 +39,33 @@ public class AcmRoleToGroupMapping
                         Collectors.mapping(AbstractMap.SimpleEntry::getValue, Collectors.toList())));
     }
 
+    public static Function<String, Stream<String>> mapGroupsString(Function<String, List<AcmGroup>> findGroup)
+    {
+        return group -> {
+            if (group.endsWith(GROUP_NAME_WILD_CARD))
+            {
+                String groupName = StringUtils.substringBeforeLast(group, GROUP_NAME_WILD_CARD);
+                List<AcmGroup> matched = findGroup.apply(groupName);
+                return matched.stream()
+                        .map(AcmGroup::getName);
+            }
+            else
+            {
+                return Stream.of(group);
+            }
+        };
+    }
+
     public Map<String, Set<String>> getRoleToGroupsMap()
     {
+        Map<String, List<AcmGroup>> groupsCache = new HashMap<>();
+
         Function<String, Set<String>> groupsStringToSet = s -> {
             String[] groupsPerRole = s.split(",");
+
             return Arrays.stream(groupsPerRole)
                     .filter(StringUtils::isNotBlank)
+                    .flatMap(mapGroupsString(name -> groupsCache.computeIfAbsent(name, it -> groupDao.findByMatchingName(it))))
                     .collect(Collectors.toSet());
         };
 
@@ -47,12 +75,12 @@ public class AcmRoleToGroupMapping
                 .filter(entry -> StringUtils.isNotBlank(entry.getValue()))
                 .collect(
                         Collectors.toMap(entry -> {
-                            String groupName = entry.getKey().trim().toUpperCase();
-                            if (!groupName.startsWith("ROLE_"))
+                            String roleName = entry.getKey().trim().toUpperCase();
+                            if (!roleName.startsWith("ROLE_"))
                             {
-                                groupName = "ROLE_" + groupName;
+                                roleName = "ROLE_" + roleName;
                             }
-                            return groupName;
+                            return roleName;
                         },
                                 entry -> groupsStringToSet.apply(entry.getValue().trim().toUpperCase())));
     }
@@ -60,5 +88,10 @@ public class AcmRoleToGroupMapping
     public void setRoleToGroupMap(Map<String, String> roleToGroupMap)
     {
         this.roleToGroupMap = roleToGroupMap;
+    }
+
+    public void setGroupDao(AcmGroupDao groupDao)
+    {
+        this.groupDao = groupDao;
     }
 }

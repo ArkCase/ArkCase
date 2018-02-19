@@ -52,6 +52,7 @@
             "newCorrespondence": "新しい対応",
             "open": "開いた",
             "email": "電子メイル",
+            "newTask": "ja_New Task",
             "download": "ダウンロード",
             "copy": "複写",
             "cut": "カット",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "右に動く",
         "tooltip.move_left": "左に移動",
         "authorized": "認可された"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ja_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "検索",
@@ -563,7 +567,7 @@
     "common.directive.coreParticipants": {
         "title": "参加者",
         "replaceFolderChildrenParticipants": "ja_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "参加者を追加",
             "editParticipant.label": "レコードの編集",
             "participantType.label": "参加者タイプ",
@@ -615,7 +619,11 @@
         "FILE": "ファイル",
         "DOC_REPO": "ドキュメントリポジトリ",
         "ORGANIZATION": "組織",
-        "PERSON": "人物"
+        "PERSON": "人物",
+        "PARTICIPANT": "ja_Participant",
+        "NOTE": "ja_Note",
+        "PARTICIPANT-ASSOCIATION": "ja_Participant-Association",
+        "ASSIGNMENT": "ja_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "ユーザーを選択",

@@ -182,7 +182,10 @@
         "name.placeholder": "नाम दर्ज",
         "descriptionLabel": "विवरण",
         "description.placeholder": "विवरण दर्ज करें",
-        "searchUser": "खोज उपयोगकर्ता",
+        "searchUser": "hi_Search User and Group",
+        "cancelBtn": "hi_Cancel",
+        "okBtn": "hi_OK",
+        "search-placeholder": "hi_Search for user or group",
         "personalRepository": "मेरे दस्तावेज"
     },
     "document-repository.dialogUserPicker": {

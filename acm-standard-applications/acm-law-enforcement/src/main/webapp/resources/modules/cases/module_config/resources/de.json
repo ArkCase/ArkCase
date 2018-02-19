@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Kalender"
+        "title": "Kalender",
+        "message": "de_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "Verschmelzen",
@@ -332,6 +333,7 @@
             "status": "Status",
             "addedBy": "Hinzugefügt von"
         },
+        "assigne.none": "de_None",
         "assignee.label": "Empfänger",
         "owningGroup.label": "Eigentümergruppe",
         "priority.label": "Priorität",

@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Calendar"
+        "title": "Calendar",
+        "message": "en-in_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "Merge",
@@ -332,6 +333,7 @@
             "status": "Status",
             "addedBy": "Added By"
         },
+        "assigne.none": "en-in_None",
         "assignee.label": "Assignee",
         "owningGroup.label": "Owning Group",
         "priority.label": "Priority",

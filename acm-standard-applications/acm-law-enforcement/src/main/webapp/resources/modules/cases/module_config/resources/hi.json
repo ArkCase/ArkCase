@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "कैलेंडर"
+        "title": "कैलेंडर",
+        "message": "hi_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "मर्ज",
@@ -332,6 +333,7 @@
             "status": "स्थिति",
             "addedBy": "द्वारा जोड़ा"
         },
+        "assigne.none": "hi_None",
         "assignee.label": "संपत्ति-भागी",
         "owningGroup.label": "मालिकाना समूह",
         "priority.label": "प्राथमिकता",

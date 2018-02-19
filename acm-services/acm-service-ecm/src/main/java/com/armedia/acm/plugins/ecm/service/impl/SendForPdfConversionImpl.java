@@ -43,8 +43,6 @@ public class SendForPdfConversionImpl implements SendForPdfConversion
 
             // Copies supported file types to the Ephesoft hot folder
             captureFileOutputStream = new FileOutputStream(new File(buildFullEphesoftDropPath(fileName)));
-            fileInputStream.reset(); // the stream was already read by the addFile mule flow in the previous stage, so
-                                     // it needs to be reset here
             IOUtils.copy(fileInputStream, captureFileOutputStream);
         }
         finally

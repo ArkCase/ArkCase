@@ -8,8 +8,13 @@
                 <label translate>admin.security.emailTemplates.modal.title</label><span class="required-asterisk"
                     ng-if="!isEdit">*</span><br />
                 <button ngf-select ng-model="templateFile" id="file" ng-required="!isEdit" class="btn btn-sm btn-default">
-                    <span translate>admin.security.emailTemplates.modal.browse</span></button>
-                {{templateFile.name}}
+                    <span translate>admin.security.emailTemplates.modal.choose.file</span></button>
+                <!--<span>{{!isEdit ? templateFile.name : template.templateName}}</span>-->
+                <span>{{templateFile.name || template.templateName}}</span>
+
+                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)" class="btn btn-sm btn-default pull-right" translate>
+                    admin.security.emailTemplates.modal.download
+                </button>
             </div>
         </div>
         <div class="row">
@@ -32,7 +37,8 @@
                 <label translate>admin.security.emailTemplates.modal.objectTypes.label</label><br />
                 <label ng-repeat="objectType in objectTypeList">
                     <input type="checkbox" name="objectTypes[]" value="{{objectType.id}}"
-                            ng-checked="template.objectTypes.indexOf(objectType.id) > -1" ng-click="toggleObjectTypes(objectType.id)">&nbsp;{{objectType.name}}&nbsp;
+                            ng-checked="template.objectTypes.indexOf(objectType.id) > -1" ng-click="toggleObjectTypes(objectType.id)">&nbsp;{{objectType.displayName
+                    | translate}}&nbsp;
                 </label>
             </div>
         </div>
@@ -41,7 +47,7 @@
                 <label translate>admin.security.emailTemplates.modal.actions.label</label><br />
                 <label ng-repeat="action in actionList">
                     <input type="checkbox" name="actions[]" value="{{action.id}}" ng-checked="template.actions.indexOf(action.id) > -1"
-                            ng-click="toggleActions(action.id)">&nbsp;{{action.name}}&nbsp;
+                            ng-click="toggleActions(action.id)">&nbsp;{{action.displayName | translate}}&nbsp;
                 </label>
             </div>
         </div>
