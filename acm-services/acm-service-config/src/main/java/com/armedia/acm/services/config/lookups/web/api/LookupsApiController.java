@@ -82,7 +82,8 @@ public class LookupsApiController
             MediaType.APPLICATION_JSON_UTF8_VALUE,
             MediaType.TEXT_XML_VALUE })
     @ResponseBody
-    public String saveLookup(@RequestBody LookupDefinition lookupDefinition) throws InvalidLookupException, IOException
+    public String saveLookup(@RequestBody LookupDefinition lookupDefinition)
+            throws InvalidLookupException, IOException, AcmResourceNotModifiableException
     {
         log.debug("Update lookup definition for lookupType: {}, lookupName: {}, lookupAsJson: {}, readonly: {}",
                 lookupDefinition.getLookupType(),

@@ -13,6 +13,11 @@ angular.module('admin').controller(
                     var deferred = $q.defer();
 
                     $scope.appRoles = [];
+                    $scope.rolesData = {
+                        "chooseObject" : $scope.appRoles,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
                     $scope.userGroupsAll = [];
 
                     //wait all promises to resolve
@@ -22,7 +27,7 @@ angular.module('admin').controller(
                             var element = new Object;
                             element.name = appRole;
                             element.key = appRole;
-                            $scope.appRoles.push(element);
+                            $scope.rolesData.chooseObject.push(element);
                         });
 
                         //get all user groups

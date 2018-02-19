@@ -8,6 +8,11 @@ angular.module('admin').controller(
                     var tempAllPrivilegesPromise = selectPrivilegesService.getAllPrivileges();
 
                     $scope.appRoles = [];
+                    $scope.rolesData = {
+                        "chooseObject" : $scope.appRoles,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
                     $scope.allPrivileges = {};
                     $scope.selectedRole = null;
                     $scope.editBtnDisabled = true;
@@ -19,7 +24,7 @@ angular.module('admin').controller(
                             var element = new Object;
                             element.name = appRole;
                             element.key = appRole;
-                            $scope.appRoles.push(element);
+                            $scope.rolesData.chooseObject.push(element);
                         });
 
                         //set all privileges
@@ -125,7 +130,7 @@ angular.module('admin').controller(
                                     var element = new Object;
                                     element.name = result;
                                     element.key = result;
-                                    $scope.appRoles.push(element);
+                                    $scope.rolesData.chooseObject.push(element);
                                 });
                             } else {
                                 //handle edit item

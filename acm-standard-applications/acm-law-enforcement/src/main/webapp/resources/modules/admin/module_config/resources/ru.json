@@ -363,7 +363,8 @@
                 "actions.label": "Действия",
                 "manual.label": "Руководство",
                 "automated.label": "Автоматизированный",
-                "browse": "Просматривать",
+                "choose.file": "ru_Choose File",
+                "download": "ru_Download",
                 "save": "Сохранить",
                 "cancel": "Отмена"
             },

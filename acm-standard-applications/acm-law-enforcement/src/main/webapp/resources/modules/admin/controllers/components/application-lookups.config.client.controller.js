@@ -83,7 +83,7 @@ angular.module('admin').controller(
                             $scope.getLookups();
                             return success;
                         }, function(error) {
-                            MessageService.error($translate.instant('admin.application.lookups.config.delete.error'));
+                            MessageService.error(error.data ? error.data : error);
                             return error;
                         });
                         return promise;

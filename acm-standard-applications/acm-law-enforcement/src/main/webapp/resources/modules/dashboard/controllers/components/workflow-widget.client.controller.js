@@ -2,7 +2,7 @@
 
 angular.module('dashboard.workflow', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('workflow', {
-        title : 'dashboard.widgets.workflow.title',
+        title : 'preference.overviewWidgets.workflow.title',
         description : 'dashboard.widgets.workflow.description',
         controller : 'Dashboard.WorkflowOverviewController',
         reload : true,
