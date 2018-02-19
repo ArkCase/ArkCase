@@ -132,7 +132,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      Member id key: member_id.key
      *      End position: n
-     *      data.type: authorized/unauthorized
+     *      Is the user part of the group: authorized/unauthorized
      *
      * @returns List of filtered authorized/unauthorized groups
      */
@@ -142,8 +142,8 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/' + data.member_id.key + '/groups/',
             params : {
                 n : (data.n ? data.n : 50),
-                q : data.member_id.key,
-                fq : data.filterWord,
+                q : encodeURIComponent(data.member_id.key),
+                fq : encodeURIComponent(data.filterWord),
                 authorized : data.isAuthorized
             }
         });
@@ -159,7 +159,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      Member id key: member_id.key
      *      End position: n
-     *      data.type: authorized/unauthorized
+     *      Is the user part of the group: authorized/unauthorized
      *
      * @returns List of all authorized/unauthorized groups
      */
@@ -168,7 +168,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             method : 'GET',
             url : 'api/latest/users/' + data.member_id.key + '/groups/',
             params : {
-                n : (data.n ? data.n : 50),
+                n : (data.n ? data.n : 18),
                 authorized : data.isAuthorized
             }
         });

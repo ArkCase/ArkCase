@@ -4,27 +4,29 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
     return {
         restrict : 'E',
         scope : {
-            controllerAlias : "@?"
+            controllerAlias : "@?",
+            filter : "&"
         },
         templateUrl : 'directives/object-authorization-filter/object.authorization.roles.filter.html',
         link : function(scope) {
-            scope.filterWord = "";
-            scope.noFilterData = true;
+            scope.isSearchValid = true;
+            scope.data = {};
+
             scope.onChangeFilterWord = function() {
-                if (scope.filterWord == "") {
-                    scope.noFilterData = true;
-                    scope.$bus.publish(scope.controllerAlias + "Filter", "");
-                } else {
-                    scope.noFilterData = false;
+                if (scope.data.filterWord == "") {
+                    scope.isSearchValid = true;
+                    scope.filter({
+                        data : {}
+                    });
                 }
+                scope.isSearchValid = false;
             };
 
             scope.filterObjects = function() {
-                var data = {};
-                data.filterWord = scope.filterWord;
-                scope.$bus.publish(scope.controllerAlias + "Filter", data);
+                scope.filter({
+                    data : scope.data
+                });
             };
-
         }
     }
 } ]);
