@@ -116,7 +116,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : url,
             params : {
                 start : 0,
-                n : data.n
+                n : (data.n ? data.n : 50)
             }
         });
     }

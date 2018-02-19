@@ -2,7 +2,7 @@
 
 angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('tasks', {
-        title : 'dashboard.widgets.tasks.title',
+        title : 'preference.overviewWidgets.tasks.title',
         description : 'dashboard.widgets.tasks.description',
         controller : 'Dashboard.TasksController',
         reload : true,

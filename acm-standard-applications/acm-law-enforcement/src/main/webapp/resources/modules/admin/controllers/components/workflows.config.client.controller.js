@@ -35,6 +35,7 @@ angular
                             ConfigService.getComponentConfig("admin", "workflowsHistoryDialogConfig").then(function(componentConfig) {
                                 var columnDefs = componentConfig.columnDefs;
                                 columnDefs.push(getActionsColumn());
+                                $scope.workflowsHistoryDialogConfig = componentConfig;
                                 $scope.gridOptions.columnDefs = columnDefs;
                                 onConfigRetrieved(componentConfig);
                                 reloadGrid();
@@ -165,16 +166,7 @@ angular
                             $scope.showHistory = function(entity) {
                                 var historyPromise = workflowsConfigService.retrieveHistory(entity.key, entity.version);
                                 var colDefs = $scope.workflowsHistoryDialogConfig.columnDefs;
-                                colDefs
-                                        .unshift({
-                                            "name" : "active",
-                                            "displayName" : "admin.workflows.config.grid.active",
-                                            "visible" : true,
-                                            "enableSorting" : false,
-                                            width : 100,
-                                            cellTemplate : "<input type='radio' name='activeBPMN' ng-model='grid.appScope.activeBPMN' ng-value='{{row.entity}}' ng-change='grid.appScope.changeActive()'/>",
-                                            "headerCellFilter" : "translate"
-                                        });
+
                                 historyPromise.then(function(payload) {
                                     if (!payload.data || payload.data.length < 1) {
                                         messageService.error($translate.instant('admin.workflows.config.noHistory'));

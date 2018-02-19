@@ -619,7 +619,11 @@
         "FILE": "文件",
         "DOC_REPO": "文檔庫",
         "ORGANIZATION": "組織",
-        "PERSON": "人員"
+        "PERSON": "人員",
+        "PARTICIPANT": "zh-tw_Participant",
+        "NOTE": "zh-tw_Note",
+        "PARTICIPANT-ASSOCIATION": "zh-tw_Participant-Association",
+        "ASSIGNMENT": "zh-tw_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "選擇用戶",
