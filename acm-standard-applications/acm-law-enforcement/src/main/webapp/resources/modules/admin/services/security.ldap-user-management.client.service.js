@@ -142,8 +142,8 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : 'api/latest/users/' + data.member_id.key + '/groups/',
             params : {
                 n : (data.n ? data.n : 50),
-                q : encodeURIComponent(data.member_id.key),
-                fq : encodeURIComponent(data.filterWord),
+                q : data.member_id.key,
+                fq : data.filterWord,
                 authorized : data.isAuthorized
             }
         });

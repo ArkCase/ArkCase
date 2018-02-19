@@ -1,10 +1,27 @@
 'use strict';
+/**
+ * @ngdoc directive
+ * @name global.directive:objectAuthorizationRolesFilter
+ * @restrict A
+ *
+ * @description
+ *
+ *{@link https://gitlab.armedia.com/arkcase/ACM3/tree/develop/acm-standard-applications/acm-law-enforcement/src/main/webapp/resources/directives/object-authorization-filter/object-authorization-filter.client.directive.js directives/object-authorization-filter/object-authorization-filter.client.directive.js}
+ *
+ * The "objectAuthorizationRolesFilter" directive search data using the search-input data
+ *
+ * @param {object} filter - An object(function) should be called when the user search/filter and to retrieve info for the search input data
+ *
+ * @example
+ <example>
+ <object-authorization-roles-filter ng-show="true" filter="exampleFunction(data)" />
+ </example>
+ **/
 
 angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'UtilService', function(Util) {
     return {
         restrict : 'E',
         scope : {
-            controllerAlias : "@?",
             filter : "&"
         },
         templateUrl : 'directives/object-authorization-filter/object.authorization.roles.filter.html',
