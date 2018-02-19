@@ -905,13 +905,6 @@
                 "components": []
             },
             {
-                "type": "p/security/access",
-                "label": "admin.security.functionalAccessControl",
-                "components": [
-                    "security.functional-access-control"
-                ]
-            },
-            {
                 "type": "p/security/ldap",
                 "label": "admin.security.ldapConfig",
                 "components": [
@@ -926,10 +919,10 @@
                 ]
             },
             {
-                "type": "p/security/ldapUser",
-                "label": "admin.security.ldap.user.management.title",
+                "type": "p/security/access",
+                "label": "admin.security.functionalAccessControl",
                 "components": [
-                    "security.ldap-user-management"
+                    "security.functional-access-control"
                 ]
             },
             {
@@ -937,6 +930,13 @@
                 "label": "admin.security.selectPrivileges",
                 "components": [
                     "security.select-privileges"
+                ]
+            },
+            {
+                "type": "p/security/ldapUser",
+                "label": "admin.security.ldap.user.management.title",
+                "components": [
+                    "security.ldap-user-management"
                 ]
             },
             {
