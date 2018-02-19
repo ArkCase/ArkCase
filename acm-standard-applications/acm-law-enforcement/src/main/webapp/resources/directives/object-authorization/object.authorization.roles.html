@@ -4,15 +4,14 @@
         <!--Sort od SOLR-->
         <select ng-model="selectedObject" ng-change="selectObject()"
                 ng-options="d[objectDisplayName] | translate for d in data.chooseObject" name="" size="15"
-                class="form-control" scroll panel-name-alias="{{objectTitle}}"
-                load-more="scrollLoadData.loadObjectsScroll()">
+                class="form-control" pagination-on-scroll load-more="scrollLoadData.loadObjectsScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-alias="{{objectTitle}}"
                 filter="filterData.objectsFilter(data)" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
         <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized" name=""
-                size="15" multiple class="form-control" scroll panel-name-alias="{{objectTitle}}Unauthorized"
+                size="15" multiple class="form-control" pagination-on-scroll
                 load-more="scrollLoadData.loadUnauthorizedScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-alias="{{objectTitle}}Unauthorized"
@@ -32,8 +31,7 @@
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.authorized' | translate}}</label>
         <select ng-model="selectedAuthorized" ng-options="a[roleDisplayName] for a in authorized" size="15" multiple
-                class="form-control" scroll panel-name-alias="{{objectTitle}}Authorized"
-                load-more="scrollLoadData.loadAuthorizedScroll()">
+                class="form-control" pagination-on-scroll load-more="scrollLoadData.loadAuthorizedScroll()">
         </select>
         <object-authorization-roles-filter ng-show="showFilter" controller-alias="{{objectTitle}}Authorized"
                 filter="filterData.authorizedFilter(data)" />

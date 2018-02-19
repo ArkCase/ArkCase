@@ -60,7 +60,7 @@ angular
 
                             function initUser(userNumber) {
                                 var userRequestInfo = {};
-                                userRequestInfo.n = Util.isEmpty(userNumber) ? 18 : userNumber;
+                                userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
                                 if (makePaginationRequest) {
                                     LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
                                         $scope.userData.chooseObject = [];
