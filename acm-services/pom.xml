@@ -3,7 +3,7 @@
     <parent>
         <artifactId>acm</artifactId>
         <groupId>com.armedia</groupId>
-        <version>3.2.4</version>
+        <version>3.2.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -55,6 +55,8 @@
         <module>acm-service-calendar-integration-exchange</module>
         <module>acm-service-labels</module>
         <module>acm-service-data-update</module>
+        <module>acm-service-ldap-syncer</module>
+        <module>acm-service-alfresco-ldap-syncer</module>
     </modules>
 
 </project>

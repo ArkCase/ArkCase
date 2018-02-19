@@ -203,7 +203,8 @@
             "documents": {
                 "title": "文件",
                 "description": "按文件夾顯示文件",
-                "noDataMessage": "目前沒有文件信息可以顯示"
+                "noDataMessage": "目前沒有文件信息可以顯示",
+                "series": "zh-tw_Number of Documents"
             },
             "locations": {
                 "title": "地點",

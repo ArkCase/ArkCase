@@ -64,6 +64,13 @@ public class AcmGroupDao extends AcmAbstractDao<AcmGroup>
         return acmGroup;
     }
 
+    public List<AcmGroup> findByMatchingName(String name)
+    {
+        TypedQuery<AcmGroup> query = getEm().createQuery("SELECT ag FROM AcmGroup ag WHERE ag.name LIKE :name", AcmGroup.class);
+        query.setParameter("name", name + "@%");
+        return query.getResultList();
+    }
+
     @Transactional
     public AcmGroup removeMembersFromGroup(String name, Set<AcmUser> membersToRemove)
     {

@@ -124,6 +124,12 @@ angular.module('directives').directive(
 
                             scope.search = function() {
                                 scope.filters = '';
+
+                                //reapply default filter if it exists
+                                if (scope.filter) {
+                                    scope.filters += 'fq=' + scope.filter;
+                                }
+                                
                                 scope.clearAllFacets();
                                 scope.queryExistingItems();
                             };

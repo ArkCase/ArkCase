@@ -18,8 +18,9 @@ angular.module('core').controller(
                 'Profile.UserInfoService',
                 'MessageService',
                 'ModalDialogService',
+                'i18nService',
                 function($scope, $q, $state, $translate, Util, Store, Authentication, Menus, ServCommService, AutoSuggestService,
-                        LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService) {
+                        LocaleService, ConfigService, UserInfoService, MessageService, ModalDialogService, i18nService) {
 
                     $scope.authentication = Authentication;
                     $scope.isCollapsed = false;
@@ -94,6 +95,7 @@ angular.module('core').controller(
                         $scope.localeDropdownOptions = Util.goodMapValue(localeData, 'locales', LocaleService.DEFAULT_LOCALES);
                         $scope.localeSelected = LocaleService.requestLocale(userInfo.langCode);
                         LocaleService.useLocale($scope.localeSelected.code);
+                        i18nService.setCurrentLang($scope.localeSelected.code);
                     });
 
                     $scope.changeLocale = function($event, localeNew) {
@@ -101,6 +103,7 @@ angular.module('core').controller(
 
                         $scope.localeSelected = LocaleService.requestLocale(localeNew.code);
                         LocaleService.useLocale(localeNew.code);
+                        i18nService.setCurrentLang(localeNew.code);// set the current language in the ui-grid footer
 
                         Authentication.updateUserLang(localeNew.code).then(function() {
                         }, function(error) {
@@ -122,7 +125,9 @@ angular.module('core').controller(
                     $scope.onCreateNew = function(event, item) {
                         event.preventDefault();
                         if (!item.modalDialog) {
-                            $state.go(item.link);
+                            $state.go(item.link, {}, {
+                                reload : true
+                            });
                         } else {
                             ModalDialogService.showModal(item.modalDialog);
                         }

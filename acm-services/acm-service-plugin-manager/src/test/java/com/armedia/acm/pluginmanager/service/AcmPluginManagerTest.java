@@ -38,6 +38,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     private SpringContextHolder mockSpringContextHolder;
     private final String roleAdd = "role_add";
     private final String roleAdmin = "role_admin";
+    private final String wildCardRole = "ADMIN@*";
     private final String privilegeAdd = "add";
 
     @Before
@@ -78,7 +79,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
     }
 
     @Test
-    public void getPrivilegesForRole() throws Exception
+    public void getPrivilegesForRole()
     {
         AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
@@ -92,19 +93,33 @@ public class AcmPluginManagerTest extends EasyMockSupport
     }
 
     @Test
-    public void getRolesForPrivilege() throws Exception
+    public void getPrivilegesForWildCardRole()
+    {
+        AcmPlugin plugin = createPlugin("test plugin");
+        unit.registerPlugin(plugin);
+
+        List<String> privileges = unit.getPrivilegesForRole("ADMIN@ARMEDIA.COM");
+
+        assertEquals(1, privileges.size());
+
+        assertEquals(privilegeAdd, privileges.get(0));
+
+    }
+
+    @Test
+    public void getRolesForPrivilege()
     {
         AcmPlugin plugin = createPlugin("test plugin");
         unit.registerPlugin(plugin);
 
         List<String> roles = unit.getRolesForPrivilege(privilegeAdd);
 
-        assertEquals(2, roles.size());
+        assertEquals(3, roles.size());
 
     }
 
     @Test
-    public void getPrivilegesForRole_noPrivileges() throws Exception
+    public void getPrivilegesForRole_noPrivileges()
     {
         AcmPlugin plugin = createPlugin("test plugin");
         plugin.setPrivileges(null);
@@ -146,7 +161,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
         AcmPluginPrivilege add = new AcmPluginPrivilege();
         add.setPrivilegeName(privilegeAdd);
 
-        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin));
+        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin, wildCardRole));
 
         retval.setPrivileges(Arrays.asList(add));
 
@@ -161,7 +176,7 @@ public class AcmPluginManagerTest extends EasyMockSupport
         AcmPluginPrivilege add = new AcmPluginPrivilege();
         add.setPrivilegeName(privilegeAdd);
 
-        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin));
+        add.setApplicationRolesWithPrivilege(Arrays.asList(roleAdd, roleAdmin, wildCardRole));
 
         retval.setPrivileges(Arrays.asList(add));
 

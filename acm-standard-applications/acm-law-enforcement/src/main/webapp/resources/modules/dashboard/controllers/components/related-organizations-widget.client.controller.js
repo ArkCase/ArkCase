@@ -2,7 +2,7 @@
 
 angular.module('dashboard.relOrganizations', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('relOrganizations', {
-        title : 'dashboard.widgets.relOrganizations.title',
+        title : 'preference.overviewWidgets.relOrganizations.title',
         description : 'dashboard.widgets.relOrganizations.description',
         controller : 'Dashboard.RelatedOrganizationsController',
         reload : true,

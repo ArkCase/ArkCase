@@ -52,6 +52,7 @@
             "newCorrespondence": "Новая переписка",
             "open": "Открыто",
             "email": "Эл. адрес",
+            "newTask": "ru_New Task",
             "download": "Скачать",
             "copy": "Копирование",
             "cut": "Порез",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "Двигаться вправо",
         "tooltip.move_left": "Двигай влево",
         "authorized": "Уполномоченный"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "ru_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "Поиск",
@@ -563,7 +567,7 @@
     "common.directive.coreParticipants": {
         "title": "Участники",
         "replaceFolderChildrenParticipants": "ru_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Добавить участника",
             "editParticipant.label": "Изменить запись",
             "participantType.label": "Тип участника",
@@ -615,7 +619,11 @@
         "FILE": "Файл",
         "DOC_REPO": "Репозиторий документов",
         "ORGANIZATION": "Организация",
-        "PERSON": "Человек"
+        "PERSON": "Человек",
+        "PARTICIPANT": "ru_Participant",
+        "NOTE": "ru_Note",
+        "PARTICIPANT-ASSOCIATION": "ru_Participant-Association",
+        "ASSIGNMENT": "ru_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Выберите пользователя",
