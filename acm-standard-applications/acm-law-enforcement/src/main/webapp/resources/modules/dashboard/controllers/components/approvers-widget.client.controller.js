@@ -87,7 +87,7 @@ angular.module('dashboard.approvers', [ 'adf.provider' ]).config(function(dashbo
 
                     var onConfigRetrieved = function(componentConfig) {
                         var widgetInfo = _.find(componentConfig.widgets, function(widget) {
-                            return widget.id === "approvers";
+                            return widget.id === "tasks";
                         });
                         gridHelper.setColumnDefs(widgetInfo);
                     };

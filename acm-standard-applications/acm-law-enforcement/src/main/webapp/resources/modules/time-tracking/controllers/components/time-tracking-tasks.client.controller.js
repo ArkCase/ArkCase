@@ -51,11 +51,7 @@ angular.module('time-tracking').controller(
 
                     var onObjectInfoRetrieved = function(objectInfo) {
                         $scope.objectInfo = objectInfo;
-                        // $scope.gridOptions = $scope.gridOptions || {};
                         retrieveGridData();
-                        // LookupService.getApprovers(objectInfo).then(function(approvers) {
-                        //     $scope.gridOptions.data = approvers;
-                        // });
 
                     };
                     var retrieveGridData = function() {
@@ -86,7 +82,6 @@ angular.module('time-tracking').controller(
                         event.preventDefault();
                         var targetType = (Util.goodMapValue(rowEntity, "adhocTask_b", false)) ? ObjectService.ObjectTypes.ADHOC_TASK
                                 : ObjectService.ObjectTypes.TASK;
-                        //var targetType = Util.goodMapValue(rowEntity, "object_type_s");
                         var targetId = Util.goodMapValue(rowEntity, "object_id_s");
                         gridHelper.showObject(targetType, targetId);
                     };

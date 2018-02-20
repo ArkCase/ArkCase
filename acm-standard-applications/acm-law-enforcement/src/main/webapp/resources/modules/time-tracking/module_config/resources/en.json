@@ -103,9 +103,9 @@
         "table": {
             "columns": {
                 "date": "Date",
-                "caseTitle": "Case Title",
-                "caseNumber": "Case Number",
-                "number": "Hours"
+                "objectTitle": "Object Title",
+                "objectNumber": "Object Number",
+                "hours": "Hours"
             }
         }
     }

@@ -12,8 +12,19 @@
  */
 angular.module('services').factory(
         'Helper.ModulesServicesStructure',
-        [ '$timeout', '$translate', 'UtilService', 'ConfigService', 'TimeTracking.InfoService',
-                function($timeout, $translate, Util, ConfigService, TimeTrackingInfoService) {
+        [
+                '$timeout',
+                '$translate',
+                'UtilService',
+                'ConfigService',
+                'TimeTracking.InfoService',
+                'ObjectService',
+                'Case.InfoService',
+                'Complaint.InfoService',
+                'Person.InfoService',
+                'Organization.InfoService',
+                function($timeout, $translate, Util, ConfigService, TimeTrackingInfoService, ObjectService, CaseInfoService,
+                        ComplaintInfoService, PersonInfoService, OrganizationInfoService) {
 
                     var Service = {};
 
@@ -23,14 +34,34 @@ angular.module('services').factory(
                      * @methodOf services:Helper.ModulesServices
                      *
                      * @description
-                     * addLocales() adds all locale support from dashboard config file.
+                     * getModulesServiceStructure() get modules service structure to be reused.
                      */
                     Service.getModulesServiceStructure = function() {
                         return [ {
-                            name : "TIMESHEET",
+                            name : ObjectService.ObjectTypes.TIMESHEET,
                             configName : "time-tracking",
                             getInfo : TimeTrackingInfoService.getTimesheetInfo,
                             validateInfo : TimeTrackingInfoService.validateTimesheet
+                        }, {
+                            name : ObjectService.ObjectTypes.CASE_FILE,
+                            configName : "time-tracking",
+                            getInfo : CaseInfoService.getCaseInfo,
+                            validateInfo : TimeTrackingInfoService.validateCaseInfo
+                        }, {
+                            name : ObjectService.ObjectTypes.COMPLAINT,
+                            configName : "time-tracking",
+                            getInfo : ComplaintInfoService.getComplaintInfo,
+                            validateInfo : TimeTrackingInfoService.validateComplaintInfo
+                        }, {
+                            name : ObjectService.ObjectTypes.PERSON,
+                            configName : "people",
+                            getInfo : PersonInfoService.getPersonInfo,
+                            validateInfo : PersonInfoService.validatePersonInfo
+                        }, {
+                            name : ObjectService.ObjectTypes.ORGANIZATION,
+                            configName : "organizations",
+                            getInfo : OrganizationInfoService.getOrganizationInfo,
+                            validateInfo : OrganizationInfoService.validateOrganizationInfo
                         } ];
                     };
 

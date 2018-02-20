@@ -215,13 +215,13 @@
                             "headerCellFilter": "translate"
                         },
                         {
-                            "name": "caseFile.title",
-                            "displayName": "timeTracking.widgets.summary.table.columns.caseTitle",
+                            "name": "object.title",
+                            "displayName": "timeTracking.widgets.summary.table.columns.objectTitle",
                             "headerCellFilter": "translate"
                         },
                         {
-                            "name": "caseFile.caseNumber",
-                            "displayName": "timeTracking.widgets.summary.table.columns.caseNumber",
+                            "name": "object.number",
+                            "displayName": "timeTracking.widgets.summary.table.columns.objectNumber",
                             "headerCellFilter": "translate"
                         },
                         {
