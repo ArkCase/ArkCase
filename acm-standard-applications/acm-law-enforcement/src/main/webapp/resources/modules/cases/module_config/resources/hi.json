@@ -245,7 +245,7 @@
     },
     "cases.comp.calendar": {
         "title": "कैलेंडर",
-        "message": "hi_Calendar Integration Configuration Not Enabled"
+        "message": "कैलेंडर एकीकरण कॉन्फ़िगरेशन सक्षम नहीं है"
     },
     "cases.comp.merge": {
         "title": "मर्ज",
@@ -333,7 +333,7 @@
             "status": "स्थिति",
             "addedBy": "द्वारा जोड़ा"
         },
-        "assigne.none": "hi_None",
+        "assigne.none": "कोई नहीं",
         "assignee.label": "संपत्ति-भागी",
         "owningGroup.label": "मालिकाना समूह",
         "priority.label": "प्राथमिकता",
@@ -362,7 +362,7 @@
         }
     },
     "cases.userOrGroupSearch": {
-        "id": "userSearch",
+        "id": "उपयोगकर्ताखोज",
         "title": "उपयोगकर्ता / समूह खोज",
         "search": {
             "btn": "खोज",
