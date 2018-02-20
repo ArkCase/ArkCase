@@ -35,8 +35,9 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
                     scope.filter({
                         data : {}
                     });
+                } else {
+                    scope.isSearchValid = false;
                 }
-                scope.isSearchValid = false;
             };
 
             scope.filterObjects = function() {
