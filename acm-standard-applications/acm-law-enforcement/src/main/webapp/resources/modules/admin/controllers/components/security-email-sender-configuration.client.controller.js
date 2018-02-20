@@ -5,7 +5,7 @@ angular.module('admin').controller(
                 function($scope, EmailSenderConfigurationService, MessageService, $translate) {
                     $scope.emailSenderConfigDataModel = {};
                     $scope.isSmtpValid = null;
-                    $scope.showMessage = true;
+                    $scope.showMessage = false;
 
                     $scope.serverTypeSelectOptions = [ {
                         value : 'smtp',
