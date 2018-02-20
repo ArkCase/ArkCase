@@ -21,6 +21,8 @@ public class AcmUsersSyncResultTest
 {
     private AcmUsersSyncResult unit;
 
+    private static final String LANG = "en";
+
     // @formatter:off
     /**
      * ldap state db state
@@ -54,7 +56,7 @@ public class AcmUsersSyncResultTest
         user5.setUserState(AcmUserState.VALID);
         List<AcmUser> acmUsers = Arrays.asList(user1, user5);
 
-        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers);
+        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers, LANG);
 
         assertThat("There should be no changed users", unit.getModifiedUsers().size(), is(0));
         assertThat("There should be 1 new user", unit.getNewUsers().size(), is(1));
@@ -101,7 +103,7 @@ public class AcmUsersSyncResultTest
         user2.setUserState(AcmUserState.VALID);
         List<AcmUser> currentUsers = Arrays.asList(user1, user2);
 
-        Map<String, AcmUser> actual = unit.sync(ldapUsers, currentUsers);
+        Map<String, AcmUser> actual = unit.sync(ldapUsers, currentUsers, LANG);
 
         assertThat("There should be no changed users", unit.getModifiedUsers().size(), is(0));
         assertThat("There should be no new users", unit.getNewUsers().size(), is(0));
@@ -163,7 +165,7 @@ public class AcmUsersSyncResultTest
         user3.setUserState(AcmUserState.VALID);
         List<AcmUser> acmUsers = Arrays.asList(user1, user2, user3);
 
-        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers);
+        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers, LANG);
 
         assertThat("There should be 2 changed users", unit.getModifiedUsers().size(), is(2));
         assertThat("There should be no new users", unit.getNewUsers().size(), is(0));
@@ -219,7 +221,7 @@ public class AcmUsersSyncResultTest
 
         List<AcmUser> acmUsers = Arrays.asList(acmUser2, acmUser3);
 
-        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers);
+        Map<String, AcmUser> actual = unit.sync(ldapUsers, acmUsers, LANG);
 
         assertThat("There should be 1 changed users", unit.getModifiedUsers().size(), is(1));
         assertThat("There should be 1 new user", unit.getNewUsers().size(), is(1));
