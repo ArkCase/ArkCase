@@ -135,37 +135,29 @@ angular.module('admin').controller(
                         }
                     }
 
-                    function openCloneUserModal(userForm, passwordError, usernameError) {
+                    function openCloneUserModal(userForm, usernameError) {
 
                         return $modal.open({
                             animation : $scope.animationsEnabled,
                             templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                             controller : [ '$scope', '$modalInstance', 'UtilService', function($scope, $modalInstance, Util) {
                                 $scope.addUser = true;
-                                $scope.cloneUser = true;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                                 $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                                 $scope.user = userForm;
-                                $scope.passwordErrorMessage = passwordError;
                                 $scope.error = usernameError;
                                 $scope.data = {
                                     "user" : $scope.user,
                                     "selectedUser" : selectedUser
                                 };
-                                $scope.clearPasswordError = function() {
-                                    if ($scope.passwordErrorMessage) {
-                                        $scope.passwordErrorMessage = '';
-                                    }
-                                };
+
                                 $scope.clearUsernameError = function() {
                                     if ($scope.error) {
                                         $scope.error = '';
                                     }
                                 };
-                                $scope.passwordErrorMessages = {
-                                    notSamePasswordsMessage : ''
-                                };
+
                                 $scope.ok = function() {
                                     $modalInstance.close($scope.data);
                                 };
@@ -195,26 +187,18 @@ angular.module('admin').controller(
                                 function(error) {
                                     //error adding user
                                     if (error.data.message) {
-                                        var passwordError;
                                         var usernameError;
                                         var onAdd = function(data) {
                                             return onCloneUser(data);
                                         };
                                         if (error.data.field == 'username') {
                                             usernameError = error.data.message;
-                                            openCloneUserModal(error.data.extra.user, passwordError, usernameError).result.then(onAdd,
+                                            openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd,
                                                     function() {
                                                         deferred.reject("cancel");
                                                         return {};
                                                     });
-                                        } else if (error.data.field == 'password') {
-                                            passwordError = error.data.message;
-                                            openCloneUserModal(error.data.extra.userForm, passwordError, usernameError).result.then(onAdd,
-                                                    function() {
-                                                        deferred.reject("cancel");
-                                                        return {};
-                                                    });
-                                        } else {
+                                        }  else {
                                             MessageService.error(error.data.message);
                                         }
 
