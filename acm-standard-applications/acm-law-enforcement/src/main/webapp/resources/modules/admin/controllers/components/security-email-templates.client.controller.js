@@ -2,7 +2,14 @@
 
 angular.module('admin').controller(
         'Admin.SecurityEmailTemplatesController',
-        [ '$scope', '$translate', '$modal', 'Admin.EmailTemplatesService', 'Helper.UiGridService', 'MessageService', 'Dialog.BootboxService',
+        [
+                '$scope',
+                '$translate',
+                '$modal',
+                'Admin.EmailTemplatesService',
+                'Helper.UiGridService',
+                'MessageService',
+                'Dialog.BootboxService',
                 function($scope, $translate, $modal, emailTemplatesService, HelperUiGridService, MessageService, DialogService) {
 
                     var gridHelper = new HelperUiGridService.Grid({
@@ -85,25 +92,40 @@ angular.module('admin').controller(
                             }
                         });
 
-                        modalInstance.result.then(function (data) {
-                            emailTemplatesService.validateEmailTemplate(data.template).then(function (response) {
-                                if (response.data.validTemplate) {
-                                    emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function () {
-                                        MessageService.succsessAction();
-                                        ReloadGrid();
-                                    }, function () {
-                                        MessageService.errorAction();
+                        modalInstance.result.then(function(data) {
+                            emailTemplatesService.validateEmailTemplate(data.template).then(
+                                    function(response) {
+                                        if (!containsExtensionHtml(data.file.name)) {
+                                            DialogService.alert($translate.instant("admin.security.emailTemplates.modal.uploadError"));
+                                        } else if (response.data.validTemplate) {
+                                            emailTemplatesService.saveEmailTemplate(data.template, data.file).then(function() {
+                                                MessageService.succsessAction();
+                                                ReloadGrid();
+                                            }, function() {
+                                                MessageService.errorAction();
+                                            });
+                                        } else {
+                                            DialogService.alert($translate
+                                                    .instant("admin.security.emailTemplates.modal.validationResponse")
+                                                    + ' ['
+                                                    + response.data.objectType
+                                                    + '] ['
+                                                    + response.data.action
+                                                    + '] ['
+                                                    + response.data.emailPattern + ']');
+                                        }
+                                    }, function(error) {
+                                        MessageService.errorAction(error);
                                     });
-                                } else {
-                                    DialogService.alert($translate.instant("admin.security.emailTemplates.modal.validationResponse") +
-                                            ' [' + response.data.objectType + '] [' + response.data.action +
-                                            '] [' + response.data.emailPattern + ']');
-                                }
-                            }, function (error) {
-                                MessageService.errorAction(error);
-                            });
                         });
                     }
+
+                    function containsExtensionHtml(templateName) {
+                        var length = templateName.length;
+                        var extension = ".html"
+                        return templateName.indexOf(extension, length - 5) >= 0;
+                    }
+                    ;
 
                     function ReloadGrid() {
                         var templatesPromise = emailTemplatesService.listEmailTemplates();
