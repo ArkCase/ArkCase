@@ -1,0 +1,10 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="01-acm-process-definition-cm_pd_sha256_hex-set-passwords-to-null" author="jivanovski" >
+        <update tableName="acm_process_definition">
+            <column name="cm_pd_sha256_hex" value="NULL" type="VARCHAR(256)"/>
+        </update>
+    </changeSet>
+
+</databaseChangeLog>

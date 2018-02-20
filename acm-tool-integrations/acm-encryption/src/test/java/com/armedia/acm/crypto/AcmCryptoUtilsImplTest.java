@@ -21,7 +21,7 @@ public class AcmCryptoUtilsImplTest
 
     private String passwordToBeEncrypted;
     private String userPassword;
-    private String md5Hex;
+    private String sha256Hex;
     private AcmCryptoUtils cryptoUtils;
 
     @Before
@@ -29,7 +29,7 @@ public class AcmCryptoUtilsImplTest
     {
         passwordToBeEncrypted = "password";
         userPassword = "userPassword";
-        md5Hex = DigestUtils.md5Hex(userPassword);
+        sha256Hex = DigestUtils.sha256Hex(userPassword);
 
         cryptoUtils = new AcmCryptoUtilsImpl();
     }
@@ -37,7 +37,7 @@ public class AcmCryptoUtilsImplTest
     @Test
     public void testEncryptData() throws Exception
     {
-        byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
+        byte[] encrypted = cryptoUtils.encryptData(sha256Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
     }
@@ -45,12 +45,12 @@ public class AcmCryptoUtilsImplTest
     @Test
     public void testDecryptData() throws Exception
     {
-        byte[] encrypted = cryptoUtils.encryptData(md5Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
+        byte[] encrypted = cryptoUtils.encryptData(sha256Hex.getBytes(), passwordToBeEncrypted.getBytes(), true);
 
         assertNotNull(encrypted);
         assertNotEquals(passwordToBeEncrypted, new String(encrypted));
 
-        byte[] decryptData = cryptoUtils.decryptData(md5Hex.getBytes(), encrypted, true);
+        byte[] decryptData = cryptoUtils.decryptData(sha256Hex.getBytes(), encrypted, true);
 
         assertEquals(passwordToBeEncrypted, new String(decryptData));
     }
