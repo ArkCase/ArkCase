@@ -35,6 +35,7 @@ angular
                             $scope.userUnauthorizedFilter = userUnauthorizedFilter;
                             $scope.userAuthorizedFilter = userAuthorizedFilter;
                             $scope.retrieveDataFilter = retrieveDataFilter;
+                            $scope.updateTest = updateTest;
 
                             var makePaginationRequest = true;
                             var currentAuthGroups;
@@ -58,6 +59,11 @@ angular
                                 "authorizedFilter" : $scope.userAuthorizedFilter
                             };
 
+                            function updateTest(data) {
+                                $scope.test = data;
+                                $scope.onObjSelect($scope.test, $scope.userData.selectedAuthorized, $scope.userData.selectedNotAuthorized);
+                            }
+
                             function initUser(userNumber) {
                                 var userRequestInfo = {};
                                 userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
@@ -65,6 +71,7 @@ angular
                                     LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
                                         $scope.userData.chooseObject = [];
                                         $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
+                                        $scope.updateTest($scope.userData.chooseObject[0]);
                                         makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
                                     });
                                 }
@@ -331,6 +338,9 @@ angular
                                         $scope.fillList($scope.userData[panelName], response.data);
                                     } else {
                                         $scope.fillList($scope.userData[panelName], response.data.response.docs);
+                                    }
+                                    if (methodName == "getNUsers" || methodName == "getUsersFiltered") {
+                                        $scope.updateTest($scope.userData.chooseObject[0]);
                                     }
                                 }, function() {
                                     $log.error('Error during calling the method ' + methodName);

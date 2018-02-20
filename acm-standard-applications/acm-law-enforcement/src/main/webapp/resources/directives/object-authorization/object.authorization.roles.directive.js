@@ -75,20 +75,21 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     objectTitle : "@",
                     showFilter : "=?",
                     paginationDataControl : "=?",
-                    filterDataControl : "=?"
+                    filterDataControl : "=?",
+                    test : "=?"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
-                    scope.$watch('data', function(newValue) {
-                        if (newValue && newValue.length > 0) {
-                            scope.selectedObject = scope.data[0];
-                            scope.selectObject();
-                        }
-                    }, true);
+                    // scope.$watch('test', function(newValue, oldValue) {
+                    //     // console.log(newValue);
+                    //     // console.log(oldValue);
+                    //     scope.selectedObject = newValue;
+                    // }, true);
 
                     //initial setup
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
+                    // scope.selectedObject = scope.data.chooseObject[0];
 
                     scope.$watch('data.selectedNotAuthorized', function() {
                         scope.notAuthorized = Util.isArrayEmpty(scope.data.selectedNotAuthorized) ? [] : scope.data.selectedNotAuthorized;
@@ -96,6 +97,7 @@ angular.module('directives').directive('objectAuthorizationRoles',
 
                     scope.$watch('data.selectedAuthorized', function() {
                         scope.authorized = Util.isArrayEmpty(scope.data.selectedAuthorized) ? [] : scope.data.selectedAuthorized;
+                        scope.selectedObject = scope.data.chooseObject[0];
                     }, true);
 
                     //authorize button is clicked
