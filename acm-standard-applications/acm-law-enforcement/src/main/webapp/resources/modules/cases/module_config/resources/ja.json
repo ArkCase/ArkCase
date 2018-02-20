@@ -128,7 +128,7 @@
             "name": "組織名",
             "associationType": "役割",
             "type": "組織の種類",
-            "identification": "ID",
+            "identification": "識別",
             "value": "組織",
             "contact": "一次連絡先",
             "phone": "電話",
@@ -245,7 +245,7 @@
     },
     "cases.comp.calendar": {
         "title": "カレンダー",
-        "message": "ja_Calendar Integration Configuration Not Enabled"
+        "message": "カレンダーの統合 設定が有効になっていない"
     },
     "cases.comp.merge": {
         "title": "マージ",
@@ -333,7 +333,7 @@
             "status": "状態",
             "addedBy": "によって追加"
         },
-        "assigne.none": "ja_None",
+        "assigne.none": "なし",
         "assignee.label": "譲受人",
         "owningGroup.label": "所有グループ",
         "priority.label": "優先",
@@ -362,7 +362,7 @@
         }
     },
     "cases.userOrGroupSearch": {
-        "id": "userSearch",
+        "id": "ユーザー検索",
         "title": "ユーザー/グループ検索",
         "search": {
             "btn": "検索",
