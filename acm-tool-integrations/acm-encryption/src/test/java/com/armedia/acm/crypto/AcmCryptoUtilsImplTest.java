@@ -25,10 +25,11 @@ public class AcmCryptoUtilsImplTest
     private AcmCryptoUtils cryptoUtils;
 
     @Before
-    public void setUp()
+    public void setUp() throws Exception
     {
         passwordToBeEncrypted = "password";
         userPassword = "userPassword";
+
         sha256Hex = DigestUtils.sha256Hex(userPassword);
 
         cryptoUtils = new AcmCryptoUtilsImpl();
