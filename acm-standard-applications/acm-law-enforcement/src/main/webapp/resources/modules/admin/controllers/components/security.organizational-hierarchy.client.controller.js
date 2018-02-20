@@ -302,7 +302,6 @@ angular.module('admin').controller(
                             animation : $scope.animationsEnabled,
                             templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                             controller : [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.cloneUser = false;
                                 $scope.addUser = true;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
