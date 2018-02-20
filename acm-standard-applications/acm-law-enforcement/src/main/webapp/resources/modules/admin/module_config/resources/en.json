@@ -379,7 +379,8 @@
                 "download": "Download",
                 "save": "Save",
                 "cancel": "Cancel",
-                "validationResponse": "Email Template already exists with selected parameters"
+                "validationResponse": "Email Template already exists with selected parameters",
+                "uploadError": "File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "Case File",

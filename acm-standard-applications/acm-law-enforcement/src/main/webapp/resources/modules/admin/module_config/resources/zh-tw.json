@@ -366,7 +366,9 @@
                 "choose.file": "zh-tw_Choose File",
                 "download": "zh-tw_Download",
                 "save": "保存",
-                "cancel": "取消"
+                "cancel": "取消",
+                "validationResponse": "zh-tw_Email Template already exists with selected parameters",
+                "uploadError": "zh-tw_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "zh-tw_Case File",

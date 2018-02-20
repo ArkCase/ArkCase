@@ -366,7 +366,9 @@
                 "choose.file": "fr_Choose File",
                 "download": "fr_Download",
                 "save": "Sauvegarder",
-                "cancel": "Annuler"
+                "cancel": "Annuler",
+                "validationResponse": "fr_Email Template already exists with selected parameters",
+                "uploadError": "fr_File upload canceled due to incorrect type of file. You can only upload html file."
             },
             "objectTypes": {
                 "caseFile": "fr_Case File",

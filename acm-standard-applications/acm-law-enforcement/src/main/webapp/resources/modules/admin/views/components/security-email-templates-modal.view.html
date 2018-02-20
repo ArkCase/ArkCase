@@ -12,7 +12,8 @@
                 <!--<span>{{!isEdit ? templateFile.name : template.templateName}}</span>-->
                 <span>{{templateFile.name || template.templateName}}</span>
 
-                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)" class="btn btn-sm btn-default pull-right" translate>
+                <button type="button" ng-disabled="!isEdit" ng-click="downloadFile(template.templateName)"
+                        class="btn btn-sm btn-default pull-right" translate>
                     admin.security.emailTemplates.modal.download
                 </button>
             </div>
@@ -28,8 +29,11 @@
         <div class="row">
             <div class="col-sm-12 form-group">
                 <label for="templateName" translate>admin.security.emailTemplates.modal.templateName.label</label>
-                <input id="templateName" class="input-md form-control" ng-model="template.templateName" required="required"
+                <input id="templateName" name="templateName" class="input-md form-control" ng-model="template.templateName"
+                        required="required" ng-pattern="/\w+\.html$/"
                         placeholder="{{ 'admin.security.emailTemplates.modal.templateName.placeholder' | translate }}" ng-readonly="isEdit">
+                <p ng-show="templateForm.templateName.$invalid && templateForm.templateName.$dirty" class="help-block">
+                    Template name must end on '.html' and can only consist of characters, digits or underscores. </p>
             </div>
         </div>
         <div class="row">
