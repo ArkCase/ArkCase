@@ -12,7 +12,8 @@
         <div class="row">
             <div class="col-sm-6 form-group">
                 <label for="urls" translate>people.comp.urls.modal.value.label</label><span class="required-asterisk">*</span>
-                <input id="urls" type="text" ng-model="url.value" class="input-md form-control" required="required"
+                <input id="urls" type="url" pattern="(http|https|ftp|sftp):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?"
+                        ng-model="url.value" class="input-md form-control" required="required"
                         placeholder="{{ 'people.comp.urls.modal.value.placeholder' | translate }}">
             </div>
             <div class="col-sm-6 form-group">
