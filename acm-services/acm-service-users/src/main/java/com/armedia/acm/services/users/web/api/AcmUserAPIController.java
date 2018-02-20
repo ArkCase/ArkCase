@@ -178,11 +178,12 @@ public class AcmUserAPIController extends SecureLdapController
     public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
-        validateLdapPassword(ldapUserCloneRequest);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
+            AcmUser acmUser = ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            return acmUser;
         }
         catch (NameAlreadyBoundException e)
         {
