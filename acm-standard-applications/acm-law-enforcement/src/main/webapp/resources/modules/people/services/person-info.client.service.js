@@ -87,8 +87,6 @@ angular.module('services').factory(
                     Service.resetPersonInfo = function(personInfo) {
                         if (personInfo && personInfo.id) {
                             personCache.remove(peopleBaseUrl + personInfo.id);
-                        } else {
-                            personCache.removeAll();
                         }
                     };
 

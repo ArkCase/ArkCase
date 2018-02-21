@@ -175,20 +175,21 @@ angular.module(ApplicationConfiguration.applicationModuleName).config(
                         AnalyticsProvider.setPageEvent('$stateChangeSuccess');
                     }
                 } ]).run(
-        [ '$translate', '$translatePartialLoader', '$rootScope', function($translate, $translatePartialLoader, $rootScope) {
-            $translatePartialLoader.addPart('core');
-            $translatePartialLoader.addPart('welcome');
-            $translate.refresh();
-            $rootScope.utils = utils;
-            /*
-             *this is cache for all $http calls if cache is enabled
-             */
-            $http.defaults.cache = CacheFactory('defaultCache', {
-                maxAge : 10 * 1000, // Items added to this cache expire after 10 seconds
-                cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
-                deleteOnExpire : 'aggressive' // Items will be deleted from this cache when they expire
-            });
-        } ]);
+        [ '$translate', '$translatePartialLoader', '$rootScope', '$http', 'CacheFactory',
+                function($translate, $translatePartialLoader, $rootScope, $http, CacheFactory) {
+                    $translatePartialLoader.addPart('core');
+                    $translatePartialLoader.addPart('welcome');
+                    $translate.refresh();
+                    $rootScope.utils = utils;
+                    /*
+                     *this is cache for all $http calls if cache is enabled
+                     */
+                    $http.defaults.cache = CacheFactory('defaultCache', {
+                        maxAge : 10 * 1000, // Items added to this cache expire after 10 seconds
+                        cacheFlushInterval : 60 * 60 * 1000, // This cache will clear itself every hour
+                        deleteOnExpire : 'aggressive' // Items will be deleted from this cache when they expire
+                    });
+                } ]);
 
 var utils = {};
 utils.getLookupValue = function(objArray, key) {
