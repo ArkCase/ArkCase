@@ -3,7 +3,7 @@ package com.armedia.acm.services.dataupdate.web;
 import static org.junit.Assert.assertEquals;
 
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
-import com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor;
+import com.armedia.acm.services.dataupdate.service.SolrReindexService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
@@ -21,23 +21,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
+public class SolrReindexExecutorTests extends EasyMockSupport
 {
     private static final String SOLR_LAST_RUN_DATE_PROPERTY_KEY = "solr.last.run.date";
-    private TriggerSolrUpdateExecutor triggerSolrUpdateExecutor;
     private PropertyFileManager propertyFileManager;
     private final String filePath = getClass().getClassLoader().getResource("properties/solrBatchUpdate.properties").getPath();
     private List<String> solrList;
     private Map<String, String> solrMap;
+    private SolrReindexService solrReindexService;
 
     @Before
     public void setUp() throws Exception
     {
-        triggerSolrUpdateExecutor = new TriggerSolrUpdateExecutor();
         propertyFileManager = new PropertyFileManager();
 
-        triggerSolrUpdateExecutor.setLastBatchUpdatePropertyFileLocation(filePath);
-        triggerSolrUpdateExecutor.setPropertyFileManager(propertyFileManager);
+        solrReindexService = new SolrReindexService();
+        solrReindexService.setLastBatchUpdatePropertyFileLocation(filePath);
+        solrReindexService.setPropertyFileManager(propertyFileManager);
 
         solrList = Arrays.asList(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmUser.class.getName(),
                 SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmGroup.class.getName());
@@ -49,7 +49,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
         fillFile(solrMap);
     }
 
-    public void fillFile(Map<String, String> solrMap) throws IOException
+    private void fillFile(Map<String, String> solrMap) throws IOException
     {
         Properties properties = new Properties();
         for (Map.Entry<String, String> entry : solrMap.entrySet())
@@ -59,7 +59,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
         properties.store(new FileOutputStream(filePath), null);
     }
 
-    public String takePropertiesValueByKey(String key) throws IOException
+    private String takePropertiesValueByKey(String key) throws IOException
     {
         String retval = "";
         Properties properties = new Properties();
@@ -78,7 +78,7 @@ public class TriggerSolrUpdateExecutorTest extends EasyMockSupport
     @Test
     public void validateRemovedLines() throws Exception
     {
-        triggerSolrUpdateExecutor.execute();
+        solrReindexService.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
 
         for (String key : solrList)
         {
