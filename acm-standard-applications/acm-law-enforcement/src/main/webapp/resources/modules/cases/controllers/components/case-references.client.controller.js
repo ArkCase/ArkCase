@@ -121,12 +121,11 @@ angular.module('cases').controller(
                                         target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
-                                    //append new entity as last item in the grid
-
                                     $timeout(function() {
                                         refresh();
                                     }, 2000);
 
+                                    //append new entity as last item in the grid
                                     var rowEntity = {
                                         object_id_s : payload.associationId,
                                         target_object : {
