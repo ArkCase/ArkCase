@@ -210,4 +210,17 @@
             <column name="cm_timesheet_title" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="11-acm-timesheet-add-discriminator-column-extensibility" author="marko.stojanoski">
+        <addColumn tableName="acm_timesheet">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="12-acm-time-add-discriminator-column-extensibility" author="marko.stojanoski">
+        <addColumn tableName="acm_time">
+            <column name="cm_class_name" type="VARCHAR(400)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

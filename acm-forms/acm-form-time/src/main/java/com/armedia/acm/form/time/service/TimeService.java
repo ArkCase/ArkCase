@@ -19,7 +19,6 @@ import com.armedia.acm.services.timesheet.service.TimesheetEventPublisher;
 import com.armedia.acm.services.timesheet.service.TimesheetService;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.google.common.base.Objects;
-
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -84,7 +83,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
             if (timesheet != null)
             {
                 form = getTimeFactory().asFrevvoTimeForm(timesheet);
-                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), FrevvoFormName.TIMESHEET.toLowerCase());
+                form = (TimeForm) populateEditInformation(form, timesheet.getContainer(), getFormName().toLowerCase());
                 if (form.getItems() != null)
                 {
                     String objectIdString = getRequest().getParameter("_id");
@@ -205,7 +204,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
         String submissionName = getRequest().getParameter("submission_name");
 
         // Unmarshall XML to object
-        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), TimeForm.class);
+        TimeForm form = (TimeForm) convertFromXMLToObject(cleanXML(xml), getFormClass());
 
         if (form == null)
         {
@@ -234,7 +233,7 @@ public class TimeService extends FrevvoFormChargeAbstractService
                 .checkWorkflowStartup(TimesheetConstants.EVENT_TYPE + "." + submissionName.toLowerCase());
 
         FrevvoUploadedFiles uploadedFiles = saveAttachments(attachments, saved.getContainer().getFolder().getCmisFolderId(),
-                FrevvoFormName.TIMESHEET.toUpperCase(), saved.getId());
+                getFormName().toUpperCase(), saved.getId());
 
         getTimesheetEventPublisher().publishEvent(saved, userId, ipAddress, true, submissionName.toLowerCase(), uploadedFiles,
                 startWorkflow);
