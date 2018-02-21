@@ -368,7 +368,8 @@
                 "save": "Salvar",
                 "cancel": "Cancelar",
                 "validationResponse": "es_Email Template already exists with selected parameters",
-                "uploadError": "es_File upload canceled due to incorrect type of file. You can only upload html file."
+                "uploadError": "es_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "es_Template name must end on '.html' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "es_Case File",

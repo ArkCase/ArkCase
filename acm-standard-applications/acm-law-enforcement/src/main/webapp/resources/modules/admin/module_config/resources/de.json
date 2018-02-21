@@ -367,7 +367,8 @@
                 "save": "Sparen",
                 "cancel": "Stornieren",
                 "validationResponse": "de_Email Template already exists with selected parameters",
-                "uploadError": "de_File upload canceled due to incorrect type of file. You can only upload html file."
+                "uploadError": "de_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "de_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "de_Case File",
