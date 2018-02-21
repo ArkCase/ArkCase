@@ -1,19 +1,14 @@
 package com.armedia.acm.services.dataupdate.service;
 
-import static com.armedia.acm.services.search.service.AcmJpaBatchUpdateService.SOLR_LAST_RUN_DATE_PROPERTY_KEY;
-
-import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.model.AcmUser;
 import com.armedia.acm.services.users.model.group.AcmGroup;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
 {
 
-    private String lastBatchUpdatePropertyFileLocation;
-    private PropertyFileManager propertyFileManager;
+    private SolarReindexExecutor solarReindexExecutor;
 
     @Override
     public String getUpdateId()
@@ -24,30 +19,16 @@ public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        List<String> propertiesToDelete = new ArrayList<>();
-        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmUser.class.getName());
-        propertiesToDelete.add(SOLR_LAST_RUN_DATE_PROPERTY_KEY + "." + AcmGroup.class.getName());
-
-        propertyFileManager.removeMultiple(propertiesToDelete, lastBatchUpdatePropertyFileLocation);
+        solarReindexExecutor.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
     }
 
-    public void setLastBatchUpdatePropertyFileLocation(String lastBatchUpdatePropertyFileLocation)
+    public SolarReindexExecutor getSolarReindexExecutor()
     {
-        this.lastBatchUpdatePropertyFileLocation = lastBatchUpdatePropertyFileLocation;
+        return solarReindexExecutor;
     }
 
-    public String getLastBatchUpdatePropertyFileLocation()
+    public void setSolarReindexExecutor(SolarReindexExecutor solarReindexExecutor)
     {
-        return lastBatchUpdatePropertyFileLocation;
-    }
-
-    public PropertyFileManager getPropertyFileManager()
-    {
-        return propertyFileManager;
-    }
-
-    public void setPropertyFileManager(PropertyFileManager propertyFileManager)
-    {
-        this.propertyFileManager = propertyFileManager;
+        this.solarReindexExecutor = solarReindexExecutor;
     }
 }
