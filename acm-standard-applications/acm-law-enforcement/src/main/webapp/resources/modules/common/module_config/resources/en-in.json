@@ -632,7 +632,11 @@
         "FILE": "File",
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
-        "PERSON": "Person"
+        "PERSON": "Person",
+        "PARTICIPANT": "en-in_Participant",
+        "NOTE": "en-in_Note",
+        "PARTICIPANT-ASSOCIATION": "en-in_Participant-Association",
+        "ASSIGNMENT": "en-in_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

@@ -619,7 +619,11 @@
         "FILE": "Archivo",
         "DOC_REPO": "Repositorio de documentos",
         "ORGANIZATION": "Organización",
-        "PERSON": "Persona"
+        "PERSON": "Persona",
+        "PARTICIPANT": "es_Participant",
+        "NOTE": "es_Note",
+        "PARTICIPANT-ASSOCIATION": "es_Participant-Association",
+        "ASSIGNMENT": "es_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Elija usuario",

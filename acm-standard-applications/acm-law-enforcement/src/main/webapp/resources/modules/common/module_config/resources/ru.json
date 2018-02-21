@@ -619,7 +619,11 @@
         "FILE": "Файл",
         "DOC_REPO": "Репозиторий документов",
         "ORGANIZATION": "Организация",
-        "PERSON": "Человек"
+        "PERSON": "Человек",
+        "PARTICIPANT": "ru_Participant",
+        "NOTE": "ru_Note",
+        "PARTICIPANT-ASSOCIATION": "ru_Participant-Association",
+        "ASSIGNMENT": "ru_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Выберите пользователя",
