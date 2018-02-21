@@ -94,7 +94,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String queryText = "SELECT ae " +
                 "FROM   AuditEvent ae LEFT OUTER JOIN AcmAuditLookup lu ON ae.fullEventType=lu.auditEventName " +
                 "WHERE  ae.status != 'DELETE' " +
-                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId AND ae.parentObjectId = NULL) " +
+                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success' " +
