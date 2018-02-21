@@ -58,13 +58,13 @@
         <property name="uuidUpdateDao" ref="groupUuidUpdateDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
     </bean>
-    <bean id="solarReindexExecutor" class="com.armedia.acm.services.dataupdate.service.SolarReindexExecutor">
+    <bean id="solrReindexService" class="com.armedia.acm.services.dataupdate.service.SolrReindexService">
         <property name="lastBatchUpdatePropertyFileLocation" value="${user.home}/.arkcase/acm/solrLastBatchUpdate.properties"/>
         <property name="propertyFileManager" ref="propertyFileManager"/>
     </bean>
 
     <bean id="triggerSolrUpdateExecutor" class="com.armedia.acm.services.dataupdate.service.TriggerSolrUpdateExecutor">
-        <property name="solarReindexExecutor" ref="com.armedia.acm.services.dataupdate.service.SolarReindexExecutor"/>
+        <property name="solrReindexService" ref="solrReindexService/>
     </bean>
 
 
