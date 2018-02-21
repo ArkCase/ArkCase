@@ -620,6 +620,7 @@
         "DOC_REPO": "Репозиторий документов",
         "ORGANIZATION": "Организация",
         "PERSON": "Человек",
+        "PERSON-ASSOCIATION": "ru_Person-Association",
         "PARTICIPANT": "ru_Participant",
         "NOTE": "ru_Note",
         "PARTICIPANT-ASSOCIATION": "ru_Participant-Association",

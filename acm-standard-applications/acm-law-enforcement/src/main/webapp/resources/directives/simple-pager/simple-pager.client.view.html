@@ -1,25 +1,25 @@
 <div class="ui-grid-pager-panel">
     <div class="ui-grid-pager-container" role="navigation">
         <div class="ui-grid-pager-control">
-            <button ng-disabled="currentPage === 1" ng-click="pageChanged(1)" type="button" role="menuitem" class="ui-grid-pager-first">
+            <button ng-disabled="pagerData.currentPage === 1" ng-click="pageChanged(1)" type="button" role="menuitem" class="ui-grid-pager-first">
                 <div class="first-triangle">
                     <div class="first-bar"></div>
                 </div>
             </button>
-            <button ng-disabled="currentPage === 1" ng-click="pageChanged(currentPage-1)" type="button" role="menuitem"
+            <button ng-disabled="pagerData.currentPage === 1" ng-click="pageChanged(pagerData.currentPage-1)" type="button" role="menuitem"
                     class="ui-grid-pager-previous">
                 <div class="first-triangle prev-triangle"></div>
             </button>
 
             <input type="number"
                     class="ui-grid-pager-control-input ng-pristine ng-untouched ng-valid ng-valid-min ng-valid-max ng-valid-required"
-                    ng-model="currentPage" min="1" max="{{ totalPages }}" required="" ng-change="pageChanged(currentPage)" />&nbsp;/ {{
+                    ng-model="pagerData.currentPage" min="1" max="{{ totalPages }}" required="" ng-change="pageChanged(pagerData.currentPage)" />&nbsp;/ {{
             totalPages }}
-            <button role="menuitem" type="button" class="ui-grid-pager-next" ng-disabled="currentPage === totalPages"
-                    ng-click="pageChanged(currentPage+1)">
+            <button role="menuitem" type="button" class="ui-grid-pager-next" ng-disabled="pagerData.currentPage === totalPages"
+                    ng-click="pageChanged(pagerData.currentPage+1)">
                 <div class="last-triangle next-triangle"></div>
             </button>
-            <button type="button" role="menuitem" class="ui-grid-pager-last" ng-disabled="currentPage === totalPages"
+            <button type="button" role="menuitem" class="ui-grid-pager-last" ng-disabled="pagerData.currentPage === totalPages"
                     ng-click="pageChanged(totalPages)">
                 <div class="last-triangle">
                     <div class="last-bar"></div>
@@ -34,7 +34,7 @@
     <div class="ui-grid-pager-count-container">
         <div class="ui-grid-pager-count">
                 <span ng-show="pagerData.totalItems > 0">
-                    {{'common.directive.simplePager.pagerCountLabel' | translate: {pageCount: showingLow - showingHigh, pageTotal: pagerData.totalItems} }}
+                    {{'common.directive.simplePager.pagerCountLabel' | translate: {pageCount: currentItems, pageTotal: pagerData.totalItems} }}
                 </span>
         </div>
     </div>
