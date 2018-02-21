@@ -699,7 +699,6 @@ angular.module('admin').controller(
                         return function($scope, $modalInstance) {
                             $scope.header = "admin.security.organizationalHierarchy.createGroupDialog.ldapGroup.title";
                             $scope.addLdapGroupModal = seeDirectorySelect;
-                            $scope.maxLdapGroupNameLength = 64;
                             $scope.group = group;
                             $scope.error = errorMessage;
                             $scope.directoryServers = directoryServers;
@@ -729,7 +728,6 @@ angular.module('admin').controller(
                                     "parentGroupDirectoryName" : parentGroup.directory_name_s
                                 };
                                 modal.close(scope.data);
-
                             };
                         }))
                     }
@@ -840,5 +838,4 @@ angular.module('admin').controller(
                         }
                         return member;
                     }
-
                 } ]);

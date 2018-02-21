@@ -25,7 +25,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -47,9 +46,7 @@ public class AcmGroup implements Serializable, AcmEntity
     private static final long serialVersionUID = -2729731595684630823L;
 
     @Id
-
     @Column(name = "cm_group_name")
-    @Size(min = 1, max = 64)
     private String name;
 
     @Column(name = "cm_group_display_name")
