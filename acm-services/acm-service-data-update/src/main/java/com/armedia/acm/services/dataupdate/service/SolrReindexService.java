@@ -7,7 +7,7 @@ import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SolarReindexExecutor
+public class SolrReindexService
 {
     private String lastBatchUpdatePropertyFileLocation;
     private PropertyFileManager propertyFileManager;
