@@ -13,7 +13,6 @@ import com.armedia.acm.services.timesheet.dao.AcmTimesheetDao;
 import com.armedia.acm.services.timesheet.model.AcmTime;
 import com.armedia.acm.services.timesheet.model.AcmTimesheet;
 import com.armedia.acm.spring.SpringContextHolder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,7 +127,7 @@ public class TimeFactory extends FrevvoFormFactory
      * @param form
      * @return
      */
-    private List<AcmTime> asAcmTimes(TimeForm form)
+    protected List<AcmTime> asAcmTimes(TimeForm form)
     {
         LOG.debug("Converting Frevvo Time Items to Acm Times.");
 
@@ -154,7 +153,7 @@ public class TimeFactory extends FrevvoFormFactory
      * @param form
      * @return
      */
-    private List<AcmTime> getTimesFromItem(TimeItem item, TimeForm form)
+    protected List<AcmTime> getTimesFromItem(TimeItem item, TimeForm form)
     {
         LOG.debug("Taking Times from Frevvo Time Item.");
 
@@ -217,7 +216,7 @@ public class TimeFactory extends FrevvoFormFactory
      * @param offset
      * @return
      */
-    private AcmTime createAcmTime(Long id, Double value, TimeItem item, TimeForm form, int offset)
+    protected AcmTime createAcmTime(Long id, Double value, TimeItem item, TimeForm form, int offset)
     {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(form.getPeriod());

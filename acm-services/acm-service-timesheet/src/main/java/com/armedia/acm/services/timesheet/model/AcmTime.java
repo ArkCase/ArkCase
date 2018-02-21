@@ -7,10 +7,14 @@ import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +25,6 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -32,6 +35,9 @@ import java.util.Date;
 @Entity
 @Table(name = "acm_time")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = AcmTime.class)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.services.timesheet.model.AcmTime")
 public class AcmTime implements Serializable, AcmObject, AcmEntity
 {
 
@@ -77,6 +83,9 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_time_modified")
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @Override
     public Long getId()
@@ -204,4 +213,11 @@ public class AcmTime implements Serializable, AcmObject, AcmEntity
         return TimeConstants.OBJECT_TYPE;
     }
 
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
 }
