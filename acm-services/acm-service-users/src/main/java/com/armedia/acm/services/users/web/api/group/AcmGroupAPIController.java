@@ -71,10 +71,10 @@ public class AcmGroupAPIController
         throw new IllegalStateException("Unexpected payload type: " + response.getPayload().getClass().getName());
     }
 
-    @RequestMapping(value = "/{userid:.+}/groups", params = {
+    @RequestMapping(value = "/{userId:.+}/groups", params = {
             "authorized" }, method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String findGroupsForUser(@PathVariable("userid") String userId, @RequestParam(value = "authorized") Boolean authorized,
+    public String findGroupsForUser(@PathVariable("userId") String userId, @RequestParam(value = "authorized") Boolean authorized,
             @RequestParam(value = "start", required = false, defaultValue = "0") int startRow,
             @RequestParam(value = "n", required = false, defaultValue = "10000") int maxRows,
             @RequestParam(value = "s", required = false, defaultValue = "name_lcs") String sortBy,
