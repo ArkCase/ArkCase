@@ -242,7 +242,8 @@
                 "type": "Type",
                 "supervisorName": "Supervisor Name",
                 "actions": "Actions"
-            }
+            },
+            "searchFilter.placeholder": "Search"
         },
         "security.selectPrivileges": "Create Role/Select Privileges",
         "security.selectPrivileges.applicationRole": "Application Role",
