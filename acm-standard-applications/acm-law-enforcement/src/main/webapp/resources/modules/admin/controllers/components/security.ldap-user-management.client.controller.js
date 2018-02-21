@@ -150,7 +150,7 @@ angular
                                 }
                             }
 
-                            function openCloneUserModal(userForm, passwordError, usernameError) {
+                            function openCloneUserModal(userForm, usernameError) {
 
                                 return $modal
                                         .open({
@@ -162,30 +162,22 @@ angular
                                                     'UtilService',
                                                     function($scope, $modalInstance, Util) {
                                                         $scope.addUser = true;
-                                                        $scope.cloneUser = true;
                                                         $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                                         $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
                                                         $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
                                                         $scope.user = userForm;
-                                                        $scope.passwordErrorMessage = passwordError;
                                                         $scope.error = usernameError;
                                                         $scope.data = {
                                                             "user" : $scope.user,
-                                                            "selectedUser" : lastSelectedUser
+                                                            "selectedUser" : selectedUser
                                                         };
-                                                        $scope.clearPasswordError = function() {
-                                                            if ($scope.passwordErrorMessage) {
-                                                                $scope.passwordErrorMessage = '';
-                                                            }
-                                                        };
+
                                                         $scope.clearUsernameError = function() {
                                                             if ($scope.error) {
                                                                 $scope.error = '';
                                                             }
                                                         };
-                                                        $scope.passwordErrorMessages = {
-                                                            notSamePasswordsMessage : ''
-                                                        };
+
                                                         $scope.ok = function() {
                                                             $modalInstance.close($scope.data);
                                                         };
@@ -195,56 +187,45 @@ angular
                             }
 
                             function onCloneUser(data, deferred) {
-                                LdapUserManagementService.cloneUser(data).then(
-                                        function(response) {
-                                            // add the new user to the list
-                                            var element = {};
-                                            element.name = response.data.fullName;
-                                            element.key = response.data.userId;
-                                            element.directory = response.data.userDirectoryName;
-                                            $scope.userData.chooseObject.push(element);
+                                LdapUserManagementService.cloneUser(data).then(function(response) {
+                                    // add the new user to the list
+                                    var element = {};
+                                    element.name = response.data.fullName;
+                                    element.key = response.data.userId;
+                                    element.directory = response.data.userDirectoryName;
+                                    $scope.userData.chooseObject.push(element);
 
-                                            //add the new user to cache store
-                                            var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
-                                            var users = cacheUsers.get();
-                                            users.push(element);
-                                            cacheUsers.set(users);
+                                    //add the new user to cache store
+                                    var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                                    var users = cacheUsers.get();
+                                    users.push(element);
+                                    cacheUsers.set(users);
 
-                                            MessageService.succsessAction();
-                                        },
-                                        function(error) {
-                                            //error adding user
-                                            if (error.data.message) {
-                                                var passwordError;
-                                                var usernameError;
-                                                var onAdd = function(data) {
-                                                    return onCloneUser(data);
-                                                };
-                                                if (error.data.field == 'username') {
-                                                    usernameError = error.data.message;
-                                                    openCloneUserModal(error.data.extra.user, passwordError, usernameError).result.then(
-                                                            onAdd, function() {
-                                                                deferred.reject("cancel");
-                                                                return {};
-                                                            });
-                                                } else if (error.data.field == 'password') {
-                                                    passwordError = error.data.message;
-                                                    openCloneUserModal(error.data.extra.userForm, passwordError, usernameError).result
-                                                            .then(onAdd, function() {
-                                                                deferred.reject("cancel");
-                                                                return {};
-                                                            });
-                                                } else {
-                                                    MessageService.error(error.data.message);
-                                                }
+                                    MessageService.succsessAction();
+                                }, function(error) {
+                                    //error adding user
+                                    if (error.data.message) {
+                                        var usernameError;
+                                        var onAdd = function(data) {
+                                            return onCloneUser(data);
+                                        };
+                                        if (error.data.field == 'username') {
+                                            usernameError = error.data.message;
+                                            openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd, function() {
+                                                deferred.reject("cancel");
+                                                return {};
+                                            });
+                                        } else {
+                                            MessageService.error(error.data.message);
+                                        }
 
-                                            }
+                                    }
 
-                                            else {
-                                                MessageService.errorAction();
-                                            }
+                                    else {
+                                        MessageService.errorAction();
+                                    }
 
-                                        });
+                                });
 
                             }
 

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
-public class NestedLookupEntry
+public class NestedLookupEntry extends AcmLookupEntry
 {
     private String key;
     private String value;
