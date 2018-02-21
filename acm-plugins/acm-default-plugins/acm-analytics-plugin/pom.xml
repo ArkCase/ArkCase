@@ -13,12 +13,5 @@
     <name>ACM Default Plugin: analytics</name>
     <description>This plugin enables the analytics feature.
     </description>
-    <dependencies>
-        <dependency>
-            <groupId>com.armedia.acm.acm-tool-integrations</groupId>
-            <artifactId>acm-reload-properties</artifactId>
-            <version>3.2.5-SNAPSHOT</version>
-        </dependency>
-    </dependencies>
 
 </project>

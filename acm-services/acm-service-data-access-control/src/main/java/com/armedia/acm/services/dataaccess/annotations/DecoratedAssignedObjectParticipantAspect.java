@@ -31,7 +31,7 @@ public class DecoratedAssignedObjectParticipantAspect
      * - {@link List<@AcmParticipant>}
      */
     @Around(value = "@annotation(decoratedAssignedObjectParticipants)")
-    public Object afterReturning(ProceedingJoinPoint pjp, DecoratedAssignedObjectParticipants decoratedAssignedObjectParticipants)
+    public Object aroundDecoratingMethod(ProceedingJoinPoint pjp, DecoratedAssignedObjectParticipants decoratedAssignedObjectParticipants)
             throws Throwable
     {
         Object ret = pjp.proceed();
@@ -97,15 +97,15 @@ public class DecoratedAssignedObjectParticipantAspect
         for (int i = 0; i < copyParticipants.size(); i++)
         {
             // Decorate editableUserParticipants
-            ValidateParticipantsEditableUser(assignedObject, originalParticipants, i);
+            validateParticipantsEditableUser(assignedObject, originalParticipants, i);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
             // Decorate editableTypeParticipants
-            ValidateParticipantsEditableType(assignedObject, originalParticipants, i);
+            validateParticipantsEditableType(assignedObject, originalParticipants, i);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
             // Decorate deletableParticipants
-            ValidateParticipantsDeletable(assignedObject, originalParticipants, i);
+            validateParticipantsDeletable(assignedObject, originalParticipants, i);
             // reset copy participants
             copyParticipants = getParticipantsCopyWithAppliedAssignmentRules(assignedObject, originalParticipants);
         }
@@ -114,7 +114,7 @@ public class DecoratedAssignedObjectParticipantAspect
         return assignedObject;
     }
 
-    private void ValidateParticipantsEditable(AcmAssignedObject assignedObjectWithCopyParticipants,
+    private void validateParticipantsEditable(AcmAssignedObject assignedObjectWithCopyParticipants,
             List<AcmParticipant> originalParticipants, int index, String validationType)
     {
         int copyParticipantsSize = assignedObjectWithCopyParticipants.getParticipants().size();
@@ -191,7 +191,7 @@ public class DecoratedAssignedObjectParticipantAspect
         }
     }
 
-    private void ValidateParticipantsDeletable(AcmAssignedObject assignedObjectWithCopyParticipants,
+    private void validateParticipantsDeletable(AcmAssignedObject assignedObjectWithCopyParticipants,
             List<AcmParticipant> originalParticipants, int index)
     {
         if (!assignedObjectWithCopyParticipants.getParticipants().get(index).isDeletable())
@@ -231,16 +231,16 @@ public class DecoratedAssignedObjectParticipantAspect
         }
     }
 
-    private void ValidateParticipantsEditableUser(AcmAssignedObject assignedObjectWithCopyParticipants,
+    private void validateParticipantsEditableUser(AcmAssignedObject assignedObjectWithCopyParticipants,
             List<AcmParticipant> originalParticipants, int index)
     {
-        ValidateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "user");
+        validateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "user");
     }
 
-    private void ValidateParticipantsEditableType(AcmAssignedObject assignedObjectWithCopyParticipants,
+    private void validateParticipantsEditableType(AcmAssignedObject assignedObjectWithCopyParticipants,
             List<AcmParticipant> originalParticipants, int index)
     {
-        ValidateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "type");
+        validateParticipantsEditable(assignedObjectWithCopyParticipants, originalParticipants, index, "type");
     }
 
     private List<AcmParticipant> getParticipantsCopyWithAppliedAssignmentRules(AcmAssignedObject assignedObject,

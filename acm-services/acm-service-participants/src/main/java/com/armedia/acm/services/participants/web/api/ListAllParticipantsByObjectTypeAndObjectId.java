@@ -33,7 +33,7 @@ public class ListAllParticipantsByObjectTypeAndObjectId
     private transient final Logger log = LoggerFactory.getLogger(getClass());
 
     @RequestMapping(value = "/{objectType}/{objectId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    @DecoratedAssignedObjectParticipants
+    @DecoratedAssignedObjectParticipants(objectTypeIndex = 0, objectIdIndex = 1)
     @ResponseBody
     public List<AcmParticipant> listParticipants(
             @PathVariable(value = "objectType") String objectType,
