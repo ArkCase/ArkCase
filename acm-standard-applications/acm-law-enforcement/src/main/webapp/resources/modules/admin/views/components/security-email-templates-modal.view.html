@@ -30,10 +30,10 @@
             <div class="col-sm-12 form-group">
                 <label for="templateName" translate>admin.security.emailTemplates.modal.templateName.label</label>
                 <input id="templateName" name="templateName" class="input-md form-control" ng-model="template.templateName"
-                        required="required" ng-pattern="/\w+\.html$/"
+                        required="required" ng-pattern="/\w+\.(html|htm|xhtml)$/"
                         placeholder="{{ 'admin.security.emailTemplates.modal.templateName.placeholder' | translate }}" ng-readonly="isEdit">
-                <p ng-show="templateForm.templateName.$invalid && templateForm.templateName.$dirty" class="help-block">
-                    Template name must end on '.html' and can only consist of characters, digits or underscores. </p>
+                <p ng-show="templateForm.templateName.$invalid && templateForm.templateName.$dirty" class="help-block" translate>
+                    admin.security.emailTemplates.modal.invalidTemplateName</p>
             </div>
         </div>
         <div class="row">

@@ -368,7 +368,8 @@
                 "save": "保存",
                 "cancel": "取消",
                 "validationResponse": "zh-cn_Email Template already exists with selected parameters",
-                "uploadError": "zh-cn_File upload canceled due to incorrect type of file. You can only upload html file."
+                "uploadError": "zh-cn_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "zh-cn_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "zh-cn_Case File",

@@ -368,7 +368,8 @@
                 "save": "बचाना",
                 "cancel": "रद्द करना",
                 "validationResponse": "hi_Email Template already exists with selected parameters",
-                "uploadError": "hi_File upload canceled due to incorrect type of file. You can only upload html file."
+                "uploadError": "hi_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "hi_Template name must end on '.html', '.htm' or '.xhtml' and can only consist of characters, digits or underscores."
             },
             "objectTypes": {
                 "caseFile": "hi_Case File",
