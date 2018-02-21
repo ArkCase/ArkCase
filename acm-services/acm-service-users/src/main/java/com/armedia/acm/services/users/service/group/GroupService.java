@@ -47,6 +47,20 @@ public interface GroupService
     String buildGroupsForUserSolrQuery(Boolean authorized, String userId) throws MuleException;
 
     /**
+     * Returns solr search results for GROUP filtered by name
+     * @param authentication
+     * @param nameFilter
+     * @param start
+     * @param max
+     * @param sortBy
+     * @param sortDir
+     * @return groups
+     * @throws MuleException
+     */
+    String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+            throws MuleException;
+
+    /**
      * Retrieve all LDAP groups that a user belongs to
      *
      * @param usernamePasswordAuthenticationToken
