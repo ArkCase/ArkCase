@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
 {
 
-    private SolarReindexExecutor solarReindexExecutor;
+    private SolrReindexService solrReindexService;
 
     @Override
     public String getUpdateId()
@@ -19,16 +19,16 @@ public class TriggerSolrUpdateExecutor implements AcmDataUpdateExecutor
     @Override
     public void execute()
     {
-        solarReindexExecutor.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
+        solrReindexService.reindex(Arrays.asList(AcmUser.class, AcmGroup.class));
     }
 
-    public SolarReindexExecutor getSolarReindexExecutor()
+    public SolrReindexService getSolrReindexService()
     {
-        return solarReindexExecutor;
+        return solrReindexService;
     }
 
-    public void setSolarReindexExecutor(SolarReindexExecutor solarReindexExecutor)
+    public void setSolrReindexService(SolrReindexService solrReindexService)
     {
-        this.solarReindexExecutor = solarReindexExecutor;
+        this.solrReindexService = solrReindexService;
     }
 }
