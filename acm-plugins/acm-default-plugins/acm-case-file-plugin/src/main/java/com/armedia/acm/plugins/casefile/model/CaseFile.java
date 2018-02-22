@@ -134,6 +134,9 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
     @Column(name = "cm_case_priority")
     private String priority;
 
+    @Column(name = "cm_case_external_flag")
+    private boolean external = false;
+
     @Column(name = "cm_object_type", insertable = true, updatable = false)
     private String objectType = CaseFileConstants.OBJECT_TYPE;
 
@@ -513,6 +516,23 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.priority = priority;
     }
 
+    /**
+     * @return the external
+     */
+    public boolean isExternal()
+    {
+        return external;
+    }
+
+    /**
+     * @param external
+     *            the external to set
+     */
+    public void setExternal(boolean external)
+    {
+        this.external = external;
+    }
+
     public String getDetails()
     {
         return details;
@@ -613,6 +633,7 @@ public class CaseFile implements Serializable, AcmAssignedObject, AcmEntity,
         this.milestones = milestones;
     }
 
+    @Override
     public Boolean getRestricted()
     {
         return restricted;

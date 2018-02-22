@@ -2,7 +2,7 @@
 /**
  * @ngdoc directive
  * @name global.directive:objectAuthorizationRolesFilter
- * @restrict A
+ * @restrict E
  *
  * @description
  *
