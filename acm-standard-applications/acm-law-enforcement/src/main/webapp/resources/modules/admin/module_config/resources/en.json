@@ -441,6 +441,42 @@
             "btn": {
                 "reportDesigner": "Report Designer",
                 "sync": "Synchronise"
+            },
+            "schedule": {
+                "title": "Reports Scheduling",
+                "selectReportType": "Select Report Type",
+                "emailAddress": {
+                    "title": "Enter Email Addresses",
+                    "placeholder": "Please enter comma (,) separated email addresses"
+                },
+                "table": {
+                    "header": "Existing Schedules",
+                    "startTimeFormat": "hh:mm a",
+                    "columns": {
+                        "jobName": "Schedule Name",
+                        "recurrence": "Recurrence",
+                        "startTime": "Start Time",
+                        "startDate": "Start Date",
+                        "endDate": "End Date",
+                        "emailAddresses": "Email Addresses",
+                        "state": "Status"
+                    }
+                },
+                "delete": {
+                    "success": "Schedule deleted successfully",
+                    "error": "Failed to delete schedule"
+                },
+                "createScheduleSuccess": "Schedule created successfully",
+                "createScheduleFailure": "Failed to create schedule",
+                "enterFutureDate": "Enter a start time in the future",
+                "recurrence": "Recurrence (Enter future time)",
+                "time": "Time",
+                "startDate": "Start Date",
+                "endDate": "End Date",
+                "filterStartDate": "Result Filter Start Date",
+                "filterEndDate": "Result Filter End Date",
+                "outputFormat": "Select Output Format",
+                "submit": "Submit"
             }
         },
         "forms.title": "Forms",
