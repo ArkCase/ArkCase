@@ -62,7 +62,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     private FactorLifecycleService factorLifecycleService;
     private FactorVerificationService factorVerificationService;
     private UserDao userDao;
-    private String supportLink;
     private ApplicationEventPublisher applicationEventPublisher;
 
 
@@ -141,7 +140,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
 
             model.addAttribute("factors", factors);
             model.addAttribute("enrollmentUrl", getMultiFactorConfig().getEnrollmentTargetUrl());
-            model.addAttribute(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
 
             // Update authentication with okta user details
             OktaAuthenticationDetails oktaAuthenticationDetails = new OktaAuthenticationDetails(user, request);
@@ -171,7 +169,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public ModelAndView confirmAuth(Model existing, String factorId, Authentication authentication)
     {
         Map<String, Object> model = new HashMap<>();
-        model.put(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
 
         try
         {
@@ -315,14 +312,12 @@ public class AuthLoginController implements ApplicationEventPublisherAware
         model.put("factor", factorId);
         model.put("user", userId);
         model.put(OktaAPIConstants.ERROR, error.getMessage());
-        model.put(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
     }
 
     @RequestMapping(value = "/enroll", method = RequestMethod.GET)
     public ModelAndView enroll(Authentication authentication) throws OktaException
     {
         Map<String, Object> model = new HashMap<>();
-        model.put(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
         try
         {
             OktaUser user = getOktaUserService().getUser(authentication.getName());
@@ -344,7 +339,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public ModelAndView confirmEnrollment(FactorType factor, HttpServletRequest request, Authentication authentication) throws OktaException
     {
         Map<String, Object> model = new HashMap<>();
-        model.put(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
         try
         {
             AcmUser dbUser = getUserDao().findByUserId(authentication.getName());
@@ -401,7 +395,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public ModelAndView confirmCodeEnrollment(String passCode, String factorHref, Authentication authentication) throws OktaException
     {
         Map<String, Object> model = new HashMap<>();
-        model.put(OktaAPIConstants.SUPPORT_LINK, getSupportLink());
         LOGGER.info("Activating Software Token");
         try
         {
@@ -518,16 +511,6 @@ public class AuthLoginController implements ApplicationEventPublisherAware
     public void setFactorVerificationService(FactorVerificationService factorVerificationService)
     {
         this.factorVerificationService = factorVerificationService;
-    }
-
-    public String getSupportLink()
-    {
-        return supportLink;
-    }
-
-    public void setSupportLink(String supportLink)
-    {
-        this.supportLink = supportLink;
     }
 
     public ApplicationEventPublisher getApplicationEventPublisher()

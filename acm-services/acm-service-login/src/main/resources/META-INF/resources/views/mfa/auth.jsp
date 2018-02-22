@@ -64,9 +64,7 @@
     <div class="text-center padder">
         <p>
             <small><a
-                    href="http://www.arkcase.com/"><span>ArkCase</span></a>
-                ( <a href="${supportLink}">Contact Support</a> )
-                <br>&copy;<span>2014, 2015, 2016, 2017</span>
+                    href="http://www.arkcase.com/"><span>ArkCase</span></a><br>&copy;<span>2014, 2015, 2016, 2017</span>
             </small>
         </p>
     </div>
