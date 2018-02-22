@@ -69,7 +69,7 @@ angular.module('admin').controller(
                     function initUser(userNumber) {
                         var userRequestInfo = {};
                         userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
-                        userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length - 1;
+                        userRequestInfo.start = Util.isEmpty(userNumber) ? 0 : $scope.userData.chooseObject.length;
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
                                 $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
@@ -160,96 +160,90 @@ angular.module('admin').controller(
                         }
                     }
 
+                    function openCloneUserModal(userForm, usernameError) {
 
-					function openCloneUserModal(userForm, usernameError) {
+                        return $modal.open({
+                            animation : $scope.animationsEnabled,
+                            templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
+                            controller : [ '$scope', '$modalInstance', 'UtilService', function($scope, $modalInstance, Util) {
+                                $scope.addUser = true;
+                                $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
+                                $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
+                                $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
+                                $scope.user = userForm;
+                                $scope.error = usernameError;
+                                $scope.data = {
+                                    "user" : $scope.user,
+                                    "selectedUser" : selectedUser
+                                };
 
-                                return $modal
-                                        .open({
-                                            animation : $scope.animationsEnabled,
-                                            templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
-                                            controller : [
-                                                    '$scope',
-                                                    '$modalInstance',
-                                                    'UtilService',
-                                                    function($scope, $modalInstance, Util) {
-                                                        $scope.addUser = true;
-                                                        $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
-                                                        $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
-                                                        $scope.cancelBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.cancel";
-                                                        $scope.user = userForm;
-                                                        $scope.error = usernameError;
-                                                        $scope.data = {
-                                                            "user" : $scope.user,
-                                                            "selectedUser" : selectedUser
-                                                        };
-
-                                                        $scope.clearUsernameError = function() {
-                                                            if ($scope.error) {
-                                                                $scope.error = '';
-                                                            }
-                                                        };
-
-                                                        $scope.ok = function() {
-                                                            $modalInstance.close($scope.data);
-                                                        };
-                                                    } ],
-                                            size : 'sm'
-                                        });
-                            }
-
-                            function onCloneUser(data, deferred) {
-                                LdapUserManagementService.cloneUser(data).then(function(response) {
-                                    // add the new user to the list
-                                    var element = {};
-                                    element.name = response.data.fullName;
-                                    element.key = response.data.userId;
-                                    element.directory = response.data.userDirectoryName;
-                                    $scope.userData.chooseObject.push(element);
-
-                                    //add the new user to cache store
-                                    var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
-                                    var users = cacheUsers.get();
-                                    users.push(element);
-                                    cacheUsers.set(users);
-
-                                    MessageService.succsessAction();
-                                }, function(error) {
-                                    //error adding user
-                                    if (error.data.message) {
-                                        var usernameError;
-                                        var onAdd = function(data) {
-                                            return onCloneUser(data);
-                                        };
-                                        if (error.data.field == 'username') {
-                                            usernameError = error.data.message;
-                                            openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd, function() {
-                                                deferred.reject("cancel");
-                                                return {};
-                                            });
-                                        } else {
-                                            MessageService.error(error.data.message);
-                                        }
-
+                                $scope.clearUsernameError = function() {
+                                    if ($scope.error) {
+                                        $scope.error = '';
                                     }
+                                };
 
-                                    else {
-                                        MessageService.errorAction();
-                                    }
+                                $scope.ok = function() {
+                                    $modalInstance.close($scope.data);
+                                };
+                            } ],
+                            size : 'sm'
+                        });
+                    }
 
-                                });
+                    function onCloneUser(data, deferred) {
+                        LdapUserManagementService.cloneUser(data).then(function(response) {
+                            // add the new user to the list
+                            var element = {};
+                            element.name = response.data.fullName;
+                            element.key = response.data.userId;
+                            element.directory = response.data.userDirectoryName;
+                            $scope.userData.chooseObject.push(element);
+
+                            //add the new user to cache store
+                            var cacheUsers = new Store.SessionData(LookupService.SessionCacheNames.USERS);
+                            var users = cacheUsers.get();
+                            users.push(element);
+                            cacheUsers.set(users);
+
+                            MessageService.succsessAction();
+                        }, function(error) {
+                            //error adding user
+                            if (error.data.message) {
+                                var usernameError;
+                                var onAdd = function(data) {
+                                    return onCloneUser(data);
+                                };
+                                if (error.data.field == 'username') {
+                                    usernameError = error.data.message;
+                                    openCloneUserModal(error.data.extra.user, usernameError).result.then(onAdd, function() {
+                                        deferred.reject("cancel");
+                                        return {};
+                                    });
+                                } else {
+                                    MessageService.error(error.data.message);
+                                }
 
                             }
 
-                            function cloneUser() {
-                                var modalInstance = openCloneUserModal({}, "");
-                                var deferred = $q.defer();
-                                modalInstance.result.then(function(data) {
-                                    onCloneUser(data, deferred);
-                                }, function() {
-                                    // Cancel button was clicked
-                                });
-
+                            else {
+                                MessageService.errorAction();
                             }
+
+                        });
+
+                    }
+
+                    function cloneUser() {
+                        var modalInstance = openCloneUserModal({}, "");
+                        var deferred = $q.defer();
+                        modalInstance.result.then(function(data) {
+                            onCloneUser(data, deferred);
+                        }, function() {
+                            // Cancel button was clicked
+                        });
+
+                    }
 
                     function fillList(listToFill, data) {
                         _.forEach(data, function(obj) {
@@ -301,7 +295,7 @@ angular.module('admin').controller(
                     function unauthorizedScroll() {
                         var data = {};
                         data.member_id = lastSelectedUser;
-                        data.start = $scope.userData.selectedNotAuthorized.length - 1;
+                        data.start = $scope.userData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedNotAuthorized");
                     }
@@ -309,7 +303,7 @@ angular.module('admin').controller(
                     function authorizedScroll() {
                         var data = {};
                         data.member_id = lastSelectedUser;
-                        data.start = $scope.userData.selectedAuthorized.length - 1;
+                        data.start = $scope.userData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedAuthorized");
                     }
