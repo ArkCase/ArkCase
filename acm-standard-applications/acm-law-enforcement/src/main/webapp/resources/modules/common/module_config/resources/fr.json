@@ -620,6 +620,7 @@
         "DOC_REPO": "Référentiel de documents",
         "ORGANIZATION": "Organisation",
         "PERSON": "fr_La personne",
+        "PERSON-ASSOCIATION": "fr_Person-Association",
         "PARTICIPANT": "fr_Participant",
         "NOTE": "fr_Note",
         "PARTICIPANT-ASSOCIATION": "fr_Participant-Association",

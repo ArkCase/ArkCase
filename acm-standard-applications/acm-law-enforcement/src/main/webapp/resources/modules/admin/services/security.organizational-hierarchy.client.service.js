@@ -120,6 +120,7 @@ angular.module('admin').service(
                     return ({
                         getGroups : getGroups,
                         getGroupsTopLevel : getGroupsTopLevel,
+                        getGroupsByName: getGroupsByName,
                         getSubGroupsForGroup : getSubGroupsForGroup,
                         getUsersForGroup : getUsersForGroup,
                         addAdHocGroup : addAdHocGroup,
@@ -182,6 +183,31 @@ angular.module('admin').service(
                             method : 'GET',
                             url : 'api/latest/users/group/get/toplevel?n=' + n + '&start=' + start + '&s=name asc' + '&groupSubtype='
                                     + groupSubtype
+                        });
+                    }
+
+                    /**
+                     * @ngdoc method
+                     * @name getGroupsByName
+                     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+                     *
+                     * param {params} object for request params
+                     * {n: page size
+                     * start: start row
+                     * nameFq: search value for name filter
+                     * }
+                     *
+                     *
+                     * @description
+                     * Retrieve all groups by matching name
+                     *
+                     * @returns {HttpPromise} Future info about groups
+                     */
+                    function getGroupsByName(params) {
+                        return $http({
+                            method : 'GET',
+                            url : 'api/latest/groups',
+                            params: params
                         });
                     }
 
