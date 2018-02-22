@@ -52,6 +52,7 @@
             "newCorrespondence": "新しい対応",
             "open": "開いた",
             "email": "電子メイル",
+            "newTask": "ja_New Task",
             "download": "ダウンロード",
             "copy": "複写",
             "cut": "カット",
@@ -618,7 +619,12 @@
         "FILE": "ファイル",
         "DOC_REPO": "ドキュメントリポジトリ",
         "ORGANIZATION": "組織",
-        "PERSON": "人物"
+        "PERSON": "人物",
+        "PERSON-ASSOCIATION": "ja_Person-Association",
+        "PARTICIPANT": "ja_Participant",
+        "NOTE": "ja_Note",
+        "PARTICIPANT-ASSOCIATION": "ja_Participant-Association",
+        "ASSIGNMENT": "ja_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "ユーザーを選択",

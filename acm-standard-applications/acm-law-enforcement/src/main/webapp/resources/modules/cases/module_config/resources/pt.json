@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Calendário"
+        "title": "Calendário",
+        "message": "pt_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "Mesclar",
@@ -332,6 +333,7 @@
             "status": "Status",
             "addedBy": "Adicionado por"
         },
+        "assigne.none": "pt_None",
         "assignee.label": "Assignee",
         "owningGroup.label": "Grupo de propriedade",
         "priority.label": "Prioridade",

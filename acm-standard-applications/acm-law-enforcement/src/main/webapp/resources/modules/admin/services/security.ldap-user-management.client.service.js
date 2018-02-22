@@ -116,7 +116,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
             url : url,
             params : {
                 start : 0,
-                n : data.n
+                n : (data.n ? data.n : 50)
             }
         });
     }
@@ -132,7 +132,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      Member id key: member_id.key
      *      End position: n
-     *      data.type: authorized/unauthorized
+     *      Is the user part of the group: authorized/unauthorized
      *
      * @returns List of filtered authorized/unauthorized groups
      */
@@ -159,7 +159,7 @@ angular.module('admin').factory('Admin.LdapUserManagementService', [ '$resource'
      *      Start position: 0
      *      Member id key: member_id.key
      *      End position: n
-     *      data.type: authorized/unauthorized
+     *      Is the user part of the group: authorized/unauthorized
      *
      * @returns List of all authorized/unauthorized groups
      */

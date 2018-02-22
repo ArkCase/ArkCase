@@ -10,6 +10,7 @@ import com.armedia.acm.services.users.model.ldap.AcmLdapAuthenticateConfig;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.LdapUser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ldap.core.LdapTemplate;
@@ -38,6 +39,7 @@ public class LdapAuthenticateService
         String userIdAttributeName = getLdapAuthenticateConfig().getUserIdAttributeName();
         String searchBase = getLdapAuthenticateConfig().getSearchBase();
 
+        userName = StringUtils.substringBeforeLast(userName, "@");
         String filter = "(" + userIdAttributeName + "=" + userName + ")";
         boolean authenticated = template.authenticate(searchBase, filter, password);
 

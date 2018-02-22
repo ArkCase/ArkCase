@@ -10,6 +10,11 @@ angular.module('admin').controller(
                     var deferred = $q.defer();
                     var tempWidgetsPromise = dashboardConfigService.getRolesByWidgets();
                     $scope.widgets = [];
+                    $scope.widgetsData = {
+                        "chooseObject" : $scope.widgets,
+                        "selectedNotAuthorized" : [],
+                        "selectedAuthorized" : []
+                    };
                     $scope.widgetsMap = [];
                     tempWidgetsPromise.then(function(payload) {
                         angular.forEach(payload.data, function(widget) {
@@ -23,7 +28,7 @@ angular.module('admin').controller(
                                     element.name = cfg.title;
                                     element.key = widget.widgetName;
 
-                                    $scope.widgets.push(element);
+                                    $scope.widgetsData.chooseObject.push(element);
                                     $scope.widgetsMap[widget.widgetName] = widget;
                                 }
 

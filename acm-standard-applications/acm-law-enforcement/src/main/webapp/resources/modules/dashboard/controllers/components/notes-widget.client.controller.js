@@ -2,7 +2,7 @@
 
 angular.module('dashboard.notes', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('notes', {
-        title : 'dashboard.widgets.notes.title',
+        title : 'preference.overviewWidgets.notes.title',
         description : 'dashboard.widgets.notes.description',
         controller : 'Dashboard.NotesController',
         reload : true,

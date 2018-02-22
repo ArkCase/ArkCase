@@ -276,14 +276,14 @@ public class EcmFileServiceImpl implements ApplicationEventPublisherAware, EcmFi
         getContainerFolderDao().getEm().refresh(container);
 
         EcmFileAddedEvent event = null;
-        try
+        try (InputStream fileInputStream = file.getInputStream())
         {
 
             String cmisRepositoryId = metadata.getCmisRepositoryId() == null ? ecmFileServiceProperties.getProperty("ecm.defaultCmisId")
                     : metadata.getCmisRepositoryId();
             metadata.setCmisRepositoryId(cmisRepositoryId);
             EcmFile uploaded = getEcmFileTransaction().addFileTransaction(authentication, file.getOriginalFilename(), container,
-                    targetCmisFolderId, file.getInputStream(), metadata);
+                    targetCmisFolderId, fileInputStream, metadata);
 
             event = new EcmFileAddedEvent(uploaded, authentication);
             event.setUserId(authentication.getName());

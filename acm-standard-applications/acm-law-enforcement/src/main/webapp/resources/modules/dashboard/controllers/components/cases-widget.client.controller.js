@@ -2,7 +2,7 @@
 
 angular.module('dashboard.cases', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('cases', {
-        title : 'dashboard.widgets.cases.title',
+        title : 'preference.overviewWidgets.cases.title',
         description : 'dashboard.widgets.cases.description',
         controller : 'Dashboard.CasesController',
         reload : true,

@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Календарь"
+        "title": "Календарь",
+        "message": "ru_Calendar Integration Configuration Not Enabled"
     },
     "cases.comp.merge": {
         "title": "Сливаться",
@@ -332,6 +333,7 @@
             "status": "Положение дел",
             "addedBy": "Добавлено"
         },
+        "assigne.none": "ru_None",
         "assignee.label": "Правопреемник",
         "owningGroup.label": "Собственная группа",
         "priority.label": "Приоритет",

@@ -36,6 +36,8 @@ public class AcmServiceLdapSyncNotifier implements ApplicationListener<AcmServic
         syncMessage.put("service", syncResult.getService());
         syncMessage.put("user", syncResult.getUser());
         syncMessage.put("result", syncResult.isResult());
+        syncMessage.put("message", syncResult.getMessage());
+        syncMessage.put("eventType", "sync-progress");
 
         log.debug("Send progress for user: {}", syncResult.getUser());
 

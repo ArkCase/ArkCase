@@ -100,10 +100,12 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             JSONObject futureTask = jsonFutureTasks.getJSONObject(0);
 
             String currentApprover = futureTask.optString("approverId", "");
+            String approverFullName = futureTask.optString("approverFullName", "");
             String taskName = futureTask.optString("taskName", "Review");
             String group = futureTask.optString("groupName", "");
             String details = futureTask.optString("details", "");
             String addedBy = futureTask.optString("addedBy", "");
+            String addedByFullName = futureTask.optString("addedByFullName", "");
             int maxTaskDurationInDays = futureTask.optInt("maxTaskDurationInDays", 3);
             String taskDueDateExpression = String.format("P%sD", maxTaskDurationInDays);
 
@@ -112,10 +114,12 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
             jsonFutureTasks.remove(0);
 
             execution.setVariable("currentApprover", currentApprover);
+            execution.setVariable("approverFullName", approverFullName);
             execution.setVariable("currentTaskName", taskName);
             execution.setVariable("currentGroup", group);
             execution.setVariable(TaskConstants.VARIABLE_NAME_DETAILS, details);
             execution.setVariable("addedBy", addedBy);
+            execution.setVariable("addedByFullName", addedByFullName);
             execution.setVariable("moreTasks", moreTasks);
             execution.setVariable("taskDueDateExpression", taskDueDateExpression);
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, jsonFutureTasks.toString());
@@ -124,10 +128,12 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         else
         {
             execution.setVariable("currentApprover", "");
+            execution.setVariable("approverFullName", "");
             execution.setVariable("currentTaskName", "");
             execution.setVariable("currentGroup", "");
             execution.setVariable(TaskConstants.VARIABLE_NAME_DETAILS, "");
             execution.setVariable("addedBy", "");
+            execution.setVariable("addedByFullName", "");
             execution.setVariable("moreTasks", "false");
             execution.setVariable(TaskConstants.VARIABLE_NAME_BUCKSLIP_FUTURE_TASKS, "[]");
         }
@@ -145,6 +151,12 @@ public class BuckslipTaskCompletedListener implements TaskListener, JavaDelegate
         if (user != null)
         {
             newJsonTask.put("approverFullName", user.getFullName());
+        }
+
+        AcmUser addByUser = userDao.findByUserId(addedBy);
+        if (addByUser != null)
+        {
+            newJsonTask.put("addedByFullName", addByUser.getFullName());
         }
 
         newJsonTask.put("groupName", groupName);

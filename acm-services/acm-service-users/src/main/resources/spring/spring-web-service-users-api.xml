@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd">
 
     <bean id="userInfoAPIController" class="com.armedia.acm.services.users.web.api.UserInfoAPIController">
         <property name="userDao" ref="userJpaDao"/>
     </bean>
 
     <bean id="findParticipantTypesForObjectTypeNameAPIController"
-        class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
+          class="com.armedia.acm.services.users.web.api.FindParticipantTypesForObjectTypeNameAPIController">
         <property name="acmApplication" ref="acmApplication"/>
     </bean>
 
@@ -25,6 +25,10 @@
         <property name="groupService" ref="groupService"/>
         <property name="muleContextManager" ref="muleContextManager"/>
         <property name="executeSolrQuery" ref="executeSolrQuery"/>
+    </bean>
+
+    <bean id="searchGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SearchGroupAPIController">
+        <property name="groupService" ref="groupService"/>
     </bean>
 
     <bean id="supervisorGroupAPIController" class="com.armedia.acm.services.users.web.api.group.SupervisorGroupAPIController">
@@ -49,13 +53,16 @@
     </bean>
 
     <bean id="ldapGroupAPIController" class="com.armedia.acm.services.users.web.api.group.LdapGroupAPIController"
-        parent="secureLdapController">
+          parent="secureLdapController">
         <property name="ldapGroupService" ref="ldapGroupService"/>
-        <property name="acmGroupEventPublisher" ref="acmGroupEventPublisher"/>
     </bean>
 
     <bean id="secureLdapController" class="com.armedia.acm.services.users.web.api.SecureLdapController">
         <property name="acmContextHolder" ref="acmContextHolder"/>
         <property name="passwordValidationService" ref="passwordValidationService"/>
+    </bean>
+
+    <bean id="ldapSyncAPIController" class="com.armedia.acm.services.users.web.api.LdapSyncAPIController">
+        <property name="acmContextHolder" ref="acmContextHolder"/>
     </bean>
 </beans>
