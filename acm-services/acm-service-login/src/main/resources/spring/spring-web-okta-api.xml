@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="factorEnrollmentAPIController" class="com.armedia.acm.auth.okta.web.api.FactorEnrollmentAPIController">
+        <property name="factorService" ref="oktaFactorService"/>
+        <property name="factorLifecycleService" ref="oktaFactorLifecycleService"/>
+        <property name="oktaUserService" ref="oktaUserService"/>
+    </bean>
+
+    <bean id="authLoginController" class="com.armedia.acm.auth.okta.web.AuthLoginController">
+        <property name="multiFactorConfig" ref="acmMultiFactorConfig"/>
+        <property name="factorService" ref="oktaFactorService"/>
+        <property name="factorLifecycleService" ref="oktaFactorLifecycleService"/>
+        <property name="oktaUserService" ref="oktaUserService"/>
+        <property name="userDao" ref="userJpaDao"/>
+        <property name="factorVerificationService" ref="factorVerificationService"/>
+    </bean>
+
+</beans>

@@ -16,6 +16,81 @@
             "userId": "User ID"
         }
     },
+    "profile.mfa": {
+        "title": "Multifactor Authentication",
+        "noData": "No Factors Enrolled",
+        "sms": "SMS",
+        "email": "Email",
+        "authy": "Authy Software Token",
+        "createSucceeded": "Factor created successfully",
+        "createFailed": "Failed to create factor",
+        "activateSucceeded": "Factor activated successfully",
+        "activateFailed": "Failed to activate factor",
+        "editSucceeded": "Factor edited successfully",
+        "editFailed": "Failed to edit factor",
+        "deleteSucceeded": "Factor deleted successfully",
+        "deleteFailed": "Failed to delete factor",
+        "table": {
+            "title": "Authentication Factors",
+            "create": "New Factor",
+            "activate": "Activate Factor",
+            "edit": "Edit Factor",
+            "delete": "Delete Factor",
+            "columns": {
+                "factorType": "Type",
+                "factorDetails": "Details",
+                "status": "Status"
+            },
+            "factorStatus": {
+                "not_setup": "Not Setup",
+                "pending_activation": "Pending Activation",
+                "enrolled": "Enrolled",
+                "active": "Active",
+                "inactive": "Inactive",
+                "expired": "Expired"
+            }
+        },
+        "modal": {
+            "create": "New Factor",
+            "edit": "Edit Factor",
+            "cancel": "Cancel",
+            "save": "Save",
+            "factorType": {
+                "label": "Factor Type",
+                "placeholder": "Select Factor Type"
+            },
+            "emailAddress": {
+                "label": "Email Address",
+                "placeholder": "Enter Email Address"
+            },
+            "phoneNumber": {
+                "label": "Phone Number",
+                "placeholder": "Enter Phone Number"
+            }
+        },
+        "activateModal": {
+            "title": "Activate Factor",
+            "cancel": "Cancel",
+            "confirm": "Activate",
+            "factorType": {
+                "label": "Factor Type",
+                "placeholder": "Select Factor Type"
+            },
+            "sharedSecret": {
+                "label": "Shared Secret (Enter this into Authy to generate activation code)"
+            },
+            "activationCode": {
+                "label": "Activation Code",
+                "placeholder": "Enter activation code"
+            }
+        },
+        "deleteModal": {
+            "title": "Confirm Delete Factor",
+            "cancel": "Cancel",
+            "confirm": "Delete",
+            "confirmationMessage": "Are you sure you want to delete the factor"
+        }
+    },
     "profile.company": {
         "title": "Company Detail",
         "name": "Company Name",
