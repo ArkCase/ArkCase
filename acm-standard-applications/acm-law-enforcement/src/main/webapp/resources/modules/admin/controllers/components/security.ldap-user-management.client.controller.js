@@ -38,6 +38,7 @@ angular
 
                             var makePaginationRequest = true;
                             var currentAuthGroups;
+                            var selectedUser;
                             var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
                             $scope.showFilter = true;
                             $scope.appGroups = [];
@@ -77,6 +78,7 @@ angular
                                 var data = {};
                                 data.member_id = selectedObject;
                                 lastSelectedUser = selectedObject;
+                                selectedUser = selectedObject;
                                 currentAuthGroups = [];
                                 $scope.userData.selectedNotAuthorized = [];
                                 $scope.userData.selectedAuthorized = [];
