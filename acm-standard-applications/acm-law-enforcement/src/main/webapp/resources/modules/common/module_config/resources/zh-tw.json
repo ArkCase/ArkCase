@@ -52,6 +52,7 @@
             "newCorrespondence": "創建新信件",
             "open": "打開",
             "email": "電子郵件",
+            "newTask": "zh-tw_New Task",
             "download": "下載",
             "copy": "複製",
             "cut": "切割",
@@ -618,7 +619,12 @@
         "FILE": "文件",
         "DOC_REPO": "文檔庫",
         "ORGANIZATION": "組織",
-        "PERSON": "人員"
+        "PERSON": "人員",
+        "PERSON-ASSOCIATION": "zh-tw_Person-Association",
+        "PARTICIPANT": "zh-tw_Participant",
+        "NOTE": "zh-tw_Note",
+        "PARTICIPANT-ASSOCIATION": "zh-tw_Participant-Association",
+        "ASSIGNMENT": "zh-tw_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "選擇用戶",

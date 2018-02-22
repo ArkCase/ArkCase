@@ -2,7 +2,7 @@
     <div ng-if="history.showChart">
         <div class="panel-body">
             <div>
-                <p class="text-center h2">{{history.chartTitle}}</p>
+                <p class="text-center h2">{{history.chartTitle | translate}}</p>
             </div>
             <div class="chart-container">
                 <canvas id="pie" class="chart chart-pie" chart-data="history.data" chart-labels="history.labels" chart-responsive="true"

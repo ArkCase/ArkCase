@@ -1,11 +1,7 @@
 package com.armedia.acm.services.users.web.api.group;
 
-import static org.easymock.EasyMock.anyString;
-import static org.easymock.EasyMock.capture;
-import static org.easymock.EasyMock.eq;
 import static org.easymock.EasyMock.expect;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -15,8 +11,6 @@ import com.armedia.acm.services.users.model.group.AcmGroupStatus;
 import com.armedia.acm.services.users.service.group.GroupServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.easymock.Capture;
-import org.easymock.EasyMock;
 import org.easymock.EasyMockRunner;
 import org.easymock.EasyMockSupport;
 import org.easymock.Mock;
@@ -42,7 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.util.Base64;
-import java.util.Map;
 
 @RunWith(EasyMockRunner.class)
 public class AcmGroupAPIControllerTest extends EasyMockSupport implements HandlerExceptionResolver
@@ -109,11 +102,8 @@ public class AcmGroupAPIControllerTest extends EasyMockSupport implements Handle
     public void getSubGroupsTestTrue() throws Exception
     {
         String groupId = "some_group////_name";
-        Capture<Map> groupNameCapture = EasyMock.newCapture();
         expect(mockAuthentication.getName()).andReturn("user").anyTimes();
-        expect(muleContextManager.send(anyString(), eq(""), capture(groupNameCapture))).andReturn(muleMessage).anyTimes();
-        expect(muleMessage.getPayload()).andReturn("{\"reponse\" : \"response\"}").anyTimes();
-
+        expect(groupService.getGroupsByParent(groupId, 0, 10, "", mockAuthentication)).andReturn("[]");
         replayAll();
 
         String encodedGroupId = Base64.getUrlEncoder().encodeToString(groupId.getBytes());
@@ -130,8 +120,6 @@ public class AcmGroupAPIControllerTest extends EasyMockSupport implements Handle
         verifyAll();
 
         assertEquals(HttpStatus.OK.value(), result.getResponse().getStatus());
-
-        assertTrue(groupNameCapture.getValue().get("query").toString().contains(groupId));
     }
 
     @Override

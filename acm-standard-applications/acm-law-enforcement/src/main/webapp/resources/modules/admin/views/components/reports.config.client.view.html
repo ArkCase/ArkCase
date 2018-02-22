@@ -14,8 +14,9 @@
     </div>
     <panel-view header="{{'admin.reports.config' | translate}}" collapsible="false">
         <div class="row">
-            <object-authorization-roles data="reports" object-display-name="name" on-object-selected="onObjSelect" role-display-name="name"
-                    on-auth-role-change="onAuthRoleSelected" object-title="{{'admin.reports.title' | translate}}" />
+            <object-authorization-roles data="reportsData" object-display-name="name" on-object-selected="onObjSelect"
+                    role-display-name="name" on-auth-role-change="onAuthRoleSelected"
+                    object-title="{{'admin.reports.title' | translate}}" />
         </div>
     </panel-view>
 </div>

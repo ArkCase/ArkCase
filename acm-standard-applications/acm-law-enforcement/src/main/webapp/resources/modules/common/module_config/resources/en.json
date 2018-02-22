@@ -65,6 +65,7 @@
             "newCorrespondence": "New Correspondence",
             "open": "Open",
             "email": "Email",
+            "newTask": "New Task",
             "download": "Download",
             "copy": "Copy",
             "cut": "Cut",
@@ -641,7 +642,12 @@
         "FILE": "File",
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
-        "PERSON": "Person"
+        "PERSON": "Person",
+        "PERSON-ASSOCIATION": "Person-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

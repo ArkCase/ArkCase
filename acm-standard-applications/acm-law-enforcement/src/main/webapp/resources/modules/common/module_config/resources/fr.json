@@ -52,6 +52,7 @@
             "newCorrespondence": "Nouvelle correspondance",
             "open": "Ouvrir",
             "email": "Email",
+            "newTask": "fr_New Task",
             "download": "Télécharger",
             "copy": "Copie",
             "cut": "Couper",
@@ -618,7 +619,12 @@
         "FILE": "Fichier",
         "DOC_REPO": "Référentiel de documents",
         "ORGANIZATION": "Organisation",
-        "PERSON": "La personne"
+        "PERSON": "fr_La personne",
+        "PERSON-ASSOCIATION": "fr_Person-Association",
+        "PARTICIPANT": "fr_Participant",
+        "NOTE": "fr_Note",
+        "PARTICIPANT-ASSOCIATION": "fr_Participant-Association",
+        "ASSIGNMENT": "fr_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choisissez l'utilisateur",

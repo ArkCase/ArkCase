@@ -52,6 +52,7 @@
             "newCorrespondence": "Новая переписка",
             "open": "Открыто",
             "email": "Эл. адрес",
+            "newTask": "ru_New Task",
             "download": "Скачать",
             "copy": "Копирование",
             "cut": "Порез",
@@ -618,7 +619,12 @@
         "FILE": "Файл",
         "DOC_REPO": "Репозиторий документов",
         "ORGANIZATION": "Организация",
-        "PERSON": "Человек"
+        "PERSON": "Человек",
+        "PERSON-ASSOCIATION": "ru_Person-Association",
+        "PARTICIPANT": "ru_Participant",
+        "NOTE": "ru_Note",
+        "PARTICIPANT-ASSOCIATION": "ru_Participant-Association",
+        "ASSIGNMENT": "ru_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Выберите пользователя",

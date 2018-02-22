@@ -2,7 +2,7 @@
 
 angular.module('dashboard.complaints', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('complaints', {
-        title : 'dashboard.widgets.complaints.title',
+        title : 'preference.overviewWidgets.complaints.title',
         description : 'dashboard.widgets.complaints.description',
         controller : 'Dashboard.ComplaintsController',
         reload : true,
