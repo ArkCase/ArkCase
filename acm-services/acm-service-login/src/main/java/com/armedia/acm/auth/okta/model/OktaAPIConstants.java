@@ -30,7 +30,6 @@ public final class OktaAPIConstants
     public static final String INVALID_PASS_CODE = "Challenge code is invalid or can't be verified";
     public static final String INVALIDATION_FAILED = "Failed to execute 2nd factor challenge";
     public static final String ERROR = "error";
-    public static final String SUPPORT_LINK = "supportLink";
     public static final String SOFTWARE_TOKEN_TYPE = "token:software:totp";
     public static final String OKTA = "OKTA";
 
