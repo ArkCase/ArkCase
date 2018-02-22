@@ -76,28 +76,44 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     showFilter : "=?",
                     paginationDataControl : "=?",
                     filterDataControl : "=?",
-                    test : "=?"
+                    selectData : "=?"
                 },
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
-                    // scope.$watch('test', function(newValue, oldValue) {
-                    //     // console.log(newValue);
-                    //     // console.log(oldValue);
-                    //     scope.selectedObject = newValue;
-                    // }, true);
-
                     //initial setup
+                    var resetSelectedObject;
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
-                    // scope.selectedObject = scope.data.chooseObject[0];
+                    scope.resetSelectedObjectFilter = false;
+                    scope.resetSelectedObjectScroll = true;
 
                     scope.$watch('data.selectedNotAuthorized', function() {
                         scope.notAuthorized = Util.isArrayEmpty(scope.data.selectedNotAuthorized) ? [] : scope.data.selectedNotAuthorized;
                     }, true);
 
+                    //This will be activated when the user search/filter for a user and will select the first user
+                    scope.$watch('resetSelectedObjectFilter', function() {
+                        if (scope.resetSelectedObjectFilter) {
+                            resetSelectedObject = scope.resetSelectedObjectFilter;
+                        }
+                    }, true);
+
                     scope.$watch('data.selectedAuthorized', function() {
                         scope.authorized = Util.isArrayEmpty(scope.data.selectedAuthorized) ? [] : scope.data.selectedAuthorized;
-                        scope.selectedObject = scope.data.chooseObject[0];
+                        //This control if the first one should be reselected
+                        resetSelectedObject = Util.isEmpty(scope.selectData) ? true : scope.selectData.resetSelect;
+
+                        //This controls the selected object when the user scroll(load new data - pagination)
+                        if (!scope.resetSelectedObjectScroll) {
+                            resetSelectedObject = scope.resetSelectedObjectScroll;
+                        }
+                        resetSelectedObject = scope.resetSelectedObjectFilter ? scope.resetSelectedObjectFilter : resetSelectedObject;
+
+                        //Reset the selected user to be the first one
+                        if (resetSelectedObject && scope.data.chooseObject.length > 0) {
+                            scope.selectedObject = scope.data.chooseObject[0];
+                            resetSelectedObject = false;
+                        }
                     }, true);
 
                     //authorize button is clicked
@@ -130,7 +146,9 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.selectObject = function() {
                         scope.authorized = [];
                         scope.notAuthorized = [];
+                        scope.resetSelectedObjectScroll = false;
                         if (scope.selectedObject) {
+                            scope.resetSelectedObjectFilter = false;
                             scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
                         }
                     };
