@@ -6,7 +6,8 @@
                 ng-options="d[objectDisplayName] | translate for d in data.chooseObject" name="" size="15"
                 class="form-control" pagination-on-scroll load-more="paginationDataControl.loadObjectsScroll()">
         </select>
-        <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.objectsFilter(data)" />
+        <object-authorization-roles-filter ng-show="showFilter" filter="filterDataControl.objectsFilter(data)"
+                reset-selected-object-filter="resetSelectedObjectFilter" />
     </div>
     <div class="col-xs-4 b-r"><label>{{'common.directive.objectAuthorizationRoles.not_authorized' | translate}}</label>
         <select ng-model="selectedNotAuthorized" ng-options="na[roleDisplayName] for na in notAuthorized" name=""
