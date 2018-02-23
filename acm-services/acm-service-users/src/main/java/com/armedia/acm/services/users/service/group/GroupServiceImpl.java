@@ -102,6 +102,15 @@ public class GroupServiceImpl implements GroupService
     }
 
     @Override
+    public String getGroupsByNameFilter(Authentication authentication, String nameFilter, int start, int max, String sortBy, String sortDir)
+            throws MuleException
+    {
+        String query = "object_type_s:GROUP AND status_lcs:ACTIVE AND -ascendants_id_ss:* AND name_partial:" + nameFilter;
+        return executeSolrQuery.getResultsByPredefinedQuery(authentication, SolrCore.ADVANCED_SEARCH, query, start, max,
+                sortBy + " " + sortDir);
+    }
+
+    @Override
     public String getLdapGroupsForUser(UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) throws MuleException
     {
 
