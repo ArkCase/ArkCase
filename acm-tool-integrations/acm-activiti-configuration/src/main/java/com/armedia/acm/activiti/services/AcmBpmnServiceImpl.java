@@ -189,7 +189,7 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
             acmProcessDefinition.setName(pd.getName());
             acmProcessDefinition.setVersion(pd.getVersion());
             acmProcessDefinition.setFileName(fileName);
-            acmProcessDefinition.setMd5Hash(digest);
+            acmProcessDefinition.setSha256Hash(digest);
 
             acmProcessDefinition = acmBpmnDao.save(acmProcessDefinition);
             if (makeActive)
@@ -217,9 +217,9 @@ public class AcmBpmnServiceImpl implements AcmBpmnService
         try
         {
             FileInputStream stream = new FileInputStream(processDefinitionFile);
-            String md5Hex = DigestUtils.md5Hex(stream);
+            String sha256Hex = DigestUtils.sha256Hex(stream);
             closeStream(stream);
-            return md5Hex;
+            return sha256Hex;
         }
         catch (IOException e)
         {

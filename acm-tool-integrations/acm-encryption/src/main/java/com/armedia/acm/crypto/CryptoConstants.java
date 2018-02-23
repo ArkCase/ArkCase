@@ -5,5 +5,7 @@ package com.armedia.acm.crypto;
  */
 public interface CryptoConstants
 {
-    public static final String ENCRYPTION_ALGORITHM = "AES";
+    String ENCRYPTION_ALGORITHM = "AES/CBC/PKCS7Padding";
+    String KEY_ALGORITHM = "AES";
+    int INITIALIZATION_VECTOR_SIZE = 16;
 }

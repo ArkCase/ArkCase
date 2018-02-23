@@ -1080,9 +1080,8 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
         OutlookDTO retval = getOutlookPasswordDao().retrieveOutlookPassword(authentication);
 
         // decrypt password and decode it from BASE64
-        String md5Hex = DigestUtils.md5Hex(authentication.getCredentials().toString());
-
-        byte[] decryptedPassword = acmCryptoUtils.decryptData(md5Hex.getBytes(),
+        String sha256Hex = DigestUtils.sha256Hex(authentication.getCredentials().toString());
+        byte[] decryptedPassword = acmCryptoUtils.decryptData(sha256Hex.getBytes(),
                 Base64.getDecoder().decode(retval.getOutlookPassword().getBytes()), true);
 
         retval.setOutlookPassword(new String(decryptedPassword));
@@ -1095,9 +1094,9 @@ public class OutlookServiceImpl implements OutlookService, OutlookFolderService
     {
 
         // encrypt password and encode it to BASE64
-        String md5Hex = DigestUtils.md5Hex(authentication.getCredentials().toString());
+        String sha256Hex = DigestUtils.sha256Hex(authentication.getCredentials().toString());
 
-        byte[] encryptedPassword = acmCryptoUtils.encryptData(md5Hex.getBytes(), in.getOutlookPassword().getBytes(), true);
+        byte[] encryptedPassword = acmCryptoUtils.encryptData(sha256Hex.getBytes(), in.getOutlookPassword().getBytes(), true);
         in.setOutlookPassword(Base64.getEncoder().encodeToString(encryptedPassword));
         getOutlookPasswordDao().saveOutlookPassword(authentication, in);
 
