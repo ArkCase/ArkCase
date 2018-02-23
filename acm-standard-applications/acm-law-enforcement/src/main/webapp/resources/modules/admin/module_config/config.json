@@ -97,10 +97,6 @@
                 {
                     "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.complaints.label",
                     "id": "COMPLAINT"
-                },
-                {
-                    "label": "admin.security.calendarConfiguration.calendarConfigForm.configurableObjectTypes.tasks.label",
-                    "id": "TASK"
                 }
             ]
         },
