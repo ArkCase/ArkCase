@@ -22,7 +22,7 @@ angular.module('document-details').controller(
                         gridHelper.setColumnDefs(config);
                         gridHelper.setBasicOptions(config);
                         gridHelper.disableGridScrolling(config);
-                        gridHelper.setExternalPaging(config, $scope.retrieveGridData, $scope.retrieveGridDataForEventHistory());
+                        gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                         gridHelper.setUserNameFilter(promiseUsers);
 
                         $scope.retrieveGridDataForEventHistory();
