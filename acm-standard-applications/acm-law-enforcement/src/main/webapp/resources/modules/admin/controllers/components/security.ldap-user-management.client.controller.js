@@ -76,35 +76,36 @@ angular.module('admin').controller(
 
                     //callback function when user is selected
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
-                        var data = {};
-                        data.member_id = selectedObject;
-                        $scope.lastSelectedUser = [];
-                        $scope.lastSelectedUser = selectedObject;
-                        selectedUser = selectedObject;
-                        currentAuthGroups = [];
                         $scope.userData.selectedAuthorized = [];
                         $scope.userData.selectedNotAuthorized = [];
 
-                        data.isAuthorized = false;
-                        var unAuthorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
-                        data.isAuthorized = true;
-                        var authorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
-
-                        $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
-                            _.forEach(result[0].data.response.docs, function(group) {
-                                var authObject = {};
-                                authObject.key = group.name;
-                                authObject.name = group.name;
-                                $scope.userData.selectedAuthorized.push(authObject);
-                                currentAuthGroups.push(authObject.key);
+                        if (!_.isEmpty($scope.userData.chooseObject)) {
+                            var data = {};
+                            data.member_id = selectedObject;
+                            $scope.lastSelectedUser = [];
+                            $scope.lastSelectedUser = selectedObject;
+                            selectedUser = selectedObject;
+                            currentAuthGroups = [];
+                            data.isAuthorized = false;
+                            var unAuthorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
+                            data.isAuthorized = true;
+                            var authorizedGroupsForUser = LdapUserManagementService.getGroupsForUser(data);
+                            $q.all([ authorizedGroupsForUser, unAuthorizedGroupsForUser ]).then(function(result) {
+                                _.forEach(result[0].data.response.docs, function(group) {
+                                    var authObject = {};
+                                    authObject.key = group.name;
+                                    authObject.name = group.name;
+                                    $scope.userData.selectedAuthorized.push(authObject);
+                                    currentAuthGroups.push(authObject.key);
+                                });
+                                _.forEach(result[1].data.response.docs, function(group) {
+                                    var authObject = {};
+                                    authObject.key = group.name;
+                                    authObject.name = group.name;
+                                    $scope.userData.selectedNotAuthorized.push(authObject);
+                                });
                             });
-                            _.forEach(result[1].data.response.docs, function(group) {
-                                var authObject = {};
-                                authObject.key = group.name;
-                                authObject.name = group.name;
-                                $scope.userData.selectedNotAuthorized.push(authObject);
-                            });
-                        });
+                        }
                     }
 
                     //callback function when groups are moved
