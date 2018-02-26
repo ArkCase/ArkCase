@@ -1396,6 +1396,10 @@
                 {
                     "name": "Complaint",
                     "id": "COMPLAINT"
+                },
+                {
+                    "name": "Cost Tracking",
+                    "id": "COSTSHEET"
                 }
             ],
             "data": {
