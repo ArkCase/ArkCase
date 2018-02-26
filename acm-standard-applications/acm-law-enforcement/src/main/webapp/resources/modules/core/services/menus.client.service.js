@@ -271,7 +271,8 @@ angular
                                     position : menuObj.position || 0,
                                     iconClass : menuObj.iconClass,
                                     permissionAction : menuObj.permissionAction || 'noAction',
-                                    modalDialog : menuObj.modalDialog
+                                    modalDialog : menuObj.modalDialog,
+                                    targetType : menuObj.targetType
 
                                 });
                             }
