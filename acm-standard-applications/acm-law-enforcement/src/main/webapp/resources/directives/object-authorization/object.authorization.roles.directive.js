@@ -20,6 +20,7 @@
  * @param {boolean} showFilter true/false, on this variable depends the visibility of the directive "objectAuthorizationRolesFilter"
  * @param {object} paginationDataControl - An object that contains functions for pagination
  * @param {object} filterDataControl - An object that contains functions for search/filter
+ * @param {object} selectData - An object that has information for the pre-selected/selected user
  *
  * @scope
  *
@@ -81,39 +82,21 @@ angular.module('directives').directive('objectAuthorizationRoles',
                 templateUrl : 'directives/object-authorization/object.authorization.roles.html',
                 link : function(scope) {
                     //initial setup
-                    var resetSelectedObject;
                     scope.selectedNotAuthorized = "";
                     scope.selectedAuthorized = "";
-                    scope.resetSelectedObjectFilter = false;
                     scope.resetSelectedObjectScroll = true;
+
+                    // Set pre-selected/selected user
+                    scope.$watch('selectData', function() {
+                        scope.selectedObject = scope.selectData;
+                    });
 
                     scope.$watch('data.selectedNotAuthorized', function() {
                         scope.notAuthorized = Util.isArrayEmpty(scope.data.selectedNotAuthorized) ? [] : scope.data.selectedNotAuthorized;
                     }, true);
 
-                    //This will be activated when the user search/filter for a user and will select the first user
-                    scope.$watch('resetSelectedObjectFilter', function() {
-                        if (scope.resetSelectedObjectFilter) {
-                            resetSelectedObject = scope.resetSelectedObjectFilter;
-                        }
-                    }, true);
-
                     scope.$watch('data.selectedAuthorized', function() {
                         scope.authorized = Util.isArrayEmpty(scope.data.selectedAuthorized) ? [] : scope.data.selectedAuthorized;
-                        //This control if the first one should be reselected
-                        resetSelectedObject = Util.isEmpty(scope.selectData) ? true : scope.selectData.resetSelect;
-
-                        //This controls the selected object when the user scroll(load new data - pagination)
-                        if (!scope.resetSelectedObjectScroll) {
-                            resetSelectedObject = scope.resetSelectedObjectScroll;
-                        }
-                        resetSelectedObject = scope.resetSelectedObjectFilter ? scope.resetSelectedObjectFilter : resetSelectedObject;
-
-                        //Reset the selected user to be the first one
-                        if (resetSelectedObject && scope.data.chooseObject.length > 0) {
-                            scope.selectedObject = scope.data.chooseObject[0];
-                            resetSelectedObject = false;
-                        }
                     }, true);
 
                     //authorize button is clicked
@@ -146,9 +129,7 @@ angular.module('directives').directive('objectAuthorizationRoles',
                     scope.selectObject = function() {
                         scope.authorized = [];
                         scope.notAuthorized = [];
-                        scope.resetSelectedObjectScroll = false;
                         if (scope.selectedObject) {
-                            scope.resetSelectedObjectFilter = false;
                             scope.onObjectSelected(scope.selectedObject, scope.authorized, scope.notAuthorized);
                         }
                     };

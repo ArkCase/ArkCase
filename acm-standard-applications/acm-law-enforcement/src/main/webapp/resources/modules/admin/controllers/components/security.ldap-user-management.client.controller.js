@@ -33,14 +33,13 @@ angular.module('admin').controller(
                     $scope.userUnauthorizedFilter = userUnauthorizedFilter;
                     $scope.userAuthorizedFilter = userAuthorizedFilter;
                     $scope.retrieveDataFilter = retrieveDataFilter;
-                    $scope.selectFirst = selectFirst;
 
                     $scope.showFilter = true;
                     var makePaginationRequest = true;
                     var currentAuthGroups;
                     var selectedUser;
                     var objectTitle = $translate.instant('admin.security.ldap.user.management.user');
-                    var lastSelectedUser = "";
+                    $scope.lastSelectedUser;
                     $scope.userData = {
                         "chooseObject" : [],
                         "selectedNotAuthorized" : [],
@@ -57,15 +56,6 @@ angular.module('admin').controller(
                         "authorizedFilter" : $scope.userAuthorizedFilter
                     };
 
-                    function selectFirst(data, flag) {
-                        $scope.selectData = {
-                            "resetSelect" : flag,
-                            "data" : data
-                        };
-                        $scope.onObjSelect($scope.selectData.data, $scope.userData.selectedAuthorized,
-                                $scope.userData.selectedNotAuthorized);
-                    }
-
                     function initUser(userNumber) {
                         var userRequestInfo = {};
                         userRequestInfo.n = Util.isEmpty(userNumber) ? 50 : userNumber;
@@ -73,7 +63,10 @@ angular.module('admin').controller(
                         if (makePaginationRequest) {
                             LdapUserManagementService.getNUsers(userRequestInfo).then(function(response) {
                                 $scope.fillList($scope.userData.chooseObject, response.data.response.docs);
-                                $scope.selectFirst($scope.userData.chooseObject[0], true);
+                                if (_.isEmpty($scope.lastSelectedUser)) {
+                                    $scope.lastSelectedUser = $scope.userData.chooseObject[0];
+                                }
+                                $scope.onObjSelect($scope.lastSelectedUser);
                                 makePaginationRequest = response.data.response.numFound > userRequestInfo.n;
                             });
                         }
@@ -85,7 +78,8 @@ angular.module('admin').controller(
                     function onObjSelect(selectedObject, authorized, notAuthorized) {
                         var data = {};
                         data.member_id = selectedObject;
-                        lastSelectedUser = selectedObject;
+                        $scope.lastSelectedUser = [];
+                        $scope.lastSelectedUser = selectedObject;
                         selectedUser = selectedObject;
                         currentAuthGroups = [];
                         $scope.userData.selectedAuthorized = [];
@@ -281,7 +275,6 @@ angular.module('admin').controller(
 
                     function retrieveDataScroll(data, methodName, panelName) {
                         LdapUserManagementService[methodName](data).then(function(response) {
-                            // $scope.userData[panelName] = [];
                             if (_.isArray(response.data)) {
                                 $scope.fillList($scope.userData[panelName], response.data);
                             } else {
@@ -294,7 +287,7 @@ angular.module('admin').controller(
 
                     function unauthorizedScroll() {
                         var data = {};
-                        data.member_id = lastSelectedUser;
+                        data.member_id = $scope.lastSelectedUser;
                         data.start = $scope.userData.selectedNotAuthorized.length;
                         data.isAuthorized = false;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedNotAuthorized");
@@ -302,7 +295,7 @@ angular.module('admin').controller(
 
                     function authorizedScroll() {
                         var data = {};
-                        data.member_id = lastSelectedUser;
+                        data.member_id = $scope.lastSelectedUser;
                         data.start = $scope.userData.selectedAuthorized.length;
                         data.isAuthorized = true;
                         $scope.retrieveDataScroll(data, "getGroupsForUser", "selectedAuthorized");
@@ -317,7 +310,7 @@ angular.module('admin').controller(
                                 $scope.fillList($scope.userData[panelName], response.data.response.docs);
                             }
                             if (methodName == "getNUsers" || methodName == "getUsersFiltered") {
-                                $scope.selectFirst($scope.userData.chooseObject[0], false);
+                                $scope.onObjSelect($scope.userData.chooseObject[0]);
                             }
                         }, function() {
                             $log.error('Error during calling the method ' + methodName);
@@ -334,7 +327,7 @@ angular.module('admin').controller(
                     }
 
                     function userUnauthorizedFilter(data) {
-                        data.member_id = lastSelectedUser;
+                        data.member_id = $scope.lastSelectedUser;
                         data.isAuthorized = false;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;
@@ -345,7 +338,7 @@ angular.module('admin').controller(
                     }
 
                     function userAuthorizedFilter(data) {
-                        data.member_id = lastSelectedUser;
+                        data.member_id = $scope.lastSelectedUser;
                         data.isAuthorized = true;
                         if (Util.isEmpty(data.filterWord)) {
                             data.n = Util.isEmpty(data.n) ? 50 : data.n;

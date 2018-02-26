@@ -22,8 +22,7 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
     return {
         restrict : 'E',
         scope : {
-            filter : "&",
-            resetSelectedObjectFilter : "=?"
+            filter : "&?"
         },
         templateUrl : 'directives/object-authorization-filter/object.authorization.roles.filter.html',
         link : function(scope) {
@@ -33,7 +32,6 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
             scope.onChangeFilterWord = function() {
                 if (scope.data.filterWord == "") {
                     scope.isSearchValid = true;
-                    scope.resetSelectedObjectFilter = true;
                     scope.filter({
                         data : {}
                     });
@@ -43,7 +41,6 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
             };
 
             scope.filterObjects = function() {
-                scope.resetSelectedObjectFilter = true;
                 scope.filter({
                     data : scope.data
                 });
