@@ -153,7 +153,8 @@
                 "person",
                 "expenses",
                 "tags",
-                "approvers"
+                "tasks",
+                "documents"
             ]
         },
         {
