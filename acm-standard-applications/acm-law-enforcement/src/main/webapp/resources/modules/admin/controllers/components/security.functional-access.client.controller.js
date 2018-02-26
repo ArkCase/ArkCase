@@ -22,13 +22,13 @@ angular.module('admin').controller(
 
                     var lastSelectedUser = "";
                     $scope.showFilter = true;
-                    //init so ke ja cuva sekogas datata na pocetok loadirana posto ako imame filter(acm) posle filter(test) ke bidi prazna
+                    // Loaded data after the initialization
                     var initRolesData = {
                         "chooseObject" : [],
                         "userGroupsAll" : [],
                         "appRolesUserGroups" : []
                     };
-                    //data display
+                    // Data to be displayed
                     $scope.rolesData = {
                         "chooseObject" : [],
                         "selectedNotAuthorized" : [],
