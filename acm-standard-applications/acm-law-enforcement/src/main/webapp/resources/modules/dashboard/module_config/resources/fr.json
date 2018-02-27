@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documents",
                 "description": "Affiche le tableau des documents par dossier",
-                "noDataMessage": "Actuellement, il n'y a pas de documents à afficher"
+                "noDataMessage": "Actuellement, il n'y a pas de documents à afficher",
+                "series": "fr_Number of Documents"
             },
             "locations": {
                 "title": "Emplacements",

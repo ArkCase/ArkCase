@@ -52,6 +52,7 @@
             "newCorrespondence": "Nova Correspondência",
             "open": "Aberto",
             "email": "Email",
+            "newTask": "pt_New Task",
             "download": "Baixar",
             "copy": "Cópia de",
             "cut": "Cortar",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "Mover para a direita",
         "tooltip.move_left": "Mova para a esquerda",
         "authorized": "Autorizado"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "pt_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "Pesquisa",
@@ -563,7 +567,7 @@
     "common.directive.coreParticipants": {
         "title": "Participantes",
         "replaceFolderChildrenParticipants": "pt_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Adicionar participante",
             "editParticipant.label": "Editar registro",
             "participantType.label": "Tipo de participante",
@@ -615,7 +619,12 @@
         "FILE": "Arquivo",
         "DOC_REPO": "Repositório de documentos",
         "ORGANIZATION": "Organização",
-        "PERSON": "Pessoa"
+        "PERSON": "Pessoa",
+        "PERSON-ASSOCIATION": "pt_Person-Association",
+        "PARTICIPANT": "pt_Participant",
+        "NOTE": "pt_Note",
+        "PARTICIPANT-ASSOCIATION": "pt_Participant-Association",
+        "ASSIGNMENT": "pt_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Escolha Usuário",

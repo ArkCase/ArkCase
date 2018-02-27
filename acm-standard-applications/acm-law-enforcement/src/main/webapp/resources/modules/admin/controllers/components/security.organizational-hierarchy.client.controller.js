@@ -87,14 +87,34 @@ angular.module('admin').controller(
                     $scope.onLoadMore = function(currentPage, pageSize) {
                         gridPageSize = pageSize;
                         gridCurrentPage = currentPage;
-                        organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []).then(function(payload) {
+
+                        var successCallback = function(payload) {
                             var groups = _.get(payload, 'data.response.docs');
                             $scope.data = [];
                             groupsMap = {};
                             $scope.totalGroups = _.get(payload, 'data.response.numFound');
                             addToGroupsMap(groups);
                             createTreeData(groups);
-                        });
+                        };
+                        if (!_.isEmpty($scope.searchParams)) {
+                            $scope.searchParams.n = pageSize;
+                            $scope.searchParams.start = (currentPage - 1) * pageSize;
+                            organizationalHierarchyService.getGroupsByName($scope.searchParams).then(successCallback);
+                        } else {
+                            organizationalHierarchyService.getGroupsTopLevel(currentPage, pageSize, []).then(successCallback);
+                        }
+                    };
+
+                    $scope.searchParams = {};
+                    $scope.onSearch = function() {
+                        $scope.onLoadMore(gridCurrentPage, gridPageSize);
+                    };
+
+                    $scope.onFilterChange = function(searchFilter) {
+                        if (searchFilter === '') {
+                            $scope.searchParams = {};
+                            $scope.onLoadMore(gridCurrentPage, gridPageSize);
+                        }
                     };
 
                     var adHocGroupController = function(group, errorMessage, parentGroup, onOK) {
@@ -302,7 +322,6 @@ angular.module('admin').controller(
                             animation : $scope.animationsEnabled,
                             templateUrl : 'modules/admin/views/components/security.organizational-hierarchy.create-user.dialog.html',
                             controller : [ '$scope', '$modalInstance', function($scope, $modalInstance) {
-                                $scope.cloneUser = false;
                                 $scope.addUser = true;
                                 $scope.header = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.title";
                                 $scope.okBtn = "admin.security.organizationalHierarchy.createUserDialog.addLdapMember.btn.ok";
@@ -499,7 +518,7 @@ angular.module('admin').controller(
                         memberGroupsPromise = organizationalHierarchyService.getSubGroupsForGroup(groupId);
 
                         //find child users
-                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId.replace(/\./g, '_002E_'), 'VALID');
+                        memberUsersPromise = organizationalHierarchyService.getUsersForGroup(groupId, 'VALID');
 
                         $q.all([ memberGroupsPromise, memberUsersPromise ]).then(function(data) {
                             var memberGroups = _.get(data[0], 'data.response.docs');

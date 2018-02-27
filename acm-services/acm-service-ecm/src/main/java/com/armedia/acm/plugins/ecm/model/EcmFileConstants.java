@@ -43,6 +43,8 @@ public interface EcmFileConstants
 
     String FIND_CONTAINER_QUERY_BY_FOLDER_ID = "SELECT e FROM AcmContainer e WHERE e.folder.id = :folderId";
 
+    String FIND_CONTAINERS_QUERY_BY_OBJECT_TYPE = "SELECT e FROM AcmContainer e WHERE e.containerObjectType = :objectType";
+
     String FIND_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType";
 
     String FIND_CMIS_CONTAINER_QUERY = "SELECT e FROM AcmContainer e WHERE e.containerObjectId = :objectId AND e.containerObjectType = :objectType AND e.cmisRepositoryId = :cmisRepositoryId";

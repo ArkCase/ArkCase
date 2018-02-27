@@ -165,6 +165,10 @@
         <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
     </bean>
 
+    <bean id="acmServiceLdapSyncNotifier" class="com.armedia.acm.data.AcmServiceLdapSyncNotifier">
+        <property name="genericMessagesChannel" ref="genericMessagesChannel"/>
+    </bean>
+
     <bean id="acmProgressNotifierInitializer" class="com.armedia.acm.data.AcmProgressNotifierInitializer">
         <property name="progressNotifier" ref="acmProgressNotifier"/>
     </bean>

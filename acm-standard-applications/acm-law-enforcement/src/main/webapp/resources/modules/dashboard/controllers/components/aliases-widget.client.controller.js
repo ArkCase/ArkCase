@@ -2,7 +2,7 @@
 
 angular.module('dashboard.aliases', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('aliases', {
-        title : 'dashboard.widgets.aliases.title',
+        title : 'preference.overviewWidgets.aliases.title',
         description : 'dashboard.widgets.aliases.description',
         controller : 'Dashboard.AliasesController',
         reload : true,

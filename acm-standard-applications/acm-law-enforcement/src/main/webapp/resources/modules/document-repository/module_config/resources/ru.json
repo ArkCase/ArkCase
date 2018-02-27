@@ -182,7 +182,10 @@
         "name.placeholder": "Введите имя",
         "descriptionLabel": "Описание",
         "description.placeholder": "Введите описание",
-        "searchUser": "Поиск пользователя",
+        "searchUser": "ru_Search User and Group",
+        "cancelBtn": "ru_Cancel",
+        "okBtn": "ru_OK",
+        "search-placeholder": "ru_Search for user or group",
         "personalRepository": "Мои документы"
     },
     "document-repository.dialogUserPicker": {

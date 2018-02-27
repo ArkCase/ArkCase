@@ -9,13 +9,14 @@
             "menuItemTitle": "preference.menus.usermenu.item",
             "moduleId": "none",
             "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 120
+            "position": 120,
+            "targetType": "_self"
         }
     ],
     "moduleWidgetPreferences": [
         {
             "id": "complaints",
-            "title": "core.menus.leftnav.complaints.main",
+            "title": "preference.modules.list.complaints.title",
             "name": "COMPLAINT",
             "allowedWidgets": [
                 "details",
@@ -37,7 +38,7 @@
         },
         {
             "id": "cases",
-            "title": "core.menus.leftnav.cases.main",
+            "title": "preference.modules.list.cases.title",
             "name": "CASE",
             "allowedWidgets": [
                 "details",
@@ -58,7 +59,7 @@
         },
         {
             "id": "tasks",
-            "title": "core.menus.leftnav.tasks.main",
+            "title": "preference.modules.list.tasks.title",
             "name": "TASK",
             "allowedWidgets": [
                 "details",
@@ -76,7 +77,7 @@
         },
         {
             "id": "people",
-            "title": "core.menus.leftnav.people.main",
+            "title": "preference.modules.list.people.title",
             "name": "PERSON",
             "allowedWidgets": [
                 "details",
@@ -97,7 +98,7 @@
         },
         {
             "id": "organizations",
-            "title": "core.menus.leftnav.organizations.main",
+            "title": "preference.modules.list.organizations.title",
             "name": "ORGANIZATION",
             "allowedWidgets": [
                 "details",
@@ -118,7 +119,7 @@
         },
         {
             "id": "document-repository",
-            "title": "core.menus.leftnav.document-repository.main",
+            "title": "preference.modules.list.document-repository.title",
             "name": "DOC_REPO",
             "allowedWidgets": [
                 "details",
@@ -132,7 +133,7 @@
         },
         {
             "id": "my-documents",
-            "title": "core.menus.leftnav.my-documents.main",
+            "title": "preference.modules.list.my-documents.title",
             "name": "MY_DOC_REPO",
             "allowedWidgets": [
                 "details",
@@ -146,7 +147,7 @@
         },
         {
             "id": "cost-tracking",
-            "title": "core.menus.leftnav.cost-tracking.main",
+            "title": "preference.modules.list.cost-tracking.title",
             "name": "COST",
             "allowedWidgets": [
                 "details",
@@ -158,7 +159,7 @@
         },
         {
             "id": "time-tracking",
-            "title": "core.menus.leftnav.time-tracking.main",
+            "title": "preference.modules.list.time-tracking.title",
             "name": "TIME",
             "allowedWidgets": [
                 "details",

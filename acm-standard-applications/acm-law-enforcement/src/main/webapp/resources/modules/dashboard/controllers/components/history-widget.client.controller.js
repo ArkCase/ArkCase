@@ -2,7 +2,7 @@
 
 angular.module('dashboard.history', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('history', {
-        title : 'dashboard.widgets.history.title',
+        title : 'preference.overviewWidgets.history.title',
         description : 'dashboard.widgets.history.description',
         controller : 'Dashboard.HistoryController',
         controllerAs : 'history',

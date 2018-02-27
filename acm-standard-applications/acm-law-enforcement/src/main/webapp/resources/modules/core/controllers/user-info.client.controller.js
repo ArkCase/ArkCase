@@ -8,7 +8,8 @@ angular.module('core').controller(
                 'Menus',
                 'Acm.LoginService',
                 'LookupService',
-                function($scope, UserInfoService, Menus, AcmLoginService, LookupService) {
+                'MessageService'
+                ,function($scope, UserInfoService, Menus, AcmLoginService, LookupService, MessageService) {
 
                     var appConfig = LookupService.getConfig('app').then(function(data) {
                         $scope.helpUrl = data.helpUrl;
@@ -24,16 +25,21 @@ angular.module('core').controller(
                                     userName : data.fullName
                                 };
                                 $scope.imgSrc = !$scope.profileEcmFileID ? 'modules/profile/img/nopic.png'
-                                        : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&inline=true';
+                                        : 'api/latest/plugin/ecm/download?ecmFileId=' + $scope.profileEcmFileID + '&parentObjectType=USER_ORG' + '&inline=true';
                             });
 
                     $scope.$on('uploadedPicture', function(event, arg) {
                         $scope.imgSrc = !arg ? 'modules/profile/img/nopic.png' : 'api/latest/plugin/ecm/download?ecmFileId=' + arg
-                                + '&inline=true';
+                                + '&parentObjectType=USER_ORG' + '&inline=true';
                     });
 
                     $scope.onClickLogout = function() {
                         AcmLoginService.logout();
                     };
 
-                } ]);
+        $scope.$bus.subscribe('sync-progress', function (data) {
+            MessageService.info(data.message);
+        });
+
+    }
+]);

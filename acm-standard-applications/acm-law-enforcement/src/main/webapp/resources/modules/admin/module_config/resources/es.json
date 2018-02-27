@@ -225,6 +225,12 @@
                         "error": "Error"
                     }
                 }
+            },
+            "tableColumns": {
+                "name": "es_Name",
+                "type": "es_Type",
+                "supervisorName": "es_Supervisor Name",
+                "actions": "es_Actions"
             }
         },
         "security.selectPrivileges": "Crear roles / Seleccionar privilegios",
@@ -256,6 +262,7 @@
                 "purge.label": "Purga",
                 "email.label": "Dirección de correo electrónico del sistema",
                 "password.label": "Contraseña del sistema",
+                "password.changeButton": "es_Change the calendar user password",
                 "purgeDays.label": "Días",
                 "emailValid": "La dirección de correo electrónico y la contraseña del sistema son válidas",
                 "emailNotValid": "La dirección de correo electrónico o la contraseña del sistema no son válidas",
@@ -356,9 +363,24 @@
                 "actions.label": "Comportamiento",
                 "manual.label": "Manual",
                 "automated.label": "Automatizado",
-                "browse": "Vistazo",
+                "choose.file": "es_Choose File",
+                "download": "es_Download",
                 "save": "Salvar",
-                "cancel": "Cancelar"
+                "cancel": "Cancelar",
+                "validationResponse": "es_Email Template already exists with selected parameters",
+                "uploadError": "es_File upload canceled due to incorrect type of file. You can only upload html file.",
+                "invalidTemplateName": "es_Template name must end on '.html' and can only consist of characters, digits or underscores."
+            },
+            "objectTypes": {
+                "caseFile": "es_Case File",
+                "complaint": "es_Complaint",
+                "task": "es_Task",
+                "document": "es_Document"
+            },
+            "actions": {
+                "sendAsAttachments": "es_Send as Attachments",
+                "sendAsLinks": "es_Send as Links",
+                "sendAsAttachmentsAndLinks": "es_Send as Attachments and Links"
             }
         },
         "security.exchangeConfiguration": {
@@ -517,7 +539,17 @@
                     "inversevalue.placeholder": "Ingrese el valor inverso de entrada como clave de etiqueta",
                     "btnCancel.text": "Cancelar",
                     "btnOk.text": "Guardar entrada"
-                }
+                },
+                "addLookup": "es_Add Lookup",
+                "label": "es_Lookup Type",
+                "lookupName": "es_Lookup Name",
+                "placeholder": "es_Enter lookup name",
+                "btnSave.text": "es_Save",
+                "deleteLookupMsg": "es_Are you sure you want to delete this lookup?",
+                "deleteEntryMsg": "es_Are you sure you want to delete this entry?",
+                "delete.success": "es_Lookup is successfully deleted",
+                "delete.error": "es_Lookup can't be deleted",
+                "lookupExists.error": "es_Lookup with this name already exists"
             },
             "module.config": {
                 "title": "Configuración del módulo"
@@ -582,6 +614,8 @@
                 "creator": "Creador",
                 "modifier": "Modificado por",
                 "activated": "Estado",
+                "statusDeactivated": "es_Deactivated",
+                "statusActivated": "es_Activated",
                 "objectType": "Tipo de objeto",
                 "version": "Versión",
                 "templateVersionActive": "Activo"
@@ -598,6 +632,7 @@
                 }
             },
             "templates.modal": {
+                "objectTypes.selectedFiles": "es_No File Selected",
                 "objectTypes.label": "Tipos de objetos",
                 "querySelect.label": "Seleccionar consulta",
                 "label.label": "Nombre para mostrar",

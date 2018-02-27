@@ -11,7 +11,7 @@
  * Organization.InfoService provides functions for Organization database data
  */
 angular.module('services').factory('Organization.InfoService',
-        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', function($resource, $translate, Store, Util) {
+        [ '$resource', '$translate', 'Acm.StoreService', 'UtilService', 'MessageService', function($resource, $translate, Store, Util, MessageService) {
             var Service = $resource('api/latest/plugin', {}, {
                 /**
                  * @ngdoc method
@@ -166,6 +166,10 @@ angular.module('services').factory('Organization.InfoService',
                             cacheOrganizationInfo.put(organizationInfo.organizationId, organizationInfo);
                             return organizationInfo;
                         }
+                    },
+                    onError: function (error) {
+                        MessageService.error(error.data);
+                        return error;
                     }
                 });
             };
