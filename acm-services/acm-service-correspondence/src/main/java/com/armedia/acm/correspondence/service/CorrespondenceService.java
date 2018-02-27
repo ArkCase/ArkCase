@@ -62,7 +62,7 @@ public class CorrespondenceService
         File file = File.createTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
 
         try (FileInputStream fisForUploadToEcm = new FileInputStream(file);
-             FileOutputStream fosToWriteFile = new FileOutputStream(file))
+                FileOutputStream fosToWriteFile = new FileOutputStream(file))
         {
 
             log.debug("writing correspondence to file: " + file.getCanonicalPath());

@@ -26,8 +26,6 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import java.io.IOException;
-
 /**
  * Created by bojan.milenkoski on 25.8.2017
  */
@@ -51,7 +49,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test
-    public void testSaveLookupAddEntryToCoreLookupSuccess() throws InvalidLookupException, IOException
+    public void testSaveLookupAddEntryToCoreLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -72,11 +70,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, false);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupUpdateInverseLookupSuccess2() throws InvalidLookupException, IOException
+    public void testSaveLookupUpdateInverseLookupEntriesToExt() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -98,11 +96,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupAddInverseEntriesToExtLookupSuccess1() throws InvalidLookupException, IOException
+    public void testSaveLookupAddInverseEntriesToExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -112,7 +110,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
         String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"inverseKey\":\"someKey\",\"inverseValue\":\"someValue\"}]";
         lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
         configLookupDao.setLookups(
-                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+                "{\"inverseValuesLookup\": [{\"name\":\"colors\", \"entries\":[], \"readonly\":true}], \"nestedLookup\": [],\"standardLookup\":[]}");
         configLookupDao.setLookupsExt("{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": []}");
 
         // when
@@ -123,11 +121,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupAddEntryToCoreAndExtLookupSuccess() throws InvalidLookupException, IOException
+    public void testSaveLookupAddEntryToCoreAndExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -149,11 +147,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test
-    public void testSaveLookupToExtLookupSuccess() throws InvalidLookupException, IOException
+    public void testSaveLookupToExtLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -174,11 +172,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), true);
     }
 
     @Test
-    public void testSaveLookupNestedLookupSuccess() throws InvalidLookupException, IOException
+    public void testSaveLookupNestedLookupSuccess() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -200,11 +198,11 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), entriesAsJson, true);
+        JSONAssert.assertEquals(entriesAsJson, updatedValue.get(0).toString(), false);
     }
 
     @Test(expected = InvalidLookupException.class)
-    public void testSaveLookupThrowsExceptionOnInvalidLookupJson() throws InvalidLookupException, IOException
+    public void testSaveLookupThrowsExceptionOnInvalidLookupJson() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -226,7 +224,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = InvalidLookupException.class)
-    public void testSaveLookupThrowsExceptionOnDuplicateKeys() throws InvalidLookupException, IOException
+    public void testSaveLookupThrowsExceptionOnDuplicateKeys() throws Exception
     {
         // given
         LookupDefinition lookupDefinition = new LookupDefinition();
@@ -403,7 +401,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
     }
 
     @Test
@@ -441,7 +439,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
     }
 
     @Test
@@ -489,7 +487,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
 
     }
 
@@ -529,12 +527,12 @@ public class ConfigLookupDaoTest extends EasyMockSupport
                 .read("$." + lookupDefinition.getLookupType().getTypeName() + "..[?(@.name=='" + lookupDefinition.getName()
                         + "')].entries");
 
-        JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
+        JSONAssert.assertEquals(updatedEntries, updatedValue.get(0).toString(), true);
 
     }
 
     @Test
-    public void testDeleteLookupFromExtLookups() throws AcmResourceNotModifiableException, AcmResourceNotFoundException, IOException
+    public void testDeleteLookupFromExtLookups() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -560,8 +558,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotModifiableException.class)
-    public void testDeleteLookupThatCantBeDeletedReturnNotModifiableException()
-            throws AcmResourceNotModifiableException, AcmResourceNotFoundException, IOException
+    public void testDeleteLookupThatCantBeDeletedReturnNotModifiableException() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -581,8 +578,7 @@ public class ConfigLookupDaoTest extends EasyMockSupport
     }
 
     @Test(expected = AcmResourceNotFoundException.class)
-    public void testDeleteLookupReturnsNotFoundExceptionForUnknownLookup()
-            throws AcmResourceNotModifiableException, IOException, AcmResourceNotFoundException
+    public void testDeleteLookupReturnsNotFoundExceptionForUnknownLookup() throws Exception
     {
         // given
         String lookupName = "lookupName";
@@ -644,4 +640,139 @@ public class ConfigLookupDaoTest extends EasyMockSupport
 
         JSONAssert.assertEquals(updatedValue.get(0).toString(), updatedEntries, true);
     }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckDeleteProtectedEntry() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("colors");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"readonly\":true}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"colors\", \"entries\":[{\"key\":\"someKey\",\"value\":\"someValue\",\"readonly\":true},{\"key\":\"someKey2\",\"value\":\"someValue2\",\"readonly\":true}], \"readonly\":true}]}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckReadOnlyEntriesOnUpdate() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("deviceTypes");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"email\",\"value\":\"Email\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"deviceTypes\", \"entries\":[{\"key\":\"email\",\"value\":\"Email\"},{\"key\":\"mobile\",\"value\":\"Mobile\",\"readonly\":true}], \"readonly\":true}]}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckDeleteProtectedEntryOnAdding() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.STANDARD_LOOKUP);
+        lookupDefinition.setName("deviceTypes");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"email\",\"value\":\"Email\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": [{\"name\":\"deviceTypes\", \"entries\":[{\"key\":\"email\",\"value\":\"Email\"},{\"key\":\"mobile\",\"value\":\"Mobile\",\"readonly\":true}], \"readonly\":true}]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckDeleteProtectedEntryInInverseLookup() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.INVERSE_VALUES_LOOKUP);
+        lookupDefinition.setName("colors");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"key\":\"someKey\",\"value\":\"someValue\",\"inverseKey\":\"someKey\",\"inverseValue\":\"someValue\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+        configLookupDao.setLookups(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [],\"standardLookup\":[]}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [{\"name\":\"colors\", \"entries\":[{\"key\":\"someKey\",\"value\":\"someValue\",\"inverseKey\":\"someKey\",\"inverseValue\":\"someValue\",\"readonly\":true},{\"key\":\"someKey2\",\"value\":\"someValue2\",\"inverseKey\":\"someInvKey2\",\"inverseValue\":\"someInvValue2\",\"readonly\":true}], \"readonly\":true}], \"nestedLookup\": [], \"standardLookup\": []}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+    }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckReadonlyEntriesInNestedLookup() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.NESTED_LOOKUP);
+        lookupDefinition.setName("contactMethodTypes");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"subLookup\":[{\"value\":\"core.lookups.common.home\",\"key\":\"Home\",\"readonly\": true},{\"key\":\"Work\",\"value\":\"work\"},{\"value\":\"core.lookups.contactMethodTypes.mobile\",\"key\":\"Mobile\",\"readonly\":true}],\"value\":\"core.lookups.contactMethodTypes.phone\",\"key\":\"phone\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+
+        configLookupDao.setLookups("{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": []}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [{\"name\":\"contactMethodTypes\",\"readonly\":true,\"entries\":[{\"subLookup\":[{\"value\":\"core.lookups.common.home\",\"key\":\"Home\",\"readonly\": true},{\"key\":\"Work\",\"value\":\"work\"},{\"value\":\"core.lookups.contactMethodTypes.mobile\",\"key\":\"Mobile\",\"readonly\":true}],\"value\":\"core.lookups.contactMethodTypes.phone\",\"key\":\"phone\"},{\"subLookup\":[{\"value\":\"core.lookups.contactMethodTypes.fax\",\"key\":\"Fax\"}],\"value\":\"core.lookups.contactMethodTypes.fax\",\"key\":\"fax\",\"readonly\":true}]}], \"standardLookup\": []}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+
+    }
+
+    @Test(expected = AcmResourceNotModifiableException.class)
+    public void testCheckReadonlyEntriesInSubLookupInNestedLookup() throws Exception
+    {
+        // given
+        LookupDefinition lookupDefinition = new LookupDefinition();
+        lookupDefinition.setLookupType(LookupType.NESTED_LOOKUP);
+        lookupDefinition.setName("contactMethodTypes");
+        lookupDefinition.setReadonly(true);
+        String entriesAsJson = "[{\"subLookup\":[{\"value\":\"core.lookups.contactMethodTypes.mobile\",\"key\":\"Mobile\",\"readonly\":true}],\"value\":\"core.lookups.contactMethodTypes.phone\",\"key\":\"phone\"}]";
+        lookupDefinition.setLookupEntriesAsJson(entriesAsJson);
+
+        configLookupDao.setLookups("{\"inverseValuesLookup\": [], \"nestedLookup\": [], \"standardLookup\": []}");
+        configLookupDao.setLookupsExt(
+                "{\"inverseValuesLookup\": [], \"nestedLookup\": [{\"name\":\"contactMethodTypes\",\"readonly\":true,\"entries\":[{\"subLookup\":[{\"value\":\"core.lookups.common.home\",\"key\":\"Home\",\"readonly\": true},{\"value\":\"core.lookups.contactMethodTypes.mobile\",\"key\":\"Mobile\",\"readonly\":true}],\"value\":\"core.lookups.contactMethodTypes.phone\",\"key\":\"phone\",\"readonly\":true}]}], \"standardLookup\": []}");
+
+        // when
+        configLookupDao.saveLookup(lookupDefinition);
+
+        // then
+        fail("AcmResourceNotModifiableException should have been thrown");
+
+    }
+
 }

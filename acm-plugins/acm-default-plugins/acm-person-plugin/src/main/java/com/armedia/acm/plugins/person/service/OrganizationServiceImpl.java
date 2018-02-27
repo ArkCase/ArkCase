@@ -2,8 +2,12 @@ package com.armedia.acm.plugins.person.service;
 
 import com.armedia.acm.core.exceptions.AcmCreateObjectFailedException;
 import com.armedia.acm.core.exceptions.AcmUpdateObjectFailedException;
+import com.armedia.acm.plugins.addressable.exceptions.AcmContactMethodValidationException;
+import com.armedia.acm.plugins.addressable.model.ContactMethod;
+import com.armedia.acm.plugins.addressable.service.ContactMethodsUtil;
 import com.armedia.acm.plugins.person.dao.OrganizationDao;
 import com.armedia.acm.plugins.person.model.Organization;
+import com.armedia.acm.plugins.person.model.Person;
 import com.armedia.acm.plugins.person.model.PersonOrganizationAssociation;
 import com.armedia.acm.plugins.person.pipeline.OrganizationPipelineContext;
 import com.armedia.acm.services.pipeline.PipelineManager;
@@ -47,6 +51,15 @@ public class OrganizationServiceImpl implements OrganizationService
             throws PipelineProcessException, AcmCreateObjectFailedException, AcmUpdateObjectFailedException
     {
         validatePersonAssociations(organization);
+        try{
+            ContactMethodsUtil.validateContactMethodFields(organization.getContactMethods());
+        } catch (AcmContactMethodValidationException e) {
+            if(organization.getId() == null){
+                throw new AcmCreateObjectFailedException("Organization", e.toString(), null);
+            } else {
+                throw new AcmUpdateObjectFailedException("Organization", organization.getId(), e.toString(), null);
+            }
+        }
         OrganizationPipelineContext pipelineContext = new OrganizationPipelineContext();
         // populate the context
         pipelineContext.setNewOrganization(organization.getId() == null);
@@ -67,7 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService
      *            the {@link Organization} to validate
      * @throws AcmCreateObjectFailedException
      *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
-     * @throws AcmDuplicatePersonAssociationException
+     * @throws AcmUpdateObjectFailedException
      *             when at least one of the {@link PersonOrganizationAssociation} is not valid.
      */
     private void validatePersonAssociations(Organization organization) throws AcmCreateObjectFailedException, AcmUpdateObjectFailedException

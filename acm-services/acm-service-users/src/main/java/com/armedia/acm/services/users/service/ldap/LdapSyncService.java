@@ -1,6 +1,8 @@
 package com.armedia.acm.services.users.service.ldap;
 
 import com.armedia.acm.core.exceptions.AcmEncryptionException;
+import com.armedia.acm.data.AcmServiceLdapSyncEvent;
+import com.armedia.acm.data.AcmServiceLdapSyncResult;
 import com.armedia.acm.data.AuditPropertyEntityAdapter;
 import com.armedia.acm.files.propertymanager.PropertyFileManager;
 import com.armedia.acm.services.users.dao.ldap.SpringLdapDao;
@@ -12,7 +14,10 @@ import com.armedia.acm.services.users.model.ldap.LdapUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.ldap.core.LdapTemplate;
+import org.springframework.scheduling.annotation.Async;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -43,7 +48,7 @@ import java.util.Optional;
  * area.</li>
  * </ul>
  */
-public class LdapSyncService
+public class LdapSyncService implements ApplicationEventPublisherAware
 {
     private SpringLdapDao ldapDao;
     private AcmLdapSyncConfig ldapSyncConfig;
@@ -53,6 +58,7 @@ public class LdapSyncService
     private PropertyFileManager propertyFileManager;
     private String ldapLastSyncPropertyFileLocation;
     private LdapSyncProcessor ldapSyncProcessor;
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -66,7 +72,7 @@ public class LdapSyncService
             return;
         }
 
-        log.info("Starting sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
+        log.info("Starting full sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
                 getLdapSyncConfig().getLdapUrl());
 
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
@@ -75,8 +81,8 @@ public class LdapSyncService
         // If we opened up a database transaction, then spend a minute or so querying LDAP, the database transaction
         // could time out. So we run all the LDAP queries first, then do all the database operations all at once.
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
-        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), Optional.empty());
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
         ldapSyncProcessor.sync(ldapUsers, ldapGroups, ldapSyncConfig, true);
     }
@@ -91,23 +97,68 @@ public class LdapSyncService
             return;
         }
 
-        log.info("Starting partial sync of directory: [{}]; ldap URL: [{}]", getLdapSyncConfig().getDirectoryName(),
-                getLdapSyncConfig().getLdapUrl());
-
         getAuditPropertyEntityAdapter().setUserId(getLdapSyncConfig().getAuditUserId());
 
         Optional<String> ldapLastSyncDate = readLastLdapSyncDate(getLdapSyncConfig().getDirectoryName());
+        boolean isFullSync = !ldapLastSyncDate.isPresent();
+
+        log.info("Starting {} sync of directory: [{}]; ldap URL: [{}]", isFullSync ? "full" : "partial",
+                getLdapSyncConfig().getDirectoryName(),
+                getLdapSyncConfig().getLdapUrl());
 
         LdapTemplate template = getLdapDao().buildLdapTemplate(getLdapSyncConfig());
 
         // only changed users are retrieved
         List<LdapUser> ldapUsers = getLdapDao().findUsersPaged(template, getLdapSyncConfig(), ldapLastSyncDate);
-        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.ofNullable(null));
+        List<LdapGroup> ldapGroups = getLdapDao().findGroupsPaged(template, getLdapSyncConfig(), Optional.empty());
 
-        boolean isFullSync = !ldapLastSyncDate.isPresent();
         getLdapSyncProcessor().sync(ldapUsers, ldapGroups, getLdapSyncConfig(), isFullSync);
 
         writeLastLdapSync(getLdapSyncConfig().getDirectoryName());
+    }
+
+    @Async
+    public void initiateSync(String principal, boolean fullSync)
+    {
+        String syncType = fullSync ? "Full" : "Partial";
+
+        if (!isSyncEnabled())
+        {
+            log.debug("{} sync is disabled - stopping now.", syncType);
+            AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
+            ldapSyncResult.setMessage(String.format("Ldap %s sync is not enabled", syncType));
+            ldapSyncResult.setResult(false);
+            ldapSyncResult.setService("LDAP");
+            ldapSyncResult.setUser(principal);
+            applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
+            return;
+        }
+
+        boolean successResult = true;
+        try
+        {
+            if (fullSync)
+            {
+                ldapSync();
+            }
+            else
+            {
+                ldapPartialSync();
+            }
+
+        }
+        catch (Exception e)
+        {
+            successResult = false;
+            log.error("LDAP {} sync failed to complete.", syncType, e);
+        }
+        AcmServiceLdapSyncResult ldapSyncResult = new AcmServiceLdapSyncResult();
+        ldapSyncResult.setMessage(successResult ? String.format("LDAP %s sync completed", syncType)
+                : String.format("LDAP %s sync failed to complete", syncType));
+        ldapSyncResult.setResult(successResult);
+        ldapSyncResult.setService("LDAP");
+        ldapSyncResult.setUser(principal);
+        applicationEventPublisher.publishEvent(new AcmServiceLdapSyncEvent(ldapSyncResult));
     }
 
     /**
@@ -254,5 +305,11 @@ public class LdapSyncService
     public void setLdapSyncProcessor(LdapSyncProcessor ldapSyncProcessor)
     {
         this.ldapSyncProcessor = ldapSyncProcessor;
+    }
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
+    {
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 }

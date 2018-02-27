@@ -5,6 +5,7 @@ import com.armedia.acm.services.dataaccess.model.AccessControlRule;
 import com.armedia.acm.services.dataaccess.model.AccessControlRules;
 import com.armedia.acm.services.dataaccess.service.AccessControlRuleChecker;
 
+import com.armedia.acm.services.users.model.AcmRoleToGroupMapping;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -318,7 +319,7 @@ public class AccessControlRuleCheckerImpl implements AccessControlRuleChecker
 
     private boolean evaluateAuthorityWildcardRole(String role, String authority)
     {
-        if (StringUtils.endsWith(role, "@*"))
+        if (StringUtils.endsWith(role, AcmRoleToGroupMapping.GROUP_NAME_WILD_CARD))
         {
             String roleName = StringUtils.substringBeforeLast(role, "@");
             String authorityName = StringUtils.substringBeforeLast(authority, "@");

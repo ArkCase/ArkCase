@@ -82,7 +82,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         switch (sort)
         {
         case "eventType":
-            sortBy = "COALESCE(lu.auditBuisinessName, al.cm_audit_activity)";
+            sortBy = "COALESCE(lu.cm_value, al.cm_audit_activity)";
             break;
         case "userId":
             sortBy = "al.cm_audit_user";
@@ -101,7 +101,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
                 "FROM (SELECT ae.cm_audit_id AS id" +
                 " FROM acm_audit_log ae" +
                 " WHERE ae.cm_audit_status != 'DELETE'" +
-                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1 AND ae.cm_parent_object_id IS NULL) OR" +
+                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
                 " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
                 (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN ("
                         + eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(",")) + ")" : "")
@@ -127,7 +127,7 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         String queryText = "SELECT COUNT(ae.fullEventType) " +
                 "FROM   AuditEvent ae " +
                 "WHERE  ae.status != 'DELETE' " +
-                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId AND ae.parentObjectId IS NULL) " +
+                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId) " +
                 "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
                 (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
                 "AND ae.eventResult = 'success'";

@@ -2,7 +2,7 @@
 
 angular.module('dashboard.expenses', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('expenses', {
-        title : 'dashboard.widgets.expenses.title',
+        title : 'preference.overviewWidgets.expenses.title',
         description : 'dashboard.widgets.expenses.description',
         controller : 'Dashboard.ExpensesController',
         controllerAs : 'expenses',

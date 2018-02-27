@@ -52,6 +52,7 @@
             "newCorrespondence": "创建新信件",
             "open": "打开",
             "email": "电子邮件",
+            "newTask": "zh-cn_New Task",
             "download": "下载",
             "copy": "复制",
             "cut": "切割",
@@ -164,6 +165,9 @@
         "tooltip.move_right": "向右移",
         "tooltip.move_left": "向左移动",
         "authorized": "合法"
+    },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "zh-cn_Error, 2 characters required."
     },
     "common.directive.searchModal": {
         "header": "搜索",
@@ -563,7 +567,7 @@
     "common.directive.coreParticipants": {
         "title": "参与者",
         "replaceFolderChildrenParticipants": "zh-cn_Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "添加参与者",
             "editParticipant.label": "编辑记录",
             "participantType.label": "参与者类型",
@@ -615,7 +619,12 @@
         "FILE": "文件",
         "DOC_REPO": "文档库",
         "ORGANIZATION": "组织",
-        "PERSON": "人员"
+        "PERSON": "人员",
+        "PERSON-ASSOCIATION": "zh-cn_Person-Association",
+        "PARTICIPANT": "zh-cn_Participant",
+        "NOTE": "zh-cn_Note",
+        "PARTICIPANT-ASSOCIATION": "zh-cn_Participant-Association",
+        "ASSIGNMENT": "zh-cn_Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "选择用户",

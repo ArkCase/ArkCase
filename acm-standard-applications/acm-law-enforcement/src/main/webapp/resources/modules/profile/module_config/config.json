@@ -9,7 +9,8 @@
             "menuItemTitle": "profile.menus.usermenu.item",
             "moduleId": "none",
             "iconClass": "glyphicon glyphicon-asterisk",
-            "position": 100
+            "position": 100,
+            "targetType": "_blank"
         }
     ],
     "components": [
