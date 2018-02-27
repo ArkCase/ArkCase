@@ -85,6 +85,14 @@ public class ExecuteSolrQuery
     public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
             boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents) throws MuleException
     {
+        return getResultsByPredefinedQuery(auth, core, solrQuery, firstRow, maxRows, sort, indent, rowQueryParameters, filterParentRef,
+                filterSubscriptionEvents, null);
+    }
+
+    public String getResultsByPredefinedQuery(Authentication auth, SolrCore core, String solrQuery, int firstRow, int maxRows, String sort,
+            boolean indent, String rowQueryParameters, boolean filterParentRef, boolean filterSubscriptionEvents, String df)
+            throws MuleException
+    {
         Map<String, Object> headers = new HashMap<>();
         headers.put("query", solrQuery);
         headers.put("firstRow", firstRow);
@@ -96,6 +104,7 @@ public class ExecuteSolrQuery
         headers.put("rowQueryParametars", rowQueryParameters);
         headers.put("enableDocumentACL", isEnableDocumentACL());
         headers.put("indent", indent ? indent : "");
+        headers.put("df", df);
 
         MuleMessage response = getMuleContextManager().send(core.getMuleEndpointUrl(), "", headers);
 
