@@ -71,8 +71,8 @@ angular.module('directives').directive(
                             customization : '=?',
                             secondGrid : '@',
                             pickUserLabel : '@',
-                            pickGroupLabel : '@'
-
+                            pickGroupLabel : '@',
+                            showSelectedItemsGrid : '@?'
                         },
 
                         link : function(scope, el, attrs) {
@@ -165,8 +165,10 @@ angular.module('directives').directive(
                             function successSearchResult(data) {
                                 updateFacets(data.facet_counts.facet_fields);
                                 scope.gridOptionsMaster.data = data.response.docs;
-                                scope.gridOptionsDetail.data = [];
-                                scope.gridOptionsDetail.totalItems = 0;
+                                if (scope.secondGrid) {
+                                    scope.gridOptionsDetail.data = [];
+                                    scope.gridOptionsDetail.totalItems = 0;
+                                }
                                 if (scope.gridOptionsMaster.data.length < 1) {
                                     scope.showNoDataResult = true;
                                 } else {
@@ -174,7 +176,6 @@ angular.module('directives').directive(
                                 }
                                 scope.gridOptionsMaster.totalItems = data.response.numFound;
                             }
-                            ;
 
                             scope.setSecondGridData = function() {
                                 if (scope.selectedItem.object_type_s === 'USER') { // Selected a user
@@ -209,7 +210,6 @@ angular.module('directives').directive(
                                 }
                                 scope.gridOptionsDetail.totalItems = data.response.numFound;
                             }
-                            ;
 
                             function updateFacets(facets) {
                                 if (facets) {
@@ -257,11 +257,13 @@ angular.module('directives').directive(
                             scope.onClickOk = function() {
                                 //when the modal is closed, the parent scope gets
                                 //the selectedItem via the two-way binding
-                                if (scope.secondGrid) {
+                                if (scope.showSelectedItemsGrid) {
+                                    scope.modalInstance.close(scope.gridSelectedItems.data);
+                                } else if (scope.secondGrid) {
                                     var result = {
                                         masterSelectedItem : scope.selectedItem,
                                         detailSelectedItems : scope.selectedDetailItem
-                                    }
+                                    };
                                     scope.modalInstance.close(result);
                                 } else {
                                     if (scope.multiSelect) {
@@ -271,7 +273,6 @@ angular.module('directives').directive(
                                         scope.modalInstance.close(scope.selectedItem);
                                     }
                                 }
-
                             };
 
                             scope.onClickCancel = function() {
@@ -283,6 +284,25 @@ angular.module('directives').directive(
                                 scope.pageSize = scope.config().paginationPageSize;
                                 scope.start = scope.config().start;
                                 scope.sort = Util.goodValue(scope.config().sort, "");
+
+                                if (scope.showSelectedItemsGrid) {
+                                    scope.gridSelectedItems = {
+                                        enableColumnResizing : true,
+                                        enableRowSelection : true,
+                                        enableRowHeaderSelection : false,
+                                        noUnselect : false,
+                                        paginationPageSizes : scope.config().paginationPageSizes,
+                                        paginationPageSize : scope.config().paginationPageSize,
+                                        columnDefs : scope.config().selectedItemsGrid.columnDefs,
+                                        deleteRow: function (rowEntity) {
+                                            var index = scope.gridSelectedItems.data.findIndex(function (el) {
+                                                return el.object_id_s === rowEntity.object_id_s;
+                                            });
+                                            scope.gridSelectedItems.data.splice(index, 1);
+                                        }
+                                    };
+                                    scope.gridSelectedItems.data = [];
+                                }
 
                                 scope.gridOptionsMaster = {
                                     enableColumnResizing : true,
@@ -298,24 +318,33 @@ angular.module('directives').directive(
                                     columnDefs : scope.config().columnDefs,
                                     onRegisterApi : function(gridApi) {
                                         scope.gridApi = gridApi;
+                                        gridApi.selection.on.rowSelectionChanged(scope,
+                                                function(row) {
+                                                    scope.selectedItems = gridApi.selection.getSelectedRows();
+                                                    scope.selectedItem = row.entity;
+                                                    if (scope.onItemsSelected) {
+                                                        scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
+                                                    }
+                                                    if (scope.secondGrid) {
+                                                        scope.setSecondGridData();
+                                                    }
+                                                    if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
+                                                        scope.gridSelectedItems.data = scope.gridSelectedItems.data
+                                                                .concat(scope.selectedItems);
+                                                    }
+                                                });
 
-                                        gridApi.selection.on.rowSelectionChanged(scope, function(row) {
-                                            scope.selectedItems = gridApi.selection.getSelectedRows();
-                                            scope.selectedItem = row.entity;
-                                            if (scope.onItemsSelected) {
-                                                scope.onItemsSelected(scope.selectedItems, [ scope.selectedItem ], row.isSelected);
-                                            }
-                                            if (scope.secondGrid) {
-                                                scope.setSecondGridData();
-                                            }
-                                        });
-
-                                        gridApi.selection.on.rowSelectionChangedBatch(scope, function(rows) {
-                                            scope.selectedItems = gridApi.selection.getSelectedRows();
-                                            if (scope.onItemsSelected) {
-                                                scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
-                                            }
-                                        });
+                                        gridApi.selection.on.rowSelectionChangedBatch(scope,
+                                                function(rows) {
+                                                    scope.selectedItems = gridApi.selection.getSelectedRows();
+                                                    if (scope.onItemsSelected) {
+                                                        scope.onItemsSelected(scope.selectedItems, scope.selectedItems, true);
+                                                    }
+                                                    if (scope.showSelectedItemsGrid && !_.isEmpty(scope.selectedItems)) {
+                                                        scope.gridSelectedItems.data = scope.gridSelectedItems.data
+                                                                .concat(scope.selectedItems);
+                                                    }
+                                                });
 
                                         // Get the sorting info from UI grid
                                         gridApi.core.on.sortChanged(scope, function(grid, sortColumns) {
@@ -437,7 +466,6 @@ angular.module('directives').directive(
                                 }
 
                             }
-
                         },
 
                         templateUrl : 'directives/search-modal/search-modal.client.view.html'
