@@ -1,9 +1,9 @@
 {
     "cases": {
         "title": "Casos",
-        "progressNoCase": "Pt_[ No case file data ]",
-        "progressLoading": "Pt_Loading case file ",
-        "progressError": "Pt_Failed to load case file"
+        "progressNoCase": "[ Nenhum arquivo de caso]",
+        "progressLoading": "Carregando arquivo do caso ",
+        "progressError": "Falha ao carregar o arquivo do caso"
     },
     "cases.menus": {
         "leftnav.item": "Arquivos de Caso",
@@ -105,7 +105,7 @@
                 "clearanceDenied%": "Liquidação negada",
                 "noticeInvestigation%": "Aviso de Investigação",
                 "witnessInterview%": "Pedido de entrevista de testemunha",
-                "witnessInterview2%": "Witness Interview Request-2.0"
+                "witnessInterview2%": "Pedido de entrevista de testemunha-2.0"
             }
         },
         "newTask": "Nova tarefa"
@@ -245,7 +245,7 @@
     },
     "cases.comp.calendar": {
         "title": "Calendário",
-        "message": "pt_Calendar Integration Configuration Not Enabled"
+        "message": "Configuração de integração do calendário não ativada"
     },
     "cases.comp.merge": {
         "title": "Mesclar",
@@ -295,7 +295,7 @@
         "assigneeNamelabel": "Nome do Assignee",
         "btnCancelText": "Cancelar",
         "btnSaveText": "Salve",
-        "searchAssigneeHeader": "Search Assignee"
+        "searchAssigneeHeader": "Assignee de pesquisa"
     },
     "cases.comp.groupPickerModal": {
         "title": "Grupo de mudança",
@@ -333,7 +333,7 @@
             "status": "Status",
             "addedBy": "Adicionado por"
         },
-        "assigne.none": "pt_None",
+        "assigne.none": "Nenhum",
         "assignee.label": "Assignee",
         "owningGroup.label": "Grupo de propriedade",
         "priority.label": "Prioridade",
@@ -348,7 +348,7 @@
             "subject.placeholder": "Insira o assunto futuro do caso",
             "details.label": "Detalhes",
             "cancel.button": "Cancelar",
-            "save.button": "Salve "
+            "save.button": "Salve"
         }
     },
     "cases.comp.pastApprovals": {
@@ -362,7 +362,7 @@
         }
     },
     "cases.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "PesquisarUsuários",
         "title": "Pesquisa de usuário / grupo",
         "search": {
             "btn": "Pesquisa",
