@@ -52,13 +52,15 @@ public class PentahoUploadGeneratedReportService
         DocumentRepository documentRepository = getDocumentRepositoryDao().findByName(getReportDocumentRepository());
         if (documentRepository != null)
         {
-            Authentication auth = new UsernamePasswordAuthenticationToken(getUploadUserId(), "SYSTEM");
-            getAuditPropertyEntityAdapter().setUserId(getUploadUserId());
+            String uploadUserId = (getUploadUserId() == null) ? "admin" : getUploadUserId();
+            Authentication auth = new UsernamePasswordAuthenticationToken(uploadUserId, uploadUserId);
+            getAuditPropertyEntityAdapter().setUserId(uploadUserId);
             if (MDC.get(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY) == null)
             {
-                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, getUploadUserId());
+                MDC.put(MDCConstants.EVENT_MDC_REQUEST_ALFRESCO_USER_ID_KEY, uploadUserId);
                 MDC.put(MDCConstants.EVENT_MDC_REQUEST_ID_KEY, UUID.randomUUID().toString());
             }
+
             AcmContainer container = documentRepository.getContainer();
             AcmFolder yearFolder = null;
             EcmFile ecmFile = null;
