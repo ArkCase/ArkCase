@@ -767,10 +767,10 @@
         "title": "Sécurité - Grille de configuration Ldap"
     },
     "admin.comp.correspondenceManagementMergeFields": {
-        "title": "Grille des champs de fusion de Correspondence Management"
+        "title": "Grille des champs de fusion de Gestion de la Correspondance"
     },
     "admin.comp.correspondenceManagementMergeFieldsVersions": {
-        "title": "Correspondance Management Merge Fields version grille"
+        "title": "Champs de fusion de gestion de correspondance version grille"
     },
     "admin.comp.correspondenceManagementTemplates": {
         "title": "Grille des modèles de gestion de correspondance"
@@ -797,7 +797,7 @@
         "title": "Hiérarchie de l'organisation"
     },
     "admin.comp.cmisConfiguration": {
-        "title": "CMIS Configuration Grid"
+        "title": "CMIS Grille de configuration"
     },
     "admin.comp.emailTemplates": {
         "title": "Modèles d'email"
