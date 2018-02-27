@@ -125,6 +125,7 @@ angular.module('admin').service(
                         getUsersForGroup : getUsersForGroup,
                         addAdHocGroup : addAdHocGroup,
                         addExistingAdHocSubGroup : addExistingAdHocSubGroup,
+                        addExistingAdHocSubGroups: addExistingAdHocSubGroups,
                         saveMembers : saveMembers,
                         removeMembers : removeMembers,
                         removeGroup : removeGroup,
@@ -305,6 +306,33 @@ angular.module('admin').service(
                         return $http({
                             method : 'POST',
                             url : url,
+                            headers : {
+                                "Content-Type" : "application/json"
+                            }
+                        });
+                    }
+
+                    /**
+                     * @ngdoc method
+                     * @name addExistingAdHocSubGroups
+                     * @methodOf admin.service:Admin.OrganizationalHierarchyService
+                     *
+                     * @description
+                     * Adds an existing Ad Hoc groups as members to another Ad Hoc group
+                     *
+                     * param {String} parentId parent group
+                     *
+                     * param {array} memberIds array of member group names
+                     *
+                     * @returns {HttpPromise} Future info about list of ad hoc subgroups
+                     */
+                    function addExistingAdHocSubGroups(parentId, memberIds) {
+                        parentId = base64.urlencode(parentId);
+                        var url = 'api/latest/users/group/' + parentId;
+                        return $http({
+                            method : 'POST',
+                            url : url,
+                            data: memberIds,
                             headers : {
                                 "Content-Type" : "application/json"
                             }
