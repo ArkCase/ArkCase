@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "請至少選擇一個文件進行審查。"
     },
     "tasks.userOrGroupSearch": {
-        "id": "userSearch",
+        "id": "用戶搜索",
         "title": "用戶/群組搜索",
         "search": {
             "btn": "搜索",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "owningGroupSearch",
+        "id": "自己的組搜索",
         "title": "搜索此用戶的群組",
         "search": {
             "btn": "搜索",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "objectSearch",
+        "id": "對象搜索",
         "title": "對象搜索",
         "search": {
             "btn": "搜索",
