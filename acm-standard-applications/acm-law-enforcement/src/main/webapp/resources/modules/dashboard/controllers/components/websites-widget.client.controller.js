@@ -38,9 +38,7 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
 
             var paginationOptions = {
                 pageNumber: 1,
-                pageSize: 5,
-                sortBy: 'id',
-                sortDir: 'desc'
+                pageSize: 5
             };
 
             //Get the user's defined options from the Config.
@@ -51,42 +49,19 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                 config.paginationPageSize = "" + paginationOptions.pageSize + "";
             }
 
-            var userFilters;
-            var userFilterQuery = "";
-            if (Util.goodMapValue(config, 'widgetFilter')) {
-                userFilters = config.widgetFilter;
-            } else {
-                userFilters = {};
-            }
-
             vm.gridOptions = {
                 rowHeight: 'auto',
                 enableColumnResizing: true,
                 enableRowSelection: true,
                 enableSelectAll: false,
                 enableRowHeaderSelection: false,
-                useExternalPagination: true,
-                useExternalSorting: true,
+                useExternalPagination: false,
+                useExternalSorting: false,
                 multiSelect: false,
                 noUnselect: false,
                 columnDefs: [],
                 onRegisterApi: function (gridApi) {
                     vm.gridApi = gridApi;
-
-                    gridApi.core.on.sortChanged($scope, function (grid, sortColumns) {
-                        if (sortColumns.length == 0) {
-                            paginationOptions.sort = null;
-                        } else {
-                            paginationOptions.sortBy = sortColumns[0].name;
-                            paginationOptions.sortDir = sortColumns[0].sort.direction;
-                        }
-                        getPage();
-                    });
-                    gridApi.pagination.on.paginationChanged($scope, function (newPage, pageSize) {
-                        paginationOptions.pageNumber = newPage;
-                        paginationOptions.pageSize = pageSize;
-                        getPage();
-                    });
                 }
             };
 
@@ -128,8 +103,8 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                     }
                 }
                 vm.gridOptions.totalItems--;
+                vm.gridOptions.data = angular.copy(vm.sitesList);
                 vm.saveData();
-                getPage();
             };
 
             vm.saveData = function () {
@@ -147,7 +122,7 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                         var jsonObj = JSON.parse(data.json);
                         vm.sitesList = jsonObj.sites;
                         vm.gridOptions.totalItems = vm.sitesList.length;
-                        getPage();
+                        vm.gridOptions.data = angular.copy(vm.sitesList);
                     }
                 });
             };
@@ -162,7 +137,7 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                             var jsonObj = JSON.parse(data[0].json);
                             vm.sitesList = jsonObj.sites;
                             vm.gridOptions.totalItems = vm.sitesList.length;
-                            getPage();
+                            vm.gridOptions.data = angular.copy(vm.sitesList);
                         } else {
                             // This user does not have the dashboard data yet, create a new object
                             vm.sitesInfo = {
@@ -172,15 +147,6 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                             vm.gridOptions.totalItems = vm.sitesList.length;
                         }
                     });
-            }
-
-            function getPage() {
-                if (vm.sitesList) {
-                    var start = (paginationOptions.pageNumber - 1) * paginationOptions.pageSize;
-                    var end = start + paginationOptions.pageSize;
-                    if (end >= vm.sitesList.length) end = vm.sitesList.length;
-                    vm.gridOptions.data = angular.copy(vm.sitesList.slice(start, end));
-                }
             }
 
             function showModal(website, isEdit) {
@@ -214,8 +180,8 @@ angular.module('dashboard.websites-widget', ['adf.provider'])
                                 url: data.url,
                                 key: data.name + "_" + Math.random()
                             });
+                            vm.gridOptions.data = angular.copy(vm.sitesList);
                             vm.gridOptions.totalItems++;
-                            getPage();
                         }
                         vm.saveData();
                     }

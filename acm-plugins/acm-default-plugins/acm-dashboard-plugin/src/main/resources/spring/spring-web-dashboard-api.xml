@@ -78,10 +78,6 @@
         <property name="siteDao" ref="siteDao"/>
     </bean>
 
-    <bean id="siteDeleteAPIController" class="com.armedia.acm.plugins.dashboard.site.web.api.DeleteSiteAPIController">
-        <property name="siteDao" ref="siteDao"/>
-    </bean>
-
     <bean id="siteListAPIController" class="com.armedia.acm.plugins.dashboard.site.web.api.ListSiteAPIController">
         <property name="siteDao" ref="siteDao"/>
     </bean>
