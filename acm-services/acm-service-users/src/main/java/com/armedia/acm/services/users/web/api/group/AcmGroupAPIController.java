@@ -254,6 +254,17 @@ public class AcmGroupAPIController
         return groupService.addGroupMember(subGroupId, parentId);
     }
 
+    @RequestMapping(value = "/group/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<AcmGroup> addGroupMembers(@PathVariable("parentId") String parentId, @RequestBody List<String> members)
+            throws AcmCreateObjectFailedException
+    {
+        // we need to decode base64 encoded group id because can contain characters which can interfere with url
+        parentId = new String(Base64.getUrlDecoder().decode(parentId.getBytes()));
+        LOG.info("Saving ad-hoc subgroups in parent [{}]", parentId);
+        return groupService.addGroupMembers(parentId, members);
+    }
+
     @RequestMapping(value = "/group/save/{parentId:.+}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public AcmGroup saveSubGroup(@RequestBody AcmGroup subGroup,
