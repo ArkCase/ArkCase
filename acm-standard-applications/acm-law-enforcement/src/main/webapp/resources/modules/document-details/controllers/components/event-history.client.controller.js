@@ -25,11 +25,11 @@ angular.module('document-details').controller(
                         gridHelper.setExternalPaging(config, $scope.retrieveGridData);
                         gridHelper.setUserNameFilter(promiseUsers);
 
-                        $scope.retrieveGridDataForEventHistory();
+                        $scope.retrieveGridData();
                         return config;
                     });
 
-                    $scope.retrieveGridDataForEventHistory = function() {
+                    $scope.retrieveGridData = function() {
                         if (Util.goodPositive($stateParams.id)) {
                             var promiseQueryAudit = ObjectAuditService.queryAudit(ObjectService.ObjectTypes.FILE, $stateParams.id, Util
                                     .goodValue($scope.start, 0), Util.goodValue($scope.pageSize, 10), Util.goodMapValue($scope.sort, "by"),
