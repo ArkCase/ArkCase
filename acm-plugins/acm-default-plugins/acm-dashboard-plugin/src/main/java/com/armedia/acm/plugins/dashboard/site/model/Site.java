@@ -2,17 +2,22 @@ package com.armedia.acm.plugins.dashboard.site.model;
 
 import com.armedia.acm.core.AcmObject;
 import com.armedia.acm.data.AcmEntity;
-import com.armedia.acm.plugins.dashboard.site.converters.JsonConverter;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import javax.persistence.Column;
-import javax.persistence.Convert;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -25,6 +30,10 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "acm_site")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "className", defaultImpl = Site.class)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "cm_class_name", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("com.armedia.acm.plugins.dashboard.site.model.Site")
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class Site implements Serializable, AcmObject, AcmEntity
 {
@@ -42,8 +51,8 @@ public class Site implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_site_id")
     private Long id;
 
-    @Column(name = "cm_site_json", columnDefinition = "json")
-    @Convert(converter = JsonConverter.class)
+    @Lob
+    @Column(name = "cm_site_json")
     private String json;
 
     @Column(name = "cm_site_user")
@@ -62,6 +71,9 @@ public class Site implements Serializable, AcmObject, AcmEntity
     @Column(name = "cm_site_modified", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modified;
+
+    @Column(name = "cm_class_name")
+    private String className = this.getClass().getName();
 
     @Override
     public Long getId()
@@ -140,6 +152,16 @@ public class Site implements Serializable, AcmObject, AcmEntity
     public void setModified(Date modified)
     {
         this.modified = modified;
+    }
+
+    public String getClassName()
+    {
+        return className;
+    }
+
+    public void setClassName(String className)
+    {
+        this.className = className;
     }
 
     @Override
