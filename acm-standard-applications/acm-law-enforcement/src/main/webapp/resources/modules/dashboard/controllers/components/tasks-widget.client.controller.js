@@ -71,17 +71,14 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                                     var config = _.find(data[0].components, {
                                         id : "main"
                                     });
-                                    // var info = data[1];
                                     var widgetInfo = _.find(config.widgets, function(widget) {
                                         return widget.id === "tasks";
                                     });
-                                    // var tasks = info.response.docs;
 
                                     gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                                     gridHelper.setColumnDefs(widgetInfo);
                                     gridHelper.setBasicOptions(widgetInfo);
                                     gridHelper.setExternalPaging(widgetInfo, populateGridData);
-                                    // gridHelper.setWidgetsGridData(tasks);
                                     populateGridData();
 
                                 }, function(err) {
