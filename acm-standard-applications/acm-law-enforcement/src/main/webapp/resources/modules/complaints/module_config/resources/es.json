@@ -232,6 +232,7 @@
         "modal": {
             "title": "Etiqueta",
             "search": "Buscando un dia",
+            "placeholder": "Añadir etiqueta",
             "buttons": {
                 "cancel": "Cancelar",
                 "ok": "Añadir una etiqueta"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Calendario"
+        "title": "Calendario",
+        "infoMessage": "La configuración de integración del calendario no está habilitada"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Búsqueda de referencia"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Nombre completo"
         },
+        "assigne.none": "Ninguna",
         "assignee.label": "Receptor",
         "owningGroup.label": "Grupo propietario",
         "priority.label": "Prioridad",

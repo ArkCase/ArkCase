@@ -232,6 +232,7 @@
         "modal": {
             "title": "Метка",
             "search": "Поиск дня",
+            "placeholder": "Добавить метку",
             "buttons": {
                 "cancel": "Отмена",
                 "ok": "Добавить тег"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "Календарь"
+        "title": "Календарь",
+        "infoMessage": "Конфигурация интеграции календарей не включена"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "Поиск ссылок"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "Полное имя"
         },
+        "assigne.none": "Никто",
         "assignee.label": "Получатель",
         "owningGroup.label": "Группа владельцев",
         "priority.label": "Приоритет",

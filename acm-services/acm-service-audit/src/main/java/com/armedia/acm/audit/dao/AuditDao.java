@@ -13,6 +13,7 @@ import javax.persistence.Query;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by armdev on 9/4/14.
@@ -81,33 +82,41 @@ public class AuditDao extends AcmAbstractDao<AuditEvent>
         switch (sort)
         {
         case "eventType":
-            sortBy = "COALESCE(lu.auditBuisinessName, ae.fullEventType)";
+            sortBy = "COALESCE(lu.cm_value, al.cm_audit_activity)";
             break;
         case "userId":
-            sortBy = "ae.userId";
+            sortBy = "al.cm_audit_user";
             break;
         default:
-            sortBy = "ae.eventDate";
+            sortBy = "al.cm_audit_datetime";
             break;
         }
 
-        String queryText = "SELECT ae " +
-                "FROM   AuditEvent ae LEFT OUTER JOIN AcmAuditLookup lu ON ae.fullEventType=lu.auditEventName " +
-                "WHERE  ae.status != 'DELETE' " +
-                "AND ((ae.objectType = :objectType AND ae.objectId = :objectId AND ae.parentObjectId = NULL) " +
-                "OR (ae.parentObjectType = :objectType AND ae.parentObjectId = :objectId)) " +
-                (eventTypes != null ? "AND ae.fullEventType IN :eventTypes " : "") +
-                "AND ae.eventResult = 'success' " +
-                "ORDER BY " + sortBy + " " + direction;
-        Query query = getEm().createQuery(queryText);
+        /*
+         * we need to create native query because of nesting queries.
+         * Because of MySQL "late row lookup" problem for slow performance when using order by and limit
+         * we need to use this trick to increase performance when there are lot of rows.
+         */
+        String queryText = "SELECT al.* " +
+                "FROM (SELECT ae.cm_audit_id AS id" +
+                " FROM acm_audit_log ae" +
+                " WHERE ae.cm_audit_status != 'DELETE'" +
+                " AND ((ae.cm_object_type = ?2 AND ae.cm_object_id = ?1) OR" +
+                " (ae.cm_parent_object_type = ?2 AND ae.cm_parent_object_id = ?1))" +
+                (eventTypes != null && eventTypes.size() > 0 ? "      AND ae.cm_audit_activity IN ("
+                        + eventTypes.stream().map(et -> "'" + et + "'").collect(Collectors.joining(",")) + ")" : "")
+                +
+                "      AND ae.cm_audit_activity_result = 'success'" +
+                "  ) tmp" +
+                " JOIN acm_audit_log al" +
+                "    ON al.cm_audit_id = tmp.id" +
+                "  LEFT OUTER JOIN acm_audit_event_type_lu lu ON al.cm_audit_activity = lu.cm_key" +
+                " ORDER BY " + sortBy + " " + direction;
+        Query query = getEm().createNativeQuery(queryText, AuditEvent.class);
         query.setFirstResult(startRow);
         query.setMaxResults(maxRows);
-        query.setParameter("objectId", objectId);
-        query.setParameter("objectType", objectType);
-        if (eventTypes != null)
-        {
-            query.setParameter("eventTypes", eventTypes);
-        }
+        query.setParameter(1, objectId);
+        query.setParameter(2, objectType);
 
         List<AuditEvent> results = query.getResultList();
         return results;

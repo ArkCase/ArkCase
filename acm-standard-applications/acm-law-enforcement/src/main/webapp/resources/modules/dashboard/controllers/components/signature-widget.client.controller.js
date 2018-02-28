@@ -2,7 +2,7 @@
 
 angular.module('dashboard.signature', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('signature', {
-        title : 'dashboard.widgets.signature.title',
+        title : 'preference.overviewWidgets.signature.title',
         description : 'dashboard.widgets.signature.description',
         controller : 'Dashboard.SignatureController',
         reload : true,

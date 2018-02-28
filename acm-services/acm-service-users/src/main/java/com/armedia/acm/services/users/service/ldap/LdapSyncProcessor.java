@@ -30,18 +30,17 @@ public class LdapSyncProcessor
     {
         List<AcmUser> acmUsers = userDao.findByDirectory(ldapSyncConfig.getDirectoryName());
         AcmUsersSyncResult acmUsersSyncResult = new AcmUsersSyncResult(fullSync);
-        Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers);
+        Map<String, AcmUser> acmSyncedUsers = acmUsersSyncResult.sync(ldapUsers, acmUsers, userDao.getDefaultUserLang());
 
         List<AcmGroup> acmGroups = groupDao.findLdapGroupsByDirectory(ldapSyncConfig.getDirectoryName());
         AcmGroupsSyncResult acmGroupsSyncResult = new AcmGroupsSyncResult();
         acmGroupsSyncResult.sync(ldapGroups, acmGroups, acmSyncedUsers);
 
-        Map<String, Set<String>> roleToGroup = roleToGroupConfig.getRoleToGroupsMap();
-
         ldapDatabaseSyncService.saveUsers(acmUsersSyncResult);
 
         ldapDatabaseSyncService.saveGroups(acmGroupsSyncResult);
 
+        Map<String, Set<String>> roleToGroup = roleToGroupConfig.getRoleToGroupsMap();
         List<String> applicationRoles = new ArrayList<>(roleToGroup.keySet());
         ldapDatabaseSyncService.saveAcmRoles(applicationRoles, AcmRoleType.APPLICATION_ROLE);
 

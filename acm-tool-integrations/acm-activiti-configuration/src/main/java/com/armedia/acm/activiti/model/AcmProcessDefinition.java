@@ -46,8 +46,8 @@ public class AcmProcessDefinition implements AcmEntity
     private String fileName;
     @Column(name = "cm_pd_is_active")
     private boolean active;
-    @Column(name = "cm_pd_md5_hex")
-    private String md5Hash;
+    @Column(name = "cm_pd_sha256_hex")
+    private String sha256Hash;
 
     @Column(name = "cm_pd_created", nullable = false, insertable = true, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -140,14 +140,14 @@ public class AcmProcessDefinition implements AcmEntity
         this.active = active;
     }
 
-    public String getMd5Hash()
+    public String getSha256Hash()
     {
-        return md5Hash;
+        return sha256Hash;
     }
 
-    public void setMd5Hash(String md5Hash)
+    public void setSha256Hash(String sha256Hash)
     {
-        this.md5Hash = md5Hash;
+        this.sha256Hash = sha256Hash;
     }
 
     @Override

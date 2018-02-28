@@ -4,7 +4,7 @@ angular
         .module('dashboard.locations', [ 'adf.provider' ])
         .config(function(dashboardProvider) {
             dashboardProvider.widget('locations', {
-                title : 'dashboard.widgets.locations.title',
+                title : 'preference.overviewWidgets.locations.title',
                 description : 'dashboard.widgets.locations.description',
                 controller : 'Dashboard.LocationsController',
                 reload : true,

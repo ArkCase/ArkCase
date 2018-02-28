@@ -2,14 +2,7 @@
 
 angular.module('tasks').controller(
         'UserPickerDialogController',
-        [
-                '$scope',
-                '$modalInstance',
-                '$q',
-                'UtilService',
-                'Admin.OrganizationalHierarchyService',
-                'cfg',
-                'parentType',
+        [ '$scope', '$modalInstance', '$q', 'UtilService', 'Admin.OrganizationalHierarchyService', 'cfg', 'parentType',
                 'showGroupAndUserPicker',
                 function($scope, $modalInstance, $q, Util, organizationalHierarchyService, cfg, parentType, showGroupAndUserPicker) {
                     $scope.modalInstance = $modalInstance;
@@ -52,27 +45,26 @@ angular.module('tasks').controller(
 
                             //find child users
                             if (group && group.member_id_ss) {
-                                organizationalHierarchyService.getUsersForGroup(group.object_id_s.replace(/\./g, '_002E_')).then(
-                                        function(payload) {
-                                            //successfully users received, insert with groups in same array
-                                            var data = _.get(payload, 'data.response.docs');
-                                            if (data) {
-                                                for (var i = 0; i < data.length; i++) {
-                                                    data[i].title = data[i].name;
-                                                    data[i].isMember = true;
-                                                    children.unshift(data[i]);
-                                                }
-                                                group.children = children;
-                                            }
-                                            dfd.resolve(children);
-                                        }, function(payload) {
-                                            //error getting users
-                                            console.log("Error getting users: " + payload);
+                                organizationalHierarchyService.getUsersForGroup(group.object_id_s).then(function(payload) {
+                                    //successfully users received, insert with groups in same array
+                                    var data = _.get(payload, 'data.response.docs');
+                                    if (data) {
+                                        for (var i = 0; i < data.length; i++) {
+                                            data[i].title = data[i].name;
+                                            data[i].isMember = true;
+                                            children.unshift(data[i]);
+                                        }
+                                        group.children = children;
+                                    }
+                                    dfd.resolve(children);
+                                }, function(payload) {
+                                    //error getting users
+                                    console.log("Error getting users: " + payload);
 
-                                            //be we still need to return sub groups which are included in children, that's why we are not using reject
-                                            group.children = children;
-                                            dfd.resolve(children);
-                                        });
+                                    //be we still need to return sub groups which are included in children, that's why we are not using reject
+                                    group.children = children;
+                                    dfd.resolve(children);
+                                });
                             } else {
                                 dfd.resolve(children);
                             }

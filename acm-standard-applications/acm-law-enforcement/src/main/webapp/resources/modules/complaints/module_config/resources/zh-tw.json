@@ -232,6 +232,7 @@
         "modal": {
             "title": "標籤",
             "search": "搜索標籤",
+            "placeholder": "添加標籤",
             "buttons": {
                 "cancel": "取消",
                 "ok": "添加標籤"
@@ -247,7 +248,8 @@
         }
     },
     "complaints.comp.calendar": {
-        "title": "日曆"
+        "title": "日曆",
+        "infoMessage": "日曆集成配置未啟用"
     },
     "complaints.comp.referenceSearchGrid": {
         "title": "參考搜索"
@@ -296,6 +298,7 @@
         "table.columns": {
             "fullName": "全名"
         },
+        "assigne.none": "沒有",
         "assignee.label": "指定人",
         "owningGroup.label": "擁有集團",
         "priority.label": "優先",
