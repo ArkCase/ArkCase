@@ -240,4 +240,8 @@
     <bean id="cmisConfigurationUrlValidation" class="com.armedia.acm.plugins.admin.web.api.CmisConfigurationUrlValidation">
         <property name="cmisConfigurationService" ref="cmisConfigurationService"/>
     </bean>
+
+    <bean id="getTranscribeConfigurationApiController" class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 </beans>
