@@ -26,8 +26,9 @@ angular
                         'Task.AlertsService',
                         'ObjectService',
                         'Task.WorkflowService',
+                        'ModalDialogService',
                         function(Util, HelperObjectBrowserService, CostTrackingInfoService, HelperUiGridService, ObjectTaskService,
-                                TaskAlertsService, ObjectService, TaskWorkflowService) {
+                                TaskAlertsService, ObjectService, TaskWorkflowService, ModalDialogService) {
 
                             var Service = {
 
@@ -39,6 +40,17 @@ angular
                                     that.gridHelper = arg.gridHelper || new HelperUiGridService.Grid({
                                         scope : that.scope
                                     });
+                                    that.scope.enableNewTaskButton = arg.enableNewTaskButton || that.scope.enableNewTaskButton;
+
+                                    that.scope.afterObjectInfo = that.scope.afterObjectInfo || function() {
+                                        if (that.objectType === ObjectService.ObjectTypes.COSTSHEET) {
+                                            that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                        } else if (that.objectType === ObjectService.ObjectTypes.CASE_FILE) {
+                                            that.scope.parentObject = that.scope.objectInfo.caseNumber;
+                                        } else if (that.objectType === ObjectService.ObjectTypes.COMPLAINT) {
+                                            that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                        }
+                                    };
 
                                     that.scope.deleteRow = that.scope.deleteRow || function(entity) {
                                         var objectInfo = Util.omitNg(that.scope.objectInfo);
@@ -64,6 +76,9 @@ angular
                                     that.scope.onObjectInfoRetrieved = arg.onObjectInfoRetrieved || function(object) {
                                         that.scope.objectInfo = object;
                                         that.scope.populateGridData();
+                                        if (that.scope.afterObjectInfo) {
+                                            that.scope.afterObjectInfo();
+                                        }
                                     };
 
                                     that.scope.populateGridData = arg.populateGridData
@@ -105,7 +120,30 @@ angular
                                                 that.gridHelper.showObject(targetType, targetId);
                                             };
 
+                                    if (that.scope.enableNewTaskButton) {
+                                        that.enableNewTaskButton();
+                                    }
+
                                 }
+                            };
+
+                            Service.TaskTableComponent.prototype.enableNewTaskButton = function() {
+                                var that = this;
+                                that.scope.addNew = function() {
+                                    var modalMetadata = {
+                                        moduleName : "tasks",
+                                        templateUrl : "modules/tasks/views/components/task-new-task.client.view.html",
+                                        controllerName : "Tasks.NewTaskController",
+                                        params : {
+                                            parentType : that.objectType,
+                                            parentObject : that.scope.parentObject,
+                                            parentId : that.scope.objectInfo.id,
+                                            parentTitle : that.scope.objectInfo.title,
+                                            taskType : 'ACM_TASK'
+                                        }
+                                    };
+                                    ModalDialogService.showModal(modalMetadata);
+                                };
                             };
 
                             Service.TaskTableComponent.prototype.commit = function() {

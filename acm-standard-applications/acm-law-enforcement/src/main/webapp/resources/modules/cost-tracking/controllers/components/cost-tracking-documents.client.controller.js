@@ -26,9 +26,6 @@ angular.module('cost-tracking').controller(
                         LocaleService, CorrespondenceService, ObjectModelService, DocTreeExtWebDAV, DocTreeExtCheckin,
                         HelperDocumentListTreeHelper) {
 
-                    $scope.afterObjectInfo = function() {
-                        $scope.parentObject = " ";
-                    };
                     var documentTreeComponent = new HelperDocumentListTreeHelper.DocumentTreeComponent({
                         scope : $scope,
                         stateParams : $stateParams,

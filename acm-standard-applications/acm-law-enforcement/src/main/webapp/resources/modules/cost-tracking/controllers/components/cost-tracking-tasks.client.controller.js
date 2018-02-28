@@ -22,6 +22,7 @@ angular.module('cost-tracking').controller(
                         moduleId : "cost-tracking",
                         componentId : "tasks",
                         retrieveObjectInfo : CostTrackingInfoService.getCostsheetInfo,
-                        validateObjectInfo : CostTrackingInfoService.validateCostsheet
+                        validateObjectInfo : CostTrackingInfoService.validateCostsheet,
+                        enableNewTaskButton : true
                     }).commit();
                 } ]);
