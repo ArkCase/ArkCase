@@ -94,8 +94,6 @@ public class SpringLdapUserDao
     public void changeUserPassword(String dn, String password, String newPassword, LdapTemplate ldapTemplate, AcmLdapConfig config)
             throws AcmLdapActionFailedException
     {
-        String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
-
         try
         {
             ContextSource contextSource = new RetryExecutor<ContextSource>().retryResult(ldapTemplate::getContextSource);
@@ -108,17 +106,16 @@ public class SpringLdapUserDao
             mods[1] = new ModificationItem(DirContext.ADD_ATTRIBUTE,
                     Directory.valueOf(config.getDirectoryType()).getPasswordAttribute(newPassword));
             // Perform the update
+            String strippedBaseDn = MapperUtils.stripBaseFromDn(dn, config.getBaseDC());
             new RetryExecutor().retryChecked(() -> context.modifyAttributes(strippedBaseDn, mods));
             context.close();
         }
         catch (AuthenticationException e)
         {
-            log.warn("User: [{}] failed to authenticate. ", dn);
             throw e;
         }
         catch (Exception e)
         {
-            log.warn("Changing the password for User: [{}] failed. ", dn, e);
             throw new AcmLdapActionFailedException("LDAP action failed to execute", e);
         }
     }

@@ -223,7 +223,7 @@
         "noSelectedDocsErrorMsg": "Выберите хотя бы один документ, подлежащий рассмотрению."
     },
     "tasks.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "ПоискПользователей",
         "title": "Поиск пользователей / групп",
         "search": {
             "btn": "Поиск",
@@ -241,7 +241,7 @@
         }
     },
     "tasks.owningGroupSearch": {
-        "id": "OwningGroupSearch",
+        "id": "ОбладаниеГрупповойПоиск",
         "title": "Поиск групп (ов) этого пользователя",
         "search": {
             "btn": "Поиск",
@@ -257,7 +257,7 @@
         }
     },
     "tasks.objectSearch": {
-        "id": "ObjectSearch",
+        "id": "ПоискОбъектов",
         "title": "Поиск объектов",
         "search": {
             "btn": "Поиск",
