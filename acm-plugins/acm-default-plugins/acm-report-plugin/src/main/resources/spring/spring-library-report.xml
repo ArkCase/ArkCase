@@ -69,7 +69,7 @@
         <property name="ecmFileService" ref="ecmFileService"/>
         <property name="ecmFileDao" ref="ecmFileDao"/>
         <property name="auditPropertyEntityAdapter" ref="auditPropertyEntityAdapter"/>
-        <property name="uploadUserId" value="${PENTAHO_RETRIEVE_REPORT_USER}"/>
+        <property name="uploadUserId" value="${CMIS_STORE_REPORT_USER}"/>
         <property name="reportDocumentRepository" value="${PENTAHO_REPORT_DOCUMENT_REPOSITORY_NAME}"/>
     </bean>
 

@@ -51,8 +51,6 @@ angular.module('directives').directive('simplePager', function() {
         },
 
         link : function(scope) { //dom operations
-            scope.pagerData.currentPage = 1;
-
             scope.$watchCollection('pagerData.totalItems', function(totalItems, oldValue) {
                 if (totalItems && totalItems != oldValue) {
                     recalculatePagerNumbers();
