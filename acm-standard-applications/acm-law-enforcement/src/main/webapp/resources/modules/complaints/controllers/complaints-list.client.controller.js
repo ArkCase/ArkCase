@@ -14,8 +14,9 @@ angular.module('complaints').controller(
                 'Helper.ObjectBrowserService',
                 'ServCommService',
                 'MessageService',
+                'Admin.CalendarConfigurationService',
                 function($scope, $state, $stateParams, $translate, Util, ObjectService, ComplaintListService, ComplaintInfoService,
-                        HelperObjectBrowserService, ServCommService, MessageService) {
+                        HelperObjectBrowserService, ServCommService, MessageService, CalendarConfigurationService) {
 
                     // maybe optional listener for "close-complaint"?
                     var eventName = "object.inserted";
@@ -49,6 +50,7 @@ angular.module('complaints').controller(
                             return ComplaintListService.updateComplaintsTreeData(start, n, sort, filters, query, nodeData);
                         },
                         getTreeData : function(start, n, sort, filters, query) {
+                            checkCalendarConfiguration();
                             return ComplaintListService.queryComplaintsTreeData(start, n, sort, filters, query);
                         },
                         getNodeData : function(complaintId) {
@@ -63,5 +65,16 @@ angular.module('complaints').controller(
                             };
                         }
                     });
+
+                    var checkCalendarConfiguration = function() {
+                        CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
+                            if (calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
+                                $scope.objectInfoRetrieved = true;
+                            } else {
+                                MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
+                                $scope.objectInfoRetrieved = false;
+                            }
+                        });
+                    }
 
                 } ]);
