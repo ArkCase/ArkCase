@@ -68,7 +68,7 @@ angular.module('complaints').controller(
 
                     var checkCalendarConfiguration = function() {
                         CalendarConfigurationService.getCurrentCalendarConfiguration().then(function(calendarAdminConfigRes) {
-                            if (calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
+                            if (calendarAdminConfigRes.data.configurationsByType['COMPLAINT'].integrationEnabled) {
                                 $scope.objectInfoRetrieved = true;
                             } else {
                                 MessageService.info($translate.instant('dashboard.widgets.calendar.calendarIntegrationDisabledMessage'));
