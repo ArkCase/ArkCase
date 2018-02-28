@@ -1,5 +1,6 @@
 package com.armedia.acm.plugins.admin.web.api;
 
+import com.armedia.acm.services.transcribe.exception.GetTranscribeConfigurationException;
 import com.armedia.acm.services.transcribe.model.TranscribeConfiguration;
 import com.armedia.acm.services.transcribe.model.TranscribeServiceProvider;
 import com.armedia.acm.services.transcribe.service.ArkCaseTranscribeService;
@@ -24,6 +25,7 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -92,5 +94,29 @@ public class GetTranscribeConfigurationAPIControllerTest extends EasyMockSupport
 
         assertNotNull(responseConfiguration);
         assertEquals(configuration.isEnabled(), responseConfiguration.isEnabled());
+    }
+
+    @Test
+    public void getConfiguration_Exception() throws Exception
+    {
+        GetTranscribeConfigurationException exception = new GetTranscribeConfigurationException("error");
+
+        when(mockAuthentication.getName()).thenReturn("user");
+        when(mockArkCaseTranscribeService.getConfiguration()).thenThrow(exception);
+
+        try
+        {
+            mockMvc.perform(get("/api/v1/plugin/admin/transcribe/configuration")
+                    .accept(MediaType.parseMediaType("application/json;charset=UTF-8"))
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .principal(mockAuthentication))
+                    .andReturn();
+        }
+        catch (Exception e)
+        {
+            assertNotNull(e);
+            assertTrue(e.getCause() instanceof GetTranscribeConfigurationException);
+            assertEquals("error", e.getCause().getMessage());
+        }
     }
 }
