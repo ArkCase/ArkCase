@@ -30,8 +30,8 @@ angular.module('directives').directive('objectAuthorizationRolesFilter', [ 'Util
             scope.data = {};
 
             scope.onChangeFilterWord = function() {
-                if (scope.data.filterWord == "") {
-                    scope.isSearchValid = true;
+                scope.isSearchValid = true;
+                if (scope.data.filterWord === "") {
                     scope.filter({
                         data : {}
                     });

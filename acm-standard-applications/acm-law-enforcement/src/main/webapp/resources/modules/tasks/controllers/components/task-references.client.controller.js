@@ -14,8 +14,9 @@ angular.module('tasks').controller(
                 'ObjectService',
                 'ObjectAssociation.Service',
                 'MessageService',
+                '$timeout',
                 function($scope, $stateParams, Util, ConfigService, TaskInfoService, HelperUiGridService, HelperObjectBrowserService,
-                        $modal, ObjectService, ObjectAssociationService, MessageService) {
+                        $modal, ObjectService, ObjectAssociationService, MessageService, $timeout) {
 
                     new HelperObjectBrowserService.Component({
                         scope : $scope,
@@ -98,10 +99,6 @@ angular.module('tasks').controller(
                                 });
                     }
 
-                    $scope.refresh = function() {
-                        $scope.$emit('report-object-refreshed', $stateParams.id);
-                    };
-
                     // open add reference modal
                     $scope.addReference = function() {
                         var modalInstance = $modal.open({
@@ -137,6 +134,10 @@ angular.module('tasks').controller(
                                         target.object_type_s, target.title_parseable, target.name, 'REFERENCE', 'REFERENCE');
                                 ObjectAssociationService.saveObjectAssociation(association).then(function(payload) {
                                     //success
+                                    $timeout(function() {
+                                        refresh();
+                                    }, 2000);
+
                                     //append new entity as last item in the grid
                                     var rowEntity = {
                                         object_id_s : payload.associationId,
@@ -164,6 +165,10 @@ angular.module('tasks').controller(
                             return [];
                         });
 
+                    };
+
+                    var refresh = function() {
+                        $scope.$emit('report-object-refreshed', $scope.objectInfo.id ? $scope.objectInfo.id : $stateParams.id);
                     };
 
                 } ]);
