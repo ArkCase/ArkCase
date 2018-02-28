@@ -203,7 +203,8 @@
             "documents": {
                 "title": "Documents",
                 "description": "Displays chart of documents by folder",
-                "noDataMessage": "Currently there are no documents to display"
+                "noDataMessage": "Currently there are no documents to display",
+                "series": "Number of Documents"
             },
             "locations": {
                 "title": "Locations",
@@ -278,7 +279,8 @@
             "calendar": {
                 "title": "Calendar",
                 "description": "Displays chart of scheduled events per day",
-                "noDataMessage": "Currently there are no events to display"
+                "noDataMessage": "Currently there are no events to display",
+                "calendarIntegrationDisabledMessage": "Calendar integration is disabled by Administrator"
             },
             "reworkDetails": {
                 "title": "Rework Details",
@@ -349,6 +351,11 @@
                 "title": "Related People",
                 "description": "Display related people",
                 "noDataMessage": "Currently no related people to display"
+            },			
+            "approvers": {
+                "title": "Approvers",
+                "description": "Displays Approvers",
+                "noDataMessage": "Currently there are no approvers to display"
             }
         }
     },

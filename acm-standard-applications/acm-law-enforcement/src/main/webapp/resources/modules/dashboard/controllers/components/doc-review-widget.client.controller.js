@@ -2,7 +2,7 @@
 
 angular.module('dashboard.docReview', [ 'adf.provider' ]).config(function(dashboardProvider) {
     dashboardProvider.widget('docReview', {
-        title : 'dashboard.widgets.docReview.title',
+        title : 'preference.overviewWidgets.docReview.title',
         description : 'dashboard.widgets.docReview.description',
         controller : 'Dashboard.DocReviewController',
         reload : true,

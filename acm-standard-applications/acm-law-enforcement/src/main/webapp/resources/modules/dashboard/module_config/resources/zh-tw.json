@@ -110,8 +110,8 @@
                 "title": "新案件",
                 "description": "顯示新案件",
                 "noDataMessage": "目前沒有案件信息",
-                "configDescription": "",
-                "configDescriptionPlaceholder": ""
+                "configDescription": "描述",
+                "configDescriptionPlaceholder": "輸入小工具說明"
             },
             "teamWorkload": {
                 "title": "團隊工作量",
@@ -154,8 +154,8 @@
                     "description": "顯示城市的當前溫度",
                     "location": "位置",
                     "insertLocationInConfiguration": "請在窗口小部件配置中插入位置",
-                    "zip": "zh-tw_Zip Code",
-                    "enterZip": "zh-tw_Enter Zip Code"
+                    "zip": "郵遞區號",
+                    "enterZip": "輸入郵遞區號"
                 },
                 "title": "天氣",
                 "noDataMessage": "目前沒有天氣信息",
@@ -203,7 +203,8 @@
             "documents": {
                 "title": "文件",
                 "description": "按文件夾顯示文件",
-                "noDataMessage": "目前沒有文件信息可以顯示"
+                "noDataMessage": "目前沒有文件信息可以顯示",
+                "series": "檔數量"
             },
             "locations": {
                 "title": "地點",
@@ -278,7 +279,8 @@
             "calendar": {
                 "title": "日曆",
                 "description": "顯示每日計劃事件的圖表",
-                "noDataMessage": "目前沒有事件信息可以顯示"
+                "noDataMessage": "目前沒有事件信息可以顯示",
+				"calendarIntegrationDisabledMessage": "由管理員禁用的日曆集成"
             },
             "reworkDetails": {
                 "title": "返工細節",
@@ -349,6 +351,11 @@
                 "title": "相關人員",
                 "description": "顯示相關人員",
                 "noDataMessage": "目前沒有相關人員信息可以顯示"
+			},
+            "approvers": {
+                "title": "審批",
+                "description": "顯示批准者",
+                "noDataMessage": "當前沒有要顯示的核准者"	
             }
         }
     },

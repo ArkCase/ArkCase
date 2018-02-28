@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "日历"
+        "title": "日历",
+        "message": "日历集成配置未启用"
     },
     "cases.comp.merge": {
         "title": "合并",
@@ -332,6 +333,7 @@
             "status": "状态",
             "addedBy": "添加者"
         },
+        "assigne.none": "没有",
         "assignee.label": "指定人员",
         "owningGroup.label": "拥有群组",
         "priority.label": "优先级别",

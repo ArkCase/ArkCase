@@ -57,18 +57,18 @@
             "newDrugFraud%": "Fraude d'application de nouveaux médicaments",
             "payoff%": "Pot-de-vin",
             "pensionWaiver%": "Demande d'exemption de pension",
-            "pollution%": "Pollution",
+            "pollution%": "La pollution",
             "productTampering%": "Tampering du produit",
             "assetTheftMisuse%": "Vol ou mauvaise utilisation de l'actif"
         }
     },
     "cases.comp.actions": {
-        "title": "Actions",
+        "title": "Actes",
         "restrict": "Restreindre?",
         "new.button": "Nouveau",
-        "edit.button": "Edit",
+        "edit.button": "Modifier",
         "status.button": "Changer l'état du cas",
-        "reinvestigate.button": "Fr_Reinvestigate",
+        "reinvestigate.button": "Réinventer",
         "subscribe.button": "S'abonner",
         "unsubscribe.button": "Désabonner",
         "merge.button": "Fusionner",
@@ -86,7 +86,7 @@
         }
     },
     "cases.comp.documents": {
-        "title": "Documents",
+        "title": "Des documents",
         "sendEmail": "Envoyer un email",
         "filterInputPlaceholder": "Filtre",
         "searchInputPlaceholder": "Chercher",
@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Calendrier"
+        "title": "Calendrier",
+        "message": "La configuration d'intégration de calendrier n'est pas activée"
     },
     "cases.comp.merge": {
         "title": "Fusionner",
@@ -332,6 +333,7 @@
             "status": "Statut",
             "addedBy": "Ajouté par"
         },
+        "assigne.none": "Aucun",
         "assignee.label": "Cessionnaire",
         "owningGroup.label": "Groupe propriétaire",
         "priority.label": "Priorité",
@@ -360,7 +362,7 @@
         }
     },
     "cases.userOrGroupSearch": {
-        "id": "UserSearch",
+        "id": "Recherched'utilisateur",
         "title": "Recherche d'utilisateur / groupe",
         "search": {
             "btn": "Chercher",
@@ -380,7 +382,7 @@
             "details.label": "Détails",
             "people.label": "Gens",
             "organizations.label": "Organisations",
-            "documents.label": "Documents",
+            "documents.label": "Des Documents",
             "participants.label": "Participants",
             "notes.label": "Remarques",
             "tasks.label": "Les tâches",

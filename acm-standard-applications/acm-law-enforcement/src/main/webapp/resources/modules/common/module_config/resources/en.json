@@ -65,6 +65,7 @@
             "newCorrespondence": "New Correspondence",
             "open": "Open",
             "email": "Email",
+            "newTask": "New Task",
             "download": "Download",
             "copy": "Copy",
             "cut": "Cut",
@@ -111,7 +112,7 @@
         "participantsDialog": {
             "titlePart": "Participants for ",
             "title": "Participants"
-        },        
+        },
         "recipientsDialog": {
             "title": "Choose Recipients",
             "search.placeholder": "Search Recipients",
@@ -182,6 +183,9 @@
         "tooltip.move_left": "Move Left",
         "authorized": "Authorized"
     },
+    "common.directive.objectAuthorizationRolesFilter": {
+        "pattern.title": "Error, 2 characters required."
+    },
     "common.directive.searchModal": {
         "header": "Search",
         "btnSearch.text": "Search",
@@ -190,7 +194,8 @@
         "edtPlaceholder": "Type in to search",
         "noData.text": "No Results",
         "pickUserLabel": "Pick Associated User",
-        "pickGroupLabel": "Pick Associated Group"
+        "pickGroupLabel": "Pick Associated Group",
+        "selectedItemsGrid.label": "Selected entries"
     },
     "common.directive.search": {
         "showMore.button.text": "Show More Values",
@@ -584,7 +589,7 @@
     "common.directive.coreParticipants": {
         "title": "Participants",
         "replaceFolderChildrenParticipants": "Replace child documents participants",
-        "modal" : {
+        "modal": {
             "addParticipant.label": "Add Participant",
             "editParticipant.label": "Edit Record",
             "participantType.label": "Participant Type ",
@@ -594,7 +599,7 @@
             "dialogUserPicker.header": "Search User",
             "dialogGroupPicker.header": "Search Group",
             "replaceChildrenParticipant": "replace children participant"
-        },        
+        },
         "message": {
             "error.groupType": "The owning group cannot be a person.",
             "error.userType": " User type cannot be a group.",
@@ -638,7 +643,12 @@
         "FILE": "File",
         "DOC_REPO": "Document Repository",
         "ORGANIZATION": "Organization",
-        "PERSON": "Person"
+        "PERSON": "Person",
+        "PERSON-ASSOCIATION": "Person-Association",
+        "PARTICIPANT": "Participant",
+        "NOTE": "Note",
+        "PARTICIPANT-ASSOCIATION": "Participant-Association",
+        "ASSIGNMENT": "Assignment"
     },
     "frevvo.dialogUserPicker": {
         "header": "Choose User",

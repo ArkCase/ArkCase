@@ -57,7 +57,7 @@
             "newDrugFraud%": "Neue Drogenanwendung Betrug",
             "payoff%": "Auszahlung",
             "pensionWaiver%": "Pension Verzichtserklärung",
-            "pollution%": "Pollution",
+            "pollution%": "Verschmutzung",
             "productTampering%": "Produkt-Manipulation",
             "assetTheftMisuse%": "Diebstahl oder Missbrauch von Vermögenswert"
         }
@@ -244,7 +244,8 @@
         }
     },
     "cases.comp.calendar": {
-        "title": "Kalender"
+        "title": "Kalender",
+        "message": "Die Kalenderintegrationskonfiguration ist nicht aktiviert"
     },
     "cases.comp.merge": {
         "title": "Verschmelzen",
@@ -332,6 +333,7 @@
             "status": "Status",
             "addedBy": "Hinzugefügt von"
         },
+        "assigne.none": "de_None",
         "assignee.label": "Empfänger",
         "owningGroup.label": "Eigentümergruppe",
         "priority.label": "Priorität",

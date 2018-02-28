@@ -112,7 +112,7 @@ angular
 
                                                 if (node.data.object_sub_type_s == "LDAP_GROUP") {
                                                     // check if editing is allowed for the directory server this group belongs
-                                                    if (scope.enableEditingLdapUsers[node.data.directory_name_s]) {
+                                                    if (scope.enableEditingLdapUsers && scope.enableEditingLdapUsers[node.data.directory_name_s]) {
                                                         $tdList
                                                                 .eq(3)
                                                                 .html(
@@ -157,7 +157,7 @@ angular
 
                                     if (scope.treeData) {
                                         scope.$watchCollection('treeData', function(treeData, oldValue) {
-                                            if (treeData && treeData.length > 0) {
+                                            if (treeData && treeData.length >= 0) {
                                                 $($fancytree).fancytree("getTree").reload(treeData);
                                             }
                                         });
@@ -167,7 +167,8 @@ angular
                                     scope.pagerData = {
                                         pageSizes : [ 10, 20, 30, 40, 50 ],
                                         pageSize : 50,
-                                        totalItems : scope.totalGroups
+                                        totalItems : scope.totalGroups,
+                                        currentPage : 1
                                     };
                                     scope.$watchCollection('config', function(config, oldValue) {
                                         if (config) {
@@ -339,9 +340,11 @@ angular
                                             //success
                                             node.remove();
                                             messageService.succsessAction();
-                                        }, function() {
+                                        }, function(error) {
                                             //error
-                                            messageService.errorAction();
+                                            if (error !== 'cancel') {
+                                                messageService.errorAction();
+                                            }
                                         });
                                     };
 

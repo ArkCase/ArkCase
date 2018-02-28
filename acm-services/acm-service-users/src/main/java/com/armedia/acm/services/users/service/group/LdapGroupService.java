@@ -9,6 +9,7 @@ import com.armedia.acm.services.users.model.group.AcmGroupType;
 import com.armedia.acm.services.users.model.ldap.AcmLdapActionFailedException;
 import com.armedia.acm.services.users.model.ldap.AcmLdapSyncConfig;
 import com.armedia.acm.services.users.model.ldap.MapperUtils;
+import com.armedia.acm.services.users.service.AcmGroupEventPublisher;
 import com.armedia.acm.services.users.service.ldap.LdapEntryTransformer;
 import com.armedia.acm.spring.SpringContextHolder;
 
@@ -31,6 +32,8 @@ public class LdapGroupService
     private LdapEntryTransformer ldapEntryTransformer;
 
     private SpringContextHolder acmContextHolder;
+
+    private AcmGroupEventPublisher acmGroupEventPublisher;
 
     private Logger log = LoggerFactory.getLogger(getClass());
 
@@ -77,6 +80,8 @@ public class LdapGroupService
         }
         ldapGroupDao.createGroup(acmGroup, ldapSyncConfig);
         log.debug("Group [{}] with DN [{}] saved in DB and LDAP", acmGroup.getName(), acmGroup.getDistinguishedName());
+
+        acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
         return acmGroup;
     }
 
@@ -157,6 +162,7 @@ public class LdapGroupService
             ldapGroupDao.deleteGroupEntry(acmGroup.getDistinguishedName(), ldapSyncConfig);
             throw e;
         }
+        acmGroupEventPublisher.publishLdapGroupCreatedEvent(acmGroup);
         return acmGroup;
     }
 
@@ -168,6 +174,7 @@ public class LdapGroupService
         AcmGroup markedGroup = groupService.markGroupDeleted(group, true);
         AcmLdapSyncConfig ldapSyncConfig = getLdapSyncConfig(directoryName);
         ldapGroupDao.deleteGroupEntry(markedGroup.getDistinguishedName(), ldapSyncConfig);
+        acmGroupEventPublisher.publishLdapGroupDeletedEvent(markedGroup);
         return markedGroup;
     }
 
@@ -247,5 +254,10 @@ public class LdapGroupService
     public void setLdapEntryTransformer(LdapEntryTransformer ldapEntryTransformer)
     {
         this.ldapEntryTransformer = ldapEntryTransformer;
+    }
+
+    public void setAcmGroupEventPublisher(AcmGroupEventPublisher acmGroupEventPublisher)
+    {
+        this.acmGroupEventPublisher = acmGroupEventPublisher;
     }
 }

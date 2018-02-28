@@ -178,11 +178,12 @@ public class AcmUserAPIController extends SecureLdapController
     public AcmUser cloneUser(@RequestBody UserDTO ldapUserCloneRequest, @PathVariable String userId, @PathVariable String directory)
             throws AcmUserActionFailedException, AcmAppErrorJsonMsg
     {
-        validateLdapPassword(ldapUserCloneRequest);
         checkIfLdapManagementIsAllowed(directory);
         try
         {
-            return ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
+            AcmUser acmUser = ldapUserService.cloneLdapUser(userId, ldapUserCloneRequest, directory);
+            ldapUserService.publishSetPasswordEmailEvent(acmUser);
+            return acmUser;
         }
         catch (NameAlreadyBoundException e)
         {
@@ -217,7 +218,7 @@ public class AcmUserAPIController extends SecureLdapController
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             log.error("Changing password for user [{}] failed!", userId, e);
-            return Collections.singletonMap("message", e.getExplanation());
+            return Collections.singletonMap("passError", e.getExplanation());
         }
         catch (AuthenticationException e)
         {
@@ -229,7 +230,7 @@ public class AcmUserAPIController extends SecureLdapController
         {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             log.error("Changing password for user [{}] failed!", userId, e);
-            return Collections.singletonMap("message", e.getMessage());
+            return Collections.singletonMap("message", e.getShortMessage());
         }
         catch (Exception e)
         {

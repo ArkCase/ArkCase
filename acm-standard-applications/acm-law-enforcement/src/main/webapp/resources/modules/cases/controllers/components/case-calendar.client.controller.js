@@ -35,7 +35,7 @@ angular.module('cases').controller(
                             if (calendarAdminConfigRes.data.configurationsByType['CASE_FILE'].integrationEnabled) {
                                 $scope.objectInfoRetrieved = true;
                             } else {
-                                MessageService.info('Calendar Integration Configuration Not Enabled');
+                                MessageService.info($translate.instant('cases.comp.calendar.message'));
                                 $scope.objectInfoRetrieved = false;
                             }
                         });
