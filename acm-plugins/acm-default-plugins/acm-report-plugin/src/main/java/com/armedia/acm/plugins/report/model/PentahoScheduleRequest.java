@@ -3,7 +3,7 @@ package com.armedia.acm.plugins.report.model;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.Calendar;
@@ -133,13 +133,13 @@ public class PentahoScheduleRequest
                 dayOfWeek = dayOfWeek - 1;
             }
             JSONArray dayOfWeekArray = new JSONArray();
-            dayOfWeekArray.put(Integer.toString(dayOfWeek));
+            dayOfWeekArray.add(Integer.toString(dayOfWeek));
             jobTrigger.put(PentahoReportScheduleConstants.DAYS_OF_WEEK, dayOfWeekArray);
         } else if (scheduleType.equals(PentahoReportScheduleConstants.MONTHLY))
         {
             int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
             JSONArray dayOfMonthArray = new JSONArray();
-            dayOfMonthArray.put(Integer.toString(dayOfMonth));
+            dayOfMonthArray.add(Integer.toString(dayOfMonth));
             jobTrigger.put(PentahoReportScheduleConstants.DAYS_OF_MONTH, dayOfMonthArray);
         } else
         {
@@ -153,47 +153,47 @@ public class PentahoScheduleRequest
     {
         jobParameters = new JSONArray();
 
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.OUTPUT_TARGET,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.OUTPUT_TARGET,
                 PentahoReportScheduleConstants.OUTPUT_TARGET_STRING_VALUE,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.ACCEPTED_PAGE,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.ACCEPTED_PAGE,
                 PentahoReportScheduleConstants.ACCEPTED_PAGE_STRING_VALUE,
                 PentahoReportScheduleConstants.NUMBER));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.START_DATE, filterStartDate,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.START_DATE, filterStartDate,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.END_DATE, filterEndDate,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.END_DATE, filterEndDate,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.DATE_FORMAT,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.DATE_FORMAT,
                 PentahoReportScheduleConstants.REPORT_DATE_FORMAT,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.TIME_ZONE,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.TIME_ZONE,
                 PentahoReportScheduleConstants.UTC,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.STATUS,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.STATUS,
                 PentahoReportScheduleConstants.WILDCARD,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.SHOW_PARAMETERS,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.SHOW_PARAMETERS,
                 PentahoReportScheduleConstants.TRUE,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.RENDER_MODE,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.RENDER_MODE,
                 PentahoReportScheduleConstants.XML,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildParameter(PentahoReportScheduleConstants.HTML_PROPORTIONAL_WIDTH,
+        jobParameters.add(buildParameter(PentahoReportScheduleConstants.HTML_PROPORTIONAL_WIDTH,
                 PentahoReportScheduleConstants.FALSE,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_TO, emailTo,
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_TO, emailTo,
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_CC, "",
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_CC, "",
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_BCC, "",
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_BCC, "",
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_SUBJECT,
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_SUBJECT,
                 String.format(PentahoReportScheduleConstants.EMAIL_SUBJECT_TEMPLATE, jobName),
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_MESSAGE,
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_MESSAGE,
                 String.format(PentahoReportScheduleConstants.EMAIL_BODY_TEMPLATE, jobName),
                 PentahoReportScheduleConstants.STRING));
-        jobParameters.put(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_ATTACHMENT, jobName,
+        jobParameters.add(buildSingleParameter(PentahoReportScheduleConstants.EMAIL_ATTACHMENT, jobName,
                 PentahoReportScheduleConstants.STRING));
 
         scheduleJob.put(PentahoReportScheduleConstants.JOB_PARAMETERS, jobParameters);
@@ -202,7 +202,7 @@ public class PentahoScheduleRequest
     private JSONObject buildParameter(String paramName, String paramValue, String paramType)
     {
         JSONArray jsonArray = new JSONArray();
-        jsonArray.put(paramValue);
+        jsonArray.add(paramValue);
         JSONObject jsonParam = new JSONObject();
         jsonParam.put(PentahoReportScheduleConstants.NAME, paramName);
         jsonParam.put(PentahoReportScheduleConstants.STRING_VALUE, jsonArray);

@@ -2,7 +2,8 @@
     <ng-form name="securityEmailConfigurationForm">
         <div class="pull-right well">
             <div class="btn-group">
-                <button class="btn btn-xs btn-link" ng-click="save()">
+                <button class="btn btn-xs btn-link" ng-click="save()"
+                        ng-disabled="emailSenderConfigDataModel.allowDocuments && !(emailSenderConfigDataModel.allowAttachments || emailSenderConfigDataModel.allowHyperlinks)">
                     <i class="fa fa-save"></i>
                     <span translate>
                         admin.security.emailConfiguration.emailConfigForm.save.button
@@ -26,16 +27,20 @@
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentEmail.checkbox
                                     </span>
+                                    <span class="text-danger"
+                                            ng-if="emailSenderConfigDataModel.allowDocuments && !(emailSenderConfigDataModel.allowAttachments || emailSenderConfigDataModel.allowHyperlinks)">
+                                        <i class="fa fa-times"></i>
+                                        <span translate>admin.security.emailConfiguration.emailConfigForm.errorMsg</span>
+                                    </span>
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="emailSenderConfigDataModel.allowDocuments">
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments"
-                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowAttachments">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentAttach.checkbox
                                     </span>
@@ -43,12 +48,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row" ng-if="emailSenderConfigDataModel.allowDocuments">
                         <div class="col-lg-12">
                             <div class="checkbox">
                                 <label>
-                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks"
-                                            ng-disabled="!emailSenderConfigDataModel.allowDocuments">
+                                    <input type="checkbox" ng-model="emailSenderConfigDataModel.allowHyperlinks">
                                     <span translate>
                                         admin.security.emailConfiguration.emailConfigForm.enableDocumentHyperlink.checkbox
                                     </span>

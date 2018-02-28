@@ -50,7 +50,7 @@ public class AcmLdapAuthenticationProvider extends LdapAuthenticationProvider im
 
         if (user == null || AcmUserState.VALID != user.getUserState())
         {
-            eventPublisher.publishEvent(new AcmLdapSyncEvent(user));
+            eventPublisher.publishEvent(new AcmLdapSyncEvent(principal));
             getLdapSyncService().syncUserByDn(dn.toString());
         }
 
