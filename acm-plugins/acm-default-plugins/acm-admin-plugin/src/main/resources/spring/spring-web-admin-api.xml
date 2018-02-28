@@ -244,4 +244,8 @@
     <bean id="getTranscribeConfigurationApiController" class="com.armedia.acm.plugins.admin.web.api.GetTranscribeConfigurationAPIController">
         <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
     </bean>
+
+    <bean id="saveTranscribeConfigurationApiController" class="com.armedia.acm.plugins.admin.web.api.SaveTranscribeConfigurationAPIController">
+        <property name="arkCaseTranscribeService" ref="arkCaseTranscribeService"/>
+    </bean>
 </beans>
