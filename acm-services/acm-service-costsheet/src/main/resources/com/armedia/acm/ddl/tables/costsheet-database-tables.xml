@@ -216,4 +216,18 @@
             <column name="cm_costsheet_title" type="VARCHAR(1024)"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="12-add-number-in-acm-costsheet-table" author="marjan.trifunov">
+        <addColumn tableName="acm_costsheet">
+            <column name="cm_costsheet_number" type="VARCHAR(1024)"/>
+        </addColumn>
+        <sql>
+            <comment>Populate costsheet number column</comment>
+            UPDATE acm_costsheet c
+            SET c.cm_costsheet_number = CONCAT(DATE_FORMAT(date(c.cm_costsheet_created), '%Y%m%d'),'_',CAST(c.cm_costsheet_id AS CHAR))
+            WHERE c.cm_costsheet_number IS NULL
+        </sql>
+        <addUniqueConstraint tableName="acm_costsheet" columnNames="cm_costsheet_number"/>
+        <addNotNullConstraint tableName="acm_costsheet" columnName="cm_costsheet_number" columnDataType="VARCHAR(1024)"/>
+    </changeSet>
 </databaseChangeLog>

@@ -66,24 +66,37 @@ angular.module('dashboard.tasks', [ 'adf.provider' ]).config(function(dashboardP
                             var currentObjectId = HelperObjectBrowserService.getCurrentObjectId();
                             if (module && Util.goodPositive(currentObjectId, false)) {
                                 promiseConfig = ConfigService.getModuleConfig(module.configName);
-                                promiseInfo = module.getInfo(module.objectType, currentObjectId, 0, 5);
                                 var promiseUsers = gridHelper.getUsers();
-
-                                $q.all([ promiseConfig, promiseInfo, promiseUsers ]).then(function(data) {
+                                $q.all([ promiseConfig, promiseUsers ]).then(function(data) {
                                     var config = _.find(data[0].components, {
                                         id : "main"
                                     });
-                                    var info = data[1];
+                                    // var info = data[1];
                                     var widgetInfo = _.find(config.widgets, function(widget) {
                                         return widget.id === "tasks";
                                     });
-                                    var tasks = info.response.docs;
+                                    // var tasks = info.response.docs;
 
                                     gridHelper.setUserNameFilterToConfig(promiseUsers, widgetInfo);
                                     gridHelper.setColumnDefs(widgetInfo);
-                                    gridHelper.setWidgetsGridData(tasks);
+                                    gridHelper.setBasicOptions(widgetInfo);
+                                    gridHelper.setExternalPaging(widgetInfo, populateGridData);
+                                    // gridHelper.setWidgetsGridData(tasks);
+                                    populateGridData();
+
                                 }, function(err) {
 
                                 });
                             }
+
+                            var populateGridData = function() {
+                                promiseInfo = module.getInfo(module.objectType, currentObjectId, $scope.start, $scope.pageSize);
+                                promiseInfo.then(function(data) {
+                                    var tasks = data.response.docs;
+                                    $scope.gridOptions = $scope.gridOptions || {};
+                                    $scope.gridOptions.data = tasks;
+                                    $scope.gridOptions.totalItems = data.response.numFound;
+                                })
+                            };
+
                         } ]);

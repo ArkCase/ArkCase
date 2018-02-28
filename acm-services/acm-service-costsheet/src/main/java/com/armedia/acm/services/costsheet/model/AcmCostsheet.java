@@ -57,6 +57,9 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
     @Column(name = "cm_costsheet_object_number")
     private String parentNumber;
 
+    @Column(name = "cm_costsheet_number")
+    private String costsheetNumber;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "costsheet")
     private List<AcmCost> costs = new ArrayList<>();
 
@@ -141,7 +144,18 @@ public class AcmCostsheet implements Serializable, AcmObject, AcmEntity, AcmStat
         {
             getContainer().setContainerObjectId(getId());
             getContainer().setContainerObjectType(getObjectType());
+            getContainer().setContainerObjectTitle(getCostsheetNumber());
         }
+    }
+
+    public String getCostsheetNumber()
+    {
+        return costsheetNumber;
+    }
+
+    public void setCostsheetNumber(String costsheetNumber)
+    {
+        this.costsheetNumber = costsheetNumber;
     }
 
     @Override

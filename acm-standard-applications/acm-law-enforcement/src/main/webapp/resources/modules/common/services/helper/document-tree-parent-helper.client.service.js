@@ -47,6 +47,16 @@ angular
                                     that.scope.enableEmailButton = arg.enableEmailButton || that.scope.enableEmailButton;
                                     that.scope.enableNewTaskButton = arg.enableNewTaskButton || that.scope.enableNewTaskButton;
 
+                                    that.scope.afterObjectInfo = that.scope.afterObjectInfo || function() {
+                                        if (that.objectType === ObjectService.ObjectTypes.COSTSHEET) {
+                                            that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                        } else if (that.objectType === ObjectService.ObjectTypes.CASE_FILE) {
+                                            that.scope.parentObject = that.scope.objectInfo.caseNumber;
+                                        } else if (that.objectType === ObjectService.ObjectTypes.COMPLAINT) {
+                                            that.scope.parentObject = that.scope.objectInfo.costsheetNumber;
+                                        }
+                                    };
+
                                     var promiseFormTypes = ObjectLookupService.getFormTypes(that.scope.objectType);
                                     var promiseFileTypes = ObjectLookupService.getFileTypes();
                                     var promiseCorrespondenceForms = CorrespondenceService.getActivatedTemplatesData(that.scope.objectType);

@@ -60,7 +60,7 @@ angular.module('services').factory('DocTreeExt.ReviewDoc',
                     } else if (DocTree._objType === ObjectService.ObjectTypes.COSTSHEET) {
                         params.parentType = DocTree._objType;
                         params.parentId = DocTree._objId;
-                        params.parentObject = " ";
+                        params.parentObject = DocTree.objectInfo.costsheetNumber;
                         params.parentTitle = DocTree.objectInfo.title;
                     }
                     params.documentsToReview = nodes;
